@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd">
+	<!--
+		Este archivo define los elementos generales de la configuración de
+		quartz para poder ejecutar ciertas cosas en el tiempo
+	-->
+	
+	<!-- Definicion de qué metodo se debe ejecutar para limpiar los mensajes -->
+	<bean id="mensajesJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	  <property name="targetObject" ref="servicioRuteoImpl"/>
+	  <property name="targetMethod" value="limpiarMensajesViejos"/>
+	  <property name="concurrent" value="false"/>
+	</bean>
+	
+	<!-- Definimos cuando invocar la limpieza de mensajes -->
+	<bean id="mensajesTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+  		<property name="jobDetail" ref="mensajesJobDetail"/>
+		<!-- esperamos 3 seg  para empezar -->
+  		<property name="startDelay" value="3000"/>
+		<!-- Ejecutamos cada media hora -->
+  		<property name="repeatInterval" value="1800000"/>
+	</bean>
+	
+	
+	<!-- Definicion de la tarea para ejecutar el método de limpieza de receptores -->
+	<bean id="receptoresJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	  <property name="targetObject" ref="servicioRuteoImpl"/>
+	  <property name="targetMethod" value="limpiarReceptoresViejos"/>
+	  <property name="concurrent" value="false"/>
+	</bean>
+	
+	<!-- Definimos cuando invocar la limpieza de receptores -->
+	<bean id="receptoresTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+  		<property name="jobDetail" ref="receptoresJobDetail"/>
+		<!-- Esperamos 5s para empezar -->
+  		<property name="startDelay" value="5000"/>
+		<!-- Ejecutamos cada 1 hora -->
+  		<property name="repeatInterval" value="3600000"/>
+	</bean>
+	
+	
+	<!-- Definimos el ejecutor de las tareas -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	  <property name="triggers">
+	    <list>
+	      <ref bean="mensajesTrigger"/>
+	      <ref bean="receptoresTrigger"/>
+	    </list>
+	  </property>
+	</bean>
+	
+</beans>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd"
+	>
+
+	<!--
+		Este archivo los parámetros de configuración de hibernate para persistir el estado de los objetos en la base
+	 -->
+
+	<!-- Permite que se se utilicen los annotations Transactional en el código para demarcar transacciones -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<!-- Declara el transaction manager para spring utilizado por las transacciones -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<!-- Define la configuración principal de Hibernate y la fuente de las sesiones de persistencia -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="packagesToScan">
+			<list>
+				<value>net.gaia.vortex.persistibles</value>
+			</list>
+		</property>		
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<!-- 
+				<prop key="hibernate.show_sql">true</prop>
+				 -->
+			</props>
+		</property>
+	</bean>
+	
+	<!-- Este datasource usa c3p0 como pool de conexiones -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="org.hsqldb.jdbcDriver"/>
+        <!-- 
+         -->
+        <property name="jdbcUrl" value="jdbc:hsqldb:file:db/vortexDb"/>
+        <property name="user" value="sa"/>
+        <property name="password" value=""/>
+        <property name="acquireIncrement" value="1"/>
+        <property name="maxPoolSize" value="30"/>
+        <property name="minPoolSize" value="3"/>
+        <property name="maxIdleTime" value="1800"/>
+        <property name="maxStatements" value="50"/>
+    </bean>
+</beans>

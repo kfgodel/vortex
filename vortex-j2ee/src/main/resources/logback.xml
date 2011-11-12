@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration debug="false"> 
+
+	<!--
+		Este archivo define la configuración del logueo de la aplicación y es interpretado por logback,
+		que recibe las llamadas de logueo del resto de las apis (log4j, commons-logging, etc) a través
+		de slf4j que hace de wrapper del resto.
+		La sintaxis para los appenders que se pueden agregar está en: http://logback.qos.ch/manual/appenders.html
+		y la sintaxis para los patrones de formateo en: http://logback.qos.ch/manual/layouts.html#conversionWord 
+	 -->
+
+	<!-- Output normal por consola -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+		  <pattern>\(%12r\) [%-20t] %-5p %-120m  | at %C\(%F:%L\) [%-23d{ISO8601}]%n</pattern>
+		</encoder>
+	</appender>
+  
+  	<!-- Output a archivo de logueo limitado a 1Mb -->
+	<appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <file>${catalina.base}/logs/vortex-server.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+	      <fileNamePattern>${catalina.base}/logs/previous/vortex-server.%i.log</fileNamePattern>
+	      <minIndex>1</minIndex>
+	      <maxIndex>10</maxIndex>
+	    </rollingPolicy>
+		
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+	     		<maxFileSize>1MB</maxFileSize>
+	   	</triggeringPolicy>
+	    <encoder>
+	      <pattern>[%-23d{ISO8601}] %-5p %-120m  | %-40c | [%t] at %C\(%F:%L\) Running:\(%12r\)%n</pattern>
+	    </encoder>
+	</appender>
+	
+	<logger name="net.gaia.vortex" level="INFO" />
+  
+
+	<root level="info">
+	  <appender-ref ref="STDOUT" />
+	  <appender-ref ref="ROLLING_FILE" />
+	</root>
+  
+</configuration>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app 
+	    id="VortexID" 
+	    version="2.5"
+        xmlns="http://java.sun.com/xml/ns/javaee" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+        	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+	    >
+    
+	<display-name>vortex-j2ee</display-name>
+
+	<listener>
+		<!-- Se encarga de levantar y bajar el contexto de spring con la app -->
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<context-param>
+		<!-- Parámetro usado por spring para saber qué archivos son configuraciones de contexto -->
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:/spring/web-application-context.xml</param-value>
+	</context-param>
+	
+	<filter>
+		<!-- Filtro para recibir los requests con el encoding UTF-8 -->
+        <filter-name>encoding-filter</filter-name>
+        <filter-class>
+            org.springframework.web.filter.CharacterEncodingFilter
+        </filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    
+    <filter-mapping>
+    	<!-- Mapping para que todos los requests tengan el encoding correcto -->
+        <filter-name>encoding-filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+	<servlet>
+		<!-- Servlet de spring que redirije los requests a los beans correspondientes de MVC. 
+			Este servlet crea un sub contexto de spring (namespace) usando su nombre "[servlet-name]-servlet", y 
+			levanta su propia configuración de beans que puede redefinir los beans existentes en el resto de la app.
+			 
+			Documentación en: http://static.springsource.org/spring/docs/2.0.x/reference/mvc.html",
+		-->
+		<servlet-name>spring-dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:/spring/spring-dispatcher-servlet.xml</param-value>
+		</init-param>
+		
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<!-- Todo lo que venga a web se lo mandamos a spring -->
+    	<servlet-name>spring-dispatcher</servlet-name>
+    	<url-pattern>/controllers/*</url-pattern>
+  	</servlet-mapping>
+
+
+	<welcome-file-list>
+	 	<!-- 
+	 		Por especificación es obligatorio declarar un file, pero en realidad no existe.
+	 		Es interceptado el request por acegi y luego pro Spring MVC 
+	 	-->
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	
+	<session-config>
+		<!-- La sesión le dura 6h -->
+		<session-timeout>360</session-timeout>
+	</session-config>
+	
+</web-app>
