@@ -31,8 +31,41 @@ public interface TaskProcessor {
 	 * @param tarea
 	 *            Tarea a realizar
 	 * 
-	 * @return Un {@link PendingTask}que permite conocer el estado de la tarea dentro del procesador
+	 * @return Un {@link SubmittedTask}que permite conocer el estado de la tarea dentro del
+	 *         procesador
 	 */
-	PendingTask process(WorkUnit tarea);
+	SubmittedTask process(WorkUnit tarea);
+
+	/**
+	 * Cancela la tarea indicada, eliminándola de la cola si estaba pendiente, esperando que termine
+	 * si está en ejecución, y no haciendo nada, si ya fue procesada
+	 * 
+	 * @param workToCancel
+	 *            Tarea a cancelar
+	 */
+	void cancel(WorkUnit workToCancel);
+
+	/**
+	 * Define el exception handler que tratará la tareas reemplazando al default
+	 * 
+	 * @param taskExceptionHandler
+	 *            El handler de excepciones para cuando falla una tarea
+	 */
+	void setExceptionHandler(TaskExceptionHandler taskExceptionHandler);
+
+	/**
+	 * Devuelve la cantidad de threads que se usan como máximo para procesar las tareas.<br>
+	 * Lo que es equivalente a decir la cantidad de tareas procesables en paralelo
+	 * 
+	 * @return La cantidad de threads destinados a procesar tareas
+	 */
+	int getThreadPoolSize();
+
+	/**
+	 * Devuelve una instancia de métricas que permite conocer el desempeño de este procesador
+	 * 
+	 * @return El registro de las mediciones realizadas
+	 */
+	TaskProcessingMetrics getMetrics();
 
 }

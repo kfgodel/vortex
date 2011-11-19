@@ -12,8 +12,9 @@
  */
 package net.gaia.taskprocessor.impl;
 
-import net.gaia.taskprocessor.api.PendingTask;
+import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.WorkUnit;
 
 /**
@@ -24,7 +25,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
  */
 public class ExecutorBasedTaskProcesor implements TaskProcessor {
 
-	public static ExecutorBasedTaskProcesor create() {
+	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
 		final ExecutorBasedTaskProcesor processor = new ExecutorBasedTaskProcesor();
 		return processor;
 	}
@@ -33,7 +34,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	@Override
-	public PendingTask process(final WorkUnit tarea) {
+	public SubmittedTask process(final WorkUnit tarea) {
 		// TODO Auto-generated method stub
 		return null;
 	}

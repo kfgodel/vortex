@@ -21,7 +21,14 @@ import ar.com.fdvs.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public interface PendingTask {
+public interface SubmittedTask {
+
+	/**
+	 * Devuelve la unidad de trabajo que originó esta tarea
+	 * 
+	 * @return El código que procesará esta tarea
+	 */
+	public WorkUnit getWork();
 
 	/**
 	 * Bloquea el hilo actual como máximo la cantidad de tiempo indicada en la magnitud pasada,
@@ -37,11 +44,19 @@ public interface PendingTask {
 	void waitForCompletionUpTo(TimeMagnitude timeout) throws UnsuccessfulWaitException;
 
 	/**
-	 * Indica si la {@link WorkUnit} de esta tarea fue procesada por el {@link TaskProcessor}.<br>
-	 * Se considera procesada si ya terminó, falló o fue cancelada
+	 * Devuelve el estado actual de la {@link WorkUnit} dentro del procesador.<br>
+	 * La instancia concreta de estado indica en que estadío se encuentra la tarea dentro del
+	 * {@link TaskProcessor}
 	 * 
-	 * @return true si la tarea terminó exitosamente, con error, o fue cancelada
+	 * @return El estado actual para esta tarea
 	 */
-	boolean wasProcessed();
+	public SubmittedTaskState getCurrentState();
+
+	/**
+	 * Devuelve la excepción que se produjo procesando esta tarea si es que hubo una
+	 * 
+	 * @return null si no se produjo ninguna excepción
+	 */
+	Throwable getFailingError();
 
 }
