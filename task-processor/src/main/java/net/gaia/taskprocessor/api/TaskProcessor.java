@@ -68,4 +68,10 @@ public interface TaskProcessor {
 	 */
 	TaskProcessingMetrics getMetrics();
 
+	/**
+	 * Define el listener a utilizar internamente.<br>
+	 * El listener será invocado al procesar las tareas
+	 */
+	void setProcessorListener(TaskProcessorListener listener);
+
 }
