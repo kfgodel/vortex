@@ -27,6 +27,6 @@ public interface TaskExceptionHandler {
 	 * @param processingProcessor
 	 *            El procesador en que se produjo el error
 	 */
-	public void onExceptionDuring(SubmittedTask task, TaskProcessor processingProcessor);
+	public void onExceptionRaisedWhileProcessing(SubmittedTask task, TaskProcessor processingProcessor);
 
 }

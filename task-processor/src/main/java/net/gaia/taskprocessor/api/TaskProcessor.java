@@ -74,4 +74,18 @@ public interface TaskProcessor {
 	 */
 	void setProcessorListener(TaskProcessorListener listener);
 
+	/**
+	 * Devuelve el listener utilizado por este procesador o null si no existe uno definido.
+	 * (default)
+	 * 
+	 * @return El listener para los eventos de tareas
+	 */
+	TaskProcessorListener getProcessorListener();
+
+	/**
+	 * Devuelve el handler utilizado por este procesador para el tratamiento con tareas fallidas
+	 * 
+	 * @return El handler a utilizar
+	 */
+	TaskExceptionHandler getExceptionHandler();
 }

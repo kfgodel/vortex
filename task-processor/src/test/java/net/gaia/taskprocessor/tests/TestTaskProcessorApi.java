@@ -114,7 +114,7 @@ public class TestTaskProcessorApi {
 		final AtomicReference<WorkUnit> failedWork = new AtomicReference<WorkUnit>();
 		this.taskProcessor.setExceptionHandler(new TaskExceptionHandler() {
 			@Override
-			public void onExceptionDuring(final SubmittedTask task, final TaskProcessor processingProcessor) {
+			public void onExceptionRaisedWhileProcessing(final SubmittedTask task, final TaskProcessor processingProcessor) {
 				final WorkUnit work = task.getWork();
 				failedWork.set(work);
 				lockParaTestear.release();

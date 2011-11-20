@@ -13,8 +13,11 @@
 package net.gaia.taskprocessor.impl;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.TaskExceptionHandler;
+import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.TaskProcessorListener;
 import net.gaia.taskprocessor.api.WorkUnit;
 
 /**
@@ -24,6 +27,9 @@ import net.gaia.taskprocessor.api.WorkUnit;
  * @author D. García
  */
 public class ExecutorBasedTaskProcesor implements TaskProcessor {
+
+	private TaskProcessorListener processorListener;
+	private TaskExceptionHandler exceptionHandler;
 
 	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
 		final ExecutorBasedTaskProcesor processor = new ExecutorBasedTaskProcesor();
@@ -38,4 +44,61 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.TaskProcessor#cancel(net.gaia.taskprocessor.api.WorkUnit)
+	 */
+	@Override
+	public void cancel(final WorkUnit workToCancel) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.TaskProcessor#setExceptionHandler(net.gaia.taskprocessor.api.TaskExceptionHandler)
+	 */
+	@Override
+	public void setExceptionHandler(final TaskExceptionHandler taskExceptionHandler) {
+		this.exceptionHandler = taskExceptionHandler;
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.TaskProcessor#getThreadPoolSize()
+	 */
+	@Override
+	public int getThreadPoolSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.TaskProcessor#getMetrics()
+	 */
+	@Override
+	public TaskProcessingMetrics getMetrics() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.TaskProcessor#setProcessorListener(net.gaia.taskprocessor.api.TaskProcessorListener)
+	 */
+	@Override
+	public void setProcessorListener(final TaskProcessorListener listener) {
+		this.processorListener = listener;
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.TaskProcessor#getProcessorListener()
+	 */
+	@Override
+	public TaskProcessorListener getProcessorListener() {
+		return processorListener;
+	}
+
+	@Override
+	public TaskExceptionHandler getExceptionHandler() {
+		return exceptionHandler;
+	}
+
 }

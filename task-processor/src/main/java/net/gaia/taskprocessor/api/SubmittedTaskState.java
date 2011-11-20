@@ -22,25 +22,74 @@ package net.gaia.taskprocessor.api;
  */
 public enum SubmittedTaskState {
 	/**
-	 * La tarea aun no fue comenzada
+	 * La tarea aún no fue comenzada
 	 */
-	PENDING,
+	PENDING {
+		@Override
+		public boolean isPending() {
+			return true;
+		}
+	},
 	/**
 	 * Se comenzó a procesar pero aun no fue terminada
 	 */
-	PROCESSING,
+	PROCESSING {
+		@Override
+		public boolean isBeingProcessed() {
+			return true;
+		}
+	},
 	/**
 	 * La tarea fue cancelada antes de terminar
 	 */
-	INTERRUPTED,
+	INTERRUPTED {
+		@Override
+		public boolean wasCancelled() {
+			return true;
+		}
+
+		@Override
+		public boolean wasProcessed() {
+			return true;
+		}
+	},
 	/**
 	 * La tarea fue completada exitosamente
 	 */
-	COMPLETED,
+	COMPLETED {
+		@Override
+		public boolean wasProcessed() {
+			return true;
+		}
+	},
 	/**
 	 * La tarea fue cancelada antes de comenzar
 	 */
-	CANCELLED;
+	CANCELLED {
+		@Override
+		public boolean wasCancelled() {
+			return true;
+		}
+
+		@Override
+		public boolean wasProcessed() {
+			return true;
+		}
+	},
+	/**
+	 * La tarea falló con una excepción mientras se estaba procesado
+	 */
+	FAILED {
+		@Override
+		public boolean hasFailed() {
+			return true;
+		}
+
+		@Override
+		public boolean wasProcessed() {
+			return true;
+		}
+	};
 
 	/**
 	 * Indica si la {@link WorkUnit} de esta tarea fue procesada por el {@link TaskProcessor}.<br>
@@ -48,7 +97,9 @@ public enum SubmittedTaskState {
 	 * 
 	 * @return true si la tarea terminó exitosamente, con error, o fue cancelada
 	 */
-	public abstract boolean wasProcessed();
+	public boolean wasProcessed() {
+		return false;
+	}
 
 	/**
 	 * Indica si la {@link WorkUnit} de esta tarea comenzó a ser procesada por el
@@ -56,7 +107,9 @@ public enum SubmittedTaskState {
 	 * 
 	 * @return true si está siendo procesada en este momento por un thread
 	 */
-	public abstract boolean isBeingProcessed();
+	public boolean isBeingProcessed() {
+		return false;
+	}
 
 	/**
 	 * Indica si la {@link WorkUnit} de esta tarea todavía no se comenzó a procesar por el
@@ -64,14 +117,18 @@ public enum SubmittedTaskState {
 	 * 
 	 * @return true si la tarea todavía está en cola esperando
 	 */
-	public abstract boolean isPending();
+	public boolean isPending() {
+		return false;
+	}
 
 	/**
 	 * Indica si la {@link WorkUnit} de esta tarea falló con una excepción antes de finalizar
 	 * 
 	 * @return true si la tarea tiró una excepción no controlada al procesarla
 	 */
-	public abstract boolean hasFailed();
+	public boolean hasFailed() {
+		return false;
+	}
 
 	/**
 	 * Indica si la {@link WorkUnit} de esta tarea fue cancelada durante, o antes de su
@@ -79,6 +136,8 @@ public enum SubmittedTaskState {
 	 * 
 	 * @return true si la tarea fue cancelada o interrumpida
 	 */
-	public abstract boolean wasCancelled();
+	public boolean wasCancelled() {
+		return false;
+	}
 
 }

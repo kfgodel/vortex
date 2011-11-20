@@ -32,7 +32,9 @@ public interface SubmittedTask {
 
 	/**
 	 * Bloquea el hilo actual como máximo la cantidad de tiempo indicada en la magnitud pasada,
-	 * esperando que la tarea pendiente se complete. En caso contrario se
+	 * esperando que la tarea pendiente se complete. Tanto por éxito o por fracaso cuando la tarea
+	 * se considera procesada este método termina.<br>
+	 * Si la tarea está cancelada antes de empezar este método retorna inmediatamente.<br>
 	 * 
 	 * @param timeout
 	 *            Cantidad de tiempo que indica el timeout que se debe esperar para completar la
