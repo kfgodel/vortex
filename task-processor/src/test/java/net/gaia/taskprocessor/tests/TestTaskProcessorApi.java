@@ -69,6 +69,8 @@ public class TestTaskProcessorApi {
 		final SubmittedTask tarea = taskProcessor.process(trabajo);
 		tarea.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.isTrue(trabajo.isProcessed(), "Después de la espera la tarea debería estar completa");
+		Assert.isTrue(tarea.getCurrentState().equals(SubmittedTaskState.COMPLETED),
+				"Debería estar marcada como completa");
 	}
 
 	@Test
