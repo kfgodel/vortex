@@ -70,11 +70,11 @@ public class TestTaskMetricsApi {
 		final TaskProcessingMetrics metrics = taskProcessor.getMetrics();
 		Assert.isTrue(metrics.getPendingTaskCount() == 0, "No debería tener tareas pendientes al crearse");
 
-		final Semaphore lockParaBloquearLaPrimerTarea = new Semaphore(-1);
-		final Semaphore lockTestearEstado = new Semaphore(-1);
+		final Semaphore lockParaBloquearLaPrimerTarea = new Semaphore(0);
+		final Semaphore lockTestearEstado = new Semaphore(0);
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public void doWork() throws InterruptedException {
 				super.doWork();
 				lockTestearEstado.release();
 				try {

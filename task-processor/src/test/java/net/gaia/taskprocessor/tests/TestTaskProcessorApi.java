@@ -51,7 +51,7 @@ public class TestTaskProcessorApi {
 		private final AtomicBoolean processed = new AtomicBoolean(false);
 
 		@Override
-		public void doWork() {
+		public void doWork() throws InterruptedException {
 			processed.set(true);
 		}
 
@@ -79,7 +79,7 @@ public class TestTaskProcessorApi {
 		final TestWorkUnit tercerTarea = new TestWorkUnit();
 		final TestWorkUnit segundaTarea = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public void doWork() throws InterruptedException {
 				final SubmittedTask tercerTask = taskProcessor.process(tercerTarea);
 				tercerProceso.set(tercerTask);
 				super.doWork();
@@ -87,7 +87,7 @@ public class TestTaskProcessorApi {
 		};
 		final TestWorkUnit primeraTarea = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public void doWork() throws InterruptedException {
 				final SubmittedTask segundoTask = taskProcessor.process(segundaTarea);
 				segundoProceso.set(segundoTask);
 				super.doWork();
@@ -108,7 +108,7 @@ public class TestTaskProcessorApi {
 
 	@Test
 	public void deberíaPermitirUsarUnHandlerParaLasTareasFallidas() throws InterruptedException {
-		final Semaphore lockParaTestear = new Semaphore(-1);
+		final Semaphore lockParaTestear = new Semaphore(0);
 
 		// Ponemos un handler para capturar la tarea fallida
 		final AtomicReference<WorkUnit> failedWork = new AtomicReference<WorkUnit>();
@@ -143,7 +143,7 @@ public class TestTaskProcessorApi {
 	@HasDependencyOn(Decision.SE_USA_UN_SOLO_THREAD_POR_DEFAULT)
 	public void deberíaPermitirConocerLasExcepcionesEnLasTareas() throws InterruptedException {
 		final RuntimeException expectedException = new RuntimeException("Excepción a lanzar");
-		final TestWorkUnit tareaFallida = new TestWorkUnit() {
+		final TestWorkUnit workFallido = new TestWorkUnit() {
 			/**
 			 * @see net.gaia.taskprocessor.tests.TestTaskProcessorApi.TestWorkUnit#doWork()
 			 */
@@ -153,22 +153,9 @@ public class TestTaskProcessorApi {
 			}
 		};
 
-		final Semaphore lockParaTestearEstado = new Semaphore(-1);
-		final TestWorkUnit tareaPosterior = new TestWorkUnit() {
-			@Override
-			public void doWork() {
-				lockParaTestearEstado.release();
-			}
-		};
-
-		final SubmittedTask SubmittedTask = this.taskProcessor.process(tareaFallida);
-		this.taskProcessor.process(tareaPosterior);
-		final boolean tryAcquire = lockParaTestearEstado.tryAcquire(1, TimeUnit.SECONDS);
-		if (!tryAcquire) {
-			throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
-		}
-
-		Assert.isTrue(SubmittedTask.getFailingError() == expectedException,
+		final SubmittedTask task = this.taskProcessor.process(workFallido);
+		task.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.isTrue(task.getFailingError() == expectedException,
 				"Debería fallar por la misma excepción lanzada de la tarea");
 	}
 
@@ -183,8 +170,8 @@ public class TestTaskProcessorApi {
 		final TestWorkUnit canceladaDespuesDeprocesar = new TestWorkUnit();
 		final TestWorkUnit canceladaAntesDeprocesar = new TestWorkUnit();
 
-		final Semaphore lockParaCancelarTodas = new Semaphore(-1);
-		final Semaphore lockParaTestear = new Semaphore(-1);
+		final Semaphore lockParaCancelarTodas = new Semaphore(0);
+		final Semaphore lockParaTestear = new Semaphore(0);
 
 		final AtomicReference<SubmittedTask> procesadaRef = new AtomicReference<SubmittedTask>();
 		final AtomicReference<SubmittedTask> interrumpidaRef = new AtomicReference<SubmittedTask>();
@@ -192,7 +179,7 @@ public class TestTaskProcessorApi {
 
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public void doWork() throws InterruptedException {
 				try {
 					final boolean tryAcquire = lockParaCancelarTodas.tryAcquire(1, TimeUnit.SECONDS);
 					if (!tryAcquire) {
@@ -205,8 +192,11 @@ public class TestTaskProcessorApi {
 				procesadaRef.get().cancel(true);
 				canceladaRef.get().cancel(true);
 				interrumpidaRef.get().cancel(true);
-				super.doWork();
 				lockParaTestear.release();
+				// El sleep permite que este thread sea interrumpido despues de cancelar
+				Thread.sleep(1000);
+				// Esta línea nunca llega qa ejecutarse
+				super.doWork();
 			}
 		};
 
@@ -227,9 +217,12 @@ public class TestTaskProcessorApi {
 				"Debería estar terminada exitosamente, no tiene efecto cancelarla");
 		Assert.isTrue(procesada.getCurrentState().equals(SubmittedTaskState.COMPLETED));
 
+		// Esperamos que termine para asegurarnos de que tenga un estado consistente
+		interrumpida.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.isTrue(interrumpida.getCurrentState().wasCancelled(),
 				"Debería estar interrumpida, por lo tanto cancelada");
-		Assert.isTrue(interrumpida.getCurrentState().equals(SubmittedTaskState.INTERRUPTED));
+		org.junit.Assert.assertEquals(SubmittedTaskState.INTERRUPTED, interrumpida.getCurrentState());
+		Assert.isTrue(!canceladaDuranteElProcesamiento.isProcessed(), "No debería haber terminado de procesar");
 
 		Assert.isTrue(cancelada.getCurrentState().wasCancelled(), "Debería estar cancelada antes de empezar");
 		Assert.isTrue(cancelada.getCurrentState().equals(SubmittedTaskState.CANCELLED));

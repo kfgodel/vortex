@@ -77,6 +77,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 		task.currentState = new AtomicReference<SubmittedTaskState>(SubmittedTaskState.PENDING);
 		task.processor = processor;
 		task.ownFuture = new FutureTask<Void>(task, null);
+		task.failingError = new AtomicReference<Throwable>();
 		return task;
 	}
 
@@ -249,19 +250,15 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 */
 	@Override
 	public void cancel(final boolean forceInterruption) {
-		final boolean cancelled = this.ownFuture.cancel(forceInterruption);
-		if (!cancelled) {
-			// No pudimos cancelar, quizás ya terminó
-			final SubmittedTaskState estadoActual = currentState.get();
-			if (!estadoActual.wasProcessed()) {
-				// No termino de procesar pero tampoco se pudo cancelar?!
-				LOG.error("No fue posible cancelar una tarea[{}] a través de su Future. Estado actual:[{}]", this,
-						estadoActual);
-			}
-			return;
+		final SubmittedTaskState estadoAnterior = currentState.get();
+		final SubmittedTaskState estadoCancelado = estadoAnterior.getStateWhenCancelled();
+		currentState.set(estadoCancelado);
+		this.ownFuture.cancel(forceInterruption);
+
+		// Si cambiamos al estado cancelado, notificamos
+		if (SubmittedTaskState.CANCELLED.equals(estadoCancelado) && !estadoCancelado.equals(estadoAnterior)) {
+			notifyListenerCancelledTask();
 		}
-		currentState.set(SubmittedTaskState.CANCELLED);
-		notifyListenerCancelledTask();
 	}
 
 	/**

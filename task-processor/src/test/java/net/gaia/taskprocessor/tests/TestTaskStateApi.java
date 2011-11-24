@@ -64,13 +64,13 @@ public class TestTaskStateApi {
 	@Test
 	public void deberíaPermitirConocerSiUnaTareaEstaSiendoProcesada() throws InterruptedException {
 		// Este hace esperar a la tarea para terminar
-		final Semaphore lockToCompleteTask = new Semaphore(-1);
+		final Semaphore lockToCompleteTask = new Semaphore(0);
 		// Este hace esperar al thread actual para testear cuando la tarea ya empezó
-		final Semaphore lockToTestTaskCompletion = new Semaphore(-1);
+		final Semaphore lockToTestTaskCompletion = new Semaphore(0);
 
 		final TestWorkUnit tarea = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public void doWork() throws InterruptedException {
 				lockToTestTaskCompletion.release();
 				super.doWork();
 				try {
@@ -108,11 +108,11 @@ public class TestTaskStateApi {
 	@HasDependencyOn(Decision.SE_USA_UN_SOLO_THREAD_POR_DEFAULT)
 	public void deberíaPermitirConocerSiUnaTareaEstaPendiente() throws InterruptedException {
 		// Bloqueamos la tarea anterior para verificar la siguiente (es un solo thread por defecto)
-		final Semaphore lockParaCompletarAnterior = new Semaphore(-1);
-		final Semaphore lockParaTestearEstado = new Semaphore(-1);
+		final Semaphore lockParaCompletarAnterior = new Semaphore(0);
+		final Semaphore lockParaTestearEstado = new Semaphore(0);
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public void doWork() throws InterruptedException {
 				super.doWork();
 				lockParaTestearEstado.release();
 				try {
@@ -159,7 +159,7 @@ public class TestTaskStateApi {
 			}
 		};
 
-		final Semaphore lockParaTestearEstado = new Semaphore(-1);
+		final Semaphore lockParaTestearEstado = new Semaphore(0);
 		final TestWorkUnit tareaPosterior = new TestWorkUnit() {
 			@Override
 			public void doWork() {
@@ -187,15 +187,15 @@ public class TestTaskStateApi {
 		// Tres tareas para cancelar en distintos momentos
 		final TestWorkUnit canceladaAntesDeProcesar = new TestWorkUnit();
 
-		final Semaphore lockParaCancelar = new Semaphore(-1);
-		final Semaphore lockParaTestear = new Semaphore(-1);
+		final Semaphore lockParaCancelar = new Semaphore(0);
+		final Semaphore lockParaTestear = new Semaphore(0);
 
 		final AtomicReference<SubmittedTask> interrumpidaRef = new AtomicReference<SubmittedTask>();
 		final AtomicReference<SubmittedTask> canceladaRef = new AtomicReference<SubmittedTask>();
 
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public void doWork() throws InterruptedException {
 				try {
 					final boolean tryAcquire = lockParaCancelar.tryAcquire(1, TimeUnit.SECONDS);
 					if (!tryAcquire) {
@@ -207,8 +207,10 @@ public class TestTaskStateApi {
 				// Cancelamos a todas durante el procesamiento de la del medio
 				canceladaRef.get().cancel(true);
 				interrumpidaRef.get().cancel(true);
-				super.doWork();
 				lockParaTestear.release();
+				// Al hacer el sleep permitimos que el thread sea interrumpido
+				Thread.sleep(1000);
+				super.doWork();
 			}
 		};
 
@@ -223,8 +225,11 @@ public class TestTaskStateApi {
 			throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
 		}
 
+		// Esperamos que termine para que tenga un estado consistente
+		interrumpida.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.isTrue(interrumpida.getCurrentState().wasCancelled(), "Debería estar interrumpida y también cancelada");
 		Assert.isTrue(interrumpida.getCurrentState().equals(SubmittedTaskState.INTERRUPTED));
+		Assert.isTrue(!canceladaDuranteElProcesamiento.isProcessed(), "No debería estar terminada si es interrumpida");
 
 		Assert.isTrue(cancelada.getCurrentState().wasCancelled(), "Debería estar cancelada antes de empezar");
 		Assert.isTrue(cancelada.getCurrentState().equals(SubmittedTaskState.CANCELLED));

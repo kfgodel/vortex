@@ -71,11 +71,11 @@ public class TestTaskListenerApi {
 			}
 		});
 
-		final Semaphore lockParaBloquearTarea = new Semaphore(-1);
-		final Semaphore lockParaTestearTarea = new Semaphore(-1);
+		final Semaphore lockParaBloquearTarea = new Semaphore(0);
+		final Semaphore lockParaTestearTarea = new Semaphore(0);
 		final TestWorkUnit tarea = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public void doWork() throws InterruptedException {
 				lockParaTestearTarea.release();
 				try {
 					final boolean tryAcquire = lockParaBloquearTarea.tryAcquire(1, TimeUnit.SECONDS);
@@ -149,10 +149,10 @@ public class TestTaskListenerApi {
 		});
 
 		// Ponemos una tarea bloqueante para que la segunda se cancele
-		final Semaphore lockParaBloquearPrimera = new Semaphore(-1);
+		final Semaphore lockParaBloquearPrimera = new Semaphore(0);
 		final TestWorkUnit blockingWork = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public void doWork() throws InterruptedException {
 				try {
 					final boolean tryAcquire = lockParaBloquearPrimera.tryAcquire(10, TimeUnit.SECONDS);
 					if (!tryAcquire) {
@@ -176,28 +176,28 @@ public class TestTaskListenerApi {
 
 	@Test
 	public void deberíaPermitirObservarCuandoUnaTareaSeInterrumpe() throws InterruptedException {
+		final Semaphore lockParaEsperarNotificacionDeinterrupcion = new Semaphore(0);
 		final AtomicBoolean interrupted = new AtomicBoolean();
 		taskProcessor.setProcessorListener(new TaskProcessorListenerSupport() {
 			@Override
 			public void onTaskInterrupted(final SubmittedTask task, final TaskProcessor processor,
 					final Thread executingThread) {
 				interrupted.set(true);
+				lockParaEsperarNotificacionDeinterrupcion.release();
 			}
 		});
 
-		final Semaphore lockParaBloquearTarea = new Semaphore(-1);
-		final Semaphore lockParaTestearTarea = new Semaphore(-1);
+		final Semaphore lockParaBloquearTarea = new Semaphore(0);
+		final Semaphore lockParaTestearTarea = new Semaphore(0);
 		final TestWorkUnit tarea = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public void doWork() throws InterruptedException {
+				// Permitimos que el thread principal nos cancele
 				lockParaTestearTarea.release();
-				try {
-					final boolean tryAcquire = lockParaBloquearTarea.tryAcquire(1, TimeUnit.SECONDS);
-					if (!tryAcquire) {
-						throw new RuntimeException("No fue posible adquirir el lock, o algo se bloqueó");
-					}
-				} catch (final InterruptedException e) {
-					throw new RuntimeException(e);
+				// Nos deberían interrumpir mientras esperamos el lock
+				final boolean acquired = lockParaBloquearTarea.tryAcquire(1, TimeUnit.SECONDS);
+				if (acquired) {
+					throw new RuntimeException("Debería ser interrumpida antes de conseguir el lock");
 				}
 				super.doWork();
 			}
@@ -208,9 +208,13 @@ public class TestTaskListenerApi {
 			throw new RuntimeException("No fue posible adquirir el lock, o algo se bloqueó");
 		}
 		interruptedTask.cancel(true);
-		interruptedTask.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		final boolean tryAcquire2 = lockParaEsperarNotificacionDeinterrupcion.tryAcquire(1, TimeUnit.SECONDS);
+		if (!tryAcquire2) {
+			throw new RuntimeException("No fue posible adquirir el lock, o algo se bloqueó");
+		}
 		// Cuando el método retorna el listener ya debería haber sido invocado
 		Assert.isTrue(interrupted.get(), "Debería estar marcado como interrumpida");
+		Assert.isTrue(!tarea.isProcessed(), "No debería estar procesada si está interrumpida");
 	}
 
 }

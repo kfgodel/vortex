@@ -38,6 +38,11 @@ public enum SubmittedTaskState {
 		public boolean isBeingProcessed() {
 			return true;
 		}
+
+		@Override
+		public SubmittedTaskState getStateWhenCancelled() {
+			return INTERRUPTED;
+		}
 	},
 	/**
 	 * La tarea fue cancelada antes de terminar
@@ -52,6 +57,11 @@ public enum SubmittedTaskState {
 		public boolean wasProcessed() {
 			return true;
 		}
+
+		@Override
+		public SubmittedTaskState getStateWhenCancelled() {
+			return INTERRUPTED;
+		}
 	},
 	/**
 	 * La tarea fue completada exitosamente
@@ -60,6 +70,11 @@ public enum SubmittedTaskState {
 		@Override
 		public boolean wasProcessed() {
 			return true;
+		}
+
+		@Override
+		public SubmittedTaskState getStateWhenCancelled() {
+			return COMPLETED;
 		}
 	},
 	/**
@@ -138,6 +153,16 @@ public enum SubmittedTaskState {
 	 */
 	public boolean wasCancelled() {
 		return false;
+	}
+
+	/**
+	 * Devuelve el estado que corresponde a la tarea cuando se encuentra en esta estado de esta
+	 * instancia, y se cancela
+	 * 
+	 * @return El estado al que debería pasar cuando está en este estado y es cancelado
+	 */
+	public SubmittedTaskState getStateWhenCancelled() {
+		return CANCELLED;
 	}
 
 }
