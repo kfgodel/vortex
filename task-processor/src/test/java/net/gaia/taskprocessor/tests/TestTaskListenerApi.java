@@ -168,7 +168,7 @@ public class TestTaskListenerApi {
 
 		final TestWorkUnit cancelledWork = new TestWorkUnit();
 		final SubmittedTask cancelledTask = taskProcessor.process(cancelledWork);
-		taskProcessor.cancel(cancelledWork);
+		cancelledTask.cancel(true);
 		lockParaBloquearPrimera.release();
 		cancelledTask.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.isTrue(cancelled.get(), "Debería estar invocado el listener con la tarea cancelada");
@@ -207,7 +207,7 @@ public class TestTaskListenerApi {
 		if (!tryAcquire) {
 			throw new RuntimeException("No fue posible adquirir el lock, o algo se bloqueó");
 		}
-		taskProcessor.cancel(tarea);
+		interruptedTask.cancel(true);
 		interruptedTask.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		// Cuando el método retorna el listener ya debería haber sido invocado
 		Assert.isTrue(interrupted.get(), "Debería estar marcado como interrumpida");

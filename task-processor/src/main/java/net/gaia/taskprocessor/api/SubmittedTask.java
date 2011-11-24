@@ -61,4 +61,13 @@ public interface SubmittedTask {
 	 */
 	Throwable getFailingError();
 
+	/**
+	 * Cancela la ejecución de la tarea.<br>
+	 * Si está en ejecución el flag indica si se espera a terminar o se interrumpe
+	 * 
+	 * @param forceInterruption
+	 *            Indica si se puede interrumpir el thread que está ejecutando la tarea
+	 */
+	public void cancel(boolean forceInterruption);
+
 }

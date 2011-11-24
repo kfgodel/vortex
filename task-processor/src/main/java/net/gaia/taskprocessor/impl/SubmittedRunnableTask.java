@@ -16,6 +16,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -47,9 +48,10 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	private TaskProcessor processor;
 
 	/**
-	 * Handler para manipular esta tarea en el executor
+	 * Sincronizador de la ejecución que permite a otros threads esperar por la ejecución de esta
+	 * tarea
 	 */
-	private Future<?> ownFuture;
+	private FutureTask<?> ownFuture;
 
 	/**
 	 * Excepción ocurrida en esta tarea
@@ -74,6 +76,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 		task.workUnit = unit;
 		task.currentState = new AtomicReference<SubmittedTaskState>(SubmittedTaskState.PENDING);
 		task.processor = processor;
+		task.ownFuture = new FutureTask<Void>(task, null);
 		return task;
 	}
 
@@ -228,4 +231,71 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	public Throwable getFailingError() {
 		return failingError.get();
 	}
+
+	public Future<?> getOwnFuture() {
+		return ownFuture;
+	}
+
+	/**
+	 * Ejecuta esta tarea pendiente a través de su {@link Future} de manera de notificar a los
+	 * threads que puedan estar esperando el resultado
+	 */
+	public void execute() {
+		this.ownFuture.run();
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.SubmittedTask#cancel(boolean)
+	 */
+	@Override
+	public void cancel(final boolean forceInterruption) {
+		final boolean cancelled = this.ownFuture.cancel(forceInterruption);
+		if (!cancelled) {
+			// No pudimos cancelar, quizás ya terminó
+			final SubmittedTaskState estadoActual = currentState.get();
+			if (!estadoActual.wasProcessed()) {
+				// No termino de procesar pero tampoco se pudo cancelar?!
+				LOG.error("No fue posible cancelar una tarea[{}] a través de su Future. Estado actual:[{}]", this,
+						estadoActual);
+			}
+			return;
+		}
+		currentState.set(SubmittedTaskState.CANCELLED);
+		notifyListenerCancelledTask();
+	}
+
+	/**
+	 * Notifica al listener del procesor si existe alguno que la tarea se completó
+	 */
+	private void notifyListenerCancelledTask() {
+		final TaskProcessorListener listener = processor.getProcessorListener();
+		if (listener == null) {
+			return;
+		}
+		try {
+			listener.onTaskCancelled(this, processor);
+		} catch (final Throwable e) {
+			LOG.error(
+					"Se produjo un error en el listener al notificarlo de la cancelación de la tarea. Ignorando error",
+					e);
+		}
+	}
+
+	/**
+	 * Notifica al listener del procesor si existe alguno que la tarea se completó
+	 */
+	public void notifyListenerAcceptedTask() {
+		final TaskProcessorListener listener = processor.getProcessorListener();
+		if (listener == null) {
+			return;
+		}
+		try {
+			listener.onTaskAcceptedAndPending(this, processor);
+		} catch (final Throwable e) {
+			LOG.error(
+					"Se produjo un error en el listener al notificarlo de la aceptación de la tarea. Ignorando error",
+					e);
+		}
+	}
+
 }

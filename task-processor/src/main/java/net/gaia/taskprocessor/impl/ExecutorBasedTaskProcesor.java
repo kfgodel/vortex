@@ -12,6 +12,11 @@
  */
 package net.gaia.taskprocessor.impl;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
@@ -20,6 +25,11 @@ import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
 import net.gaia.taskprocessor.api.WorkUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.com.fdvs.dgarcia.lang.time.TimeMagnitude;
+
 /**
  * Esta clase representa un procesador de tareas que utiliza un executor propio para procesarla en
  * threads propios
@@ -27,12 +37,25 @@ import net.gaia.taskprocessor.api.WorkUnit;
  * @author D. García
  */
 public class ExecutorBasedTaskProcesor implements TaskProcessor {
+	private static final Logger LOG = LoggerFactory.getLogger(ExecutorBasedTaskProcesor.class);
 
 	private TaskProcessorListener processorListener;
 	private TaskExceptionHandler exceptionHandler;
 
+	private ThreadPoolExecutor executor;
+	private TaskProcessingMetricsImpl metrics;
+
+	private LinkedBlockingQueue<SubmittedRunnableTask> pendingTasks;
+
 	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
 		final ExecutorBasedTaskProcesor processor = new ExecutorBasedTaskProcesor();
+		final int threadPoolSize = config.getThreadPoolSize();
+		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
+		processor.executor = new ThreadPoolExecutor(1, threadPoolSize, maxIdleTimePerThread.getQuantity(),
+				maxIdleTimePerThread.getTimeUnit(), new LinkedBlockingQueue<Runnable>(),
+				Executors.defaultThreadFactory());
+		processor.pendingTasks = new LinkedBlockingQueue<SubmittedRunnableTask>();
+		processor.metrics = TaskProcessingMetricsImpl.create(processor.pendingTasks);
 		return processor;
 	}
 
@@ -40,18 +63,33 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	@Override
-	public SubmittedTask process(final WorkUnit tarea) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public SubmittedTask process(final WorkUnit work) {
+		// Agregamos la tarea como pendiente
+		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
+		final boolean added = this.pendingTasks.add(task);
+		if (!added) {
+			LOG.error("No fue posible agregar la tarea[{}] como pendiente. Cancelando", work);
+			task.cancel(true);
+			return task;
+		}
+		// Notificamos que la agregamos como pendiente
+		task.notifyListenerAcceptedTask();
 
-	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#cancel(net.gaia.taskprocessor.api.WorkUnit)
-	 */
-	@Override
-	public void cancel(final WorkUnit workToCancel) {
-		// TODO Auto-generated method stub
+		// Por diseño usamos todos los threads del pool que podamos para las tareas
+		if (executor.getActiveCount() >= executor.getMaximumPoolSize()) {
+			// Estamos en el limite, no agregamos más threads al procesamiento de tareas
+			return task;
+		}
 
+		// Agregamos un worker más para resolver las tareas pendientes
+		final TaskWorker extraWorker = TaskWorker.create(pendingTasks, this.metrics);
+		try {
+			executor.submit(extraWorker);
+		} catch (final RejectedExecutionException e) {
+			// Es posible que se agreguen workers de más, en cuyo caso sobran y no es problema
+			LOG.debug("Se rechazó el worker agregado. Activos: " + executor.getActiveCount(), e);
+		}
+		return task;
 	}
 
 	/**
@@ -67,8 +105,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	@Override
 	public int getThreadPoolSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return executor.getMaximumPoolSize();
 	}
 
 	/**
@@ -76,8 +113,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	@Override
 	public TaskProcessingMetrics getMetrics() {
-		// TODO Auto-generated method stub
-		return null;
+		return metrics;
 	}
 
 	/**

@@ -14,6 +14,7 @@ package net.gaia.taskprocessor.tests;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.SubmittedTask;
@@ -189,6 +190,9 @@ public class TestTaskStateApi {
 		final Semaphore lockParaCancelar = new Semaphore(-1);
 		final Semaphore lockParaTestear = new Semaphore(-1);
 
+		final AtomicReference<SubmittedTask> interrumpidaRef = new AtomicReference<SubmittedTask>();
+		final AtomicReference<SubmittedTask> canceladaRef = new AtomicReference<SubmittedTask>();
+
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
 			@Override
 			public void doWork() {
@@ -201,15 +205,17 @@ public class TestTaskStateApi {
 					throw new RuntimeException(e);
 				}
 				// Cancelamos a todas durante el procesamiento de la del medio
-				taskProcessor.cancel(canceladaAntesDeProcesar);
-				taskProcessor.cancel(this);
+				canceladaRef.get().cancel(true);
+				interrumpidaRef.get().cancel(true);
 				super.doWork();
 				lockParaTestear.release();
 			}
 		};
 
 		final SubmittedTask interrumpida = this.taskProcessor.process(canceladaDuranteElProcesamiento);
+		interrumpidaRef.set(interrumpida);
 		final SubmittedTask cancelada = this.taskProcessor.process(canceladaAntesDeProcesar);
+		canceladaRef.set(cancelada);
 
 		lockParaCancelar.release();
 		final boolean tryAcquire = lockParaTestear.tryAcquire(1, TimeUnit.SECONDS);

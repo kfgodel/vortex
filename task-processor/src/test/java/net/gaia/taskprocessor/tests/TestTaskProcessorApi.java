@@ -114,7 +114,8 @@ public class TestTaskProcessorApi {
 		final AtomicReference<WorkUnit> failedWork = new AtomicReference<WorkUnit>();
 		this.taskProcessor.setExceptionHandler(new TaskExceptionHandler() {
 			@Override
-			public void onExceptionRaisedWhileProcessing(final SubmittedTask task, final TaskProcessor processingProcessor) {
+			public void onExceptionRaisedWhileProcessing(final SubmittedTask task,
+					final TaskProcessor processingProcessor) {
 				final WorkUnit work = task.getWork();
 				failedWork.set(work);
 				lockParaTestear.release();
@@ -185,6 +186,10 @@ public class TestTaskProcessorApi {
 		final Semaphore lockParaCancelarTodas = new Semaphore(-1);
 		final Semaphore lockParaTestear = new Semaphore(-1);
 
+		final AtomicReference<SubmittedTask> procesadaRef = new AtomicReference<SubmittedTask>();
+		final AtomicReference<SubmittedTask> interrumpidaRef = new AtomicReference<SubmittedTask>();
+		final AtomicReference<SubmittedTask> canceladaRef = new AtomicReference<SubmittedTask>();
+
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
 			@Override
 			public void doWork() {
@@ -197,17 +202,20 @@ public class TestTaskProcessorApi {
 					throw new RuntimeException(e);
 				}
 				// Cancelamos a todas durante el procesamiento de la del medio
-				taskProcessor.cancel(canceladaAntesDeprocesar);
-				taskProcessor.cancel(canceladaDespuesDeprocesar);
-				taskProcessor.cancel(this);
+				procesadaRef.get().cancel(true);
+				canceladaRef.get().cancel(true);
+				interrumpidaRef.get().cancel(true);
 				super.doWork();
 				lockParaTestear.release();
 			}
 		};
 
 		final SubmittedTask procesada = this.taskProcessor.process(canceladaDespuesDeprocesar);
+		procesadaRef.set(procesada);
 		final SubmittedTask interrumpida = this.taskProcessor.process(canceladaDuranteElProcesamiento);
+		interrumpidaRef.set(interrumpida);
 		final SubmittedTask cancelada = this.taskProcessor.process(canceladaAntesDeprocesar);
+		canceladaRef.set(cancelada);
 
 		lockParaCancelarTodas.release();
 		final boolean tryAcquire = lockParaTestear.tryAcquire(1, TimeUnit.SECONDS);
@@ -227,5 +235,4 @@ public class TestTaskProcessorApi {
 		Assert.isTrue(cancelada.getCurrentState().equals(SubmittedTaskState.CANCELLED));
 
 	}
-
 }

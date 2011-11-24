@@ -37,15 +37,6 @@ public interface TaskProcessor {
 	SubmittedTask process(WorkUnit tarea);
 
 	/**
-	 * Cancela la tarea indicada, eliminándola de la cola si estaba pendiente, esperando que termine
-	 * si está en ejecución, y no haciendo nada, si ya fue procesada
-	 * 
-	 * @param workToCancel
-	 *            Tarea a cancelar
-	 */
-	void cancel(WorkUnit workToCancel);
-
-	/**
 	 * Define el exception handler que tratará la tareas reemplazando al default
 	 * 
 	 * @param taskExceptionHandler
