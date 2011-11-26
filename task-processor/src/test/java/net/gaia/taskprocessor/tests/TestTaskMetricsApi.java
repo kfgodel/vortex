@@ -12,21 +12,20 @@
  */
 package net.gaia.taskprocessor.tests;
 
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.tests.TestTaskProcessorApi.TestWorkUnit;
+import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.util.Assert;
-
-import ar.com.fdvs.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase realiza test sobre la api para conocer las métricas del procesador
@@ -54,7 +53,7 @@ public class TestTaskMetricsApi {
 	}
 
 	@Test
-	public void deberíaPermitirConocerLaCantidadDeTareasProcesadas() {
+	public void deberíaPermitirConocerLaCantidadDeTareasProcesadas() throws InterruptedException {
 		final TaskProcessingMetrics metrics = taskProcessor.getMetrics();
 		Assert.isTrue(metrics.getProcessedTaskCount() == 0, "No debería tener tareas procesadas al crearse");
 
@@ -62,6 +61,8 @@ public class TestTaskMetricsApi {
 		final SubmittedTask submittedTask = taskProcessor.process(primerTarea);
 		submittedTask.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
+		// Que la tarea no es garantía de que el contador esté actualizado, esperamos un poco
+		Thread.sleep(10);
 		Assert.isTrue(metrics.getProcessedTaskCount() == 1, "Debería contar la tarea procesada");
 	}
 
@@ -70,24 +71,20 @@ public class TestTaskMetricsApi {
 		final TaskProcessingMetrics metrics = taskProcessor.getMetrics();
 		Assert.isTrue(metrics.getPendingTaskCount() == 0, "No debería tener tareas pendientes al crearse");
 
-		final Semaphore lockParaBloquearLaPrimerTarea = new Semaphore(0);
-		final Semaphore lockTestearEstado = new Semaphore(0);
+		final WaitBarrier lockParaBloquearLaPrimerTarea = WaitBarrier.create();
+		final WaitBarrier lockTestearEstado = WaitBarrier.create();
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
 			@Override
 			public void doWork() throws InterruptedException {
 				super.doWork();
 				lockTestearEstado.release();
-				try {
-					lockParaBloquearLaPrimerTarea.acquire();
-				} catch (final InterruptedException e) {
-					throw new RuntimeException(e);
-				}
+				lockParaBloquearLaPrimerTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			}
 		};
 		taskProcessor.process(blockingTask);
 		taskProcessor.process(new TestWorkUnit());
 
-		lockTestearEstado.acquire();
+		lockTestearEstado.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.isTrue(metrics.getPendingTaskCount() == 1, "Debería contar la segunda tarea que espera la primera");
 		// Dejamos que sigan
 		lockParaBloquearLaPrimerTarea.release();

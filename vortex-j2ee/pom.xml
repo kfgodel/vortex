@@ -17,13 +17,6 @@
 
 	<dependencies>
 
-		<!-- Definición de los mensajes  -->
-		<dependency>
-		  <groupId>net.gaia</groupId>
-		  <artifactId>vortex-messages</artifactId>
-		  <version>1.0-SNAPSHOT</version>
-		</dependency>
-
 		<!-- Spring Web -->	
 		<dependency>
 			<groupId>org.springframework</groupId>

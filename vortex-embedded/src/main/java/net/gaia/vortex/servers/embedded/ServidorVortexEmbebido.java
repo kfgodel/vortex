@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.servers.embedded;
 
+import java.util.List;
+
+import net.gaia.vortex.protocol.MensajeVortex;
 import net.gaia.vortex.servers.ServidorVortex;
 
 /**
@@ -24,5 +27,21 @@ public class ServidorVortexEmbebido implements ServidorVortex {
 	public static ServidorVortexEmbebido create() {
 		final ServidorVortexEmbebido embebido = new ServidorVortexEmbebido();
 		return embebido;
+	}
+
+	/**
+	 * @see net.gaia.vortex.servers.ServidorVortex#enviar(java.util.List)
+	 */
+	public void enviar(final List<MensajeVortex> mensajes) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * @see net.gaia.vortex.servers.ServidorVortex#crearComunicante()
+	 */
+	public ComunicanteVortex crearComunicante() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

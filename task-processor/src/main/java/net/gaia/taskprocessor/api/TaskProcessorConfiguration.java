@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.meta.Decision;
-import ar.com.fdvs.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa la configuración de un procesador de tareas

@@ -12,7 +12,6 @@
  */
 package net.gaia.taskprocessor.tests;
 
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -20,16 +19,17 @@ import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.TimeMagnitude;
+import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
 import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.impl.TaskProcessorListenerSupport;
 import net.gaia.taskprocessor.meta.Decision;
 import net.gaia.taskprocessor.tests.TestTaskProcessorApi.TestWorkUnit;
+import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.util.Assert;
-
-import ar.com.fdvs.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase testea la api listener del {@link TaskProcessor}
@@ -71,29 +71,19 @@ public class TestTaskListenerApi {
 			}
 		});
 
-		final Semaphore lockParaBloquearTarea = new Semaphore(0);
-		final Semaphore lockParaTestearTarea = new Semaphore(0);
+		final WaitBarrier lockParaBloquearTarea = WaitBarrier.create();
+		final WaitBarrier lockParaTestearTarea = WaitBarrier.create();
 		final TestWorkUnit tarea = new TestWorkUnit() {
 			@Override
 			public void doWork() throws InterruptedException {
 				lockParaTestearTarea.release();
-				try {
-					final boolean tryAcquire = lockParaBloquearTarea.tryAcquire(1, TimeUnit.SECONDS);
-					if (!tryAcquire) {
-						throw new RuntimeException("No fue posible adquirir el lock, o algo se bloqueó");
-					}
-				} catch (final InterruptedException e) {
-					throw new RuntimeException(e);
-				}
+				lockParaBloquearTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 				super.doWork();
 			}
 		};
 		taskProcessor.process(tarea);
 
-		final boolean tryAcquire = lockParaTestearTarea.tryAcquire(1, TimeUnit.SECONDS);
-		if (!tryAcquire) {
-			throw new RuntimeException("No fue posible adquirir el lock, o algo se bloqueó");
-		}
+		lockParaTestearTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		// Cuando el método retorna el listener ya debería haber sido invocado
 		Assert.isTrue(started.get(), "Debería etar marcado como aceptado");
 
@@ -149,18 +139,11 @@ public class TestTaskListenerApi {
 		});
 
 		// Ponemos una tarea bloqueante para que la segunda se cancele
-		final Semaphore lockParaBloquearPrimera = new Semaphore(0);
+		final WaitBarrier lockParaBloquearPrimera = WaitBarrier.create();
 		final TestWorkUnit blockingWork = new TestWorkUnit() {
 			@Override
 			public void doWork() throws InterruptedException {
-				try {
-					final boolean tryAcquire = lockParaBloquearPrimera.tryAcquire(10, TimeUnit.SECONDS);
-					if (!tryAcquire) {
-						throw new RuntimeException("No fue posible adquirir el lock, o algo se bloqueó");
-					}
-				} catch (final InterruptedException e) {
-					throw new RuntimeException(e);
-				}
+				lockParaBloquearPrimera.waitForReleaseUpTo(TimeMagnitude.of(10, TimeUnit.SECONDS));
 				super.doWork();
 			}
 		};
@@ -176,42 +159,38 @@ public class TestTaskListenerApi {
 
 	@Test
 	public void deberíaPermitirObservarCuandoUnaTareaSeInterrumpe() throws InterruptedException {
-		final Semaphore lockParaEsperarNotificacionDeinterrupcion = new Semaphore(0);
+		final WaitBarrier lockParaEsperarNotificacionDeInterrupcion = WaitBarrier.create();
 		final AtomicBoolean interrupted = new AtomicBoolean();
 		taskProcessor.setProcessorListener(new TaskProcessorListenerSupport() {
 			@Override
 			public void onTaskInterrupted(final SubmittedTask task, final TaskProcessor processor,
 					final Thread executingThread) {
 				interrupted.set(true);
-				lockParaEsperarNotificacionDeinterrupcion.release();
+				lockParaEsperarNotificacionDeInterrupcion.release();
 			}
 		});
 
-		final Semaphore lockParaBloquearTarea = new Semaphore(0);
-		final Semaphore lockParaTestearTarea = new Semaphore(0);
+		final WaitBarrier lockParaBloquearTarea = WaitBarrier.create();
+		final WaitBarrier lockParaCancelarTarea = WaitBarrier.create();
 		final TestWorkUnit tarea = new TestWorkUnit() {
 			@Override
 			public void doWork() throws InterruptedException {
 				// Permitimos que el thread principal nos cancele
-				lockParaTestearTarea.release();
+				lockParaCancelarTarea.release();
 				// Nos deberían interrumpir mientras esperamos el lock
-				final boolean acquired = lockParaBloquearTarea.tryAcquire(1, TimeUnit.SECONDS);
-				if (acquired) {
-					throw new RuntimeException("Debería ser interrumpida antes de conseguir el lock");
+				try {
+					lockParaBloquearTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+				} catch (final InterruptedWaitException e) {
+					throw new InterruptedException("Interrumpieron el thread");
 				}
 				super.doWork();
 			}
 		};
 		final SubmittedTask interruptedTask = taskProcessor.process(tarea);
-		final boolean tryAcquire = lockParaTestearTarea.tryAcquire(1, TimeUnit.SECONDS);
-		if (!tryAcquire) {
-			throw new RuntimeException("No fue posible adquirir el lock, o algo se bloqueó");
-		}
+		lockParaCancelarTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		interruptedTask.cancel(true);
-		final boolean tryAcquire2 = lockParaEsperarNotificacionDeinterrupcion.tryAcquire(1, TimeUnit.SECONDS);
-		if (!tryAcquire2) {
-			throw new RuntimeException("No fue posible adquirir el lock, o algo se bloqueó");
-		}
+
+		lockParaEsperarNotificacionDeInterrupcion.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		// Cuando el método retorna el listener ya debería haber sido invocado
 		Assert.isTrue(interrupted.get(), "Debería estar marcado como interrumpida");
 		Assert.isTrue(!tarea.isProcessed(), "No debería estar procesada si está interrumpida");

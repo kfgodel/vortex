@@ -14,13 +14,6 @@
   
   	<dependencies>
 
-		<!-- Codigo que facilita algunas cosas que he hecho muchas veces -->
-		<dependency>
-			<groupId>ar.com.fdvs.dgarcia</groupId>
-			<artifactId>dgarcia-commons</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
-
 		<!-- Spring -->	
 		<dependency>
 			<groupId>org.springframework</groupId>

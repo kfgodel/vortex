@@ -1,5 +1,5 @@
 /**
- * 12/11/2011 23:53:18 Copyright (C) 2011 Darío L. García
+ * 26/11/2011 14:53:29 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,32 +10,25 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.servers;
-
-import java.util.List;
+package net.gaia.vortex.lowlevel.api;
 
 import net.gaia.vortex.protocol.MensajeVortex;
-import net.gaia.vortex.servers.embedded.ComunicanteVortex;
 
 /**
- * Esta clase representa el contrato basico necesario por un servidor vortex
+ * Esta interfaz define el contrato que tiene una sesión vortex, la cual permite enviar y recibir
+ * mensajes a un nodo vortex de manera que este identifique el emisor y receptor
  * 
  * @author D. García
  */
-public interface ServidorVortex {
+public interface SesionVortex {
 
 	/**
-	 * Envia los mensajes indicados al servidor
+	 * Envía un mensaje dentro de la sesión permitiendo al nodo que identifique quién lo envía, de
+	 * manera de rutearlo al resto
 	 * 
-	 * @param mensajes
+	 * @param mensajeVortex
+	 *            El mensaje a enviar
 	 */
-	void enviar(List<MensajeVortex> mensajes);
-
-	/**
-	 * Crea un objeto que representa un extremo comunicante conectado al servidor
-	 * 
-	 * @return
-	 */
-	ComunicanteVortex crearComunicante();
+	void enviar(MensajeVortex mensajeVortex);
 
 }

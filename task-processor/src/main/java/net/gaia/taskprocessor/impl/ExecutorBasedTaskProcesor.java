@@ -23,12 +23,11 @@ import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
+import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.WorkUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ar.com.fdvs.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa un procesador de tareas que utiliza un executor propio para procesarla en

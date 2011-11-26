@@ -12,7 +12,6 @@
  */
 package net.gaia.taskprocessor.tests;
 
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -21,15 +20,15 @@ import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.meta.Decision;
 import net.gaia.taskprocessor.tests.TestTaskProcessorApi.TestWorkUnit;
+import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.util.Assert;
-
-import ar.com.fdvs.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase prueba el contrato definido por el estado de una tarea
@@ -64,32 +63,21 @@ public class TestTaskStateApi {
 	@Test
 	public void deberíaPermitirConocerSiUnaTareaEstaSiendoProcesada() throws InterruptedException {
 		// Este hace esperar a la tarea para terminar
-		final Semaphore lockToCompleteTask = new Semaphore(0);
+		final WaitBarrier lockToCompleteTask = WaitBarrier.create();
 		// Este hace esperar al thread actual para testear cuando la tarea ya empezó
-		final Semaphore lockToTestTaskCompletion = new Semaphore(0);
+		final WaitBarrier lockToTestTaskCompletion = WaitBarrier.create();
 
 		final TestWorkUnit tarea = new TestWorkUnit() {
 			@Override
 			public void doWork() throws InterruptedException {
 				lockToTestTaskCompletion.release();
 				super.doWork();
-				try {
-					// Esperamos que nos autoricen terminar
-					final boolean tryAcquire = lockToCompleteTask.tryAcquire(1, TimeUnit.SECONDS);
-					if (!tryAcquire) {
-						throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
-					}
-				} catch (final InterruptedException e) {
-					throw new RuntimeException(e);
-				}
+				lockToCompleteTask.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			}
 		};
 		final SubmittedTask pendiente = this.taskProcessor.process(tarea);
 		// Esperamos que nos autoricen testear el estado
-		final boolean tryAcquire = lockToTestTaskCompletion.tryAcquire(1, TimeUnit.SECONDS);
-		if (!tryAcquire) {
-			throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
-		}
+		lockToTestTaskCompletion.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final boolean isProcessing = pendiente.getCurrentState().isBeingProcessed();
 		Assert.isTrue(tarea.isProcessed(),
@@ -108,31 +96,21 @@ public class TestTaskStateApi {
 	@HasDependencyOn(Decision.SE_USA_UN_SOLO_THREAD_POR_DEFAULT)
 	public void deberíaPermitirConocerSiUnaTareaEstaPendiente() throws InterruptedException {
 		// Bloqueamos la tarea anterior para verificar la siguiente (es un solo thread por defecto)
-		final Semaphore lockParaCompletarAnterior = new Semaphore(0);
-		final Semaphore lockParaTestearEstado = new Semaphore(0);
+		final WaitBarrier lockParaCompletarAnterior = WaitBarrier.create();
+		final WaitBarrier lockParaTestearEstado = WaitBarrier.create();
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
 			@Override
 			public void doWork() throws InterruptedException {
 				super.doWork();
 				lockParaTestearEstado.release();
-				try {
-					final boolean tryAcquire = lockParaCompletarAnterior.tryAcquire(1, TimeUnit.SECONDS);
-					if (!tryAcquire) {
-						throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
-					}
-				} catch (final InterruptedException e) {
-					throw new RuntimeException(e);
-				}
+				lockParaCompletarAnterior.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			}
 		};
 		this.taskProcessor.process(blockingTask);
 		final TestWorkUnit blockedTask = new TestWorkUnit();
 		final SubmittedTask pendiente = this.taskProcessor.process(blockedTask);
-		final boolean tryAcquire = lockParaTestearEstado.tryAcquire(1, TimeUnit.SECONDS);
-		if (!tryAcquire) {
-			throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
-		}
 
+		lockParaTestearEstado.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.isTrue(pendiente.getCurrentState().isPending(),
 				"La tarea debería estar bloqueada por la anterior por se un solo thread");
 
@@ -159,7 +137,7 @@ public class TestTaskStateApi {
 			}
 		};
 
-		final Semaphore lockParaTestearEstado = new Semaphore(0);
+		final WaitBarrier lockParaTestearEstado = WaitBarrier.create();
 		final TestWorkUnit tareaPosterior = new TestWorkUnit() {
 			@Override
 			public void doWork() {
@@ -169,11 +147,8 @@ public class TestTaskStateApi {
 
 		final SubmittedTask SubmittedTask = this.taskProcessor.process(tareaFallida);
 		this.taskProcessor.process(tareaPosterior);
-		final boolean tryAcquire = lockParaTestearEstado.tryAcquire(1, TimeUnit.SECONDS);
-		if (!tryAcquire) {
-			throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
-		}
 
+		lockParaTestearEstado.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.isTrue(SubmittedTask.getCurrentState().hasFailed(), "Debería detectar que falló con una excepción");
 	}
 
@@ -187,8 +162,8 @@ public class TestTaskStateApi {
 		// Tres tareas para cancelar en distintos momentos
 		final TestWorkUnit canceladaAntesDeProcesar = new TestWorkUnit();
 
-		final Semaphore lockParaCancelar = new Semaphore(0);
-		final Semaphore lockParaTestear = new Semaphore(0);
+		final WaitBarrier lockParaCancelar = WaitBarrier.create();
+		final WaitBarrier lockParaTestear = WaitBarrier.create();
 
 		final AtomicReference<SubmittedTask> interrumpidaRef = new AtomicReference<SubmittedTask>();
 		final AtomicReference<SubmittedTask> canceladaRef = new AtomicReference<SubmittedTask>();
@@ -196,18 +171,13 @@ public class TestTaskStateApi {
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
 			@Override
 			public void doWork() throws InterruptedException {
-				try {
-					final boolean tryAcquire = lockParaCancelar.tryAcquire(1, TimeUnit.SECONDS);
-					if (!tryAcquire) {
-						throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
-					}
-				} catch (final InterruptedException e) {
-					throw new RuntimeException(e);
-				}
+				lockParaCancelar.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
 				// Cancelamos a todas durante el procesamiento de la del medio
 				canceladaRef.get().cancel(true);
 				interrumpidaRef.get().cancel(true);
 				lockParaTestear.release();
+
 				// Al hacer el sleep permitimos que el thread sea interrumpido
 				Thread.sleep(1000);
 				super.doWork();
@@ -220,10 +190,7 @@ public class TestTaskStateApi {
 		canceladaRef.set(cancelada);
 
 		lockParaCancelar.release();
-		final boolean tryAcquire = lockParaTestear.tryAcquire(1, TimeUnit.SECONDS);
-		if (!tryAcquire) {
-			throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
-		}
+		lockParaTestear.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Esperamos que termine para que tenga un estado consistente
 		interrumpida.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));

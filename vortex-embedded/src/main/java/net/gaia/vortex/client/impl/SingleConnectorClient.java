@@ -12,7 +12,11 @@
  */
 package net.gaia.vortex.client.impl;
 
+import java.util.Set;
+
 import net.gaia.vortex.client.ClienteVortex;
+import net.gaia.vortex.client.HandlerMensajesRecibidos;
+import net.gaia.vortex.client.VortexDeliveryResult;
 
 /**
  * Esta clase representa un cliente vortex que sólo utiliza o tiene un conector.<br>
@@ -25,5 +29,54 @@ public class SingleConnectorClient implements ClienteVortex {
 	public static SingleConnectorClient create() {
 		final SingleConnectorClient client = new SingleConnectorClient();
 		return client;
+	}
+
+	/**
+	 * @see net.gaia.vortex.client.ClienteVortex#deliverMessage(java.lang.Object, java.util.Set)
+	 */
+	public VortexDeliveryResult deliverMessage(final Object message, final Set<String> messageTags) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * @see net.gaia.vortex.client.ClienteVortex#recibirMensajesTagueadosCon(java.util.Set,
+	 *      net.gaia.vortex.client.HandlerMensajesRecibidos)
+	 */
+	public void recibirMensajesTagueadosCon(final Set<String> tagsToReceive, final HandlerMensajesRecibidos handler) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * @see net.gaia.vortex.client.ClienteVortex#ofrecerMensajesTagueadosCon(java.util.Set)
+	 */
+	public void ofrecerMensajesTagueadosCon(final Set<String> tagsToSend) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * @see net.gaia.vortex.client.ClienteVortex#detenerIntercambioDeMensajes()
+	 */
+	public void detenerIntercambioDeMensajes() {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * @see net.gaia.vortex.client.ClienteVortex#dejarDeRecibirMensajesTagueadosCon(java.util.Set)
+	 */
+	public void dejarDeRecibirMensajesTagueadosCon(final Set<String> tagsToReceive) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * @see net.gaia.vortex.client.ClienteVortex#dejarDeOfrecerMensajesTagueadosCon(java.util.Set)
+	 */
+	public void dejarDeOfrecerMensajesTagueadosCon(final Set<String> tagsToSend) {
+		// TODO Auto-generated method stub
+
 	}
 }

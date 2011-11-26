@@ -25,6 +25,7 @@ import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
+import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
 import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
@@ -32,8 +33,6 @@ import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ar.com.fdvs.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa la tarea enviada y aceptada por el {@link TaskProcessor} que es ejecutable

@@ -12,7 +12,6 @@
  */
 package net.gaia.taskprocessor.tests;
 
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -23,15 +22,15 @@ import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.meta.Decision;
+import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.util.Assert;
-
-import ar.com.fdvs.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase prueba los casos de uso básicos del procesador de tareas
@@ -110,7 +109,7 @@ public class TestTaskProcessorApi {
 
 	@Test
 	public void deberíaPermitirUsarUnHandlerParaLasTareasFallidas() throws InterruptedException {
-		final Semaphore lockParaTestear = new Semaphore(0);
+		final WaitBarrier lockParaTestear = WaitBarrier.create();
 
 		// Ponemos un handler para capturar la tarea fallida
 		final AtomicReference<WorkUnit> failedWork = new AtomicReference<WorkUnit>();
@@ -133,11 +132,7 @@ public class TestTaskProcessorApi {
 		};
 		taskProcessor.process(tarea);
 
-		final boolean tryAcquire = lockParaTestear.tryAcquire(1, TimeUnit.SECONDS);
-		if (!tryAcquire) {
-			throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
-		}
-
+		lockParaTestear.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.isTrue(failedWork.get() == tarea, "Debería estar registrado la tarea que falló");
 	}
 
@@ -172,8 +167,8 @@ public class TestTaskProcessorApi {
 		final TestWorkUnit canceladaDespuesDeprocesar = new TestWorkUnit();
 		final TestWorkUnit canceladaAntesDeprocesar = new TestWorkUnit();
 
-		final Semaphore lockParaCancelarTodas = new Semaphore(0);
-		final Semaphore lockParaTestear = new Semaphore(0);
+		final WaitBarrier lockParaCancelarTodas = WaitBarrier.create();
+		final WaitBarrier lockParaTestear = WaitBarrier.create();
 
 		final AtomicReference<SubmittedTask> procesadaRef = new AtomicReference<SubmittedTask>();
 		final AtomicReference<SubmittedTask> interrumpidaRef = new AtomicReference<SubmittedTask>();
@@ -182,22 +177,18 @@ public class TestTaskProcessorApi {
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
 			@Override
 			public void doWork() throws InterruptedException {
-				try {
-					final boolean tryAcquire = lockParaCancelarTodas.tryAcquire(1, TimeUnit.SECONDS);
-					if (!tryAcquire) {
-						throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
-					}
-				} catch (final InterruptedException e) {
-					throw new RuntimeException(e);
-				}
+				lockParaCancelarTodas.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
 				// Cancelamos a todas durante el procesamiento de la del medio
 				procesadaRef.get().cancel(true);
 				canceladaRef.get().cancel(true);
 				interrumpidaRef.get().cancel(true);
 				lockParaTestear.release();
+
 				// El sleep permite que este thread sea interrumpido despues de cancelar
 				Thread.sleep(1000);
-				// Esta línea nunca llega qa ejecutarse
+
+				// Esta línea nunca llega a ejecutarse
 				super.doWork();
 			}
 		};
@@ -210,10 +201,7 @@ public class TestTaskProcessorApi {
 		canceladaRef.set(cancelada);
 
 		lockParaCancelarTodas.release();
-		final boolean tryAcquire = lockParaTestear.tryAcquire(1, TimeUnit.SECONDS);
-		if (!tryAcquire) {
-			throw new RuntimeException("No alcanzó el tiempo para obtener el lock, o se trabó algo");
-		}
+		lockParaTestear.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		Assert.isTrue(!procesada.getCurrentState().wasCancelled(),
 				"Debería estar terminada exitosamente, no tiene efecto cancelarla");

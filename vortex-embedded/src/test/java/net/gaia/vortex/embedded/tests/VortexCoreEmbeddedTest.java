@@ -12,10 +12,12 @@
  */
 package net.gaia.vortex.embedded.tests;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.gaia.vortex.messages.MensajeVortex;
+import net.gaia.vortex.protocol.MensajeVortex;
 import net.gaia.vortex.servers.ServidorVortex;
 import net.gaia.vortex.servers.embedded.ComunicanteVortex;
 import net.gaia.vortex.servers.embedded.HandlerMensajesVortexRecibidos;
@@ -42,7 +44,7 @@ public class VortexCoreEmbeddedTest extends VortexTest {
 	// Enviar un mensaje
 	@Test
 	public void deberiaPermitirMandarUnMensajeVortex() {
-		final List<MensajeVortex> mensajes;
+		final List<MensajeVortex> mensajes = new ArrayList<MensajeVortex>();
 		server.enviar(mensajes);
 	}
 
@@ -50,8 +52,8 @@ public class VortexCoreEmbeddedTest extends VortexTest {
 	@Test
 	public void deberiaPermitirPublicarLosTagsInteresantesParaElReceptor() {
 		final ComunicanteVortex comunicante = server.crearComunicante();
-		final Set<String> tagsEntrantes;
-		final Set<String> tagsSalientes;
+		final Set<String> tagsEntrantes = new HashSet<String>();
+		final Set<String> tagsSalientes = new HashSet<String>();
 		comunicante.publicarTags(tagsEntrantes, tagsSalientes);
 	}
 
@@ -59,8 +61,9 @@ public class VortexCoreEmbeddedTest extends VortexTest {
 	@Test
 	public void deberiaPermitirRecibirUnMensajeConElTagCoincidente() {
 		final ComunicanteVortex comunicante = server.crearComunicante();
-		final HandlerMensajesVortexRecibidos handlerMensajesVortex;
+		final HandlerMensajesVortexRecibidos handlerMensajesVortex = null;
 		comunicante.setHandlerMensajes(handlerMensajesVortex);
+		final Set<String> tagRecibido = new HashSet<String>();
 		comunicante.publicarTags(tagRecibido, null);
 		server.enviar(null);
 	}

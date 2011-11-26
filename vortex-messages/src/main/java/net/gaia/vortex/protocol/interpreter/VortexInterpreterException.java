@@ -1,5 +1,5 @@
 /**
- * 12/11/2011 23:53:18 Copyright (C) 2011 Darío L. García
+ * 26/11/2011 16:11:41 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,32 +10,26 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.servers;
-
-import java.util.List;
-
-import net.gaia.vortex.protocol.MensajeVortex;
-import net.gaia.vortex.servers.embedded.ComunicanteVortex;
+package net.gaia.vortex.protocol.interpreter;
 
 /**
- * Esta clase representa el contrato basico necesario por un servidor vortex
+ * Esta clase representa un error al interpretar mensajes vortex
  * 
  * @author D. García
  */
-public interface ServidorVortex {
+public class VortexInterpreterException extends RuntimeException {
+	private static final long serialVersionUID = 4434439763407980748L;
 
-	/**
-	 * Envia los mensajes indicados al servidor
-	 * 
-	 * @param mensajes
-	 */
-	void enviar(List<MensajeVortex> mensajes);
+	public VortexInterpreterException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-	/**
-	 * Crea un objeto que representa un extremo comunicante conectado al servidor
-	 * 
-	 * @return
-	 */
-	ComunicanteVortex crearComunicante();
+	public VortexInterpreterException(final String message) {
+		super(message);
+	}
+
+	public VortexInterpreterException(final Throwable cause) {
+		super(cause);
+	}
 
 }
