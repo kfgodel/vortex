@@ -13,10 +13,12 @@
 package net.gaia.vortex.lowlevel;
 
 import java.util.List;
+import java.util.Set;
 
-import net.gaia.vortex.protocol.ContenidoVortex;
+import net.gaia.vortex.lowlevel.api.DeclaracionDeTags;
 import net.gaia.vortex.protocol.IdVortex;
-import net.gaia.vortex.protocol.MensajeVortex;
+import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
 
 import com.google.common.collect.Lists;
 
@@ -30,13 +32,14 @@ public class EscenarioDeTest {
 	/**
 	 * Crea un mensaje dummy para testear
 	 * 
+	 * @param tagDelMensaje
+	 * 
 	 * @return El mensaje creado
 	 */
-	public MensajeVortex crearMensajeDeTest() {
-		final ContenidoVortex contenido = ContenidoVortex.create("tipo", "valor");
+	public MensajeVortexEmbebido crearMensajeDeTest(final String tagDelMensaje) {
 		final IdVortex identificacion = IdVortex.create("1", "1", 1L, 1L);
-		final List<String> tags = Lists.newArrayList("TAG1");
-		final MensajeVortex mensajeVortex = MensajeVortex.create(contenido, identificacion, tags);
+		final List<String> tags = Lists.newArrayList(tagDelMensaje);
+		final MensajeVortexEmbebido mensajeVortex = MensajeVortexEmbebido.create("contenido", identificacion, tags);
 		return mensajeVortex;
 	}
 
@@ -45,11 +48,31 @@ public class EscenarioDeTest {
 	 * 
 	 * @return El mensaje creado pero incompleto
 	 */
-	public MensajeVortex crearMensajeDeTestSinHash() {
-		final MensajeVortex mensajeDeTest = crearMensajeDeTest();
+	public MensajeVortexEmbebido crearMensajeDeTestSinHash() {
+		final MensajeVortexEmbebido mensajeDeTest = crearMensajeDeTest();
 		// Le quitamos el hash
 		mensajeDeTest.getIdentificacion().setHashDelContenido(null);
 		return mensajeDeTest;
+	}
+
+	public MensajeVortexEmbebido crearMetamensajeDePublicacionDeTags(final Set<String> recibibles,
+			final Set<String> enviables) {
+		final IdVortex identificacion = IdVortex.create("1", "1", 1L, 1L);
+		final List<String> tags = Lists.newArrayList(MensajeVortexEmbebido.TAG_INTERCAMBIO_VECINO);
+		final DeclaracionDeTags declaracion = DeclaracionDeTags.create(recibibles, enviables);
+		final MensajeVortexEmbebido mensajeVortex = MensajeVortexEmbebido.create(declaracion, identificacion, tags);
+		return mensajeVortex;
+	}
+
+	public MensajeVortexEmbebido crearMensajeDeTest() {
+		return crearMensajeDeTest("TAG_DE_PRUEBA");
+	}
+
+	public MensajeVortexEmbebido crearMensajeDeConsumo(final ConfirmacionConsumo consumo) {
+		final IdVortex identificacion = IdVortex.create("1", "1", 1L, 1L);
+		final List<String> tags = Lists.newArrayList(MensajeVortexEmbebido.TAG_INTERCAMBIO_VECINO);
+		final MensajeVortexEmbebido mensajeVortex = MensajeVortexEmbebido.create(consumo, identificacion, tags);
+		return mensajeVortex;
 	}
 
 }

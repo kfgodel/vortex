@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.api;
 
-import net.gaia.vortex.protocol.MensajeVortex;
+import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 
 /**
  * Esta interfaz define el método que debe implementar el handler invocado al recibir mensajes
@@ -28,5 +28,5 @@ public interface MensajeVortexHandler {
 	 * @param nuevoMensaje
 	 *            El mensaje recibido
 	 */
-	public void onMensajeRecibido(MensajeVortex nuevoMensaje);
+	public void onMensajeRecibido(MensajeVortexEmbebido nuevoMensaje);
 }

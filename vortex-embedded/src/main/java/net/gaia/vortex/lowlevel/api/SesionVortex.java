@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.api;
 
-import net.gaia.vortex.protocol.MensajeVortex;
+import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 
 /**
  * Esta interfaz define el contrato que tiene una sesión vortex, la cual permite enviar y recibir
@@ -26,9 +26,9 @@ public interface SesionVortex {
 	 * Envía un mensaje dentro de la sesión permitiendo al nodo que identifique quién lo envía, de
 	 * manera de rutearlo al resto
 	 * 
-	 * @param mensajeVortex
+	 * @param mensajeEnviado
 	 *            El mensaje a enviar
 	 */
-	void enviar(MensajeVortex mensajeVortex);
+	void enviar(MensajeVortexEmbebido mensajeEnviado);
 
 }
