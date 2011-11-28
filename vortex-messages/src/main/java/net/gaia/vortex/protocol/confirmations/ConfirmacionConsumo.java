@@ -20,7 +20,7 @@ import net.gaia.vortex.protocol.IdVortex;
  * 
  * @author D. García
  */
-public class ConfirmacionConsumo {
+public class ConfirmacionConsumo implements MensajeDeConfirmacion {
 
 	/**
 	 * identificacion del mensaje original
@@ -81,10 +81,12 @@ public class ConfirmacionConsumo {
 		this.perdidos = perdidos;
 	}
 
+	@Override
 	public IdVortex getIdentificacionMensaje() {
 		return identificacionMensaje;
 	}
 
+	@Override
 	public void setIdentificacionMensaje(final IdVortex identificacionMensaje) {
 		this.identificacionMensaje = identificacionMensaje;
 	}

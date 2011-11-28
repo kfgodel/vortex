@@ -19,7 +19,7 @@ import net.gaia.vortex.protocol.IdVortex;
  * 
  * @author D. García
  */
-public class ConfirmacionRecepcion {
+public class ConfirmacionRecepcion implements MensajeDeConfirmacion {
 
 	/**
 	 * Identificación del mensaje al que refiere esta confirmación
@@ -63,4 +63,20 @@ public class ConfirmacionRecepcion {
 		this.causa = causa;
 	}
 
+	/**
+	 * Crea una nueva confirmación de recepción
+	 * 
+	 * @param identificacion
+	 *            La identificación del mensaje recibido
+	 * @param error
+	 *            El error producido o null si no hubo error
+	 * @return La confirmación creada
+	 */
+	public static ConfirmacionRecepcion create(final IdVortex identificacion, final String error) {
+		final ConfirmacionRecepcion confirmacion = new ConfirmacionRecepcion();
+		confirmacion.identificacionMensaje = identificacion;
+		confirmacion.aceptado = error == null;
+		confirmacion.causa = error;
+		return confirmacion;
+	}
 }
