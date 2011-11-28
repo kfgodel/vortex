@@ -26,19 +26,23 @@ public class SesionVortexImpl implements SesionVortex {
 	/**
 	 * Receptor de los mensajes de esta sesión
 	 */
-	private ReceptorVortex receptor;
+	private ReceptorVortex receptorEmisor;
+	private NodoVortexConTasks nodo;
 
 	/**
 	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#enviar(net.gaia.vortex.protocol.MensajeVortexEmbebido)
 	 */
 	public void enviar(final MensajeVortexEmbebido mensajeEnviado) {
-		// TODO Auto-generated method stub
-
+		// Creamos el contexto para el ruteo del mensaje del emisor
+		final ContextoDeRuteoDeMensaje nuevoRuteo = ContextoDeRuteoDeMensaje
+				.create(mensajeEnviado, receptorEmisor, this.nodo);
+		nodo.comenzarRuteo(nuevoRuteo);
 	}
 
-	public static SesionVortexImpl create(final ReceptorVortex receptor) {
+	public static SesionVortexImpl create(final ReceptorVortex receptor, final NodoVortexConTasks nodoHost) {
 		final SesionVortexImpl sesion = new SesionVortexImpl();
-		sesion.receptor = receptor;
+		sesion.receptorEmisor = receptor;
+		sesion.nodo = nodoHost;
 		return sesion;
 	}
 }

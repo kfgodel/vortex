@@ -17,6 +17,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
+import net.gaia.vortex.lowlevel.impl.tasks.ValidacionDeMensajeWorkUnit;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 
@@ -65,15 +66,35 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 		nodo.generadorMensajes = null;
 		nodo.memoriaDeMensajes = null;
 		nodo.configuracion = ConfiguracionDeNodo.create();
+		nodo.sinEmisorIdentificado = NullReceptorVortex.create();
 		return nodo;
 	}
+
+	/**
+	 * Receptor a utilizar cuando no existe uno en un mensaje
+	 */
+	private NullReceptorVortex sinEmisorIdentificado;
 
 	/**
 	 * @see net.gaia.vortex.lowlevel.api.NodoVortexEmbebido#rutear(net.gaia.vortex.protocol.MensajeVortexEmbebido)
 	 */
 	public void rutear(final MensajeVortexEmbebido mensajeVortex) {
-		// TODO Auto-generated method stub
+		// Creamos el contexto para el ruteo del mensaje sin emisor
+		final ContextoDeRuteoDeMensaje nuevoRuteo = ContextoDeRuteoDeMensaje.create(mensajeVortex,
+				sinEmisorIdentificado, this);
+		comenzarRuteo(nuevoRuteo);
+	}
 
+	/**
+	 * Comienza el proceso de ruteo de un mensaje recibido
+	 * 
+	 * @param nuevoRuteo
+	 *            El contexto del ruteo a realizar
+	 */
+	protected void comenzarRuteo(final ContextoDeRuteoDeMensaje nuevoRuteo) {
+		// Comenzamos con el paso de validación
+		final ValidacionDeMensajeWorkUnit validacion = ValidacionDeMensajeWorkUnit.create(nuevoRuteo);
+		getProcesador().process(validacion);
 	}
 
 	/**
@@ -81,7 +102,7 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	 */
 	public SesionVortex crearNuevaSesion(final MensajeVortexHandler handlerDeMensajes) {
 		final ReceptorVortexConSesion nuevoReceptor = ReceptorVortexConSesion.create(handlerDeMensajes);
-		final SesionVortexImpl sesion = SesionVortexImpl.create(nuevoReceptor);
+		final SesionVortexImpl sesion = SesionVortexImpl.create(nuevoReceptor, this);
 		registroReceptores.agregar(nuevoReceptor);
 		return sesion;
 	}

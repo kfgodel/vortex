@@ -62,8 +62,9 @@ public class ValidacionDeMensajeWorkUnit implements WorkUnit {
 		return null;
 	}
 
-	public static ValidacionDeMensajeWorkUnit create() {
-		final ValidacionDeMensajeWorkUnit tarea = new ValidacionDeMensajeWorkUnit();
-		return tarea;
+	public static ValidacionDeMensajeWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
+		final ValidacionDeMensajeWorkUnit validacion = new ValidacionDeMensajeWorkUnit();
+		validacion.contexto = contexto;
+		return validacion;
 	}
 }
