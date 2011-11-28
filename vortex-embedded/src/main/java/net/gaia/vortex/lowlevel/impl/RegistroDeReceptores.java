@@ -27,11 +27,11 @@ public class RegistroDeReceptores {
 	/**
 	 * La lista de los receptores existentes en este nodo
 	 */
-	private ConcurrentLinkedQueue<ReceptorVortex> receptores;
+	private ConcurrentLinkedQueue<ReceptorVortexConSesion> receptores;
 
 	public static RegistroDeReceptores create() {
 		final RegistroDeReceptores registro = new RegistroDeReceptores();
-		registro.receptores = new ConcurrentLinkedQueue<ReceptorVortex>();
+		registro.receptores = new ConcurrentLinkedQueue<ReceptorVortexConSesion>();
 		return registro;
 	}
 
@@ -41,7 +41,7 @@ public class RegistroDeReceptores {
 	 * @param nuevoReceptor
 	 *            El receptor que comenzará a recibir mensajes
 	 */
-	public void agregar(final ReceptorVortex nuevoReceptor) {
+	public void agregar(final ReceptorVortexConSesion nuevoReceptor) {
 		this.receptores.add(nuevoReceptor);
 	}
 
@@ -55,9 +55,9 @@ public class RegistroDeReceptores {
 	 */
 	public SeleccionDeReceptores getReceptoresInteresadosEn(final List<String> tagsDelMensaje) {
 		final SeleccionDeReceptores nuevaSeleccion = SeleccionDeReceptores.create();
-		final Iterator<ReceptorVortex> iterator = this.receptores.iterator();
+		final Iterator<ReceptorVortexConSesion> iterator = this.receptores.iterator();
 		while (iterator.hasNext()) {
-			final ReceptorVortex receptor = iterator.next();
+			final ReceptorVortexConSesion receptor = iterator.next();
 			if (receptor.estaInteresadoEnCualquieraDe(tagsDelMensaje)) {
 				nuevaSeleccion.incluir(receptor);
 			} else {

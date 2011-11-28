@@ -77,6 +77,8 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 		task.processor = processor;
 		task.ownFuture = new FutureTask<Void>(task, null);
 		task.failingError = new AtomicReference<Throwable>();
+		// Notificamos que la agregamos como pendiente
+		task.notifyListenerAcceptedTask();
 		return task;
 	}
 

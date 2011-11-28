@@ -15,7 +15,9 @@ package net.gaia.taskprocessor.impl;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
@@ -41,20 +43,22 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	private TaskProcessorListener processorListener;
 	private TaskExceptionHandler exceptionHandler;
 
-	private ThreadPoolExecutor executor;
+	private ScheduledThreadPoolExecutor delayedExecutor;
+	private ThreadPoolExecutor inmediateExecutor;
 	private TaskProcessingMetricsImpl metrics;
 
-	private LinkedBlockingQueue<SubmittedRunnableTask> pendingTasks;
+	private LinkedBlockingQueue<SubmittedRunnableTask> inmediatePendingTasks;
 
 	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
 		final ExecutorBasedTaskProcesor processor = new ExecutorBasedTaskProcesor();
 		final int threadPoolSize = config.getThreadPoolSize();
 		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
-		processor.executor = new ThreadPoolExecutor(1, threadPoolSize, maxIdleTimePerThread.getQuantity(),
+		processor.inmediateExecutor = new ThreadPoolExecutor(1, threadPoolSize, maxIdleTimePerThread.getQuantity(),
 				maxIdleTimePerThread.getTimeUnit(), new LinkedBlockingQueue<Runnable>(),
 				Executors.defaultThreadFactory());
-		processor.pendingTasks = new LinkedBlockingQueue<SubmittedRunnableTask>();
-		processor.metrics = TaskProcessingMetricsImpl.create(processor.pendingTasks);
+		processor.delayedExecutor = new ScheduledThreadPoolExecutor(1);
+		processor.inmediatePendingTasks = new LinkedBlockingQueue<SubmittedRunnableTask>();
+		processor.metrics = TaskProcessingMetricsImpl.create(processor.inmediatePendingTasks);
 		return processor;
 	}
 
@@ -63,32 +67,61 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	@Override
 	public SubmittedTask process(final WorkUnit work) {
-		// Agregamos la tarea como pendiente
+		// Creamos la tarea y la ejecutamos inmediatamente
 		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
-		final boolean added = this.pendingTasks.add(task);
+		processImmediatelyWithExecutor(task);
+		return task;
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.TaskProcessor#processDelayed(net.gaia.taskprocessor.api.TimeMagnitude,
+	 *      net.gaia.taskprocessor.tests.TestTaskProcessorApi.TestWorkUnit)
+	 */
+	@Override
+	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit work) {
+		// Creamos la tarea para el trabajo
+		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
+
+		// Creamos el planner que la pasará a ejecución inmediata en su momento
+		final TaskPlanner planner = TaskPlanner.create(task, this);
+		final TimeUnit timeUnit = workDelay.getTimeUnit();
+		final long quantity = workDelay.getQuantity();
+
+		// Programamos el planner para que espere el delay
+		this.delayedExecutor.schedule(planner, quantity, timeUnit);
+		return task;
+	}
+
+	/**
+	 * Este método ejecuta la tarea pasada usando el executor interno para procesarla en el momento.<br>
+	 * La tarea será agregada a la cola de tareas pendientes en el momento y se agregará un
+	 * {@link TaskWorker} si es posible
+	 * 
+	 * @param task
+	 *            La tarea a procesar
+	 */
+	protected void processImmediatelyWithExecutor(final SubmittedRunnableTask task) {
+		final boolean added = this.inmediatePendingTasks.add(task);
 		if (!added) {
-			LOG.error("No fue posible agregar la tarea[{}] como pendiente. Cancelando", work);
+			LOG.error("No fue posible agregar la tarea[{}] como pendiente. Cancelando", task.getWork());
 			task.cancel(true);
-			return task;
+			return;
 		}
-		// Notificamos que la agregamos como pendiente
-		task.notifyListenerAcceptedTask();
 
 		// Por diseño usamos todos los threads del pool que podamos para las tareas
-		if (executor.getActiveCount() >= executor.getMaximumPoolSize()) {
+		if (inmediateExecutor.getActiveCount() >= inmediateExecutor.getMaximumPoolSize()) {
 			// Estamos en el limite, no agregamos más threads al procesamiento de tareas
-			return task;
+			return;
 		}
 
 		// Agregamos un worker más para resolver las tareas pendientes
-		final TaskWorker extraWorker = TaskWorker.create(pendingTasks, this.metrics);
+		final TaskWorker extraWorker = TaskWorker.create(inmediatePendingTasks, this.metrics);
 		try {
-			executor.submit(extraWorker);
+			inmediateExecutor.submit(extraWorker);
 		} catch (final RejectedExecutionException e) {
 			// Es posible que se agreguen workers de más, en cuyo caso sobran y no es problema
-			LOG.debug("Se rechazó el worker agregado. Activos: " + executor.getActiveCount(), e);
+			LOG.debug("Se rechazó el worker agregado. Activos: " + inmediateExecutor.getActiveCount(), e);
 		}
-		return task;
 	}
 
 	/**
@@ -104,7 +137,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	@Override
 	public int getThreadPoolSize() {
-		return executor.getMaximumPoolSize();
+		return inmediateExecutor.getMaximumPoolSize();
 	}
 
 	/**

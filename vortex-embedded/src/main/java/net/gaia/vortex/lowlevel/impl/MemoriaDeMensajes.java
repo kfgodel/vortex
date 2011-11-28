@@ -31,4 +31,11 @@ public interface MemoriaDeMensajes {
 	 */
 	boolean registrarSiNoRecuerdaA(MensajeVortexEmbebido mensaje);
 
+	/**
+	 * Devuelve los mensajes registrados que requieren una confirmación de recepción
+	 * 
+	 * @return Los mensajes en espera
+	 */
+	public MensajesEnEspera getEsperandoConfirmacionDeRecepcion();
+
 }

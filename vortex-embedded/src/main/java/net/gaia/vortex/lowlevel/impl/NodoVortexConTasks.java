@@ -77,7 +77,7 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	 * @see net.gaia.vortex.lowlevel.api.NodoVortexEmbebido#crearNuevaSesion(net.gaia.vortex.lowlevel.api.MensajeVortexHandler)
 	 */
 	public SesionVortex crearNuevaSesion(final MensajeVortexHandler handlerDeMensajes) {
-		final ReceptorVortex nuevoReceptor = ReceptorVortex.create(handlerDeMensajes);
+		final ReceptorVortexConSesion nuevoReceptor = ReceptorVortexConSesion.create(handlerDeMensajes);
 		final SesionVortexImpl sesion = SesionVortexImpl.create(nuevoReceptor);
 		registroReceptores.agregar(nuevoReceptor);
 		return sesion;

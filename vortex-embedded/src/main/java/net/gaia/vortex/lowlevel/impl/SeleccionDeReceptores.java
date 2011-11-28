@@ -22,18 +22,18 @@ import java.util.List;
  */
 public class SeleccionDeReceptores {
 
-	private List<ReceptorVortex> seleccionados;
+	private List<ReceptorVortexConSesion> seleccionados;
 
 	private int excluidos;
 
 	public static SeleccionDeReceptores create() {
 		final SeleccionDeReceptores seleccion = new SeleccionDeReceptores();
-		seleccion.seleccionados = new ArrayList<ReceptorVortex>();
+		seleccion.seleccionados = new ArrayList<ReceptorVortexConSesion>();
 		seleccion.excluidos = 0;
 		return seleccion;
 	}
 
-	public List<ReceptorVortex> getSeleccionados() {
+	public List<ReceptorVortexConSesion> getSeleccionados() {
 		return seleccionados;
 	}
 
@@ -47,7 +47,7 @@ public class SeleccionDeReceptores {
 	 * @param receptor
 	 *            El receptor a incluir como seleccionado
 	 */
-	public void incluir(final ReceptorVortex receptor) {
+	public void incluir(final ReceptorVortexConSesion receptor) {
 		this.seleccionados.add(receptor);
 	}
 

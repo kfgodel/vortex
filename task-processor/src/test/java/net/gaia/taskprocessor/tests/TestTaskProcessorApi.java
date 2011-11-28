@@ -218,4 +218,25 @@ public class TestTaskProcessorApi {
 		Assert.isTrue(cancelada.getCurrentState().equals(SubmittedTaskState.CANCELLED));
 
 	}
+
+	@Test
+	public void deberiaPermitirEjecutarUnaTareaConDelay() throws InterruptedException {
+		final TestWorkUnit trabajo = new TestWorkUnit();
+		final TimeMagnitude workDelay = TimeMagnitude.of(1, TimeUnit.SECONDS);
+		final long momentoDeEncargo = System.currentTimeMillis();
+		final SubmittedTask tarea = taskProcessor.processDelayed(workDelay, trabajo);
+
+		// Esperamos medio segundo y verificamos que todavía no se ejecutó
+		Thread.sleep(500);
+		Assert.isTrue(tarea.getCurrentState().isPending(), "La tarea debería estar pendiente todavía");
+		Assert.isTrue(!trabajo.isProcessed(), "Verificacion adicional de que la tarea no fue procesada todavía");
+
+		// Esperamos que se ejecute
+		tarea.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Deberíamos estar cerca del segundo del momento en que se encargó
+		final long elapsed = System.currentTimeMillis() - momentoDeEncargo;
+		Assert.isTrue(Math.abs(elapsed - 1000) < 100,
+				"La tarea debería ser ejecutada con un error de decima de segundo");
+	}
 }

@@ -14,7 +14,10 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
+import net.gaia.vortex.lowlevel.impl.MensajesEnEspera;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
+import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 
 /**
  * Esta clase representa la tarea de enviar el mensaje y esperar confirmación de entrega
@@ -38,8 +41,18 @@ public class EnviarMensajeWorkUnit implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	public void doWork() throws InterruptedException {
-		// TODO Auto-generated method stub
+		final MensajeVortexEmbebido mensajeAEnviar = contexto.getMensaje();
 
+		// Primero lo registramos como esperando confirmación por si llega antes
+		final MemoriaDeMensajes memoriaDeMensajes = this.contexto.getMemoriaDeMensajes();
+		final MensajesEnEspera esperandoConfirmacion = memoriaDeMensajes.getEsperandoConfirmacionDeRecepcion();
+		esperandoConfirmacion.agregar(mensajeAEnviar, contexto);
+
+		// Enviamos el mensaje a su destinatarios
+		receptorVortex.recibir(mensajeAEnviar);
+
+		// Agregamos la espera por timeout por si la confirmación no llega
+		final EsperarRecepcionOTimeoutWorkUnit esperaWorkUnit = EsperarRecepcionOTimeoutWorkUnit.create(contexto);
+		this.contexto.getProcesador().processDelayed(EsperarRecepcionOTimeoutWorkUnit.DEFAULT_TIMEOUT, esperaWorkUnit);
 	}
-
 }

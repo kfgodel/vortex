@@ -34,7 +34,7 @@ public class VerificarDuplicadoWorkUnit implements WorkUnit {
 	 */
 	public void doWork() throws InterruptedException {
 		final MensajeVortexEmbebido mensaje = contexto.getMensaje();
-		final MemoriaDeMensajes memoria = contexto.getMemorMemoriaDeMensajes();
+		final MemoriaDeMensajes memoria = contexto.getMemoriaDeMensajes();
 		if (memoria.registrarSiNoRecuerdaA(mensaje)) {
 			// Es duplicado
 			final DevolverConfirmacionRecepcionWorkUnit devolucion = DevolverConfirmacionRecepcionWorkUnit.create(

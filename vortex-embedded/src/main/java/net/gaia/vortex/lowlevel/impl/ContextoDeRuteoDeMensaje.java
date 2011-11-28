@@ -68,7 +68,7 @@ public class ContextoDeRuteoDeMensaje {
 		return nodo.getGeneradorMensajes();
 	}
 
-	public MemoriaDeMensajes getMemorMemoriaDeMensajes() {
+	public MemoriaDeMensajes getMemoriaDeMensajes() {
 		return nodo.getMemoriaDeMensajes();
 	}
 

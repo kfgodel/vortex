@@ -1,5 +1,5 @@
 /**
- * 28/11/2011 00:22:14 Copyright (C) 2011 Darío L. García
+ * 28/11/2011 00:23:02 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -17,27 +17,29 @@ import java.util.List;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 
 /**
- * Esta interfaz define el contrato de un receptor vortex para el nodo
+ * Esta clase representa a un receptor sin sesión, lo que en realidad no es un receptor
  * 
  * @author D. García
  */
-public interface ReceptorVortex {
+public class NullReceptorVortex implements ReceptorVortex {
 
 	/**
-	 * Entrega el mensaje pasado a este receptor
-	 * 
-	 * @param mensaje
-	 *            El mensaje a ser procesado por este receptor con el handler declarado
+	 * @see net.gaia.vortex.lowlevel.impl.ReceptorVortex#recibir(net.gaia.vortex.protocol.MensajeVortexEmbebido)
 	 */
-	public abstract void recibir(final MensajeVortexEmbebido mensaje);
+	public void recibir(final MensajeVortexEmbebido mensaje) {
+		// No hacemos nada en realidad
+	}
 
 	/**
-	 * Indica si este receptor está interesado en recibir cualquier de los tags pasados
-	 * 
-	 * @param tagsDelMensaje
-	 *            Los tags a evaluar
-	 * @return true si este receptor declaró interés en alguno de los tags pasados
+	 * @see net.gaia.vortex.lowlevel.impl.ReceptorVortex#estaInteresadoEnCualquieraDe(java.util.List)
 	 */
-	public abstract boolean estaInteresadoEnCualquieraDe(final List<String> tagsDelMensaje);
+	public boolean estaInteresadoEnCualquieraDe(final List<String> tagsDelMensaje) {
+		// El receptor nulo no recibe mensajes
+		return false;
+	}
 
+	public static NullReceptorVortex create() {
+		final NullReceptorVortex receptor = new NullReceptorVortex();
+		return receptor;
+	}
 }
