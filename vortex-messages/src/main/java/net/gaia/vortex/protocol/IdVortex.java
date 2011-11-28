@@ -77,6 +77,29 @@ public class IdVortex {
 	}
 
 	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.hashDelContenido, this.idDelEmisor, this.numeroDeSecuencia, this.timestamp);
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof IdVortex)) {
+			return false;
+		}
+		final IdVortex that = (IdVortex) obj;
+		return Objects.equal(this.timestamp, that.timestamp)
+				&& Objects.equal(this.hashDelContenido, that.hashDelContenido)
+				&& Objects.equal(this.numeroDeSecuencia, that.numeroDeSecuencia)
+				&& Objects.equal(this.idDelEmisor, that.idDelEmisor);
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

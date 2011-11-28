@@ -35,6 +35,11 @@ public class ContextoDeRuteoDeMensaje {
 	 */
 	private MensajeVortexEmbebido mensaje;
 
+	/**
+	 * Información acerca del ruteo una vez aceptado
+	 */
+	private ControlDeRuteo control;
+
 	public TaskProcessor getProcesador() {
 		return nodo.getProcesador();
 	}
@@ -79,6 +84,18 @@ public class ContextoDeRuteoDeMensaje {
 	 */
 	public RegistroDeReceptores getRegistroDeReceptoresDelNodo() {
 		return nodo.getRegistroReceptores();
+	}
+
+	public ControlDeRuteo getControl() {
+		return control;
+	}
+
+	public void setControl(final ControlDeRuteo control) {
+		this.control = control;
+	}
+
+	public ConfiguracionDeNodo getConfiguracionDeNodo() {
+		return this.nodo.getConfiguracion();
 	}
 
 }

@@ -38,6 +38,8 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 
 	private MemoriaDeMensajes memoriaDeMensajes;
 
+	private ConfiguracionDeNodo configuracion;
+
 	public MemoriaDeMensajes getMemoriaDeMensajes() {
 		return memoriaDeMensajes;
 	}
@@ -62,6 +64,7 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 		nodo.procesador = processor;
 		nodo.generadorMensajes = null;
 		nodo.memoriaDeMensajes = null;
+		nodo.configuracion = ConfiguracionDeNodo.create();
 		return nodo;
 	}
 
@@ -85,6 +88,10 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 
 	public RegistroDeReceptores getRegistroReceptores() {
 		return registroReceptores;
+	}
+
+	public ConfiguracionDeNodo getConfiguracion() {
+		return configuracion;
 	}
 
 }

@@ -16,9 +16,9 @@ import java.util.List;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
-import net.gaia.vortex.lowlevel.impl.ReceptorVortexConSesion;
 import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
 
 /**
@@ -26,14 +26,14 @@ import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
  * 
  * @author D. García
  */
-public class EnviarMensajeAInteresadosWorkUnit implements WorkUnit {
+public class DistribuirMensajeAInteresadosWorkUnit implements WorkUnit {
 
 	private ContextoDeRuteoDeMensaje contexto;
 	private SeleccionDeReceptores interesados;
 
-	public static EnviarMensajeAInteresadosWorkUnit create(final ContextoDeRuteoDeMensaje contexto,
+	public static DistribuirMensajeAInteresadosWorkUnit create(final ContextoDeRuteoDeMensaje contexto,
 			final SeleccionDeReceptores interesados) {
-		final EnviarMensajeAInteresadosWorkUnit envio = new EnviarMensajeAInteresadosWorkUnit();
+		final DistribuirMensajeAInteresadosWorkUnit envio = new DistribuirMensajeAInteresadosWorkUnit();
 		envio.contexto = contexto;
 		envio.interesados = interesados;
 		return envio;
@@ -43,10 +43,11 @@ public class EnviarMensajeAInteresadosWorkUnit implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	public void doWork() throws InterruptedException {
-		final List<ReceptorVortexConSesion> allInteresados = this.interesados.getSeleccionados();
 		final TaskProcessor procesador = this.contexto.getProcesador();
+		final List<ReceptorVortex> allInteresados = this.interesados.getSeleccionados();
 		for (final ReceptorVortex interesado : allInteresados) {
-			final EnviarMensajeWorkUnit enviarMensaje = EnviarMensajeWorkUnit.create(contexto, interesado);
+			final ContextoDeEnvio contextoDeEnvioDelMensaje = ContextoDeEnvio.create(contexto, interesado);
+			final EnviarMensajeWorkUnit enviarMensaje = EnviarMensajeWorkUnit.create(contextoDeEnvioDelMensaje);
 			procesador.process(enviarMensaje);
 		}
 	}

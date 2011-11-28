@@ -12,8 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
-
 /**
  * Esta clase representa el registro en memoria de los mensajes en lista de espera.<br>
  * Estos mensajes normalmente están esperando que la otra parte de la comunicación realice alguna
@@ -27,14 +25,38 @@ public class MensajesEnEspera {
 	 * Agrega el mensaje pasado para ser registrado como mensaje a la espera. <br>
 	 * El id del mensaje puede ser utilizado para recuperar el contexto asociado
 	 * 
-	 * @param mensajeEnEspera
+	 * @param identificacionDeEnvio
 	 *            El mensaje registrado como esperando
 	 * @param contexto
 	 *            El contexto de ruteo asociado al mensaje
 	 */
-	public void agregar(final MensajeVortexEmbebido mensajeEnEspera, final ContextoDeRuteoDeMensaje contexto) {
+	public void agregar(final IdentificadorDeEnvio identificacionDeEnvio, final ContextoDeEnvio contexto) {
 		// TODO Auto-generated method stub
 
+	}
+
+	/**
+	 * Indica si este registro de mensajes en espera todavía tiene al envío pasado
+	 * 
+	 * @param envio
+	 *            El identificador del envío hecho del cual no se obtuvo confirmación todavía
+	 * @return true si esta estructura todavía contiene un contexto para el identificador pasado
+	 */
+	public boolean incluyeA(final IdentificadorDeEnvio envio) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * Remueve el contexto registrado como espera en esta instancia, solo si esta presente
+	 * 
+	 * @param idDeEnvio
+	 *            El identificador del envío previamente registrado
+	 * @return true si fue posible quitarlo y estaba presente. False si el envío ya no estaba
+	 */
+	public boolean quitar(final IdentificadorDeEnvio idDeEnvio) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

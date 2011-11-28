@@ -16,6 +16,7 @@ import java.util.List;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.RegistroDeReceptores;
 import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
@@ -39,19 +40,26 @@ public class SeleccionarReceptoresWorkUnit implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	public void doWork() throws InterruptedException {
+		// Obtenemos el registro del nodo de receptores para buscar interesados
+		final RegistroDeReceptores registro = contexto.getRegistroDeReceptoresDelNodo();
+
+		// Queremos los interesados en el tag del mensaje
 		final MensajeVortexEmbebido mensaje = this.contexto.getMensaje();
 		final List<String> tagsDelMensaje = mensaje.getTagsDestino();
-		final RegistroDeReceptores registro = contexto.getRegistroDeReceptoresDelNodo();
 		final SeleccionDeReceptores seleccion = registro.getReceptoresInteresadosEn(tagsDelMensaje);
+
+		// Creamos la estructura de control para realizar el ruteo
+		final ControlDeRuteo controlDeRuteo = ControlDeRuteo.create(seleccion);
+		this.contexto.setControl(controlDeRuteo);
 		if (seleccion.esVacia()) {
 			// El mensaje no le interesa a nadie
-			final DevolverConfirmacionSinConsumoWorkUnit devolucion = DevolverConfirmacionSinConsumoWorkUnit.create(
-					contexto, seleccion.getExcluidos());
+			final DevolverConfirmacionDeConsumoWorkUnit devolucion = DevolverConfirmacionDeConsumoWorkUnit
+					.create(contexto);
 			contexto.getProcesador().process(devolucion);
 			return;
 		}
 		// Si le interesa a alguien tenemos que entregarle el mensaje
-		final EnviarMensajeAInteresadosWorkUnit envioAInteresados = EnviarMensajeAInteresadosWorkUnit.create(contexto,
+		final DistribuirMensajeAInteresadosWorkUnit envioAInteresados = DistribuirMensajeAInteresadosWorkUnit.create(contexto,
 				seleccion);
 		contexto.getProcesador().process(envioAInteresados);
 	}

@@ -15,6 +15,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
@@ -27,18 +28,14 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class DevolverConfirmacionSinConsumoWorkUnit implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(DevolverConfirmacionSinConsumoWorkUnit.class);
+public class DevolverConfirmacionDeConsumoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(DevolverConfirmacionDeConsumoWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 
-	private int cantidadNoInteresada;
-
-	public static DevolverConfirmacionSinConsumoWorkUnit create(final ContextoDeRuteoDeMensaje contexto,
-			final int receptoresNoInteresados) {
-		final DevolverConfirmacionSinConsumoWorkUnit devolucion = new DevolverConfirmacionSinConsumoWorkUnit();
+	public static DevolverConfirmacionDeConsumoWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
+		final DevolverConfirmacionDeConsumoWorkUnit devolucion = new DevolverConfirmacionDeConsumoWorkUnit();
 		devolucion.contexto = contexto;
-		devolucion.cantidadNoInteresada = receptoresNoInteresados;
 		return devolucion;
 	}
 
@@ -55,8 +52,8 @@ public class DevolverConfirmacionSinConsumoWorkUnit implements WorkUnit {
 					contexto.getMensaje());
 			return;
 		}
-		final ConfirmacionConsumo confirmacionConsumo = ConfirmacionConsumo.create(null);
-		confirmacionConsumo.setNoInteresados(cantidadNoInteresada);
+		ControlDeRuteo controlDeRuteo = this.contexto.getControl();
+		final ConfirmacionConsumo confirmacionConsumo = controlDeRuteo.crearConfirmacionDeConsumo();
 		final EnviarConfirmacionWorkUnit envio = EnviarConfirmacionWorkUnit.create(contexto, confirmacionConsumo);
 		contexto.getProcesador().process(envio);
 	}

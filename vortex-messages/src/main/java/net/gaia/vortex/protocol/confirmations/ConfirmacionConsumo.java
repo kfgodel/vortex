@@ -115,9 +115,8 @@ public class ConfirmacionConsumo implements MensajeDeConfirmacion {
 		this.seleccionados = seleccionados;
 	}
 
-	public static ConfirmacionConsumo create(final IdVortex identificacionDelMensaje) {
+	public static ConfirmacionConsumo create() {
 		final ConfirmacionConsumo confirmacion = new ConfirmacionConsumo();
-		confirmacion.identificacionMensaje = identificacionDelMensaje;
 		confirmacion.interesados = 0;
 		confirmacion.noInteresados = 0;
 		confirmacion.perdidos = 0;

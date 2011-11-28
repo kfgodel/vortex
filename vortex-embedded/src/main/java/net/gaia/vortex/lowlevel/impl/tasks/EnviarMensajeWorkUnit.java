@@ -12,8 +12,11 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
+import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.ConfiguracionDeNodo;
+import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
+import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.MensajesEnEspera;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
@@ -26,14 +29,11 @@ import net.gaia.vortex.protocol.MensajeVortexEmbebido;
  */
 public class EnviarMensajeWorkUnit implements WorkUnit {
 
-	private ContextoDeRuteoDeMensaje contexto;
-	private ReceptorVortex receptorVortex;
+	private ContextoDeEnvio contexto;
 
-	public static EnviarMensajeWorkUnit create(final ContextoDeRuteoDeMensaje contexto,
-			final ReceptorVortex receptorDelMensaje) {
+	public static EnviarMensajeWorkUnit create(final ContextoDeEnvio contexto) {
 		final EnviarMensajeWorkUnit envio = new EnviarMensajeWorkUnit();
 		envio.contexto = contexto;
-		envio.receptorVortex = receptorDelMensaje;
 		return envio;
 	}
 
@@ -41,18 +41,25 @@ public class EnviarMensajeWorkUnit implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	public void doWork() throws InterruptedException {
-		final MensajeVortexEmbebido mensajeAEnviar = contexto.getMensaje();
 
-		// Primero lo registramos como esperando confirmación por si llega antes
+		// Primero lo registramos en espera de confirmación por si llega antes
 		final MemoriaDeMensajes memoriaDeMensajes = this.contexto.getMemoriaDeMensajes();
 		final MensajesEnEspera esperandoConfirmacion = memoriaDeMensajes.getEsperandoConfirmacionDeRecepcion();
-		esperandoConfirmacion.agregar(mensajeAEnviar, contexto);
+		final IdentificadorDeEnvio identificacionDeEnvio = contexto.getIdDeEnvio();
+		esperandoConfirmacion.agregar(identificacionDeEnvio, contexto);
 
-		// Enviamos el mensaje a su destinatarios
-		receptorVortex.recibir(mensajeAEnviar);
+		// Enviamos el mensaje a su destinatario
+		final MensajeVortexEmbebido mensajeAEnviar = contexto.getMensaje();
+		final ReceptorVortex receptor = contexto.getReceptorInteresado();
+		receptor.recibir(mensajeAEnviar);
 
 		// Agregamos la espera por timeout por si la confirmación no llega
-		final EsperarRecepcionOTimeoutWorkUnit esperaWorkUnit = EsperarRecepcionOTimeoutWorkUnit.create(contexto);
-		this.contexto.getProcesador().processDelayed(EsperarRecepcionOTimeoutWorkUnit.DEFAULT_TIMEOUT, esperaWorkUnit);
+		final ConfiguracionDeNodo configuracion = this.contexto.getConfig();
+		final TimeMagnitude timeoutDeConfirmacion = configuracion.getTimeoutDeConfirmacionRecepcion();
+
+		// Disparamos la tarea para ejecutarse cuando se acabe el timeout
+		final ConfirmarRecepcionOSolicitarNuevamenteWorkUnit esperaWorkUnit = ConfirmarRecepcionOSolicitarNuevamenteWorkUnit
+				.create(contexto);
+		this.contexto.getProcesador().processDelayed(timeoutDeConfirmacion, esperaWorkUnit);
 	}
 }

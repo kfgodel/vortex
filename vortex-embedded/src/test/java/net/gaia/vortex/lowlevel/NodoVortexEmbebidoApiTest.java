@@ -288,7 +288,8 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 				"El contendio del enviado debería ser el mismo objeto por ser todo en memoria");
 
 		// Enviamos la confirmación de que lo consumimos
-		final ConfirmacionConsumo consumo = ConfirmacionConsumo.create(mensajeRecibido.getIdentificacion());
+		final ConfirmacionConsumo consumo = ConfirmacionConsumo.create();
+		consumo.setIdentificacionMensaje(mensajeRecibido.getIdentificacion());
 		consumo.setConsumidos(1);
 		final MensajeVortexEmbebido mensajeConsumoEnviado = escenarios.crearMensajeDeConsumo(consumo);
 		sesionDelReceptor.enviar(mensajeConsumoEnviado);
