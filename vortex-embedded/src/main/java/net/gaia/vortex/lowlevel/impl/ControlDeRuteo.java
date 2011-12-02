@@ -50,10 +50,10 @@ public class ControlDeRuteo {
 		this.receptoresInteresados = receptoresInteresados;
 	}
 
-	public static ControlDeRuteo create(final SeleccionDeReceptores receptoresDelMensaje) {
+	public static ControlDeRuteo create() {
 		final ControlDeRuteo control = new ControlDeRuteo();
-		control.receptoresInteresados = receptoresDelMensaje.getSeleccionados();
-		control.receptoresNoInteresados = receptoresDelMensaje.getExcluidos();
+		control.receptoresInteresados = null;
+		control.receptoresNoInteresados = 0;
 		control.mensajesPerdidos = 0;
 		control.mensajesRuteados = 0;
 		control.lockParaContinuarProcesoDeRuteo = new ReentrantLock();

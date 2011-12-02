@@ -49,8 +49,9 @@ public class SeleccionarReceptoresWorkUnit implements WorkUnit {
 		final SeleccionDeReceptores seleccion = registro.getReceptoresInteresadosEn(tagsDelMensaje);
 
 		// Creamos la estructura de control para realizar el ruteo
-		final ControlDeRuteo controlDeRuteo = ControlDeRuteo.create(seleccion);
-		this.contexto.setControl(controlDeRuteo);
+		final ControlDeRuteo controlDeRuteo = this.contexto.getControl();
+		controlDeRuteo.setReceptoresInteresados(seleccion.getSeleccionados());
+		controlDeRuteo.setReceptoresNoInteresados(seleccion.getExcluidos());
 		if (seleccion.esVacia()) {
 			// El mensaje no le interesa a nadie
 			final DevolverConfirmacionDeConsumoWorkUnit devolucion = DevolverConfirmacionDeConsumoWorkUnit
@@ -59,8 +60,8 @@ public class SeleccionarReceptoresWorkUnit implements WorkUnit {
 			return;
 		}
 		// Si le interesa a alguien tenemos que entregarle el mensaje
-		final DistribuirMensajeAInteresadosWorkUnit envioAInteresados = DistribuirMensajeAInteresadosWorkUnit.create(contexto,
-				seleccion);
+		final DistribuirMensajeAInteresadosWorkUnit envioAInteresados = DistribuirMensajeAInteresadosWorkUnit.create(
+				contexto, seleccion);
 		contexto.getProcesador().process(envioAInteresados);
 	}
 }

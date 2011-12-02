@@ -42,15 +42,10 @@ public class VerificarDuplicadoWorkUnit implements WorkUnit {
 			this.contexto.getProcesador().process(devolucion);
 			return;
 		}
-		// Si es duplicado ya no lo recordamos ;) enviamos el OK
-		final DevolverConfirmacionRecepcionWorkUnit confirmacionExitosa = DevolverConfirmacionRecepcionWorkUnit.create(
-				contexto, null);
+		// Si era duplicado ya no lo recordamos ;) lo tratamos como nuevo
+		final RecibirMensajeWorkUnit recibirMensaje = RecibirMensajeWorkUnit.create(contexto);
 		final TaskProcessor procesador = this.contexto.getProcesador();
-		procesador.process(confirmacionExitosa);
-
-		// Comenzamos a rutearlo
-		final SeleccionarReceptoresWorkUnit proximoPaso = SeleccionarReceptoresWorkUnit.create(contexto);
-		procesador.process(proximoPaso);
+		procesador.process(recibirMensaje);
 	}
 
 	public static VerificarDuplicadoWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {

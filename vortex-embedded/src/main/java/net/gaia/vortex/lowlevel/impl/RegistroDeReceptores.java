@@ -29,12 +29,9 @@ public class RegistroDeReceptores {
 	 */
 	private ConcurrentLinkedQueue<ReceptorVortexConSesion> receptores;
 
-	private ReceptorDeMetamensajes receptorMeta;
-
 	public static RegistroDeReceptores create() {
 		final RegistroDeReceptores registro = new RegistroDeReceptores();
 		registro.receptores = new ConcurrentLinkedQueue<ReceptorVortexConSesion>();
-		registro.receptorMeta = ReceptorDeMetamensajes.create();
 		return registro;
 	}
 
@@ -58,11 +55,6 @@ public class RegistroDeReceptores {
 	 */
 	public SeleccionDeReceptores getReceptoresInteresadosEn(final List<String> tagsDelMensaje) {
 		final SeleccionDeReceptores nuevaSeleccion = SeleccionDeReceptores.create();
-
-		// Verificamos si debemos incluir al receptor de metamensajes
-		if (receptorMeta.estaInteresadoEnCualquieraDe(tagsDelMensaje)) {
-			nuevaSeleccion.incluir(receptorMeta);
-		}
 
 		final Iterator<ReceptorVortexConSesion> iterator = this.receptores.iterator();
 		while (iterator.hasNext()) {

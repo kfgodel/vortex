@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.protocol;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Objects;
@@ -51,6 +52,9 @@ public class MensajeVortexEmbebido {
 	}
 
 	public List<String> getTagsDestino() {
+		if (tagsDestino == null) {
+			tagsDestino = new ArrayList<String>();
+		}
 		return tagsDestino;
 	}
 
@@ -77,6 +81,17 @@ public class MensajeVortexEmbebido {
 		mensaje.identificacion = identificacion2;
 		mensaje.tagsDestino = tags;
 		return mensaje;
+	}
+
+	/**
+	 * Este método indica si el mensaje representa un metamensaje. para lo cual debe poseer el tag
+	 * de metamensaje
+	 * 
+	 * @return true si este mensaje está tagueado con el tag reservado para comunicacion entre
+	 *         vecinos
+	 */
+	public boolean isMetaMensaje() {
+		return getTagsDestino().contains(TAG_INTERCAMBIO_VECINO);
 	}
 
 }
