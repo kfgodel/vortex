@@ -48,6 +48,10 @@ public class EnviarMensajeWorkUnit implements WorkUnit {
 		final IdentificadorDeEnvio identificacionDeEnvio = contexto.getIdDeEnvio();
 		esperandoConfirmacion.agregar(identificacionDeEnvio, contexto);
 
+		// Y en espera de consumo también por si llega antes
+		final MensajesEnEspera esperandoConsumo = memoriaDeMensajes.getEsperandoConfirmacionDeConsumo();
+		esperandoConsumo.agregar(identificacionDeEnvio, contexto);
+
 		// Enviamos el mensaje a su destinatario
 		final MensajeVortexEmbebido mensajeAEnviar = contexto.getMensaje();
 		final ReceptorVortex receptor = contexto.getReceptorInteresado();

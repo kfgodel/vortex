@@ -52,11 +52,11 @@ public class MensajesEnEspera {
 	 * 
 	 * @param idDeEnvio
 	 *            El identificador del envío previamente registrado
-	 * @return true si fue posible quitarlo y estaba presente. False si el envío ya no estaba
+	 * @return null si el envio ya no estaba
 	 */
-	public boolean quitar(final IdentificadorDeEnvio idDeEnvio) {
+	public ContextoDeEnvio quitar(final IdentificadorDeEnvio idDeEnvio) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
 }

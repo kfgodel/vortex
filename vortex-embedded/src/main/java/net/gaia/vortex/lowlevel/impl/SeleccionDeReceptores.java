@@ -24,12 +24,12 @@ public class SeleccionDeReceptores {
 
 	private List<ReceptorVortex> seleccionados;
 
-	private int excluidos;
+	private List<ReceptorVortex> excluidos;
 
 	public static SeleccionDeReceptores create() {
 		final SeleccionDeReceptores seleccion = new SeleccionDeReceptores();
 		seleccion.seleccionados = new ArrayList<ReceptorVortex>();
-		seleccion.excluidos = 0;
+		seleccion.excluidos = new ArrayList<ReceptorVortex>();
 		return seleccion;
 	}
 
@@ -37,7 +37,7 @@ public class SeleccionDeReceptores {
 		return seleccionados;
 	}
 
-	public int getExcluidos() {
+	public List<ReceptorVortex> getExcluidos() {
 		return excluidos;
 	}
 
@@ -58,7 +58,7 @@ public class SeleccionDeReceptores {
 	 *            El receptor a excluir
 	 */
 	public void excluir(final ReceptorVortex receptor) {
-		this.excluidos++;
+		this.excluidos.add(receptor);
 	}
 
 	/**

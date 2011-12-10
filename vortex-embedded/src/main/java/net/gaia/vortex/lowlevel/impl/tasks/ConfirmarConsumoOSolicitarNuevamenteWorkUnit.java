@@ -1,5 +1,5 @@
 /**
- * 28/11/2011 01:08:00 Copyright (C) 2011 Darío L. García
+ * 10/12/2011 14:07:27 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -22,14 +22,20 @@ import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.MensajesEnEspera;
 
 /**
- * Esta clase representa la tarea de espera de timeout de un mensaje en el que se espera su
- * confirmación de recepción
+ * Esta clase representa la acción realizada por el nodo cuando se vence el tiempo de espera de la
+ * confirmación de consumo
  * 
  * @author D. García
  */
-public class ConfirmarRecepcionOSolicitarNuevamenteWorkUnit implements WorkUnit {
+public class ConfirmarConsumoOSolicitarNuevamenteWorkUnit implements WorkUnit {
 
 	private ContextoDeEnvio contexto;
+
+	public static ConfirmarConsumoOSolicitarNuevamenteWorkUnit create(final ContextoDeEnvio contexto) {
+		final ConfirmarConsumoOSolicitarNuevamenteWorkUnit confirmar = new ConfirmarConsumoOSolicitarNuevamenteWorkUnit();
+		confirmar.contexto = contexto;
+		return confirmar;
+	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
@@ -37,34 +43,28 @@ public class ConfirmarRecepcionOSolicitarNuevamenteWorkUnit implements WorkUnit 
 	public void doWork() throws InterruptedException {
 		// Consultamos si el mensaje espera confirmación todavía
 		final MemoriaDeMensajes memoria = this.contexto.getMemoriaDeMensajes();
-		final MensajesEnEspera esperandoConfirmacion = memoria.getEsperandoConfirmacionDeRecepcion();
+		final MensajesEnEspera esperandoConfirmacion = memoria.getEsperandoConfirmacionDeConsumo();
 		final IdentificadorDeEnvio idDeEnvio = this.contexto.getIdDeEnvio();
 		if (!esperandoConfirmacion.incluyeA(idDeEnvio)) {
 			// Si el envío no está en espera, debería ser porque recibimos la confirmación
 			return;
 		}
 		// Si aún espera, la solicitamos nuevamente
-		final EnviarSolicitudDeConfirmacionRecepcionWorkUnit solicitarConfirmacion = EnviarSolicitudDeConfirmacionRecepcionWorkUnit
+		final EnviarSolicitudDeConfirmacionConsumoWorkUnit solicitarConfirmacion = EnviarSolicitudDeConfirmacionConsumoWorkUnit
 				.create(this.contexto);
 		this.contexto.getProcesador().process(solicitarConfirmacion);
 
 		// Iniciamos la espera nuevamente
 		final ConfiguracionDeNodo configuracion = this.contexto.getConfig();
-		final TimeMagnitude timeoutDeSolicitud = configuracion.getTimeoutDeSolicitudDeConfirmacionRecepcion();
+		final TimeMagnitude timeoutDeSolicitud = configuracion.getTimeoutDeConfirmacionConsumo();
 
 		// Registramos el momento de inicio
-		final EsperaDeAccion esperaDeConfirmacion = this.contexto.getEsperaDeConfirmacionRecepcion();
+		final EsperaDeAccion esperaDeConfirmacion = this.contexto.getEsperaDeConfirmacionConsumo();
 		esperaDeConfirmacion.iniciarEsperaDe(timeoutDeSolicitud);
 
 		// Disparamos la tarea a realizar cuando se acabe el tiempo
-		final ConfirmarRecepcionODarPorPerdidoWorkUnit confirmacion = ConfirmarRecepcionODarPorPerdidoWorkUnit
+		final ConfirmarConsumoODarPorPerdidoWorkUnit confirmacion = ConfirmarConsumoODarPorPerdidoWorkUnit
 				.create(contexto);
 		this.contexto.getProcesador().processDelayed(timeoutDeSolicitud, confirmacion);
-	}
-
-	public static ConfirmarRecepcionOSolicitarNuevamenteWorkUnit create(final ContextoDeEnvio contexto) {
-		final ConfirmarRecepcionOSolicitarNuevamenteWorkUnit espera = new ConfirmarRecepcionOSolicitarNuevamenteWorkUnit();
-		espera.contexto = contexto;
-		return espera;
 	}
 }

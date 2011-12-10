@@ -14,6 +14,7 @@ package net.gaia.vortex.lowlevel.impl;
 
 import java.util.List;
 
+import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 
 /**
@@ -39,5 +40,15 @@ public interface ReceptorVortex {
 	 * @return true si este receptor declaró interés en alguno de los tags pasados
 	 */
 	public abstract boolean estaInteresadoEnCualquieraDe(final List<String> tagsDelMensaje);
+
+	/**
+	 * Indica si este emisor envio en algun momento un mensaje con el ID indicado
+	 * 
+	 * @param idDeMensajeAConfirmar
+	 *            El id del mensaje a verificar
+	 * @return true si este emisor registrar el ID de mensaje pasado como enviado en algun momento.
+	 *         False si no, o ya no lo recordamos
+	 */
+	public abstract boolean envioPreviamente(IdVortex idDeMensajeAConfirmar);
 
 }

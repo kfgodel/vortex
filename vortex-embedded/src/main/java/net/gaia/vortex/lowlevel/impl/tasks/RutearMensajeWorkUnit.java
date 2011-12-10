@@ -15,6 +15,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
+import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 
 /**
@@ -38,11 +39,12 @@ public class RutearMensajeWorkUnit implements WorkUnit {
 	 */
 	public void doWork() throws InterruptedException {
 		// Creamos la estructura de control para realizar el ruteo
-		final ControlDeRuteo controlDeRuteo = ControlDeRuteo.create();
+		final MensajeVortexEmbebido mensaje = this.contexto.getMensaje();
+		final IdVortex idMensaje = mensaje.getIdentificacion();
+		final ControlDeRuteo controlDeRuteo = ControlDeRuteo.create(idMensaje);
 		this.contexto.setControl(controlDeRuteo);
 
 		// Tenemos que ver si es un metamensaje
-		final MensajeVortexEmbebido mensaje = this.contexto.getMensaje();
 		if (mensaje.isMetaMensaje()) {
 			// Si es meta, es para procesarlo internamente, no para enviarlo a otros nodos
 			final ProcesarMetamensajeWorkUnit procesoDeMetaMensaje = ProcesarMetamensajeWorkUnit.create(contexto);

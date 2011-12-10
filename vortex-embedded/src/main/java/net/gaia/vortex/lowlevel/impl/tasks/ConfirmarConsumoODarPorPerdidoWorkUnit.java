@@ -1,5 +1,5 @@
 /**
- * 28/11/2011 13:23:08 Copyright (C) 2011 Darío L. García
+ * 10/12/2011 14:17:54 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -25,27 +25,27 @@ import net.gaia.vortex.lowlevel.impl.MensajesEnEspera;
 import net.gaia.vortex.meta.Decision;
 
 /**
- * Esta clase representa la tarea de espera de confirmación cuando se pide por segunda vez, si no se
- * recibe
+ * Esta clase representa la acción realizada por el nodo al terminar el tiempo de espera de la
+ * solicitud de consumo
  * 
  * @author D. García
  */
-public class ConfirmarRecepcionODarPorPerdidoWorkUnit implements WorkUnit {
+public class ConfirmarConsumoODarPorPerdidoWorkUnit implements WorkUnit {
 
 	private ContextoDeEnvio contexto;
 
-	public static ConfirmarRecepcionODarPorPerdidoWorkUnit create(final ContextoDeEnvio contexto) {
-		final ConfirmarRecepcionODarPorPerdidoWorkUnit confirmacion = new ConfirmarRecepcionODarPorPerdidoWorkUnit();
-		confirmacion.contexto = contexto;
-		return confirmacion;
+	public static ConfirmarConsumoODarPorPerdidoWorkUnit create(final ContextoDeEnvio contexto) {
+		final ConfirmarConsumoODarPorPerdidoWorkUnit confirmar = new ConfirmarConsumoODarPorPerdidoWorkUnit();
+		confirmar.contexto = contexto;
+		return confirmar;
 	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@HasDependencyOn(Decision.EL_TIMEOUT_DE_RECEPCION_QUITA_EL_MENSAJE_DE_ESPERA)
+	@HasDependencyOn(Decision.EL_TIMEOUT_DE_CONSUMO_QUITA_EL_MENSAJE_DE_ESPERA)
 	public void doWork() throws InterruptedException {
-		final EsperaDeAccion esperaDeConfirmacion = this.contexto.getEsperaDeConfirmacionRecepcion();
+		final EsperaDeAccion esperaDeConfirmacion = this.contexto.getEsperaDeConfirmacionConsumo();
 		final long prorroga = esperaDeConfirmacion.getMillisRestantes();
 		if (prorroga > 0) {
 			// Todavía no es momento de tomar la decisión, esperamos
@@ -55,7 +55,7 @@ public class ConfirmarRecepcionODarPorPerdidoWorkUnit implements WorkUnit {
 
 		// Se acabó el tiempo de espera. Es hora de hacer algo con el mensaje
 		final MemoriaDeMensajes memoria = this.contexto.getMemoriaDeMensajes();
-		final MensajesEnEspera esperandoConfirmacion = memoria.getEsperandoConfirmacionDeRecepcion();
+		final MensajesEnEspera esperandoConfirmacion = memoria.getEsperandoConfirmacionDeConsumo();
 		final IdentificadorDeEnvio idDeEnvio = this.contexto.getIdDeEnvio();
 
 		// Verificamos si aún estaba esperando confirmación
@@ -67,5 +67,7 @@ public class ConfirmarRecepcionODarPorPerdidoWorkUnit implements WorkUnit {
 		// Se acabó el tiempo y no hay confirmación, lo damos por perdido
 		final RegistrarMensajePerdidoWorkUnit registrarPerdido = RegistrarMensajePerdidoWorkUnit.create(contexto);
 		this.contexto.getProcesador().process(registrarPerdido);
+
 	}
+
 }

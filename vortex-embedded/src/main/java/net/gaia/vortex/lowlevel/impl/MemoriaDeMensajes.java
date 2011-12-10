@@ -38,4 +38,11 @@ public interface MemoriaDeMensajes {
 	 */
 	public MensajesEnEspera getEsperandoConfirmacionDeRecepcion();
 
+	/**
+	 * Devuelve los mensajes registrados que requieren una confirmación de consumo
+	 * 
+	 * @return Los mensajes que esperan confirmación de consumo
+	 */
+	MensajesEnEspera getEsperandoConfirmacionDeConsumo();
+
 }

@@ -17,7 +17,8 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
-import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacion;
+import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionConsumo;
+import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionRecepcion;
 import net.gaia.vortex.protocol.tags.ModificacionDeTags;
 import net.gaia.vortex.protocol.tags.PublicacionDeTags;
 
@@ -44,17 +45,24 @@ public class ProcesarMetamensajeWorkUnit implements WorkUnit {
 		final MensajeVortexEmbebido mensaje = this.contexto.getMensaje();
 		final Object metamensaje = mensaje.getContenido();
 		if (metamensaje instanceof ConfirmacionRecepcion) {
-			// Deberíamos sacar el mensaje de la espera de confirmacion
+			final ConfirmacionRecepcion confirmacion = (ConfirmacionRecepcion) metamensaje;
+			final RecibirConfirmacionDeRecepcionWorkUnit recibirConfirmacion = RecibirConfirmacionDeRecepcionWorkUnit
+					.create(contexto, confirmacion);
+			this.contexto.getProcesador().process(recibirConfirmacion);
 		} else if (metamensaje instanceof ConfirmacionConsumo) {
-			// Deberíamos sacar el mensaje de la espera de consumo
-		} else if (metamensaje instanceof SolicitudDeConfirmacion) {
+			final ConfirmacionConsumo confirmacion = (ConfirmacionConsumo) metamensaje;
+			final RecibirConfirmacionDeConsumoWorkUnit recibirConfirmacion = RecibirConfirmacionDeConsumoWorkUnit
+					.create(contexto, confirmacion);
+			this.contexto.getProcesador().process(recibirConfirmacion);
+		} else if (metamensaje instanceof SolicitudDeConfirmacionRecepcion) {
+			// Deberíamos enviar la confirmacion nuevamente
+		} else if (metamensaje instanceof SolicitudDeConfirmacionConsumo) {
 			// Deberíamos enviar la confirmacion nuevamente
 		} else if (metamensaje instanceof PublicacionDeTags) {
 			// Deberíamos actualizar los tags del receptor, y los de este nodo
 		} else if (metamensaje instanceof ModificacionDeTags) {
 			// Deberíamos actualizar los tags del receptor, y los de este nodo
 		}
-		// Publicacion de tags
 		// Si no es un tipo conocido deberíamos indicar que no lo consumimos
 	}
 }

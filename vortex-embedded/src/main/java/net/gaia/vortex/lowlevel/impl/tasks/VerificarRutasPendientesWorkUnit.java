@@ -1,5 +1,5 @@
 /**
- * 28/11/2011 14:44:31 Copyright (C) 2011 Darío L. García
+ * 10/12/2011 14:36:26 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -14,17 +14,17 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
+import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
-import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 
 /**
- * Esta clase representa la tarea de registrar que un mensaje no recibió confirmación y se considera
- * perdido.<br>
- * Si esta es la última confirmación que faltaba se dispara una confirmación de consumo
+ * Esta clase representa la acción realizada por el nodo para terminar un ruteo cada vez que se
+ * completa una ruta de mensaje enviado.<br>
+ * Sólo se termina el ruteo si no quedan más rutas pendientes
  * 
  * @author D. García
  */
-public class RegistrarMensajePerdidoWorkUnit implements WorkUnit {
+public class VerificarRutasPendientesWorkUnit implements WorkUnit {
 
 	private ContextoDeEnvio contexto;
 
@@ -32,19 +32,23 @@ public class RegistrarMensajePerdidoWorkUnit implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	public void doWork() throws InterruptedException {
-		// Registramos que el mensaje fue perdido
 		final ControlDeRuteo controlDeRuteo = contexto.getControlDeRuteo();
-		final IdentificadorDeEnvio idEnvio = contexto.getIdDeEnvio();
-		controlDeRuteo.registrarMensajePerdido(idEnvio);
-
-		// Verificamos si quedan más rutas o hay que terminar el ruteo
-		final VerificarRutasPendientesWorkUnit verificarRutas = VerificarRutasPendientesWorkUnit.create(contexto);
-		contexto.getProcesador().process(verificarRutas);
+		// Vemos si todavía hay más mensajes para rutear
+		if (controlDeRuteo.existenMensajesEnRuta()) {
+			// Quedan más rutas para confirmar, esperamos
+			return;
+		}
+		// Tenemos que seguir con el ruteo, enviar una confirmación de consumo
+		final ContextoDeRuteoDeMensaje contextoDeRuteo = contexto.getContextoDeRuteo();
+		final DevolverConfirmacionDeConsumoWorkUnit devolverConfirmacion = DevolverConfirmacionDeConsumoWorkUnit
+				.create(contextoDeRuteo);
+		contextoDeRuteo.getProcesador().process(devolverConfirmacion);
 	}
 
-	public static RegistrarMensajePerdidoWorkUnit create(final ContextoDeEnvio contexto) {
-		final RegistrarMensajePerdidoWorkUnit registro = new RegistrarMensajePerdidoWorkUnit();
+	public static VerificarRutasPendientesWorkUnit create(final ContextoDeEnvio contexto) {
+		final VerificarRutasPendientesWorkUnit registro = new VerificarRutasPendientesWorkUnit();
 		registro.contexto = contexto;
 		return registro;
 	}
+
 }

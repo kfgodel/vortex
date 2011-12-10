@@ -1,5 +1,5 @@
 /**
- * 28/11/2011 14:44:31 Copyright (C) 2011 Darío L. García
+ * 10/12/2011 14:33:29 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -18,13 +18,11 @@ import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 
 /**
- * Esta clase representa la tarea de registrar que un mensaje no recibió confirmación y se considera
- * perdido.<br>
- * Si esta es la última confirmación que faltaba se dispara una confirmación de consumo
+ * Esta clase representa la acción realizada por el nodo para registrar que un mensaje fue consumido
  * 
  * @author D. García
  */
-public class RegistrarMensajePerdidoWorkUnit implements WorkUnit {
+public class RegistrarMensajeConsumidoWorkUnit implements WorkUnit {
 
 	private ContextoDeEnvio contexto;
 
@@ -32,19 +30,21 @@ public class RegistrarMensajePerdidoWorkUnit implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	public void doWork() throws InterruptedException {
-		// Registramos que el mensaje fue perdido
+		// Registramos que el mensaje fue consumido
 		final ControlDeRuteo controlDeRuteo = contexto.getControlDeRuteo();
 		final IdentificadorDeEnvio idEnvio = contexto.getIdDeEnvio();
-		controlDeRuteo.registrarMensajePerdido(idEnvio);
+		controlDeRuteo.registrarConsumoRealizado(idEnvio);
 
-		// Verificamos si quedan más rutas o hay que terminar el ruteo
-		final VerificarRutasPendientesWorkUnit verificarRutas = VerificarRutasPendientesWorkUnit.create(contexto);
-		contexto.getProcesador().process(verificarRutas);
+		// Verificamos si ya no quedan rutas y tenemos que terminar el ruteo
+		final VerificarRutasPendientesWorkUnit verificarRutasPendientes = VerificarRutasPendientesWorkUnit
+				.create(contexto);
+		contexto.getProcesador().process(verificarRutasPendientes);
 	}
 
-	public static RegistrarMensajePerdidoWorkUnit create(final ContextoDeEnvio contexto) {
-		final RegistrarMensajePerdidoWorkUnit registro = new RegistrarMensajePerdidoWorkUnit();
+	public static RegistrarMensajeConsumidoWorkUnit create(final ContextoDeEnvio contexto) {
+		final RegistrarMensajeConsumidoWorkUnit registro = new RegistrarMensajeConsumidoWorkUnit();
 		registro.contexto = contexto;
 		return registro;
 	}
+
 }

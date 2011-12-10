@@ -98,4 +98,8 @@ public class ContextoDeRuteoDeMensaje {
 		return this.nodo.getConfiguracion();
 	}
 
+	public ConfiguracionDeNodo getConfig() {
+		return this.nodo.getConfiguracion();
+	}
+
 }

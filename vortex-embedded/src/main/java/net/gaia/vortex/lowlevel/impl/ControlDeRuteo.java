@@ -12,12 +12,14 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.meta.Decision;
+import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
 
 /**
@@ -28,17 +30,20 @@ import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
  */
 public class ControlDeRuteo {
 
-	private int receptoresNoInteresados;
+	private IdVortex idMensajeRuteado;
+	private List<ReceptorVortex> receptoresNoInteresados;
 	private List<ReceptorVortex> receptoresInteresados;
-	private int mensajesPerdidos;
-	private int mensajesRuteados;
+	private List<IdentificadorDeEnvio> mensajesPerdidos;
+	private List<IdentificadorDeEnvio> mensajesConsumidos;
+	private List<IdentificadorDeEnvio> mensajesRuteados;
+	private List<IdentificadorDeEnvio> recepcionesConfirmadas;
 	private Lock lockParaContinuarProcesoDeRuteo;
 
-	public int getReceptoresNoInteresados() {
+	public List<ReceptorVortex> getReceptoresNoInteresados() {
 		return receptoresNoInteresados;
 	}
 
-	public void setReceptoresNoInteresados(final int receptoresNoInteresados) {
+	public void setReceptoresNoInteresados(final List<ReceptorVortex> receptoresNoInteresados) {
 		this.receptoresNoInteresados = receptoresNoInteresados;
 	}
 
@@ -50,12 +55,14 @@ public class ControlDeRuteo {
 		this.receptoresInteresados = receptoresInteresados;
 	}
 
-	public static ControlDeRuteo create() {
+	public static ControlDeRuteo create(final IdVortex idMensaje) {
 		final ControlDeRuteo control = new ControlDeRuteo();
+		control.idMensajeRuteado = idMensaje;
 		control.receptoresInteresados = null;
-		control.receptoresNoInteresados = 0;
-		control.mensajesPerdidos = 0;
-		control.mensajesRuteados = 0;
+		control.receptoresNoInteresados = null;
+		control.mensajesPerdidos = null;
+		control.mensajesRuteados = null;
+		control.recepcionesConfirmadas = null;
 		control.lockParaContinuarProcesoDeRuteo = new ReentrantLock();
 		return control;
 	}
@@ -69,16 +76,48 @@ public class ControlDeRuteo {
 	public ConfirmacionConsumo crearConfirmacionDeConsumo() {
 		final ConfirmacionConsumo confirmacion = ConfirmacionConsumo.create();
 		confirmacion.setInteresados(this.receptoresInteresados.size());
-		confirmacion.setNoInteresados(this.receptoresNoInteresados);
+		confirmacion.setNoInteresados(this.receptoresNoInteresados.size());
 		return confirmacion;
+	}
+
+	public IdVortex getIdMensajeRuteado() {
+		return idMensajeRuteado;
+	}
+
+	public List<IdentificadorDeEnvio> getMensajesPerdidos() {
+		if (mensajesPerdidos == null) {
+			mensajesPerdidos = new ArrayList<IdentificadorDeEnvio>();
+		}
+		return mensajesPerdidos;
+	}
+
+	public List<IdentificadorDeEnvio> getMensajesRuteados() {
+		if (mensajesRuteados == null) {
+			mensajesRuteados = new ArrayList<IdentificadorDeEnvio>();
+		}
+		return mensajesRuteados;
+	}
+
+	public List<IdentificadorDeEnvio> getRecepcionesConfirmadas() {
+		if (recepcionesConfirmadas == null) {
+			recepcionesConfirmadas = new ArrayList<IdentificadorDeEnvio>();
+		}
+		return recepcionesConfirmadas;
+	}
+
+	public List<IdentificadorDeEnvio> getMensajesConsumidos() {
+		if (mensajesConsumidos == null) {
+			mensajesConsumidos = new ArrayList<IdentificadorDeEnvio>();
+		}
+		return mensajesConsumidos;
 	}
 
 	/**
 	 * Incrementa la cantidad de mensajes perdidos
 	 */
-	public void registrarMensajePerdido() {
-		mensajesPerdidos++;
-		mensajesRuteados++;
+	public void registrarMensajePerdido(final IdentificadorDeEnvio idEnvio) {
+		getMensajesPerdidos().add(idEnvio);
+		getMensajesRuteados().add(idEnvio);
 	}
 
 	/**
@@ -92,12 +131,28 @@ public class ControlDeRuteo {
 	@HasDependencyOn(Decision.PARA_CONTINUAR_EL_RUTEO_DESPUES_DEL_ENVIO_SE_UTILIZAN_CONTADORES)
 	public boolean existenMensajesEnRuta() {
 		// Vemos si ya se rutearon todos
-		final boolean existenMasMensajesParaConfirmar = mensajesRuteados < this.receptoresInteresados.size();
+		final boolean existenMasMensajesParaConfirmar = getMensajesRuteados().size() < this.getReceptoresInteresados()
+				.size();
 		if (existenMasMensajesParaConfirmar) {
 			return true;
 		}
 		final boolean podemosContinuarElRuteo = lockParaContinuarProcesoDeRuteo.tryLock();
 		final boolean debemosIndicarQueExistenMas = !podemosContinuarElRuteo;
 		return debemosIndicarQueExistenMas;
+	}
+
+	/**
+	 * Registra en este control que el mensaje fue recibido por un receptor
+	 */
+	public void registrarRecepcionRealizada(final IdentificadorDeEnvio idenvio) {
+		this.getRecepcionesConfirmadas().add(idenvio);
+	}
+
+	/**
+	 * @param idEnvio
+	 */
+	public void registrarConsumoRealizado(final IdentificadorDeEnvio idEnvio) {
+		this.getMensajesConsumidos().add(idEnvio);
+		this.getMensajesRuteados().add(idEnvio);
 	}
 }

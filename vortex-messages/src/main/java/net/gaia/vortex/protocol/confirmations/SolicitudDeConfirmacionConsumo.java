@@ -20,12 +20,12 @@ import net.gaia.vortex.protocol.IdVortex;
  * 
  * @author D. García
  */
-public class SolicitudDeConfirmacion {
+public class SolicitudDeConfirmacionConsumo {
 
 	private IdVortex idDeMensajeAConfirmar;
 
-	public static SolicitudDeConfirmacion create(final IdVortex mensaje) {
-		final SolicitudDeConfirmacion solicitud = new SolicitudDeConfirmacion();
+	public static SolicitudDeConfirmacionConsumo create(final IdVortex mensaje) {
+		final SolicitudDeConfirmacionConsumo solicitud = new SolicitudDeConfirmacionConsumo();
 		solicitud.idDeMensajeAConfirmar = mensaje;
 		return solicitud;
 	}

@@ -19,14 +19,14 @@ import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
-import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacion;
+import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionRecepcion;
 
 /**
  * Esta clase representa la tarea de solicitar nueva confirmación por envio realizado
  * 
  * @author D. García
  */
-public class EnviarSolicitudDeConfirmacionWorkUnit implements WorkUnit {
+public class EnviarSolicitudDeConfirmacionRecepcionWorkUnit implements WorkUnit {
 
 	private ContextoDeEnvio contexto;
 
@@ -37,7 +37,7 @@ public class EnviarSolicitudDeConfirmacionWorkUnit implements WorkUnit {
 		// Creamos la solicitud a enviar
 		final IdentificadorDeEnvio idDeEnvio = this.contexto.getIdDeEnvio();
 		final IdVortex idDeMensajeEnviado = idDeEnvio.getIdDeMensajeEnviado();
-		final SolicitudDeConfirmacion solicitud = SolicitudDeConfirmacion.create(idDeMensajeEnviado);
+		final SolicitudDeConfirmacionRecepcion solicitud = SolicitudDeConfirmacionRecepcion.create(idDeMensajeEnviado);
 
 		// La metemos en un mensaje vortex
 		final GeneradorMensajesDeNodo generadorMensajes = this.contexto.getGeneradorDeMensajes();
@@ -48,8 +48,8 @@ public class EnviarSolicitudDeConfirmacionWorkUnit implements WorkUnit {
 
 	}
 
-	public static EnviarSolicitudDeConfirmacionWorkUnit create(final ContextoDeEnvio contexto) {
-		final EnviarSolicitudDeConfirmacionWorkUnit envio = new EnviarSolicitudDeConfirmacionWorkUnit();
+	public static EnviarSolicitudDeConfirmacionRecepcionWorkUnit create(final ContextoDeEnvio contexto) {
+		final EnviarSolicitudDeConfirmacionRecepcionWorkUnit envio = new EnviarSolicitudDeConfirmacionRecepcionWorkUnit();
 		envio.contexto = contexto;
 		return envio;
 	}
