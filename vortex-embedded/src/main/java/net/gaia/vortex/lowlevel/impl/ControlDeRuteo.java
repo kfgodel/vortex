@@ -36,8 +36,16 @@ public class ControlDeRuteo {
 	private List<IdentificadorDeEnvio> mensajesPerdidos;
 	private List<IdentificadorDeEnvio> mensajesConsumidos;
 	private List<IdentificadorDeEnvio> mensajesRuteados;
+	private List<IdentificadorDeEnvio> mensajesRechazados;
 	private List<IdentificadorDeEnvio> recepcionesConfirmadas;
 	private Lock lockParaContinuarProcesoDeRuteo;
+
+	public List<IdentificadorDeEnvio> getMensajesRechazados() {
+		if (mensajesRechazados == null) {
+			mensajesRechazados = new ArrayList<IdentificadorDeEnvio>();
+		}
+		return mensajesRechazados;
+	}
 
 	public List<ReceptorVortex> getReceptoresNoInteresados() {
 		return receptoresNoInteresados;
@@ -153,6 +161,16 @@ public class ControlDeRuteo {
 	 */
 	public void registrarConsumoRealizado(final IdentificadorDeEnvio idEnvio) {
 		this.getMensajesConsumidos().add(idEnvio);
+		this.getMensajesRuteados().add(idEnvio);
+	}
+
+	/**
+	 * Registra en este control que el mensaje enviado fue rechazado
+	 * 
+	 * @param idEnvio
+	 */
+	public void registrarMensajeRechazado(final IdentificadorDeEnvio idEnvio) {
+		this.getMensajesRechazados().add(idEnvio);
 		this.getMensajesRuteados().add(idEnvio);
 	}
 }

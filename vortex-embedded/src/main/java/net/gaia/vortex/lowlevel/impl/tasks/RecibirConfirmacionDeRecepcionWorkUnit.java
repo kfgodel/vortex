@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
+import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
@@ -19,6 +20,7 @@ import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.MensajesEnEspera;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
+import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
 
@@ -56,9 +58,36 @@ public class RecibirConfirmacionDeRecepcionWorkUnit implements WorkUnit {
 			// Nada que hacer
 			return;
 		}
-		final RegistrarMensajeRecibidoWorkUnit registrarRecibido = RegistrarMensajeRecibidoWorkUnit
+
+		// Determinamos la proxima acción en base a los datos de la confirmación
+		final WorkUnit proximaAccion = crearAccionDesde(confirmacion, contextoDeEnvio);
+		contexto.getProcesador().process(proximaAccion);
+
+	}
+
+	/**
+	 * Determina la próxima acción a partir de la confirmación recibida. Si es exitosa
+	 * 
+	 * @param contextoDeEnvio
+	 * 
+	 * @param confirmacion2
+	 * @return
+	 */
+	@HasDependencyOn({ Decision.TODAVIA_NO_IMPLEMENTE_PRORROGA,
+			Decision.TODAVIA_NO_IMPLEMENTE_REENVIO_DE_MENSAJE_PERDIDO })
+	private WorkUnit crearAccionDesde(final ConfirmacionRecepcion confirmacion, final ContextoDeEnvio contextoDeEnvio) {
+		// Vemos si es un error o es una confirmación exitosa
+		if (confirmacion.getAceptado()) {
+			final RegistrarMensajeRecibidoWorkUnit registrarRecibido = RegistrarMensajeRecibidoWorkUnit
+					.create(contextoDeEnvio);
+			return registrarRecibido;
+		}
+		// TODO: Si es mensaje perdido se debería reenviar
+
+		// Lo registramos como rechazado
+		final RegistrarMensajeRechazadoWorkUnit registrarRechazo = RegistrarMensajeRechazadoWorkUnit
 				.create(contextoDeEnvio);
-		contexto.getProcesador().process(registrarRecibido);
+		return registrarRechazo;
 	}
 
 	public static RecibirConfirmacionDeRecepcionWorkUnit create(final ContextoDeRuteoDeMensaje contexto,

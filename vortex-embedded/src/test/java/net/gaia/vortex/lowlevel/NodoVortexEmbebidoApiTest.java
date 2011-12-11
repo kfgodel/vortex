@@ -20,8 +20,6 @@ import net.gaia.vortex.lowlevel.api.DeclaracionDeTags;
 import net.gaia.vortex.lowlevel.api.EncoladorDeMensajesHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
-import net.gaia.vortex.lowlevel.impl.tasks.ValidacionDeMensajeWorkUnit;
-import net.gaia.vortex.lowlevel.impl.tasks.VerificarDuplicadoWorkUnit;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
@@ -91,7 +89,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		Assert.isTrue(confirmacion.getIdentificacionMensaje().equals(mensajeEnviado.getIdentificacion()),
 				"La confirmacion debería ser para el mensaje mandado");
 		Assert.isTrue(!confirmacion.getAceptado(), "Debería estar rechazado por estar mal armado indicando causa");
-		Assert.isNull(ValidacionDeMensajeWorkUnit.BAD_HASH_ERROR.equals(confirmacion.getCausa()),
+		Assert.isNull(ConfirmacionRecepcion.BAD_HASH_ERROR.equals(confirmacion.getCausa()),
 				"Deberia indicad la causa de rechazo");
 	}
 
@@ -154,7 +152,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		Assert.isTrue(confirmacion.getIdentificacionMensaje().equals(mensajeReplica.getIdentificacion()),
 				"La confirmacion debería ser para el mensaje mandado por segunda vez");
 		Assert.isTrue(!confirmacion.getAceptado(), "Debería estar rechazado por estar duplicado");
-		Assert.isNull(VerificarDuplicadoWorkUnit.MENSAJE_IS_DUPLICATED_ERROR.equals(confirmacion.getCausa()),
+		Assert.isNull(ConfirmacionRecepcion.MENSAJE_IS_DUPLICATED_ERROR.equals(confirmacion.getCausa()),
 				"Debería indicar que está duplicado");
 
 	}

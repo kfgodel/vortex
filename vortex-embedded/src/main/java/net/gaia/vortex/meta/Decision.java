@@ -28,5 +28,7 @@ public class Decision {
 	public static final String EL_TIMEOUT_DE_RECEPCION_QUITA_EL_MENSAJE_DE_ESPERA = "El mensaje se saca de espera para evitar que se registre la confirmación si llega justo, y permite darlo por perdido";
 	public static final String PARA_CONTINUAR_EL_RUTEO_DESPUES_DEL_ENVIO_SE_UTILIZAN_CONTADORES = "Quizás no es la mejor estrategia porque los contadores pueden no actualizarse. Quizás debería haber un timeout también?";
 	public static final String EL_TIMEOUT_DE_CONSUMO_QUITA_EL_MENSAJE_DE_ESPERA = "El código asume que esto se mantiene";
+	public static final String TODAVIA_NO_IMPLEMENTE_PRORROGA = "Tengo que agregar el calculo de espera para poder usar las prorrogas";
+	public static final String TODAVIA_NO_IMPLEMENTE_REENVIO_DE_MENSAJE_PERDIDO = "Si el receptor nos devuelve que se perdio lo consideramos rechazo";
 
 }

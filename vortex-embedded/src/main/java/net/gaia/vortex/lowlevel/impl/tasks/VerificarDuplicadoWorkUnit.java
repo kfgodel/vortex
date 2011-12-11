@@ -17,6 +17,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
 
 /**
  * Esta clase representa la tarea de verificar si el mensaje está duplicado respecto a los mensajes
@@ -27,8 +28,6 @@ import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 public class VerificarDuplicadoWorkUnit implements WorkUnit {
 
 	private ContextoDeRuteoDeMensaje contexto;
-	public static final String MENSAJE_IS_DUPLICATED_ERROR = "mensaje.isDuplicated";
-
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
@@ -38,7 +37,7 @@ public class VerificarDuplicadoWorkUnit implements WorkUnit {
 		if (memoria.registrarSiNoRecuerdaA(mensaje)) {
 			// Es duplicado
 			final DevolverConfirmacionRecepcionWorkUnit devolucion = DevolverConfirmacionRecepcionWorkUnit.create(
-					contexto, MENSAJE_IS_DUPLICATED_ERROR);
+					contexto, ConfirmacionRecepcion.MENSAJE_IS_DUPLICATED_ERROR);
 			this.contexto.getProcesador().process(devolucion);
 			return;
 		}

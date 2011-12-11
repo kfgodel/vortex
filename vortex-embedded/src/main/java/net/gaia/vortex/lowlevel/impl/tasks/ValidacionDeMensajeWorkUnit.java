@@ -18,6 +18,7 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
 
 /**
  * Esta clase representa la tarea que valida la conformidad del mensaje al protocolo
@@ -25,8 +26,6 @@ import net.gaia.vortex.protocol.MensajeVortexEmbebido;
  * @author D. García
  */
 public class ValidacionDeMensajeWorkUnit implements WorkUnit {
-	public static final String BAD_HASH_ERROR = "mensaje.identificacion.hashDelContenido.isnull";
-
 	private ContextoDeRuteoDeMensaje contexto;
 
 	/**
@@ -57,7 +56,7 @@ public class ValidacionDeMensajeWorkUnit implements WorkUnit {
 	private String validarMensaje(final MensajeVortexEmbebido mensaje) {
 		final IdVortex identificacion = mensaje.getIdentificacion();
 		if (identificacion.getHashDelContenido() == null) {
-			return BAD_HASH_ERROR;
+			return ConfirmacionRecepcion.BAD_HASH_ERROR;
 		}
 		return null;
 	}

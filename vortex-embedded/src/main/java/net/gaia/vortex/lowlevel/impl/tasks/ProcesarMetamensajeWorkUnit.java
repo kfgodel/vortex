@@ -44,25 +44,52 @@ public class ProcesarMetamensajeWorkUnit implements WorkUnit {
 		// Tenemos que ver que tipo de metamensaje es, y en base a eso el tipo de acción a realizar
 		final MensajeVortexEmbebido mensaje = this.contexto.getMensaje();
 		final Object metamensaje = mensaje.getContenido();
+		final WorkUnit tareaDelMensaje = crearTareaDesdeMetamensaje(metamensaje);
+		if (tareaDelMensaje != null) {
+			contexto.getProcesador().process(tareaDelMensaje);
+		}
+		// Deberíamos indicar si lo consumimos o no
+	}
+
+	/**
+	 * Evalua el metamensaje para determinar el tipo de tarea que se debe realizar
+	 * 
+	 * @param mensaje
+	 *            El mensaje recibido como metamensaje
+	 * @return La tarea a realizar
+	 */
+	private WorkUnit crearTareaDesdeMetamensaje(final Object metamensaje) {
 		if (metamensaje instanceof ConfirmacionRecepcion) {
 			final ConfirmacionRecepcion confirmacion = (ConfirmacionRecepcion) metamensaje;
 			final RecibirConfirmacionDeRecepcionWorkUnit recibirConfirmacion = RecibirConfirmacionDeRecepcionWorkUnit
 					.create(contexto, confirmacion);
-			this.contexto.getProcesador().process(recibirConfirmacion);
-		} else if (metamensaje instanceof ConfirmacionConsumo) {
+			return recibirConfirmacion;
+		}
+		if (metamensaje instanceof ConfirmacionConsumo) {
 			final ConfirmacionConsumo confirmacion = (ConfirmacionConsumo) metamensaje;
 			final RecibirConfirmacionDeConsumoWorkUnit recibirConfirmacion = RecibirConfirmacionDeConsumoWorkUnit
 					.create(contexto, confirmacion);
-			this.contexto.getProcesador().process(recibirConfirmacion);
-		} else if (metamensaje instanceof SolicitudDeConfirmacionRecepcion) {
-			// Deberíamos enviar la confirmacion nuevamente
-		} else if (metamensaje instanceof SolicitudDeConfirmacionConsumo) {
-			// Deberíamos enviar la confirmacion nuevamente
-		} else if (metamensaje instanceof PublicacionDeTags) {
-			// Deberíamos actualizar los tags del receptor, y los de este nodo
-		} else if (metamensaje instanceof ModificacionDeTags) {
+			return recibirConfirmacion;
+		}
+		if (metamensaje instanceof SolicitudDeConfirmacionRecepcion) {
+			final SolicitudDeConfirmacionRecepcion solicitud = (SolicitudDeConfirmacionRecepcion) metamensaje;
+			final RecibirSolicitudDeRecepcionWorkUnit recibirSolicitud = RecibirSolicitudDeRecepcionWorkUnit.create(
+					contexto, solicitud);
+			return recibirSolicitud;
+		}
+		if (metamensaje instanceof SolicitudDeConfirmacionConsumo) {
+			// Deberíamos enviar la confirmación nuevamente
+			final SolicitudDeConfirmacionConsumo solicitud = (SolicitudDeConfirmacionConsumo) metamensaje;
+			final RecibirSolicitudDeConsumoWorkUnit recibirSolicitud = RecibirSolicitudDeConsumoWorkUnit.create(
+					contexto, solicitud);
+			return recibirSolicitud;
+		}
+		if (metamensaje instanceof PublicacionDeTags) {
 			// Deberíamos actualizar los tags del receptor, y los de este nodo
 		}
-		// Si no es un tipo conocido deberíamos indicar que no lo consumimos
+		if (metamensaje instanceof ModificacionDeTags) {
+			// Deberíamos actualizar los tags del receptor, y los de este nodo
+		}
+		return null;
 	}
 }
