@@ -16,9 +16,9 @@ import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.meta.Decision;
-import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
+import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
  * Esta clase representa la tarea que valida la conformidad del mensaje al protocolo

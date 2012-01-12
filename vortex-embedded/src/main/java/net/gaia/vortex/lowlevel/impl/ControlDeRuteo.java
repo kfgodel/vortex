@@ -19,8 +19,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.meta.Decision;
-import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
+import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
  * Esta clase representa la información de control del ruteo de manera de determinar cuando está

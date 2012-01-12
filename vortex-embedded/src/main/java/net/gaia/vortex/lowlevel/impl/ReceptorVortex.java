@@ -14,8 +14,8 @@ package net.gaia.vortex.lowlevel.impl;
 
 import java.util.List;
 
-import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
  * Esta interfaz define el contrato de un receptor vortex para el nodo

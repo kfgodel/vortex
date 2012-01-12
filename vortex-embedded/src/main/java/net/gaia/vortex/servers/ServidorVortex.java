@@ -14,7 +14,7 @@ package net.gaia.vortex.servers;
 
 import java.util.List;
 
-import net.gaia.vortex.protocol.MensajeVortex;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.servers.embedded.ComunicanteVortex;
 
 /**

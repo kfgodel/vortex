@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Set;
 
 import net.gaia.vortex.lowlevel.api.DeclaracionDeTags;
-import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
+import net.gaia.vortex.protocol.messages.IdVortex;
 
 import com.google.common.collect.Lists;
 

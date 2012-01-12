@@ -19,8 +19,6 @@ import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
 import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionConsumo;
 import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionRecepcion;
-import net.gaia.vortex.protocol.tags.ModificacionDeTags;
-import net.gaia.vortex.protocol.tags.PublicacionDeTags;
 
 /**
  * Esta clase representa el trabajo que hace el nodo para procesar un metamensaje recibido
@@ -83,12 +81,6 @@ public class ProcesarMetamensajeWorkUnit implements WorkUnit {
 			final RecibirSolicitudDeConsumoWorkUnit recibirSolicitud = RecibirSolicitudDeConsumoWorkUnit.create(
 					contexto, solicitud);
 			return recibirSolicitud;
-		}
-		if (metamensaje instanceof PublicacionDeTags) {
-			// Deberíamos actualizar los tags del receptor, y los de este nodo
-		}
-		if (metamensaje instanceof ModificacionDeTags) {
-			// Deberíamos actualizar los tags del receptor, y los de este nodo
 		}
 		return null;
 	}

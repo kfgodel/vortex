@@ -15,8 +15,8 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
-import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
  * Esta clase representa el trabajo quimport net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;

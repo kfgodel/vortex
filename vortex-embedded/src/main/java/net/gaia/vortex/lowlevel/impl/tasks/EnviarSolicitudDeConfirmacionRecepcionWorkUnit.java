@@ -17,9 +17,9 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.GeneradorMensajesDeNodo;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
-import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionRecepcion;
+import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
  * Esta clase representa la tarea de solicitar nueva confirmación por envio realizado

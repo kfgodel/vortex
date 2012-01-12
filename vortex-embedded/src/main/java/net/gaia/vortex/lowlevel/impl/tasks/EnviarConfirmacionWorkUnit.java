@@ -17,9 +17,9 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
-import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 import net.gaia.vortex.protocol.confirmations.MensajeDeConfirmacion;
+import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
  * Esta clase representa la tarea de enviar una confirmación al emisor de un mensaje. A diferencia

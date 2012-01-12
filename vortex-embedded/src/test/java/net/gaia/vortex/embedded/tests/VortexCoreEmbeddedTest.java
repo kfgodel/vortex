@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.gaia.vortex.protocol.MensajeVortex;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.servers.ServidorVortex;
 import net.gaia.vortex.servers.embedded.ComunicanteVortex;
 import net.gaia.vortex.servers.embedded.HandlerMensajesVortexRecibidos;

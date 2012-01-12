@@ -13,8 +13,8 @@
 package net.gaia.vortex.lowlevel.impl;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.protocol.IdVortex;
 import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
  * Esta clase representa la información de contexto necesaria para las tareas relacionadas con el

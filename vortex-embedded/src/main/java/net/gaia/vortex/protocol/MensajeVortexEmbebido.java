@@ -15,6 +15,8 @@ package net.gaia.vortex.protocol;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.gaia.vortex.protocol.messages.IdVortex;
+
 import com.google.common.base.Objects;
 
 /**
