@@ -10,9 +10,10 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.protocol;
+package net.gaia.vortex.protocol.messages;
 
 import java.util.List;
+
 
 import com.google.common.base.Objects;
 
@@ -26,14 +27,14 @@ public class MensajeVortex {
 
 	public static final String TAG_INTERCAMBIO_VECINO = "CHE";
 
+	private IdVortex identificacion;
+	public static final String identificacion_FIELD = "identificacion";
+
 	private ContenidoVortex contenido;
 	public static final String contenido_FIELD = "contenido";
 
 	private List<String> tagsDestino;
 	public static final String tagsDestino_FIELD = "tagsDestino";
-
-	private IdVortex identificacion;
-	public static final String identificacion_FIELD = "identificacion";
 
 	public IdVortex getIdentificacion() {
 		return identificacion;

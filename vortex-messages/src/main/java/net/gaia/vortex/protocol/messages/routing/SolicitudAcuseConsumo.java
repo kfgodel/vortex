@@ -1,5 +1,5 @@
 /**
- * 27/11/2011 22:34:26 Copyright (C) 2011 Darío L. García
+ * 12/01/2012 00:01:30 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,30 +10,25 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.protocol.confirmations;
+package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
- * Esta interfaz define los métodos comunes a los mensajes de confirmación
+ * Esta clase representa el metamensaje de solicitud de {@link AcuseConsumo} realizada por el emisor
+ * del mensaje para conocer el estatus del mismo o darlo por perdido
  * 
  * @author D. García
  */
-public interface MensajeDeConfirmacion {
+public class SolicitudAcuseConsumo {
+	private IdVortex idMensajeEnviado;
 
-	/**
-	 * Devuelve el identificador del mensaje para el que es esta confirmación
-	 * 
-	 * @return El identificador del mensaje original
-	 */
-	public IdVortex getIdentificacionMensaje();
+	public IdVortex getIdMensajeEnviado() {
+		return idMensajeEnviado;
+	}
 
-	/**
-	 * Establece el identificador del mensaje original para el que es esta confirmación
-	 * 
-	 * @param identificacionMensaje
-	 *            Identificación del mensaje
-	 */
-	public void setIdentificacionMensaje(final IdVortex identificacionMensaje);
+	public void setIdMensajeEnviado(final IdVortex idMensajeEnviado) {
+		this.idMensajeEnviado = idMensajeEnviado;
+	}
 
 }

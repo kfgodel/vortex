@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.protocol.confirmations;
 
-import net.gaia.vortex.protocol.IdVortex;
+import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
  * Esta clase representa una solicitud de confirmación que es efectuada cuando pasa el timeout de la

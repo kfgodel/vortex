@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.protocol.confirmations;
 
-import net.gaia.vortex.protocol.IdVortex;
+import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
  * Esta clase representa la informacion de consumo del mensaje recibido por el nodo, que es devuelto

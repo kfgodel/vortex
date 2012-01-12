@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.protocol;
+package net.gaia.vortex.protocol.messages;
 
 import com.google.common.base.Objects;
 
@@ -24,7 +24,7 @@ public class ContenidoVortex {
 	private String tipoContenido;
 	public static final String tipoContenido_FIELD = "tipoContenido";
 
-	private String valor;
+	private Object valor;
 	public static final String valor_FIELD = "valor";
 
 	public String getTipoContenido() {
@@ -35,11 +35,11 @@ public class ContenidoVortex {
 		this.tipoContenido = tipoContenido;
 	}
 
-	public String getValor() {
+	public Object getValor() {
 		return valor;
 	}
 
-	public void setValor(final String valor) {
+	public void setValor(final Object valor) {
 		this.valor = valor;
 	}
 

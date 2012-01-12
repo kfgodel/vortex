@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.protocol.interpreter;
 
-import net.gaia.vortex.protocol.MensajeVortex;
 import net.gaia.vortex.protocol.TipoMetamensaje;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta interfaz define métodos que permiten interpretar mensajes vortex en objetos y viceversa

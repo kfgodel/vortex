@@ -14,11 +14,11 @@ package net.gaia.vortex.protocol.interpreter.impl;
 
 import net.gaia.vortex.dependencies.json.InterpreteJson;
 import net.gaia.vortex.dependencies.json.JsonConversionException;
-import net.gaia.vortex.protocol.ContenidoVortex;
-import net.gaia.vortex.protocol.MensajeVortex;
 import net.gaia.vortex.protocol.TipoMetamensaje;
 import net.gaia.vortex.protocol.interpreter.InterpreteVortex;
 import net.gaia.vortex.protocol.interpreter.VortexInterpreterException;
+import net.gaia.vortex.protocol.messages.ContenidoVortex;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta clase permite interpretar los mensajes vortex como objetos de la aplicación
@@ -30,7 +30,7 @@ public class InterpreteVortexImpl implements InterpreteVortex {
 	private InterpreteJson interpreteJson;
 
 	/**
-	 * @see net.gaia.vortex.protocol.interpreter.InterpreteVortex#fromContenidoDe(net.gaia.vortex.protocol.MensajeVortex,
+	 * @see net.gaia.vortex.protocol.interpreter.InterpreteVortex#fromContenidoDe(net.gaia.vortex.protocol.messages.MensajeVortex,
 	 *      java.lang.String, java.lang.Class)
 	 */
 	@Override
@@ -42,7 +42,7 @@ public class InterpreteVortexImpl implements InterpreteVortex {
 			throw new VortexInterpreterException("El tipo de contenido recibido[" + tipoContenido
 					+ "] no es el esperado[" + tipoContenidoEsperado + "]");
 		}
-		final String jsonValue = contenido.getValor();
+		final String jsonValue = (String) contenido.getValor();
 		T objeto;
 		try {
 			objeto = interpreteJson.fromJson(jsonValue, tipoDeClaseEsperada);
@@ -53,7 +53,7 @@ public class InterpreteVortexImpl implements InterpreteVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.protocol.interpreter.InterpreteVortex#fromContenidoDe(net.gaia.vortex.protocol.MensajeVortex,
+	 * @see net.gaia.vortex.protocol.interpreter.InterpreteVortex#fromContenidoDe(net.gaia.vortex.protocol.messages.MensajeVortex,
 	 *      net.gaia.vortex.protocol.TipoMetamensaje)
 	 */
 	@SuppressWarnings("unchecked")

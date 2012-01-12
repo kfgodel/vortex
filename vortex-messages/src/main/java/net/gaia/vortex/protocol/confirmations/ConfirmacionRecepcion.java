@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.protocol.confirmations;
 
-import net.gaia.vortex.protocol.IdVortex;
+import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
  * Esta clase representa la confirmación de que el mensaje es aceptado por el nodo y será ruteado

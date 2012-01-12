@@ -1,5 +1,5 @@
 /**
- * 27/11/2011 22:34:26 Copyright (C) 2011 Darío L. García
+ * 12/01/2012 00:00:44 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,30 +10,24 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.protocol.confirmations;
+package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
 
 /**
- * Esta interfaz define los métodos comunes a los mensajes de confirmación
+ * Esta clase representa el metamensaje de notificación por mensaje duplicado recibido
  * 
  * @author D. García
  */
-public interface MensajeDeConfirmacion {
+public class AcuseDuplicado {
+	private IdVortex idMensajeDuplicado;
 
-	/**
-	 * Devuelve el identificador del mensaje para el que es esta confirmación
-	 * 
-	 * @return El identificador del mensaje original
-	 */
-	public IdVortex getIdentificacionMensaje();
+	public IdVortex getIdMensajeDuplicado() {
+		return idMensajeDuplicado;
+	}
 
-	/**
-	 * Establece el identificador del mensaje original para el que es esta confirmación
-	 * 
-	 * @param identificacionMensaje
-	 *            Identificación del mensaje
-	 */
-	public void setIdentificacionMensaje(final IdVortex identificacionMensaje);
+	public void setIdMensajeDuplicado(final IdVortex idMensajeDuplicado) {
+		this.idMensajeDuplicado = idMensajeDuplicado;
+	}
 
 }
