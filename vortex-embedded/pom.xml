@@ -29,6 +29,20 @@
 		</dependency>
 		
 		
+		<!-- Generación de JSON para comunicación -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-lgpl</artifactId>
+			<version>1.8.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-lgpl</artifactId>
+			<version>1.8.3</version>
+		</dependency>
+		
+		
+		
 		<!-- Codigo que facilita algunas cosas que he hecho muchas veces -->
 		<dependency>
 			<groupId>ar.com.fdvs.dgarcia</groupId>
