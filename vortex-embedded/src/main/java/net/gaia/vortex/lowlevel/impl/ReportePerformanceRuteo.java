@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
+import net.gaia.vortex.protocol.messages.MensajeVortex;
+
 /**
  * Esta clase representa el reporte de como se desempeño cada receptor al recibir un mensaje
  * 
@@ -19,7 +21,7 @@ package net.gaia.vortex.lowlevel.impl;
  */
 public class ReportePerformanceRuteo {
 
-	public static ReportePerformanceRuteo create() {
+	public static ReportePerformanceRuteo create(final ControlDeRuteo controlDeRuteo, final MensajeVortex mensaje) {
 		final ReportePerformanceRuteo reporte = new ReportePerformanceRuteo();
 		return reporte;
 	}

@@ -78,7 +78,7 @@ public class RegistroDeReceptores {
 	 *            El resultado de un ruteo
 	 */
 	public void ajustarPesosDeAcuerdoA(final ReportePerformanceRuteo reportePerformance) {
-		// TODO Auto-generated method stub
+		// TODO Por ahora no hay ajuste de pesos
 
 	}
 

@@ -16,8 +16,15 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.gaia.vortex.protocol.messages.meta.AgregarTags;
+import net.gaia.vortex.protocol.messages.meta.CerrarConexion;
+import net.gaia.vortex.protocol.messages.meta.LimpiarTags;
 import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
+import net.gaia.vortex.protocol.messages.meta.QuitarTags;
+import net.gaia.vortex.protocol.messages.meta.ReemplazarTags;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
+import net.gaia.vortex.protocol.messages.routing.AcuseDuplicado;
+import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 import net.gaia.vortex.protocol.messages.routing.SolicitudAcuseConsumo;
 import net.gaia.vortex.protocol.messages.routing.SolicitudEsperaAcuseConsumo;
 
@@ -81,10 +88,34 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 		if (metamensaje instanceof SolicitudEsperaAcuseConsumo) {
 			// Deberíamos enviar la confirmación nuevamente
 			final SolicitudEsperaAcuseConsumo solicitud = (SolicitudEsperaAcuseConsumo) metamensaje;
-			final RecibirSolicitudDeEsperaAcuseConsumoWorkUnit recibirSolicitud = RecibirSolicitudDeEsperaAcuseConsumoWorkUnit.create(
-					contexto, solicitud);
+			final RecibirSolicitudDeEsperaAcuseConsumoWorkUnit recibirSolicitud = RecibirSolicitudDeEsperaAcuseConsumoWorkUnit
+					.create(contexto, solicitud);
 			return recibirSolicitud;
 		}
+		if (metamensaje instanceof AcuseDuplicado) {
+
+		}
+		if (metamensaje instanceof AcuseFallaRecepcion) {
+
+		}
+
+		if (metamensaje instanceof AgregarTags) {
+
+		}
+		if (metamensaje instanceof QuitarTags) {
+
+		}
+		if (metamensaje instanceof LimpiarTags) {
+
+		}
+		if (metamensaje instanceof ReemplazarTags) {
+
+		}
+
+		if (metamensaje instanceof CerrarConexion) {
+
+		}
+
 		return null;
 	}
 }
