@@ -15,6 +15,8 @@ package net.gaia.vortex.protocol.messages.routing;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa el metamensaje de solicitud de espera. Enviado por un ruteador cuando
  * recibe una {@link SolicitudAcuseConsumo} y aún no puede devolverla
@@ -23,6 +25,7 @@ import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
  */
 public class SolicitudEsperaAcuseConsumo implements MetamensajeVortex {
 	private IdVortex idMensajeRecibido;
+	public static final String idMensajeRecibido_FIELD = "idMensajeRecibido";
 
 	public IdVortex getIdMensajeRecibido() {
 		return idMensajeRecibido;
@@ -32,4 +35,17 @@ public class SolicitudEsperaAcuseConsumo implements MetamensajeVortex {
 		this.idMensajeRecibido = idMensajeRecibido;
 	}
 
+	public static SolicitudEsperaAcuseConsumo create(final IdVortex idMensajeRecibido) {
+		final SolicitudEsperaAcuseConsumo name = new SolicitudEsperaAcuseConsumo();
+		name.idMensajeRecibido = idMensajeRecibido;
+		return name;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(idMensajeRecibido_FIELD, idMensajeRecibido).toString();
+	}
 }
