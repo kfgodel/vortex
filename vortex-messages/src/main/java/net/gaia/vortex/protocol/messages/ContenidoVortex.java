@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.protocol.messages;
 
+import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
+
 import com.google.common.base.Objects;
 
 /**
@@ -59,6 +61,15 @@ public class ContenidoVortex {
 		contenido.tipoContenido = tipo;
 		contenido.valor = valor;
 		return contenido;
+	}
+
+	/**
+	 * Indica si este mensaje tiene como contenido un metamensaje
+	 * 
+	 * @return true si el contenido es una instancia de metamensaje
+	 */
+	public boolean isMetaMensaje() {
+		return this.valor instanceof MetamensajeVortex;
 	}
 
 }

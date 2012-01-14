@@ -19,7 +19,7 @@ import java.util.List;
  * 
  * @author D. García
  */
-public class QuitarTags {
+public class QuitarTags implements MetamensajeVortex {
 
 	private List<String> tags;
 

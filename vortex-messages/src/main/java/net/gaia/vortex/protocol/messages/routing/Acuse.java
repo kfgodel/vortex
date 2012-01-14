@@ -1,5 +1,5 @@
 /**
- * 12/01/2012 00:09:32 Copyright (C) 2011 Darío L. García
+ * 12/01/2012 22:37:24 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,14 +10,23 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.protocol.messages.meta;
+package net.gaia.vortex.protocol.messages.routing;
+
+import net.gaia.vortex.protocol.messages.IdVortex;
+import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
 
 /**
- * Esta clase representa el metamensaje de cierre de conexion. Con el cual una parte comunicante
- * pide que se cierre el canal
+ * Esta interfaz ofrece una vista comun a todos los acuses para operaciones comunes
  * 
  * @author D. García
  */
-public class CerrarConexion implements MetamensajeVortex {
+public interface Acuse extends MetamensajeVortex {
+
+	/**
+	 * Establece el id del mensaje involucrado en el acuse
+	 * 
+	 * @param idMensaje
+	 */
+	public void setIdMensajeInvolucrado(IdVortex idMensaje);
 
 }

@@ -1,5 +1,5 @@
 /**
- * 12/01/2012 00:09:32 Copyright (C) 2011 Darío L. García
+ * 12/01/2012 23:17:15 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -13,11 +13,10 @@
 package net.gaia.vortex.protocol.messages.meta;
 
 /**
- * Esta clase representa el metamensaje de cierre de conexion. Con el cual una parte comunicante
- * pide que se cierre el canal
+ * Esta interfaz es una marca para los objetos que representan metamensajes del protocolo
  * 
  * @author D. García
  */
-public class CerrarConexion implements MetamensajeVortex {
+public interface MetamensajeVortex {
 
 }

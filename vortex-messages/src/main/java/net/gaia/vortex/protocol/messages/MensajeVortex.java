@@ -14,7 +14,6 @@ package net.gaia.vortex.protocol.messages;
 
 import java.util.List;
 
-
 import com.google.common.base.Objects;
 
 /**
@@ -80,4 +79,5 @@ public class MensajeVortex {
 		mensaje.tagsDestino = tags;
 		return mensaje;
 	}
+
 }

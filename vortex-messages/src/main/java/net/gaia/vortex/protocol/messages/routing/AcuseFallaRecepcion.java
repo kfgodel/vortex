@@ -19,14 +19,15 @@ import net.gaia.vortex.protocol.messages.IdVortex;
  * 
  * @author D. García
  */
-public class AcuseFallaRecepcion {
+public class AcuseFallaRecepcion implements Acuse {
 	private IdVortex idMensajeFallado;
-	private Integer codigoError;
+	private String codigoError;
 
 	/**
 	 * Descripción humana opcional
 	 */
 	private String descripcionError;
+	public static final String BAD_HASH_ERROR = "mensaje.identificacion.hashDelContenido.isnull";
 
 	public IdVortex getIdMensajeFallado() {
 		return idMensajeFallado;
@@ -36,11 +37,11 @@ public class AcuseFallaRecepcion {
 		this.idMensajeFallado = idMensajeFallado;
 	}
 
-	public Integer getCodigoError() {
+	public String getCodigoError() {
 		return codigoError;
 	}
 
-	public void setCodigoError(final Integer codigoError) {
+	public void setCodigoError(final String codigoError) {
 		this.codigoError = codigoError;
 	}
 
@@ -52,4 +53,17 @@ public class AcuseFallaRecepcion {
 		this.descripcionError = descripcionError;
 	}
 
+	/**
+	 * @see net.gaia.vortex.protocol.messages.routing.Acuse#setIdMensajeInvolucrado(net.gaia.vortex.protocol.messages.IdVortex)
+	 */
+	@Override
+	public void setIdMensajeInvolucrado(final IdVortex idMensaje) {
+		this.setIdMensajeFallado(idMensaje);
+	}
+
+	public static AcuseFallaRecepcion create(final String codigoDeError) {
+		final AcuseFallaRecepcion acuse = new AcuseFallaRecepcion();
+		acuse.codigoError = codigoDeError;
+		return acuse;
+	}
 }

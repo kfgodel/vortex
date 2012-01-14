@@ -39,9 +39,7 @@ public class ConfirmacionRecepcion implements MensajeDeConfirmacion {
 	private String causa;
 	public static final String causa_FIELD = "causa";
 
-	public static final String MENSAJE_IS_DUPLICATED_ERROR = "mensaje.isDuplicated";
 	public static final String MENSAJE_IS_MISSING_ERROR = "mensaje.isMissing";
-	public static final String BAD_HASH_ERROR = "mensaje.identificacion.hashDelContenido.isnull";
 
 	@Override
 	public IdVortex getIdentificacionMensaje() {

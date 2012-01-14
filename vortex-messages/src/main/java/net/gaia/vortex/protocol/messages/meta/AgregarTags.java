@@ -19,7 +19,7 @@ import java.util.List;
  * 
  * @author D. García
  */
-public class AgregarTags {
+public class AgregarTags implements MetamensajeVortex {
 
 	private List<String> tags;
 

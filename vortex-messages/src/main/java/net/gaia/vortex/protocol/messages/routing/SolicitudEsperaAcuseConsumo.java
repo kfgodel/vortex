@@ -13,6 +13,7 @@
 package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
 
 /**
  * Esta clase representa el metamensaje de solicitud de espera. Enviado por un ruteador cuando
@@ -20,7 +21,7 @@ import net.gaia.vortex.protocol.messages.IdVortex;
  * 
  * @author D. García
  */
-public class SolicitudEsperaAcuseConsumo {
+public class SolicitudEsperaAcuseConsumo implements MetamensajeVortex {
 	private IdVortex idMensajeRecibido;
 
 	public IdVortex getIdMensajeRecibido() {

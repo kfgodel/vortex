@@ -19,7 +19,7 @@ import net.gaia.vortex.protocol.messages.IdVortex;
  * 
  * @author D. García
  */
-public class AcuseDuplicado {
+public class AcuseDuplicado implements Acuse {
 	private IdVortex idMensajeDuplicado;
 
 	public IdVortex getIdMensajeDuplicado() {
@@ -30,4 +30,16 @@ public class AcuseDuplicado {
 		this.idMensajeDuplicado = idMensajeDuplicado;
 	}
 
+	/**
+	 * @see net.gaia.vortex.protocol.messages.routing.Acuse#setIdMensajeInvolucrado(net.gaia.vortex.protocol.messages.IdVortex)
+	 */
+	@Override
+	public void setIdMensajeInvolucrado(final IdVortex idMensaje) {
+		this.setIdMensajeDuplicado(idMensaje);
+	}
+
+	public static AcuseDuplicado create() {
+		final AcuseDuplicado acuse = new AcuseDuplicado();
+		return acuse;
+	}
 }

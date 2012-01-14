@@ -20,7 +20,7 @@ import java.util.List;
  * 
  * @author D. García
  */
-public class ReemplazarTags {
+public class ReemplazarTags implements MetamensajeVortex {
 
 	private List<String> tags;
 

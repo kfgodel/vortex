@@ -17,6 +17,6 @@ package net.gaia.vortex.protocol.messages.meta;
  * 
  * @author D. García
  */
-public class LimpiarTags {
+public class LimpiarTags implements MetamensajeVortex {
 
 }

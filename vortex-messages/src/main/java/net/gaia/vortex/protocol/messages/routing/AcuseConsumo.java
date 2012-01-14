@@ -20,7 +20,7 @@ import net.gaia.vortex.protocol.messages.IdVortex;
  * 
  * @author D. García
  */
-public class AcuseConsumo {
+public class AcuseConsumo implements Acuse {
 	private IdVortex idMensajeConsumido;
 	private Integer valorConsumo;
 	private Long cantidadInteresados;
@@ -76,4 +76,21 @@ public class AcuseConsumo {
 		this.cantidadConsumidos = cantidadConsumidos;
 	}
 
+	/**
+	 * @see net.gaia.vortex.protocol.messages.routing.Acuse#setIdMensajeInvolucrado(net.gaia.vortex.protocol.messages.IdVortex)
+	 */
+	@Override
+	public void setIdMensajeInvolucrado(final IdVortex idMensaje) {
+		this.setIdMensajeConsumido(idMensaje);
+	}
+
+	public static AcuseConsumo create() {
+		final AcuseConsumo acuse = new AcuseConsumo();
+		acuse.valorConsumo = 0;
+		acuse.cantidadInteresados = 0L;
+		acuse.cantidadDuplicados = 0L;
+		acuse.cantidadFallados = 0L;
+		acuse.cantidadConsumidos = 0L;
+		return acuse;
+	}
 }

@@ -13,6 +13,7 @@
 package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
 
 /**
  * Esta clase representa el metamensaje de solicitud de {@link AcuseConsumo} realizada por el emisor
@@ -20,7 +21,7 @@ import net.gaia.vortex.protocol.messages.IdVortex;
  * 
  * @author D. García
  */
-public class SolicitudAcuseConsumo {
+public class SolicitudAcuseConsumo implements MetamensajeVortex {
 	private IdVortex idMensajeEnviado;
 
 	public IdVortex getIdMensajeEnviado() {
@@ -31,4 +32,9 @@ public class SolicitudAcuseConsumo {
 		this.idMensajeEnviado = idMensajeEnviado;
 	}
 
+	public static SolicitudAcuseConsumo create(final IdVortex idMensaje) {
+		final SolicitudAcuseConsumo solicitud = new SolicitudAcuseConsumo();
+		solicitud.idMensajeEnviado = idMensaje;
+		return solicitud;
+	}
 }
