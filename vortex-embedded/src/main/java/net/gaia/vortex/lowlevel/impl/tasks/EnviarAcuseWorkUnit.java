@@ -52,10 +52,10 @@ public class EnviarAcuseWorkUnit implements WorkUnit {
 		final IdVortex identificacion = mensaje.getIdentificacion();
 		this.acuse.setIdMensajeInvolucrado(identificacion);
 
-		// Hacemos que el emisor reciba el acuse
-		final MensajeVortex mensajeConfirmacion = contexto.getGeneradorMensajes().generarMetaMensajePara(acuse);
 		final ReceptorVortex emisor = contexto.getEmisor();
-		emisor.recibir(mensajeConfirmacion);
+		final ProcesarEnvioDeMetamensajeWorkUnit envioMentamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(
+				contexto, emisor, acuse);
+		contexto.getProcesador().process(envioMentamensaje);
 	}
 
 }

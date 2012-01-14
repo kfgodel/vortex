@@ -14,24 +14,28 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
-import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
-import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
-import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionConsumo;
-import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionRecepcion;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
+import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
+import net.gaia.vortex.protocol.messages.routing.SolicitudAcuseConsumo;
+import net.gaia.vortex.protocol.messages.routing.SolicitudEsperaAcuseConsumo;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase representa el trabajo que hace el nodo para procesar un metamensaje recibido
  * 
  * @author D. García
  */
-public class ProcesarMetamensajeWorkUnit implements WorkUnit {
+public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(ProcesarRecepcionDeMetamensajeWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 
-	public static ProcesarMetamensajeWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
-		final ProcesarMetamensajeWorkUnit procesado = new ProcesarMetamensajeWorkUnit();
+	public static ProcesarRecepcionDeMetamensajeWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
+		final ProcesarRecepcionDeMetamensajeWorkUnit procesado = new ProcesarRecepcionDeMetamensajeWorkUnit();
 		procesado.contexto = contexto;
 		return procesado;
 	}
@@ -45,9 +49,13 @@ public class ProcesarMetamensajeWorkUnit implements WorkUnit {
 		final MensajeVortex mensaje = this.contexto.getMensaje();
 		final ContenidoVortex contenido = mensaje.getContenido();
 		final Object metamensaje = contenido.getValor();
-		final WorkUnit tareaDelMensaje = crearTareaDesdeMetamensaje(metamensaje);
-		if (tareaDelMensaje != null) {
-			contexto.getProcesador().process(tareaDelMensaje);
+		if (!(metamensaje instanceof MetamensajeVortex)) {
+			LOG.error("Se recibió como metamensaje uno que no es: " + metamensaje + ". Abortando procesamiento");
+			return;
+		}
+		final WorkUnit tareaDelMetamensaje = crearTareaDesdeMetamensaje(metamensaje);
+		if (tareaDelMetamensaje != null) {
+			contexto.getProcesador().process(tareaDelMetamensaje);
 		}
 	}
 
@@ -59,28 +67,21 @@ public class ProcesarMetamensajeWorkUnit implements WorkUnit {
 	 * @return La tarea a realizar
 	 */
 	private WorkUnit crearTareaDesdeMetamensaje(final Object metamensaje) {
-		if (metamensaje instanceof ConfirmacionRecepcion) {
-			final ConfirmacionRecepcion confirmacion = (ConfirmacionRecepcion) metamensaje;
-			final RecibirConfirmacionDeRecepcionWorkUnit recibirConfirmacion = RecibirConfirmacionDeRecepcionWorkUnit
-					.create(contexto, confirmacion);
-			return recibirConfirmacion;
+		if (metamensaje instanceof AcuseConsumo) {
+			final AcuseConsumo acuseConsumo = (AcuseConsumo) metamensaje;
+			final RecibirAcuseConsumoWorkUnit recibirAcuse = RecibirAcuseConsumoWorkUnit.create(contexto, acuseConsumo);
+			return recibirAcuse;
 		}
-		if (metamensaje instanceof ConfirmacionConsumo) {
-			final ConfirmacionConsumo confirmacion = (ConfirmacionConsumo) metamensaje;
-			final RecibirConfirmacionDeConsumoWorkUnit recibirConfirmacion = RecibirConfirmacionDeConsumoWorkUnit
-					.create(contexto, confirmacion);
-			return recibirConfirmacion;
-		}
-		if (metamensaje instanceof SolicitudDeConfirmacionRecepcion) {
-			final SolicitudDeConfirmacionRecepcion solicitud = (SolicitudDeConfirmacionRecepcion) metamensaje;
-			final RecibirSolicitudDeRecepcionWorkUnit recibirSolicitud = RecibirSolicitudDeRecepcionWorkUnit.create(
-					contexto, solicitud);
+		if (metamensaje instanceof SolicitudAcuseConsumo) {
+			final SolicitudAcuseConsumo solicitud = (SolicitudAcuseConsumo) metamensaje;
+			final RecibirSolicitudDeAcuseConsumoWorkUnit recibirSolicitud = RecibirSolicitudDeAcuseConsumoWorkUnit
+					.create(contexto, solicitud);
 			return recibirSolicitud;
 		}
-		if (metamensaje instanceof SolicitudDeConfirmacionConsumo) {
+		if (metamensaje instanceof SolicitudEsperaAcuseConsumo) {
 			// Deberíamos enviar la confirmación nuevamente
-			final SolicitudDeConfirmacionConsumo solicitud = (SolicitudDeConfirmacionConsumo) metamensaje;
-			final RecibirSolicitudDeConsumoWorkUnit recibirSolicitud = RecibirSolicitudDeConsumoWorkUnit.create(
+			final SolicitudEsperaAcuseConsumo solicitud = (SolicitudEsperaAcuseConsumo) metamensaje;
+			final RecibirSolicitudDeEsperaAcuseConsumoWorkUnit recibirSolicitud = RecibirSolicitudDeEsperaAcuseConsumoWorkUnit.create(
 					contexto, solicitud);
 			return recibirSolicitud;
 		}

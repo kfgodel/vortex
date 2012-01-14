@@ -59,4 +59,14 @@ public class MensajesEnEspera {
 		return null;
 	}
 
+	/**
+	 * Devuelve el contexto de envio asociado el envio indicado
+	 * 
+	 * @param idEnvioRealizado
+	 */
+	public ContextoDeEnvio getContextoDe(final IdentificadorDeEnvio idEnvioRealizado) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

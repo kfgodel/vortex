@@ -1,5 +1,5 @@
 /**
- * 10/12/2011 21:05:51 Copyright (C) 2011 Darío L. García
+ * 01/12/2011 22:24:05 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -14,32 +14,29 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
-import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionConsumo;
 
 /**
- * Esta clase representa la acción realizada por el nodo al recibir la solicitud de consumo
+ * Esta clase representa el trabajo que hace el nodo al recibir un mensaje, después de validarlo
  * 
  * @author D. García
  */
-public class RecibirSolicitudDeConsumoWorkUnit implements WorkUnit {
+public class ProcesarRecepcionDeMensajeWorkUnit implements WorkUnit {
 
 	private ContextoDeRuteoDeMensaje contexto;
-	private SolicitudDeConfirmacionConsumo solicitud;
+
+	public static ProcesarRecepcionDeMensajeWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
+		final ProcesarRecepcionDeMensajeWorkUnit recibir = new ProcesarRecepcionDeMensajeWorkUnit();
+		recibir.contexto = contexto;
+		return recibir;
+	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
+	@Override
 	public void doWork() throws InterruptedException {
-		// Deberíamos reenviar el reporte de consumo, o solicitar prorroga si todavía no está listo
-		// Otra opción es que no sepamos de qué mensaje nos piden el consumo
-
-	}
-
-	public static RecibirSolicitudDeConsumoWorkUnit create(final ContextoDeRuteoDeMensaje contexto,
-			final SolicitudDeConfirmacionConsumo solicitud) {
-		final RecibirSolicitudDeConsumoWorkUnit recibir = new RecibirSolicitudDeConsumoWorkUnit();
-		recibir.contexto = contexto;
-		recibir.solicitud = solicitud;
-		return recibir;
+		// Comenzamos el ruteo del mensaje
+		final RutearMensajeWorkUnit ruteo = RutearMensajeWorkUnit.create(contexto);
+		this.contexto.getProcesador().process(ruteo);
 	}
 }

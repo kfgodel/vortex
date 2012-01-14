@@ -56,7 +56,7 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 	@Override
 	@HasDependencyOn(Decision.NO_ESTA_IMPLEMENTADO_EL_INTERES_DEL_RECEPTOR)
 	public boolean estaInteresadoEnCualquieraDe(final List<String> tagsDelMensaje) {
-		// TODO Auto-generated method stub
+		// TODO Tomar en cuenta el peso de los tags para este receptor
 		return false;
 	}
 }

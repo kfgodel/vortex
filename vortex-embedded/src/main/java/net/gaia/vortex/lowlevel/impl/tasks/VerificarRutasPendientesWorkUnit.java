@@ -31,6 +31,7 @@ public class VerificarRutasPendientesWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
+	@Override
 	public void doWork() throws InterruptedException {
 		final ControlDeRuteo controlDeRuteo = contexto.getControlDeRuteo();
 		// Vemos si todavía hay más mensajes para rutear
@@ -40,9 +41,8 @@ public class VerificarRutasPendientesWorkUnit implements WorkUnit {
 		}
 		// Tenemos que seguir con el ruteo, enviar una confirmación de consumo
 		final ContextoDeRuteoDeMensaje contextoDeRuteo = contexto.getContextoDeRuteo();
-		final DevolverAcuseConsumoWorkUnit devolverConfirmacion = DevolverAcuseConsumoWorkUnit
-				.create(contextoDeRuteo);
-		contextoDeRuteo.getProcesador().process(devolverConfirmacion);
+		final TerminarRuteoWorkUnit terminarRuteo = TerminarRuteoWorkUnit.create(contextoDeRuteo);
+		contextoDeRuteo.getProcesador().process(terminarRuteo);
 	}
 
 	public static VerificarRutasPendientesWorkUnit create(final ContextoDeEnvio contexto) {

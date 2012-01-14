@@ -42,7 +42,7 @@ public class VerificarDuplicadoWorkUnit implements WorkUnit {
 			return;
 		}
 		// Puede que sea duplicado pero ya no lo recordamos ;) lo tratamos como nuevo
-		final RecibirMensajeWorkUnit recibirMensaje = RecibirMensajeWorkUnit.create(contexto);
+		final ProcesarRecepcionDeMensajeWorkUnit recibirMensaje = ProcesarRecepcionDeMensajeWorkUnit.create(contexto);
 		final TaskProcessor procesador = this.contexto.getProcesador();
 		procesador.process(recibirMensaje);
 	}

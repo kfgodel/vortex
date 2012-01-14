@@ -18,7 +18,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Esta clase representa el registro interno que un nodo tiene de sus receptores.<br>
- * A través de este registro el nodo puede saber qué nodos tiene interesados en un tag o varios
+ * A través de este registro el nodo puede saber qué nodos tiene interesados en un tag o no. Y como
+ * se desempeña cada receptor con respecto a un tag en particular de manera de ajustar pesos para
+ * elegir correctamente los receptores para el próximo envío
  * 
  * @author D. García
  */
@@ -66,6 +68,18 @@ public class RegistroDeReceptores {
 			}
 		}
 		return nuevaSeleccion;
+	}
+
+	/**
+	 * Ajusta los pesos de los tags de cada receptor de acuerdo a los resultados de performance
+	 * indicados
+	 * 
+	 * @param reportePerformance
+	 *            El resultado de un ruteo
+	 */
+	public void ajustarPesosDeAcuerdoA(final ReportePerformanceRuteo reportePerformance) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

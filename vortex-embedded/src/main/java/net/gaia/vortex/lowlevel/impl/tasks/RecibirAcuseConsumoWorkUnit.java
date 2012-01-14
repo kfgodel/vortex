@@ -19,8 +19,8 @@ import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.MensajesEnEspera;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
-import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,37 +30,36 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class RecibirConfirmacionDeConsumoWorkUnit implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(RecibirConfirmacionDeConsumoWorkUnit.class);
+public class RecibirAcuseConsumoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(RecibirAcuseConsumoWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
-	private ConfirmacionConsumo confirmacion;
+	private AcuseConsumo acuse;
 
-	public static RecibirConfirmacionDeConsumoWorkUnit create(final ContextoDeRuteoDeMensaje contexto,
-			final ConfirmacionConsumo confirmacion) {
-		final RecibirConfirmacionDeConsumoWorkUnit recibir = new RecibirConfirmacionDeConsumoWorkUnit();
+	public static RecibirAcuseConsumoWorkUnit create(final ContextoDeRuteoDeMensaje contexto, final AcuseConsumo acuse) {
+		final RecibirAcuseConsumoWorkUnit recibir = new RecibirAcuseConsumoWorkUnit();
 		recibir.contexto = contexto;
-		recibir.confirmacion = confirmacion;
+		recibir.acuse = acuse;
 		return recibir;
 	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
+	@Override
 	public void doWork() throws InterruptedException {
-		// Creamos el identificador del envío
-		final IdVortex identificacionMensaje = confirmacion.getIdentificacionMensaje();
+		// Armamos el identificador del envío que realizamos
+		final IdVortex identificacionMensaje = acuse.getIdMensajeConsumido();
 		final ReceptorVortex receptor = this.contexto.getEmisor();
 		final IdentificadorDeEnvio identificadorDeEnvio = IdentificadorDeEnvio.create(identificacionMensaje, receptor);
 
-		// Quitamos el mensaje de la lista de espera de confirmaciones de consumo
+		// Quitamos el mensaje de la lista de espera de acuses de consumo
 		final MemoriaDeMensajes memoriaDeMensajes = this.contexto.getMemoriaDeMensajes();
 		final MensajesEnEspera esperandoConfirmacion = memoriaDeMensajes.getEsperandoAcuseDeConsumo();
 		final ContextoDeEnvio contextoDeEnvio = esperandoConfirmacion.quitar(identificadorDeEnvio);
 		if (contextoDeEnvio == null) {
-			// Ya lo quitaron. Quizás por confirmación o porque se acabó el tiempo de espera
-			LOG.info("Llegó una confirmación de consumo[{}] para la que no existe contexto", confirmacion);
-			// Nada que hacer
+			// Ya lo quitaron. O recibimos un acuse previo, o ya lo dimos por perdido
+			LOG.debug("Llegó una confirmación de consumo[{}] para la que no existe contexto", acuse);
 			return;
 		}
 

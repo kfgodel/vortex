@@ -1,5 +1,5 @@
 /**
- * 01/12/2011 22:24:05 Copyright (C) 2011 Darío L. García
+ * 14/01/2012 19:40:34 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -16,27 +16,31 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 
 /**
- * Esta clase representa el trabajo que hace el nodo al recibir un mensaje, después de validarlo
+ * Esta clase representa la operación de cierre del ruteo que envia el acuse de consumo y balancea
+ * los pesos de los tags
  * 
  * @author D. García
  */
-public class RecibirMensajeWorkUnit implements WorkUnit {
+public class TerminarRuteoWorkUnit implements WorkUnit {
 
 	private ContextoDeRuteoDeMensaje contexto;
-
-	public static RecibirMensajeWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
-		final RecibirMensajeWorkUnit recibir = new RecibirMensajeWorkUnit();
-		recibir.contexto = contexto;
-		return recibir;
-	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
-		// Comenzamos el ruteo del mensaje
-		final RutearMensajeWorkUnit ruteo = RutearMensajeWorkUnit.create(contexto);
-		this.contexto.getProcesador().process(ruteo);
+		// Devolvemos el acuse al emisor original
+		final DevolverAcuseConsumoWorkUnit devolverAcuse = DevolverAcuseConsumoWorkUnit.create(contexto);
+		contexto.getProcesador().process(devolverAcuse);
+
+		// Recalibramos las rutas de los mensajes
+		final OptimizarRutasDeMensajesWorkUnit optimizacion;
+	}
+
+	public static TerminarRuteoWorkUnit create(final ContextoDeRuteoDeMensaje contextoDeRuteo) {
+		final TerminarRuteoWorkUnit terminar = new TerminarRuteoWorkUnit();
+		terminar.contexto = contextoDeRuteo;
+		return terminar;
 	}
 }

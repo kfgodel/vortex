@@ -45,4 +45,30 @@ public interface MemoriaDeMensajes {
 	 */
 	MensajesEnEspera getEsperandoAcuseDeConsumo();
 
+	/**
+	 * Registra en esta memoria que existe un ruteo en progreso para el ID de envío recibido
+	 * 
+	 * @param idEnvioRecibido
+	 *            El identificador del envío que recibimos como nodo
+	 * @param contexto
+	 *            El contexto del ruteo en progreso
+	 */
+	void registrarRuteoActivo(IdentificadorDeEnvio idEnvioRecibido, ContextoDeRuteoDeMensaje contexto);
+
+	/**
+	 * Elimina de esta memoria el ruteo como activo
+	 * 
+	 * @param idEnvioRecibido
+	 *            El identificador del envío en proceso de ruteo
+	 */
+	void registrarRuteoTerminado(IdentificadorDeEnvio idEnvioRecibido);
+
+	/**
+	 * Indica si existe un ruteo activo para el Identificador de envio indicado
+	 * 
+	 * @param idEnvioRealizado
+	 * @return
+	 */
+	boolean tieneRuteoActivoPara(IdentificadorDeEnvio idEnvioRealizado);
+
 }

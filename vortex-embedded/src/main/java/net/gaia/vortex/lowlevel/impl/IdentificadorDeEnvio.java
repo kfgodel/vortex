@@ -26,7 +26,9 @@ import com.google.common.base.Objects;
 public class IdentificadorDeEnvio {
 
 	private IdVortex idDeMensajeEnviado;
+	public static final String idDeMensajeEnviado_FIELD = "idDeMensajeEnviado";
 	private ReceptorVortex receptorDestino;
+	public static final String receptorDestino_FIELD = "receptorDestino";
 
 	public IdVortex getIdDeMensajeEnviado() {
 		return idDeMensajeEnviado;
@@ -70,5 +72,14 @@ public class IdentificadorDeEnvio {
 		identificador.receptorDestino = receptor;
 		identificador.idDeMensajeEnviado = idMensaje;
 		return identificador;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(idDeMensajeEnviado_FIELD, idDeMensajeEnviado)
+				.add(receptorDestino_FIELD, receptorDestino).toString();
 	}
 }

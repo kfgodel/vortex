@@ -33,4 +33,13 @@ public class ControlDeConsumoDeEnvio {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	/**
+	 * Registra la recepcion de la solicitud de espera, de manera que solicitemos el acuse la
+	 * proxima vez
+	 */
+	public void registrarRecepcionDeSolicitudDeEspera() {
+		// TODO Auto-generated method stub
+
+	}
 }

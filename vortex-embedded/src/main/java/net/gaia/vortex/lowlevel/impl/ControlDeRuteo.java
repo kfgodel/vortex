@@ -36,12 +36,60 @@ public class ControlDeRuteo {
 	private List<ReceptorVortex> receptoresNoInteresados;
 	private List<ReceptorVortex> receptoresInteresados;
 	private ConcurrentLinkedQueue<ReceptorVortex> ruteosRealizados;
+	private ConcurrentLinkedQueue<ReceptorVortex> ruteosDuplicados;
+	private ConcurrentLinkedQueue<ReceptorVortex> ruteosFallidos;
+	private ConcurrentLinkedQueue<ReceptorVortex> ruteosPerdidos;
+	private ConcurrentLinkedQueue<ReceptorVortex> ruteosExitosos;
 	private AtomicLong acumuladoCantidadFallas;
 	private AtomicLong acumuladoCantidadDuplicados;
 	private AtomicLong acumuladoCantidadInteresados;
 	private AtomicLong acumuladoCantidadConsumidos;
 
 	private Lock lockParaContinuarProcesoDeRuteo;
+
+	public ConcurrentLinkedQueue<ReceptorVortex> getRuteosFallidos() {
+		if (ruteosFallidos == null) {
+			ruteosFallidos = new ConcurrentLinkedQueue<ReceptorVortex>();
+		}
+		return ruteosFallidos;
+	}
+
+	public void setRuteosFallidos(final ConcurrentLinkedQueue<ReceptorVortex> ruteosFallidos) {
+		this.ruteosFallidos = ruteosFallidos;
+	}
+
+	public ConcurrentLinkedQueue<ReceptorVortex> getRuteosPerdidos() {
+		if (ruteosPerdidos == null) {
+			ruteosPerdidos = new ConcurrentLinkedQueue<ReceptorVortex>();
+		}
+		return ruteosPerdidos;
+	}
+
+	public void setRuteosPerdidos(final ConcurrentLinkedQueue<ReceptorVortex> ruteosPerdidos) {
+		this.ruteosPerdidos = ruteosPerdidos;
+	}
+
+	public ConcurrentLinkedQueue<ReceptorVortex> getRuteosDuplicados() {
+		if (ruteosDuplicados == null) {
+			ruteosDuplicados = new ConcurrentLinkedQueue<ReceptorVortex>();
+		}
+		return ruteosDuplicados;
+	}
+
+	public void setRuteosDuplicados(final ConcurrentLinkedQueue<ReceptorVortex> ruteosDuplicados) {
+		this.ruteosDuplicados = ruteosDuplicados;
+	}
+
+	public ConcurrentLinkedQueue<ReceptorVortex> getRuteosExitosos() {
+		if (ruteosExitosos == null) {
+			ruteosExitosos = new ConcurrentLinkedQueue<ReceptorVortex>();
+		}
+		return ruteosExitosos;
+	}
+
+	public void setRuteosExitosos(final ConcurrentLinkedQueue<ReceptorVortex> ruteosExitosos) {
+		this.ruteosExitosos = ruteosExitosos;
+	}
 
 	public ConcurrentLinkedQueue<ReceptorVortex> getRuteosRealizados() {
 		if (ruteosRealizados == null) {
@@ -100,6 +148,7 @@ public class ControlDeRuteo {
 	public void registrarMensajePerdido(final IdentificadorDeEnvio idEnvio) {
 		final ReceptorVortex receptorDestino = idEnvio.getReceptorDestino();
 		getRuteosRealizados().add(receptorDestino);
+		getRuteosPerdidos().add(receptorDestino);
 		this.acumuladoCantidadFallas.incrementAndGet();
 	}
 
@@ -127,12 +176,14 @@ public class ControlDeRuteo {
 	public void registrarConsumoRealizado(final IdentificadorDeEnvio idEnvio) {
 		final ReceptorVortex receptor = idEnvio.getReceptorDestino();
 		this.getRuteosRealizados().add(receptor);
+		this.getRuteosExitosos().add(receptor);
 		this.acumuladoCantidadConsumidos.incrementAndGet();
 	}
 
 	public void registrarMensajeDuplicados(final IdentificadorDeEnvio idEnvio) {
 		final ReceptorVortex receptor = idEnvio.getReceptorDestino();
 		this.getRuteosRealizados().add(receptor);
+		this.getRuteosDuplicados().add(receptor);
 		this.acumuladoCantidadDuplicados.incrementAndGet();
 	}
 
@@ -144,6 +195,7 @@ public class ControlDeRuteo {
 	public void registrarMensajeFallado(final IdentificadorDeEnvio idEnvio) {
 		final ReceptorVortex receptorDestino = idEnvio.getReceptorDestino();
 		this.getRuteosRealizados().add(receptorDestino);
+		this.getRuteosFallidos().add(receptorDestino);
 		this.acumuladoCantidadFallas.incrementAndGet();
 	}
 
