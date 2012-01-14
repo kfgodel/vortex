@@ -19,7 +19,7 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.RegistroDeReceptores;
 import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta clase representa la tarea de seleccionar los mejores receptores para un mensaje ruteado
@@ -39,12 +39,13 @@ public class SeleccionarReceptoresWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
+	@Override
 	public void doWork() throws InterruptedException {
 		// Obtenemos el registro del nodo de receptores para buscar interesados
 		final RegistroDeReceptores registro = contexto.getRegistroDeReceptoresDelNodo();
 
 		// Queremos los interesados en el tag del mensaje
-		final MensajeVortexEmbebido mensaje = this.contexto.getMensaje();
+		final MensajeVortex mensaje = this.contexto.getMensaje();
 		final List<String> tagsDelMensaje = mensaje.getTagsDestino();
 		final SeleccionDeReceptores seleccion = registro.getReceptoresInteresadosEn(tagsDelMensaje);
 
@@ -54,7 +55,7 @@ public class SeleccionarReceptoresWorkUnit implements WorkUnit {
 		controlDeRuteo.setReceptoresNoInteresados(seleccion.getExcluidos());
 		if (seleccion.esVacia()) {
 			// El mensaje no le interesa a nadie
-			final DevolverConfirmacionDeConsumoWorkUnit devolucion = DevolverConfirmacionDeConsumoWorkUnit
+			final DevolverAcuseConsumoWorkUnit devolucion = DevolverAcuseConsumoWorkUnit
 					.create(contexto);
 			contexto.getProcesador().process(devolucion);
 			return;

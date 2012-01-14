@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta interfaz representa la memoria de un nodo para recordar mensajes recibidos. Esta memoria
@@ -29,7 +29,7 @@ public interface MemoriaDeMensajes {
 	 *            El mensaje a evaluar
 	 * @return true si esta memoria tiene registro anterior del mensaje
 	 */
-	boolean registrarSiNoRecuerdaA(MensajeVortexEmbebido mensaje);
+	boolean registrarSiNoRecuerdaA(MensajeVortex mensaje);
 
 	/**
 	 * Devuelve los mensajes registrados que requieren una confirmación de recepción
@@ -43,6 +43,6 @@ public interface MemoriaDeMensajes {
 	 * 
 	 * @return Los mensajes que esperan confirmación de consumo
 	 */
-	MensajesEnEspera getEsperandoConfirmacionDeConsumo();
+	MensajesEnEspera getEsperandoAcuseDeConsumo();
 
 }

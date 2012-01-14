@@ -14,12 +14,11 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
-import net.gaia.vortex.lowlevel.impl.GeneradorMensajesDeNodo;
+import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
-import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionConsumo;
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.gaia.vortex.protocol.messages.routing.SolicitudAcuseConsumo;
 
 /**
  * Esta clase representa la acción del nodo para solicitar a un receptor que envíe la confirmación
@@ -27,12 +26,12 @@ import net.gaia.vortex.protocol.messages.IdVortex;
  * 
  * @author D. García
  */
-public class EnviarSolicitudDeConfirmacionConsumoWorkUnit implements WorkUnit {
+public class EnviarSolicitudDeAcuseDeConsumoWorkUnit implements WorkUnit {
 
 	private ContextoDeEnvio contexto;
 
-	public static EnviarSolicitudDeConfirmacionConsumoWorkUnit create(final ContextoDeEnvio contexto) {
-		final EnviarSolicitudDeConfirmacionConsumoWorkUnit solicitud = new EnviarSolicitudDeConfirmacionConsumoWorkUnit();
+	public static EnviarSolicitudDeAcuseDeConsumoWorkUnit create(final ContextoDeEnvio contexto) {
+		final EnviarSolicitudDeAcuseDeConsumoWorkUnit solicitud = new EnviarSolicitudDeAcuseDeConsumoWorkUnit();
 		solicitud.contexto = contexto;
 		return solicitud;
 	}
@@ -40,18 +39,19 @@ public class EnviarSolicitudDeConfirmacionConsumoWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
+	@Override
 	public void doWork() throws InterruptedException {
 		// Creamos la solicitud a enviar
 		final IdentificadorDeEnvio idDeEnvio = this.contexto.getIdDeEnvio();
 		final IdVortex idDeMensajeEnviado = idDeEnvio.getIdDeMensajeEnviado();
-		final SolicitudDeConfirmacionConsumo solicitud = SolicitudDeConfirmacionConsumo.create(idDeMensajeEnviado);
+		final SolicitudAcuseConsumo solicitudAEnviar = SolicitudAcuseConsumo.create(idDeMensajeEnviado);
 
-		// La metemos en un mensaje vortex
-		final GeneradorMensajesDeNodo generadorMensajes = this.contexto.getGeneradorDeMensajes();
-		final MensajeVortexEmbebido mensajeDeSolicitud = generadorMensajes.generarMetaMensajePara(solicitud);
-		// Se la enviamos al receptor que no respondió todavía
-		final ReceptorVortex receptorASolicitar = idDeEnvio.getReceptorDestino();
-		receptorASolicitar.recibir(mensajeDeSolicitud);
+		// Se la enviamos al receptor que le mandamos el mensaje
+		final ContextoDeRuteoDeMensaje contextoRuteo = contexto.getContextoDeRuteo();
+		final ReceptorVortex destino = idDeEnvio.getReceptorDestino();
+		final ProcesarEnvioDeMetamensajeWorkUnit envioMetamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(
+				contextoRuteo, destino, solicitudAEnviar);
+		contextoRuteo.getProcesador().process(envioMetamensaje);
 	}
 
 }

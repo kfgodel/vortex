@@ -17,7 +17,7 @@ import java.util.List;
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.meta.Decision;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +39,10 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.ReceptorVortex#recibir(net.gaia.vortex.protocol.MensajeVortexEmbebido)
+	 * @see net.gaia.vortex.lowlevel.impl.ReceptorVortex#recibir(net.gaia.vortex.protocol.MensajeVortex)
 	 */
-	public void recibir(final MensajeVortexEmbebido mensaje) {
+	@Override
+	public void recibir(final MensajeVortex mensaje) {
 		try {
 			this.handler.onMensajeRecibido(mensaje);
 		} catch (final Exception e) {
@@ -52,6 +53,7 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 	/**
 	 * @see net.gaia.vortex.lowlevel.impl.ReceptorVortex#estaInteresadoEnCualquieraDe(java.util.List)
 	 */
+	@Override
 	@HasDependencyOn(Decision.NO_ESTA_IMPLEMENTADO_EL_INTERES_DEL_RECEPTOR)
 	public boolean estaInteresadoEnCualquieraDe(final List<String> tagsDelMensaje) {
 		// TODO Auto-generated method stub

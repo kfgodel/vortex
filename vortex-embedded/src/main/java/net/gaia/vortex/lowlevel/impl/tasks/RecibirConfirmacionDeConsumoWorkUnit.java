@@ -55,7 +55,7 @@ public class RecibirConfirmacionDeConsumoWorkUnit implements WorkUnit {
 
 		// Quitamos el mensaje de la lista de espera de confirmaciones de consumo
 		final MemoriaDeMensajes memoriaDeMensajes = this.contexto.getMemoriaDeMensajes();
-		final MensajesEnEspera esperandoConfirmacion = memoriaDeMensajes.getEsperandoConfirmacionDeConsumo();
+		final MensajesEnEspera esperandoConfirmacion = memoriaDeMensajes.getEsperandoAcuseDeConsumo();
 		final ContextoDeEnvio contextoDeEnvio = esperandoConfirmacion.quitar(identificadorDeEnvio);
 		if (contextoDeEnvio == null) {
 			// Ya lo quitaron. Quizás por confirmación o porque se acabó el tiempo de espera

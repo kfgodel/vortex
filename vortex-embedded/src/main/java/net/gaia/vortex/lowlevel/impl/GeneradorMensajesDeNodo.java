@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta interfaz representa un generador de mensajes de nodo que permite generar nuevos mensajes
@@ -33,7 +33,7 @@ public interface GeneradorMensajesDeNodo {
 	 * @return El mensaje con el contenido y los tags indicados teniendo la identificación
 	 *         consecutiva
 	 */
-	MensajeVortexEmbebido generarMensajePara(Object contenido, String... tags);
+	MensajeVortex generarMensajePara(Object contenido, String... tags);
 
 	/**
 	 * Genera un mensaje con el tag de metamensaje para enviar al nodo receptor vecino
@@ -42,6 +42,6 @@ public interface GeneradorMensajesDeNodo {
 	 *            El contenido a enviar como metamensaje
 	 * @return El mensaje listo para ser enviado al receptor
 	 */
-	MensajeVortexEmbebido generarMetaMensajePara(Object contenido);
+	MensajeVortex generarMetaMensajePara(Object contenido);
 
 }

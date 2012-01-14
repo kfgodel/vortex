@@ -12,27 +12,25 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ConfiguracionDeNodo;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.MensajesEnEspera;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta clase representa la tarea de enviar el mensaje y esperar confirmación de entrega
  * 
  * @author D. García
  */
-public class EnviarMensajeWorkUnit implements WorkUnit {
+public class ProcesarEnvioDeMensajeWorkUnit implements WorkUnit {
 
 	private ContextoDeEnvio contexto;
 
-	public static EnviarMensajeWorkUnit create(final ContextoDeEnvio contexto) {
-		final EnviarMensajeWorkUnit envio = new EnviarMensajeWorkUnit();
+	public static ProcesarEnvioDeMensajeWorkUnit create(final ContextoDeEnvio contexto) {
+		final ProcesarEnvioDeMensajeWorkUnit envio = new ProcesarEnvioDeMensajeWorkUnit();
 		envio.contexto = contexto;
 		return envio;
 	}
@@ -40,30 +38,23 @@ public class EnviarMensajeWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
+	@Override
 	public void doWork() throws InterruptedException {
 
-		// Primero lo registramos en espera de confirmación por si llega antes
+		// Primero lo registramos en espera de consumo por si llega rápido el acuse de consumo
 		final MemoriaDeMensajes memoriaDeMensajes = this.contexto.getMemoriaDeMensajes();
-		final MensajesEnEspera esperandoConfirmacion = memoriaDeMensajes.getEsperandoConfirmacionDeRecepcion();
+		final MensajesEnEspera esperandoConsumo = memoriaDeMensajes.getEsperandoAcuseDeConsumo();
 		final IdentificadorDeEnvio identificacionDeEnvio = contexto.getIdDeEnvio();
-		esperandoConfirmacion.agregar(identificacionDeEnvio, contexto);
-
-		// Y en espera de consumo también por si llega antes
-		final MensajesEnEspera esperandoConsumo = memoriaDeMensajes.getEsperandoConfirmacionDeConsumo();
 		esperandoConsumo.agregar(identificacionDeEnvio, contexto);
 
 		// Enviamos el mensaje a su destinatario
-		final MensajeVortexEmbebido mensajeAEnviar = contexto.getMensaje();
-		final ReceptorVortex receptor = contexto.getReceptorInteresado();
-		receptor.recibir(mensajeAEnviar);
+		final ReceptorVortex destino = contexto.getReceptorInteresado();
+		final MensajeVortex mensaje = contexto.getMensaje();
+		final EntregarMensajeWorkUnit entregaMensaje = EntregarMensajeWorkUnit.create(destino, mensaje);
+		contexto.getProcesador().process(entregaMensaje);
 
-		// Agregamos la espera por timeout por si la confirmación no llega
-		final ConfiguracionDeNodo configuracion = this.contexto.getConfig();
-		final TimeMagnitude timeoutDeConfirmacion = configuracion.getTimeoutDeConfirmacionRecepcion();
-
-		// Disparamos la tarea para ejecutarse cuando se acabe el timeout
-		final ConfirmarRecepcionOSolicitarNuevamenteWorkUnit esperaWorkUnit = ConfirmarRecepcionOSolicitarNuevamenteWorkUnit
-				.create(contexto);
-		this.contexto.getProcesador().processDelayed(timeoutDeConfirmacion, esperaWorkUnit);
+		// Esperamos el acuse de consumo
+		final EsperarAcuseConsumoWorkUnit esperaConsumo = EsperarAcuseConsumoWorkUnit.create(contexto);
+		contexto.getProcesador().process(esperaConsumo);
 	}
 }

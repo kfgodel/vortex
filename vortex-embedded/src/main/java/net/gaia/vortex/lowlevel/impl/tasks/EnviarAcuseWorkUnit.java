@@ -17,9 +17,9 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
-import net.gaia.vortex.protocol.confirmations.MensajeDeConfirmacion;
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.gaia.vortex.protocol.messages.routing.Acuse;
 
 /**
  * Esta clase representa la tarea de enviar una confirmación al emisor de un mensaje. A diferencia
@@ -27,34 +27,33 @@ import net.gaia.vortex.protocol.messages.IdVortex;
  * 
  * @author D. García
  */
-public class EnviarConfirmacionWorkUnit implements WorkUnit {
+public class EnviarAcuseWorkUnit implements WorkUnit {
 
 	private ContextoDeRuteoDeMensaje contexto;
 
-	private MensajeDeConfirmacion confirmacion;
+	private Acuse acuse;
 
-	public static EnviarConfirmacionWorkUnit create(final ContextoDeRuteoDeMensaje contexto,
-			final MensajeDeConfirmacion confirmacion) {
-		final EnviarConfirmacionWorkUnit envio = new EnviarConfirmacionWorkUnit();
+	public static EnviarAcuseWorkUnit create(final ContextoDeRuteoDeMensaje contexto, final Acuse acuse) {
+		final EnviarAcuseWorkUnit envio = new EnviarAcuseWorkUnit();
 		envio.contexto = contexto;
-		envio.confirmacion = confirmacion;
+		envio.acuse = acuse;
 		return envio;
 	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@HasDependencyOn({ Decision.LA_TAREA_DE_ENVIO_DE_CONFIRMACION_REQUIERE_EMISOR_REAL,
-			Decision.LA_TAREA_DE_ENVIO_DE_CONFIRMACION_ASIGNA_EL_ID_DEL_MENSAJE })
+	@Override
+	@HasDependencyOn({ Decision.LA_TAREA_DE_ENVIO_DE_ACUSE_REQUIERE_EMISOR_REAL,
+			Decision.LA_TAREA_DE_ENVIO_DE_ACUSE_ASIGNA_EL_ID_DEL_MENSAJE })
 	public void doWork() throws InterruptedException {
 		// Establecemos el ID del mensaje para el que se envía la confirmación
-		final MensajeVortexEmbebido mensaje = contexto.getMensaje();
+		final MensajeVortex mensaje = contexto.getMensaje();
 		final IdVortex identificacion = mensaje.getIdentificacion();
-		this.confirmacion.setIdentificacionMensaje(identificacion);
+		this.acuse.setIdMensajeInvolucrado(identificacion);
 
-		// Hacemos que el emisor reciba la confirmación
-		final MensajeVortexEmbebido mensajeConfirmacion = contexto.getGeneradorMensajes().generarMetaMensajePara(
-				confirmacion);
+		// Hacemos que el emisor reciba el acuse
+		final MensajeVortex mensajeConfirmacion = contexto.getGeneradorMensajes().generarMetaMensajePara(acuse);
 		final ReceptorVortex emisor = contexto.getEmisor();
 		emisor.recibir(mensajeConfirmacion);
 	}

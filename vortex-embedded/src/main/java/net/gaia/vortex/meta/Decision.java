@@ -23,12 +23,12 @@ public class Decision {
 	public static final String TODAVIA_NO_IMPLEMENTE_EL_GENERADOR_DE_MENSAJES = "El codigo no va a andar hasta que lo haga";
 	public static final String TODAVIA_NO_IMPLEMENTE_LA_MEMORIA_DE_MENSAJES = "El codigo no va a andar hasta que lo haga";
 	public static final String NO_ESTA_IMPLEMENTADO_EL_INTERES_DEL_RECEPTOR = "Debería agregar la lista de tags que le interesan";
-	public static final String LA_TAREA_DE_ENVIO_DE_CONFIRMACION_REQUIERE_EMISOR_REAL = "Asumimos que el emisor ya fue definido antes de pasar a la tarea";
-	public static final String LA_TAREA_DE_ENVIO_DE_CONFIRMACION_ASIGNA_EL_ID_DEL_MENSAJE = "No es necesario definir id de mensaje ya que se obtiene de contexto";
+	public static final String LA_TAREA_DE_ENVIO_DE_ACUSE_REQUIERE_EMISOR_REAL = "Asumimos que el emisor ya fue definido antes de pasar a la tarea";
+	public static final String LA_TAREA_DE_ENVIO_DE_ACUSE_ASIGNA_EL_ID_DEL_MENSAJE = "No es necesario definir id de mensaje ya que se obtiene de contexto";
 	public static final String EL_TIMEOUT_DE_RECEPCION_QUITA_EL_MENSAJE_DE_ESPERA = "El mensaje se saca de espera para evitar que se registre la confirmación si llega justo, y permite darlo por perdido";
 	public static final String PARA_CONTINUAR_EL_RUTEO_DESPUES_DEL_ENVIO_SE_UTILIZAN_CONTADORES = "Quizás no es la mejor estrategia porque los contadores pueden no actualizarse. Quizás debería haber un timeout también?";
 	public static final String EL_TIMEOUT_DE_CONSUMO_QUITA_EL_MENSAJE_DE_ESPERA = "El código asume que esto se mantiene";
 	public static final String TODAVIA_NO_IMPLEMENTE_PRORROGA = "Tengo que agregar el calculo de espera para poder usar las prorrogas";
 	public static final String TODAVIA_NO_IMPLEMENTE_REENVIO_DE_MENSAJE_PERDIDO = "Si el receptor nos devuelve que se perdio lo consideramos rechazo";
-
+	public static final String CONFIO_EN_QUE_NO_HAY_ACUSES_REPETIDOS = "Si un nodo mandara acuses de más, habría que cambiar las listas por sets";
 }

@@ -14,11 +14,12 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
 import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionConsumo;
 import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionRecepcion;
+import net.gaia.vortex.protocol.messages.ContenidoVortex;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta clase representa el trabajo que hace el nodo para procesar un metamensaje recibido
@@ -38,15 +39,16 @@ public class ProcesarMetamensajeWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
+	@Override
 	public void doWork() throws InterruptedException {
 		// Tenemos que ver que tipo de metamensaje es, y en base a eso el tipo de acción a realizar
-		final MensajeVortexEmbebido mensaje = this.contexto.getMensaje();
-		final Object metamensaje = mensaje.getContenido();
+		final MensajeVortex mensaje = this.contexto.getMensaje();
+		final ContenidoVortex contenido = mensaje.getContenido();
+		final Object metamensaje = contenido.getValor();
 		final WorkUnit tareaDelMensaje = crearTareaDesdeMetamensaje(metamensaje);
 		if (tareaDelMensaje != null) {
 			contexto.getProcesador().process(tareaDelMensaje);
 		}
-		// Deberíamos indicar si lo consumimos o no
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * 26/11/2011 14:53:29 Copyright (C) 2011 Darío L. García
+ * 14/01/2012 17:51:47 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,25 +10,27 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.lowlevel.api;
-
-import net.gaia.vortex.protocol.messages.MensajeVortex;
+package net.gaia.vortex.lowlevel.impl;
 
 /**
- * Esta interfaz define el contrato que tiene una sesión vortex, la cual permite enviar y recibir
- * mensajes a un nodo vortex de manera que este identifique el emisor y receptor
+ * Esta clase representa la información de control del acuse de consumo de un envio
  * 
  * @author D. García
  */
-public interface SesionVortex {
+public class ControlDeConsumoDeEnvio {
+
+	public static ControlDeConsumoDeEnvio create() {
+		final ControlDeConsumoDeEnvio control = new ControlDeConsumoDeEnvio();
+		return control;
+	}
 
 	/**
-	 * Envía un mensaje dentro de la sesión permitiendo al nodo que identifique quién lo envía, de
-	 * manera de rutearlo al resto
+	 * Indica si para el envio realizado corresponde solicitar acuse o no
 	 * 
-	 * @param mensajeEnviado
-	 *            El mensaje a enviar
+	 * @return
 	 */
-	void enviar(MensajeVortex mensajeEnviado);
-
+	public boolean correspondeSolicitud() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

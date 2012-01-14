@@ -25,7 +25,7 @@ public class ConfiguracionDeNodo {
 
 	private TimeMagnitude timeoutDeConfirmacionRecepcion;
 	private TimeMagnitude timeoutDeSolicitudDeConfirmacionRecepcion;
-	private TimeMagnitude timeoutDeConfirmacionConsumo;
+	private TimeMagnitude timeoutDeAcuseDeConsumo;
 
 	public TimeMagnitude getTimeoutDeConfirmacionRecepcion() {
 		return timeoutDeConfirmacionRecepcion;
@@ -47,17 +47,17 @@ public class ConfiguracionDeNodo {
 	public static ConfiguracionDeNodo create() {
 		final ConfiguracionDeNodo configuracion = new ConfiguracionDeNodo();
 		configuracion.timeoutDeConfirmacionRecepcion = TimeMagnitude.of(2, TimeUnit.SECONDS);
-		configuracion.timeoutDeConfirmacionConsumo = TimeMagnitude.of(2, TimeUnit.SECONDS);
+		configuracion.timeoutDeAcuseDeConsumo = TimeMagnitude.of(2, TimeUnit.SECONDS);
 		configuracion.timeoutDeSolicitudDeConfirmacionRecepcion = configuracion.timeoutDeConfirmacionRecepcion;
 		return configuracion;
 	}
 
-	public TimeMagnitude getTimeoutDeConfirmacionConsumo() {
-		return timeoutDeConfirmacionConsumo;
+	public TimeMagnitude getTimeoutDeAcuseDeConsumo() {
+		return timeoutDeAcuseDeConsumo;
 	}
 
 	public void setTimeoutDeConfirmacionConsumo(final TimeMagnitude timeoutDeConfirmacionConsumo) {
-		this.timeoutDeConfirmacionConsumo = timeoutDeConfirmacionConsumo;
+		this.timeoutDeAcuseDeConsumo = timeoutDeConfirmacionConsumo;
 	}
 
 }

@@ -17,7 +17,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
-import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
+import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +29,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class DevolverConfirmacionRecepcionWorkUnit implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(DevolverConfirmacionRecepcionWorkUnit.class);
+public class DevolverAcuseFallaRecepcionWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(DevolverAcuseFallaRecepcionWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 	private String errorRegistrado;
@@ -45,9 +45,8 @@ public class DevolverConfirmacionRecepcionWorkUnit implements WorkUnit {
 	 *            El error producido durante la validación del mensaje
 	 * @return La tarea para devolver un mensaje de confirmación
 	 */
-	public static DevolverConfirmacionRecepcionWorkUnit create(final ContextoDeRuteoDeMensaje contexto,
-			final String error) {
-		final DevolverConfirmacionRecepcionWorkUnit devolucion = new DevolverConfirmacionRecepcionWorkUnit();
+	public static DevolverAcuseFallaRecepcionWorkUnit create(final ContextoDeRuteoDeMensaje contexto, final String error) {
+		final DevolverAcuseFallaRecepcionWorkUnit devolucion = new DevolverAcuseFallaRecepcionWorkUnit();
 		devolucion.contexto = contexto;
 		devolucion.errorRegistrado = error;
 		return devolucion;
@@ -56,8 +55,9 @@ public class DevolverConfirmacionRecepcionWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@HasDependencyOn({ Decision.LA_TAREA_DE_ENVIO_DE_CONFIRMACION_ASIGNA_EL_ID_DEL_MENSAJE,
-			Decision.LA_TAREA_DE_ENVIO_DE_CONFIRMACION_REQUIERE_EMISOR_REAL })
+	@Override
+	@HasDependencyOn({ Decision.LA_TAREA_DE_ENVIO_DE_ACUSE_ASIGNA_EL_ID_DEL_MENSAJE,
+			Decision.LA_TAREA_DE_ENVIO_DE_ACUSE_REQUIERE_EMISOR_REAL })
 	public void doWork() throws InterruptedException {
 		final ReceptorVortex emisor = contexto.getEmisor();
 		if (emisor == null) {
@@ -67,8 +67,8 @@ public class DevolverConfirmacionRecepcionWorkUnit implements WorkUnit {
 			return;
 		}
 
-		final ConfirmacionRecepcion confirmacionRecepcion = ConfirmacionRecepcion.create(null, errorRegistrado);
-		final EnviarConfirmacionWorkUnit envio = EnviarConfirmacionWorkUnit.create(contexto, confirmacionRecepcion);
+		final AcuseFallaRecepcion acuseDeFalla = AcuseFallaRecepcion.create(errorRegistrado);
+		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, acuseDeFalla);
 		contexto.getProcesador().process(envio);
 	}
 }

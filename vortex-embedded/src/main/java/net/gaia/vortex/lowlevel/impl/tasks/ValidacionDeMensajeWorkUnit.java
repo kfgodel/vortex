@@ -16,9 +16,9 @@ import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.meta.Decision;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
-import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 
 /**
  * Esta clase representa la tarea que valida la conformidad del mensaje al protocolo
@@ -31,12 +31,13 @@ public class ValidacionDeMensajeWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
+	@Override
 	public void doWork() throws InterruptedException {
-		final MensajeVortexEmbebido mensajeRecibido = contexto.getMensaje();
+		final MensajeVortex mensajeRecibido = contexto.getMensaje();
 		final String descripcionError = validarMensaje(mensajeRecibido);
 		if (descripcionError != null) {
 			// Existe un error en el mensaje intentamos devolver feedback al respecto
-			final DevolverConfirmacionRecepcionWorkUnit devolucionWorkUnit = DevolverConfirmacionRecepcionWorkUnit
+			final DevolverAcuseFallaRecepcionWorkUnit devolucionWorkUnit = DevolverAcuseFallaRecepcionWorkUnit
 					.create(contexto, descripcionError);
 			contexto.getProcesador().process(devolucionWorkUnit);
 			return;
@@ -53,10 +54,10 @@ public class ValidacionDeMensajeWorkUnit implements WorkUnit {
 	 * @return El error con la descripción del mensaje
 	 */
 	@HasDependencyOn(Decision.FALTAN_MAS_VALIDACIONES_DE_MENSAJE)
-	private String validarMensaje(final MensajeVortexEmbebido mensaje) {
+	private String validarMensaje(final MensajeVortex mensaje) {
 		final IdVortex identificacion = mensaje.getIdentificacion();
 		if (identificacion.getHashDelContenido() == null) {
-			return ConfirmacionRecepcion.BAD_HASH_ERROR;
+			return AcuseFallaRecepcion.BAD_HASH_ERROR;
 		}
 		return null;
 	}

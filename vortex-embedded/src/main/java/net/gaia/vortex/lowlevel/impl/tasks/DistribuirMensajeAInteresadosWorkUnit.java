@@ -47,7 +47,7 @@ public class DistribuirMensajeAInteresadosWorkUnit implements WorkUnit {
 		final List<ReceptorVortex> allInteresados = this.interesados.getSeleccionados();
 		for (final ReceptorVortex interesado : allInteresados) {
 			final ContextoDeEnvio contextoDeEnvioDelMensaje = ContextoDeEnvio.create(contexto, interesado);
-			final EnviarMensajeWorkUnit enviarMensaje = EnviarMensajeWorkUnit.create(contextoDeEnvioDelMensaje);
+			final ProcesarEnvioDeMensajeWorkUnit enviarMensaje = ProcesarEnvioDeMensajeWorkUnit.create(contextoDeEnvioDelMensaje);
 			procesador.process(enviarMensaje);
 		}
 	}

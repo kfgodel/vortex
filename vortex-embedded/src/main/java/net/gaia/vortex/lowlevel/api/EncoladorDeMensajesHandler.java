@@ -19,7 +19,7 @@ import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
 import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Este handler de mensajes mantiene una lista interna de los mensajes recibidos y permite esperar a
@@ -29,22 +29,22 @@ import net.gaia.vortex.protocol.MensajeVortexEmbebido;
  */
 public class EncoladorDeMensajesHandler implements MensajeVortexHandler {
 
-	private LinkedBlockingQueue<MensajeVortexEmbebido> mensajes;
+	private LinkedBlockingQueue<MensajeVortex> mensajes;
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.api.MensajeVortexHandler#onMensajeRecibido(net.gaia.vortex.protocol.MensajeVortexEmbebido)
+	 * @see net.gaia.vortex.lowlevel.api.MensajeVortexHandler#onMensajeRecibido(net.gaia.vortex.protocol.MensajeVortex)
 	 */
-	public void onMensajeRecibido(final MensajeVortexEmbebido nuevoMensaje) {
+	public void onMensajeRecibido(final MensajeVortex nuevoMensaje) {
 		mensajes.add(nuevoMensaje);
 	}
 
 	public static EncoladorDeMensajesHandler create() {
 		final EncoladorDeMensajesHandler encolador = new EncoladorDeMensajesHandler();
-		encolador.mensajes = new LinkedBlockingQueue<MensajeVortexEmbebido>();
+		encolador.mensajes = new LinkedBlockingQueue<MensajeVortex>();
 		return encolador;
 	}
 
-	public LinkedBlockingQueue<MensajeVortexEmbebido> getMensajes() {
+	public LinkedBlockingQueue<MensajeVortex> getMensajes() {
 		return mensajes;
 	}
 
@@ -61,11 +61,11 @@ public class EncoladorDeMensajesHandler implements MensajeVortexHandler {
 	 *             Si se alcanza el límite de espera y no hay mensajes disponibles o el thread es
 	 *             interrumpido antes de tiempo
 	 */
-	public MensajeVortexEmbebido esperarProximoMensaje(final TimeMagnitude timeout) throws UnsuccessfulWaitException {
+	public MensajeVortex esperarProximoMensaje(final TimeMagnitude timeout) throws UnsuccessfulWaitException {
 		final TimeUnit timeUnit = timeout.getTimeUnit();
 		final long quantity = timeout.getQuantity();
 		try {
-			final MensajeVortexEmbebido mensaje = mensajes.poll(quantity, timeUnit);
+			final MensajeVortex mensaje = mensajes.poll(quantity, timeUnit);
 			if (mensaje == null) {
 				throw new TimeoutExceededException("Se acabó el timput antes de recibir un mensaje");
 			}

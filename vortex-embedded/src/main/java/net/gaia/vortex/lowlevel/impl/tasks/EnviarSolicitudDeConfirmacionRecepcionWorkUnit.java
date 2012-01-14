@@ -17,9 +17,9 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.GeneradorMensajesDeNodo;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 import net.gaia.vortex.protocol.confirmations.SolicitudDeConfirmacionRecepcion;
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta clase representa la tarea de solicitar nueva confirmación por envio realizado
@@ -33,6 +33,7 @@ public class EnviarSolicitudDeConfirmacionRecepcionWorkUnit implements WorkUnit 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
+	@Override
 	public void doWork() throws InterruptedException {
 		// Creamos la solicitud a enviar
 		final IdentificadorDeEnvio idDeEnvio = this.contexto.getIdDeEnvio();
@@ -41,7 +42,7 @@ public class EnviarSolicitudDeConfirmacionRecepcionWorkUnit implements WorkUnit 
 
 		// La metemos en un mensaje vortex
 		final GeneradorMensajesDeNodo generadorMensajes = this.contexto.getGeneradorDeMensajes();
-		final MensajeVortexEmbebido mensajeDeSolicitud = generadorMensajes.generarMetaMensajePara(solicitud);
+		final MensajeVortex mensajeDeSolicitud = generadorMensajes.generarMetaMensajePara(solicitud);
 		// Se la enviamos al receptor que no respondió todavía
 		final ReceptorVortex receptorASolicitar = idDeEnvio.getReceptorDestino();
 		receptorASolicitar.recibir(mensajeDeSolicitud);

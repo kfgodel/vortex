@@ -13,8 +13,8 @@
 package net.gaia.vortex.lowlevel.impl;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta clase representa la información de contexto necesaria para las tareas relacionadas con el
@@ -28,14 +28,16 @@ public class ContextoDeEnvio {
 	private ReceptorVortex receptorInteresado;
 	private IdentificadorDeEnvio idDeEnvio;
 	private EsperaDeAccion esperaDeConfirmacionRecepcion;
-	private EsperaDeAccion esperaDeConfirmacionConsumo;
+	private EsperaDeAccion esperaDeAcuseConsumo;
+	private ControlDeConsumoDeEnvio controlDeConsumo;
 
 	public static ContextoDeEnvio create(final ContextoDeRuteoDeMensaje contextoDeRuteo, final ReceptorVortex interesado) {
 		final ContextoDeEnvio contextoEnvio = new ContextoDeEnvio();
 		contextoEnvio.contextoDeRuteo = contextoDeRuteo;
 		contextoEnvio.receptorInteresado = interesado;
+		contextoEnvio.controlDeConsumo = ControlDeConsumoDeEnvio.create();
 
-		final MensajeVortexEmbebido mensaje = contextoDeRuteo.getMensaje();
+		final MensajeVortex mensaje = contextoDeRuteo.getMensaje();
 		final IdVortex idDelMensaje = mensaje.getIdentificacion();
 		contextoEnvio.idDeEnvio = IdentificadorDeEnvio.create(idDelMensaje, interesado);
 		contextoEnvio.esperaDeConfirmacionRecepcion = EsperaDeAccion.create();
@@ -70,7 +72,7 @@ public class ContextoDeEnvio {
 		return this.contextoDeRuteo.getMemoriaDeMensajes();
 	}
 
-	public MensajeVortexEmbebido getMensaje() {
+	public MensajeVortex getMensaje() {
 		return contextoDeRuteo.getMensaje();
 	}
 
@@ -94,12 +96,20 @@ public class ContextoDeEnvio {
 		return this.contextoDeRuteo.getControl();
 	}
 
-	public EsperaDeAccion getEsperaDeConfirmacionConsumo() {
-		return esperaDeConfirmacionConsumo;
+	public EsperaDeAccion getEsperaDeAcuseConsumo() {
+		return esperaDeAcuseConsumo;
 	}
 
 	public void setEsperaDeConfirmacionConsumo(final EsperaDeAccion esperaDeConfirmacionConsumo) {
-		this.esperaDeConfirmacionConsumo = esperaDeConfirmacionConsumo;
+		this.esperaDeAcuseConsumo = esperaDeConfirmacionConsumo;
+	}
+
+	public ControlDeConsumoDeEnvio getControlDeConsumo() {
+		return controlDeConsumo;
+	}
+
+	public void setControlDeConsumo(final ControlDeConsumoDeEnvio controlDeConsumo) {
+		this.controlDeConsumo = controlDeConsumo;
 	}
 
 }

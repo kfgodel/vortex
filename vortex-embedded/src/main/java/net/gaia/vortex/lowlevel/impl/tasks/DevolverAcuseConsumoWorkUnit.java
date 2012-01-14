@@ -18,7 +18,7 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
-import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
+import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +28,13 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class DevolverConfirmacionDeConsumoWorkUnit implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(DevolverConfirmacionDeConsumoWorkUnit.class);
+public class DevolverAcuseConsumoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(DevolverAcuseConsumoWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 
-	public static DevolverConfirmacionDeConsumoWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
-		final DevolverConfirmacionDeConsumoWorkUnit devolucion = new DevolverConfirmacionDeConsumoWorkUnit();
+	public static DevolverAcuseConsumoWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
+		final DevolverAcuseConsumoWorkUnit devolucion = new DevolverAcuseConsumoWorkUnit();
 		devolucion.contexto = contexto;
 		return devolucion;
 	}
@@ -42,8 +42,9 @@ public class DevolverConfirmacionDeConsumoWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@HasDependencyOn({ Decision.LA_TAREA_DE_ENVIO_DE_CONFIRMACION_ASIGNA_EL_ID_DEL_MENSAJE,
-			Decision.LA_TAREA_DE_ENVIO_DE_CONFIRMACION_REQUIERE_EMISOR_REAL })
+	@Override
+	@HasDependencyOn({ Decision.LA_TAREA_DE_ENVIO_DE_ACUSE_ASIGNA_EL_ID_DEL_MENSAJE,
+			Decision.LA_TAREA_DE_ENVIO_DE_ACUSE_REQUIERE_EMISOR_REAL })
 	public void doWork() throws InterruptedException {
 		final ReceptorVortex emisor = this.contexto.getEmisor();
 		if (emisor == null) {
@@ -52,9 +53,9 @@ public class DevolverConfirmacionDeConsumoWorkUnit implements WorkUnit {
 					contexto.getMensaje());
 			return;
 		}
-		ControlDeRuteo controlDeRuteo = this.contexto.getControl();
-		final ConfirmacionConsumo confirmacionConsumo = controlDeRuteo.crearConfirmacionDeConsumo();
-		final EnviarConfirmacionWorkUnit envio = EnviarConfirmacionWorkUnit.create(contexto, confirmacionConsumo);
+		final ControlDeRuteo controlDeRuteo = this.contexto.getControl();
+		final AcuseConsumo confirmacionConsumo = controlDeRuteo.crearAcuseDeConsumo();
+		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, confirmacionConsumo);
 		contexto.getProcesador().process(envio);
 	}
 }

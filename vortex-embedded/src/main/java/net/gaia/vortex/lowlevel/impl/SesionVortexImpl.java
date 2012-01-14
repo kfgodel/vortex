@@ -13,7 +13,7 @@
 package net.gaia.vortex.lowlevel.impl;
 
 import net.gaia.vortex.lowlevel.api.SesionVortex;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta clase representa la sesión vortex creada desde el nodo y dada al cliente para poder enviar y
@@ -30,12 +30,13 @@ public class SesionVortexImpl implements SesionVortex {
 	private NodoVortexConTasks nodo;
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#enviar(net.gaia.vortex.protocol.MensajeVortexEmbebido)
+	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#enviar(net.gaia.vortex.protocol.MensajeVortex)
 	 */
-	public void enviar(final MensajeVortexEmbebido mensajeEnviado) {
+	@Override
+	public void enviar(final MensajeVortex mensajeEnviado) {
 		// Creamos el contexto para el ruteo del mensaje del emisor
-		final ContextoDeRuteoDeMensaje nuevoRuteo = ContextoDeRuteoDeMensaje
-				.create(mensajeEnviado, receptorEmisor, this.nodo);
+		final ContextoDeRuteoDeMensaje nuevoRuteo = ContextoDeRuteoDeMensaje.create(mensajeEnviado, receptorEmisor,
+				this.nodo);
 		nodo.comenzarRuteo(nuevoRuteo);
 	}
 

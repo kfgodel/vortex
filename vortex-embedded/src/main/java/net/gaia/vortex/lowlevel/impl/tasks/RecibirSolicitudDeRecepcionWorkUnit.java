@@ -43,15 +43,15 @@ public class RecibirSolicitudDeRecepcionWorkUnit implements WorkUnit {
 		// Vemos si recordamos el mensaje y por lo tanto lo recibimos
 		final ReceptorVortex emisor = contexto.getEmisor();
 		final IdVortex idDeMensajeAConfirmar = solicitud.getIdDeMensajeAConfirmar();
-		DevolverConfirmacionRecepcionWorkUnit confirmacionDevuelta;
+		DevolverAcuseFallaRecepcionWorkUnit confirmacionDevuelta;
 		final boolean recibimosElMensaje = emisor.envioPreviamente(idDeMensajeAConfirmar);
 		if (recibimosElMensaje) {
 			// Le devolvemos una confirmación exitosa porque recibimos el mensaje en algún momento
-			confirmacionDevuelta = DevolverConfirmacionRecepcionWorkUnit.create(contexto, null);
+			confirmacionDevuelta = DevolverAcuseFallaRecepcionWorkUnit.create(contexto, null);
 		} else {
 			LOG.error("Nos pidieron confirmación de un mensaje[{}] que no recibimos", idDeMensajeAConfirmar);
 			// Le devolvemos una confirmación pero por error
-			confirmacionDevuelta = DevolverConfirmacionRecepcionWorkUnit.create(contexto,
+			confirmacionDevuelta = DevolverAcuseFallaRecepcionWorkUnit.create(contexto,
 					ConfirmacionRecepcion.MENSAJE_IS_MISSING_ERROR);
 		}
 		// TODO: Pedimos tiempo de prórroga?

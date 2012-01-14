@@ -45,7 +45,7 @@ public class ConfirmarConsumoODarPorPerdidoWorkUnit implements WorkUnit {
 	 */
 	@HasDependencyOn(Decision.EL_TIMEOUT_DE_CONSUMO_QUITA_EL_MENSAJE_DE_ESPERA)
 	public void doWork() throws InterruptedException {
-		final EsperaDeAccion esperaDeConfirmacion = this.contexto.getEsperaDeConfirmacionConsumo();
+		final EsperaDeAccion esperaDeConfirmacion = this.contexto.getEsperaDeAcuseConsumo();
 		final long prorroga = esperaDeConfirmacion.getMillisRestantes();
 		if (prorroga > 0) {
 			// Todavía no es momento de tomar la decisión, esperamos
@@ -55,7 +55,7 @@ public class ConfirmarConsumoODarPorPerdidoWorkUnit implements WorkUnit {
 
 		// Se acabó el tiempo de espera. Es hora de hacer algo con el mensaje
 		final MemoriaDeMensajes memoria = this.contexto.getMemoriaDeMensajes();
-		final MensajesEnEspera esperandoConfirmacion = memoria.getEsperandoConfirmacionDeConsumo();
+		final MensajesEnEspera esperandoConfirmacion = memoria.getEsperandoAcuseDeConsumo();
 		final IdentificadorDeEnvio idDeEnvio = this.contexto.getIdDeEnvio();
 
 		// Verificamos si aún estaba esperando confirmación

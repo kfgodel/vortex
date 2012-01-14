@@ -12,15 +12,16 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.meta.Decision;
-import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
 
 /**
  * Esta clase representa la información de control del ruteo de manera de determinar cuando está
@@ -28,23 +29,37 @@ import net.gaia.vortex.protocol.messages.IdVortex;
  * 
  * @author D. García
  */
+@HasDependencyOn(Decision.CONFIO_EN_QUE_NO_HAY_ACUSES_REPETIDOS)
 public class ControlDeRuteo {
 
 	private IdVortex idMensajeRuteado;
 	private List<ReceptorVortex> receptoresNoInteresados;
 	private List<ReceptorVortex> receptoresInteresados;
-	private List<IdentificadorDeEnvio> mensajesPerdidos;
-	private List<IdentificadorDeEnvio> mensajesConsumidos;
-	private List<IdentificadorDeEnvio> mensajesRuteados;
-	private List<IdentificadorDeEnvio> mensajesRechazados;
-	private List<IdentificadorDeEnvio> recepcionesConfirmadas;
+	private ConcurrentLinkedQueue<ReceptorVortex> ruteosRealizados;
+	private AtomicLong acumuladoCantidadFallas;
+	private AtomicLong acumuladoCantidadDuplicados;
+	private AtomicLong acumuladoCantidadInteresados;
+	private AtomicLong acumuladoCantidadConsumidos;
+
 	private Lock lockParaContinuarProcesoDeRuteo;
 
-	public List<IdentificadorDeEnvio> getMensajesRechazados() {
-		if (mensajesRechazados == null) {
-			mensajesRechazados = new ArrayList<IdentificadorDeEnvio>();
+	public ConcurrentLinkedQueue<ReceptorVortex> getRuteosRealizados() {
+		if (ruteosRealizados == null) {
+			ruteosRealizados = new ConcurrentLinkedQueue<ReceptorVortex>();
 		}
-		return mensajesRechazados;
+		return ruteosRealizados;
+	}
+
+	public void setRuteosRealizados(final ConcurrentLinkedQueue<ReceptorVortex> ruteosRealizados) {
+		this.ruteosRealizados = ruteosRealizados;
+	}
+
+	public AtomicLong getAcumuladoCantidadConsumidos() {
+		return acumuladoCantidadConsumidos;
+	}
+
+	public void setAcumuladoCantidadConsumidos(final AtomicLong acumuladoCantidadConsumidos) {
+		this.acumuladoCantidadConsumidos = acumuladoCantidadConsumidos;
 	}
 
 	public List<ReceptorVortex> getReceptoresNoInteresados() {
@@ -61,71 +76,31 @@ public class ControlDeRuteo {
 
 	public void setReceptoresInteresados(final List<ReceptorVortex> receptoresInteresados) {
 		this.receptoresInteresados = receptoresInteresados;
+		this.acumuladoCantidadInteresados.set(receptoresInteresados.size());
 	}
 
 	public static ControlDeRuteo create(final IdVortex idMensaje) {
 		final ControlDeRuteo control = new ControlDeRuteo();
 		control.idMensajeRuteado = idMensaje;
-		control.receptoresInteresados = null;
-		control.receptoresNoInteresados = null;
-		control.mensajesPerdidos = null;
-		control.mensajesRuteados = null;
-		control.recepcionesConfirmadas = null;
 		control.lockParaContinuarProcesoDeRuteo = new ReentrantLock();
+		control.acumuladoCantidadConsumidos = new AtomicLong();
+		control.acumuladoCantidadFallas = new AtomicLong();
+		control.acumuladoCantidadDuplicados = new AtomicLong();
+		control.acumuladoCantidadInteresados = new AtomicLong();
 		return control;
-	}
-
-	/**
-	 * Crea la confirmación de consumo con la información disponible actualmente
-	 * 
-	 * @return La confirmación de consumo con la información para enviar
-	 */
-	@HasDependencyOn(Decision.LA_TAREA_DE_ENVIO_DE_CONFIRMACION_ASIGNA_EL_ID_DEL_MENSAJE)
-	public ConfirmacionConsumo crearConfirmacionDeConsumo() {
-		final ConfirmacionConsumo confirmacion = ConfirmacionConsumo.create();
-		confirmacion.setInteresados(this.receptoresInteresados.size());
-		confirmacion.setNoInteresados(this.receptoresNoInteresados.size());
-		return confirmacion;
 	}
 
 	public IdVortex getIdMensajeRuteado() {
 		return idMensajeRuteado;
 	}
 
-	public List<IdentificadorDeEnvio> getMensajesPerdidos() {
-		if (mensajesPerdidos == null) {
-			mensajesPerdidos = new ArrayList<IdentificadorDeEnvio>();
-		}
-		return mensajesPerdidos;
-	}
-
-	public List<IdentificadorDeEnvio> getMensajesRuteados() {
-		if (mensajesRuteados == null) {
-			mensajesRuteados = new ArrayList<IdentificadorDeEnvio>();
-		}
-		return mensajesRuteados;
-	}
-
-	public List<IdentificadorDeEnvio> getRecepcionesConfirmadas() {
-		if (recepcionesConfirmadas == null) {
-			recepcionesConfirmadas = new ArrayList<IdentificadorDeEnvio>();
-		}
-		return recepcionesConfirmadas;
-	}
-
-	public List<IdentificadorDeEnvio> getMensajesConsumidos() {
-		if (mensajesConsumidos == null) {
-			mensajesConsumidos = new ArrayList<IdentificadorDeEnvio>();
-		}
-		return mensajesConsumidos;
-	}
-
 	/**
 	 * Incrementa la cantidad de mensajes perdidos
 	 */
 	public void registrarMensajePerdido(final IdentificadorDeEnvio idEnvio) {
-		getMensajesPerdidos().add(idEnvio);
-		getMensajesRuteados().add(idEnvio);
+		final ReceptorVortex receptorDestino = idEnvio.getReceptorDestino();
+		getRuteosRealizados().add(receptorDestino);
+		this.acumuladoCantidadFallas.incrementAndGet();
 	}
 
 	/**
@@ -139,7 +114,7 @@ public class ControlDeRuteo {
 	@HasDependencyOn(Decision.PARA_CONTINUAR_EL_RUTEO_DESPUES_DEL_ENVIO_SE_UTILIZAN_CONTADORES)
 	public boolean existenMensajesEnRuta() {
 		// Vemos si ya se rutearon todos
-		final boolean existenMasMensajesParaConfirmar = getMensajesRuteados().size() < this.getReceptoresInteresados()
+		final boolean existenMasMensajesParaConfirmar = getRuteosRealizados().size() < this.getReceptoresInteresados()
 				.size();
 		if (existenMasMensajesParaConfirmar) {
 			return true;
@@ -149,19 +124,16 @@ public class ControlDeRuteo {
 		return debemosIndicarQueExistenMas;
 	}
 
-	/**
-	 * Registra en este control que el mensaje fue recibido por un receptor
-	 */
-	public void registrarRecepcionRealizada(final IdentificadorDeEnvio idenvio) {
-		this.getRecepcionesConfirmadas().add(idenvio);
+	public void registrarConsumoRealizado(final IdentificadorDeEnvio idEnvio) {
+		final ReceptorVortex receptor = idEnvio.getReceptorDestino();
+		this.getRuteosRealizados().add(receptor);
+		this.acumuladoCantidadConsumidos.incrementAndGet();
 	}
 
-	/**
-	 * @param idEnvio
-	 */
-	public void registrarConsumoRealizado(final IdentificadorDeEnvio idEnvio) {
-		this.getMensajesConsumidos().add(idEnvio);
-		this.getMensajesRuteados().add(idEnvio);
+	public void registrarMensajeDuplicados(final IdentificadorDeEnvio idEnvio) {
+		final ReceptorVortex receptor = idEnvio.getReceptorDestino();
+		this.getRuteosRealizados().add(receptor);
+		this.acumuladoCantidadDuplicados.incrementAndGet();
 	}
 
 	/**
@@ -169,8 +141,22 @@ public class ControlDeRuteo {
 	 * 
 	 * @param idEnvio
 	 */
-	public void registrarMensajeRechazado(final IdentificadorDeEnvio idEnvio) {
-		this.getMensajesRechazados().add(idEnvio);
-		this.getMensajesRuteados().add(idEnvio);
+	public void registrarMensajeFallado(final IdentificadorDeEnvio idEnvio) {
+		final ReceptorVortex receptorDestino = idEnvio.getReceptorDestino();
+		this.getRuteosRealizados().add(receptorDestino);
+		this.acumuladoCantidadFallas.incrementAndGet();
+	}
+
+	/**
+	 * @return
+	 */
+	@HasDependencyOn(Decision.LA_TAREA_DE_ENVIO_DE_ACUSE_ASIGNA_EL_ID_DEL_MENSAJE)
+	public AcuseConsumo crearAcuseDeConsumo() {
+		final AcuseConsumo acuse = AcuseConsumo.create();
+		acuse.setCantidadInteresados(this.acumuladoCantidadInteresados.get());
+		acuse.setCantidadDuplicados(this.acumuladoCantidadDuplicados.get());
+		acuse.setCantidadFallados(this.acumuladoCantidadFallas.get());
+		acuse.setCantidadConsumidos(this.acumuladoCantidadConsumidos.get());
+		return acuse;
 	}
 }

@@ -19,7 +19,7 @@ import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.tasks.ValidacionDeMensajeWorkUnit;
 import net.gaia.vortex.meta.Decision;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta clase representa el nodo vortex implementado en memoria con un {@link TaskProcessor}
@@ -76,9 +76,9 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	private NullReceptorVortex sinEmisorIdentificado;
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.api.NodoVortexEmbebido#rutear(net.gaia.vortex.protocol.MensajeVortexEmbebido)
+	 * @see net.gaia.vortex.lowlevel.api.NodoVortexEmbebido#rutear(net.gaia.vortex.protocol.MensajeVortex)
 	 */
-	public void rutear(final MensajeVortexEmbebido mensajeVortex) {
+	public void rutear(final MensajeVortex mensajeVortex) {
 		// Creamos el contexto para el ruteo del mensaje sin emisor
 		final ContextoDeRuteoDeMensaje nuevoRuteo = ContextoDeRuteoDeMensaje.create(mensajeVortex,
 				sinEmisorIdentificado, this);
@@ -100,6 +100,7 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	/**
 	 * @see net.gaia.vortex.lowlevel.api.NodoVortexEmbebido#crearNuevaSesion(net.gaia.vortex.lowlevel.api.MensajeVortexHandler)
 	 */
+	@Override
 	public SesionVortex crearNuevaSesion(final MensajeVortexHandler handlerDeMensajes) {
 		final ReceptorVortexConSesion nuevoReceptor = ReceptorVortexConSesion.create(handlerDeMensajes);
 		final SesionVortexImpl sesion = SesionVortexImpl.create(nuevoReceptor, this);

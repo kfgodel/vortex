@@ -40,7 +40,7 @@ public class VerificarRutasPendientesWorkUnit implements WorkUnit {
 		}
 		// Tenemos que seguir con el ruteo, enviar una confirmación de consumo
 		final ContextoDeRuteoDeMensaje contextoDeRuteo = contexto.getContextoDeRuteo();
-		final DevolverConfirmacionDeConsumoWorkUnit devolverConfirmacion = DevolverConfirmacionDeConsumoWorkUnit
+		final DevolverAcuseConsumoWorkUnit devolverConfirmacion = DevolverAcuseConsumoWorkUnit
 				.create(contextoDeRuteo);
 		contextoDeRuteo.getProcesador().process(devolverConfirmacion);
 	}

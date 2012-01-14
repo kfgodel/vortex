@@ -13,7 +13,7 @@
 package net.gaia.vortex.lowlevel.impl;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta clase representa la inforamción de contexto necesaria para las tareas de ruteo de mensajes.
@@ -33,7 +33,7 @@ public class ContextoDeRuteoDeMensaje {
 	/**
 	 * El mensaje a rutear
 	 */
-	private MensajeVortexEmbebido mensaje;
+	private MensajeVortex mensaje;
 
 	/**
 	 * Información acerca del ruteo una vez aceptado
@@ -52,15 +52,15 @@ public class ContextoDeRuteoDeMensaje {
 		this.emisor = emisor;
 	}
 
-	public MensajeVortexEmbebido getMensaje() {
+	public MensajeVortex getMensaje() {
 		return mensaje;
 	}
 
-	public void setMensaje(final MensajeVortexEmbebido mensaje) {
+	public void setMensaje(final MensajeVortex mensaje) {
 		this.mensaje = mensaje;
 	}
 
-	public static ContextoDeRuteoDeMensaje create(final MensajeVortexEmbebido mensaje, final ReceptorVortex emisor,
+	public static ContextoDeRuteoDeMensaje create(final MensajeVortex mensaje, final ReceptorVortex emisor,
 			final NodoVortexConTasks nodo) {
 		final ContextoDeRuteoDeMensaje contexto = new ContextoDeRuteoDeMensaje();
 		contexto.emisor = emisor;

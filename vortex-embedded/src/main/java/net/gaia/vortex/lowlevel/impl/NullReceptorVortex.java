@@ -14,7 +14,7 @@ package net.gaia.vortex.lowlevel.impl;
 
 import java.util.List;
 
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta clase representa a un receptor sin sesión, lo que en realidad no es un receptor
@@ -24,15 +24,16 @@ import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 public class NullReceptorVortex implements ReceptorVortex {
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.ReceptorVortex#recibir(net.gaia.vortex.protocol.MensajeVortexEmbebido)
+	 * @see net.gaia.vortex.lowlevel.impl.ReceptorVortex#recibir(net.gaia.vortex.protocol.MensajeVortex)
 	 */
-	public void recibir(final MensajeVortexEmbebido mensaje) {
+	public void recibir(final MensajeVortex mensaje) {
 		// No hacemos nada en realidad
 	}
 
 	/**
 	 * @see net.gaia.vortex.lowlevel.impl.ReceptorVortex#estaInteresadoEnCualquieraDe(java.util.List)
 	 */
+	@Override
 	public boolean estaInteresadoEnCualquieraDe(final List<String> tagsDelMensaje) {
 		// El receptor nulo no recibe mensajes
 		return false;

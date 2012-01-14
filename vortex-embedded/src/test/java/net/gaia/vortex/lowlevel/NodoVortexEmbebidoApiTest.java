@@ -20,9 +20,10 @@ import net.gaia.vortex.lowlevel.api.DeclaracionDeTags;
 import net.gaia.vortex.lowlevel.api.EncoladorDeMensajesHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
 import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 import net.gaia.vortex.tests.VortexTest;
 
 import org.springframework.util.Assert;
@@ -35,12 +36,13 @@ import com.google.common.collect.Sets;
  * @author D. García
  */
 public class NodoVortexEmbebidoApiTest extends VortexTest {
+
 	private NodoVortexEmbebido nodoVortex;
 
 	private EscenarioDeTest escenarios;
 
 	public void deberiaPermitirEnviarUnMensajeSinRemitente() {
-		final MensajeVortexEmbebido mensajeVortex = escenarios.crearMensajeDeTest();
+		final MensajeVortex mensajeVortex = escenarios.crearMensajeDeTest();
 		nodoVortex.rutear(mensajeVortex);
 	}
 
@@ -53,12 +55,11 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
 
 		// Enviamos el mensaje
-		final MensajeVortexEmbebido mensajeEnviado = escenarios.crearMensajeDeTest();
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest();
 		sesion.enviar(mensajeEnviado);
 
 		// Esperamos la respuesta
-		final MensajeVortexEmbebido mensajeRecibido = encolador.esperarProximoMensaje(TimeMagnitude.of(1,
-				TimeUnit.SECONDS));
+		final MensajeVortex mensajeRecibido = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final ConfirmacionRecepcion confirmacion = (ConfirmacionRecepcion) mensajeRecibido.getContenido();
 		Assert.isTrue(confirmacion.getIdentificacionMensaje().equals(mensajeEnviado.getIdentificacion()),
@@ -77,19 +78,18 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
 
 		// Enviamos el mensaje
-		final MensajeVortexEmbebido mensajeEnviado = escenarios.crearMensajeDeTestSinHash();
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTestSinHash();
 		sesion.enviar(mensajeEnviado);
 
 		// Esperamos la respuesta
-		final MensajeVortexEmbebido mensajeRecibido = encolador.esperarProximoMensaje(TimeMagnitude.of(1,
-				TimeUnit.SECONDS));
+		final MensajeVortex mensajeRecibido = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final ConfirmacionRecepcion confirmacion = (ConfirmacionRecepcion) mensajeRecibido.getContenido();
 
 		Assert.isTrue(confirmacion.getIdentificacionMensaje().equals(mensajeEnviado.getIdentificacion()),
 				"La confirmacion debería ser para el mensaje mandado");
 		Assert.isTrue(!confirmacion.getAceptado(), "Debería estar rechazado por estar mal armado indicando causa");
-		Assert.isNull(ConfirmacionRecepcion.BAD_HASH_ERROR.equals(confirmacion.getCausa()),
+		Assert.isNull(AcuseFallaRecepcion.BAD_HASH_ERROR.equals(confirmacion.getCausa()),
 				"Deberia indicad la causa de rechazo");
 	}
 
@@ -101,15 +101,14 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
 
 		// Enviamos el mensaje
-		final MensajeVortexEmbebido mensajeEnviado = escenarios.crearMensajeDeTest();
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest();
 		sesion.enviar(mensajeEnviado);
 
 		// Esperamos la respuesta, asumimos que esta todo bien
 		encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Esperamos la confirmación de consumo
-		final MensajeVortexEmbebido mensajeRecibido = encolador.esperarProximoMensaje(TimeMagnitude.of(1,
-				TimeUnit.SECONDS));
+		final MensajeVortex mensajeRecibido = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Verificamos que no le fue entregado a nadie
 		final ConfirmacionConsumo confirmacion = (ConfirmacionConsumo) mensajeRecibido.getContenido();
@@ -132,7 +131,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
 
 		// Enviamos el mensaje
-		final MensajeVortexEmbebido mensajeEnviado = escenarios.crearMensajeDeTest();
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest();
 		sesion.enviar(mensajeEnviado);
 
 		// Asumimos que la primera confirmación es exitosa
@@ -141,11 +140,11 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Enviamos de nuevo y debería rechazarlo por duplicado
-		final MensajeVortexEmbebido mensajeReplica = escenarios.crearMensajeDeTest();
+		final MensajeVortex mensajeReplica = escenarios.crearMensajeDeTest();
 		sesion.enviar(mensajeReplica);
 
 		// Esperamos la respuesta
-		final MensajeVortexEmbebido respuestaSegundoEnvio = encolador.esperarProximoMensaje(TimeMagnitude.of(1,
+		final MensajeVortex respuestaSegundoEnvio = encolador.esperarProximoMensaje(TimeMagnitude.of(1,
 				TimeUnit.SECONDS));
 
 		final ConfirmacionRecepcion confirmacion = (ConfirmacionRecepcion) respuestaSegundoEnvio.getContenido();
@@ -165,19 +164,17 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
 
 		// Declaramos los tags que recibimos
-		final MensajeVortexEmbebido publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(
+		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(
 				Sets.newHashSet("TAG1", "TAG2"), null);
 		sesion.enviar(publicacionDeTags);
 
 		// Deberíamos recibir la confirmación y la consumición
-		final MensajeVortexEmbebido mensajeRecepcion = encolador.esperarProximoMensaje(TimeMagnitude.of(1,
-				TimeUnit.SECONDS));
+		final MensajeVortex mensajeRecepcion = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		final ConfirmacionRecepcion recepcion = (ConfirmacionRecepcion) mensajeRecepcion.getContenido();
 		Assert.isTrue(recepcion.getAceptado());
 
 		// Esperamos el de consumo
-		final MensajeVortexEmbebido mensajeConsumo = encolador.esperarProximoMensaje(TimeMagnitude.of(1,
-				TimeUnit.SECONDS));
+		final MensajeVortex mensajeConsumo = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		final ConfirmacionConsumo consumo = (ConfirmacionConsumo) mensajeConsumo.getContenido();
 		Assert.isTrue(consumo.getConsumidos().equals(Integer.valueOf(1)),
 				"El nodo deberia consumir el mensaje y confirmarnos que lo recibió");
@@ -191,19 +188,17 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
 
 		// Declaramos los tags que recibimos
-		final MensajeVortexEmbebido publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(null,
+		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(null,
 				Sets.newHashSet("TAG1", "TAG2"));
 		sesion.enviar(publicacionDeTags);
 
 		// Deberíamos recibir la confirmación y la consumición
-		final MensajeVortexEmbebido mensajeRecepcion = encolador.esperarProximoMensaje(TimeMagnitude.of(1,
-				TimeUnit.SECONDS));
+		final MensajeVortex mensajeRecepcion = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		final ConfirmacionRecepcion recepcion = (ConfirmacionRecepcion) mensajeRecepcion.getContenido();
 		Assert.isTrue(recepcion.getAceptado());
 
 		// Esperamos el de consumo
-		final MensajeVortexEmbebido mensajeConsumo = encolador.esperarProximoMensaje(TimeMagnitude.of(1,
-				TimeUnit.SECONDS));
+		final MensajeVortex mensajeConsumo = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		final ConfirmacionConsumo consumo = (ConfirmacionConsumo) mensajeConsumo.getContenido();
 		Assert.isTrue(consumo.getConsumidos().equals(Integer.valueOf(1)),
 				"El nodo deberia consumir el mensaje y confirmarnos que lo recibió");
@@ -226,22 +221,22 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		// Declaramos los tags que publicamos
 		final HashSet<String> tagsPublicadosComoRecibibles = Sets.newHashSet("TAG_RECIBIBLE");
 		final HashSet<String> tagsPublicadosComoEnviables = Sets.newHashSet("TAG_ENVIABLE");
-		final MensajeVortexEmbebido publicacionDelClienteReal = escenarios.crearMetamensajeDePublicacionDeTags(
+		final MensajeVortex publicacionDelClienteReal = escenarios.crearMetamensajeDePublicacionDeTags(
 				tagsPublicadosComoRecibibles, tagsPublicadosComoEnviables);
 		sesionDePublicador.enviar(publicacionDelClienteReal);
 
 		// Esperamos la confirmación de recepción
 		encoladorDePublicador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		// Esperamos la confirmación de consumo (se lo entregó a si mismo)
-		final MensajeVortexEmbebido mensajeConsumo = encoladorDePublicador.esperarProximoMensaje(TimeMagnitude.of(1,
+		final MensajeVortex mensajeConsumo = encoladorDePublicador.esperarProximoMensaje(TimeMagnitude.of(1,
 				TimeUnit.SECONDS));
 		final ConfirmacionConsumo consumo = (ConfirmacionConsumo) mensajeConsumo.getContenido();
 		Assert.isTrue(consumo.getConsumidos().equals(Integer.valueOf(1)),
 				"El único que consume el mensaje de publicacion es el nodo");
 
 		// Esperamos el mensaje donde el nodo nos re publica sus intereses
-		final MensajeVortexEmbebido republicacionDelNodo = encoladorDeObservador.esperarProximoMensaje(TimeMagnitude
-				.of(1, TimeUnit.SECONDS));
+		final MensajeVortex republicacionDelNodo = encoladorDeObservador.esperarProximoMensaje(TimeMagnitude.of(1,
+				TimeUnit.SECONDS));
 		Assert.isTrue(!republicacionDelNodo.getIdentificacion().equals(publicacionDelClienteReal.getIdentificacion()),
 				"El mensaje del nodo no debería tener el mismo ID que el mensaje del publicador real");
 
@@ -260,7 +255,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesionDelReceptor = nodoVortex.crearNuevaSesion(encoladorDelReceptor);
 
 		// Declaramos los tags que recibimos
-		final MensajeVortexEmbebido publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(
+		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(
 				Sets.newHashSet("TAG_TEST"), null);
 		sesionDelReceptor.enviar(publicacionDeTags);
 
@@ -273,10 +268,10 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesionDelEmisor = nodoVortex.crearNuevaSesion(encoladorDelEmisor);
 
 		// Enviamos un mensaje con mismo tag
-		final MensajeVortexEmbebido mensajeEnviado = escenarios.crearMensajeDeTest("TAG_TEST");
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest("TAG_TEST");
 		sesionDelEmisor.enviar(mensajeEnviado);
 
-		final MensajeVortexEmbebido mensajeRecibido = encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1,
+		final MensajeVortex mensajeRecibido = encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1,
 				TimeUnit.SECONDS));
 
 		Assert.isTrue(mensajeRecibido.getIdentificacion().equals(mensajeEnviado.getIdentificacion()),
@@ -289,12 +284,12 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final ConfirmacionConsumo consumo = ConfirmacionConsumo.create();
 		consumo.setIdentificacionMensaje(mensajeRecibido.getIdentificacion());
 		consumo.setConsumidos(1);
-		final MensajeVortexEmbebido mensajeConsumoEnviado = escenarios.crearMensajeDeConsumo(consumo);
+		final MensajeVortex mensajeConsumoEnviado = escenarios.crearMensajeDeConsumo(consumo);
 		sesionDelReceptor.enviar(mensajeConsumoEnviado);
 
 		// Al emisor le debería llegar la confirmación de consumo
-		final MensajeVortexEmbebido mensajeConsumoRecibido = encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(
-				1, TimeUnit.SECONDS));
+		final MensajeVortex mensajeConsumoRecibido = encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1,
+				TimeUnit.SECONDS));
 		final ConfirmacionConsumo consumoRecibido = (ConfirmacionConsumo) mensajeConsumoRecibido.getContenido();
 
 		Assert.isTrue(consumoRecibido.getConsumidos().equals(Integer.valueOf(1)),
@@ -310,7 +305,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesionDelNoReceptor = nodoVortex.crearNuevaSesion(encoladorQueNoRecibe);
 
 		// Declaramos los tags que recibimos
-		final MensajeVortexEmbebido publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(
+		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(
 				Sets.newHashSet("TAG_TEST"), null);
 		sesionDelNoReceptor.enviar(publicacionDeTags);
 
@@ -322,12 +317,12 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesionDelEmisor = nodoVortex.crearNuevaSesion(encoladorDelEmisor);
 
 		// Enviamos un mensaje con diferente tags
-		final MensajeVortexEmbebido mensajeEnviado = escenarios.crearMensajeDeTest("TAG_TEST2");
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest("TAG_TEST2");
 		sesionDelEmisor.enviar(mensajeEnviado);
 
 		// Deberíamos recibir la confirmación de que acepta el ruteo
 		encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		final MensajeVortexEmbebido mensajeConsumo = encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1,
+		final MensajeVortex mensajeConsumo = encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1,
 				TimeUnit.SECONDS));
 		final ConfirmacionConsumo consumo = (ConfirmacionConsumo) mensajeConsumo.getContenido();
 

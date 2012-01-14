@@ -1,5 +1,5 @@
 /**
- * 01/12/2011 22:24:05 Copyright (C) 2011 Darío L. García
+ * 14/01/2012 15:44:55 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -13,30 +13,32 @@
 package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
- * Esta clase representa el trabajo que hace el nodo al recibir un mensaje, después de validarlo
+ * Esta clase representa la operación de entrega del mensaje a un receptor
  * 
  * @author D. García
  */
-public class RecibirMensajeWorkUnit implements WorkUnit {
+public class EntregarMensajeWorkUnit implements WorkUnit {
 
-	private ContextoDeRuteoDeMensaje contexto;
-
-	public static RecibirMensajeWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
-		final RecibirMensajeWorkUnit recibir = new RecibirMensajeWorkUnit();
-		recibir.contexto = contexto;
-		return recibir;
-	}
+	private ReceptorVortex receptor;
+	private MensajeVortex mensaje;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
-		// Comenzamos el ruteo del mensaje
-		final RutearMensajeWorkUnit ruteo = RutearMensajeWorkUnit.create(contexto);
-		this.contexto.getProcesador().process(ruteo);
+		// Le damos el mensaje al receptor destinado
+		receptor.recibir(mensaje);
+	}
+
+	public static EntregarMensajeWorkUnit create(final ReceptorVortex destino, final MensajeVortex mensajeAEnviar) {
+		final EntregarMensajeWorkUnit entrega = new EntregarMensajeWorkUnit();
+		entrega.mensaje = mensajeAEnviar;
+		entrega.receptor = destino;
+		return entrega;
 	}
 }

@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.api;
 
-import net.gaia.vortex.protocol.MensajeVortexEmbebido;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
  * Esta interfaz representa un nodo vortex que puede rutear mensajes a otros nodos y clientes
@@ -31,7 +31,7 @@ public interface NodoVortexEmbebido {
 	 * @param mensajeVortex
 	 *            El mensaje a enviar
 	 */
-	void rutear(MensajeVortexEmbebido mensajeVortex);
+	void rutear(MensajeVortex mensajeVortex);
 
 	/**
 	 * Crea una nueva sesión vortex con la cual enviar y recibir mensajes
