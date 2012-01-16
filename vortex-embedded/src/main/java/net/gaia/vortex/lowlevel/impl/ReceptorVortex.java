@@ -51,4 +51,11 @@ public interface ReceptorVortex {
 	 */
 	public abstract boolean envioPreviamente(IdVortex idDeMensajeAConfirmar);
 
+	/**
+	 * Devuelve el conjunto de tags de este receptor que es modificable externamente
+	 * 
+	 * @return El conjunto de tags
+	 */
+	public TagsDeReceptor getTags();
+
 }

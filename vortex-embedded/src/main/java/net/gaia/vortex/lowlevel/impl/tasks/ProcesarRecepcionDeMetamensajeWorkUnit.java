@@ -86,21 +86,28 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 			return recibirSolicitud;
 		}
 		if (metamensaje instanceof SolicitudEsperaAcuseConsumo) {
-			// Deberíamos enviar la confirmación nuevamente
 			final SolicitudEsperaAcuseConsumo solicitud = (SolicitudEsperaAcuseConsumo) metamensaje;
 			final RecibirSolicitudDeEsperaAcuseConsumoWorkUnit recibirSolicitud = RecibirSolicitudDeEsperaAcuseConsumoWorkUnit
 					.create(contexto, solicitud);
 			return recibirSolicitud;
 		}
 		if (metamensaje instanceof AcuseDuplicado) {
-
+			final AcuseDuplicado acuseDuplicado = (AcuseDuplicado) metamensaje;
+			final RecibirAcuseDuplicadoWorkUnit recibirSolicitud = RecibirAcuseDuplicadoWorkUnit.create(contexto,
+					acuseDuplicado);
+			return recibirSolicitud;
 		}
 		if (metamensaje instanceof AcuseFallaRecepcion) {
-
+			final AcuseFallaRecepcion acuseDuplicado = (AcuseFallaRecepcion) metamensaje;
+			final RecibirAcuseFallaRecepcionWorkUnit recibirSolicitud = RecibirAcuseFallaRecepcionWorkUnit.create(
+					contexto, acuseDuplicado);
+			return recibirSolicitud;
 		}
 
 		if (metamensaje instanceof AgregarTags) {
-
+			final AgregarTags agregadoTags = (AgregarTags) metamensaje;
+			final RecibirAgregarTagsWorkUnit agregarTags = RecibirAgregarTagsWorkUnit.create(contexto, agregadoTags);
+			return agregarTags;
 		}
 		if (metamensaje instanceof QuitarTags) {
 
