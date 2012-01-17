@@ -12,7 +12,9 @@
  */
 package net.gaia.vortex.protocol.messages.meta;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Esta clase representa el metamensaje de agregar tags asociados a un cliente
@@ -31,4 +33,9 @@ public class AgregarTags implements MetamensajeVortex {
 		this.tags = tags;
 	}
 
+	public static AgregarTags create(final Set<String> nuevosTags) {
+		final AgregarTags agregado = new AgregarTags();
+		agregado.tags = new ArrayList<String>(nuevosTags);
+		return agregado;
+	}
 }
