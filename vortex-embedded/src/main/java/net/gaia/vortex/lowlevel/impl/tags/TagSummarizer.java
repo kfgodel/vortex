@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.impl.tags;
 
-import java.util.List;
+import java.util.Set;
 
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 
@@ -33,7 +33,7 @@ public interface TagSummarizer {
 	 * @param nuevosTags
 	 *            Los tags que declara como agregados
 	 */
-	void agregarTagsPara(ReceptorVortex receptorAModificar, List<String> nuevosTags);
+	void agregarTagsPara(ReceptorVortex receptorAModificar, Set<String> nuevosTags);
 
 	/**
 	 * Elimina los tags pasados de los tags del receptor, notificando al listener si hay cambios
@@ -44,7 +44,7 @@ public interface TagSummarizer {
 	 * @param nuevosTags
 	 *            Los tags a quitar
 	 */
-	void quitarTagsPara(ReceptorVortex receptorAModificar, List<String> nuevosTags);
+	void quitarTagsPara(ReceptorVortex receptorAModificar, Set<String> nuevosTags);
 
 	/**
 	 * Reemplaza los tags del receptor indicado, notificando al listener si hay cambios en los tags
@@ -55,7 +55,7 @@ public interface TagSummarizer {
 	 * @param nuevosTags
 	 *            Los nuevos tags del receptor
 	 */
-	void reemplazarTagsPara(ReceptorVortex receptorAModificar, List<String> nuevosTags);
+	void reemplazarTagsPara(ReceptorVortex receptorAModificar, Set<String> nuevosTags);
 
 	/**
 	 * Elimina todos los tags asociados al receptor indicado, notificando al listener si hay cambios
@@ -65,5 +65,13 @@ public interface TagSummarizer {
 	 *            El receptor a modificar
 	 */
 	void limpiarTagsPara(ReceptorVortex receptorAModificar);
+
+	/**
+	 * Devuelve el conjunto de todos los tags sumarizados en esta instancia como producto de los
+	 * receptores registrados
+	 * 
+	 * @return Los tags comunes a todos los receptores
+	 */
+	Set<String> getGlobalTags();
 
 }

@@ -31,4 +31,5 @@ public class Decision {
 	public static final String TODAVIA_NO_IMPLEMENTE_PRORROGA = "Tengo que agregar el calculo de espera para poder usar las prorrogas";
 	public static final String TODAVIA_NO_IMPLEMENTE_REENVIO_DE_MENSAJE_PERDIDO = "Si el receptor nos devuelve que se perdio lo consideramos rechazo";
 	public static final String CONFIO_EN_QUE_NO_HAY_ACUSES_REPETIDOS = "Si un nodo mandara acuses de más, habría que cambiar las listas por sets";
+	public static final String LA_DIFERENCIA_DE_SETS_DE_TAGS_REQUIERE_LA_MISMA_IMPL_DE_SETS = "Los sets usados en la diferencia tienen que tener la misma relacion de equivalencia para que la differencia de bien";
 }
