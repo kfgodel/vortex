@@ -13,6 +13,7 @@
 package net.gaia.vortex.lowlevel.impl;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
@@ -100,6 +101,15 @@ public class ContextoDeRuteoDeMensaje {
 
 	public ConfiguracionDeNodo getConfig() {
 		return this.nodo.getConfiguracion();
+	}
+
+	/**
+	 * Devuelve el {@link TagSummarizer} del nodo
+	 * 
+	 * @return El punto de administración de los tags
+	 */
+	public TagSummarizer getTagSummarizer() {
+		return this.nodo.getTagSummarizer();
 	}
 
 }

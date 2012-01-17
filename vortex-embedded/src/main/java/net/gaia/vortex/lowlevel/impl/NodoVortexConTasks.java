@@ -17,6 +17,8 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
+import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
+import net.gaia.vortex.lowlevel.impl.tags.TagSummarizerImpl;
 import net.gaia.vortex.lowlevel.impl.tasks.ValidacionDeMensajeWorkUnit;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
@@ -40,6 +42,8 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	private MemoriaDeMensajes memoriaDeMensajes;
 
 	private ConfiguracionDeNodo configuracion;
+
+	private TagSummarizer tagSummarizer;
 
 	public MemoriaDeMensajes getMemoriaDeMensajes() {
 		return memoriaDeMensajes;
@@ -67,7 +71,12 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 		nodo.memoriaDeMensajes = null;
 		nodo.configuracion = ConfiguracionDeNodo.create();
 		nodo.sinEmisorIdentificado = NullReceptorVortex.create();
+		nodo.tagSummarizer = TagSummarizerImpl.create();
 		return nodo;
+	}
+
+	public TagSummarizer getTagSummarizer() {
+		return tagSummarizer;
 	}
 
 	/**
@@ -78,6 +87,7 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	/**
 	 * @see net.gaia.vortex.lowlevel.api.NodoVortexEmbebido#rutear(net.gaia.vortex.protocol.MensajeVortex)
 	 */
+	@Override
 	public void rutear(final MensajeVortex mensajeVortex) {
 		// Creamos el contexto para el ruteo del mensaje sin emisor
 		final ContextoDeRuteoDeMensaje nuevoRuteo = ContextoDeRuteoDeMensaje.create(mensajeVortex,

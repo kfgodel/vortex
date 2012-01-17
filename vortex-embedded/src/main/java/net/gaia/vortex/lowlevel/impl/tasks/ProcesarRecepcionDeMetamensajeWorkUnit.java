@@ -17,7 +17,6 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.AgregarTags;
-import net.gaia.vortex.protocol.messages.meta.CerrarConexion;
 import net.gaia.vortex.protocol.messages.meta.LimpiarTags;
 import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.QuitarTags;
@@ -63,11 +62,13 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 		final WorkUnit tareaDelMetamensaje = crearTareaDesdeMetamensaje(metamensaje);
 		if (tareaDelMetamensaje != null) {
 			contexto.getProcesador().process(tareaDelMetamensaje);
+		} else {
+			LOG.warn("Se recibió un metamensaje sin interpretación: " + mensaje);
 		}
 	}
 
 	/**
-	 * Evalua el metamensaje para determinar el tipo de tarea que se debe realizar
+	 * Evalúa el metamensaje para determinar el tipo de tarea que se debe realizar
 	 * 
 	 * @param mensaje
 	 *            El mensaje recibido como metamensaje
@@ -110,19 +111,20 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 			return agregarTags;
 		}
 		if (metamensaje instanceof QuitarTags) {
-
-		}
-		if (metamensaje instanceof LimpiarTags) {
-
+			final QuitarTags quitadoTags = (QuitarTags) metamensaje;
+			final RecibirQuitarTagsWorkunit quitarTags = RecibirQuitarTagsWorkunit.create(contexto, quitadoTags);
+			return quitarTags;
 		}
 		if (metamensaje instanceof ReemplazarTags) {
+			final QuitarTags quitadoTags = (QuitarTags) metamensaje;
+			final RecibirQuitarTagsWorkunit quitarTags = RecibirQuitarTagsWorkunit.create(contexto, quitadoTags);
+			return quitarTags;
+		}
+		if (metamensaje instanceof LimpiarTags) {
+			final RecibirLimpiarTagsWorkUnit limpiarTags = RecibirLimpiarTagsWorkUnit.create(contexto);
+			return limpiarTags;
 
 		}
-
-		if (metamensaje instanceof CerrarConexion) {
-
-		}
-
 		return null;
 	}
 }
