@@ -14,6 +14,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.SolicitudEsperaAcuseConsumo;
@@ -37,7 +38,8 @@ public class SolicitarEsperaDeAcuseConsumoWorkUnit implements WorkUnit {
 		// Armamos la solicitud y la mandamos
 		final SolicitudEsperaAcuseConsumo solicitudDeEspera = SolicitudEsperaAcuseConsumo.create(idMensajeSolicitado);
 		final ReceptorVortex emisor = contexto.getEmisor();
-		final ProcesarEnvioDeMetamensajeWorkUnit envioMetamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(contexto,
+		final NodoVortexConTasks nodo = contexto.getNodo();
+		final ProcesarEnvioDeMetamensajeWorkUnit envioMetamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,
 				emisor, solicitudDeEspera);
 		contexto.getProcesador().process(envioMetamensaje);
 	}

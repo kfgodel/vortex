@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
+import java.util.HashSet;
 import java.util.List;
 
 import net.gaia.taskprocessor.api.WorkUnit;
@@ -39,7 +40,7 @@ public class RecibirQuitarTagsWorkunit implements WorkUnit {
 		final List<String> nuevosTags = mensaje.getTags();
 		final ReceptorVortex receptorAModificar = contexto.getEmisor();
 		final TagSummarizer summarizer = contexto.getTagSummarizer();
-		summarizer.quitarTagsPara(receptorAModificar, nuevosTags);
+		summarizer.quitarTagsPara(receptorAModificar, new HashSet<String>(nuevosTags));
 
 		// Si hay cambios de tags globales, se disparará notificaciones a los receptores vecinos
 	}

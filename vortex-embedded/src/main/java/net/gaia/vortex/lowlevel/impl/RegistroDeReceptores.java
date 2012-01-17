@@ -82,4 +82,14 @@ public class RegistroDeReceptores {
 
 	}
 
+	/**
+	 * Devuelve el conjunto de todos los receptores registrados
+	 * 
+	 * @return
+	 */
+	public List<ReceptorVortex> getAllReceptores() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -112,4 +112,7 @@ public class ContextoDeRuteoDeMensaje {
 		return this.nodo.getTagSummarizer();
 	}
 
+	public NodoVortexConTasks getNodo() {
+		return nodo;
+	}
 }

@@ -16,6 +16,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
+import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.SolicitudAcuseConsumo;
@@ -49,8 +50,9 @@ public class EnviarSolicitudDeAcuseDeConsumoWorkUnit implements WorkUnit {
 		// Se la enviamos al receptor que le mandamos el mensaje
 		final ContextoDeRuteoDeMensaje contextoRuteo = contexto.getContextoDeRuteo();
 		final ReceptorVortex destino = idDeEnvio.getReceptorDestino();
-		final ProcesarEnvioDeMetamensajeWorkUnit envioMetamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(
-				contextoRuteo, destino, solicitudAEnviar);
+		final NodoVortexConTasks nodo = contextoRuteo.getNodo();
+		final ProcesarEnvioDeMetamensajeWorkUnit envioMetamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,
+				destino, solicitudAEnviar);
 		contextoRuteo.getProcesador().process(envioMetamensaje);
 	}
 

@@ -15,6 +15,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.IdVortex;
@@ -53,8 +54,9 @@ public class EnviarAcuseWorkUnit implements WorkUnit {
 		this.acuse.setIdMensajeInvolucrado(identificacion);
 
 		final ReceptorVortex emisor = contexto.getEmisor();
-		final ProcesarEnvioDeMetamensajeWorkUnit envioMentamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(
-				contexto, emisor, acuse);
+		final NodoVortexConTasks nodo = contexto.getNodo();
+		final ProcesarEnvioDeMetamensajeWorkUnit envioMentamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,
+				emisor, acuse);
 		contexto.getProcesador().process(envioMentamensaje);
 	}
 

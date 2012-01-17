@@ -13,8 +13,8 @@
 package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.GeneradorMensajesDeNodo;
+import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
@@ -26,30 +26,30 @@ import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
  */
 public class ProcesarEnvioDeMetamensajeWorkUnit implements WorkUnit {
 
-	private ContextoDeRuteoDeMensaje contexto;
 	private MetamensajeVortex metamensaje;
 	private ReceptorVortex receptor;
+	private NodoVortexConTasks nodo;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		final GeneradorMensajesDeNodo generadorMensajes = nodo.getGeneradorMensajes();
 		// Generamos el mensaje para el metamensaje
-		final GeneradorMensajesDeNodo generadorMensajes = contexto.getGeneradorMensajes();
 		final MensajeVortex mensaje = generadorMensajes.generarMetaMensajePara(metamensaje);
 
 		// Lo entregamos al receptor
 		final EntregarMensajeWorkUnit entregarMensaje = EntregarMensajeWorkUnit.create(receptor, mensaje);
-		contexto.getProcesador().process(entregarMensaje);
+		nodo.getProcesador().process(entregarMensaje);
 	}
 
-	public static ProcesarEnvioDeMetamensajeWorkUnit create(final ContextoDeRuteoDeMensaje contexto,
+	public static ProcesarEnvioDeMetamensajeWorkUnit create(final NodoVortexConTasks nodo,
 			final ReceptorVortex destino, final MetamensajeVortex contenido) {
 		final ProcesarEnvioDeMetamensajeWorkUnit entrega = new ProcesarEnvioDeMetamensajeWorkUnit();
-		entrega.contexto = contexto;
 		entrega.metamensaje = contenido;
 		entrega.receptor = destino;
+		entrega.nodo = nodo;
 		return entrega;
 	}
 }
