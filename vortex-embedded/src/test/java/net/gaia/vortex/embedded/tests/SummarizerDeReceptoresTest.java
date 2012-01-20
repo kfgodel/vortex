@@ -17,10 +17,9 @@ import java.util.List;
 import java.util.Set;
 
 import junit.framework.Assert;
-import net.gaia.vortex.lowlevel.impl.NotificacionDeCambioDeTags;
-import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
-import net.gaia.vortex.lowlevel.impl.ReporteCambioDeTags;
-import net.gaia.vortex.lowlevel.impl.TagsDeReceptor;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.tags.NotificacionDeCambioDeTags;
+import net.gaia.vortex.lowlevel.impl.tags.ReporteCambioDeTags;
 import net.gaia.vortex.lowlevel.impl.tags.SummarizerDeReceptores;
 import net.gaia.vortex.lowlevel.impl.tags.TagChangeListener;
 import net.gaia.vortex.protocol.messages.IdVortex;
@@ -74,11 +73,6 @@ public class SummarizerDeReceptoresTest {
 		@Override
 		public boolean envioPreviamente(final IdVortex idDeMensajeAConfirmar) {
 			return false;
-		}
-
-		@Override
-		public TagsDeReceptor getTags() {
-			return null;
 		}
 
 		@Override

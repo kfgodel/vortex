@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.lowlevel.impl;
+package net.gaia.vortex.lowlevel.impl.receptores;
 
 import java.util.List;
 
@@ -24,14 +24,14 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
 public class NullReceptorVortex implements ReceptorVortex {
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.ReceptorVortex#recibir(net.gaia.vortex.protocol.MensajeVortex)
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#recibir(net.gaia.vortex.protocol.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
 		// No hacemos nada en realidad
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.ReceptorVortex#estaInteresadoEnCualquieraDe(java.util.List)
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#estaInteresadoEnCualquieraDe(java.util.List)
 	 */
 	@Override
 	public boolean estaInteresadoEnCualquieraDe(final List<String> tagsDelMensaje) {

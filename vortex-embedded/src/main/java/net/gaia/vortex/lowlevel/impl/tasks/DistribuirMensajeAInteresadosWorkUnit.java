@@ -18,8 +18,8 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
-import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 
 /**
  * Esta clase representa la tarea de enviar el mensaje a todos los receptores interesados

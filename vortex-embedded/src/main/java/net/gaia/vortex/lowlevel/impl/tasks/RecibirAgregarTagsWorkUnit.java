@@ -17,7 +17,7 @@ import java.util.List;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
-import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
 import net.gaia.vortex.protocol.messages.meta.AgregarTags;
 

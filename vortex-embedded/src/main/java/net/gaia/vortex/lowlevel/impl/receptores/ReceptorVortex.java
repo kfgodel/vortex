@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.lowlevel.impl;
+package net.gaia.vortex.lowlevel.impl.receptores;
 
 import java.util.List;
 import java.util.Set;
@@ -51,13 +51,6 @@ public interface ReceptorVortex {
 	 *         False si no, o ya no lo recordamos
 	 */
 	public abstract boolean envioPreviamente(IdVortex idDeMensajeAConfirmar);
-
-	/**
-	 * Devuelve el conjunto de tags de este receptor que es modificable externamente
-	 * 
-	 * @return El conjunto de tags
-	 */
-	public TagsDeReceptor getTags();
 
 	/**
 	 * Devuelve los tags que fueron notificados a este receptor como intereses del nodo

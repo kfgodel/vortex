@@ -15,6 +15,8 @@ package net.gaia.vortex.lowlevel.impl;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+
 /**
  * Esta clase representa la selección de un conjunto de receptores a los cuales rutear un mensaje
  * 

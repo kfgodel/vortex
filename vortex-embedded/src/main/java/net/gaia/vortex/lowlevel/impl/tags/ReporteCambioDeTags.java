@@ -10,10 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.lowlevel.impl;
+package net.gaia.vortex.lowlevel.impl.tags;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 
 import ar.com.dgarcia.coding.caching.Instantiator;
 import ar.com.dgarcia.coding.caching.SimpleCacheConcurrentMap;

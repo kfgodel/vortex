@@ -13,6 +13,8 @@
 package net.gaia.vortex.lowlevel.impl;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 

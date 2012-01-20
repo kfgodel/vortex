@@ -18,11 +18,10 @@ import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 import net.gaia.annotations.HasDependencyOn;
-import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
-import net.gaia.vortex.lowlevel.impl.RegistroDeReceptores;
-import net.gaia.vortex.lowlevel.impl.ReporteCambioDeTags;
 import net.gaia.vortex.lowlevel.impl.ReportePerformanceRuteo;
 import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
 import net.gaia.vortex.meta.Decision;
 import ar.com.dgarcia.coding.caching.Instantiator;
 import ar.com.dgarcia.coding.caching.SimpleCacheConcurrentMap;
@@ -64,7 +63,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.tags.TagSummarizer#agregarTagsPara(net.gaia.vortex.lowlevel.impl.ReceptorVortex,
+	 * @see net.gaia.vortex.lowlevel.impl.tags.TagSummarizer#agregarTagsPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex,
 	 *      java.util.Set)
 	 */
 	@Override
@@ -100,7 +99,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.tags.TagSummarizer#reemplazarTagsPara(net.gaia.vortex.lowlevel.impl.ReceptorVortex,
+	 * @see net.gaia.vortex.lowlevel.impl.tags.TagSummarizer#reemplazarTagsPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex,
 	 *      java.util.Set)
 	 */
 	@Override
@@ -157,7 +156,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.tags.TagSummarizer#quitarTagsPara(net.gaia.vortex.lowlevel.impl.ReceptorVortex,
+	 * @see net.gaia.vortex.lowlevel.impl.tags.TagSummarizer#quitarTagsPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex,
 	 *      java.util.Set)
 	 */
 	@Override
@@ -390,7 +389,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.tags.TagSummarizer#limpiarTagsPara(net.gaia.vortex.lowlevel.impl.ReceptorVortex)
+	 * @see net.gaia.vortex.lowlevel.impl.tags.TagSummarizer#limpiarTagsPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
 	 */
 	@Override
 	public void limpiarTagsPara(final ReceptorVortex receptorAModificar) {
@@ -419,7 +418,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.RegistroDeReceptores#agregar(net.gaia.vortex.lowlevel.impl.ReceptorVortexConSesion)
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores#agregar(net.gaia.vortex.lowlevel.impl.ReceptorVortexConSesion)
 	 */
 	@Override
 	@HasDependencyOn(Decision.AL_QUITAR_TAG_SE_ELIMINA_SU_ENTRADA_DEL_MAPA)
@@ -437,7 +436,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.RegistroDeReceptores#getReceptoresInteresadosEn(java.util.List)
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores#getReceptoresInteresadosEn(java.util.List)
 	 */
 	@Override
 	@HasDependencyOn(Decision.TODAVIA_NO_IMPLEMENTE_EL_AJUSTE_DE_PESOS)
@@ -457,7 +456,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.RegistroDeReceptores#ajustarPesosDeAcuerdoA(net.gaia.vortex.lowlevel.impl.ReportePerformanceRuteo)
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores#ajustarPesosDeAcuerdoA(net.gaia.vortex.lowlevel.impl.ReportePerformanceRuteo)
 	 */
 	@Override
 	@HasDependencyOn(Decision.TODAVIA_NO_IMPLEMENTE_EL_AJUSTE_DE_PESOS)
@@ -466,7 +465,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.RegistroDeReceptores#getAllReceptores()
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores#getAllReceptores()
 	 */
 	@Override
 	public Set<ReceptorVortex> getAllReceptores() {
@@ -475,7 +474,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.RegistroDeReceptores#getTagSummarizer()
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores#getTagSummarizer()
 	 */
 	@Override
 	public TagSummarizer getTagSummarizer() {
@@ -501,7 +500,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.RegistroDeReceptores#quitar(net.gaia.vortex.lowlevel.impl.ReceptorVortex)
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores#quitar(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
 	 */
 	@Override
 	public void quitar(final ReceptorVortex receptorQuitado) {

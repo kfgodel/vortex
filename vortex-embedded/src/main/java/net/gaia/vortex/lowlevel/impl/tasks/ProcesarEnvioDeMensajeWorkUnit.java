@@ -17,7 +17,7 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.MensajesEnEspera;
-import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**

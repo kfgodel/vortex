@@ -16,8 +16,8 @@ import java.util.List;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
-import net.gaia.vortex.lowlevel.impl.NotificacionDeCambioDeTags;
-import net.gaia.vortex.lowlevel.impl.ReporteCambioDeTags;
+import net.gaia.vortex.lowlevel.impl.tags.NotificacionDeCambioDeTags;
+import net.gaia.vortex.lowlevel.impl.tags.ReporteCambioDeTags;
 
 /**
  * Esta clase representa la operación realizada por el nodo para notificar a los clientes de cambios

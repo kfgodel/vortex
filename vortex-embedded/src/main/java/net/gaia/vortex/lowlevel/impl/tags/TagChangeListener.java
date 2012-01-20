@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl.tags;
 
-import net.gaia.vortex.lowlevel.impl.ReporteCambioDeTags;
 
 /**
  * Esta interfaz representa el contrato que debe cumplir el listener de cambios en los tags de un

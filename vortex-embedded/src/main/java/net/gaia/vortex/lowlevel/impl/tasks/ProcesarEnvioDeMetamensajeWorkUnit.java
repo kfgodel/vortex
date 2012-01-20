@@ -15,7 +15,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.GeneradorMensajesDeNodo;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
-import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
 

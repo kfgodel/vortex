@@ -14,7 +14,7 @@ package net.gaia.vortex.lowlevel.impl.tags;
 
 import java.util.Set;
 
-import net.gaia.vortex.lowlevel.impl.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 
 /**
  * Esta interfaz representa el sumarizador de tags que posee el nodo para tomar conocimiento de los

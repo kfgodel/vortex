@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl.tags;
 
-import net.gaia.vortex.lowlevel.impl.ReporteCambioDeTags;
 
 /**
  * Esta interfaz representa una operación atómica sobre los tags del nodo, que puede dar lugar a

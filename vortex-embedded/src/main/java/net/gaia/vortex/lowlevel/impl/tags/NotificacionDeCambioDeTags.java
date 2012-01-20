@@ -10,10 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.lowlevel.impl;
+package net.gaia.vortex.lowlevel.impl.tags;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 
 /**
  * Esta clase representa la notificación de cambios en los tags del nodo que se deben avisar a un

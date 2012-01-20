@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 
 import com.google.common.base.Objects;
