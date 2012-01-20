@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import java.util.List;
+import java.util.Set;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
@@ -42,12 +42,14 @@ public class DistribuirMensajeAInteresadosWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
+	@Override
 	public void doWork() throws InterruptedException {
 		final TaskProcessor procesador = this.contexto.getProcesador();
-		final List<ReceptorVortex> allInteresados = this.interesados.getSeleccionados();
+		final Set<ReceptorVortex> allInteresados = this.interesados.getSeleccionados();
 		for (final ReceptorVortex interesado : allInteresados) {
 			final ContextoDeEnvio contextoDeEnvioDelMensaje = ContextoDeEnvio.create(contexto, interesado);
-			final ProcesarEnvioDeMensajeWorkUnit enviarMensaje = ProcesarEnvioDeMensajeWorkUnit.create(contextoDeEnvioDelMensaje);
+			final ProcesarEnvioDeMensajeWorkUnit enviarMensaje = ProcesarEnvioDeMensajeWorkUnit
+					.create(contextoDeEnvioDelMensaje);
 			procesador.process(enviarMensaje);
 		}
 	}

@@ -66,12 +66,4 @@ public interface TagSummarizer {
 	 */
 	void limpiarTagsPara(ReceptorVortex receptorAModificar);
 
-	/**
-	 * Devuelve el conjunto de todos los tags sumarizados en esta instancia como producto de los
-	 * receptores registrados
-	 * 
-	 * @return Los tags comunes a todos los receptores
-	 */
-	Set<String> getGlobalTags();
-
 }

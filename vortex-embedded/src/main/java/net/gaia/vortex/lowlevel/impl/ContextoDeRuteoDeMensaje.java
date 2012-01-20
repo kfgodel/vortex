@@ -109,7 +109,8 @@ public class ContextoDeRuteoDeMensaje {
 	 * @return El punto de administración de los tags
 	 */
 	public TagSummarizer getTagSummarizer() {
-		return this.nodo.getTagSummarizer();
+		final RegistroDeReceptores registroReceptores = this.nodo.getRegistroReceptores();
+		return registroReceptores.getTagSummarizer();
 	}
 
 	public NodoVortexConTasks getNodo() {

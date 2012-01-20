@@ -52,11 +52,9 @@ public class SeleccionarReceptoresWorkUnit implements WorkUnit {
 		// Creamos la estructura de control para realizar el ruteo
 		final ControlDeRuteo controlDeRuteo = this.contexto.getControl();
 		controlDeRuteo.setReceptoresInteresados(seleccion.getSeleccionados());
-		controlDeRuteo.setReceptoresNoInteresados(seleccion.getExcluidos());
 		if (seleccion.esVacia()) {
 			// El mensaje no le interesa a nadie
-			final DevolverAcuseConsumoWorkUnit devolucion = DevolverAcuseConsumoWorkUnit
-					.create(contexto);
+			final DevolverAcuseConsumoWorkUnit devolucion = DevolverAcuseConsumoWorkUnit.create(contexto);
 			contexto.getProcesador().process(devolucion);
 			return;
 		}

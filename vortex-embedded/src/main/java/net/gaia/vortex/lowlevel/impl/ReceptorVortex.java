@@ -13,6 +13,7 @@
 package net.gaia.vortex.lowlevel.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
@@ -57,5 +58,27 @@ public interface ReceptorVortex {
 	 * @return El conjunto de tags
 	 */
 	public TagsDeReceptor getTags();
+
+	/**
+	 * Devuelve los tags que fueron notificados a este receptor como intereses del nodo
+	 * 
+	 * @return El conjunto de tags que le fueron comunicados al receptor
+	 */
+	public abstract Set<String> getTagsNotificados();
+
+	/**
+	 * Agrega los tags pasados como notificados al receptor
+	 * 
+	 * @param tagsAgregados
+	 *            tags agregados
+	 */
+	public abstract void agregarTagsNotificados(Set<String> tagsAgregados);
+
+	/**
+	 * Elimina los tags indicados como notificados al receptor
+	 * 
+	 * @param tagsQuitados
+	 */
+	public abstract void quitarTagsNotificados(Set<String> tagsQuitados);
 
 }

@@ -1,5 +1,5 @@
 /**
- * 18/01/2012 21:33:10 Copyright (C) 2011 Darío L. García
+ * 19/01/2012 22:56:46 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -15,18 +15,20 @@ package net.gaia.vortex.lowlevel.impl.tags;
 import net.gaia.vortex.lowlevel.impl.ReporteCambioDeTags;
 
 /**
- * Esta interfaz representa el contrato que debe cumplir el listener de cambios en los tags de un
- * nodo
+ * Esta interfaz representa una operación atómica sobre los tags del nodo, que puede dar lugar a
+ * notificaciones en un {@link ReporteCambioDeTags}
  * 
  * @author D. García
  */
-public interface TagChangeListener {
+public interface AtomicTagOperation {
+
 	/**
-	 * Invocado cuando un cliente cambia los tags del nodo, de manera que es necesario avisar a
-	 * otros clientes
+	 * Ejecuta esta operación pasando el reporte sobre el cuál se deben registrar las notificaciones
 	 * 
 	 * @param reporte
-	 *            El reporte de lo cambios generado
+	 *            El reporte que puede ser compartido por otras operaciones para notificar los
+	 *            cambios efectuados
 	 */
-	public void onTagChanges(ReporteCambioDeTags reporte);
+	public void execute(ReporteCambioDeTags reporte);
+
 }

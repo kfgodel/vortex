@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Esta clase representa la selección de un conjunto de receptores a los cuales rutear un mensaje
@@ -22,23 +22,22 @@ import java.util.List;
  */
 public class SeleccionDeReceptores {
 
-	private List<ReceptorVortex> seleccionados;
-
-	private List<ReceptorVortex> excluidos;
+	private Set<ReceptorVortex> seleccionados;
 
 	public static SeleccionDeReceptores create() {
 		final SeleccionDeReceptores seleccion = new SeleccionDeReceptores();
-		seleccion.seleccionados = new ArrayList<ReceptorVortex>();
-		seleccion.excluidos = new ArrayList<ReceptorVortex>();
 		return seleccion;
 	}
 
-	public List<ReceptorVortex> getSeleccionados() {
+	public Set<ReceptorVortex> getSeleccionados() {
+		if (seleccionados == null) {
+			seleccionados = new HashSet<ReceptorVortex>();
+		}
 		return seleccionados;
 	}
 
-	public List<ReceptorVortex> getExcluidos() {
-		return excluidos;
+	public void setSeleccionados(final Set<ReceptorVortex> seleccionados) {
+		this.seleccionados = seleccionados;
 	}
 
 	/**
@@ -47,18 +46,8 @@ public class SeleccionDeReceptores {
 	 * @param receptor
 	 *            El receptor a incluir como seleccionado
 	 */
-	public void incluir(final ReceptorVortex receptor) {
-		this.seleccionados.add(receptor);
-	}
-
-	/**
-	 * Registra el receptor pasado como no incluido en la selección
-	 * 
-	 * @param receptor
-	 *            El receptor a excluir
-	 */
-	public void excluir(final ReceptorVortex receptor) {
-		this.excluidos.add(receptor);
+	public void incluirTodos(final Set<ReceptorVortex> receptores) {
+		this.getSeleccionados().addAll(receptores);
 	}
 
 	/**

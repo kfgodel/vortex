@@ -12,18 +12,14 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
-import java.util.Set;
-
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
+import net.gaia.vortex.lowlevel.impl.tags.SummarizerDeReceptores;
 import net.gaia.vortex.lowlevel.impl.tags.TagChangeListener;
-import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
-import net.gaia.vortex.lowlevel.impl.tags.TagSummarizerImpl;
-import net.gaia.vortex.lowlevel.impl.tasks.NotificarTagsAgregadosWorkUnit;
-import net.gaia.vortex.lowlevel.impl.tasks.NotificarTagsQuitadosWorkUnit;
+import net.gaia.vortex.lowlevel.impl.tasks.NotificarCambiosDeTagsEnNodoWorkUnit;
 import net.gaia.vortex.lowlevel.impl.tasks.ValidacionDeMensajeWorkUnit;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
@@ -48,10 +44,6 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 
 	private ConfiguracionDeNodo configuracion;
 
-	private TagSummarizer tagSummarizer;
-
-	private TagChangeListener internalTagChangeListener;
-
 	public MemoriaDeMensajes getMemoriaDeMensajes() {
 		return memoriaDeMensajes;
 	}
@@ -72,36 +64,21 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 			Decision.TODAVIA_NO_IMPLEMENTE_LA_MEMORIA_DE_MENSAJES })
 	public static NodoVortexConTasks create(final TaskProcessor processor) {
 		final NodoVortexConTasks nodo = new NodoVortexConTasks();
-		nodo.registroReceptores = RegistroDeReceptores.create();
+		nodo.registroReceptores = SummarizerDeReceptores.create(new TagChangeListener() {
+			@Override
+			public void onTagChanges(final ReporteCambioDeTags reporte) {
+				// Si hay cambios en los tags les avisamos a los clientes interesados
+				final NotificarCambiosDeTagsEnNodoWorkUnit notificacionGlobal = NotificarCambiosDeTagsEnNodoWorkUnit
+						.create(nodo, reporte);
+				nodo.getProcesador().process(notificacionGlobal);
+			}
+		});
 		nodo.procesador = processor;
 		nodo.generadorMensajes = null;
 		nodo.memoriaDeMensajes = null;
 		nodo.configuracion = ConfiguracionDeNodo.create();
 		nodo.sinEmisorIdentificado = NullReceptorVortex.create();
-		nodo.internalTagChangeListener = new TagChangeListener() {
-
-			@Override
-			public void onTagsQuitadosGlobalmente(final Set<String> tagQuitadosGlobalmente,
-					final ReceptorVortex receptorQueLosQuito) {
-				final NotificarTagsQuitadosWorkUnit notificarQuitados = NotificarTagsQuitadosWorkUnit.create(nodo,
-						tagQuitadosGlobalmente);
-				processor.process(notificarQuitados);
-			}
-
-			@Override
-			public void onTagsAgregadosGlobalmente(final Set<String> tagAgregadosGlobalmente,
-					final ReceptorVortex receptorQueLosAgrega) {
-				final NotificarTagsAgregadosWorkUnit notificarAgregados = NotificarTagsAgregadosWorkUnit.create(nodo,
-						tagAgregadosGlobalmente);
-				processor.process(notificarAgregados);
-			}
-		};
-		nodo.tagSummarizer = TagSummarizerImpl.create(nodo.internalTagChangeListener);
 		return nodo;
-	}
-
-	public TagSummarizer getTagSummarizer() {
-		return tagSummarizer;
 	}
 
 	/**

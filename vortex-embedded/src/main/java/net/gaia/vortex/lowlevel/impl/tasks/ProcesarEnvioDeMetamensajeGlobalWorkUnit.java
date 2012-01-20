@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import java.util.List;
+import java.util.Set;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
@@ -38,7 +38,7 @@ public class ProcesarEnvioDeMetamensajeGlobalWorkUnit implements WorkUnit {
 	public void doWork() throws InterruptedException {
 		// Buscamos todos los receptores
 		final RegistroDeReceptores registroReceptores = nodo.getRegistroReceptores();
-		final List<ReceptorVortex> allReceptores = registroReceptores.getAllReceptores();
+		final Set<ReceptorVortex> allReceptores = registroReceptores.getAllReceptores();
 
 		// Les enviamos el metamensaje a cada uno
 		for (final ReceptorVortex destino : allReceptores) {
