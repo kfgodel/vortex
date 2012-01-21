@@ -90,6 +90,8 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	 */
 	private NullReceptorVortex sinEmisorIdentificado;
 
+	private MemoriaDeRuteos memoriaDeRuteos;
+
 	/**
 	 * @see net.gaia.vortex.lowlevel.api.NodoVortexEmbebido#rutear(net.gaia.vortex.protocol.MensajeVortex)
 	 */
@@ -130,6 +132,15 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 
 	public ConfiguracionDeNodo getConfiguracion() {
 		return configuracion;
+	}
+
+	/**
+	 * Devuelve la instancia de la memoria de ruteos que registra los activos en este nodo
+	 * 
+	 * @return La memoria de los ruteos activos
+	 */
+	public MemoriaDeRuteos getMemoriaDeRuteos() {
+		return memoriaDeRuteos;
 	}
 
 }

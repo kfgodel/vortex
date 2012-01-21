@@ -17,7 +17,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
-import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
+import net.gaia.vortex.lowlevel.impl.MemoriaDeRuteos;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.IdVortex;
@@ -47,7 +47,7 @@ public class DevolverAcuseConsumoWorkUnit implements WorkUnit {
 	 */
 	@Override
 	@HasDependencyOn({ Decision.LA_TAREA_DE_ENVIO_DE_ACUSE_ASIGNA_EL_ID_DEL_MENSAJE,
-			Decision.LA_TAREA_DE_ENVIO_DE_ACUSE_REQUIERE_EMISOR_REAL })
+			Decision.LA_TAREA_DE_ENVIO_DE_ACUSE_REQUIERE_EMISOR_REAL, Decision.TODAVIA_NO_IMPLEMENTE_EL_AJUSTE_DE_PESOS })
 	public void doWork() throws InterruptedException {
 		final ReceptorVortex emisor = this.contexto.getEmisor();
 		if (emisor == null) {
@@ -64,7 +64,7 @@ public class DevolverAcuseConsumoWorkUnit implements WorkUnit {
 		// Desregistramos el ruteo como en progreso
 		final IdVortex idMensajeRecibido = contexto.getMensaje().getIdentificacion();
 		final IdentificadorDeEnvio idEnvioRecibido = IdentificadorDeEnvio.create(idMensajeRecibido, emisor);
-		final MemoriaDeMensajes memoriaDeMensajes = contexto.getMemoriaDeMensajes();
+		final MemoriaDeRuteos memoriaDeMensajes = contexto.getMemoriaDeRuteos();
 		memoriaDeMensajes.registrarRuteoTerminado(idEnvioRecibido);
 
 		// TODO: Deberíamos acomodar los pesos de los nodos en base al consumo?

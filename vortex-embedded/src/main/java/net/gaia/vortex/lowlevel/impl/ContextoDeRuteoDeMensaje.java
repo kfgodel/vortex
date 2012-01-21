@@ -80,6 +80,10 @@ public class ContextoDeRuteoDeMensaje {
 		return nodo.getMemoriaDeMensajes();
 	}
 
+	public MemoriaDeRuteos getMemoriaDeRuteos() {
+		return nodo.getMemoriaDeRuteos();
+	}
+
 	/**
 	 * Devuelve el registro del nodo acerca de los receptores que posee
 	 * 

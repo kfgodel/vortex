@@ -16,7 +16,7 @@ import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
-import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
+import net.gaia.vortex.lowlevel.impl.MemoriaDeRuteos;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.IdVortex;
@@ -49,7 +49,7 @@ public class RecibirSolicitudDeAcuseConsumoWorkUnit implements WorkUnit {
 				.create(idMensajeSolicitado, receptorDelEnvio);
 
 		// Verificamos que el acuse está inconcluso todavía
-		final MemoriaDeMensajes memoriaDeMensajes = contexto.getMemoriaDeMensajes();
+		final MemoriaDeRuteos memoriaDeMensajes = contexto.getMemoriaDeRuteos();
 		if (!memoriaDeMensajes.tieneRuteoActivoPara(idEnvioRealizado)) {
 			// No estamos armando el acuse. O ya enviamos el acuse, o nunca enviamos el mensaje
 			LOG.info("Solicitaron un acuse del que no tenemos envio. Asumiendo que ya lo enviamos");
