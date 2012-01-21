@@ -28,7 +28,6 @@ public class ContextoDeEnvio {
 	private ContextoDeRuteoDeMensaje contextoDeRuteo;
 	private ReceptorVortex receptorInteresado;
 	private IdentificadorDeEnvio idDeEnvio;
-	private EsperaDeAccion esperaDeConfirmacionRecepcion;
 	private EsperaDeAccion esperaDeAcuseConsumo;
 	private ControlDeConsumoDeEnvio controlDeConsumo;
 
@@ -37,11 +36,10 @@ public class ContextoDeEnvio {
 		contextoEnvio.contextoDeRuteo = contextoDeRuteo;
 		contextoEnvio.receptorInteresado = interesado;
 		contextoEnvio.controlDeConsumo = ControlDeConsumoDeEnvio.create();
-
+		contextoEnvio.esperaDeAcuseConsumo = EsperaDeAccion.create();
 		final MensajeVortex mensaje = contextoDeRuteo.getMensaje();
 		final IdVortex idDelMensaje = mensaje.getIdentificacion();
 		contextoEnvio.idDeEnvio = IdentificadorDeEnvio.create(idDelMensaje, interesado);
-		contextoEnvio.esperaDeConfirmacionRecepcion = EsperaDeAccion.create();
 		return contextoEnvio;
 	}
 
@@ -87,10 +85,6 @@ public class ContextoDeEnvio {
 
 	public ConfiguracionDeNodo getConfig() {
 		return this.contextoDeRuteo.getConfiguracionDeNodo();
-	}
-
-	public EsperaDeAccion getEsperaDeConfirmacionRecepcion() {
-		return esperaDeConfirmacionRecepcion;
 	}
 
 	public ControlDeRuteo getControlDeRuteo() {

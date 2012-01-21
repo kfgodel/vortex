@@ -54,6 +54,9 @@ public class EnviarSolicitudDeAcuseDeConsumoWorkUnit implements WorkUnit {
 		final ProcesarEnvioDeMetamensajeWorkUnit envioMetamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,
 				destino, solicitudAEnviar);
 		contextoRuteo.getProcesador().process(envioMetamensaje);
+
+		// Registramos que enviamos la solicitud por si viene una espera
+		contexto.getControlDeConsumo().registrarEnvioDeSolicitud();
 	}
 
 }

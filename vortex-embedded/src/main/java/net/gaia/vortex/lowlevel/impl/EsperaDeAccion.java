@@ -22,6 +22,9 @@ import net.gaia.taskprocessor.api.TimeMagnitude;
  */
 public class EsperaDeAccion {
 
+	private long startMillis;
+	private long durationMillis;
+
 	public static EsperaDeAccion create() {
 		final EsperaDeAccion espera = new EsperaDeAccion();
 		return espera;
@@ -34,8 +37,9 @@ public class EsperaDeAccion {
 	 *         terminó
 	 */
 	public long getMillisRestantes() {
-		// TODO Auto-generated method stub
-		return 0;
+		final long endMillis = this.startMillis + durationMillis;
+		final long remainingMillis = endMillis - getCurrentMillis();
+		return remainingMillis;
 	}
 
 	/**
@@ -45,8 +49,17 @@ public class EsperaDeAccion {
 	 *            Cantidad de tiempo que se debe esperar
 	 */
 	public void iniciarEsperaDe(final TimeMagnitude tiempoAEsperar) {
-		// TODO Auto-generated method stub
+		this.startMillis = getCurrentMillis();
+		this.durationMillis = tiempoAEsperar.getQuantity();
+	}
 
+	/**
+	 * Devuelve el timestamp en millis considerado como actual
+	 * 
+	 * @return El momento actual desde el 70 en millis
+	 */
+	private long getCurrentMillis() {
+		return System.currentTimeMillis();
 	}
 
 }

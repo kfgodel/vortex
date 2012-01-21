@@ -23,33 +23,12 @@ import net.gaia.taskprocessor.api.TimeMagnitude;
  */
 public class ConfiguracionDeNodo {
 
-	private TimeMagnitude timeoutDeConfirmacionRecepcion;
-	private TimeMagnitude timeoutDeSolicitudDeConfirmacionRecepcion;
 	private TimeMagnitude timeoutDeAcuseDeConsumo;
 	private TimeMagnitude esperaPorAcuseDeConsumo;
 
-	public TimeMagnitude getTimeoutDeConfirmacionRecepcion() {
-		return timeoutDeConfirmacionRecepcion;
-	}
-
-	public void setTimeoutDeConfirmacionRecepcion(final TimeMagnitude timeoutDeConfirmacionRecepcion) {
-		this.timeoutDeConfirmacionRecepcion = timeoutDeConfirmacionRecepcion;
-	}
-
-	public TimeMagnitude getTimeoutDeSolicitudDeConfirmacionRecepcion() {
-		return timeoutDeSolicitudDeConfirmacionRecepcion;
-	}
-
-	public void setTimeoutDeSolicitudDeConfirmacionRecepcion(
-			final TimeMagnitude timeoutDeSolicitudDeConfirmacionRecepcion) {
-		this.timeoutDeSolicitudDeConfirmacionRecepcion = timeoutDeSolicitudDeConfirmacionRecepcion;
-	}
-
 	public static ConfiguracionDeNodo create() {
 		final ConfiguracionDeNodo configuracion = new ConfiguracionDeNodo();
-		configuracion.timeoutDeConfirmacionRecepcion = TimeMagnitude.of(2, TimeUnit.SECONDS);
 		configuracion.timeoutDeAcuseDeConsumo = TimeMagnitude.of(2, TimeUnit.SECONDS);
-		configuracion.timeoutDeSolicitudDeConfirmacionRecepcion = configuracion.timeoutDeConfirmacionRecepcion;
 		configuracion.esperaPorAcuseDeConsumo = TimeMagnitude.of(2, TimeUnit.SECONDS);
 		return configuracion;
 	}
