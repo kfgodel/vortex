@@ -28,6 +28,16 @@ public class TimeMagnitude {
 	}
 
 	/**
+	 * Devuelve la cantidad que representa esta magnitud en milisegundos
+	 * 
+	 * @return La cantidad expresada en milisegundos
+	 */
+	public long getMillis() {
+		final long millis = this.timeUnit.toMillis(this.quantity);
+		return millis;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
