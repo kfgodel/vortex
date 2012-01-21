@@ -71,11 +71,11 @@ public class MensajeVortex {
 				.toString();
 	}
 
-	public static MensajeVortex create(final ContenidoVortex contenido2, final IdVortex identificacion2,
+	public static MensajeVortex create(final ContenidoVortex contenido, final IdVortex identificacion,
 			final List<String> tags) {
 		final MensajeVortex mensaje = new MensajeVortex();
-		mensaje.contenido = contenido2;
-		mensaje.identificacion = identificacion2;
+		mensaje.contenido = contenido;
+		mensaje.identificacion = identificacion;
 		mensaje.tagsDestino = tags;
 		return mensaje;
 	}

@@ -23,9 +23,21 @@ import net.gaia.vortex.protocol.messages.IdVortex;
 public class AcuseConsumo implements Acuse {
 	private IdVortex idMensajeConsumido;
 	private Integer valorConsumo;
+	/**
+	 * Cantidad de clientes del nodo (otros nodos) interesados en el mensaje
+	 */
 	private Long cantidadInteresados;
+	/**
+	 * Cantidad de ruteos que indicaron duplicado
+	 */
 	private Long cantidadDuplicados;
+	/**
+	 * Cantidad de ruteos que tuvieron fallas
+	 */
 	private Long cantidadFallados;
+	/**
+	 * Cantidad de clientes que indicaron consumo del mensaje
+	 */
 	private Long cantidadConsumidos;
 
 	public IdVortex getIdMensajeConsumido() {

@@ -56,7 +56,7 @@ public class ContenidoVortex {
 				.toString();
 	}
 
-	public static ContenidoVortex create(final String tipo, final String valor) {
+	public static ContenidoVortex create(final String tipo, final Object valor) {
 		final ContenidoVortex contenido = new ContenidoVortex();
 		contenido.tipoContenido = tipo;
 		contenido.valor = valor;

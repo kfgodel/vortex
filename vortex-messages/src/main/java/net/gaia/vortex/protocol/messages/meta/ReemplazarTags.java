@@ -32,4 +32,9 @@ public class ReemplazarTags implements MetamensajeVortex {
 		this.tags = tags;
 	}
 
+	public static ReemplazarTags create(final List<String> tags) {
+		final ReemplazarTags reemplazar = new ReemplazarTags();
+		reemplazar.tags = tags;
+		return reemplazar;
+	}
 }
