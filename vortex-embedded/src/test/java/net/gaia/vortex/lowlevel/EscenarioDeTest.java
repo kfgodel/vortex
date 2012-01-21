@@ -18,6 +18,7 @@ import java.util.List;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.gaia.vortex.protocol.messages.meta.CerrarConexion;
 import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.ReemplazarTags;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
@@ -114,6 +115,14 @@ public class EscenarioDeTest {
 		acuse.setCantidadConsumidos(1L);
 		final MensajeVortex mensajeVortex = crearMetamensaje(acuse);
 		return mensajeVortex;
+	}
+
+	/**
+	 * Crea el mensaje para cerrar la conexión desde el protocolo
+	 */
+	public MensajeVortex crearMensajeDeCierreDeConexion() {
+		final MetamensajeVortex cierreConexion = CerrarConexion.create();
+		return crearMetamensaje(cierreConexion);
 	}
 
 }

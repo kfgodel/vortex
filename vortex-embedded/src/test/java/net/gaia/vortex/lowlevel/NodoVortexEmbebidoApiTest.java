@@ -383,6 +383,24 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesionDelPrimero = nodoVortex.crearNuevaSesion(encoladorDelPrimero);
 		// Cerramos la sesión impidiendo mandar más mensajes desde ella
 		sesionDelPrimero.cerrar();
+	}
 
+	@Test
+	public void deberiaPermitirCerrarConexionDesdeElCliente() {
+		// Almacena los mensajes recibidos por el primero
+		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();
+		// Creamos la sesión para poder recibir los mensajes
+		final SesionVortex sesionDelPrimero = nodoVortex.crearNuevaSesion(encoladorDelPrimero);
+
+		sesionDelPrimero.enviar(escenarios.crearMensajeDeCierreDeConexion());
+
+		try {
+			encoladorDelPrimero.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("No deberíamos recibir proximo mensaje");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción esperada
+		}
+
+		// TODO: Verificar que esté cerrada
 	}
 }

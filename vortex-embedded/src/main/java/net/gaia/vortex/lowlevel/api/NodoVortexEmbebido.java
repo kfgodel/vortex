@@ -39,7 +39,7 @@ public interface NodoVortexEmbebido {
 	 * @param handlerDeMensajes
 	 *            El handler que utilizará el receptor para tratar los mensajes recibidos
 	 * 
-	 * @return La sesion creada para la comunicación con el nodo
+	 * @return La sesión creada para la comunicación con el nodo
 	 */
 	SesionVortex crearNuevaSesion(MensajeVortexHandler handlerDeMensajes);
 

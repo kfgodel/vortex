@@ -17,6 +17,7 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.AgregarTags;
+import net.gaia.vortex.protocol.messages.meta.CerrarConexion;
 import net.gaia.vortex.protocol.messages.meta.LimpiarTags;
 import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.QuitarTags;
@@ -124,6 +125,10 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 			final RecibirLimpiarTagsWorkUnit limpiarTags = RecibirLimpiarTagsWorkUnit.create(contexto);
 			return limpiarTags;
 
+		}
+		if (metamensaje instanceof CerrarConexion) {
+			final RecibirCerrarConexionWorkUnit cerrarConexion = RecibirCerrarConexionWorkUnit.create(contexto);
+			return cerrarConexion;
 		}
 		return null;
 	}

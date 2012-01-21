@@ -45,8 +45,14 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	private GeneradorMensajesDeNodo generadorMensajes;
 
 	private MemoriaDeMensajes memoriaDeMensajes;
+	private MemoriaDeRuteos memoriaDeRuteos;
 
 	private ConfiguracionDeNodo configuracion;
+
+	/**
+	 * Receptor a utilizar cuando no existe uno en un mensaje
+	 */
+	private NullReceptorVortex sinEmisorIdentificado;
 
 	public MemoriaDeMensajes getMemoriaDeMensajes() {
 		return memoriaDeMensajes;
@@ -86,13 +92,6 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	}
 
 	/**
-	 * Receptor a utilizar cuando no existe uno en un mensaje
-	 */
-	private NullReceptorVortex sinEmisorIdentificado;
-
-	private MemoriaDeRuteos memoriaDeRuteos;
-
-	/**
 	 * @see net.gaia.vortex.lowlevel.api.NodoVortexEmbebido#rutear(net.gaia.vortex.protocol.MensajeVortex)
 	 */
 	@Override
@@ -120,8 +119,8 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	 */
 	@Override
 	public SesionVortex crearNuevaSesion(final MensajeVortexHandler handlerDeMensajes) {
+		final SesionVortexImpl sesion = SesionVortexImpl.create(handlerDeMensajes, this);
 		final ReceptorVortexConSesion nuevoReceptor = ReceptorVortexConSesion.create(handlerDeMensajes);
-		final SesionVortexImpl sesion = SesionVortexImpl.create(nuevoReceptor, this);
 		registroReceptores.agregar(nuevoReceptor);
 		return sesion;
 	}

@@ -12,9 +12,17 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortexConSesion;
+import net.gaia.vortex.lowlevel.impl.tasks.ProcesarCierreDeConexionWorkUnit;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase representa la sesión vortex creada desde el nodo y dada al cliente para poder enviar y
@@ -22,29 +30,76 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
  * 
  * @author D. García
  */
-public class SesionVortexImpl implements SesionVortex {
+public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
+	private static final Logger LOG = LoggerFactory.getLogger(SesionVortexImpl.class);
 
 	/**
 	 * Receptor de los mensajes de esta sesión
 	 */
 	private ReceptorVortex receptorEmisor;
 	private NodoVortexConTasks nodo;
+	private AtomicBoolean cerrada;
+	private MensajeVortexHandler handlerDelReceptor;
 
 	/**
 	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#enviar(net.gaia.vortex.protocol.MensajeVortex)
 	 */
 	@Override
 	public void enviar(final MensajeVortex mensajeEnviado) {
+		if (cerrada.get()) {
+			LOG.error("Se intentó enviar un mensaje[{}] por una sesión cerrada[{}]", mensajeEnviado, this);
+			return;
+		}
+
 		// Creamos el contexto para el ruteo del mensaje del emisor
 		final ContextoDeRuteoDeMensaje nuevoRuteo = ContextoDeRuteoDeMensaje.create(mensajeEnviado, receptorEmisor,
 				this.nodo);
 		nodo.comenzarRuteo(nuevoRuteo);
 	}
 
-	public static SesionVortexImpl create(final ReceptorVortex receptor, final NodoVortexConTasks nodoHost) {
+	public static SesionVortexImpl create(final MensajeVortexHandler handlerDeMensajes,
+			final NodoVortexConTasks nodoHost) {
 		final SesionVortexImpl sesion = new SesionVortexImpl();
-		sesion.receptorEmisor = receptor;
+		sesion.handlerDelReceptor = handlerDeMensajes;
+		sesion.receptorEmisor = ReceptorVortexConSesion.create(sesion);
 		sesion.nodo = nodoHost;
+		sesion.cerrada = new AtomicBoolean(false);
 		return sesion;
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#cerrar()
+	 */
+	@Override
+	public void cerrar() {
+		if (cerrada.get()) {
+			LOG.info("Se solicito cierre de sesión ya cerrada[{}]", this);
+			return;
+		}
+		// Marcamos que ya estamos cerrados, por lo que se ignorará toda circulación de mensajes
+		cerrada.set(true);
+		final ProcesarCierreDeConexionWorkUnit cierreDeConexion = ProcesarCierreDeConexionWorkUnit.create(nodo,
+				receptorEmisor);
+		nodo.getProcesador().process(cierreDeConexion);
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#estaCerrada()
+	 */
+	@Override
+	public boolean estaCerrada() {
+		return cerrada.get();
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.api.MensajeVortexHandler#onMensajeRecibido(net.gaia.vortex.protocol.messages.MensajeVortex)
+	 */
+	@Override
+	public void onMensajeRecibido(final MensajeVortex nuevoMensaje) {
+		if (cerrada.get()) {
+			LOG.warn("Se recibió un mensaje[{}] en una sesión cerrada[{}]", nuevoMensaje, this);
+			return;
+		}
+		handlerDelReceptor.onMensajeRecibido(nuevoMensaje);
 	}
 }

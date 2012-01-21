@@ -36,4 +36,10 @@ public interface SesionVortex {
 	 */
 	void cerrar();
 
+	/**
+	 * Indica si esta sesión está cerrada y por lo tanto no puede enviar o recibir mensajes
+	 * 
+	 * @return true si esta cerrada
+	 */
+	public boolean estaCerrada();
 }
