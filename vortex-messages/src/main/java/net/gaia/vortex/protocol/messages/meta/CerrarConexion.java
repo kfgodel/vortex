@@ -20,4 +20,8 @@ package net.gaia.vortex.protocol.messages.meta;
  */
 public class CerrarConexion implements MetamensajeVortex {
 
+	public static CerrarConexion create() {
+		final CerrarConexion cierre = new CerrarConexion();
+		return cierre;
+	}
 }
