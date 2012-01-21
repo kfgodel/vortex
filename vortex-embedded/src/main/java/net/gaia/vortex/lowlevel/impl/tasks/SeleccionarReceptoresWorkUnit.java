@@ -18,6 +18,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
@@ -47,7 +48,8 @@ public class SeleccionarReceptoresWorkUnit implements WorkUnit {
 		// Queremos los interesados en el tag del mensaje
 		final MensajeVortex mensaje = this.contexto.getMensaje();
 		final List<String> tagsDelMensaje = mensaje.getTagsDestino();
-		final SeleccionDeReceptores seleccion = registro.getReceptoresInteresadosEn(tagsDelMensaje);
+		final ReceptorVortex emisor = contexto.getEmisor();
+		final SeleccionDeReceptores seleccion = registro.getReceptoresInteresadosMenosA(emisor, tagsDelMensaje);
 
 		// Creamos la estructura de control para realizar el ruteo
 		final ControlDeRuteo controlDeRuteo = this.contexto.getControl();

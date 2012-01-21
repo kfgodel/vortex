@@ -67,4 +67,9 @@ public class InterpreteJackson implements InterpreteJson {
 		}
 	}
 
+	public static InterpreteJackson create() {
+		final InterpreteJackson interprete = new InterpreteJackson();
+		interprete.jsonMapper = new ObjectMapper();
+		return interprete;
+	}
 }

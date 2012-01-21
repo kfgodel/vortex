@@ -31,4 +31,9 @@ public interface SesionVortex {
 	 */
 	void enviar(MensajeVortex mensajeEnviado);
 
+	/**
+	 * Cierra la sesión actual indicando al nodo que puede liberar los recursos asociados
+	 */
+	void cerrar();
+
 }

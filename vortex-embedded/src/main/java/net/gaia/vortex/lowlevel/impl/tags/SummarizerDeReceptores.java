@@ -436,12 +436,15 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores#getReceptoresInteresadosEn(java.util.List)
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores#getReceptoresInteresadosMenosA(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex,
+	 *      java.util.List)
 	 */
 	@Override
 	@HasDependencyOn(Decision.TODAVIA_NO_IMPLEMENTE_EL_AJUSTE_DE_PESOS)
-	public SeleccionDeReceptores getReceptoresInteresadosEn(final List<String> tagsDelMensaje) {
-		final SeleccionDeReceptores interesadosEnElMensaje = SeleccionDeReceptores.create();
+	public SeleccionDeReceptores getReceptoresInteresadosMenosA(final ReceptorVortex emisorExcluido,
+			final List<String> tagsDelMensaje) {
+		// Creamos la selección que excluirá al emisor
+		final SeleccionDeReceptores interesadosEnElMensaje = SeleccionDeReceptores.create(emisorExcluido);
 		doAtomicOperation(new Runnable() {
 			@Override
 			public void run() {

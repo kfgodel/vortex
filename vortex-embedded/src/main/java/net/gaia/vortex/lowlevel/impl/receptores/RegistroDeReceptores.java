@@ -37,11 +37,15 @@ public interface RegistroDeReceptores {
 	 * Devuelve la lista de receptores que declararon interés en recibir mensajes con alguno de los
 	 * tags pasados
 	 * 
+	 * @param emisorExcluido
+	 *            El emisor del mensaje que debe ser excluído
+	 * 
 	 * @param tagsDelMensaje
 	 *            Tags del mensaje a rutear
 	 * @return Los receptores que tienen al menos uno de los tags declarados como recibibles
 	 */
-	public abstract SeleccionDeReceptores getReceptoresInteresadosEn(final List<String> tagsDelMensaje);
+	public abstract SeleccionDeReceptores getReceptoresInteresadosMenosA(ReceptorVortex emisorExcluido,
+			final List<String> tagsDelMensaje);
 
 	/**
 	 * Ajusta los pesos de los tags de cada receptor de acuerdo a los resultados de performance

@@ -24,10 +24,19 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
  */
 public class SeleccionDeReceptores {
 
+	private ReceptorVortex receptorExcluido;
 	private Set<ReceptorVortex> seleccionados;
 
-	public static SeleccionDeReceptores create() {
+	/**
+	 * Crea esta selección para excluir de sus seleccionados al receptor indicado
+	 * 
+	 * @param emisorExcluido
+	 *            El receptor a excluir de los seleccionados
+	 * @return La selección creada
+	 */
+	public static SeleccionDeReceptores create(final ReceptorVortex emisorExcluido) {
 		final SeleccionDeReceptores seleccion = new SeleccionDeReceptores();
+		seleccion.receptorExcluido = emisorExcluido;
 		return seleccion;
 	}
 
@@ -49,7 +58,13 @@ public class SeleccionDeReceptores {
 	 *            El receptor a incluir como seleccionado
 	 */
 	public void incluirTodos(final Set<ReceptorVortex> receptores) {
-		this.getSeleccionados().addAll(receptores);
+		for (final ReceptorVortex receptorIncluible : receptores) {
+			// Agregamos todos menos al excluido
+			if (receptorIncluible.equals(receptorExcluido)) {
+				continue;
+			}
+			this.getSeleccionados().add(receptorIncluible);
+		}
 	}
 
 	/**

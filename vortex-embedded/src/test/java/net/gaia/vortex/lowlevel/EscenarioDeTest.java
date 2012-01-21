@@ -12,13 +12,15 @@
  */
 package net.gaia.vortex.lowlevel;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import net.gaia.vortex.lowlevel.api.DeclaracionDeTags;
-import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
+import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
+import net.gaia.vortex.protocol.messages.meta.ReemplazarTags;
+import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
 
 import com.google.common.collect.Lists;
 
@@ -37,10 +39,18 @@ public class EscenarioDeTest {
 	 * @return El mensaje creado
 	 */
 	public MensajeVortex crearMensajeDeTest(final String tagDelMensaje) {
-		final IdVortex identificacion = IdVortex.create("1", "1", 1L, 1L);
+		final IdVortex identificacion = createId();
 		final List<String> tags = Lists.newArrayList(tagDelMensaje);
-		final MensajeVortex mensajeVortex = MensajeVortex.create("contenido", identificacion, tags);
+		final ContenidoVortex contenidoVortex = ContenidoVortex.create("tipo", "valor");
+		final MensajeVortex mensajeVortex = MensajeVortex.create(contenidoVortex, identificacion, tags);
 		return mensajeVortex;
+	}
+
+	/**
+	 * Crea un ID para tests
+	 */
+	private IdVortex createId() {
+		return IdVortex.create("1", "1", 1L, 1L);
 	}
 
 	/**
@@ -55,11 +65,42 @@ public class EscenarioDeTest {
 		return mensajeDeTest;
 	}
 
-	public MensajeVortex crearMetamensajeDePublicacionDeTags(final Set<String> recibibles, final Set<String> enviables) {
-		final IdVortex identificacion = IdVortex.create("1", "1", 1L, 1L);
-		final List<String> tags = Lists.newArrayList(MensajeVortex.TAG_INTERCAMBIO_VECINO);
-		final DeclaracionDeTags declaracion = DeclaracionDeTags.create(recibibles, enviables);
-		final MensajeVortex mensajeVortex = MensajeVortex.create(declaracion, identificacion, tags);
+	/**
+	 * Crea un metamensaje de publicación de tags que reemplaza tags previos
+	 * 
+	 * @param enviablesORecibibles
+	 *            Los tags declarados
+	 * @return El mensaje creado que contiene el metamensaje
+	 */
+	public MensajeVortex crearMetamensajeDePublicacionDeTags(final String... enviablesORecibibles) {
+		final ArrayList<String> tagsDeclarados = Lists.newArrayList(enviablesORecibibles);
+		return crearMetamensajeDePublicacionDeTags(tagsDeclarados);
+	}
+
+	/**
+	 * Crea un metamensaje de publicación de tags que reemplaza tags previos
+	 * 
+	 * @param tagsDeclarados
+	 *            Los tags declarados enviables o recibibles
+	 * @return El mensaje creado que contiene el metamensaje
+	 */
+	public MensajeVortex crearMetamensajeDePublicacionDeTags(final List<String> tagsDeclarados) {
+		final ReemplazarTags metamensaje = ReemplazarTags.create(tagsDeclarados);
+		return crearMetamensaje(metamensaje);
+	}
+
+	/**
+	 * Crea el mensaje para el metamensaje indicado
+	 * 
+	 * @param metamensaje
+	 *            El metamensaje a envolver en un mensaje vortex
+	 * @return El mensaje para el metamensaje
+	 */
+	private MensajeVortex crearMetamensaje(final MetamensajeVortex metamensaje) {
+		final ContenidoVortex contenido = ContenidoVortex.create(metamensaje.getClass().getName(), metamensaje);
+		final IdVortex identificacion = createId();
+		final List<String> tagsDelMensaje = Lists.newArrayList(MensajeVortex.TAG_INTERCAMBIO_VECINO);
+		final MensajeVortex mensajeVortex = MensajeVortex.create(contenido, identificacion, tagsDelMensaje);
 		return mensajeVortex;
 	}
 
@@ -67,10 +108,11 @@ public class EscenarioDeTest {
 		return crearMensajeDeTest("TAG_DE_PRUEBA");
 	}
 
-	public MensajeVortex crearMensajeDeConsumo(final ConfirmacionConsumo consumo) {
-		final IdVortex identificacion = IdVortex.create("1", "1", 1L, 1L);
-		final List<String> tags = Lists.newArrayList(MensajeVortex.TAG_INTERCAMBIO_VECINO);
-		final MensajeVortex mensajeVortex = MensajeVortex.create(consumo, identificacion, tags);
+	public MensajeVortex crearMensajeDeConsumo(final IdVortex idMensaje) {
+		final AcuseConsumo acuse = AcuseConsumo.create();
+		acuse.setIdMensajeConsumido(idMensaje);
+		acuse.setCantidadConsumidos(1L);
+		final MensajeVortex mensajeVortex = crearMetamensaje(acuse);
 		return mensajeVortex;
 	}
 

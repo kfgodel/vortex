@@ -12,23 +12,29 @@
  */
 package net.gaia.vortex.lowlevel;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.vortex.lowlevel.api.DeclaracionDeTags;
+import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.lowlevel.api.EncoladorDeMensajesHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
-import net.gaia.vortex.protocol.confirmations.ConfirmacionConsumo;
-import net.gaia.vortex.protocol.confirmations.ConfirmacionRecepcion;
+import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.gaia.vortex.protocol.messages.meta.AgregarTags;
+import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
+import net.gaia.vortex.protocol.messages.routing.AcuseDuplicado;
 import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 import net.gaia.vortex.tests.VortexTest;
 
-import org.springframework.util.Assert;
+import org.junit.Test;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 
 /**
  * Esta clase prueba la api de uso de un nodo vortex en memoria
@@ -46,6 +52,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		nodoVortex.rutear(mensajeVortex);
 	}
 
+	@Test
 	public void deberiaAceptarUnMensajeVortexBienArmado() throws InterruptedException {
 
 		// Almacena los mensajes recibidos
@@ -54,21 +61,19 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		// Creamos la sesión para poder recibir la confirmación
 		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
 
-		// Enviamos el mensaje
+		// Enviamos un mensaje bien armado
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest();
 		sesion.enviar(mensajeEnviado);
 
 		// Esperamos la respuesta
 		final MensajeVortex mensajeRecibido = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		final ConfirmacionRecepcion confirmacion = (ConfirmacionRecepcion) mensajeRecibido.getContenido();
-		Assert.isTrue(confirmacion.getIdentificacionMensaje().equals(mensajeEnviado.getIdentificacion()),
-				"La confirmacion debería ser para el mensaje mandado");
-		Assert.isTrue(confirmacion.getAceptado(),
-				"El mensaje debería ser aceptado para rutear, aunque no haya nadie a quien darselo");
-		Assert.isNull(confirmacion.getCausa(), "No debería tener causa definida");
+		final AcuseConsumo acuse = castContenidoAs(AcuseConsumo.class, mensajeRecibido);
+		assertEquals("La confirmacion debería ser para el mensaje mandado", mensajeEnviado.getIdentificacion(),
+				acuse.getIdMensajeConsumido());
 	}
 
+	@Test
 	public void deberiaRechazarUnMensajeVortexMalArmado() {
 
 		// Almacena los mensajes recibidos
@@ -84,15 +89,36 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		// Esperamos la respuesta
 		final MensajeVortex mensajeRecibido = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		final ConfirmacionRecepcion confirmacion = (ConfirmacionRecepcion) mensajeRecibido.getContenido();
+		final AcuseFallaRecepcion acuse = castContenidoAs(AcuseFallaRecepcion.class, mensajeRecibido);
 
-		Assert.isTrue(confirmacion.getIdentificacionMensaje().equals(mensajeEnviado.getIdentificacion()),
-				"La confirmacion debería ser para el mensaje mandado");
-		Assert.isTrue(!confirmacion.getAceptado(), "Debería estar rechazado por estar mal armado indicando causa");
-		Assert.isNull(AcuseFallaRecepcion.BAD_HASH_ERROR.equals(confirmacion.getCausa()),
-				"Deberia indicad la causa de rechazo");
+		assertEquals("La confirmacion debería ser para el mensaje mandado", mensajeEnviado.getIdentificacion(),
+				acuse.getIdMensajeFallado());
+		assertEquals("Deberia indicad la causa de rechazo", AcuseFallaRecepcion.BAD_HASH_ERROR, acuse.getCodigoError());
 	}
 
+	/**
+	 * Obtiene el contenido del mensaje pasado y lo castea al tipo indicado validando que si no es
+	 * de ese tipo genere un error
+	 * 
+	 * @param expectedContenidoType
+	 *            El tipo esperado del contenido
+	 * @param mensajeRecibido
+	 *            El mensaje recibido
+	 * @return El contenido casteado al tipo esperado
+	 */
+	@SuppressWarnings("unchecked")
+	private <T> T castContenidoAs(final Class<T> expectedContenidoType, final MensajeVortex mensajeRecibido) {
+		final ContenidoVortex contenidoVortex = mensajeRecibido.getContenido();
+		final Object valorRecibido = contenidoVortex.getValor();
+		if (expectedContenidoType.isInstance(valorRecibido)) {
+			return (T) valorRecibido;
+		}
+		Assert.fail("El mensaje recibido[" + valorRecibido + "] no tiene el contenido esperado["
+				+ expectedContenidoType + "]");
+		return null;
+	}
+
+	@Test
 	public void deberiaInformarLaNoEntregaSiNoHayAQuien() {
 		// Almacena los mensajes recibidos
 		final EncoladorDeMensajesHandler encolador = EncoladorDeMensajesHandler.create();
@@ -104,25 +130,25 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest();
 		sesion.enviar(mensajeEnviado);
 
-		// Esperamos la respuesta, asumimos que esta todo bien
 		encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Esperamos la confirmación de consumo
 		final MensajeVortex mensajeRecibido = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Verificamos que no le fue entregado a nadie
-		final ConfirmacionConsumo confirmacion = (ConfirmacionConsumo) mensajeRecibido.getContenido();
-		Assert.isTrue(confirmacion.getConsumidos().equals(Integer.valueOf(0)),
-				"No debería haber nadie que pueda consumir el mensaje");
-		Assert.isTrue(confirmacion.getRechazados().equals(Integer.valueOf(0)),
-				"No deberían haber partes que puedan rechazar");
-		Assert.isNull(confirmacion.getPerdidos().equals(Integer.valueOf(0)), "No deberían haber mensajes perdidos");
+		final AcuseConsumo acuse = castContenidoAs(AcuseConsumo.class, mensajeRecibido);
+		assertEquals("No debería haber nadie que pueda consumir el mensaje", 0, acuse.getCantidadInteresados()
+				.longValue());
+		assertEquals("No debería haber ruteos duplicados", 0, acuse.getCantidadDuplicados().longValue());
+		assertEquals("No debería haber ruteos fallidos", 0, acuse.getCantidadFallados().longValue());
+		assertEquals("No debería haber mensajes consumidos", 0, acuse.getCantidadConsumidos().longValue());
 
 	}
 
 	/**
 	 * Deberían haber dos confirmaciones, una que sí, la otra que no
 	 */
+	@Test
 	public void deberiaRechazarUnMensajeVortexDuplicado() {
 		// Almacena los mensajes recibidos
 		final EncoladorDeMensajesHandler encolador = EncoladorDeMensajesHandler.create();
@@ -134,9 +160,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest();
 		sesion.enviar(mensajeEnviado);
 
-		// Asumimos que la primera confirmación es exitosa
-		encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		// El segundo mensaje debería ser el reporte de consumo
+		// Asumimos que la primera confirmación esperamos el acuse de consumo y lo descartamos
 		encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Enviamos de nuevo y debería rechazarlo por duplicado
@@ -147,16 +171,17 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final MensajeVortex respuestaSegundoEnvio = encolador.esperarProximoMensaje(TimeMagnitude.of(1,
 				TimeUnit.SECONDS));
 
-		final ConfirmacionRecepcion confirmacion = (ConfirmacionRecepcion) respuestaSegundoEnvio.getContenido();
-		Assert.isTrue(confirmacion.getIdentificacionMensaje().equals(mensajeReplica.getIdentificacion()),
-				"La confirmacion debería ser para el mensaje mandado por segunda vez");
-		Assert.isTrue(!confirmacion.getAceptado(), "Debería estar rechazado por estar duplicado");
-		Assert.isNull(ConfirmacionRecepcion.MENSAJE_IS_DUPLICATED_ERROR.equals(confirmacion.getCausa()),
-				"Debería indicar que está duplicado");
-
+		final AcuseDuplicado acuse = castContenidoAs(AcuseDuplicado.class, respuestaSegundoEnvio);
+		assertEquals("Debería ser para el segundo mensaje enviado", mensajeReplica.getIdentificacion(),
+				acuse.getIdMensajeDuplicado());
 	}
 
-	public void deberiaPermitirDeclararLosMensajesQueSeReciben() {
+	/**
+	 * Como no hay confirmación sólo se verifica que al mandar el metamensaje no exista una
+	 * respuesta negativa
+	 */
+	@Test
+	public void deberiaPermitirDeclararLosMensajesQueSeEnvianOReciben() {
 		// Almacena los mensajes recibidos
 		final EncoladorDeMensajesHandler encolador = EncoladorDeMensajesHandler.create();
 
@@ -164,90 +189,76 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
 
 		// Declaramos los tags que recibimos
-		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(
-				Sets.newHashSet("TAG1", "TAG2"), null);
+		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags("TAG1", "TAG2");
 		sesion.enviar(publicacionDeTags);
 
-		// Deberíamos recibir la confirmación y la consumición
-		final MensajeVortex mensajeRecepcion = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		final ConfirmacionRecepcion recepcion = (ConfirmacionRecepcion) mensajeRecepcion.getContenido();
-		Assert.isTrue(recepcion.getAceptado());
-
-		// Esperamos el de consumo
-		final MensajeVortex mensajeConsumo = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		final ConfirmacionConsumo consumo = (ConfirmacionConsumo) mensajeConsumo.getContenido();
-		Assert.isTrue(consumo.getConsumidos().equals(Integer.valueOf(1)),
-				"El nodo deberia consumir el mensaje y confirmarnos que lo recibió");
+		// No deberíamos recibir ninguna respuesta si todo salió bien
+		try {
+			encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("Debería fallar por espera agotada");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperabamos por no recibir nada
+		}
 	}
 
-	public void deberiaPermitirDeclararLosMensajesQueSeEnvian() {
-		// Almacena los mensajes recibidos
-		final EncoladorDeMensajesHandler encolador = EncoladorDeMensajesHandler.create();
-
-		// Creamos la sesión para poder recibir la confirmación
-		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
-
-		// Declaramos los tags que recibimos
-		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(null,
-				Sets.newHashSet("TAG1", "TAG2"));
-		sesion.enviar(publicacionDeTags);
-
-		// Deberíamos recibir la confirmación y la consumición
-		final MensajeVortex mensajeRecepcion = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		final ConfirmacionRecepcion recepcion = (ConfirmacionRecepcion) mensajeRecepcion.getContenido();
-		Assert.isTrue(recepcion.getAceptado());
-
-		// Esperamos el de consumo
-		final MensajeVortex mensajeConsumo = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		final ConfirmacionConsumo consumo = (ConfirmacionConsumo) mensajeConsumo.getContenido();
-		Assert.isTrue(consumo.getConsumidos().equals(Integer.valueOf(1)),
-				"El nodo deberia consumir el mensaje y confirmarnos que lo recibió");
-
-	}
-
-	public void deberiaPermitirConocerLosMensajesQueOtrosPublican() {
+	/**
+	 * Declaramos tags en el primero y el segundo sólo por conectarse debería recibirlos
+	 */
+	@Test
+	public void deberiaDarAConocerLosTagsExistentesAlNuevoCliente() {
 		// Almacena los mensajes recibidos para el observador
-		final EncoladorDeMensajesHandler encoladorDeObservador = EncoladorDeMensajesHandler.create();
+		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();
 
-		// Creamos la sesión para poder recibir las publicaciones
-		nodoVortex.crearNuevaSesion(encoladorDeObservador);
+		// Creamos la sesión para declarar las publicaciones de tag
+		final SesionVortex sesionPrimero = nodoVortex.crearNuevaSesion(encoladorDelPrimero);
+		final List<String> tagsDelPrimero = Lists.newArrayList("Tag1", "Tag2");
+		sesionPrimero.enviar(escenarios.crearMetamensajeDePublicacionDeTags(tagsDelPrimero));
 
-		// Almacena los mensajes recibidos al publicador
-		final EncoladorDeMensajesHandler encoladorDePublicador = EncoladorDeMensajesHandler.create();
+		// Conectamos al segundo cliente
+		final EncoladorDeMensajesHandler encoladorDelSegundo = EncoladorDeMensajesHandler.create();
+		nodoVortex.crearNuevaSesion(encoladorDelSegundo);
 
-		// Creamos la sesión para poder recibir la confirmación
-		final SesionVortex sesionDePublicador = nodoVortex.crearNuevaSesion(encoladorDePublicador);
-
-		// Declaramos los tags que publicamos
-		final HashSet<String> tagsPublicadosComoRecibibles = Sets.newHashSet("TAG_RECIBIBLE");
-		final HashSet<String> tagsPublicadosComoEnviables = Sets.newHashSet("TAG_ENVIABLE");
-		final MensajeVortex publicacionDelClienteReal = escenarios.crearMetamensajeDePublicacionDeTags(
-				tagsPublicadosComoRecibibles, tagsPublicadosComoEnviables);
-		sesionDePublicador.enviar(publicacionDelClienteReal);
-
-		// Esperamos la confirmación de recepción
-		encoladorDePublicador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		// Esperamos la confirmación de consumo (se lo entregó a si mismo)
-		final MensajeVortex mensajeConsumo = encoladorDePublicador.esperarProximoMensaje(TimeMagnitude.of(1,
+		// Por sólo conectarnos deberíamos recibir los tags del primero como intereses del nodo
+		final MensajeVortex mensajeRecibido = encoladorDelSegundo.esperarProximoMensaje(TimeMagnitude.of(1,
 				TimeUnit.SECONDS));
-		final ConfirmacionConsumo consumo = (ConfirmacionConsumo) mensajeConsumo.getContenido();
-		Assert.isTrue(consumo.getConsumidos().equals(Integer.valueOf(1)),
-				"El único que consume el mensaje de publicacion es el nodo");
-
-		// Esperamos el mensaje donde el nodo nos re publica sus intereses
-		final MensajeVortex republicacionDelNodo = encoladorDeObservador.esperarProximoMensaje(TimeMagnitude.of(1,
-				TimeUnit.SECONDS));
-		Assert.isTrue(!republicacionDelNodo.getIdentificacion().equals(publicacionDelClienteReal.getIdentificacion()),
-				"El mensaje del nodo no debería tener el mismo ID que el mensaje del publicador real");
-
-		final DeclaracionDeTags publicacionDelNodo = (DeclaracionDeTags) republicacionDelNodo.getContenido();
-		Assert.isTrue(publicacionDelNodo.getTagsEnviables().equals(tagsPublicadosComoEnviables),
-				"El nodo debería publicar como enviables propios los del nodo publicante");
-		Assert.isTrue(publicacionDelNodo.getTagsRecibibles().equals(tagsPublicadosComoRecibibles),
-				"El nodo debería publicar como recibibles propios los del nodo publicante");
+		// El nodo nos indica por separado lo agregado de lo quitado
+		final AgregarTags agregadoDeTagsDelNodo = castContenidoAs(AgregarTags.class, mensajeRecibido);
+		assertEquals("Debería decir que trata con los tags del primero", new HashSet<String>(tagsDelPrimero),
+				new HashSet<String>(agregadoDeTagsDelNodo.getTags()));
 	}
 
-	public void deberiaPermitirRecibirUnMensajeEnviadoConTagPreDeclarado() {
+	/**
+	 * Al conectar un segundo obtenemos esa información para el primero
+	 */
+	@Test
+	public void deberiaDarAConocerLosTagsNuevosAlClienteExistente() {
+		// Almacena los mensajes recibidos para el observador
+		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();
+
+		// Creamos la sesión para declarar las publicaciones de tag
+		final SesionVortex sesionPrimero = nodoVortex.crearNuevaSesion(encoladorDelPrimero);
+		final List<String> tagsDelPrimero = Lists.newArrayList("Tag1", "Tag2");
+		sesionPrimero.enviar(escenarios.crearMetamensajeDePublicacionDeTags(tagsDelPrimero));
+
+		// Conectamos al segundo cliente
+		final EncoladorDeMensajesHandler encoladorDelSegundo = EncoladorDeMensajesHandler.create();
+		final SesionVortex sesionDelSegundo = nodoVortex.crearNuevaSesion(encoladorDelSegundo);
+
+		// Publicamos los tags que le interesan al segundo
+		final List<String> tagsDelSegundo = Lists.newArrayList("Tag2", "tag3");
+		sesionDelSegundo.enviar(escenarios.crearMetamensajeDePublicacionDeTags(tagsDelSegundo));
+
+		// Verificamos que al primero el nodo le avise de los nuevos tags que le interesan
+		final MensajeVortex mensajeRecibido = encoladorDelPrimero.esperarProximoMensaje(TimeMagnitude.of(1,
+				TimeUnit.SECONDS));
+		// El nodo nos indica por separado lo agregado de lo quitado
+		final AgregarTags agregadoDeTagsDelNodo = castContenidoAs(AgregarTags.class, mensajeRecibido);
+		assertEquals("Debería decir que trata con los tags del primero", new HashSet<String>(tagsDelSegundo),
+				new HashSet<String>(agregadoDeTagsDelNodo.getTags()));
+	}
+
+	@Test
+	public void deberiaPermitirRecibirUnMensajeEnviadoSinClienteAOtroConTagPreDeclarado() {
 		// Almacena los mensajes recibidos
 		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
 
@@ -255,81 +266,123 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final SesionVortex sesionDelReceptor = nodoVortex.crearNuevaSesion(encoladorDelReceptor);
 
 		// Declaramos los tags que recibimos
-		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(
-				Sets.newHashSet("TAG_TEST"), null);
-		sesionDelReceptor.enviar(publicacionDeTags);
+		sesionDelReceptor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1", "Tag2"));
 
-		// Esperamos los mensajes de confirmación
-		encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		// Enviamos el mensaje sin un cliente
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest("Tag1");
+		nodoVortex.rutear(mensajeEnviado);
 
-		// Creamos otra sesión para enviar el mensaje
-		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
-		final SesionVortex sesionDelEmisor = nodoVortex.crearNuevaSesion(encoladorDelEmisor);
-
-		// Enviamos un mensaje con mismo tag
-		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest("TAG_TEST");
-		sesionDelEmisor.enviar(mensajeEnviado);
-
+		// Esperamos recibirlo desde el cliente
 		final MensajeVortex mensajeRecibido = encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1,
 				TimeUnit.SECONDS));
 
-		Assert.isTrue(mensajeRecibido.getIdentificacion().equals(mensajeEnviado.getIdentificacion()),
-				"El mensaje recibido debería tener el mismo ID que el enviado");
+		// Como es todo en memoria debería ser la misma instancia
+		Assert.assertTrue("Debería ser el mensaje enviado", mensajeEnviado == mensajeRecibido);
+	}
 
-		Assert.isTrue(mensajeRecibido.getContenido() == mensajeEnviado.getContenido(),
-				"El contendio del enviado debería ser el mismo objeto por ser todo en memoria");
+	/**
+	 * Enviamos el mensaje y verificamos que lo reciba uno, y no el emisor
+	 */
+	@Test
+	public void deberiaPermitirRecibirUnMensajeEnviadoDesdeUnClienteAOtroConTagPreDeclarado() {
+		// Almacena los mensajes recibidos
+		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
+		// Creamos la sesión para poder recibir los mensajes
+		final SesionVortex sesionDelReceptor = nodoVortex.crearNuevaSesion(encoladorDelReceptor);
+		// Declaramos los tags que recibimos
+		sesionDelReceptor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1", "Tag2"));
 
-		// Enviamos la confirmación de que lo consumimos
-		final ConfirmacionConsumo consumo = ConfirmacionConsumo.create();
-		consumo.setIdentificacionMensaje(mensajeRecibido.getIdentificacion());
-		consumo.setConsumidos(1);
-		final MensajeVortex mensajeConsumoEnviado = escenarios.crearMensajeDeConsumo(consumo);
-		sesionDelReceptor.enviar(mensajeConsumoEnviado);
+		// Creamos la segunda sesión
+		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
+		// Creamos la sesión para enviar mensajes
+		final SesionVortex sesionDelEmisor = nodoVortex.crearNuevaSesion(encoladorDelEmisor);
+		// Declaramos los tags que vamos a enviar
+		sesionDelEmisor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1"));
 
-		// Al emisor le debería llegar la confirmación de consumo
-		final MensajeVortex mensajeConsumoRecibido = encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1,
+		// Esperamos y limpiamos los mensajes del nodo por los tags declarados
+		// Al primero debería informarle el tag1
+		encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		// Al segundo el tag1 y tag2
+		encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Enviamos el mensaje desde el emisor
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest("Tag1");
+		sesionDelEmisor.enviar(mensajeEnviado);
+
+		// Verificamos que le llegó al receptor
+		final MensajeVortex mensajeRecibidoPorReceptor = encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1,
 				TimeUnit.SECONDS));
-		final ConfirmacionConsumo consumoRecibido = (ConfirmacionConsumo) mensajeConsumoRecibido.getContenido();
+		Assert.assertTrue("Debería ser el mismo mensaje que el enviado", mensajeRecibidoPorReceptor == mensajeEnviado);
 
-		Assert.isTrue(consumoRecibido.getConsumidos().equals(Integer.valueOf(1)),
-				"Debería llegarnos que el mensaje fue consumido por otro cliente");
+		// Al consumir el mensaje deberíamos informarlo al nodo
+		sesionDelReceptor.enviar(escenarios.crearMensajeDeConsumo(mensajeRecibidoPorReceptor.getIdentificacion()));
+
+		// Verificamos que al segundo sólo le llegue el acuse de consumo
+		final MensajeVortex mensajeRecibidoPorElSegundo = encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1,
+				TimeUnit.SECONDS));
+		final AcuseConsumo acuse = castContenidoAs(AcuseConsumo.class, mensajeRecibidoPorElSegundo);
+		assertEquals("Debería ser un acuse por el mensaje enviado", mensajeEnviado.getIdentificacion(),
+				acuse.getIdMensajeConsumido());
+		assertEquals("Debería haber un sólo interesado", 1, acuse.getCantidadInteresados().longValue());
+		assertEquals("No debería haber ruteos duplicados", 0, acuse.getCantidadDuplicados().longValue());
+		assertEquals("No debería haber ruteos fallidos", 0, acuse.getCantidadFallados().longValue());
+		assertEquals("Debería haber un consumo realizado", 1, acuse.getCantidadConsumidos().longValue());
 
 	}
 
 	public void nodeberiaPermitirRecibirUnMensajeEnviadoConTagNoDeclarado() {
-		// Almacena los mensajes recibidos
-		final EncoladorDeMensajesHandler encoladorQueNoRecibe = EncoladorDeMensajesHandler.create();
-
+		// Almacena los mensajes recibidos por el primero
+		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();
 		// Creamos la sesión para poder recibir los mensajes
-		final SesionVortex sesionDelNoReceptor = nodoVortex.crearNuevaSesion(encoladorQueNoRecibe);
-
+		final SesionVortex sesionDelPrimero = nodoVortex.crearNuevaSesion(encoladorDelPrimero);
 		// Declaramos los tags que recibimos
-		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(
-				Sets.newHashSet("TAG_TEST"), null);
-		sesionDelNoReceptor.enviar(publicacionDeTags);
+		sesionDelPrimero.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1"));
 
-		// Esperamos los mensajes de confirmación por la publicación
-		encoladorQueNoRecibe.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		encoladorQueNoRecibe.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-
+		// Creamos la segunda sesión
 		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
+		// Creamos la sesión para enviar mensajes
 		final SesionVortex sesionDelEmisor = nodoVortex.crearNuevaSesion(encoladorDelEmisor);
+		// Declaramos los tags que vamos a enviar
+		sesionDelEmisor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1", "Tag2"));
 
-		// Enviamos un mensaje con diferente tags
-		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest("TAG_TEST2");
+		// Esperamos y limpiamos los mensajes del nodo por los tags declarados
+		// Al primero debería informarle el tag1
+		encoladorDelPrimero.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		// Al segundo el tag1 y tag2
+		encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Enviamos el mensaje desde el emisor con un tag que el receptor no tiene
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest("Tag2");
 		sesionDelEmisor.enviar(mensajeEnviado);
 
-		// Deberíamos recibir la confirmación de que acepta el ruteo
-		encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		final MensajeVortex mensajeConsumo = encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1,
-				TimeUnit.SECONDS));
-		final ConfirmacionConsumo consumo = (ConfirmacionConsumo) mensajeConsumo.getContenido();
+		// Verificamos que no le llegó al receptor
+		try {
+			encoladorDelPrimero.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("Debería tirar una excepción por timeout");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperabamos
+		}
 
-		Assert.isTrue(consumo.getConsumidos().equals(Integer.valueOf(0)), "No debería ser consumido por nadie");
-		Assert.isTrue(consumo.getInteresados().equals(Integer.valueOf(0)),
-				"No debería haber otros interesados en el mensaje");
-		Assert.isTrue(consumo.getNoInteresados().equals(Integer.valueOf(1)), "Debería existir uno no interesado");
+		// Verificamos que al segundo le llegue el acuse sin consumidores
+		final MensajeVortex mensajeRecibidoPorElSegundo = encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1,
+				TimeUnit.SECONDS));
+		final AcuseConsumo acuse = castContenidoAs(AcuseConsumo.class, mensajeRecibidoPorElSegundo);
+		assertEquals("Debería ser un acuse por el mensaje enviado", mensajeEnviado.getIdentificacion(),
+				acuse.getIdMensajeConsumido());
+		assertEquals("No debería haber interesados", 0, acuse.getCantidadInteresados().longValue());
+		assertEquals("No debería haber ruteos duplicados", 0, acuse.getCantidadDuplicados().longValue());
+		assertEquals("No debería haber ruteos fallidos", 0, acuse.getCantidadFallados().longValue());
+		assertEquals("No debería haber consumidos", 0, acuse.getCantidadConsumidos().longValue());
 	}
 
+	@Test
+	public void deberiaPermitirDesconectarseDelNodo() {
+		// Almacena los mensajes recibidos por el primero
+		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();
+		// Creamos la sesión para poder recibir los mensajes
+		final SesionVortex sesionDelPrimero = nodoVortex.crearNuevaSesion(encoladorDelPrimero);
+		// Cerramos la sesión impidiendo mandar más mensajes desde ella
+		sesionDelPrimero.cerrar();
+
+	}
 }
