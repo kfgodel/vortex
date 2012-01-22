@@ -19,11 +19,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
+import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
+import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.lowlevel.api.EncoladorDeMensajesHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
+import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.AgregarTags;
@@ -32,6 +35,7 @@ import net.gaia.vortex.protocol.messages.routing.AcuseDuplicado;
 import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 import net.gaia.vortex.tests.VortexTest;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -47,6 +51,15 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 
 	private EscenarioDeTest escenarios;
 
+	@Before
+	public void prepararTest() {
+		final ExecutorBasedTaskProcesor procesador = ExecutorBasedTaskProcesor.create(TaskProcessorConfiguration
+				.create());
+		nodoVortex = NodoVortexConTasks.create(procesador);
+		escenarios = new EscenarioDeTest();
+	}
+
+	@Test
 	public void deberiaPermitirEnviarUnMensajeSinRemitente() {
 		final MensajeVortex mensajeVortex = escenarios.crearMensajeDeTest();
 		nodoVortex.rutear(mensajeVortex);

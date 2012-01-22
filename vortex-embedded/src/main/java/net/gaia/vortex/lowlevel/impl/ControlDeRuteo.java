@@ -13,7 +13,6 @@
 package net.gaia.vortex.lowlevel.impl;
 
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,6 +22,7 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
+import ar.com.fdvs.dgarcia.colecciones.sets.ConcurrentHashSet;
 
 /**
  * Esta clase representa la información de control del ruteo de manera de determinar cuando está
@@ -35,11 +35,11 @@ public class ControlDeRuteo {
 
 	private IdVortex idMensajeRuteado;
 	private Set<ReceptorVortex> receptoresInteresados;
-	private ConcurrentSkipListSet<ReceptorVortex> ruteosRealizados;
-	private ConcurrentSkipListSet<ReceptorVortex> ruteosDuplicados;
-	private ConcurrentSkipListSet<ReceptorVortex> ruteosFallidos;
-	private ConcurrentSkipListSet<ReceptorVortex> ruteosPerdidos;
-	private ConcurrentSkipListSet<ReceptorVortex> ruteosExitosos;
+	private Set<ReceptorVortex> ruteosRealizados;
+	private Set<ReceptorVortex> ruteosDuplicados;
+	private Set<ReceptorVortex> ruteosFallidos;
+	private Set<ReceptorVortex> ruteosPerdidos;
+	private Set<ReceptorVortex> ruteosExitosos;
 	private AtomicLong acumuladoCantidadFallas;
 	private AtomicLong acumuladoCantidadDuplicados;
 	private AtomicLong acumuladoCantidadInteresados;
@@ -47,58 +47,58 @@ public class ControlDeRuteo {
 
 	private Lock lockParaContinuarProcesoDeRuteo;
 
-	public ConcurrentSkipListSet<ReceptorVortex> getRuteosFallidos() {
+	public Set<ReceptorVortex> getRuteosFallidos() {
 		if (ruteosFallidos == null) {
-			ruteosFallidos = new ConcurrentSkipListSet<ReceptorVortex>();
+			ruteosFallidos = new ConcurrentHashSet<ReceptorVortex>();
 		}
 		return ruteosFallidos;
 	}
 
-	public void setRuteosFallidos(final ConcurrentSkipListSet<ReceptorVortex> ruteosFallidos) {
+	public void setRuteosFallidos(final Set<ReceptorVortex> ruteosFallidos) {
 		this.ruteosFallidos = ruteosFallidos;
 	}
 
-	public ConcurrentSkipListSet<ReceptorVortex> getRuteosPerdidos() {
+	public Set<ReceptorVortex> getRuteosPerdidos() {
 		if (ruteosPerdidos == null) {
-			ruteosPerdidos = new ConcurrentSkipListSet<ReceptorVortex>();
+			ruteosPerdidos = new ConcurrentHashSet<ReceptorVortex>();
 		}
 		return ruteosPerdidos;
 	}
 
-	public void setRuteosPerdidos(final ConcurrentSkipListSet<ReceptorVortex> ruteosPerdidos) {
+	public void setRuteosPerdidos(final Set<ReceptorVortex> ruteosPerdidos) {
 		this.ruteosPerdidos = ruteosPerdidos;
 	}
 
-	public ConcurrentSkipListSet<ReceptorVortex> getRuteosDuplicados() {
+	public Set<ReceptorVortex> getRuteosDuplicados() {
 		if (ruteosDuplicados == null) {
-			ruteosDuplicados = new ConcurrentSkipListSet<ReceptorVortex>();
+			ruteosDuplicados = new ConcurrentHashSet<ReceptorVortex>();
 		}
 		return ruteosDuplicados;
 	}
 
-	public void setRuteosDuplicados(final ConcurrentSkipListSet<ReceptorVortex> ruteosDuplicados) {
+	public void setRuteosDuplicados(final Set<ReceptorVortex> ruteosDuplicados) {
 		this.ruteosDuplicados = ruteosDuplicados;
 	}
 
-	public ConcurrentSkipListSet<ReceptorVortex> getRuteosExitosos() {
+	public Set<ReceptorVortex> getRuteosExitosos() {
 		if (ruteosExitosos == null) {
-			ruteosExitosos = new ConcurrentSkipListSet<ReceptorVortex>();
+			ruteosExitosos = new ConcurrentHashSet<ReceptorVortex>();
 		}
 		return ruteosExitosos;
 	}
 
-	public void setRuteosExitosos(final ConcurrentSkipListSet<ReceptorVortex> ruteosExitosos) {
+	public void setRuteosExitosos(final Set<ReceptorVortex> ruteosExitosos) {
 		this.ruteosExitosos = ruteosExitosos;
 	}
 
-	public ConcurrentSkipListSet<ReceptorVortex> getRuteosRealizados() {
+	public Set<ReceptorVortex> getRuteosRealizados() {
 		if (ruteosRealizados == null) {
-			ruteosRealizados = new ConcurrentSkipListSet<ReceptorVortex>();
+			ruteosRealizados = new ConcurrentHashSet<ReceptorVortex>();
 		}
 		return ruteosRealizados;
 	}
 
-	public void setRuteosRealizados(final ConcurrentSkipListSet<ReceptorVortex> ruteosRealizados) {
+	public void setRuteosRealizados(final Set<ReceptorVortex> ruteosRealizados) {
 		this.ruteosRealizados = ruteosRealizados;
 	}
 

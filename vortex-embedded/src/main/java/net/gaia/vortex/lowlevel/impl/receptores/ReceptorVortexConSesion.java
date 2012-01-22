@@ -14,13 +14,14 @@ package net.gaia.vortex.lowlevel.impl.receptores;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.fdvs.dgarcia.colecciones.sets.ConcurrentHashSet;
 
 /**
  * Esta clase representa la visión del nodo acerca de los clientes que abren sesiones
@@ -32,12 +33,12 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 
 	private MensajeVortexHandler handler;
 
-	private ConcurrentSkipListSet<String> tagsNotificados;
+	private Set<String> tagsNotificados;
 
 	public static ReceptorVortexConSesion create(final MensajeVortexHandler handlerDeMensajes) {
 		final ReceptorVortexConSesion receptor = new ReceptorVortexConSesion();
 		receptor.handler = handlerDeMensajes;
-		receptor.tagsNotificados = new ConcurrentSkipListSet<String>();
+		receptor.tagsNotificados = new ConcurrentHashSet<String>();
 		return receptor;
 	}
 

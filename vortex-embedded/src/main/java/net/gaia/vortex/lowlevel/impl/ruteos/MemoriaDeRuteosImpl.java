@@ -13,11 +13,12 @@
 package net.gaia.vortex.lowlevel.impl.ruteos;
 
 import java.util.Iterator;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.Set;
 
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeRuteos;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import ar.com.fdvs.dgarcia.colecciones.sets.ConcurrentHashSet;
 
 /**
  * Esta clase es la implementación de la memoria de ruteos activos
@@ -26,7 +27,7 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
  */
 public class MemoriaDeRuteosImpl implements MemoriaDeRuteos {
 
-	private ConcurrentSkipListSet<IdentificadorDeEnvio> ruteosActivos;
+	private Set<IdentificadorDeEnvio> ruteosActivos;
 
 	/**
 	 * @see net.gaia.vortex.lowlevel.impl.MemoriaDeRuteos#registrarRuteoActivo(net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio)
@@ -69,7 +70,7 @@ public class MemoriaDeRuteosImpl implements MemoriaDeRuteos {
 
 	public static MemoriaDeRuteosImpl create() {
 		final MemoriaDeRuteosImpl memeoria = new MemoriaDeRuteosImpl();
-		memeoria.ruteosActivos = new ConcurrentSkipListSet<IdentificadorDeEnvio>();
+		memeoria.ruteosActivos = new ConcurrentHashSet<IdentificadorDeEnvio>();
 		return memeoria;
 	}
 }

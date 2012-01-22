@@ -450,8 +450,10 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 			public void run() {
 				// Por cada tag recolectamos los receptores interesados
 				for (final String tagIncluidoEnMensaje : tagsDelMensaje) {
-					final Set<ReceptorVortex> interesadosEnElTag = getReceptoresDelTag(tagIncluidoEnMensaje);
-					interesadosEnElMensaje.incluirTodos(interesadosEnElTag);
+					final Set<ReceptorVortex> interesadosEnElTag = receptoresPorTag.get(tagIncluidoEnMensaje);
+					if (interesadosEnElTag != null) {
+						interesadosEnElMensaje.incluirTodos(interesadosEnElTag);
+					}
 				}
 			}
 		});

@@ -40,7 +40,7 @@ public class MemoriaDeMensajesImpl implements MemoriaDeMensajes {
 	public boolean registrarSiNoRecuerdaA(final MensajeVortex mensaje) {
 		final boolean yaLoRecordaba = registrados.contains(mensaje);
 		if (yaLoRecordaba) {
-			return false;
+			return true;
 		}
 		// Registramos el momento de inicio de intentar agregar a la memoria
 		final long startTime = getCurrentTime();
@@ -59,7 +59,7 @@ public class MemoriaDeMensajesImpl implements MemoriaDeMensajes {
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	/**

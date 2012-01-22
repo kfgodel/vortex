@@ -30,6 +30,8 @@ import net.gaia.vortex.lowlevel.impl.tasks.ValidacionDeMensajeWorkUnit;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa el nodo vortex implementado en memoria con un {@link TaskProcessor}
  * 
@@ -145,4 +147,11 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 		return memoriaDeRuteos;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 }
