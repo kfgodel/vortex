@@ -12,6 +12,7 @@
  */
 package net.gaia.taskprocessor.impl;
 
+import java.util.Iterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
@@ -20,6 +21,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessor;
@@ -47,6 +49,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	private ThreadPoolExecutor inmediateExecutor;
 	private TaskProcessingMetricsImpl metrics;
 
+	private LinkedBlockingQueue<TaskPlanner> delayedTasks;
 	private LinkedBlockingQueue<SubmittedRunnableTask> inmediatePendingTasks;
 
 	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
@@ -58,6 +61,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 				Executors.defaultThreadFactory());
 		processor.delayedExecutor = new ScheduledThreadPoolExecutor(1);
 		processor.inmediatePendingTasks = new LinkedBlockingQueue<SubmittedRunnableTask>();
+		processor.delayedTasks = new LinkedBlockingQueue<TaskPlanner>();
 		processor.metrics = TaskProcessingMetricsImpl.create(processor.inmediatePendingTasks);
 		return processor;
 	}
@@ -86,6 +90,9 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 		final TaskPlanner planner = TaskPlanner.create(task, this);
 		final TimeUnit timeUnit = workDelay.getTimeUnit();
 		final long quantity = workDelay.getQuantity();
+
+		// Registramos en la lista interna
+		planner.registerOn(delayedTasks);
 
 		// Programamos el planner para que espere el delay
 		this.delayedExecutor.schedule(planner, quantity, timeUnit);
@@ -169,4 +176,31 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 		return exceptionHandler;
 	}
 
+	/**
+	 * @see net.gaia.taskprocessor.api.TaskProcessor#removeTasksMatching(net.gaia.taskprocessor.api.TaskCriteria)
+	 */
+	@Override
+	public void removeTasksMatching(final TaskCriteria criteria) {
+		// Quitamos las tareas postergadas primero
+		final Iterator<TaskPlanner> delayedIterator = this.delayedTasks.iterator();
+		while (delayedIterator.hasNext()) {
+			final TaskPlanner taskPlanner = delayedIterator.next();
+			final SubmittedRunnableTask delayedTask = taskPlanner.getDelayedTask();
+			final WorkUnit workUnit = delayedTask.getWork();
+
+			if (criteria.matches(workUnit)) {
+				delayedIterator.remove();
+			}
+		}
+
+		// Luego las de ejecución inmediata
+		final Iterator<SubmittedRunnableTask> inmediateIterator = this.inmediatePendingTasks.iterator();
+		while (inmediateIterator.hasNext()) {
+			final SubmittedRunnableTask inmediateTask = inmediateIterator.next();
+			final WorkUnit workUnit = inmediateTask.getWork();
+			if (criteria.matches(workUnit)) {
+				inmediateIterator.remove();
+			}
+		}
+	}
 }

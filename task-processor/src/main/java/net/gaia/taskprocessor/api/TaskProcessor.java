@@ -12,7 +12,6 @@
  */
 package net.gaia.taskprocessor.api;
 
-
 /**
  * Esta interfaz define el contrato que ofrece un procesador de las tareas para procesar un conjunto
  * de tareas.<br>
@@ -94,4 +93,10 @@ public interface TaskProcessor {
 	 * @return El {@link SubmittedTask} para poder controlar el estado de la tarea
 	 */
 	SubmittedTask processDelayed(TimeMagnitude workDelay, WorkUnit trabajo);
+
+	/**
+	 * Elimina de este procesador, las tareas pendientes que cumplen con el criterio pasado.<br>
+	 * Las tareas que se estén ejecutando no podrán ser eliminadas
+	 */
+	void removeTasksMatching(TaskCriteria criteria);
 }
