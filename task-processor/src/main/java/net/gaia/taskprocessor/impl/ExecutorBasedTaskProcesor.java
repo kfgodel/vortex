@@ -33,6 +33,8 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa un procesador de tareas que utiliza un executor propio para procesarla en
  * threads propios
@@ -202,5 +204,16 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 				inmediateIterator.remove();
 			}
 		}
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("Concurrentes", this.inmediateExecutor.getMaximumPoolSize())
+				.add("Activas", this.inmediateExecutor.getActiveCount())
+				.add("Pendientes", this.inmediatePendingTasks.size()).add("Postergadas", this.delayedTasks.size())
+				.toString();
 	}
 }
