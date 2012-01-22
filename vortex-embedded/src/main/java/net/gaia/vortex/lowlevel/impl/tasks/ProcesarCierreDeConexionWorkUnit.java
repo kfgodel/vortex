@@ -12,9 +12,15 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
+import net.gaia.annotations.HasDependencyOn;
+import net.gaia.taskprocessor.api.TaskCriteria;
+import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.vortex.lowlevel.impl.MemoriaDeRuteos;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
+import net.gaia.vortex.meta.Decision;
 
 /**
  * Esta clase representa la operación realizada por el nodo para cerrar la conexión asociada a un
@@ -39,7 +45,20 @@ public class ProcesarCierreDeConexionWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
-		// TODO Auto-generated method stub
+		@HasDependencyOn(Decision.TODAVIA_NO_IMPLEMENTE_LA_LIMPIEZA_DE_TAREAS)
+		final TaskProcessor procesador = nodo.getProcesador();
+		procesador.removeTasksMatching(new TaskCriteria() {
+			@Override
+			public boolean matches(final WorkUnit workUnit) {
+				// TODO: Implementar!
+				return false;
+			}
+		});
 
+		final RegistroDeReceptores registroReceptores = nodo.getRegistroReceptores();
+		registroReceptores.quitar(receptorCerrado);
+
+		final MemoriaDeRuteos memoriaDeRuteos = nodo.getMemoriaDeRuteos();
+		memoriaDeRuteos.eliminarRuteosActivosPara(receptorCerrado);
 	}
 }

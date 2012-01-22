@@ -10,7 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.lowlevel.impl;
+package net.gaia.vortex.lowlevel.impl.ruteos;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
+import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 
 /**
  * Esta clase representa el registro en memoria de los mensajes en lista de espera.<br>
@@ -20,6 +26,8 @@ package net.gaia.vortex.lowlevel.impl;
  * @author D. García
  */
 public class MensajesEnEspera {
+
+	private Map<IdentificadorDeEnvio, ContextoDeEnvio> enEspera;
 
 	/**
 	 * Agrega el mensaje pasado para ser registrado como mensaje a la espera. <br>
@@ -31,8 +39,7 @@ public class MensajesEnEspera {
 	 *            El contexto de ruteo asociado al mensaje
 	 */
 	public void agregar(final IdentificadorDeEnvio identificacionDeEnvio, final ContextoDeEnvio contexto) {
-		// TODO Auto-generated method stub
-
+		enEspera.put(identificacionDeEnvio, contexto);
 	}
 
 	/**
@@ -43,8 +50,8 @@ public class MensajesEnEspera {
 	 * @return true si esta estructura todavía contiene un contexto para el identificador pasado
 	 */
 	public boolean incluyeA(final IdentificadorDeEnvio envio) {
-		// TODO Auto-generated method stub
-		return false;
+		final boolean incluye = enEspera.containsKey(envio);
+		return incluye;
 	}
 
 	/**
@@ -55,18 +62,25 @@ public class MensajesEnEspera {
 	 * @return null si el envio ya no estaba
 	 */
 	public ContextoDeEnvio quitar(final IdentificadorDeEnvio idDeEnvio) {
-		// TODO Auto-generated method stub
-		return null;
+		final ContextoDeEnvio contexto = enEspera.remove(idDeEnvio);
+		return contexto;
 	}
 
 	/**
-	 * Devuelve el contexto de envio asociado el envio indicado
+	 * Devuelve el contexto de envío asociado el envío indicado
 	 * 
 	 * @param idEnvioRealizado
+	 *            El identificador del envío previamente registrado
+	 * @return null si no existe uno en espera
 	 */
 	public ContextoDeEnvio getContextoDe(final IdentificadorDeEnvio idEnvioRealizado) {
-		// TODO Auto-generated method stub
-
+		final ContextoDeEnvio contexto = enEspera.get(idEnvioRealizado);
+		return contexto;
 	}
 
+	public static MensajesEnEspera create() {
+		final MensajesEnEspera mensajes = new MensajesEnEspera();
+		mensajes.enEspera = new ConcurrentHashMap<IdentificadorDeEnvio, ContextoDeEnvio>();
+		return mensajes;
+	}
 }

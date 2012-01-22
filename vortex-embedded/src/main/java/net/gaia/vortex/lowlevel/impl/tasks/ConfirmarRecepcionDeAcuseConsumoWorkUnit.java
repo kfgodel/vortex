@@ -21,7 +21,7 @@ import net.gaia.vortex.lowlevel.impl.ControlDeConsumoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.EsperaDeAccion;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
-import net.gaia.vortex.lowlevel.impl.MensajesEnEspera;
+import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
 
 /**
  * Esta clase representa la acción realizada por el nodo cuando se vence el tiempo de espera de la

@@ -83,4 +83,16 @@ public class IdentificadorDeEnvio {
 		return Objects.toStringHelper(this).add(idDeMensajeEnviado_FIELD, idDeMensajeEnviado)
 				.add(receptorDestino_FIELD, receptorDestino).toString();
 	}
+
+	/**
+	 * Indica si este identificador de envío es para uno realizado al receptor indicado
+	 * 
+	 * @param receptorComprobado
+	 *            El receptor a comprobar
+	 * @return true si este identificador de envío esta compuesto por el receptor pasado
+	 */
+	public boolean esPara(final ReceptorVortex receptorComprobado) {
+		final boolean esParaElReceptor = this.receptorDestino.equals(receptorComprobado);
+		return esParaElReceptor;
+	}
 }

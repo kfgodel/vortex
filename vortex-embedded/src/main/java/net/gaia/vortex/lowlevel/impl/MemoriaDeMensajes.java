@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
+import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**

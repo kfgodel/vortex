@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+
 /**
  * Esta interfaz representa la memoria del nodo respecto de ruteos activos
  * 
@@ -24,10 +26,8 @@ public interface MemoriaDeRuteos {
 	 * 
 	 * @param idEnvioRecibido
 	 *            El identificador del envío que recibimos como nodo
-	 * @param contexto
-	 *            El contexto del ruteo en progreso
 	 */
-	void registrarRuteoActivo(IdentificadorDeEnvio idEnvioRecibido, ContextoDeRuteoDeMensaje contexto);
+	void registrarRuteoActivo(IdentificadorDeEnvio idEnvioRecibido);
 
 	/**
 	 * Elimina de esta memoria el ruteo como activo
@@ -44,5 +44,13 @@ public interface MemoriaDeRuteos {
 	 * @return
 	 */
 	public abstract boolean tieneRuteoActivoPara(IdentificadorDeEnvio idEnvioRealizado);
+
+	/**
+	 * Elimina todos los ruteos registrados para el receptor indicado
+	 * 
+	 * @param receptorCerrado
+	 *            El receptor a eliminar
+	 */
+	void eliminarRuteosActivosPara(ReceptorVortex receptorCerrado);
 
 }

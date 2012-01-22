@@ -53,7 +53,7 @@ public class RutearMensajeWorkUnit implements WorkUnit {
 		final ReceptorVortex emisor = contexto.getEmisor();
 		final IdentificadorDeEnvio idEnvioRecibido = IdentificadorDeEnvio.create(idMensaje, emisor);
 		final MemoriaDeRuteos memoriaDeRuteos = contexto.getMemoriaDeRuteos();
-		memoriaDeRuteos.registrarRuteoActivo(idEnvioRecibido, contexto);
+		memoriaDeRuteos.registrarRuteoActivo(idEnvioRecibido);
 
 		// Tenemos que ver si es un metamensaje
 		final ContenidoVortex contenido = mensaje.getContenido();

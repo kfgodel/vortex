@@ -13,7 +13,6 @@
 package net.gaia.vortex.embedded.tests;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -22,7 +21,6 @@ import net.gaia.vortex.lowlevel.impl.tags.NotificacionDeCambioDeTags;
 import net.gaia.vortex.lowlevel.impl.tags.ReporteCambioDeTags;
 import net.gaia.vortex.lowlevel.impl.tags.SummarizerDeReceptores;
 import net.gaia.vortex.lowlevel.impl.tags.TagChangeListener;
-import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.junit.Before;
@@ -63,16 +61,6 @@ public class SummarizerDeReceptoresTest {
 	public class TestReceptor implements ReceptorVortex {
 		@Override
 		public void recibir(final MensajeVortex mensaje) {
-		}
-
-		@Override
-		public boolean estaInteresadoEnCualquieraDe(final List<String> tagsDelMensaje) {
-			return false;
-		}
-
-		@Override
-		public boolean envioPreviamente(final IdVortex idDeMensajeAConfirmar) {
-			return false;
 		}
 
 		@Override

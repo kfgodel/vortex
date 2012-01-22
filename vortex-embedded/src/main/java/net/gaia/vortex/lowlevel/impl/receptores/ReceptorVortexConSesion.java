@@ -12,11 +12,11 @@
  */
 package net.gaia.vortex.lowlevel.impl.receptores;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
-import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
-import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -32,9 +32,12 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 
 	private MensajeVortexHandler handler;
 
+	private ConcurrentSkipListSet<String> tagsNotificados;
+
 	public static ReceptorVortexConSesion create(final MensajeVortexHandler handlerDeMensajes) {
 		final ReceptorVortexConSesion receptor = new ReceptorVortexConSesion();
 		receptor.handler = handlerDeMensajes;
+		receptor.tagsNotificados = new ConcurrentSkipListSet<String>();
 		return receptor;
 	}
 
@@ -51,12 +54,26 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#estaInteresadoEnCualquieraDe(java.util.List)
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#getTagsNotificados()
 	 */
 	@Override
-	@HasDependencyOn(Decision.NO_ESTA_IMPLEMENTADO_EL_INTERES_DEL_RECEPTOR)
-	public boolean estaInteresadoEnCualquieraDe(final List<String> tagsDelMensaje) {
-		// TODO Tomar en cuenta el peso de los tags para este receptor
-		return false;
+	public Set<String> getTagsNotificados() {
+		return new HashSet<String>(tagsNotificados);
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#agregarTagsNotificados(java.util.Set)
+	 */
+	@Override
+	public void agregarTagsNotificados(final Set<String> tagsAgregados) {
+		tagsNotificados.addAll(tagsAgregados);
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#quitarTagsNotificados(java.util.Set)
+	 */
+	@Override
+	public void quitarTagsNotificados(final Set<String> tagsQuitados) {
+		tagsNotificados.removeAll(tagsQuitados);
 	}
 }

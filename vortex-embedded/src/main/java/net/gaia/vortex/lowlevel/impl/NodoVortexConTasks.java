@@ -20,6 +20,8 @@ import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.NullReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortexConSesion;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
+import net.gaia.vortex.lowlevel.impl.ruteos.MemoriaDeMensajesImpl;
+import net.gaia.vortex.lowlevel.impl.ruteos.MemoriaDeRuteosImpl;
 import net.gaia.vortex.lowlevel.impl.tags.ReporteCambioDeTags;
 import net.gaia.vortex.lowlevel.impl.tags.SummarizerDeReceptores;
 import net.gaia.vortex.lowlevel.impl.tags.TagChangeListener;
@@ -84,8 +86,9 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 			}
 		});
 		nodo.procesador = processor;
-		nodo.generadorMensajes = null;
-		nodo.memoriaDeMensajes = null;
+		nodo.generadorMensajes = GeneradorDeMensajesImpl.create();
+		nodo.memoriaDeMensajes = MemoriaDeMensajesImpl.create();
+		nodo.memoriaDeRuteos = MemoriaDeRuteosImpl.create();
 		nodo.configuracion = ConfiguracionDeNodo.create();
 		nodo.sinEmisorIdentificado = NullReceptorVortex.create();
 		return nodo;

@@ -12,10 +12,8 @@
  */
 package net.gaia.vortex.lowlevel.impl.receptores;
 
-import java.util.List;
 import java.util.Set;
 
-import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
@@ -32,25 +30,6 @@ public interface ReceptorVortex {
 	 *            El mensaje a ser procesado por este receptor con el handler declarado
 	 */
 	public abstract void recibir(final MensajeVortex mensaje);
-
-	/**
-	 * Indica si este receptor está interesado en recibir cualquier de los tags pasados
-	 * 
-	 * @param tagsDelMensaje
-	 *            Los tags a evaluar
-	 * @return true si este receptor declaró interés en alguno de los tags pasados
-	 */
-	public abstract boolean estaInteresadoEnCualquieraDe(final List<String> tagsDelMensaje);
-
-	/**
-	 * Indica si este emisor envio en algun momento un mensaje con el ID indicado
-	 * 
-	 * @param idDeMensajeAConfirmar
-	 *            El id del mensaje a verificar
-	 * @return true si este emisor registrar el ID de mensaje pasado como enviado en algun momento.
-	 *         False si no, o ya no lo recordamos
-	 */
-	public abstract boolean envioPreviamente(IdVortex idDeMensajeAConfirmar);
 
 	/**
 	 * Devuelve los tags que fueron notificados a este receptor como intereses del nodo
