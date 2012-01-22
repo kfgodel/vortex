@@ -80,4 +80,23 @@ public class MensajeVortex {
 		return mensaje;
 	}
 
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return this.identificacion.hashCode();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof MensajeVortex)) {
+			return false;
+		}
+		final MensajeVortex that = (MensajeVortex) obj;
+		return Objects.equal(this.identificacion, that.identificacion);
+	}
 }
