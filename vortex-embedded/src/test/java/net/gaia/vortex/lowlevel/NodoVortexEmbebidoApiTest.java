@@ -225,6 +225,12 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final List<String> tagsDelPrimero = Lists.newArrayList("Tag1", "Tag2");
 		sesionPrimero.enviar(escenarios.crearMetamensajeDePublicacionDeTags(tagsDelPrimero));
 
+		// Enviamos un mensaje para asegurarnos que la publicacion de tags y se proceso
+		sesionPrimero.enviar(escenarios.crearMensajeDeTest());
+		// Debería llegar el acuse y en ese caso ya estamos seguro que se procesó su publicación de
+		// tags
+		encoladorDelPrimero.esperarProximoMensaje(TimeMagnitude.of(500, TimeUnit.MILLISECONDS));
+
 		// Conectamos al segundo cliente
 		final EncoladorDeMensajesHandler encoladorDelSegundo = EncoladorDeMensajesHandler.create();
 		nodoVortex.crearNuevaSesion(encoladorDelSegundo);
@@ -278,6 +284,12 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 
 		// Declaramos los tags que recibimos
 		sesionDelReceptor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1", "Tag2"));
+
+		// Enviamos un mensaje para asegurarnos que la publicacion de tags y se proceso
+		sesionDelReceptor.enviar(escenarios.crearMensajeDeTest());
+		// Debería llegar el acuse y en ese caso ya estamos seguro que se procesó su publicación de
+		// tags
+		encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(500, TimeUnit.MILLISECONDS));
 
 		// Enviamos el mensaje sin un cliente
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest("Tag1");
