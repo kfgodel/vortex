@@ -20,6 +20,9 @@ import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.NotificacionDeCambioDeTags;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación realizada por el nodo para notificar a un cliente que
  * cambiaron los tags del nodo
@@ -27,6 +30,7 @@ import net.gaia.vortex.lowlevel.impl.tags.NotificacionDeCambioDeTags;
  * @author D. García
  */
 public class NotificarAReceptorCambiosDeTagsWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(NotificarAReceptorCambiosDeTagsWorkUnit.class);
 
 	private NotificacionDeCambioDeTags notificacion;
 	private NodoVortexConTasks nodo;
@@ -46,6 +50,7 @@ public class NotificarAReceptorCambiosDeTagsWorkUnit implements WorkUnit {
 	public void doWork() throws InterruptedException {
 		// Comparamos con los tags que ya notificamos para evitar notificar varias veces
 		final ReceptorVortex receptorANotificar = notificacion.getReceptor();
+		LOG.debug("Comenzando notificación de cambio de tags para el receptor[{}]", receptorANotificar);
 		final Set<String> tagsNotificadosPreviamente = receptorANotificar.getTagsNotificados();
 
 		// Comprobamos los tags agregados
@@ -61,6 +66,8 @@ public class NotificarAReceptorCambiosDeTagsWorkUnit implements WorkUnit {
 				final NotificarAReceptorTagsAgregadosWorkUnit notificarAgregados = NotificarAReceptorTagsAgregadosWorkUnit
 						.create(nodo, receptorANotificar, tagsAgregadosYNoNotificados);
 				nodo.getProcesador().process(notificarAgregados);
+			} else {
+				LOG.debug("Notificacion de agregado de tags no necesaria para receptor[{}]", receptorANotificar);
 			}
 		}
 
@@ -77,6 +84,8 @@ public class NotificarAReceptorCambiosDeTagsWorkUnit implements WorkUnit {
 				final NotificarAReceptorTagsQuitadosWorkUnit notificarAgregados = NotificarAReceptorTagsQuitadosWorkUnit
 						.create(nodo, receptorANotificar, tagsQuitadosYNoNotificados);
 				nodo.getProcesador().process(notificarAgregados);
+			} else {
+				LOG.debug("Notificacion de quitado de tags no necesaria para receptor[{}]", receptorANotificar);
 			}
 		}
 	}

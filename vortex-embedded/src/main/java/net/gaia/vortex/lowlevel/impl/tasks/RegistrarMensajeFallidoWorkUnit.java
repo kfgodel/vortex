@@ -17,12 +17,16 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación de registro de mensaje fallido en el nodo
  * 
  * @author D. García
  */
 public class RegistrarMensajeFallidoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(RegistrarMensajeFallidoWorkUnit.class);
 
 	private ContextoDeEnvio contexto;
 
@@ -40,6 +44,7 @@ public class RegistrarMensajeFallidoWorkUnit implements WorkUnit {
 		// Registramos que el mensaje fue duplicado
 		final ControlDeRuteo controlDeRuteo = contexto.getControlDeRuteo();
 		final IdentificadorDeEnvio idEnvio = contexto.getIdDeEnvio();
+		LOG.debug("Registrando envio fallido para el envío[{}]", idEnvio);
 		controlDeRuteo.registrarMensajeFallado(idEnvio);
 
 		// Verificamos si quedan más rutas o hay que terminar el ruteo

@@ -20,12 +20,17 @@ import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la tarea que valida la conformidad del mensaje al protocolo
  * 
  * @author D. García
  */
 public class ValidacionDeMensajeWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(ValidacionDeMensajeWorkUnit.class);
+
 	private ContextoDeRuteoDeMensaje contexto;
 
 	/**
@@ -34,14 +39,19 @@ public class ValidacionDeMensajeWorkUnit implements WorkUnit {
 	@Override
 	public void doWork() throws InterruptedException {
 		final MensajeVortex mensajeRecibido = contexto.getMensaje();
+
+		LOG.debug("Validando mensaje[{}]", mensajeRecibido);
 		final String descripcionError = validarMensaje(mensajeRecibido);
 		if (descripcionError != null) {
+			LOG.warn("Error[{}] encontrado en mensaje[{}] al validar", descripcionError, mensajeRecibido);
 			// Existe un error en el mensaje intentamos devolver feedback al respecto
-			final DevolverAcuseFallaRecepcionWorkUnit devolucionWorkUnit = DevolverAcuseFallaRecepcionWorkUnit
-					.create(contexto, descripcionError);
+			final DevolverAcuseFallaRecepcionWorkUnit devolucionWorkUnit = DevolverAcuseFallaRecepcionWorkUnit.create(
+					contexto, descripcionError);
 			contexto.getProcesador().process(devolucionWorkUnit);
 			return;
 		}
+
+		LOG.debug("Validación superada para mensaje[{}]", mensajeRecibido);
 		final VerificarDuplicadoWorkUnit verificarWorkUnit = VerificarDuplicadoWorkUnit.create(contexto);
 		contexto.getProcesador().process(verificarWorkUnit);
 	}

@@ -42,6 +42,7 @@ public class RecibirAcuseDuplicadoWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Recibiendo acuse de duplicado en mensaje[{}]", contexto.getMensaje());
 		// Armamos el ID del envio que realizamos
 		final ReceptorVortex receptorDelMensaje = contexto.getEmisor();
 		final IdVortex idMensajeDuplicado = acuse.getIdMensajeDuplicado();

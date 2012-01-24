@@ -17,6 +17,9 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación que realiza el nodo al recibir el mensaje de limpieza de tags
  * de un receptor
@@ -24,6 +27,7 @@ import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
  * @author D. García
  */
 public class RecibirLimpiarTagsWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(RecibirLimpiarTagsWorkUnit.class);
 	private ContextoDeRuteoDeMensaje contexto;
 
 	/**
@@ -31,10 +35,12 @@ public class RecibirLimpiarTagsWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Recibiendo limpieza de tags en el mensaje[{}]", contexto.getMensaje());
 		// Reemplazamos los tags de los declarados por el receptor
 		final ReceptorVortex receptorAModificar = contexto.getEmisor();
 		final TagSummarizer summarizer = contexto.getTagSummarizer();
 		summarizer.limpiarTagsPara(receptorAModificar);
+		LOG.debug("Tags limpiados para el receptor[{}]", receptorAModificar);
 
 		// Si hay cambios de tags globales, se disparará notificaciones a los receptores vecinos
 	}

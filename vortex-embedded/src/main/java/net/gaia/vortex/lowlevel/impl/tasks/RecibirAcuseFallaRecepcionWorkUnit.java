@@ -42,6 +42,7 @@ public class RecibirAcuseFallaRecepcionWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Recibiendo acuse de falla en el mensaje[{}]", contexto.getMensaje());
 		// Armamos el ID del envio que realizamos
 		final ReceptorVortex receptorDelMensaje = contexto.getEmisor();
 		final IdVortex idMensajeFallado = acuse.getIdMensajeFallado();

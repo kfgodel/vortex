@@ -16,12 +16,16 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación de entrega del mensaje a un receptor
  * 
  * @author D. García
  */
 public class EntregarMensajeWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(EntregarMensajeWorkUnit.class);
 
 	private ReceptorVortex receptor;
 	private MensajeVortex mensaje;
@@ -31,6 +35,7 @@ public class EntregarMensajeWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Entregando mensaje[{}] a receptor[{}]", mensaje, receptor);
 		// Le damos el mensaje al receptor destinado
 		receptor.recibir(mensaje);
 	}

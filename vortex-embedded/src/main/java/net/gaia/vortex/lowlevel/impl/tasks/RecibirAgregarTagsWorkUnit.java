@@ -21,12 +21,16 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
 import net.gaia.vortex.protocol.messages.meta.AgregarTags;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación realizada por el nodo al recibir el mensaje de agregar tags
  * 
  * @author D. García
  */
 public class RecibirAgregarTagsWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(RecibirAgregarTagsWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 	private AgregarTags mensaje;
@@ -36,11 +40,15 @@ public class RecibirAgregarTagsWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Recibiendo agregado de tags en el mensaje[{}]", contexto.getMensaje());
+
 		// Agregamos los tags los declarados por el receptor
 		final List<String> nuevosTags = mensaje.getTags();
 		final ReceptorVortex receptorAModificar = contexto.getEmisor();
 		final TagSummarizer summarizer = contexto.getTagSummarizer();
-		summarizer.agregarTagsPara(receptorAModificar, new HashSet<String>(nuevosTags));
+		final HashSet<String> tagsAgregados = new HashSet<String>(nuevosTags);
+		summarizer.agregarTagsPara(receptorAModificar, tagsAgregados);
+		LOG.debug("Tags{} agregados al receptor[{}]", tagsAgregados, receptorAModificar);
 
 		// Si hay cambios de tags globales, se disparará notificaciones a los receptores vecinos
 	}

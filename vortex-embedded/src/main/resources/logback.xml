@@ -34,7 +34,7 @@
 	</appender>
 
 	
-	<logger name="net.gaia.vortex" level="INFO" />
+	<logger name="net.gaia.vortex" level="DEBUG" />
 	
   
 	<root level="info">

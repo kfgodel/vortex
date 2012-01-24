@@ -17,6 +17,9 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la acción realizada por el nodo para terminar un ruteo cada vez que se
  * completa una ruta de mensaje enviado.<br>
@@ -25,6 +28,7 @@ import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
  * @author D. García
  */
 public class VerificarRutasPendientesWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(VerificarRutasPendientesWorkUnit.class);
 
 	private ContextoDeEnvio contexto;
 
@@ -33,12 +37,15 @@ public class VerificarRutasPendientesWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Verificando ruteos pendientes para el mensaje[{}]", contexto.getMensaje());
 		final ControlDeRuteo controlDeRuteo = contexto.getControlDeRuteo();
 		// Vemos si todavía hay más mensajes para rutear
 		if (controlDeRuteo.existenMensajesEnRuta()) {
+			LOG.debug("Existen más ruteos pendientes para el mensaje[{}]", contexto.getMensaje());
 			// Quedan más rutas para confirmar, esperamos
 			return;
 		}
+		LOG.debug("Todos los ruteos resueltos. Devolviendo acuse de consumo para el mensaje[{}]", contexto.getMensaje());
 		// Tenemos que seguir con el ruteo, enviar una confirmación de consumo
 		final ContextoDeRuteoDeMensaje contextoDeRuteo = contexto.getContextoDeRuteo();
 		final TerminarRuteoWorkUnit terminarRuteo = TerminarRuteoWorkUnit.create(contextoDeRuteo);

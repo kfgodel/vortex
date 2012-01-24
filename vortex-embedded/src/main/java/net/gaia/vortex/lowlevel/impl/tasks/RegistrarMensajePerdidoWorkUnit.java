@@ -17,6 +17,9 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la tarea de registrar que un mensaje no recibió confirmación y se considera
  * perdido.<br>
@@ -25,16 +28,20 @@ import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
  * @author D. García
  */
 public class RegistrarMensajePerdidoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(RegistrarMensajePerdidoWorkUnit.class);
 
 	private ContextoDeEnvio contexto;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
+	@Override
 	public void doWork() throws InterruptedException {
 		// Registramos que el mensaje fue perdido
 		final ControlDeRuteo controlDeRuteo = contexto.getControlDeRuteo();
 		final IdentificadorDeEnvio idEnvio = contexto.getIdDeEnvio();
+		LOG.debug("Registrando mensaje[{}] como perdido al enviarlo al receptor[{}]", contexto.getMensaje(),
+				idEnvio.getReceptorDestino());
 		controlDeRuteo.registrarMensajePerdido(idEnvio);
 
 		// Verificamos si quedan más rutas o hay que terminar el ruteo

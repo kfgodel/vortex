@@ -18,6 +18,9 @@ import net.gaia.vortex.lowlevel.impl.ConfiguracionDeNodo;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.EsperaDeAccion;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación de espera del acuse de consumo por parte del nodo al que se le
  * envió el mensaje
@@ -25,6 +28,7 @@ import net.gaia.vortex.lowlevel.impl.EsperaDeAccion;
  * @author D. García
  */
 public class EsperarAcuseConsumoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(EsperarAcuseConsumoWorkUnit.class);
 
 	private ContextoDeEnvio contexto;
 
@@ -44,6 +48,7 @@ public class EsperarAcuseConsumoWorkUnit implements WorkUnit {
 		final ConfiguracionDeNodo configuracion = this.contexto.getConfig();
 		final TimeMagnitude timeoutDeAcuse = configuracion.getTimeoutDeAcuseDeConsumo();
 		esperaDeAcuse.iniciarEsperaDe(timeoutDeAcuse);
+		LOG.debug("Esperando[{}] acuse de consumo de mensaje[{}]", timeoutDeAcuse, contexto.getMensaje());
 
 		// Disparamos la tarea para ejecutarse cuando se acabe el timeout
 		final ConfirmarRecepcionDeAcuseConsumoWorkUnit confirmarAcuse = ConfirmarRecepcionDeAcuseConsumoWorkUnit

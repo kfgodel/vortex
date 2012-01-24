@@ -23,6 +23,9 @@ import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la acción realizada por el nodo cuando se vence el tiempo de espera de la
  * confirmación de consumo
@@ -30,6 +33,7 @@ import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
  * @author D. García
  */
 public class ConfirmarRecepcionDeAcuseConsumoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(ConfirmarRecepcionDeAcuseConsumoWorkUnit.class);
 
 	private ContextoDeEnvio contexto;
 
@@ -44,11 +48,14 @@ public class ConfirmarRecepcionDeAcuseConsumoWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Confirmando la recepción del acuse de consumo para mensaje[{}]", contexto.getMensaje());
 		// Verificamos que el mensaje esté en espera de acuse todavía
 		final MemoriaDeMensajes memoria = this.contexto.getMemoriaDeMensajes();
 		final MensajesEnEspera esperandoAcuse = memoria.getEsperandoAcuseDeConsumo();
 		final IdentificadorDeEnvio idDeEnvio = this.contexto.getIdDeEnvio();
 		if (!esperandoAcuse.incluyeA(idDeEnvio)) {
+			LOG.debug("Mensaje[{}] ya no espera acuse. Suponemos que fue recibido o anulada la espera",
+					contexto.getMensaje());
 			// Si el envío no está en espera de acuse, es porque ya la recibimos. Nada que hacer acá
 			return;
 		}
@@ -57,6 +64,9 @@ public class ConfirmarRecepcionDeAcuseConsumoWorkUnit implements WorkUnit {
 		final EsperaDeAccion esperaDeConfirmacion = this.contexto.getEsperaDeAcuseConsumo();
 		final long millisDeEsperaDisponible = esperaDeConfirmacion.getMillisRestantes();
 		if (millisDeEsperaDisponible > 0) {
+			LOG.debug(
+					"Existe más tiempo disponible de espera para recibir acuse de consumo para mensaje[{}]. Esperamos",
+					contexto.getMensaje());
 			// Todavía tiene tiempo para llegar el acuse, lo esperamos
 			this.contexto.getProcesador().processDelayed(
 					TimeMagnitude.of(millisDeEsperaDisponible, TimeUnit.MILLISECONDS), this);
@@ -66,6 +76,8 @@ public class ConfirmarRecepcionDeAcuseConsumoWorkUnit implements WorkUnit {
 		// No llegó el mensaje y se acabó el tiempo de espera. Vemos si corresponde enviar solicitud
 		final ControlDeConsumoDeEnvio controlDeConsumo = contexto.getControlDeConsumo();
 		if (controlDeConsumo.correspondeSolicitud()) {
+			LOG.debug("Acuse de consumo para mensaje[{}] no recibido, pero corresponde solicitarlo",
+					contexto.getMensaje());
 			// Enviamos la solicitud y esperamos nuevamente
 			final EnviarSolicitudDeAcuseDeConsumoWorkUnit enviarSolicitud = EnviarSolicitudDeAcuseDeConsumoWorkUnit
 					.create(this.contexto);
@@ -76,9 +88,11 @@ public class ConfirmarRecepcionDeAcuseConsumoWorkUnit implements WorkUnit {
 			return;
 		}
 
+		LOG.debug("Acuse de consumo no recibido para mensaje[{}]. Dandolo por perdido", contexto.getMensaje());
 		// Nos apropiamos del mensaje si aún está en espera de acuse
 		final ContextoDeEnvio estabaEsperando = esperandoAcuse.quitar(idDeEnvio);
 		if (estabaEsperando == null) {
+			LOG.debug("El mensaje[{}] fue quitado mientras se trataba el MIA. Ignorando", contexto.getMensaje());
 			// En el medio recibimos el acuse, no hacemos nada más acá
 			return;
 		}

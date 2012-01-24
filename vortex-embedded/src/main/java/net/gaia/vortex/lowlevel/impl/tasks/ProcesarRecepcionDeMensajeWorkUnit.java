@@ -15,12 +15,16 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa el trabajo que hace el nodo al recibir un mensaje, después de validarlo
  * 
  * @author D. García
  */
 public class ProcesarRecepcionDeMensajeWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(ProcesarRecepcionDeMensajeWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 

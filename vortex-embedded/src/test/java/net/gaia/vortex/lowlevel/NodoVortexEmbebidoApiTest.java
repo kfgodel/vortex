@@ -55,7 +55,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 	public void prepararTest() {
 		final ExecutorBasedTaskProcesor procesador = ExecutorBasedTaskProcesor.create(TaskProcessorConfiguration
 				.create());
-		nodoVortex = NodoVortexConTasks.create(procesador);
+		nodoVortex = NodoVortexConTasks.create(procesador, null);
 		escenarios = new EscenarioDeTest();
 	}
 

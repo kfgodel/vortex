@@ -14,6 +14,7 @@ package net.gaia.vortex.lowlevel.impl.receptores;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
@@ -22,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ar.com.fdvs.dgarcia.colecciones.sets.ConcurrentHashSet;
+
+import com.google.common.base.Objects;
 
 /**
  * Esta clase representa la visión del nodo acerca de los clientes que abren sesiones
@@ -34,11 +37,17 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 	private MensajeVortexHandler handler;
 
 	private Set<String> tagsNotificados;
+	public static final String tagsNotificados_FIELD = "tagsNotificados";
+
+	private static final AtomicLong idSequencer = new AtomicLong(0);
+	private long internalId;
+	public static final String internalId_FIELD = "internalId";
 
 	public static ReceptorVortexConSesion create(final MensajeVortexHandler handlerDeMensajes) {
 		final ReceptorVortexConSesion receptor = new ReceptorVortexConSesion();
 		receptor.handler = handlerDeMensajes;
 		receptor.tagsNotificados = new ConcurrentHashSet<String>();
+		receptor.internalId = idSequencer.getAndIncrement();
 		return receptor;
 	}
 
@@ -76,5 +85,14 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 	@Override
 	public void quitarTagsNotificados(final Set<String> tagsQuitados) {
 		tagsNotificados.removeAll(tagsQuitados);
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(internalId_FIELD, internalId)
+				.add(tagsNotificados_FIELD, tagsNotificados).toString();
 	}
 }

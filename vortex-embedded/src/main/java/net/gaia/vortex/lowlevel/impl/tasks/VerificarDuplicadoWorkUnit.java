@@ -18,6 +18,9 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la tarea de verificar si el mensaje está duplicado respecto a los mensajes
  * recibidos en el nodo
@@ -25,6 +28,7 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
  * @author D. García
  */
 public class VerificarDuplicadoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(VerificarDuplicadoWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 
@@ -34,13 +38,17 @@ public class VerificarDuplicadoWorkUnit implements WorkUnit {
 	@Override
 	public void doWork() throws InterruptedException {
 		final MensajeVortex mensaje = contexto.getMensaje();
+		LOG.debug("Verificando duplicados para mensaje[{}]", mensaje);
+
 		final MemoriaDeMensajes memoria = contexto.getMemoriaDeMensajes();
 		final boolean esDuplicado = memoria.registrarSiNoRecuerdaA(mensaje);
 		if (esDuplicado) {
+			LOG.info("Mensaje[{}] duplicado detectado", mensaje);
 			final DevolverAcuseDuplicadoWorkUnit devolucion = DevolverAcuseDuplicadoWorkUnit.create(contexto);
 			this.contexto.getProcesador().process(devolucion);
 			return;
 		}
+		LOG.debug("Mensaje[{}] no-duplicado detectado", mensaje);
 		// Puede que sea duplicado pero ya no lo recordamos ;) lo tratamos como nuevo
 		final ProcesarRecepcionDeMensajeWorkUnit recibirMensaje = ProcesarRecepcionDeMensajeWorkUnit.create(contexto);
 		final TaskProcessor procesador = this.contexto.getProcesador();

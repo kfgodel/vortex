@@ -19,6 +19,9 @@ import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.tags.NotificacionDeCambioDeTags;
 import net.gaia.vortex.lowlevel.impl.tags.ReporteCambioDeTags;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación realizada por el nodo para notificar a los clientes de cambios
  * en los tags del nodo
@@ -26,6 +29,7 @@ import net.gaia.vortex.lowlevel.impl.tags.ReporteCambioDeTags;
  * @author D. García
  */
 public class NotificarCambiosDeTagsEnNodoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(NotificarCambiosDeTagsEnNodoWorkUnit.class);
 
 	private ReporteCambioDeTags reporte;
 	private NodoVortexConTasks nodo;
@@ -35,6 +39,7 @@ public class NotificarCambiosDeTagsEnNodoWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Cambios de tags en el nodo detectado. Notificando a afectados");
 		final List<NotificacionDeCambioDeTags> notificaciones = reporte.getNotificaciones();
 		for (final NotificacionDeCambioDeTags notificacionDeCambioDeTags : notificaciones) {
 			final NotificarAReceptorCambiosDeTagsWorkUnit notificarAReceptor = NotificarAReceptorCambiosDeTagsWorkUnit

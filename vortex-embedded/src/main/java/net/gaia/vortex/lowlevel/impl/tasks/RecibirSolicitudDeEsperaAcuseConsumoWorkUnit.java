@@ -45,6 +45,7 @@ public class RecibirSolicitudDeEsperaAcuseConsumoWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Recibiendo solicitud de espera para del mensaje[{}]", contexto.getMensaje());
 		// Armamos el ID del envío que realizamos
 		final IdVortex idMensajeEnviado = solicitud.getIdMensajeRecibido();
 		final ReceptorVortex receptor = contexto.getEmisor();
@@ -57,7 +58,7 @@ public class RecibirSolicitudDeEsperaAcuseConsumoWorkUnit implements WorkUnit {
 
 		if (contextoDeEnvio == null) {
 			// O recibimos el acuse, o se acabo el tiempo, por lo que la espera no tiene sentido
-			LOG.debug("Recibimos una solicitud para un envio que ya está cerrado: " + idEnvioRealizado);
+			LOG.debug("Recibimos una solicitud de espera para un envio que ya está cerrado: " + idEnvioRealizado);
 			return;
 		}
 
@@ -66,6 +67,7 @@ public class RecibirSolicitudDeEsperaAcuseConsumoWorkUnit implements WorkUnit {
 		final ConfiguracionDeNodo config = contexto.getConfig();
 		final TimeMagnitude prorroga = config.getTimeoutDeAcuseDeConsumo();
 		esperaDeAcuse.iniciarEsperaDe(prorroga);
+		LOG.debug("Extendiendo espera[{}] para el envio[{}]", prorroga, idEnvioRealizado);
 
 		// Registramos que recibimos una solicitud de espera
 		final ControlDeConsumoDeEnvio controlDeConsumo = contextoDeEnvio.getControlDeConsumo();

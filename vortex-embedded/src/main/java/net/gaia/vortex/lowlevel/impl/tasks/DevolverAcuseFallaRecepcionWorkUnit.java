@@ -62,11 +62,12 @@ public class DevolverAcuseFallaRecepcionWorkUnit implements WorkUnit {
 		final ReceptorVortex emisor = contexto.getEmisor();
 		if (emisor == null) {
 			// No existe a quién devolverle la confirmación
-			LOG.error("Se recibió un mensaje[{}] invalido[{}] de fuente nula. Ignorando error", contexto.getMensaje(),
-					errorRegistrado);
+			LOG.error("Se recibió un mensaje[{}] invalido[{}] de receptor nulo. Ignorando error",
+					contexto.getMensaje(), errorRegistrado);
 			return;
 		}
 
+		LOG.debug("Armando acuse de falla[{}] para mensaje[{}]", errorRegistrado, contexto.getMensaje());
 		final AcuseFallaRecepcion acuseDeFalla = AcuseFallaRecepcion.create(errorRegistrado);
 		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, acuseDeFalla);
 		contexto.getProcesador().process(envio);

@@ -20,12 +20,16 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la tarea de enviar el mensaje y esperar confirmación de entrega
  * 
  * @author D. García
  */
 public class ProcesarEnvioDeMensajeWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(ProcesarEnvioDeMensajeWorkUnit.class);
 
 	private ContextoDeEnvio contexto;
 
@@ -40,6 +44,8 @@ public class ProcesarEnvioDeMensajeWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Procesando envío de mensaje[{}] a receptor[{}]", contexto.getMensaje(), contexto.getIdDeEnvio()
+				.getReceptorDestino());
 
 		// Primero lo registramos en espera de consumo por si llega rápido el acuse de consumo
 		final MemoriaDeMensajes memoriaDeMensajes = this.contexto.getMemoriaDeMensajes();

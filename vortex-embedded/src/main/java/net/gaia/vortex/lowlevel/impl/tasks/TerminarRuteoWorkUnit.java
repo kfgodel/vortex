@@ -15,6 +15,9 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación de cierre del ruteo que envia el acuse de consumo y balancea
  * los pesos de los tags
@@ -22,6 +25,7 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
  * @author D. García
  */
 public class TerminarRuteoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(TerminarRuteoWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 
@@ -30,12 +34,14 @@ public class TerminarRuteoWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Terminando ruteo para mensaje[{}]", contexto.getMensaje());
 		// Devolvemos el acuse al emisor original
 		final DevolverAcuseConsumoWorkUnit devolverAcuse = DevolverAcuseConsumoWorkUnit.create(contexto);
 		contexto.getProcesador().process(devolverAcuse);
 
 		// Recalibramos las rutas de los mensajes
-		final OptimizarRutasDeMensajesWorkUnit optimizacion;
+		final OptimizarRutasDeMensajesWorkUnit optimizacion = OptimizarRutasDeMensajesWorkUnit.create(contexto);
+		contexto.getProcesador().process(optimizacion);
 	}
 
 	public static TerminarRuteoWorkUnit create(final ContextoDeRuteoDeMensaje contextoDeRuteo) {

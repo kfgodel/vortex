@@ -19,6 +19,9 @@ import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.meta.QuitarTags;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación realizada por el nodo para notificar a un receptor de tags
  * quitados
@@ -26,6 +29,7 @@ import net.gaia.vortex.protocol.messages.meta.QuitarTags;
  * @author D. García
  */
 public class NotificarAReceptorTagsQuitadosWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(NotificarAReceptorTagsQuitadosWorkUnit.class);
 
 	private NodoVortexConTasks nodo;
 	private ReceptorVortex receptor;
@@ -36,6 +40,7 @@ public class NotificarAReceptorTagsQuitadosWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Notificando al receptor[{}] tags quitados[{}]", receptor, tagsQuitados);
 		// Mandamos el mensaje por los nuevos tags
 		final QuitarTags quitarTags = QuitarTags.create(tagsQuitados);
 		final ProcesarEnvioDeMetamensajeWorkUnit envioDeMensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,

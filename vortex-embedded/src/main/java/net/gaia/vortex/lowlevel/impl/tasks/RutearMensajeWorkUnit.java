@@ -22,6 +22,9 @@ import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa el trabajo quimport net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
  * e hace el nodo al comenzar el ruteo de un mensaje
@@ -29,6 +32,7 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
  * @author D. García
  */
 public class RutearMensajeWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(RutearMensajeWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 
@@ -45,6 +49,7 @@ public class RutearMensajeWorkUnit implements WorkUnit {
 	public void doWork() throws InterruptedException {
 		// Creamos la estructura de control para realizar el ruteo
 		final MensajeVortex mensaje = this.contexto.getMensaje();
+		LOG.debug("Comenzando ruteo para mensaje[{}]", mensaje);
 		final IdVortex idMensaje = mensaje.getIdentificacion();
 		final ControlDeRuteo controlDeRuteo = ControlDeRuteo.create(idMensaje);
 		this.contexto.setControl(controlDeRuteo);
@@ -58,6 +63,7 @@ public class RutearMensajeWorkUnit implements WorkUnit {
 		// Tenemos que ver si es un metamensaje
 		final ContenidoVortex contenido = mensaje.getContenido();
 		if (contenido.isMetaMensaje()) {
+			LOG.debug("Mensaje[{}] detectado como metamensaje", mensaje);
 			// Si es meta, es para procesarlo internamente, no para enviarlo a otros nodos
 			final ProcesarRecepcionDeMetamensajeWorkUnit procesoDeMetaMensaje = ProcesarRecepcionDeMetamensajeWorkUnit
 					.create(contexto);

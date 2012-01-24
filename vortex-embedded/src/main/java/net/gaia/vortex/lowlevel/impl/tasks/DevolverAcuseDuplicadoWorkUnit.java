@@ -48,7 +48,7 @@ public class DevolverAcuseDuplicadoWorkUnit implements WorkUnit {
 			LOG.error("Se recibió un mensaje[{}] duplicado[{}] de fuente nula. Ignorando error", contexto.getMensaje());
 			return;
 		}
-
+		LOG.debug("Armando acuse de duplicado para el mensaje[{}]", contexto.getMensaje());
 		final AcuseDuplicado acuseDeFalla = AcuseDuplicado.create();
 		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, acuseDeFalla);
 		contexto.getProcesador().process(envio);

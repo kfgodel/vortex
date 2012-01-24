@@ -19,12 +19,16 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase entrega el metamensaje indicado al receptor encapsulándolo en un mensaje vortex
  * 
  * @author D. García
  */
 public class ProcesarEnvioDeMetamensajeWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(ProcesarEnvioDeMetamensajeWorkUnit.class);
 
 	private MetamensajeVortex metamensaje;
 	private ReceptorVortex receptor;
@@ -35,6 +39,8 @@ public class ProcesarEnvioDeMetamensajeWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Generando metamensaje[{}] para el receptor[{}]", metamensaje, receptor);
+
 		final GeneradorMensajesDeNodo generadorMensajes = nodo.getGeneradorMensajes();
 		// Generamos el mensaje para el metamensaje
 		final MensajeVortex mensaje = generadorMensajes.generarMetaMensajePara(metamensaje);

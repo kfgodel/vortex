@@ -22,6 +22,9 @@ import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.routing.Acuse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la tarea de enviar una confirmación al emisor de un mensaje. A diferencia
  * de otros envíos esta tarea no requiere confirmación del envío
@@ -29,6 +32,7 @@ import net.gaia.vortex.protocol.messages.routing.Acuse;
  * @author D. García
  */
 public class EnviarAcuseWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(EnviarAcuseWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 
@@ -50,8 +54,10 @@ public class EnviarAcuseWorkUnit implements WorkUnit {
 	public void doWork() throws InterruptedException {
 		// Establecemos el ID del mensaje para el que se envía la confirmación
 		final MensajeVortex mensaje = contexto.getMensaje();
+
 		final IdVortex identificacion = mensaje.getIdentificacion();
 		this.acuse.setIdMensajeInvolucrado(identificacion);
+		LOG.debug("Acuse[{}] completado con ID para el mensaje[{}]", mensaje);
 
 		final ReceptorVortex emisor = contexto.getEmisor();
 		final NodoVortexConTasks nodo = contexto.getNodo();

@@ -19,6 +19,9 @@ import net.gaia.vortex.lowlevel.impl.ReportePerformanceRuteo;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación de optimización de las rutas de mensajes de acuerdo al
  * desempeño de cada canal
@@ -26,6 +29,7 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
  * @author D. García
  */
 public class OptimizarRutasDeMensajesWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(OptimizarRutasDeMensajesWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 
@@ -34,6 +38,7 @@ public class OptimizarRutasDeMensajesWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Optimizando rutas de mensajes en base resultados de mensaje[{}]", contexto.getMensaje());
 		// Calificamos a cada receptor segun su performance
 		final ControlDeRuteo controlDeRuteo = contexto.getControl();
 		final MensajeVortex mensaje = contexto.getMensaje();

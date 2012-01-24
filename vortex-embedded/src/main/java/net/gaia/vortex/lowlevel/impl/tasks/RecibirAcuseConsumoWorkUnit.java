@@ -48,6 +48,7 @@ public class RecibirAcuseConsumoWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Recibiendo acuse de consumo del mensaje[{}]", contexto.getMensaje());
 		// Armamos el identificador del envío que realizamos
 		final IdVortex identificacionMensaje = acuse.getIdMensajeConsumido();
 		final ReceptorVortex receptor = this.contexto.getEmisor();
@@ -59,13 +60,14 @@ public class RecibirAcuseConsumoWorkUnit implements WorkUnit {
 		final ContextoDeEnvio contextoDeEnvio = esperandoConfirmacion.quitar(identificadorDeEnvio);
 		if (contextoDeEnvio == null) {
 			// Ya lo quitaron. O recibimos un acuse previo, o ya lo dimos por perdido
-			LOG.debug("Llegó una confirmación de consumo[{}] para la que no existe contexto", acuse);
+			LOG.debug("Llegó un acuse de consumo[{}] para el que no existe contexto previo en el mensaje[{}]", acuse,
+					contexto.getMensaje());
 			return;
 		}
 
 		// Si lo pudimos quitar registramos que recibimos confirmación
-		final RegistrarMensajeConsumidoWorkUnit registroConsumo = RegistrarMensajeConsumidoWorkUnit
-				.create(contextoDeEnvio);
+		final RegistrarMensajeConsumidoWorkUnit registroConsumo = RegistrarMensajeConsumidoWorkUnit.create(
+				contextoDeEnvio, acuse);
 		contexto.getProcesador().process(registroConsumo);
 	}
 }

@@ -21,6 +21,9 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.SolicitudAcuseConsumo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la acción del nodo para solicitar a un receptor que envíe la confirmación
  * de consumo
@@ -28,6 +31,7 @@ import net.gaia.vortex.protocol.messages.routing.SolicitudAcuseConsumo;
  * @author D. García
  */
 public class EnviarSolicitudDeAcuseDeConsumoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(EnviarSolicitudDeAcuseDeConsumoWorkUnit.class);
 
 	private ContextoDeEnvio contexto;
 
@@ -42,6 +46,7 @@ public class EnviarSolicitudDeAcuseDeConsumoWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Generando solicitud para el acuse de consumo para el mensaje[{}]", contexto.getMensaje());
 		// Creamos la solicitud a enviar
 		final IdentificadorDeEnvio idDeEnvio = this.contexto.getIdDeEnvio();
 		final IdVortex idDeMensajeEnviado = idDeEnvio.getIdDeMensajeEnviado();
@@ -55,6 +60,7 @@ public class EnviarSolicitudDeAcuseDeConsumoWorkUnit implements WorkUnit {
 				destino, solicitudAEnviar);
 		contextoRuteo.getProcesador().process(envioMetamensaje);
 
+		LOG.debug("Registrando solicitud de consumo enviada para mensaje[{}]", contexto.getMensaje());
 		// Registramos que enviamos la solicitud por si viene una espera
 		contexto.getControlDeConsumo().registrarEnvioDeSolicitud();
 	}

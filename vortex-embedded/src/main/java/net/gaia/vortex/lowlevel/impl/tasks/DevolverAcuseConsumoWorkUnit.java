@@ -52,7 +52,7 @@ public class DevolverAcuseConsumoWorkUnit implements WorkUnit {
 		final ReceptorVortex emisor = this.contexto.getEmisor();
 		if (emisor == null) {
 			// No existe a quién devolverle la confirmación
-			LOG.error("Se recibió un mensaje[{}] de fuente nula que no fue interesante para nadie",
+			LOG.error("No es posible devolver acuse de consumo si no existe receptor en contexto para el mensaje[{}]",
 					contexto.getMensaje());
 			return;
 		}
@@ -66,7 +66,7 @@ public class DevolverAcuseConsumoWorkUnit implements WorkUnit {
 		final IdentificadorDeEnvio idEnvioRecibido = IdentificadorDeEnvio.create(idMensajeRecibido, emisor);
 		final MemoriaDeRuteos memoriaDeMensajes = contexto.getMemoriaDeRuteos();
 		memoriaDeMensajes.registrarRuteoTerminado(idEnvioRecibido);
+		LOG.debug("Ruteo terminado para el mensaje[{}] enviado a receptor[{}]", contexto.getMensaje(), emisor);
 
-		// TODO: Deberíamos acomodar los pesos de los nodos en base al consumo?
 	}
 }

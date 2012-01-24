@@ -21,12 +21,16 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
 import net.gaia.vortex.protocol.messages.meta.QuitarTags;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación realizada por el nodo al recibir un mensaje de quitar tags
  * 
  * @author D. García
  */
 public class RecibirQuitarTagsWorkunit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(RecibirQuitarTagsWorkunit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 	private QuitarTags mensaje;
@@ -36,11 +40,14 @@ public class RecibirQuitarTagsWorkunit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Recibiendo quitado de tags en el mensaje[{}]", contexto.getMensaje());
 		// Quitarmos los tags de los declarados por el receptor
 		final List<String> nuevosTags = mensaje.getTags();
 		final ReceptorVortex receptorAModificar = contexto.getEmisor();
 		final TagSummarizer summarizer = contexto.getTagSummarizer();
-		summarizer.quitarTagsPara(receptorAModificar, new HashSet<String>(nuevosTags));
+		final HashSet<String> tagsQuitados = new HashSet<String>(nuevosTags);
+		summarizer.quitarTagsPara(receptorAModificar, tagsQuitados);
+		LOG.debug("Tags{} quitados al receptor[{}]", tagsQuitados, receptorAModificar);
 
 		// Si hay cambios de tags globales, se disparará notificaciones a los receptores vecinos
 	}

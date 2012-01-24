@@ -22,12 +22,16 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la tarea de seleccionar los mejores receptores para un mensaje ruteado
  * 
  * @author D. García
  */
 public class SeleccionarReceptoresWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(SeleccionarReceptoresWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 
@@ -47,6 +51,7 @@ public class SeleccionarReceptoresWorkUnit implements WorkUnit {
 
 		// Queremos los interesados en el tag del mensaje
 		final MensajeVortex mensaje = this.contexto.getMensaje();
+		LOG.debug("Eligiendo receptores interesados para el mensaje[{}]", mensaje);
 		final List<String> tagsDelMensaje = mensaje.getTagsDestino();
 		final ReceptorVortex emisor = contexto.getEmisor();
 		final SeleccionDeReceptores seleccion = registro.getReceptoresInteresadosMenosA(emisor, tagsDelMensaje);
@@ -55,6 +60,7 @@ public class SeleccionarReceptoresWorkUnit implements WorkUnit {
 		final ControlDeRuteo controlDeRuteo = this.contexto.getControl();
 		controlDeRuteo.setReceptoresInteresados(seleccion.getSeleccionados());
 		if (seleccion.esVacia()) {
+			LOG.info("Ningún receptor conectado interesado en el mensaje[{}]", mensaje);
 			// El mensaje no le interesa a nadie
 			final DevolverAcuseConsumoWorkUnit devolucion = DevolverAcuseConsumoWorkUnit.create(contexto);
 			contexto.getProcesador().process(devolucion);

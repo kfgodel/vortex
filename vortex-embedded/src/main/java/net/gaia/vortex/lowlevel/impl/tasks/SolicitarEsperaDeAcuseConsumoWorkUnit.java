@@ -19,6 +19,9 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.SolicitudEsperaAcuseConsumo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación de solicitud de espera de consumo.<br>
  * Esta operación es necesaria cuando el acuse de consumo está en progreso todavía
@@ -26,6 +29,7 @@ import net.gaia.vortex.protocol.messages.routing.SolicitudEsperaAcuseConsumo;
  * @author D. García
  */
 public class SolicitarEsperaDeAcuseConsumoWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(SolicitarEsperaDeAcuseConsumoWorkUnit.class);
 
 	private IdVortex idMensajeSolicitado;
 	private ContextoDeRuteoDeMensaje contexto;
@@ -35,6 +39,7 @@ public class SolicitarEsperaDeAcuseConsumoWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Solicitando espera para el acuse de consumo del mensaje[{}]", contexto.getMensaje());
 		// Armamos la solicitud y la mandamos
 		final SolicitudEsperaAcuseConsumo solicitudDeEspera = SolicitudEsperaAcuseConsumo.create(idMensajeSolicitado);
 		final ReceptorVortex emisor = contexto.getEmisor();

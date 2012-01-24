@@ -22,6 +22,9 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
 import net.gaia.vortex.meta.Decision;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación realizada por el nodo para cerrar la conexión asociada a un
  * receptor y limpiar sus datos
@@ -29,6 +32,7 @@ import net.gaia.vortex.meta.Decision;
  * @author D. García
  */
 public class ProcesarCierreDeConexionWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(ProcesarCierreDeConexionWorkUnit.class);
 
 	private NodoVortexConTasks nodo;
 	private ReceptorVortex receptorCerrado;
@@ -45,6 +49,7 @@ public class ProcesarCierreDeConexionWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Limpiando tareas del receptor[{}] por cierre recibido", receptorCerrado);
 		@HasDependencyOn(Decision.TODAVIA_NO_IMPLEMENTE_LA_LIMPIEZA_DE_TAREAS)
 		final TaskProcessor procesador = nodo.getProcesador();
 		procesador.removeTasksMatching(new TaskCriteria() {
@@ -55,9 +60,11 @@ public class ProcesarCierreDeConexionWorkUnit implements WorkUnit {
 			}
 		});
 
+		LOG.debug("Quitando tags asociados al receptor[{}] por cierre", receptorCerrado);
 		final RegistroDeReceptores registroReceptores = nodo.getRegistroReceptores();
 		registroReceptores.quitar(receptorCerrado);
 
+		LOG.debug("Quitando ruteos activos para el receptor[{}] por cierre", receptorCerrado);
 		final MemoriaDeRuteos memoriaDeRuteos = nodo.getMemoriaDeRuteos();
 		memoriaDeRuteos.eliminarRuteosActivosPara(receptorCerrado);
 	}

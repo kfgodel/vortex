@@ -21,12 +21,16 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la tarea de enviar el mensaje a todos los receptores interesados
  * 
  * @author D. García
  */
 public class DistribuirMensajeAInteresadosWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(DistribuirMensajeAInteresadosWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 	private SeleccionDeReceptores interesados;
@@ -46,6 +50,8 @@ public class DistribuirMensajeAInteresadosWorkUnit implements WorkUnit {
 	public void doWork() throws InterruptedException {
 		final TaskProcessor procesador = this.contexto.getProcesador();
 		final Set<ReceptorVortex> allInteresados = this.interesados.getSeleccionados();
+
+		LOG.debug("Distribuyendo mensaje[{}] a interesados[{}]", contexto.getMensaje(), allInteresados);
 		for (final ReceptorVortex interesado : allInteresados) {
 			final ContextoDeEnvio contextoDeEnvioDelMensaje = ContextoDeEnvio.create(contexto, interesado);
 			final ProcesarEnvioDeMensajeWorkUnit enviarMensaje = ProcesarEnvioDeMensajeWorkUnit

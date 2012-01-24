@@ -42,6 +42,8 @@ public class RecibirSolicitudDeAcuseConsumoWorkUnit implements WorkUnit {
 	@Override
 	@HasDependencyOn(Decision.TODAVIA_NO_IMPLEMENTE_PRORROGA)
 	public void doWork() throws InterruptedException {
+		LOG.debug("Recibiendo solicitud de acuse de consumo para mensaje[{}]", contexto.getMensaje());
+
 		// Armamos el identificador del envío realizado
 		final ReceptorVortex receptorDelEnvio = contexto.getEmisor();
 		final IdVortex idMensajeSolicitado = solicitud.getIdMensajeEnviado();
@@ -52,7 +54,9 @@ public class RecibirSolicitudDeAcuseConsumoWorkUnit implements WorkUnit {
 		final MemoriaDeRuteos memoriaDeMensajes = contexto.getMemoriaDeRuteos();
 		if (!memoriaDeMensajes.tieneRuteoActivoPara(idEnvioRealizado)) {
 			// No estamos armando el acuse. O ya enviamos el acuse, o nunca enviamos el mensaje
-			LOG.info("Solicitaron un acuse del que no tenemos envio. Asumiendo que ya lo enviamos");
+			LOG.info(
+					"Solicitaron un acuse para el ID de mensaje[{}] del que no tenemos envio. Asumiendo que ya lo enviamos",
+					idMensajeSolicitado);
 			return;
 		}
 

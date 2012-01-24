@@ -62,9 +62,11 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 		}
 		final WorkUnit tareaDelMetamensaje = crearTareaDesdeMetamensaje(metamensaje);
 		if (tareaDelMetamensaje != null) {
+			LOG.debug("Tarea elegida para el metamensaje[{}]: {}", mensaje, tareaDelMetamensaje.getClass()
+					.getSimpleName());
 			contexto.getProcesador().process(tareaDelMetamensaje);
 		} else {
-			LOG.warn("Se recibió un metamensaje sin interpretación: " + mensaje);
+			LOG.warn("Se recibió un metamensaje sin interpretación conocida: " + mensaje);
 		}
 	}
 
@@ -117,8 +119,9 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 			return quitarTags;
 		}
 		if (metamensaje instanceof ReemplazarTags) {
-			final QuitarTags quitadoTags = (QuitarTags) metamensaje;
-			final RecibirQuitarTagsWorkunit quitarTags = RecibirQuitarTagsWorkunit.create(contexto, quitadoTags);
+			final ReemplazarTags quitadoTags = (ReemplazarTags) metamensaje;
+			final RecibirReemplazarTagsWorkUnit quitarTags = RecibirReemplazarTagsWorkUnit
+					.create(contexto, quitadoTags);
 			return quitarTags;
 		}
 		if (metamensaje instanceof LimpiarTags) {

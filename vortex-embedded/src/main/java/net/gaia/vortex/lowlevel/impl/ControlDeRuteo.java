@@ -165,11 +165,14 @@ public class ControlDeRuteo {
 		return debemosIndicarQueExistenMas;
 	}
 
-	public void registrarConsumoRealizado(final IdentificadorDeEnvio idEnvio) {
+	public void registrarConsumoRealizado(final IdentificadorDeEnvio idEnvio, final AcuseConsumo acuse) {
 		final ReceptorVortex receptor = idEnvio.getReceptorDestino();
 		this.getRuteosRealizados().add(receptor);
 		this.getRuteosExitosos().add(receptor);
-		this.acumuladoCantidadConsumidos.incrementAndGet();
+		this.acumuladoCantidadConsumidos.addAndGet(acuse.getCantidadConsumidos());
+		this.acumuladoCantidadDuplicados.addAndGet(acuse.getCantidadDuplicados());
+		this.acumuladoCantidadFallas.addAndGet(acuse.getCantidadFallados());
+		this.acumuladoCantidadInteresados.addAndGet(acuse.getCantidadInteresados());
 	}
 
 	public void registrarMensajeDuplicados(final IdentificadorDeEnvio idEnvio) {

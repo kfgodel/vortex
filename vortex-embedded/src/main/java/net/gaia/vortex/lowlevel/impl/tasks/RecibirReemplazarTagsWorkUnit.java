@@ -21,12 +21,16 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
 import net.gaia.vortex.protocol.messages.meta.ReemplazarTags;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación que realiza el nodo al recibir el mensaje de reemplazo de tags
  * 
  * @author D. García
  */
 public class RecibirReemplazarTagsWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(RecibirReemplazarTagsWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 	private ReemplazarTags mensaje;
@@ -36,11 +40,14 @@ public class RecibirReemplazarTagsWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Recibiendo reemplazo de tags en el mensaje[{}]", contexto.getMensaje());
 		// Reemplazamos los tags de los declarados por el receptor
 		final List<String> nuevosTags = mensaje.getTags();
 		final ReceptorVortex receptorAModificar = contexto.getEmisor();
 		final TagSummarizer summarizer = contexto.getTagSummarizer();
-		summarizer.reemplazarTagsPara(receptorAModificar, new HashSet<String>(nuevosTags));
+		final HashSet<String> tagsReemplazados = new HashSet<String>(nuevosTags);
+		summarizer.reemplazarTagsPara(receptorAModificar, tagsReemplazados);
+		LOG.debug("Tags[{}] reemplazados para el receptor[{}]", tagsReemplazados, receptorAModificar);
 
 		// Si hay cambios de tags globales, se disparará notificaciones a los receptores vecinos
 	}

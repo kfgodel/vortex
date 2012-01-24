@@ -17,6 +17,9 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa la operación realizada por el nodo al recibir un pedido de cierre de la
  * conexión
@@ -24,6 +27,7 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
  * @author D. García
  */
 public class RecibirCerrarConexionWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(RecibirCerrarConexionWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 
@@ -38,6 +42,8 @@ public class RecibirCerrarConexionWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
+		LOG.debug("Recibiendo cierre de conexión en el mensaje[{}]", contexto.getMensaje());
+
 		final ReceptorVortex emisor = contexto.getEmisor();
 		final NodoVortexConTasks nodo = contexto.getNodo();
 

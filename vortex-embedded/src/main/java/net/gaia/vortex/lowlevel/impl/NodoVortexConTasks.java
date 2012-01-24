@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
@@ -30,6 +32,9 @@ import net.gaia.vortex.lowlevel.impl.tasks.ValidacionDeMensajeWorkUnit;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Objects;
 
 /**
@@ -38,6 +43,7 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 public class NodoVortexConTasks implements NodoVortexEmbebido {
+	private static final Logger LOG = LoggerFactory.getLogger(NodoVortexConTasks.class);
 
 	private RegistroDeReceptores registroReceptores;
 
@@ -58,6 +64,14 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	 */
 	private NullReceptorVortex sinEmisorIdentificado;
 
+	/**
+	 * Nombre opcional para identificar la instancia
+	 */
+	private String nombre;
+	public static final String nombre_FIELD = "nombre";
+
+	private static final AtomicInteger nameSequencer = new AtomicInteger(0);
+
 	public MemoriaDeMensajes getMemoriaDeMensajes() {
 		return memoriaDeMensajes;
 	}
@@ -76,7 +90,7 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 
 	@HasDependencyOn({ Decision.TODAVIA_NO_IMPLEMENTE_EL_GENERADOR_DE_MENSAJES,
 			Decision.TODAVIA_NO_IMPLEMENTE_LA_MEMORIA_DE_MENSAJES })
-	public static NodoVortexConTasks create(final TaskProcessor processor) {
+	public static NodoVortexConTasks create(final TaskProcessor processor, final String nombreOpcional) {
 		final NodoVortexConTasks nodo = new NodoVortexConTasks();
 		nodo.registroReceptores = SummarizerDeReceptores.create(new TagChangeListener() {
 			@Override
@@ -93,7 +107,24 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 		nodo.memoriaDeRuteos = MemoriaDeRuteosImpl.create();
 		nodo.configuracion = ConfiguracionDeNodo.create();
 		nodo.sinEmisorIdentificado = NullReceptorVortex.create();
+		nodo.nombre = getValidNameFrom(nombreOpcional);
 		return nodo;
+	}
+
+	/**
+	 * Devuelve un nombre nuevo si el pasado es nulo. Se asigna un número secuencial para cada
+	 * instancia
+	 * 
+	 * @param nombreOpcional
+	 *            El nombre del nodo
+	 * @return Un identificador válido o el pasado
+	 */
+	private static String getValidNameFrom(final String nombreOpcional) {
+		if (nombreOpcional != null) {
+			return nombreOpcional;
+		}
+		final int availableSecuence = nameSequencer.getAndIncrement();
+		return String.valueOf(availableSecuence);
 	}
 
 	/**
@@ -101,6 +132,8 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	 */
 	@Override
 	public void rutear(final MensajeVortex mensajeVortex) {
+		LOG.debug("Mensaje[{}] recibido en nodo[{}] para rutear", mensajeVortex, this);
+
 		// Creamos el contexto para el ruteo del mensaje sin emisor
 		final ContextoDeRuteoDeMensaje nuevoRuteo = ContextoDeRuteoDeMensaje.create(mensajeVortex,
 				sinEmisorIdentificado, this);
@@ -152,6 +185,6 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).toString();
+		return Objects.toStringHelper(this).add(nombre_FIELD, nombre).toString();
 	}
 }
