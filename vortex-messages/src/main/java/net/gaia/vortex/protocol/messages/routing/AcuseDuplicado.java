@@ -14,6 +14,8 @@ package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa el metamensaje de notificación por mensaje duplicado recibido
  * 
@@ -21,6 +23,7 @@ import net.gaia.vortex.protocol.messages.IdVortex;
  */
 public class AcuseDuplicado implements Acuse {
 	private IdVortex idMensajeDuplicado;
+	public static final String idMensajeDuplicado_FIELD = "idMensajeDuplicado";
 
 	public IdVortex getIdMensajeDuplicado() {
 		return idMensajeDuplicado;
@@ -41,5 +44,13 @@ public class AcuseDuplicado implements Acuse {
 	public static AcuseDuplicado create() {
 		final AcuseDuplicado acuse = new AcuseDuplicado();
 		return acuse;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(idMensajeDuplicado_FIELD, idMensajeDuplicado).toString();
 	}
 }

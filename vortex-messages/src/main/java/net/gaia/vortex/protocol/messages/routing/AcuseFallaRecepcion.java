@@ -14,6 +14,8 @@ package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa la notificación de un error en la recepción y ruteo de un mensaje
  * 
@@ -21,12 +23,16 @@ import net.gaia.vortex.protocol.messages.IdVortex;
  */
 public class AcuseFallaRecepcion implements Acuse {
 	private IdVortex idMensajeFallado;
+	public static final String idMensajeFallado_FIELD = "idMensajeFallado";
 	private String codigoError;
+	public static final String codigoError_FIELD = "codigoError";
 
 	/**
 	 * Descripción humana opcional
 	 */
 	private String descripcionError;
+	public static final String descripcionError_FIELD = "descripcionError";
+
 	public static final String BAD_HASH_ERROR = "mensaje.identificacion.hashDelContenido.isnull";
 
 	public IdVortex getIdMensajeFallado() {
@@ -65,5 +71,14 @@ public class AcuseFallaRecepcion implements Acuse {
 		final AcuseFallaRecepcion acuse = new AcuseFallaRecepcion();
 		acuse.codigoError = codigoDeError;
 		return acuse;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(idMensajeFallado_FIELD, idMensajeFallado)
+				.add(codigoError_FIELD, codigoError).add(descripcionError_FIELD, descripcionError).toString();
 	}
 }

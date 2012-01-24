@@ -105,10 +105,6 @@ public class IdVortex {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this) //
-				.add(numeroDeSecuencia_FIELD, numeroDeSecuencia)//
-				.add(idDelEmisor_FIELD, idDelEmisor)//
-				.add(hashDelContenido_FIELD, hashDelContenido)//
-				.add(timestamp_FIELD, timestamp)//
-				.toString();
+				.add("id", timestamp + " " + idDelEmisor + " " + numeroDeSecuencia + " " + hashDelContenido).toString();
 	}
 }

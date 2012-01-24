@@ -14,6 +14,8 @@ package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa el metamensaje de notificación de consumo realizado de un mensaje por parte
  * de un ruteador
@@ -22,23 +24,30 @@ import net.gaia.vortex.protocol.messages.IdVortex;
  */
 public class AcuseConsumo implements Acuse {
 	private IdVortex idMensajeConsumido;
+	public static final String idMensajeConsumido_FIELD = "idMensajeConsumido";
+
 	private Integer valorConsumo;
+	public static final String valorConsumo_FIELD = "valorConsumo";
 	/**
 	 * Cantidad de clientes del nodo (otros nodos) interesados en el mensaje
 	 */
 	private Long cantidadInteresados;
+	public static final String cantidadInteresados_FIELD = "cantidadInteresados";
 	/**
 	 * Cantidad de ruteos que indicaron duplicado
 	 */
 	private Long cantidadDuplicados;
+	public static final String cantidadDuplicados_FIELD = "cantidadDuplicados";
 	/**
 	 * Cantidad de ruteos que tuvieron fallas
 	 */
 	private Long cantidadFallados;
+	public static final String cantidadFallados_FIELD = "cantidadFallados";
 	/**
 	 * Cantidad de clientes que indicaron consumo del mensaje
 	 */
 	private Long cantidadConsumidos;
+	public static final String cantidadConsumidos_FIELD = "cantidadConsumidos";
 
 	public IdVortex getIdMensajeConsumido() {
 		return idMensajeConsumido;
@@ -86,6 +95,11 @@ public class AcuseConsumo implements Acuse {
 
 	public void setCantidadConsumidos(final Long cantidadConsumidos) {
 		this.cantidadConsumidos = cantidadConsumidos;
+		if (cantidadConsumidos != null && cantidadConsumidos.longValue() > 0) {
+			valorConsumo = 1;
+		} else {
+			valorConsumo = 0;
+		}
 	}
 
 	/**
@@ -104,5 +118,16 @@ public class AcuseConsumo implements Acuse {
 		acuse.cantidadFallados = 0L;
 		acuse.cantidadConsumidos = 0L;
 		return acuse;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(idMensajeConsumido_FIELD, idMensajeConsumido)
+				.add(cantidadInteresados_FIELD, cantidadInteresados).add(cantidadConsumidos_FIELD, cantidadConsumidos)
+				.add(cantidadFallados_FIELD, cantidadFallados).add(cantidadDuplicados_FIELD, cantidadDuplicados)
+				.toString();
 	}
 }

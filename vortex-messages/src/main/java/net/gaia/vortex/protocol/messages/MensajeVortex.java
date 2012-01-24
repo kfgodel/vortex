@@ -65,9 +65,7 @@ public class MensajeVortex {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this) //
-				.add(tagsDestino_FIELD, tagsDestino)//
 				.add(identificacion_FIELD, identificacion)//
-				.add(contenido_FIELD, contenido)//
 				.toString();
 	}
 
