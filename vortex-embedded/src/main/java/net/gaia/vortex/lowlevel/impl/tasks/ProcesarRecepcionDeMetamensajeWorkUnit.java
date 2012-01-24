@@ -58,6 +58,9 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 		final Object metamensaje = contenido.getValor();
 		if (!(metamensaje instanceof MetamensajeVortex)) {
 			LOG.error("Se recibió como metamensaje uno que no es: " + metamensaje + ". Abortando procesamiento");
+			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
+					contexto.getEmisor(), contexto.getNodo());
+			contexto.getProcesador().process(terminarProceso);
 			return;
 		}
 		final WorkUnit tareaDelMetamensaje = crearTareaDesdeMetamensaje(metamensaje);
@@ -67,6 +70,9 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 			contexto.getProcesador().process(tareaDelMetamensaje);
 		} else {
 			LOG.warn("Se recibió un metamensaje sin interpretación conocida: " + mensaje);
+			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
+					contexto.getEmisor(), contexto.getNodo());
+			contexto.getProcesador().process(terminarProceso);
 		}
 	}
 

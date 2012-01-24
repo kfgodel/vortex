@@ -35,6 +35,16 @@ public class DevolverAcuseConsumoWorkUnit implements WorkUnit {
 	private static final Logger LOG = LoggerFactory.getLogger(DevolverAcuseConsumoWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
+	private final Runnable terminarProcesoActual = new Runnable() {
+		@Override
+		public void run() {
+			// Seguimos con el próximo mensaje recibido del receptor
+			final ReceptorVortex emisor = contexto.getEmisor();
+			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(emisor,
+					contexto.getNodo());
+			contexto.getProcesador().process(terminarProceso);
+		}
+	};
 
 	public static DevolverAcuseConsumoWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
 		final DevolverAcuseConsumoWorkUnit devolucion = new DevolverAcuseConsumoWorkUnit();
@@ -58,7 +68,8 @@ public class DevolverAcuseConsumoWorkUnit implements WorkUnit {
 		}
 		final ControlDeRuteo controlDeRuteo = this.contexto.getControl();
 		final AcuseConsumo confirmacionConsumo = controlDeRuteo.crearAcuseDeConsumo();
-		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, confirmacionConsumo);
+		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, confirmacionConsumo,
+				terminarProcesoActual);
 		contexto.getProcesador().process(envio);
 
 		// Desregistramos el ruteo como en progreso

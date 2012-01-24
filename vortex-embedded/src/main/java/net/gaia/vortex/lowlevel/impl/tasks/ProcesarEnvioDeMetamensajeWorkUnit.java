@@ -33,6 +33,7 @@ public class ProcesarEnvioDeMetamensajeWorkUnit implements WorkUnit {
 	private MetamensajeVortex metamensaje;
 	private ReceptorVortex receptor;
 	private NodoVortexConTasks nodo;
+	private Runnable whenDone;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
@@ -48,14 +49,19 @@ public class ProcesarEnvioDeMetamensajeWorkUnit implements WorkUnit {
 		// Lo entregamos al receptor
 		final EntregarMensajeWorkUnit entregarMensaje = EntregarMensajeWorkUnit.create(receptor, mensaje);
 		nodo.getProcesador().process(entregarMensaje);
+
+		if (whenDone != null) {
+			whenDone.run();
+		}
 	}
 
 	public static ProcesarEnvioDeMetamensajeWorkUnit create(final NodoVortexConTasks nodo,
-			final ReceptorVortex destino, final MetamensajeVortex contenido) {
+			final ReceptorVortex destino, final MetamensajeVortex contenido, final Runnable whenDone) {
 		final ProcesarEnvioDeMetamensajeWorkUnit entrega = new ProcesarEnvioDeMetamensajeWorkUnit();
 		entrega.metamensaje = contenido;
 		entrega.receptor = destino;
 		entrega.nodo = nodo;
+		entrega.whenDone = whenDone;
 		return entrega;
 	}
 }

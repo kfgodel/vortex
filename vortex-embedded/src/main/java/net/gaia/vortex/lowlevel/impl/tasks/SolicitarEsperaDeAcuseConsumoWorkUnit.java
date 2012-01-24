@@ -33,6 +33,16 @@ public class SolicitarEsperaDeAcuseConsumoWorkUnit implements WorkUnit {
 
 	private IdVortex idMensajeSolicitado;
 	private ContextoDeRuteoDeMensaje contexto;
+	private final Runnable terminarProcesoActual = new Runnable() {
+		@Override
+		public void run() {
+			// Seguimos con el próximo mensaje recibido del receptor
+			final ReceptorVortex emisor = contexto.getEmisor();
+			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(emisor,
+					contexto.getNodo());
+			contexto.getProcesador().process(terminarProceso);
+		}
+	};
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
@@ -45,7 +55,7 @@ public class SolicitarEsperaDeAcuseConsumoWorkUnit implements WorkUnit {
 		final ReceptorVortex emisor = contexto.getEmisor();
 		final NodoVortexConTasks nodo = contexto.getNodo();
 		final ProcesarEnvioDeMetamensajeWorkUnit envioMetamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,
-				emisor, solicitudDeEspera);
+				emisor, solicitudDeEspera, terminarProcesoActual);
 		contexto.getProcesador().process(envioMetamensaje);
 	}
 

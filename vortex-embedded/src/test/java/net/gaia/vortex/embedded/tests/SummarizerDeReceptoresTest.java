@@ -76,6 +76,21 @@ public class SummarizerDeReceptoresTest {
 		public void quitarTagsNotificados(final Set<String> tagsQuitados) {
 
 		}
+
+		@Override
+		public void encolarMensaje(final MensajeVortex mensajeEnviado) {
+
+		}
+
+		@Override
+		public MensajeVortex tomarProximoActualSiNoHayOtro() {
+			return null;
+		}
+
+		@Override
+		public void terminarMensajeActual() {
+
+		}
 	}
 
 	@Before

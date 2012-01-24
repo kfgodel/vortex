@@ -49,6 +49,11 @@ public class RecibirReemplazarTagsWorkUnit implements WorkUnit {
 		summarizer.reemplazarTagsPara(receptorAModificar, tagsReemplazados);
 		LOG.debug("Tags[{}] reemplazados para el receptor[{}]", tagsReemplazados, receptorAModificar);
 
+		// Terminamos la recepción del mensaje
+		final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
+				receptorAModificar, contexto.getNodo());
+		contexto.getProcesador().process(terminarProceso);
+
 		// Si hay cambios de tags globales, se disparará notificaciones a los receptores vecinos
 	}
 

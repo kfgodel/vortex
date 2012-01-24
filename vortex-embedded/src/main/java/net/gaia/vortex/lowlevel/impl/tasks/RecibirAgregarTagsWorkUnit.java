@@ -50,7 +50,13 @@ public class RecibirAgregarTagsWorkUnit implements WorkUnit {
 		summarizer.agregarTagsPara(receptorAModificar, tagsAgregados);
 		LOG.debug("Tags{} agregados al receptor[{}]", tagsAgregados, receptorAModificar);
 
+		// Terminamos la recepción del mensaje
+		final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
+				receptorAModificar, contexto.getNodo());
+		contexto.getProcesador().process(terminarProceso);
+
 		// Si hay cambios de tags globales, se disparará notificaciones a los receptores vecinos
+
 	}
 
 	public static RecibirAgregarTagsWorkUnit create(final ContextoDeRuteoDeMensaje contexto, final AgregarTags mensaje) {

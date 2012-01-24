@@ -17,6 +17,7 @@ import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
+import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
 import net.gaia.vortex.protocol.messages.IdVortex;
@@ -55,6 +56,9 @@ public class RecibirAcuseFallaRecepcionWorkUnit implements WorkUnit {
 		if (contextoDeEnvio == null) {
 			// Si no tenemos el contexto lo más probable es que el acuse que recibimos sea inválido
 			LOG.warn("Recibimos un acuse de duplicado para un envio que no tenemos registro: {}. Ignorando", acuse);
+			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
+					receptorDelMensaje, contexto.getNodo());
+			contexto.getProcesador().process(terminarProceso);
 			return;
 		}
 
@@ -62,6 +66,12 @@ public class RecibirAcuseFallaRecepcionWorkUnit implements WorkUnit {
 		final RegistrarMensajeFallidoWorkUnit registrarDuplicado = RegistrarMensajeFallidoWorkUnit
 				.create(contextoDeEnvio);
 		contexto.getProcesador().process(registrarDuplicado);
+
+		// Terminamos el procesamiento del mensaje actual para pasar al siguiente
+		final NodoVortexConTasks nodo = contexto.getNodo();
+		final TerminarProcesoDeMensajeWorkUnit terminarProcesoDeMensaje = TerminarProcesoDeMensajeWorkUnit.create(
+				contexto.getEmisor(), nodo);
+		nodo.getProcesador().process(terminarProcesoDeMensaje);
 	}
 
 	public static RecibirAcuseFallaRecepcionWorkUnit create(final ContextoDeRuteoDeMensaje contexto,

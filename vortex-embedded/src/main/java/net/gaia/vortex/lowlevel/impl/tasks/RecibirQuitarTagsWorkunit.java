@@ -49,6 +49,11 @@ public class RecibirQuitarTagsWorkunit implements WorkUnit {
 		summarizer.quitarTagsPara(receptorAModificar, tagsQuitados);
 		LOG.debug("Tags{} quitados al receptor[{}]", tagsQuitados, receptorAModificar);
 
+		// Terminamos la recepción del mensaje
+		final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
+				receptorAModificar, contexto.getNodo());
+		contexto.getProcesador().process(terminarProceso);
+
 		// Si hay cambios de tags globales, se disparará notificaciones a los receptores vecinos
 	}
 

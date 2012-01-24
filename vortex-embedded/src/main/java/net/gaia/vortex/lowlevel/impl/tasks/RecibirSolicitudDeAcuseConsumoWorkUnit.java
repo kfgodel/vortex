@@ -57,6 +57,9 @@ public class RecibirSolicitudDeAcuseConsumoWorkUnit implements WorkUnit {
 			LOG.info(
 					"Solicitaron un acuse para el ID de mensaje[{}] del que no tenemos envio. Asumiendo que ya lo enviamos",
 					idMensajeSolicitado);
+			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
+					receptorDelEnvio, contexto.getNodo());
+			contexto.getProcesador().process(terminarProceso);
 			return;
 		}
 

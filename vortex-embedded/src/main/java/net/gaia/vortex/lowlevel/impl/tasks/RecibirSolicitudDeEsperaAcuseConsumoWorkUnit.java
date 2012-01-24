@@ -59,6 +59,9 @@ public class RecibirSolicitudDeEsperaAcuseConsumoWorkUnit implements WorkUnit {
 		if (contextoDeEnvio == null) {
 			// O recibimos el acuse, o se acabo el tiempo, por lo que la espera no tiene sentido
 			LOG.debug("Recibimos una solicitud de espera para un envio que ya está cerrado: " + idEnvioRealizado);
+			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(receptor,
+					contexto.getNodo());
+			contexto.getProcesador().process(terminarProceso);
 			return;
 		}
 
@@ -72,6 +75,10 @@ public class RecibirSolicitudDeEsperaAcuseConsumoWorkUnit implements WorkUnit {
 		// Registramos que recibimos una solicitud de espera
 		final ControlDeConsumoDeEnvio controlDeConsumo = contextoDeEnvio.getControlDeConsumo();
 		controlDeConsumo.registrarRecepcionDeSolicitudDeEspera();
+
+		final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(receptor,
+				contexto.getNodo());
+		contexto.getProcesador().process(terminarProceso);
 	}
 
 	public static RecibirSolicitudDeEsperaAcuseConsumoWorkUnit create(final ContextoDeRuteoDeMensaje contexto,

@@ -42,6 +42,11 @@ public class RecibirLimpiarTagsWorkUnit implements WorkUnit {
 		summarizer.limpiarTagsPara(receptorAModificar);
 		LOG.debug("Tags limpiados para el receptor[{}]", receptorAModificar);
 
+		// Terminamos la recepción del mensaje
+		final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
+				receptorAModificar, contexto.getNodo());
+		contexto.getProcesador().process(terminarProceso);
+
 		// Si hay cambios de tags globales, se disparará notificaciones a los receptores vecinos
 	}
 

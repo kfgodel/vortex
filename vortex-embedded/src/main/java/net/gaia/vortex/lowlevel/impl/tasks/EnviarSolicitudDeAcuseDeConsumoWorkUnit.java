@@ -57,7 +57,7 @@ public class EnviarSolicitudDeAcuseDeConsumoWorkUnit implements WorkUnit {
 		final ReceptorVortex destino = idDeEnvio.getReceptorDestino();
 		final NodoVortexConTasks nodo = contextoRuteo.getNodo();
 		final ProcesarEnvioDeMetamensajeWorkUnit envioMetamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,
-				destino, solicitudAEnviar);
+				destino, solicitudAEnviar, null);
 		contextoRuteo.getProcesador().process(envioMetamensaje);
 
 		LOG.debug("Registrando solicitud de consumo enviada para mensaje[{}]", contexto.getMensaje());

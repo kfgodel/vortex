@@ -14,6 +14,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
+import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 
@@ -47,6 +48,11 @@ public class RegistrarMensajePerdidoWorkUnit implements WorkUnit {
 		// Verificamos si quedan más rutas o hay que terminar el ruteo
 		final VerificarRutasPendientesWorkUnit verificarRutas = VerificarRutasPendientesWorkUnit.create(contexto);
 		contexto.getProcesador().process(verificarRutas);
+
+		final ContextoDeRuteoDeMensaje contextoDeRuteo = contexto.getContextoDeRuteo();
+		final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
+				contextoDeRuteo.getEmisor(), contextoDeRuteo.getNodo());
+		contexto.getProcesador().process(terminarProceso);
 	}
 
 	public static RegistrarMensajePerdidoWorkUnit create(final ContextoDeEnvio contexto) {

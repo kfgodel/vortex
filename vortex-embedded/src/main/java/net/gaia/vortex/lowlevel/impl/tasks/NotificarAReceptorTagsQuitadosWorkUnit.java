@@ -44,7 +44,7 @@ public class NotificarAReceptorTagsQuitadosWorkUnit implements WorkUnit {
 		// Mandamos el mensaje por los nuevos tags
 		final QuitarTags quitarTags = QuitarTags.create(tagsQuitados);
 		final ProcesarEnvioDeMetamensajeWorkUnit envioDeMensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,
-				receptor, quitarTags);
+				receptor, quitarTags, null);
 		nodo.getProcesador().process(envioDeMensaje);
 
 		// Registramos que le avisamos

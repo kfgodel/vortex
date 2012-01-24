@@ -19,6 +19,7 @@ import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortexConSesion;
 import net.gaia.vortex.lowlevel.impl.tasks.ProcesarCierreDeConexionWorkUnit;
+import net.gaia.vortex.lowlevel.impl.tasks.ProcesarProximoMensajeDelReceptorWorkUnit;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -50,11 +51,12 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 			LOG.error("Se intentó enviar un mensaje[{}] por una sesión cerrada[{}]", mensajeEnviado, this);
 			return;
 		}
-		LOG.debug("Mensaje[{}] de receptor[{}] recibido para rutear", mensajeEnviado, receptorEmisor);
-		// Creamos el contexto para el ruteo del mensaje del emisor
-		final ContextoDeRuteoDeMensaje nuevoRuteo = ContextoDeRuteoDeMensaje.create(mensajeEnviado, receptorEmisor,
-				this.nodo);
-		nodo.comenzarRuteo(nuevoRuteo);
+		LOG.debug("Encolando mensaje[{}] recibido del receptor[{}]", mensajeEnviado, receptorEmisor);
+		receptorEmisor.encolarMensaje(mensajeEnviado);
+
+		final ProcesarProximoMensajeDelReceptorWorkUnit procesoProximoMensaje = ProcesarProximoMensajeDelReceptorWorkUnit
+				.create(receptorEmisor, nodo);
+		nodo.getProcesador().process(procesoProximoMensaje);
 	}
 
 	public static SesionVortexImpl create(final MensajeVortexHandler handlerDeMensajes,

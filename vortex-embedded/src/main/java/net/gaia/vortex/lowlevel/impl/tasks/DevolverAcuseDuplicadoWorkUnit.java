@@ -31,6 +31,17 @@ public class DevolverAcuseDuplicadoWorkUnit implements WorkUnit {
 
 	private ContextoDeRuteoDeMensaje contexto;
 
+	private final Runnable terminarProcesoActual = new Runnable() {
+		@Override
+		public void run() {
+			// Seguimos con el próximo mensaje recibido del receptor
+			final ReceptorVortex emisor = contexto.getEmisor();
+			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(emisor,
+					contexto.getNodo());
+			contexto.getProcesador().process(terminarProceso);
+		}
+	};
+
 	public static DevolverAcuseDuplicadoWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
 		final DevolverAcuseDuplicadoWorkUnit devolucion = new DevolverAcuseDuplicadoWorkUnit();
 		devolucion.contexto = contexto;
@@ -50,8 +61,9 @@ public class DevolverAcuseDuplicadoWorkUnit implements WorkUnit {
 		}
 		LOG.debug("Armando acuse de duplicado para el mensaje[{}]", contexto.getMensaje());
 		final AcuseDuplicado acuseDeFalla = AcuseDuplicado.create();
-		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, acuseDeFalla);
+		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, acuseDeFalla, terminarProcesoActual);
 		contexto.getProcesador().process(envio);
+
 	}
 
 }

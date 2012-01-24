@@ -34,6 +34,16 @@ public class DevolverAcuseFallaRecepcionWorkUnit implements WorkUnit {
 
 	private ContextoDeRuteoDeMensaje contexto;
 	private String errorRegistrado;
+	private final Runnable terminarProcesoActual = new Runnable() {
+		@Override
+		public void run() {
+			// Seguimos con el próximo mensaje recibido del receptor
+			final ReceptorVortex emisor = contexto.getEmisor();
+			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(emisor,
+					contexto.getNodo());
+			contexto.getProcesador().process(terminarProceso);
+		}
+	};
 
 	/**
 	 * Crea una tarea de devolución de mensaje de confirmación con el cual el emisor puede obtener
@@ -69,7 +79,7 @@ public class DevolverAcuseFallaRecepcionWorkUnit implements WorkUnit {
 
 		LOG.debug("Armando acuse de falla[{}] para mensaje[{}]", errorRegistrado, contexto.getMensaje());
 		final AcuseFallaRecepcion acuseDeFalla = AcuseFallaRecepcion.create(errorRegistrado);
-		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, acuseDeFalla);
+		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, acuseDeFalla, terminarProcesoActual);
 		contexto.getProcesador().process(envio);
 	}
 }

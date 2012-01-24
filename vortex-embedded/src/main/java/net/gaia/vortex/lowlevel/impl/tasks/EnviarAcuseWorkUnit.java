@@ -37,11 +37,14 @@ public class EnviarAcuseWorkUnit implements WorkUnit {
 	private ContextoDeRuteoDeMensaje contexto;
 
 	private Acuse acuse;
+	private Runnable whenDone;
 
-	public static EnviarAcuseWorkUnit create(final ContextoDeRuteoDeMensaje contexto, final Acuse acuse) {
+	public static EnviarAcuseWorkUnit create(final ContextoDeRuteoDeMensaje contexto, final Acuse acuse,
+			final Runnable whenDone) {
 		final EnviarAcuseWorkUnit envio = new EnviarAcuseWorkUnit();
 		envio.contexto = contexto;
 		envio.acuse = acuse;
+		envio.whenDone = whenDone;
 		return envio;
 	}
 
@@ -62,7 +65,7 @@ public class EnviarAcuseWorkUnit implements WorkUnit {
 		final ReceptorVortex emisor = contexto.getEmisor();
 		final NodoVortexConTasks nodo = contexto.getNodo();
 		final ProcesarEnvioDeMetamensajeWorkUnit envioMentamensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,
-				emisor, acuse);
+				emisor, acuse, whenDone);
 		contexto.getProcesador().process(envioMentamensaje);
 	}
 

@@ -44,7 +44,7 @@ public class NotificarAReceptorTagsAgregadosWorkUnit implements WorkUnit {
 		// Mandamos el mensaje por los nuevos tags
 		final AgregarTags agregarTags = AgregarTags.create(tagsAgregados);
 		final ProcesarEnvioDeMetamensajeWorkUnit envioDeMensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,
-				receptor, agregarTags);
+				receptor, agregarTags, null);
 		nodo.getProcesador().process(envioDeMensaje);
 
 		// Registramos que le avisamos
