@@ -57,7 +57,7 @@ public class EnviarAcuseWorkUnit implements WorkUnit {
 
 		final IdVortex identificacion = mensaje.getIdentificacion();
 		this.acuse.setIdMensajeInvolucrado(identificacion);
-		LOG.debug("Acuse[{}] completado con ID para el mensaje[{}]", mensaje);
+		LOG.debug("Acuse[{}] completado con ID para el mensaje[{}]", acuse, mensaje);
 
 		final ReceptorVortex emisor = contexto.getEmisor();
 		final NodoVortexConTasks nodo = contexto.getNodo();

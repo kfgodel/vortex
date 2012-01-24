@@ -14,6 +14,7 @@ package net.gaia.vortex.lowlevel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
@@ -31,6 +32,8 @@ import com.google.common.collect.Lists;
  * @author D. García
  */
 public class EscenarioDeTest {
+
+	private final AtomicLong secuencer = new AtomicLong(0);
 
 	/**
 	 * Crea un mensaje dummy para testear
@@ -51,7 +54,7 @@ public class EscenarioDeTest {
 	 * Crea un ID para tests
 	 */
 	private IdVortex createId() {
-		return IdVortex.create("1", "1", 1L, 1L);
+		return IdVortex.create("1", "1", -1L, 1L);
 	}
 
 	/**
@@ -91,7 +94,8 @@ public class EscenarioDeTest {
 	}
 
 	/**
-	 * Crea el mensaje para el metamensaje indicado
+	 * Crea el mensaje para el metamensaje indicado. El mensaje generado utiliza identificaciones
+	 * distintas para cada mensaje
 	 * 
 	 * @param metamensaje
 	 *            El metamensaje a envolver en un mensaje vortex
@@ -102,6 +106,7 @@ public class EscenarioDeTest {
 		final IdVortex identificacion = createId();
 		final List<String> tagsDelMensaje = Lists.newArrayList(MensajeVortex.TAG_INTERCAMBIO_VECINO);
 		final MensajeVortex mensajeVortex = MensajeVortex.create(contenido, identificacion, tagsDelMensaje);
+		mensajeVortex.getIdentificacion().setNumeroDeSecuencia(secuencer.getAndIncrement());
 		return mensajeVortex;
 	}
 

@@ -143,8 +143,6 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest();
 		sesion.enviar(mensajeEnviado);
 
-		encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-
 		// Esperamos la confirmación de consumo
 		final MensajeVortex mensajeRecibido = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
