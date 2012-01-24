@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
+import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
@@ -27,6 +28,7 @@ import net.gaia.vortex.lowlevel.api.EncoladorDeMensajesHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
+import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.AgregarTags;
@@ -216,6 +218,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 	 * Declaramos tags en el primero y el segundo sólo por conectarse debería recibirlos
 	 */
 	@Test
+	@HasDependencyOn(Decision.EL_NODO_PROCESA_LOS_MENSAJES_DE_UN_RECEPTOR_EN_EL_ORDEN_QUE_LOS_RECIBE)
 	public void deberiaDarAConocerLosTagsExistentesAlNuevoCliente() {
 		// Almacena los mensajes recibidos para el observador
 		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();
@@ -275,6 +278,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 	}
 
 	@Test
+	@HasDependencyOn(Decision.EL_NODO_PROCESA_LOS_MENSAJES_DE_UN_RECEPTOR_EN_EL_ORDEN_QUE_LOS_RECIBE)
 	public void deberiaPermitirRecibirUnMensajeEnviadoSinClienteAOtroConTagPreDeclarado() {
 		// Almacena los mensajes recibidos
 		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
@@ -284,12 +288,6 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 
 		// Declaramos los tags que recibimos
 		sesionDelReceptor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1", "Tag2"));
-
-		// Enviamos un mensaje para asegurarnos que la publicacion de tags y se proceso
-		sesionDelReceptor.enviar(escenarios.crearMensajeDeTest());
-		// Debería llegar el acuse y en ese caso ya estamos seguro que se procesó su publicación de
-		// tags
-		encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(500, TimeUnit.MILLISECONDS));
 
 		// Enviamos el mensaje sin un cliente
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest("Tag1");
@@ -307,6 +305,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 	 * Enviamos el mensaje y verificamos que lo reciba uno, y no el emisor
 	 */
 	@Test
+	@HasDependencyOn(Decision.EL_NODO_PROCESA_LOS_MENSAJES_DE_UN_RECEPTOR_EN_EL_ORDEN_QUE_LOS_RECIBE)
 	public void deberiaPermitirRecibirUnMensajeEnviadoDesdeUnClienteAOtroConTagPreDeclarado() {
 		// Almacena los mensajes recibidos
 		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();

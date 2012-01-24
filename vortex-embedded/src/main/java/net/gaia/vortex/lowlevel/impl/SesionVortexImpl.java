@@ -50,7 +50,7 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 			LOG.error("Se intentó enviar un mensaje[{}] por una sesión cerrada[{}]", mensajeEnviado, this);
 			return;
 		}
-
+		LOG.debug("Mensaje[{}] de receptor[{}] recibido para rutear", mensajeEnviado, receptorEmisor);
 		// Creamos el contexto para el ruteo del mensaje del emisor
 		final ContextoDeRuteoDeMensaje nuevoRuteo = ContextoDeRuteoDeMensaje.create(mensajeEnviado, receptorEmisor,
 				this.nodo);

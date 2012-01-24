@@ -132,7 +132,7 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	 */
 	@Override
 	public void rutear(final MensajeVortex mensajeVortex) {
-		LOG.debug("Mensaje[{}] recibido en nodo[{}] para rutear", mensajeVortex, this);
+		LOG.debug("Mensaje[{}] sin receptor recibido en nodo[{}] para rutear", mensajeVortex, this);
 
 		// Creamos el contexto para el ruteo del mensaje sin emisor
 		final ContextoDeRuteoDeMensaje nuevoRuteo = ContextoDeRuteoDeMensaje.create(mensajeVortex,
@@ -146,7 +146,10 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	 * @param nuevoRuteo
 	 *            El contexto del ruteo a realizar
 	 */
+	@HasDependencyOn(Decision.EL_NODO_PROCESA_LOS_MENSAJES_DE_UN_RECEPTOR_EN_EL_ORDEN_QUE_LOS_RECIBE)
 	protected void comenzarRuteo(final ContextoDeRuteoDeMensaje nuevoRuteo) {
+		// Tenemos que meter el mensaje en la cola del receptor para procesarlos en orden
+
 		// Comenzamos con el paso de validación
 		final ValidacionDeMensajeWorkUnit validacion = ValidacionDeMensajeWorkUnit.create(nuevoRuteo);
 		getProcesador().process(validacion);

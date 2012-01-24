@@ -35,4 +35,5 @@ public class Decision {
 	public static final String TODAVIA_NO_IMPLEMENTE_EL_AJUSTE_DE_PESOS = "No hay cambios en la elección de los receptores para el ruteo basado en los acuses";
 	public static final String AL_QUITAR_TAG_SE_ELIMINA_SU_ENTRADA_DEL_MAPA = "Si no hay más interesados en un tag, se elimina del nodo";
 	public static final String TODAVIA_NO_IMPLEMENTE_LA_LIMPIEZA_DE_TAREAS = "Las tareas para receptores cerrados se siguen ejecutando";
+	public static final String EL_NODO_PROCESA_LOS_MENSAJES_DE_UN_RECEPTOR_EN_EL_ORDEN_QUE_LOS_RECIBE = "Un cliente puede confiar que un mensaje enviado posteriormente actuará con la base del enviado anteriormente";
 }
