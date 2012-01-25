@@ -216,4 +216,13 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 				.add("Pendientes", this.inmediatePendingTasks.size()).add("Postergadas", this.delayedTasks.size())
 				.toString();
 	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.TaskProcessor#detener()
+	 */
+	@Override
+	public void detener() {
+		this.delayedExecutor.shutdownNow();
+		this.inmediateExecutor.shutdownNow();
+	}
 }

@@ -99,4 +99,10 @@ public interface TaskProcessor {
 	 * Las tareas que se estén ejecutando no podrán ser eliminadas
 	 */
 	void removeTasksMatching(TaskCriteria criteria);
+
+	/**
+	 * Detiene la ejecución de tareas en este procesador.<br>
+	 * El procesador no es utilizable a partir de este método
+	 */
+	void detener();
 }
