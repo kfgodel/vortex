@@ -14,6 +14,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
+import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesDelReceptor;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
@@ -37,11 +38,12 @@ public class ProcesarProximoMensajeDelReceptorWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
-		LOG.debug("Procesando proximo mensaje en cola para receptor[{}]", receptor);
+		LOG.debug("Tomando proximo mensaje disponible del receptor[{}]", receptor);
 		// Verificamos si podemos seguir procesando o ya hay otro mensaje en proceso
-		final MensajeVortex proximoMensaje = receptor.tomarProximoActualSiNoHayOtro();
+		final ColaDeMensajesDelReceptor colaDeMensajes = receptor.getColaDeMensajes();
+		final MensajeVortex proximoMensaje = colaDeMensajes.tomarProximoMensaje();
 		if (proximoMensaje == null) {
-			LOG.debug("Sin mensajes pendientes para el receptor[{}]. Descansando", receptor);
+			LOG.debug("No quedan mensajes recibidos pendientes para el receptor[{}]. Descansando", receptor);
 			return;
 		}
 

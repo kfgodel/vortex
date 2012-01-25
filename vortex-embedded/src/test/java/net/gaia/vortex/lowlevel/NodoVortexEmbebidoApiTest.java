@@ -37,6 +37,7 @@ import net.gaia.vortex.protocol.messages.routing.AcuseDuplicado;
 import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 import net.gaia.vortex.tests.VortexTest;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,6 +60,11 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 				.create());
 		nodoVortex = NodoVortexConTasks.create(procesador, null);
 		escenarios = new EscenarioDeTest();
+	}
+
+	@After
+	public void limpiarTest() {
+		nodoVortex.detenerYDevolverRecursos();
 	}
 
 	@Test
@@ -289,8 +295,14 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		// Declaramos los tags que recibimos
 		sesionDelReceptor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1", "Tag2"));
 
+		// Enviamos un mensaje para asegurarnos que la publicación de tags y se proceso
+		sesionDelReceptor.enviar(escenarios.crearMensajeDeTest());
+		// Debería llegar el acuse y en ese caso ya estamos seguro que se procesó su publicación de
+		// tags porque se procesan en orden de llegada
+		encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(500, TimeUnit.MILLISECONDS));
+
 		// Enviamos el mensaje sin un cliente
-		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest("Tag1");
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTestConIDNuevo("Tag1");
 		nodoVortex.rutear(mensajeEnviado);
 
 		// Esperamos recibirlo desde el cliente
@@ -328,7 +340,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Enviamos el mensaje desde el emisor
-		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest("Tag1");
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTestConIDNuevo("Tag1");
 		sesionDelEmisor.enviar(mensajeEnviado);
 
 		// Verificamos que le llegó al receptor

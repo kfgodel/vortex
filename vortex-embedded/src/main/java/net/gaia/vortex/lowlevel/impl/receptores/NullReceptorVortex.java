@@ -67,27 +67,27 @@ public class NullReceptorVortex implements ReceptorVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#encolarMensaje(net.gaia.vortex.protocol.messages.MensajeVortex)
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#getColaDeMensajes()
 	 */
 	@Override
-	public void encolarMensaje(final MensajeVortex mensajeEnviado) {
-		LOG.error("Se intento encolar un mensaje en el receptor nulo");
-	}
+	public ColaDeMensajesDelReceptor getColaDeMensajes() {
+		return new ColaDeMensajesDelReceptor() {
+			@Override
+			public boolean agregarPendiente(final MensajeVortex mensajeEnviado) {
+				LOG.error("Se intentó enclar un mensaje en el receptor nulo[{}]", mensajeEnviado);
+				return true;
+			}
 
-	/**
-	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#tomarProximoActualSiNoHayOtro()
-	 */
-	@Override
-	public MensajeVortex tomarProximoActualSiNoHayOtro() {
-		// Nunca hay siguiente
-		return null;
-	}
+			@Override
+			public MensajeVortex tomarProximoMensaje() {
+				// Nunca hay próximo mensaje porque no se encolan
+				return null;
+			}
 
-	/**
-	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#terminarMensajeActual()
-	 */
-	@Override
-	public void terminarMensajeActual() {
-		// No hay mensaje actual para el receptor nulo
+			@Override
+			public MensajeVortex terminarMensajeActual() {
+				return null;
+			}
+		};
 	}
 }

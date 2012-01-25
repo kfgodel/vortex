@@ -54,26 +54,11 @@ public interface ReceptorVortex {
 	public abstract void quitarTagsNotificados(Set<String> tagsQuitados);
 
 	/**
-	 * Encola el mensaje indicado como pendiente de ser procesado en este receptor.<br>
-	 * De esta manera se sigue un orden en el procesamiento de los mensajes
+	 * Devuelve la cola de mensajes del receptor, donde se acumulan los mensajes mientras se procesa
+	 * el actual
 	 * 
-	 * @param mensajeEnviado
-	 *            El mensaje a encolar
+	 * @return La cola de mensajes del receptor
 	 */
-	public abstract void encolarMensaje(MensajeVortex mensajeEnviado);
-
-	/**
-	 * Toma el siguiente mensaje vortex existente en cola, sólo si ya no hay un mensaje actual.<br>
-	 * Si no hay un mensaje actual toma el próximo y lo pone como actual hasta terminar su
-	 * procesamiento
-	 * 
-	 * @return El próximo mensaje o null
-	 */
-	public abstract MensajeVortex tomarProximoActualSiNoHayOtro();
-
-	/**
-	 * Elimina el mensaje tomado como actual de este receptor liberando el espacio para el siguiente
-	 */
-	public void terminarMensajeActual();
+	public ColaDeMensajesDelReceptor getColaDeMensajes();
 
 }

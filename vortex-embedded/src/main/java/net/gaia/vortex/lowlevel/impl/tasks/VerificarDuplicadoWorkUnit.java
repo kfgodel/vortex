@@ -43,12 +43,12 @@ public class VerificarDuplicadoWorkUnit implements WorkUnit {
 		final MemoriaDeMensajes memoria = contexto.getMemoriaDeMensajes();
 		final boolean esDuplicado = memoria.registrarSiNoRecuerdaA(mensaje);
 		if (esDuplicado) {
-			LOG.info("Mensaje[{}] duplicado detectado", mensaje);
+			LOG.info("Duplicado detectado en Mensaje[{}]", mensaje);
 			final DevolverAcuseDuplicadoWorkUnit devolucion = DevolverAcuseDuplicadoWorkUnit.create(contexto);
 			this.contexto.getProcesador().process(devolucion);
 			return;
 		}
-		LOG.debug("Mensaje[{}] no-duplicado detectado", mensaje);
+		LOG.debug("Verificación superada para Mensaje[{}]: no duplicado", mensaje);
 		// Puede que sea duplicado pero ya no lo recordamos ;) lo tratamos como nuevo
 		final ProcesarRecepcionDeMensajeWorkUnit recibirMensaje = ProcesarRecepcionDeMensajeWorkUnit.create(contexto);
 		final TaskProcessor procesador = this.contexto.getProcesador();

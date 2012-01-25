@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesDelReceptor;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortexConSesion;
 import net.gaia.vortex.lowlevel.impl.tasks.ProcesarCierreDeConexionWorkUnit;
@@ -51,9 +52,14 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 			LOG.error("Se intentó enviar un mensaje[{}] por una sesión cerrada[{}]", mensajeEnviado, this);
 			return;
 		}
-		LOG.debug("Encolando mensaje[{}] recibido del receptor[{}]", mensajeEnviado, receptorEmisor);
-		receptorEmisor.encolarMensaje(mensajeEnviado);
-
+		LOG.debug("Mensaje[{}] recibido desde receptor[{}] en nodo[{}]", new Object[] { mensajeEnviado, receptorEmisor,
+				nodo });
+		final ColaDeMensajesDelReceptor colaDeMensajes = receptorEmisor.getColaDeMensajes();
+		final boolean esElProximo = colaDeMensajes.agregarPendiente(mensajeEnviado);
+		if (!esElProximo) {
+			LOG.debug("Mensaje[{}] encolado hasta procesar previos", mensajeEnviado, receptorEmisor);
+			return;
+		}
 		final ProcesarProximoMensajeDelReceptorWorkUnit procesoProximoMensaje = ProcesarProximoMensajeDelReceptorWorkUnit
 				.create(receptorEmisor, nodo);
 		nodo.getProcesador().process(procesoProximoMensaje);

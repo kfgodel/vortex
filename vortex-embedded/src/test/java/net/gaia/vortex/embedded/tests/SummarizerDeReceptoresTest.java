@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.Assert;
+import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesDelReceptor;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.NotificacionDeCambioDeTags;
 import net.gaia.vortex.lowlevel.impl.tags.ReporteCambioDeTags;
@@ -78,18 +79,8 @@ public class SummarizerDeReceptoresTest {
 		}
 
 		@Override
-		public void encolarMensaje(final MensajeVortex mensajeEnviado) {
-
-		}
-
-		@Override
-		public MensajeVortex tomarProximoActualSiNoHayOtro() {
+		public ColaDeMensajesDelReceptor getColaDeMensajes() {
 			return null;
-		}
-
-		@Override
-		public void terminarMensajeActual() {
-
 		}
 	}
 

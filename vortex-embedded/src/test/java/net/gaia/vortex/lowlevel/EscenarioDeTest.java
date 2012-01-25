@@ -130,4 +130,16 @@ public class EscenarioDeTest {
 		return crearMetamensaje(cierreConexion);
 	}
 
+	/**
+	 * Crea un mensaje de test asegurando que el ID sea válido
+	 * 
+	 * @param tagsDelMensaje
+	 * @return
+	 */
+	public MensajeVortex crearMensajeDeTestConIDNuevo(final String tagsDelMensaje) {
+		final MensajeVortex mensaje = crearMensajeDeTest(tagsDelMensaje);
+		mensaje.getIdentificacion().setNumeroDeSecuencia(secuencer.getAndIncrement());
+		return mensaje;
+	}
+
 }

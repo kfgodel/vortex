@@ -49,7 +49,7 @@ public class RutearMensajeWorkUnit implements WorkUnit {
 	public void doWork() throws InterruptedException {
 		// Creamos la estructura de control para realizar el ruteo
 		final MensajeVortex mensaje = this.contexto.getMensaje();
-		LOG.debug("Comenzando ruteo para mensaje[{}]", mensaje);
+		LOG.debug("Comenzando ruteo interno para mensaje[{}]", mensaje);
 		final IdVortex idMensaje = mensaje.getIdentificacion();
 		final ControlDeRuteo controlDeRuteo = ControlDeRuteo.create(idMensaje);
 		this.contexto.setControl(controlDeRuteo);
@@ -63,7 +63,7 @@ public class RutearMensajeWorkUnit implements WorkUnit {
 		// Tenemos que ver si es un metamensaje
 		final ContenidoVortex contenido = mensaje.getContenido();
 		if (contenido.isMetaMensaje()) {
-			LOG.debug("Mensaje[{}] detectado como metamensaje", mensaje);
+			LOG.debug("MetaMensaje detectado en Mensaje[{}]", mensaje);
 			// Si es meta, es para procesarlo internamente, no para enviarlo a otros nodos
 			final ProcesarRecepcionDeMetamensajeWorkUnit procesoDeMetaMensaje = ProcesarRecepcionDeMetamensajeWorkUnit
 					.create(contexto);

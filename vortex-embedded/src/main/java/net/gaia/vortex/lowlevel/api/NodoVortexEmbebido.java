@@ -43,4 +43,9 @@ public interface NodoVortexEmbebido {
 	 */
 	SesionVortex crearNuevaSesion(MensajeVortexHandler handlerDeMensajes);
 
+	/**
+	 * Detiene la ejecución de este nodo y devuelve los recursos asociados
+	 */
+	void detenerYDevolverRecursos();
+
 }

@@ -14,7 +14,12 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
+import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesDelReceptor;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase representa la operación realizada por el nodo para terminar el proceso de tratamiento
@@ -23,6 +28,7 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
  * @author D. García
  */
 public class TerminarProcesoDeMensajeWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(TerminarProcesoDeMensajeWorkUnit.class);
 
 	private ReceptorVortex receptor;
 	private NodoVortexConTasks nodo;
@@ -33,7 +39,9 @@ public class TerminarProcesoDeMensajeWorkUnit implements WorkUnit {
 	@Override
 	public void doWork() throws InterruptedException {
 		// Limpiamos el mensaje actual
-		receptor.terminarMensajeActual();
+		final ColaDeMensajesDelReceptor colaDeMensajes = receptor.getColaDeMensajes();
+		final MensajeVortex mensajeProcesado = colaDeMensajes.terminarMensajeActual();
+		LOG.debug("Mensaje[{}] procesado completamente", mensajeProcesado);
 
 		// Seguimos con el próximo si hay
 		final ProcesarProximoMensajeDelReceptorWorkUnit procesarSiguiente = ProcesarProximoMensajeDelReceptorWorkUnit

@@ -133,7 +133,7 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	 */
 	@Override
 	public void rutear(final MensajeVortex mensajeVortex) {
-		LOG.debug("Mensaje[{}] sin receptor recibido en nodo[{}] para rutear", mensajeVortex, this);
+		LOG.debug("Mensaje[{}] recibido sin receptor en nodo[{}]", mensajeVortex, this);
 
 		final ComenzarProcesoDeMensajeWorkUnit comienzoDeProceso = ComenzarProcesoDeMensajeWorkUnit.create(
 				mensajeVortex, sinEmisorIdentificado, this);
@@ -186,5 +186,22 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).add(nombre_FIELD, nombre).toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.api.NodoVortexEmbebido#detenerYDevolverRecursos()
+	 */
+	@Override
+	public void detenerYDevolverRecursos() {
+		procesador.detener();
+	}
+
+	/**
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		detenerYDevolverRecursos();
+		super.finalize();
 	}
 }

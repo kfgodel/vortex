@@ -43,14 +43,14 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 	private long internalId;
 	public static final String internalId_FIELD = "internalId";
 
-	private MensajesDeReceptor cola;
+	private ColaDeMensajesDelReceptor cola;
 
 	public static ReceptorVortexConSesion create(final MensajeVortexHandler handlerDeMensajes) {
 		final ReceptorVortexConSesion receptor = new ReceptorVortexConSesion();
 		receptor.handler = handlerDeMensajes;
 		receptor.tagsNotificados = new ConcurrentHashSet<String>();
 		receptor.internalId = idSequencer.getAndIncrement();
-		receptor.cola = MensajesDeReceptor.create();
+		receptor.cola = ColaDeMensajesDelReceptor.create();
 		return receptor;
 	}
 
@@ -100,26 +100,10 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#encolarMensaje(net.gaia.vortex.protocol.messages.MensajeVortex)
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#getColaDeMensajes()
 	 */
 	@Override
-	public void encolarMensaje(final MensajeVortex mensajeEnviado) {
-		cola.encolarMensaje(mensajeEnviado);
-	}
-
-	/**
-	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#tomarProximoActualSiNoHayOtro()
-	 */
-	@Override
-	public MensajeVortex tomarProximoActualSiNoHayOtro() {
-		return cola.tomarProximoActualSiNoHayOtro();
-	}
-
-	/**
-	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#terminarMensajeActual()
-	 */
-	@Override
-	public void terminarMensajeActual() {
-		cola.terminarMensajeActual();
+	public ColaDeMensajesDelReceptor getColaDeMensajes() {
+		return cola;
 	}
 }
