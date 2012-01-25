@@ -27,14 +27,14 @@ import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
  */
 public class ColaDeMensajesDelReceptor {
 
-	private AtomicReference<MensajeVortex> proximoMensaje;
+	private AtomicReference<MensajeVortex> mensajeActual;
 	private ConcurrentLinkedQueue<MensajeVortex> mensajesPendientes;
 	private ReentrantLock modificationLock;
 
 	public static ColaDeMensajesDelReceptor create() {
 		final ColaDeMensajesDelReceptor mensajes = new ColaDeMensajesDelReceptor();
 		mensajes.mensajesPendientes = new ConcurrentLinkedQueue<MensajeVortex>();
-		mensajes.proximoMensaje = new AtomicReference<MensajeVortex>();
+		mensajes.mensajeActual = new AtomicReference<MensajeVortex>();
 		mensajes.modificationLock = new ReentrantLock();
 		return mensajes;
 	}
@@ -64,7 +64,7 @@ public class ColaDeMensajesDelReceptor {
 			@Override
 			public Boolean call() throws Exception {
 				// Intentamos setearlo como el primero actual, sólo si no hay otro
-				final boolean esElPrimero = proximoMensaje.compareAndSet(null, mensajeEnviado);
+				final boolean esElPrimero = mensajeActual.compareAndSet(null, mensajeEnviado);
 				if (!esElPrimero) {
 					// Si no es el primero va a la cola
 					mensajesPendientes.offer(mensajeEnviado);
@@ -79,14 +79,14 @@ public class ColaDeMensajesDelReceptor {
 	 * Quita el mensaje registrado como actual de esta cola para dar lugar al siguiente
 	 */
 	public MensajeVortex terminarMensajeActual() {
-		final MensajeVortex mensajeActual = doModification(new Callable<MensajeVortex>() {
+		final MensajeVortex mensajeTerminado = doModification(new Callable<MensajeVortex>() {
 			@Override
 			public MensajeVortex call() throws Exception {
-				final MensajeVortex previo = proximoMensaje.getAndSet(null);
-				return previo;
+				final MensajeVortex terminado = mensajeActual.getAndSet(null);
+				return terminado;
 			}
 		});
-		return mensajeActual;
+		return mensajeTerminado;
 	}
 
 	/**
@@ -98,14 +98,14 @@ public class ColaDeMensajesDelReceptor {
 		final MensajeVortex proximo = doModification(new Callable<MensajeVortex>() {
 			@Override
 			public MensajeVortex call() throws Exception {
-				final MensajeVortex proximo = proximoMensaje.get();
+				final MensajeVortex proximo = mensajeActual.get();
 				if (proximo != null) {
-					// Si hay uno usamos ese como próximo
-					return proximo;
+					// Si hay uno, alguien lo está procesando, no hay próximo para nosotros
+					return null;
 				}
 				// Si no, tomamos el siguiente como próximo
 				final MensajeVortex siguiente = mensajesPendientes.poll();
-				proximoMensaje.set(siguiente);
+				mensajeActual.set(siguiente);
 				return siguiente;
 			}
 		});

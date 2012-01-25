@@ -158,7 +158,8 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	@Override
 	public SesionVortex crearNuevaSesion(final MensajeVortexHandler handlerDeMensajes) {
 		final SesionVortexImpl sesion = SesionVortexImpl.create(handlerDeMensajes, this);
-		final ReceptorVortexConSesion nuevoReceptor = ReceptorVortexConSesion.create(handlerDeMensajes);
+		final ReceptorVortexConSesion nuevoReceptor = sesion.getReceptorEmisor();
+		LOG.debug("Creando nueva sesión para el receptor[{}] en el nodo[{}]", nuevoReceptor, this);
 		registroReceptores.agregar(nuevoReceptor);
 		return sesion;
 	}

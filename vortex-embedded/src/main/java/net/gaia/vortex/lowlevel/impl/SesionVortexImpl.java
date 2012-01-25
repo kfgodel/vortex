@@ -17,10 +17,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesDelReceptor;
-import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortexConSesion;
+import net.gaia.vortex.lowlevel.impl.tasks.ComenzarProcesoDeMensajeWorkUnit;
 import net.gaia.vortex.lowlevel.impl.tasks.ProcesarCierreDeConexionWorkUnit;
-import net.gaia.vortex.lowlevel.impl.tasks.ProcesarProximoMensajeDelReceptorWorkUnit;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -38,7 +37,7 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 	/**
 	 * Receptor de los mensajes de esta sesión
 	 */
-	private ReceptorVortex receptorEmisor;
+	private ReceptorVortexConSesion receptorEmisor;
 	private NodoVortexConTasks nodo;
 	private AtomicBoolean cerrada;
 	private MensajeVortexHandler handlerDelReceptor;
@@ -60,9 +59,11 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 			LOG.debug("Mensaje[{}] encolado hasta procesar previos", mensajeEnviado, receptorEmisor);
 			return;
 		}
-		final ProcesarProximoMensajeDelReceptorWorkUnit procesoProximoMensaje = ProcesarProximoMensajeDelReceptorWorkUnit
-				.create(receptorEmisor, nodo);
-		nodo.getProcesador().process(procesoProximoMensaje);
+
+		// Comenzamos con el procesamiento
+		final ComenzarProcesoDeMensajeWorkUnit comienzoDeProceso = ComenzarProcesoDeMensajeWorkUnit.create(
+				mensajeEnviado, receptorEmisor, nodo);
+		nodo.getProcesador().process(comienzoDeProceso);
 	}
 
 	public static SesionVortexImpl create(final MensajeVortexHandler handlerDeMensajes,
@@ -109,5 +110,9 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 			return;
 		}
 		handlerDelReceptor.onMensajeRecibido(nuevoMensaje);
+	}
+
+	public ReceptorVortexConSesion getReceptorEmisor() {
+		return receptorEmisor;
 	}
 }

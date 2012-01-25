@@ -326,18 +326,37 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		// Declaramos los tags que recibimos
 		sesionDelReceptor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1", "Tag2"));
 
+		// Enviamos un mensaje para asegurarnos que la publicación de tags se proceso antes de
+		// seguir
+		sesionDelReceptor.enviar(escenarios.crearMensajeDeTestConIDNuevo("MensajeParaNadie"));
+		// Debería llegar el acuse y en ese caso ya estamos seguro que se procesó su publicación de
+		// tags porque se procesan en orden de llegada
+		encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(500, TimeUnit.MILLISECONDS));
+
+		// -- Parte 2
+
 		// Creamos la segunda sesión
 		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
 		// Creamos la sesión para enviar mensajes
 		final SesionVortex sesionDelEmisor = nodoVortex.crearNuevaSesion(encoladorDelEmisor);
+
+		// Quitamos la notificación de los tags del primero que recibimos al crear la sesión
+		encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
 		// Declaramos los tags que vamos a enviar
 		sesionDelEmisor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1"));
 
-		// Esperamos y limpiamos los mensajes del nodo por los tags declarados
-		// Al primero debería informarle el tag1
+		// Limpiamos la notificación que le llega al receptor por los tags del segundo
 		encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		// Al segundo el tag1 y tag2
-		encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Enviamos un mensaje para asegurarnos que la publicación de tags se proceso antes de
+		// seguir
+		sesionDelEmisor.enviar(escenarios.crearMensajeDeTestConIDNuevo("MensajeParaNadie2"));
+		// Debería llegar el acuse y en ese caso ya estamos seguro que se procesó su publicación de
+		// tags porque se procesan en orden de llegada
+		encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(500, TimeUnit.MILLISECONDS));
+
+		// -- Parte 3
 
 		// Enviamos el mensaje desde el emisor
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTestConIDNuevo("Tag1");

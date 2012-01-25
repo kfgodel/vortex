@@ -65,8 +65,8 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 		}
 		final WorkUnit tareaDelMetamensaje = crearTareaDesdeMetamensaje(metamensaje);
 		if (tareaDelMetamensaje != null) {
-			LOG.debug("Tarea elegida para el metamensaje[{}]: {}", mensaje, tareaDelMetamensaje.getClass()
-					.getSimpleName());
+			LOG.debug("Tarea[{}] elegida para el metamensaje[{}]: {}", tareaDelMetamensaje.getClass().getSimpleName(),
+					mensaje);
 			contexto.getProcesador().process(tareaDelMetamensaje);
 		} else {
 			LOG.warn("Se recibió un metamensaje sin interpretación conocida: " + mensaje);
