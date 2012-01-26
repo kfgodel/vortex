@@ -31,6 +31,7 @@ import net.gaia.vortex.lowlevel.impl.tasks.ComenzarProcesoDeMensajeWorkUnit;
 import net.gaia.vortex.lowlevel.impl.tasks.NotificarCambiosDeTagsEnNodoWorkUnit;
 import net.gaia.vortex.lowlevel.impl.tasks.ValidacionDeMensajeWorkUnit;
 import net.gaia.vortex.meta.Decision;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -134,6 +135,8 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	@Override
 	public void rutear(final MensajeVortex mensajeVortex) {
 		LOG.debug("Mensaje[{}] recibido sin receptor en nodo[{}]", mensajeVortex, this);
+		Loggers.RUTEO.info("RECIBIDO mensaje[{}] sin receptor en nodo[{}]. Contenido: [{}]", new Object[] {
+				mensajeVortex, this, mensajeVortex.getPrettyPrint() });
 
 		final ComenzarProcesoDeMensajeWorkUnit comienzoDeProceso = ComenzarProcesoDeMensajeWorkUnit.create(
 				mensajeVortex, sinEmisorIdentificado, this);

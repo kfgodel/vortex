@@ -23,6 +23,7 @@ import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.SolicitudEsperaAcuseConsumo;
 
@@ -59,6 +60,8 @@ public class RecibirSolicitudDeEsperaAcuseConsumoWorkUnit implements WorkUnit {
 		if (contextoDeEnvio == null) {
 			// O recibimos el acuse, o se acabo el tiempo, por lo que la espera no tiene sentido
 			LOG.debug("Recibimos una solicitud de espera para un envio que ya está cerrado: " + idEnvioRealizado);
+			Loggers.RUTEO.info("SOLICITUD ESPERA para envio[{}] no tiene contexto registrado. Ignorando. FIN",
+					idEnvioRealizado);
 			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(receptor,
 					contexto.getNodo());
 			contexto.getProcesador().process(terminarProceso);
@@ -71,6 +74,8 @@ public class RecibirSolicitudDeEsperaAcuseConsumoWorkUnit implements WorkUnit {
 		final TimeMagnitude prorroga = config.getTimeoutDeAcuseDeConsumo();
 		esperaDeAcuse.iniciarEsperaDe(prorroga);
 		LOG.debug("Extendiendo espera[{}] para el envio[{}]", prorroga, idEnvioRealizado);
+		Loggers.RUTEO.info("SOLICITUD ESPERA confirmada para envio[{}]. Extendiendo espera [{}]. FIN",
+				idEnvioRealizado, prorroga);
 
 		// Registramos que recibimos una solicitud de espera
 		final ControlDeConsumoDeEnvio controlDeConsumo = contextoDeEnvio.getControlDeConsumo();

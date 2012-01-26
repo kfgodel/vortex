@@ -19,6 +19,7 @@ import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeRuteos;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.SolicitudAcuseConsumo;
 
@@ -57,12 +58,15 @@ public class RecibirSolicitudDeAcuseConsumoWorkUnit implements WorkUnit {
 			LOG.info(
 					"Solicitaron un acuse para el ID de mensaje[{}] del que no tenemos envio. Asumiendo que ya lo enviamos",
 					idMensajeSolicitado);
+			Loggers.RUTEO
+					.info("SOLICITUD ACUSE para envio[{}] no tiene ruteo activo. Ignorando. FIN", idEnvioRealizado);
 			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
 					receptorDelEnvio, contexto.getNodo());
 			contexto.getProcesador().process(terminarProceso);
 			return;
 		}
 
+		Loggers.RUTEO.info("SOLICITUD ACUSE confirmada para envio[{}]", idEnvioRealizado);
 		// Todavía estamos armando el acuse, solicitamos más tiempo
 		final SolicitarEsperaDeAcuseConsumoWorkUnit solicitarEspera = SolicitarEsperaDeAcuseConsumoWorkUnit.create(
 				contexto, idMensajeSolicitado);

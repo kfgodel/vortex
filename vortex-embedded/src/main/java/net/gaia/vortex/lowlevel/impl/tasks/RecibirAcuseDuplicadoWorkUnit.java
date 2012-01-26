@@ -20,6 +20,7 @@ import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.AcuseDuplicado;
 
@@ -56,6 +57,7 @@ public class RecibirAcuseDuplicadoWorkUnit implements WorkUnit {
 		if (contextoDeEnvio == null) {
 			// Si no tenemos el contexto lo más probable es que el acuse que recibimos sea inválido
 			LOG.warn("Recibimos un acuse de duplicado para un envio que no tenemos registro: {}. Ignorando", acuse);
+			Loggers.RUTEO.info("ACUSE DUPLICADO para envio[{}] no registra contexto. Ignorando. FIN", idDeEnvio);
 			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
 					receptorDelMensaje, contexto.getNodo());
 			contexto.getProcesador().process(terminarProceso);

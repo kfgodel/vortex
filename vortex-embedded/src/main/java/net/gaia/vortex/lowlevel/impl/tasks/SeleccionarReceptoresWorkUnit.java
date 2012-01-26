@@ -20,6 +20,7 @@ import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -55,6 +56,8 @@ public class SeleccionarReceptoresWorkUnit implements WorkUnit {
 		final List<String> tagsDelMensaje = mensaje.getTagsDestino();
 		final ReceptorVortex emisor = contexto.getEmisor();
 		final SeleccionDeReceptores seleccion = registro.getReceptoresInteresadosMenosA(emisor, tagsDelMensaje);
+		Loggers.RUTEO.debug("INTERESADOS en mensaje[{}]: {} {}", new Object[] { mensaje,
+				seleccion.getSeleccionados().size(), seleccion.getSeleccionados() });
 
 		// Creamos la estructura de control para realizar el ruteo
 		final ControlDeRuteo controlDeRuteo = this.contexto.getControl();

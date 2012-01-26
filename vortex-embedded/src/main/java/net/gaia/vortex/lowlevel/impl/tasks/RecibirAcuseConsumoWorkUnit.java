@@ -20,6 +20,7 @@ import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
 
@@ -63,6 +64,8 @@ public class RecibirAcuseConsumoWorkUnit implements WorkUnit {
 			// Ya lo quitaron. O recibimos un acuse previo, o ya lo dimos por perdido
 			LOG.debug("Llegó un acuse de consumo[{}] para el que no existe contexto previo en el mensaje[{}]", acuse,
 					contexto.getMensaje());
+			Loggers.RUTEO.info("ACUSE CONSUMO para envio[{}] no tiene contexto registrado. Ignorando. FIN",
+					identificadorDeEnvio);
 			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(receptor,
 					contexto.getNodo());
 			contexto.getProcesador().process(terminarProceso);

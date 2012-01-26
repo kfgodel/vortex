@@ -16,6 +16,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
+import net.gaia.vortex.meta.Loggers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +44,11 @@ public class VerificarRutasPendientesWorkUnit implements WorkUnit {
 		if (controlDeRuteo.existenMensajesEnRuta()) {
 			LOG.debug("Existen más ruteos pendientes para el mensaje[{}]", contexto.getMensaje());
 			// Quedan más rutas para confirmar, esperamos
+			Loggers.RUTEO.debug("RUTEOS PENDIENTES para mensaje[{}]. Esperando otros. FIN", contexto.getMensaje());
 			return;
 		}
 		LOG.debug("Todos los ruteos resueltos. Devolviendo acuse de consumo para el mensaje[{}]", contexto.getMensaje());
+		Loggers.RUTEO.debug("RUTEOS TERMINADOS para mensaje[{}]", contexto.getMensaje());
 		// Tenemos que seguir con el ruteo, enviar una confirmación de consumo
 		final ContextoDeRuteoDeMensaje contextoDeRuteo = contexto.getContextoDeRuteo();
 		final TerminarRuteoWorkUnit terminarRuteo = TerminarRuteoWorkUnit.create(contextoDeRuteo);

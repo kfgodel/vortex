@@ -19,6 +19,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.meta.ReemplazarTags;
 
 import org.slf4j.Logger;
@@ -48,6 +49,7 @@ public class RecibirReemplazarTagsWorkUnit implements WorkUnit {
 		final HashSet<String> tagsReemplazados = new HashSet<String>(nuevosTags);
 		summarizer.reemplazarTagsPara(receptorAModificar, tagsReemplazados);
 		LOG.debug("Tags[{}] reemplazados para el receptor[{}]", tagsReemplazados, receptorAModificar);
+		Loggers.RUTEO.info("TAGS REEMPLAZADOS al receptor[{}]: {}. FIN", receptorAModificar, tagsReemplazados);
 
 		// Terminamos la recepción del mensaje
 		final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(

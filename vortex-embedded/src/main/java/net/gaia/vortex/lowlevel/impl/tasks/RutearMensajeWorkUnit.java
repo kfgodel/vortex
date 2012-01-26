@@ -61,8 +61,7 @@ public class RutearMensajeWorkUnit implements WorkUnit {
 		memoriaDeRuteos.registrarRuteoActivo(idEnvioRecibido);
 
 		// Tenemos que ver si es un metamensaje
-		final ContenidoVortex contenido = mensaje.getContenido();
-		if (contenido.isMetaMensaje()) {
+		if (mensaje.isMetaMensaje()) {
 			LOG.debug("MetaMensaje detectado en Mensaje[{}]", mensaje);
 			// Si es meta, es para procesarlo internamente, no para enviarlo a otros nodos
 			final ProcesarRecepcionDeMetamensajeWorkUnit procesoDeMetaMensaje = ProcesarRecepcionDeMetamensajeWorkUnit

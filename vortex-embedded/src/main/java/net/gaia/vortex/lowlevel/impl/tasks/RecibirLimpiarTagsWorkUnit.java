@@ -16,6 +16,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
+import net.gaia.vortex.meta.Loggers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,7 @@ public class RecibirLimpiarTagsWorkUnit implements WorkUnit {
 		final TagSummarizer summarizer = contexto.getTagSummarizer();
 		summarizer.limpiarTagsPara(receptorAModificar);
 		LOG.debug("Tags limpiados para el receptor[{}]", receptorAModificar);
+		Loggers.RUTEO.info("TAGS LIMPIADOS al receptor[{}]. FIN", receptorAModificar);
 
 		// Terminamos la recepción del mensaje
 		final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(

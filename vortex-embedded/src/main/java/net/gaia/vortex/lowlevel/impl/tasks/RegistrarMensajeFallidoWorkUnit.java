@@ -16,6 +16,8 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
+import net.gaia.vortex.meta.Loggers;
+import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +32,12 @@ public class RegistrarMensajeFallidoWorkUnit implements WorkUnit {
 
 	private ContextoDeEnvio contexto;
 
-	public static RegistrarMensajeFallidoWorkUnit create(final ContextoDeEnvio contexto) {
+	private AcuseFallaRecepcion acuse;
+
+	public static RegistrarMensajeFallidoWorkUnit create(final ContextoDeEnvio contexto, final AcuseFallaRecepcion acuse) {
 		final RegistrarMensajeFallidoWorkUnit registrar = new RegistrarMensajeFallidoWorkUnit();
 		registrar.contexto = contexto;
+		registrar.acuse = acuse;
 		return registrar;
 	}
 
@@ -44,7 +49,9 @@ public class RegistrarMensajeFallidoWorkUnit implements WorkUnit {
 		// Registramos que el mensaje fue duplicado
 		final ControlDeRuteo controlDeRuteo = contexto.getControlDeRuteo();
 		final IdentificadorDeEnvio idEnvio = contexto.getIdDeEnvio();
+
 		LOG.debug("Registrando envio fallido para el envío[{}]", idEnvio);
+		Loggers.RUTEO.info("ACUSE FALLA confirmado para envio[{}]: [{}]", idEnvio, acuse.getCodigoError());
 		controlDeRuteo.registrarMensajeFallado(idEnvio);
 
 		// Verificamos si quedan más rutas o hay que terminar el ruteo

@@ -20,6 +20,7 @@ import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeRuteos;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
 
@@ -67,9 +68,9 @@ public class DevolverAcuseConsumoWorkUnit implements WorkUnit {
 			return;
 		}
 		final ControlDeRuteo controlDeRuteo = this.contexto.getControl();
-		final AcuseConsumo confirmacionConsumo = controlDeRuteo.crearAcuseDeConsumo();
-		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, confirmacionConsumo,
-				terminarProcesoActual);
+		final AcuseConsumo acuseConsumo = controlDeRuteo.crearAcuseDeConsumo();
+		Loggers.RUTEO.info("ENVIO ACUSE CONSUMO para mensaje[{}]: [{}]. FIN", contexto.getMensaje(), acuseConsumo);
+		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, acuseConsumo, terminarProcesoActual);
 		contexto.getProcesador().process(envio);
 
 		// Desregistramos el ruteo como en progreso

@@ -383,6 +383,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 
 	}
 
+	@Test
 	public void nodeberiaPermitirRecibirUnMensajeEnviadoConTagNoDeclarado() {
 		// Almacena los mensajes recibidos por el primero
 		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();

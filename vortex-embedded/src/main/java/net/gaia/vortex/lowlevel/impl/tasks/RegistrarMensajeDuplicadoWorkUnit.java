@@ -16,6 +16,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
+import net.gaia.vortex.meta.Loggers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,9 @@ public class RegistrarMensajeDuplicadoWorkUnit implements WorkUnit {
 		// Registramos que el mensaje fue duplicado
 		final ControlDeRuteo controlDeRuteo = contexto.getControlDeRuteo();
 		final IdentificadorDeEnvio idEnvio = contexto.getIdDeEnvio();
+
 		LOG.debug("Registrando duplicado para el envio[{}]", idEnvio);
+		Loggers.RUTEO.info("ACUSE DUPLICADO confirmado para envio[{}]", idEnvio);
 		controlDeRuteo.registrarMensajeDuplicados(idEnvio);
 
 		// Verificamos si quedan más rutas o hay que terminar el ruteo

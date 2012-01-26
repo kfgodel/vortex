@@ -20,6 +20,7 @@ import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesDelReceptor;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortexConSesion;
 import net.gaia.vortex.lowlevel.impl.tasks.ComenzarProcesoDeMensajeWorkUnit;
 import net.gaia.vortex.lowlevel.impl.tasks.ProcesarCierreDeConexionWorkUnit;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -53,6 +54,8 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 		}
 		LOG.debug("Mensaje[{}] recibido desde receptor[{}] en nodo[{}]", new Object[] { mensajeEnviado, receptorEmisor,
 				nodo });
+		Loggers.RUTEO.info("RECIBIDO mensaje[{}] desde receptor[{}] en nodo[{}]. Contenido: [{}]", new Object[] {
+				mensajeEnviado, receptorEmisor, nodo, mensajeEnviado.getPrettyPrint() });
 		final ColaDeMensajesDelReceptor colaDeMensajes = receptorEmisor.getColaDeMensajes();
 		final boolean esElProximo = colaDeMensajes.agregarPendiente(mensajeEnviado);
 		if (!esElProximo) {

@@ -15,6 +15,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.routing.AcuseDuplicado;
 
 import org.slf4j.Logger;
@@ -60,6 +61,7 @@ public class DevolverAcuseDuplicadoWorkUnit implements WorkUnit {
 			return;
 		}
 		LOG.debug("Armando acuse de duplicado para el mensaje[{}]", contexto.getMensaje());
+		Loggers.RUTEO.info("DUPLICADO mensaje[{}]", contexto.getMensaje());
 		final AcuseDuplicado acuseDeFalla = AcuseDuplicado.create();
 		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, acuseDeFalla, terminarProcesoActual);
 		contexto.getProcesador().process(envio);

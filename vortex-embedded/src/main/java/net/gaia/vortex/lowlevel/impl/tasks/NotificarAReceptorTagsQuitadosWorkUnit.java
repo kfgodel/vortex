@@ -17,6 +17,7 @@ import java.util.Set;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.meta.QuitarTags;
 
 import org.slf4j.Logger;
@@ -41,6 +42,8 @@ public class NotificarAReceptorTagsQuitadosWorkUnit implements WorkUnit {
 	@Override
 	public void doWork() throws InterruptedException {
 		LOG.debug("Notificando al receptor[{}] tags quitados[{}]", receptor, tagsQuitados);
+		Loggers.RUTEO.info("ENVIO TAGS QUITADOS en nodo[{}] al receptor [{}]: {}", new Object[] { nodo, receptor,
+				tagsQuitados });
 		// Mandamos el mensaje por los nuevos tags
 		final QuitarTags quitarTags = QuitarTags.create(tagsQuitados);
 		final ProcesarEnvioDeMetamensajeWorkUnit envioDeMensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,

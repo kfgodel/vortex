@@ -19,6 +19,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.meta.AgregarTags;
 
 import org.slf4j.Logger;
@@ -49,6 +50,7 @@ public class RecibirAgregarTagsWorkUnit implements WorkUnit {
 		final HashSet<String> tagsAgregados = new HashSet<String>(nuevosTags);
 		summarizer.agregarTagsPara(receptorAModificar, tagsAgregados);
 		LOG.debug("Tags{} agregados al receptor[{}]", tagsAgregados, receptorAModificar);
+		Loggers.RUTEO.info("TAGS AGREGADOS al receptor[{}]: {}. FIN", receptorAModificar, tagsAgregados);
 
 		// Terminamos la recepción del mensaje
 		final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(

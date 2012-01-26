@@ -18,6 +18,7 @@ import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -56,6 +57,7 @@ public class ProcesarEnvioDeMensajeWorkUnit implements WorkUnit {
 		// Enviamos el mensaje a su destinatario
 		final ReceptorVortex destino = contexto.getReceptorInteresado();
 		final MensajeVortex mensaje = contexto.getMensaje();
+		Loggers.RUTEO.info("ENVIO de mensaje[{}] a receptor[{}]", mensaje, destino);
 		final EntregarMensajeWorkUnit entregaMensaje = EntregarMensajeWorkUnit.create(destino, mensaje);
 		contexto.getProcesador().process(entregaMensaje);
 

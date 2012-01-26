@@ -17,6 +17,7 @@ import java.util.Set;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.meta.AgregarTags;
 
 import org.slf4j.Logger;
@@ -41,6 +42,8 @@ public class NotificarAReceptorTagsAgregadosWorkUnit implements WorkUnit {
 	@Override
 	public void doWork() throws InterruptedException {
 		LOG.debug("Notificando a receptor[{}] por tags agregados[{}]", receptor, tagsAgregados);
+		Loggers.RUTEO.info("ENVIO TAGS AGREGADOS en nodo[{}] al receptor [{}]: {}", new Object[] { nodo, receptor,
+				tagsAgregados });
 		// Mandamos el mensaje por los nuevos tags
 		final AgregarTags agregarTags = AgregarTags.create(tagsAgregados);
 		final ProcesarEnvioDeMetamensajeWorkUnit envioDeMensaje = ProcesarEnvioDeMetamensajeWorkUnit.create(nodo,

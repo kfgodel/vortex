@@ -16,6 +16,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
 import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
 
 import org.slf4j.Logger;
@@ -43,6 +44,7 @@ public class RegistrarMensajeConsumidoWorkUnit implements WorkUnit {
 		final IdentificadorDeEnvio idEnvio = contexto.getIdDeEnvio();
 
 		LOG.debug("Registrando consumo[{}] para mensaje[{}]", acuse, contexto.getMensaje());
+		Loggers.RUTEO.info("ACUSE CONSUMO confirmado para envio[{}]: [{}]", idEnvio, acuse);
 		controlDeRuteo.registrarConsumoRealizado(idEnvio, acuse);
 
 		// Verificamos si ya no quedan rutas y tenemos que terminar el ruteo

@@ -19,6 +19,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.meta.QuitarTags;
 
 import org.slf4j.Logger;
@@ -48,6 +49,7 @@ public class RecibirQuitarTagsWorkunit implements WorkUnit {
 		final HashSet<String> tagsQuitados = new HashSet<String>(nuevosTags);
 		summarizer.quitarTagsPara(receptorAModificar, tagsQuitados);
 		LOG.debug("Tags{} quitados al receptor[{}]", tagsQuitados, receptorAModificar);
+		Loggers.RUTEO.info("TAGS QUITADOS al receptor[{}]: {}. FIN", receptorAModificar, tagsQuitados);
 
 		// Terminamos la recepción del mensaje
 		final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(

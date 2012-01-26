@@ -17,6 +17,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ public class DevolverAcuseFallaRecepcionWorkUnit implements WorkUnit {
 
 	private ContextoDeRuteoDeMensaje contexto;
 	private String errorRegistrado;
+
 	private final Runnable terminarProcesoActual = new Runnable() {
 		@Override
 		public void run() {
@@ -78,6 +80,7 @@ public class DevolverAcuseFallaRecepcionWorkUnit implements WorkUnit {
 		}
 
 		LOG.debug("Armando acuse de falla[{}] para mensaje[{}]", errorRegistrado, contexto.getMensaje());
+		Loggers.RUTEO.info("INVALIDO mensaje[{}]. Error: {}", contexto.getMensaje(), errorRegistrado);
 		final AcuseFallaRecepcion acuseDeFalla = AcuseFallaRecepcion.create(errorRegistrado);
 		final EnviarAcuseWorkUnit envio = EnviarAcuseWorkUnit.create(contexto, acuseDeFalla, terminarProcesoActual);
 		contexto.getProcesador().process(envio);

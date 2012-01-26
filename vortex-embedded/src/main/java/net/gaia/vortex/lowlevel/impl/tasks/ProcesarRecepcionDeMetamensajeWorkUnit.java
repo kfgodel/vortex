@@ -14,6 +14,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.AgregarTags;
@@ -58,6 +59,7 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 		final Object metamensaje = contenido.getValor();
 		if (!(metamensaje instanceof MetamensajeVortex)) {
 			LOG.error("Se recibió como metamensaje uno que no es: " + metamensaje + ". Abortando procesamiento");
+			Loggers.RUTEO.error("METAMENSAJE incorrecto[{}], no implementa la interfaz. FIN", mensaje);
 			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
 					contexto.getEmisor(), contexto.getNodo());
 			contexto.getProcesador().process(terminarProceso);
@@ -67,9 +69,12 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 		if (tareaDelMetamensaje != null) {
 			LOG.debug("Tarea[{}] elegida para el metamensaje[{}]: {}", tareaDelMetamensaje.getClass().getSimpleName(),
 					mensaje);
+			Loggers.RUTEO.debug("METAMENSAJE {} en mensaje[{}]. Corresponde tarea: {}", new Object[] {
+					metamensaje.getClass().getSimpleName(), mensaje, tareaDelMetamensaje.getClass().getSimpleName() });
 			contexto.getProcesador().process(tareaDelMetamensaje);
 		} else {
 			LOG.warn("Se recibió un metamensaje sin interpretación conocida: " + mensaje);
+			Loggers.RUTEO.warn("METAMENSAJE DESCONOCIDO[{}] se ignora su semantica. FIN", mensaje);
 			final TerminarProcesoDeMensajeWorkUnit terminarProceso = TerminarProcesoDeMensajeWorkUnit.create(
 					contexto.getEmisor(), contexto.getNodo());
 			contexto.getProcesador().process(terminarProceso);
@@ -108,9 +113,9 @@ public class ProcesarRecepcionDeMetamensajeWorkUnit implements WorkUnit {
 			return recibirSolicitud;
 		}
 		if (metamensaje instanceof AcuseFallaRecepcion) {
-			final AcuseFallaRecepcion acuseDuplicado = (AcuseFallaRecepcion) metamensaje;
+			final AcuseFallaRecepcion acuseFalla = (AcuseFallaRecepcion) metamensaje;
 			final RecibirAcuseFallaRecepcionWorkUnit recibirSolicitud = RecibirAcuseFallaRecepcionWorkUnit.create(
-					contexto, acuseDuplicado);
+					contexto, acuseFalla);
 			return recibirSolicitud;
 		}
 

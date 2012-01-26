@@ -16,6 +16,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.meta.Loggers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,8 @@ public class RecibirCerrarConexionWorkUnit implements WorkUnit {
 
 		final ReceptorVortex emisor = contexto.getEmisor();
 		final NodoVortexConTasks nodo = contexto.getNodo();
+
+		Loggers.RUTEO.info("CERRAR CONEXION confirmada del receptor[{}]. FIN", emisor);
 
 		// Disparamos el cierre efectivo de la conexión
 		final ProcesarCierreDeConexionWorkUnit cierreConexion = ProcesarCierreDeConexionWorkUnit.create(nodo, emisor);
