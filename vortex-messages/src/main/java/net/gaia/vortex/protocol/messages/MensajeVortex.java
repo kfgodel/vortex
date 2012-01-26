@@ -97,4 +97,24 @@ public class MensajeVortex {
 		final MensajeVortex that = (MensajeVortex) obj;
 		return Objects.equal(this.identificacion, that.identificacion);
 	}
+
+	/**
+	 * Indica si este mensaje tiene como contenido un metamensaje
+	 * 
+	 * @return true si el contenido es una instancia de metamensaje
+	 */
+	public boolean isMetaMensaje() {
+		boolean esMetamensaje = this.getTagsDestino().contains(MensajeVortex.TAG_INTERCAMBIO_VECINO);
+		return esMetamensaje;
+	}
+
+	/**
+	 * Devuelve una versión toString de este mensaje con la información completa
+	 * 
+	 * @return El mensaje formateado con todos los datos
+	 */
+	public String getPrettyPrint() {
+		return Objects.toStringHelper(this).add(identificacion_FIELD, identificacion)
+				.add(tagsDestino_FIELD, tagsDestino).add(contenido_FIELD, contenido).toString();
+	}
 }
