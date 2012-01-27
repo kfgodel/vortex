@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.lowlevel.impl;
 
+import java.util.Set;
+
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
@@ -28,12 +30,13 @@ public interface GeneradorMensajesDeNodo {
 	 * 
 	 * @param contenido
 	 *            Contenido a enviar
+	 * @param tipoDelContenido
 	 * @param tags
 	 *            Los tags utilizados sobre el contenido
 	 * @return El mensaje con el contenido y los tags indicados teniendo la identificación
 	 *         consecutiva
 	 */
-	MensajeVortex generarMensajePara(Object contenido, String... tags);
+	MensajeVortex generarMensajePara(Object contenido, String tipoDeContenido, Set<String> tags);
 
 	/**
 	 * Genera un mensaje con el tag de metamensaje para enviar al nodo receptor vecino

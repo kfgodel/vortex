@@ -13,6 +13,7 @@
 package net.gaia.vortex.lowlevel.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import net.gaia.vortex.lowlevel.impl.ids.HashcodeHasher;
 import net.gaia.vortex.lowlevel.impl.ids.IdentificadorDeEmisor;
@@ -27,6 +28,7 @@ import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * Esta clase es la implementación del generador de mensajes de un nodo
@@ -54,9 +56,9 @@ public class GeneradorDeMensajesImpl implements GeneradorMensajesDeNodo {
 	 *      java.lang.String[])
 	 */
 	@Override
-	public MensajeVortex generarMensajePara(final Object contenido, final String... tagsDeclarados) {
-		final String tipoContenido = generarDescripcionDeTipoPara(contenido);
-		final ContenidoVortex contenidoVortex = ContenidoVortex.create(tipoContenido, contenido);
+	public MensajeVortex generarMensajePara(final Object contenido, final String tipoDeContenido,
+			final Set<String> tagsDeclarados) {
+		final ContenidoVortex contenidoVortex = ContenidoVortex.create(tipoDeContenido, contenido);
 		final IdVortex idVortex = generarNuevoIdPara(contenido);
 		final List<String> tagsDelMensaje = Lists.newArrayList(tagsDeclarados);
 		final MensajeVortex mensajeGenerado = MensajeVortex.create(contenidoVortex, idVortex, tagsDelMensaje);
@@ -81,6 +83,17 @@ public class GeneradorDeMensajesImpl implements GeneradorMensajesDeNodo {
 	}
 
 	/**
+	 * @see net.gaia.vortex.lowlevel.impl.GeneradorMensajesDeNodo#generarMetaMensajePara(java.lang.Object)
+	 */
+	@Override
+	public MensajeVortex generarMetaMensajePara(final Object contenido) {
+		final String tipoDeContenido = generarDescripcionDeTipoPara(contenido);
+		final MensajeVortex metamensaje = generarMensajePara(contenido, tipoDeContenido,
+				Sets.newHashSet(MensajeVortex.TAG_INTERCAMBIO_VECINO));
+		return metamensaje;
+	}
+
+	/**
 	 * Devuelve el texto qeu describe el tipo de contenido. Utiliza el nombre de la clase como tipo
 	 * de contenido
 	 * 
@@ -95,15 +108,6 @@ public class GeneradorDeMensajesImpl implements GeneradorMensajesDeNodo {
 		final Class<? extends Object> claseDelContenido = contenido.getClass();
 		final String tipoDeContenido = claseDelContenido.getName();
 		return tipoDeContenido;
-	}
-
-	/**
-	 * @see net.gaia.vortex.lowlevel.impl.GeneradorMensajesDeNodo#generarMetaMensajePara(java.lang.Object)
-	 */
-	@Override
-	public MensajeVortex generarMetaMensajePara(final Object contenido) {
-		final MensajeVortex metamensaje = generarMensajePara(contenido, MensajeVortex.TAG_INTERCAMBIO_VECINO);
-		return metamensaje;
 	}
 
 }
