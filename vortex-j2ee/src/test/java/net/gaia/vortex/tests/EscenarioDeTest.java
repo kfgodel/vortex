@@ -15,7 +15,7 @@ package net.gaia.vortex.tests;
 import java.util.List;
 
 import net.gaia.vortex.conectores.http.WrapperHttp;
-import net.gaia.vortex.externals.json.InterpreteJson;
+import net.gaia.vortex.externals.json_old.InterpreteJson;
 import net.gaia.vortex.model.messages.TipoMetaMensaje;
 import net.gaia.vortex.model.messages.meta.AgregarTagsMetaMensaje;
 import net.gaia.vortex.model.messages.protocolo.ContenidoVortex;

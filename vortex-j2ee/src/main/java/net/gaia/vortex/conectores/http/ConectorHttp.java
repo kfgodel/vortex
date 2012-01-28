@@ -15,7 +15,7 @@ package net.gaia.vortex.conectores.http;
 import java.util.List;
 
 import net.gaia.vortex.externals.http.OperacionHttp;
-import net.gaia.vortex.externals.json.InterpreteJson;
+import net.gaia.vortex.externals.json_old.InterpreteJson;
 import net.gaia.vortex.model.messages.MensajeRecibido;
 import net.gaia.vortex.model.messages.protocolo.MensajeVortex;
 import net.gaia.vortex.model.servidor.localizadores.ReferenciaAReceptor;

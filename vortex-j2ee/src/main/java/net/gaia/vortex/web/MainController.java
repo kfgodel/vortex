@@ -3,9 +3,9 @@ package net.gaia.vortex.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.gaia.vortex.conectores.http.ConectorHttp;
 import net.gaia.vortex.externals.http.OperacionHttp;
 import net.gaia.vortex.externals.http.OperacionHttpJ2ee;
+import net.gaia.vortex.http.controller.HttpTranslator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +25,13 @@ public class MainController {
 	private static final Logger LOG = LoggerFactory.getLogger(MainController.class);
 
 	@Autowired
-	private ConectorHttp connector;
+	private HttpTranslator translator;
 
 	@RequestMapping(value = "main")
 	public void getFirstPage(final HttpServletRequest request, final HttpServletResponse response) {
 		LOG.debug("Llegó un request: \"" + request.getRequestURI() + "\"");
 
 		final OperacionHttp pedido = OperacionHttpJ2ee.create(request, response);
-		connector.procesar(pedido);
+		translator.translate(pedido);
 	}
 }

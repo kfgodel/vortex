@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 import net.gaia.vortex.externals.hash.StringHasher;
-import net.gaia.vortex.externals.json.InterpreteJackson;
-import net.gaia.vortex.externals.json.InterpreteJson;
+import net.gaia.vortex.externals.json_old.InterpreteJacksonOld;
+import net.gaia.vortex.externals.json_old.InterpreteJson;
 import net.gaia.vortex.externals.time.TimeStamper;
 import net.gaia.vortex.model.messages.MensajeRecibido;
 import net.gaia.vortex.model.messages.TipoMetaMensaje;
@@ -102,7 +102,7 @@ public class ReceptorServidor implements ReceptorVortex {
 
 	public InterpreteJson getInterpreteJson() {
 		if (interpreteJson == null) {
-			interpreteJson = InterpreteJackson.create();
+			interpreteJson = InterpreteJacksonOld.create();
 		}
 		return interpreteJson;
 	}

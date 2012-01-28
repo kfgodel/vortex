@@ -55,7 +55,7 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 		LOG.debug("Mensaje[{}] recibido desde receptor[{}] en nodo[{}]", new Object[] { mensajeEnviado, receptorEmisor,
 				nodo });
 		Loggers.RUTEO.info("RECIBIDO mensaje[{}] desde receptor[{}] en nodo[{}]. Contenido: [{}]", new Object[] {
-				mensajeEnviado, receptorEmisor, nodo, mensajeEnviado.getPrettyPrint() });
+				mensajeEnviado, receptorEmisor, nodo, mensajeEnviado.toPrettyPrint() });
 		final ColaDeMensajesDelReceptor colaDeMensajes = receptorEmisor.getColaDeMensajes();
 		final boolean esElProximo = colaDeMensajes.agregarPendiente(mensajeEnviado);
 		if (!esElProximo) {

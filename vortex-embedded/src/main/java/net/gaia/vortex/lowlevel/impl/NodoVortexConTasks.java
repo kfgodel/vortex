@@ -136,7 +136,7 @@ public class NodoVortexConTasks implements NodoVortexEmbebido {
 	public void rutear(final MensajeVortex mensajeVortex) {
 		LOG.debug("Mensaje[{}] recibido sin receptor en nodo[{}]", mensajeVortex, this);
 		Loggers.RUTEO.info("RECIBIDO mensaje[{}] sin receptor en nodo[{}]. Contenido: [{}]", new Object[] {
-				mensajeVortex, this, mensajeVortex.getPrettyPrint() });
+				mensajeVortex, this, mensajeVortex.toPrettyPrint() });
 
 		final ComenzarProcesoDeMensajeWorkUnit comienzoDeProceso = ComenzarProcesoDeMensajeWorkUnit.create(
 				mensajeVortex, sinEmisorIdentificado, this);

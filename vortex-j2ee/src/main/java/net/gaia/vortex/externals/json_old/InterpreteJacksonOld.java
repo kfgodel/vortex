@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.externals.json;
+package net.gaia.vortex.externals.json_old;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,17 +36,17 @@ import org.springframework.stereotype.Component;
  * @author D. García
  */
 @Component
-public class InterpreteJackson implements InterpreteJson {
+public class InterpreteJacksonOld implements InterpreteJson {
 
 	private ObjectMapper jsonMapper;
 
 	public static InterpreteJson create() {
-		final InterpreteJackson interprete = new InterpreteJackson();
+		final InterpreteJacksonOld interprete = new InterpreteJacksonOld();
 		return interprete;
 	}
 
 	/**
-	 * @see net.gaia.vortex.externals.json.InterpreteJson#leerMensaje(java.lang.String)
+	 * @see net.gaia.vortex.externals.json_old.InterpreteJson#leerMensaje(java.lang.String)
 	 */
 	@Override
 	public MensajeVortex leerMensaje(final String mensajeJson) {
@@ -90,7 +90,7 @@ public class InterpreteJackson implements InterpreteJson {
 	}
 
 	/**
-	 * @see net.gaia.vortex.externals.json.InterpreteJson#escribirMensaje(net.gaia.vortex.model.messages.protocolo.MensajeVortex)
+	 * @see net.gaia.vortex.externals.json_old.InterpreteJson#escribirMensaje(net.gaia.vortex.model.messages.protocolo.MensajeVortex)
 	 */
 	@Override
 	public String escribirMensaje(final MensajeVortex mensajeVortex) {
@@ -106,7 +106,7 @@ public class InterpreteJackson implements InterpreteJson {
 	}
 
 	/**
-	 * @see net.gaia.vortex.externals.json.InterpreteJson#leerMensajesDe(java.lang.String)
+	 * @see net.gaia.vortex.externals.json_old.InterpreteJson#leerMensajesDe(java.lang.String)
 	 */
 	@Override
 	public MensajesPendientes leerMensajesDe(final String respuestaJson) {
@@ -115,7 +115,7 @@ public class InterpreteJackson implements InterpreteJson {
 	}
 
 	/**
-	 * @see net.gaia.vortex.externals.json.InterpreteJson#escribirWrapper(net.gaia.vortex.conectores.http.WrapperHttp)
+	 * @see net.gaia.vortex.externals.json_old.InterpreteJson#escribirWrapper(net.gaia.vortex.conectores.http.WrapperHttp)
 	 */
 	@Override
 	public String escribirWrapper(final WrapperHttp wrapperRespuesta) {
@@ -124,7 +124,7 @@ public class InterpreteJackson implements InterpreteJson {
 	}
 
 	/**
-	 * @see net.gaia.vortex.externals.json.InterpreteJson#leerListaDeMensajesDe(java.lang.String)
+	 * @see net.gaia.vortex.externals.json_old.InterpreteJson#leerListaDeMensajesDe(java.lang.String)
 	 */
 	@Override
 	public List<MensajeVortex> leerListaDeMensajesDe(final String mensajesComoJson) {
@@ -155,7 +155,7 @@ public class InterpreteJackson implements InterpreteJson {
 	}
 
 	/**
-	 * @see net.gaia.vortex.externals.json.InterpreteJson#leerWrapper(java.lang.String)
+	 * @see net.gaia.vortex.externals.json_old.InterpreteJson#leerWrapper(java.lang.String)
 	 */
 	@Override
 	public WrapperHttp leerWrapper(final String wrapperComoJson) {
@@ -164,7 +164,7 @@ public class InterpreteJackson implements InterpreteJson {
 	}
 
 	/**
-	 * @see net.gaia.vortex.externals.json.InterpreteJson#leerAgregarTagsDe(java.lang.String)
+	 * @see net.gaia.vortex.externals.json_old.InterpreteJson#leerAgregarTagsDe(java.lang.String)
 	 */
 	@Override
 	public AgregarTagsMetaMensaje leerAgregarTagsDe(final String metamensajeString) {
@@ -173,7 +173,7 @@ public class InterpreteJackson implements InterpreteJson {
 	}
 
 	/**
-	 * @see net.gaia.vortex.externals.json.InterpreteJson#leerQuitarTagsDe(java.lang.String)
+	 * @see net.gaia.vortex.externals.json_old.InterpreteJson#leerQuitarTagsDe(java.lang.String)
 	 */
 	@Override
 	public QuitarTagsMetaMensaje leerQuitarTagsDe(final String metamensajeString) {
@@ -182,7 +182,7 @@ public class InterpreteJackson implements InterpreteJson {
 	}
 
 	/**
-	 * @see net.gaia.vortex.externals.json.InterpreteJson#escribirAgregarTagsMensaje(net.gaia.vortex.model.messages.meta.AgregarTagsMetaMensaje)
+	 * @see net.gaia.vortex.externals.json_old.InterpreteJson#escribirAgregarTagsMensaje(net.gaia.vortex.model.messages.meta.AgregarTagsMetaMensaje)
 	 */
 	@Override
 	public String escribirAgregarTagsMensaje(final AgregarTagsMetaMensaje metaMensaje) {
@@ -191,7 +191,7 @@ public class InterpreteJackson implements InterpreteJson {
 	}
 
 	/**
-	 * @see net.gaia.vortex.externals.json.InterpreteJson#escribirMetamensajeSobre(net.gaia.vortex.model.messages.meta.MetamensajeSobreTags)
+	 * @see net.gaia.vortex.externals.json_old.InterpreteJson#escribirMetamensajeSobre(net.gaia.vortex.model.messages.meta.MetamensajeSobreTags)
 	 */
 	@Override
 	public String escribirMetamensajeSobre(final MetamensajeSobreTags metaMensaje) {

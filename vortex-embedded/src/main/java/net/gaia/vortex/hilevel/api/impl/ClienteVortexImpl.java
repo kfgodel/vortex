@@ -114,13 +114,13 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	 */
 	@Override
 	public void onMensajeRecibido(final MensajeVortex nuevoMensaje) {
-		if (nuevoMensaje.isMetaMensaje()) {
+		if (nuevoMensaje.esMetaMensaje()) {
 			procesarMetaMensaje(nuevoMensaje);
 		}
 		// Indicamos si consumimos el mensaje
 		final boolean aceptamosElMensaje = contestarAlNodoSiAceptamos(nuevoMensaje);
 		if (!aceptamosElMensaje) {
-			LOG.debug("Ignorando mensaje recibido[{}] rechazado por el filtro", nuevoMensaje.getPrettyPrint());
+			LOG.debug("Ignorando mensaje recibido[{}] rechazado por el filtro", nuevoMensaje.toPrettyPrint());
 			return;
 		}
 

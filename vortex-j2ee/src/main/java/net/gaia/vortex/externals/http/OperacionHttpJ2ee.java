@@ -22,7 +22,8 @@ import org.apache.commons.io.IOUtils;
 import com.tenpines.commons.exceptions.UnhandledConditionException;
 
 /**
- * Esta clase es la implementación de la operación http utilizado las clases del standard j2ee
+ * Esta clase representa una operación Http abstrayendo las clases concretas para brindar una
+ * interfaz acorde a lo que se necesita en este sistema
  * 
  * @author D. García
  */

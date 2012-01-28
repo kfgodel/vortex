@@ -61,7 +61,7 @@ public class RutearMensajeWorkUnit implements WorkUnit {
 		memoriaDeRuteos.registrarRuteoActivo(idEnvioRecibido);
 
 		// Tenemos que ver si es un metamensaje
-		if (mensaje.isMetaMensaje()) {
+		if (mensaje.esMetaMensaje()) {
 			LOG.debug("MetaMensaje detectado en Mensaje[{}]", mensaje);
 			// Si es meta, es para procesarlo internamente, no para enviarlo a otros nodos
 			final ProcesarRecepcionDeMetamensajeWorkUnit procesoDeMetaMensaje = ProcesarRecepcionDeMetamensajeWorkUnit

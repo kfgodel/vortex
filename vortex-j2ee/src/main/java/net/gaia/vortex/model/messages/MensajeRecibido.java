@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.gaia.vortex.externals.json.InterpreteJson;
+import net.gaia.vortex.externals.json_old.InterpreteJson;
 import net.gaia.vortex.model.messages.protocolo.MensajeVortex;
 import net.gaia.vortex.model.servidor.localizadores.ReferenciaAReceptor;
 

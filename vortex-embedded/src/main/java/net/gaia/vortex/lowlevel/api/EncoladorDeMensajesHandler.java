@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.lowlevel.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -81,6 +83,20 @@ public class EncoladorDeMensajesHandler implements MensajeVortexHandler, Handler
 	@Override
 	public void onMensajeRecibido(final MensajeVortexApi mensajeRecibido) {
 		mensajes.add(mensajeRecibido);
+	}
+
+	/**
+	 * Quita todos los mensajes existentes en la cola y los devuelve
+	 * 
+	 * @return los mensajes que se acumularon hasta el momento
+	 */
+	public List<MensajeVortex> quitarTodos() {
+		final List<MensajeVortex> quitados = new ArrayList<MensajeVortex>(this.mensajes.size());
+		MensajeVortex quitado;
+		while ((quitado = (MensajeVortex) mensajes.poll()) != null) {
+			quitados.add(quitado);
+		}
+		return quitados;
 	}
 
 }

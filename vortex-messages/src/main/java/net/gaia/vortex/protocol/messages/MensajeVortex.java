@@ -103,7 +103,7 @@ public class MensajeVortex {
 	 * 
 	 * @return true si el contenido es una instancia de metamensaje
 	 */
-	public boolean isMetaMensaje() {
+	public boolean esMetaMensaje() {
 		boolean esMetamensaje = this.getTagsDestino().contains(MensajeVortex.TAG_INTERCAMBIO_VECINO);
 		return esMetamensaje;
 	}
@@ -113,7 +113,7 @@ public class MensajeVortex {
 	 * 
 	 * @return El mensaje formateado con todos los datos
 	 */
-	public String getPrettyPrint() {
+	public String toPrettyPrint() {
 		return Objects.toStringHelper(this).add(identificacion_FIELD, identificacion)
 				.add(tagsDestino_FIELD, tagsDestino).add(contenido_FIELD, contenido).toString();
 	}

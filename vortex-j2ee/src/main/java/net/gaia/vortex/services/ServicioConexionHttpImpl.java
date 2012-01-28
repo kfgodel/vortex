@@ -18,8 +18,8 @@ import java.util.List;
 import net.gaia.vortex.conectores.http.ComandoHttp;
 import net.gaia.vortex.conectores.http.WrapperHttp;
 import net.gaia.vortex.externals.http.OperacionHttp;
-import net.gaia.vortex.externals.json.InterpreteJackson;
-import net.gaia.vortex.externals.json.InterpreteJson;
+import net.gaia.vortex.externals.json_old.InterpreteJacksonOld;
+import net.gaia.vortex.externals.json_old.InterpreteJson;
 import net.gaia.vortex.model.messages.MensajesPendientes;
 import net.gaia.vortex.model.messages.protocolo.MensajeVortex;
 import net.gaia.vortex.model.servidor.localizadores.ReferenciaAReceptor;
@@ -54,7 +54,7 @@ public class ServicioConexionHttpImpl implements ServicioConexionHttp {
 
 	public InterpreteJson getInterpreteJson() {
 		if (interpreteJson == null) {
-			interpreteJson = InterpreteJackson.create();
+			interpreteJson = InterpreteJacksonOld.create();
 		}
 		return interpreteJson;
 	}
