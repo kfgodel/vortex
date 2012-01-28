@@ -19,6 +19,8 @@ import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
 import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
+import net.gaia.vortex.hilevel.api.HandlerDeMensajesApi;
+import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
@@ -27,25 +29,22 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
  * 
  * @author D. García
  */
-public class EncoladorDeMensajesHandler implements MensajeVortexHandler {
+public class EncoladorDeMensajesHandler implements MensajeVortexHandler, HandlerDeMensajesApi {
 
-	private LinkedBlockingQueue<MensajeVortex> mensajes;
+	private LinkedBlockingQueue<Object> mensajes;
 
 	/**
 	 * @see net.gaia.vortex.lowlevel.api.MensajeVortexHandler#onMensajeRecibido(net.gaia.vortex.protocol.MensajeVortex)
 	 */
+	@Override
 	public void onMensajeRecibido(final MensajeVortex nuevoMensaje) {
 		mensajes.add(nuevoMensaje);
 	}
 
 	public static EncoladorDeMensajesHandler create() {
 		final EncoladorDeMensajesHandler encolador = new EncoladorDeMensajesHandler();
-		encolador.mensajes = new LinkedBlockingQueue<MensajeVortex>();
+		encolador.mensajes = new LinkedBlockingQueue<Object>();
 		return encolador;
-	}
-
-	public LinkedBlockingQueue<MensajeVortex> getMensajes() {
-		return mensajes;
 	}
 
 	/**
@@ -61,11 +60,12 @@ public class EncoladorDeMensajesHandler implements MensajeVortexHandler {
 	 *             Si se alcanza el límite de espera y no hay mensajes disponibles o el thread es
 	 *             interrumpido antes de tiempo
 	 */
-	public MensajeVortex esperarProximoMensaje(final TimeMagnitude timeout) throws UnsuccessfulWaitException {
+	public <T> T esperarProximoMensaje(final TimeMagnitude timeout) throws UnsuccessfulWaitException {
 		final TimeUnit timeUnit = timeout.getTimeUnit();
 		final long quantity = timeout.getQuantity();
 		try {
-			final MensajeVortex mensaje = mensajes.poll(quantity, timeUnit);
+			@SuppressWarnings("unchecked")
+			final T mensaje = (T) mensajes.poll(quantity, timeUnit);
 			if (mensaje == null) {
 				throw new TimeoutExceededException("Se acabó el timput antes de recibir un mensaje");
 			}
@@ -73,6 +73,14 @@ public class EncoladorDeMensajesHandler implements MensajeVortexHandler {
 		} catch (final InterruptedException e) {
 			throw new InterruptedWaitException("El thread fue interrumpido esperando un mensaje", e);
 		}
+	}
+
+	/**
+	 * @see net.gaia.vortex.hilevel.api.HandlerDeMensajesApi#onMensajeRecibido(net.gaia.vortex.hilevel.api.MensajeVortexApi)
+	 */
+	@Override
+	public void onMensajeRecibido(final MensajeVortexApi mensajeRecibido) {
+		mensajes.add(mensajeRecibido);
 	}
 
 }
