@@ -16,6 +16,13 @@
 	</properties>
 
 	<dependencies>
+	
+		<!-- Nodo vortex embebido -->
+		<dependency>
+			<groupId>net.gaia</groupId>
+			<artifactId>vortex-embedded</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Spring Web -->	
 		<dependency>
