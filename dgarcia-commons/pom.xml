@@ -16,9 +16,6 @@
 			  <configuration>
 			    <archive>
 			      <index>true</index>
-			      <manifest>
-			        <addClasspath>true</addClasspath>
-			      </manifest>
 					<manifestEntries>
 						<Build-JVM>${java.vm.name} - ${java.vm.vendor}</Build-JVM>
 						<Build-OS>${os.name} - Version: ${os.version}</Build-OS>
