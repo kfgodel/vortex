@@ -30,15 +30,18 @@ import com.google.common.collect.Lists;
 public class GeneradorPost {
 
 	public static void main(final String[] args) {
+		final InterpreteJackson interpreteJackson = new InterpreteJackson();
+
 		final ReemplazarTags publicacionDeTags = ReemplazarTags.create(Lists.newArrayList("TAG1"));
-		final ContenidoVortex contenido = ContenidoVortex.create(null, publicacionDeTags);
+		final String contenidoJson = interpreteJackson.toJson(publicacionDeTags);
+
+		final ContenidoVortex contenido = ContenidoVortex.create(publicacionDeTags.getClass().getName(), contenidoJson);
 		final IdVortex identificacion = IdVortex.create("1", "1", 1L, 0L);
 		final List<String> tags = Lists.newArrayList(MensajeVortex.TAG_INTERCAMBIO_VECINO);
 		final MensajeVortex mensajeVortex = MensajeVortex.create(contenido, identificacion, tags);
 		final VortexWrapper wrapper = new VortexWrapper();
 		wrapper.setMensajes(Lists.newArrayList(mensajeVortex));
 
-		final InterpreteJackson interpreteJackson = new InterpreteJackson();
 		System.out.println(interpreteJackson.toJson(wrapper));
 	}
 }

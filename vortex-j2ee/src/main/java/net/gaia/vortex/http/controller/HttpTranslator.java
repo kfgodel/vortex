@@ -12,12 +12,16 @@
  */
 package net.gaia.vortex.http.controller;
 
+import java.util.List;
+
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.dependencies.json.InterpreteJson;
 import net.gaia.vortex.dependencies.json.JsonConversionException;
 import net.gaia.vortex.externals.http.OperacionHttp;
 import net.gaia.vortex.http.protocol.VortexWrapper;
 import net.gaia.vortex.prog.Decision;
+import net.gaia.vortex.protocol.messages.ContenidoVortex;
+import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,8 +72,47 @@ public class HttpTranslator {
 	 */
 	@HasDependencyOn(Decision.SI_FALLA_LA_RESPUESTA_NO_HACEMOS_NADA)
 	private void translateToHttp(final VortexWrapper output, final OperacionHttp pedido) {
-		final String wrapperComoTexto = interprete.toJson(pedido);
+		final List<MensajeVortex> mensajes = output.getMensajes();
+		for (final MensajeVortex mensajeVortex : mensajes) {
+			translateContentToJson(mensajeVortex);
+		}
+
+		final String wrapperComoTexto = interprete.toJson(output);
 		pedido.responder(wrapperComoTexto);
+	}
+
+	/**
+	 * Convierte el contenido del mensaje en json si es un metamensaje para el cliente
+	 * 
+	 * @param mensajeVortex
+	 *            El mensaje a procesar
+	 */
+	private void translateContentToJson(final MensajeVortex mensajeVortex) {
+		if (!mensajeVortex.esMetaMensaje()) {
+			// No es necesario convertirlo ya que fue string en todo momento
+			return;
+		}
+		final ContenidoVortex contenido = mensajeVortex.getContenido();
+		final Object valorComoObjeto = contenido.getValor();
+		final String valorComoJson = interprete.toJson(valorComoObjeto);
+		contenido.setValor(valorComoJson);
+		final String tipoDeContenido = getTipoDeContenidoFromTipoDeValor(valorComoObjeto);
+		contenido.setTipoContenido(tipoDeContenido);
+	}
+
+	/**
+	 * Devuelve la cadena que corresponde al tipo de contenido del objeto pasado
+	 * 
+	 * @param valorComoObjeto
+	 *            El objeto a evaluar
+	 * @return
+	 */
+	private String getTipoDeContenidoFromTipoDeValor(final Object valorComoObjeto) {
+		if (valorComoObjeto == null) {
+			throw new UnhandledConditionException("Se indico como valor de un metamensaje el valor null");
+		}
+		final String tipoDeContenido = valorComoObjeto.getClass().getName();
+		return tipoDeContenido;
 	}
 
 	/**
@@ -90,10 +133,70 @@ public class HttpTranslator {
 		try {
 			wrapper = interprete.fromJson(textoDelWrapper, VortexWrapper.class);
 		} catch (final JsonConversionException e) {
-			LOG.error("Se produjo un error al interpretar el wrapper recibido: [" + textoDelWrapper + "]", e);
-			throw new UnhandledConditionException(
-					"Se produjo un error al interpretar el wrapper JSON que no está considerado");
+			throw new UnhandledConditionException("Se produjo un error al interpretar el wrapper recibido: ["
+					+ textoDelWrapper + "]", e);
 		}
+
+		final List<MensajeVortex> mensajes = wrapper.getMensajes();
+		for (final MensajeVortex mensajeVortex : mensajes) {
+			translateContentFromJson(mensajeVortex);
+		}
+
 		return wrapper;
+	}
+
+	/**
+	 * Recupera el contenido del mensaje que es convertido a JSON para poder mandarlo por HTTP
+	 * 
+	 * @param mensajeVortex
+	 *            El mensaje cuyo contenido se convertirá en objeto nuevamente
+	 */
+	private void translateContentFromJson(final MensajeVortex mensajeVortex) {
+		if (!mensajeVortex.esMetaMensaje()) {
+			// No necesita conversion, debería ser un String, lo confirmamos por las dudas
+			final Object valor = mensajeVortex.getContenido().getValor();
+			if (valor == null) {
+				// Es un valor valido
+				return;
+			}
+			if (!(valor instanceof String)) {
+				throw new UnhandledConditionException("Se recibio un mensaje cuyo contenido no es un String: " + valor);
+			}
+			return;
+		}
+		final ContenidoVortex contenido = mensajeVortex.getContenido();
+		final String tipoContenidoDeclarado = contenido.getTipoContenido();
+		final Class<?> tipoEsperado = getTipoEsperadoFromTipoDeContenido(tipoContenidoDeclarado);
+		String valorJson;
+		try {
+			valorJson = (String) contenido.getValor();
+		} catch (final ClassCastException e) {
+			throw new UnhandledConditionException("Se recibio un metamensaje cuyo contenido no es un String: "
+					+ contenido.getValor(), e);
+		}
+		try {
+			final Object valorObjeto = interprete.fromJson(valorJson, tipoEsperado);
+			contenido.setValor(valorObjeto);
+		} catch (final JsonConversionException e) {
+			throw new UnhandledConditionException("No fue posible recrear el objeto[" + tipoEsperado
+					+ "] de su version String: " + valorJson, e);
+		}
+	}
+
+	/**
+	 * devuelve la clase de objeto que se corresponde con el contenido en base al tipo declarado
+	 * 
+	 * @param tipoContenidoDeclarado
+	 *            El tipo declarado del contenido
+	 * @return La clase para recrear el objeto
+	 */
+	private Class<?> getTipoEsperadoFromTipoDeContenido(final String tipoContenidoDeclarado) {
+		try {
+			final Class<?> claseDemetamensaje = Class.forName(tipoContenidoDeclarado);
+			return claseDemetamensaje;
+		} catch (final Exception e) {
+			throw new UnhandledConditionException("Se produjo un error al intentar obtener el metamensaje de tipo: "
+					+ tipoContenidoDeclarado, e);
+		}
 	}
 }
