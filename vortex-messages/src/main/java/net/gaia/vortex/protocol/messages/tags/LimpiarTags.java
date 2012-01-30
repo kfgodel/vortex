@@ -10,7 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.protocol.messages.meta;
+package net.gaia.vortex.protocol.messages.tags;
+
+import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
 /**
  * Esta clase representa el metamensaje para eliminar todos los tags asociados a un cliente vortex

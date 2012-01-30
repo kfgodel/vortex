@@ -13,7 +13,7 @@
 package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
-import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
+import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
 /**
  * Esta interfaz ofrece una vista comun a todos los acuses para operaciones comunes

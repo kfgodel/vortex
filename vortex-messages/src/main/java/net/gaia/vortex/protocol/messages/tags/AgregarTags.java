@@ -1,5 +1,5 @@
 /**
- * 11/01/2012 23:56:04 Copyright (C) 2011 Darío L. García
+ * 11/01/2012 23:54:18 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,17 +10,20 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.protocol.messages.meta;
+package net.gaia.vortex.protocol.messages.tags;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
 /**
- * Esta clase representa el metamensaje de declaración de todos los tags de un cliente vortex, que
- * reemplaza los tags asociados anteriores
+ * Esta clase representa el metamensaje de agregar tags asociados a un cliente
  * 
  * @author D. García
  */
-public class ReemplazarTags implements MetamensajeVortex {
+public class AgregarTags implements MetamensajeVortex {
 
 	private List<String> tags;
 
@@ -32,9 +35,9 @@ public class ReemplazarTags implements MetamensajeVortex {
 		this.tags = tags;
 	}
 
-	public static ReemplazarTags create(final List<String> tags) {
-		final ReemplazarTags reemplazar = new ReemplazarTags();
-		reemplazar.tags = tags;
-		return reemplazar;
+	public static AgregarTags create(final Set<String> nuevosTags) {
+		final AgregarTags agregado = new AgregarTags();
+		agregado.tags = new ArrayList<String>(nuevosTags);
+		return agregado;
 	}
 }

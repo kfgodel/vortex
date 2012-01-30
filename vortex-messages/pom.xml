@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia</groupId>
   <artifactId>vortex-messages</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>Vortex messages</name>
   <description>Mensajes de vortex definidos de acuerdo al protocolo para ser compartidos por los proyectos Java</description>
   

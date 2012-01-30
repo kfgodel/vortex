@@ -13,7 +13,7 @@
 package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
-import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
+import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
 /**
  * Esta clase representa el metamensaje de solicitud de {@link AcuseConsumo} realizada por el emisor

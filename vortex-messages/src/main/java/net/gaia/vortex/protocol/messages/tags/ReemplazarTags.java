@@ -1,5 +1,5 @@
 /**
- * 11/01/2012 23:55:12 Copyright (C) 2011 Darío L. García
+ * 11/01/2012 23:56:04 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,18 +10,19 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.protocol.messages.meta;
+package net.gaia.vortex.protocol.messages.tags;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
+import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
 /**
- * Esta clase representa el metamensaje para quitar tags asociados a un cliente vortex
+ * Esta clase representa el metamensaje de declaración de todos los tags de un cliente vortex, que
+ * reemplaza los tags asociados anteriores
  * 
  * @author D. García
  */
-public class QuitarTags implements MetamensajeVortex {
+public class ReemplazarTags implements MetamensajeVortex {
 
 	private List<String> tags;
 
@@ -33,9 +34,9 @@ public class QuitarTags implements MetamensajeVortex {
 		this.tags = tags;
 	}
 
-	public static QuitarTags create(final Set<String> quitados) {
-		final QuitarTags quitar = new QuitarTags();
-		quitar.tags = new ArrayList<String>(quitados);
-		return quitar;
+	public static ReemplazarTags create(final List<String> tags) {
+		final ReemplazarTags reemplazar = new ReemplazarTags();
+		reemplazar.tags = tags;
+		return reemplazar;
 	}
 }
