@@ -17,10 +17,10 @@ package net.gaia.vortex.lowlevel.impl.ids;
  * 
  * @author D. García
  */
-public class HashcodeHasher implements StringHasher {
+public class HashcodeHasher implements ContentHasher {
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.ids.StringHasher#hashDe(java.lang.Object)
+	 * @see net.gaia.vortex.lowlevel.impl.ids.ContentHasher#hashDe(java.lang.Object)
 	 */
 	@Override
 	public String hashDe(final Object contenido) {

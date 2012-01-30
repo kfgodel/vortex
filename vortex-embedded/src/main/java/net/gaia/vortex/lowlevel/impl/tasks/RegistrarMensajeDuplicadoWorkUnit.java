@@ -13,9 +13,9 @@
 package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
-import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
-import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
+import net.gaia.vortex.lowlevel.impl.envios.ContextoDeEnvio;
+import net.gaia.vortex.lowlevel.impl.envios.IdentificadorDeEnvio;
+import net.gaia.vortex.lowlevel.impl.ruteo.ControlDeRuteo;
 import net.gaia.vortex.meta.Loggers;
 
 import org.slf4j.Logger;

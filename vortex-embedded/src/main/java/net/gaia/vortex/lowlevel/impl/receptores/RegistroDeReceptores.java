@@ -15,8 +15,8 @@ package net.gaia.vortex.lowlevel.impl.receptores;
 import java.util.List;
 import java.util.Set;
 
-import net.gaia.vortex.lowlevel.impl.ReportePerformanceRuteo;
-import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
+import net.gaia.vortex.lowlevel.impl.ruteo.ReportePerformanceRuteo;
+import net.gaia.vortex.lowlevel.impl.ruteo.SeleccionDeReceptores;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
 
 /**

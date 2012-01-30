@@ -16,10 +16,10 @@ import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.MemoriaDeRuteos;
-import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
+import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
+import net.gaia.vortex.lowlevel.impl.ruteo.MemoriaDeRuteos;
 import net.gaia.vortex.meta.Decision;
 
 import org.slf4j.Logger;

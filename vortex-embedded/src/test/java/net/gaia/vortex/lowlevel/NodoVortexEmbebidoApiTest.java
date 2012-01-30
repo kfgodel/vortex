@@ -24,10 +24,10 @@ import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
-import net.gaia.vortex.lowlevel.api.EncoladorDeMensajesHandler;
-import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
+import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
-import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
+import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
+import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
@@ -50,7 +50,7 @@ import com.google.common.collect.Lists;
  */
 public class NodoVortexEmbebidoApiTest extends VortexTest {
 
-	private NodoVortexEmbebido nodoVortex;
+	private NodoVortex nodoVortex;
 
 	private EscenarioDeTest escenarios;
 

@@ -16,12 +16,12 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
-import net.gaia.vortex.lowlevel.impl.ControlDeConsumoDeEnvio;
-import net.gaia.vortex.lowlevel.impl.EsperaDeAccion;
-import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
-import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
-import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
+import net.gaia.vortex.lowlevel.impl.envios.ContextoDeEnvio;
+import net.gaia.vortex.lowlevel.impl.envios.ControlDeConsumoDeEnvio;
+import net.gaia.vortex.lowlevel.impl.envios.EsperaDeAccion;
+import net.gaia.vortex.lowlevel.impl.envios.IdentificadorDeEnvio;
+import net.gaia.vortex.lowlevel.impl.envios.MensajesEnEspera;
+import net.gaia.vortex.lowlevel.impl.mensajes.MemoriaDeMensajes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

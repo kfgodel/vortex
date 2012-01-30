@@ -13,7 +13,7 @@
 package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 
 /**
  * Esta clase representa el trabajo que hace el nodo al recibir un mensaje, después de validarlo

@@ -15,11 +15,11 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import java.util.List;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
-import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
-import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
+import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.ruteo.ControlDeRuteo;
+import net.gaia.vortex.lowlevel.impl.ruteo.SeleccionDeReceptores;
 import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 

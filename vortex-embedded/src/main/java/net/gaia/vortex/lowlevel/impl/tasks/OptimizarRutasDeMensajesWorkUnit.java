@@ -13,10 +13,10 @@
 package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
-import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
-import net.gaia.vortex.lowlevel.impl.ReportePerformanceRuteo;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
+import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.ruteo.ControlDeRuteo;
+import net.gaia.vortex.lowlevel.impl.ruteo.ReportePerformanceRuteo;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;

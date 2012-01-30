@@ -18,10 +18,10 @@ import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 import net.gaia.annotations.HasDependencyOn;
-import net.gaia.vortex.lowlevel.impl.ReportePerformanceRuteo;
-import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
+import net.gaia.vortex.lowlevel.impl.ruteo.ReportePerformanceRuteo;
+import net.gaia.vortex.lowlevel.impl.ruteo.SeleccionDeReceptores;
 import net.gaia.vortex.meta.Decision;
 import ar.com.dgarcia.coding.caching.Instantiator;
 import ar.com.dgarcia.coding.caching.SimpleCacheConcurrentMap;
@@ -461,7 +461,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores#ajustarPesosDeAcuerdoA(net.gaia.vortex.lowlevel.impl.ReportePerformanceRuteo)
+	 * @see net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores#ajustarPesosDeAcuerdoA(net.gaia.vortex.lowlevel.impl.ruteo.ReportePerformanceRuteo)
 	 */
 	@Override
 	@HasDependencyOn(Decision.TODAVIA_NO_IMPLEMENTE_EL_AJUSTE_DE_PESOS)

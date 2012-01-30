@@ -14,9 +14,9 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ConfiguracionDeNodo;
-import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
-import net.gaia.vortex.lowlevel.impl.EsperaDeAccion;
+import net.gaia.vortex.lowlevel.impl.envios.ContextoDeEnvio;
+import net.gaia.vortex.lowlevel.impl.envios.EsperaDeAccion;
+import net.gaia.vortex.lowlevel.impl.nodo.ConfiguracionDeNodo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

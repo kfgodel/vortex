@@ -16,10 +16,10 @@ import java.util.Set;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
-import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
-import net.gaia.vortex.lowlevel.impl.SeleccionDeReceptores;
+import net.gaia.vortex.lowlevel.impl.envios.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.ruteo.SeleccionDeReceptores;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

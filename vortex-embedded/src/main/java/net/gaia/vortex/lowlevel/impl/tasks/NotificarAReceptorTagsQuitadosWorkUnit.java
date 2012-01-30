@@ -15,7 +15,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import java.util.Set;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
+import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.meta.QuitarTags;

@@ -15,7 +15,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import java.util.List;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
+import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.tags.NotificacionDeCambioDeTags;
 import net.gaia.vortex.lowlevel.impl.tags.ReporteCambioDeTags;
 

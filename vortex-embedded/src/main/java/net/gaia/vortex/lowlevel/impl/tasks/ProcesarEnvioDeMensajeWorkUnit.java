@@ -13,11 +13,11 @@
 package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeEnvio;
-import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
-import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
+import net.gaia.vortex.lowlevel.impl.envios.ContextoDeEnvio;
+import net.gaia.vortex.lowlevel.impl.envios.IdentificadorDeEnvio;
+import net.gaia.vortex.lowlevel.impl.envios.MensajesEnEspera;
+import net.gaia.vortex.lowlevel.impl.mensajes.MemoriaDeMensajes;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
-import net.gaia.vortex.lowlevel.impl.ruteos.MensajesEnEspera;
 import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 

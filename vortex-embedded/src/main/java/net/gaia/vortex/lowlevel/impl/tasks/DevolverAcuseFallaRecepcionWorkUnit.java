@@ -14,8 +14,8 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;

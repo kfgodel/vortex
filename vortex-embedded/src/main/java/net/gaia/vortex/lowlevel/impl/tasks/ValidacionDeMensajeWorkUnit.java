@@ -14,7 +14,7 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;

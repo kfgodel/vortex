@@ -22,9 +22,9 @@ import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.hilevel.api.ClienteVortex;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.impl.ClienteVortexImpl;
-import net.gaia.vortex.lowlevel.api.EncoladorDeMensajesHandler;
-import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
-import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
+import net.gaia.vortex.lowlevel.api.NodoVortex;
+import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
+import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 
 import org.junit.After;
 import org.junit.Before;
@@ -40,7 +40,7 @@ import com.google.common.collect.Sets;
 public class ClienteVortexTest {
 
 	private ClienteVortex cliente;
-	private NodoVortexEmbebido nodo;
+	private NodoVortex nodo;
 
 	@Before
 	public void prepararTest() {

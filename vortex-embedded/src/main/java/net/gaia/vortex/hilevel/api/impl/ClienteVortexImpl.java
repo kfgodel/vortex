@@ -20,11 +20,12 @@ import net.gaia.vortex.hilevel.api.ClienteVortex;
 import net.gaia.vortex.hilevel.api.FiltroDeMensajesDelCliente;
 import net.gaia.vortex.hilevel.api.HandlerDeMensajesApi;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
+import net.gaia.vortex.hilevel.api.TagsDelNodo;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
-import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
+import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
-import net.gaia.vortex.lowlevel.impl.GeneradorDeMensajesImpl;
-import net.gaia.vortex.lowlevel.impl.GeneradorMensajesDeNodo;
+import net.gaia.vortex.lowlevel.impl.ids.GeneradorDeMensajesImpl;
+import net.gaia.vortex.lowlevel.impl.ids.GeneradorMensajesDeNodo;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.meta.AgregarTags;
@@ -51,7 +52,7 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(ClienteVortexImpl.class);
 
 	private AtomicReference<HandlerDeMensajesApi> handlerDeMensajes;
-	private NodoVortexEmbebido nodoVortex;
+	private NodoVortex nodoVortex;
 	private SesionVortex sesionVortex;
 	private GeneradorMensajesDeNodo generadorMensajes;
 	private FiltroDeMensajesDelCliente filtroDeMensajes;
@@ -88,7 +89,7 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 		handlerDeMensajes.set(handler);
 	}
 
-	public static ClienteVortexImpl create(final NodoVortexEmbebido nodoVortex,
+	public static ClienteVortexImpl create(final NodoVortex nodoVortex,
 			final HandlerDeMensajesApi handlerDeMensajes) {
 		final ClienteVortexImpl cliente = new ClienteVortexImpl();
 		cliente.nodoVortex = nodoVortex;

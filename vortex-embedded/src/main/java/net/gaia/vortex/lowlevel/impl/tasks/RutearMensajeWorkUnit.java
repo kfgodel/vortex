@@ -13,12 +13,11 @@
 package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
-import net.gaia.vortex.lowlevel.impl.ControlDeRuteo;
-import net.gaia.vortex.lowlevel.impl.IdentificadorDeEnvio;
-import net.gaia.vortex.lowlevel.impl.MemoriaDeRuteos;
+import net.gaia.vortex.lowlevel.impl.envios.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
-import net.gaia.vortex.protocol.messages.ContenidoVortex;
+import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
+import net.gaia.vortex.lowlevel.impl.ruteo.ControlDeRuteo;
+import net.gaia.vortex.lowlevel.impl.ruteo.MemoriaDeRuteos;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
@@ -26,8 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Esta clase representa el trabajo quimport net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
- * e hace el nodo al comenzar el ruteo de un mensaje
+ * Esta clase representa el trabajo que hace el nodo al comenzar el ruteo de un mensaje
  * 
  * @author D. García
  */

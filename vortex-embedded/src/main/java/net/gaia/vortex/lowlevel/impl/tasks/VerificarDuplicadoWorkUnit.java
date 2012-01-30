@@ -14,8 +14,8 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.ContextoDeRuteoDeMensaje;
-import net.gaia.vortex.lowlevel.impl.MemoriaDeMensajes;
+import net.gaia.vortex.lowlevel.impl.mensajes.MemoriaDeMensajes;
+import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
