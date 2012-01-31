@@ -49,6 +49,12 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework.version}</version>
 		</dependency>
+	    <!-- Requerido para que Spring no tire error por el TransactionException faltante -->
+	   <dependency>
+	      <groupId>org.springframework</groupId>
+	      <artifactId>spring-orm</artifactId>
+	      <version>${org.springframework.version}</version>
+	    </dependency>
 		
 
  	   <!-- Requerido por Spring para interpretar los @Configuration -->
