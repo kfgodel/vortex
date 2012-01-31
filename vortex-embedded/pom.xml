@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia</groupId>
   <artifactId>vortex-embedded</artifactId>
-  <version>0.2.2-SNAPSHOT</version>
+  <version>0.2.2</version>
   <name>Vortex Server Embedded</name>
   <description>Proyecto para desarrollar el servidor en memoria utilizable dentro de aplicaciones</description>
   
