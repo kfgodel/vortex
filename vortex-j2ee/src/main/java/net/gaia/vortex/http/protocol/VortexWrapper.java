@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.http.protocol;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.gaia.annotations.HasDependencyOn;
@@ -45,6 +46,9 @@ public class VortexWrapper {
 	}
 
 	public List<MensajeVortex> getMensajes() {
+		if (mensajes == null) {
+			mensajes = new ArrayList<MensajeVortex>();
+		}
 		return mensajes;
 	}
 

@@ -22,6 +22,8 @@ import net.gaia.vortex.http.protocol.VortexWrapper;
 import net.gaia.vortex.prog.Decision;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.gaia.vortex.protocol.messages.MetamensajeVortex;
+import net.gaia.vortex.protocol.messages.TipoContenidoMetamensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,11 +94,19 @@ public class HttpTranslator {
 			// No es necesario convertirlo ya que fue string en todo momento
 			return;
 		}
+
 		final ContenidoVortex contenido = mensajeVortex.getContenido();
 		final Object valorComoObjeto = contenido.getValor();
 		final String valorComoJson = interprete.toJson(valorComoObjeto);
+		MetamensajeVortex metamensaje;
+		try {
+			metamensaje = (MetamensajeVortex) valorComoObjeto;
+		} catch (final ClassCastException e) {
+			throw new UnhandledConditionException("Se recibio como metamensaje un objeto que no lo es: "
+					+ valorComoObjeto);
+		}
 		contenido.setValor(valorComoJson);
-		final String tipoDeContenido = getTipoDeContenidoFromTipoDeValor(valorComoObjeto);
+		final String tipoDeContenido = TipoContenidoMetamensaje.getTipoDeContenidoFor(metamensaje);
 		contenido.setTipoContenido(tipoDeContenido);
 	}
 
@@ -166,7 +176,11 @@ public class HttpTranslator {
 		}
 		final ContenidoVortex contenido = mensajeVortex.getContenido();
 		final String tipoContenidoDeclarado = contenido.getTipoContenido();
-		final Class<?> tipoEsperado = getTipoEsperadoFromTipoDeContenido(tipoContenidoDeclarado);
+		final Class<?> tipoEsperado = TipoContenidoMetamensaje.getTipoFrom(tipoContenidoDeclarado);
+		if (tipoEsperado == null) {
+			throw new UnhandledConditionException("El tipo de contenido no se corresponde con un metamensaje: "
+					+ tipoContenidoDeclarado);
+		}
 		String valorJson;
 		try {
 			valorJson = (String) contenido.getValor();

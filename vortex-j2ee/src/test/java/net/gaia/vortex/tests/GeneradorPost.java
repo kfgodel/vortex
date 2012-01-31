@@ -29,19 +29,40 @@ import com.google.common.collect.Lists;
  */
 public class GeneradorPost {
 
+	static final InterpreteJackson interpreteJackson = new InterpreteJackson();
+
 	public static void main(final String[] args) {
-		final InterpreteJackson interpreteJackson = new InterpreteJackson();
-
-		final ReemplazarTags publicacionDeTags = ReemplazarTags.create(Lists.newArrayList("TAG1"));
-		final String contenidoJson = interpreteJackson.toJson(publicacionDeTags);
-
-		final ContenidoVortex contenido = ContenidoVortex.create(publicacionDeTags.getClass().getName(), contenidoJson);
-		final IdVortex identificacion = IdVortex.create("1", "1", 1L, 0L);
-		final List<String> tags = Lists.newArrayList(MensajeVortex.TAG_INTERCAMBIO_VECINO);
-		final MensajeVortex mensajeVortex = MensajeVortex.create(contenido, identificacion, tags);
+		final MensajeVortex mensajeVortex = crearReemplazoDeTags();
 		final VortexWrapper wrapper = new VortexWrapper();
 		wrapper.setMensajes(Lists.newArrayList(mensajeVortex));
 
 		System.out.println(interpreteJackson.toJson(wrapper));
+	}
+
+	/**
+	 * @return
+	 */
+	private static MensajeVortex crearHolaMundo() {
+		final MensajeVortex mensajeVortex = crearMensaje("texto", "Hola mundo", "TagEjemplo");
+		return mensajeVortex;
+	}
+
+	private static MensajeVortex crearReemplazoDeTags() {
+		final ReemplazarTags publicacionDeTags = ReemplazarTags.create(Lists.newArrayList("TAG1"));
+		final String contenidoJson = interpreteJackson.toJson(publicacionDeTags);
+
+		final String tipoDeContenido = publicacionDeTags.getClass().getName();
+		final MensajeVortex mensajeVortex = crearMensaje(contenidoJson, tipoDeContenido,
+				MensajeVortex.TAG_INTERCAMBIO_VECINO);
+		return mensajeVortex;
+	}
+
+	private static MensajeVortex crearMensaje(final String contenidoJson, final String tipoDeContenido,
+			final String... tagsArray) {
+		final ContenidoVortex contenido = ContenidoVortex.create(tipoDeContenido, contenidoJson);
+		final IdVortex identificacion = IdVortex.create("1", "1", 1L, 0L);
+		final List<String> tags = Lists.newArrayList(tagsArray);
+		final MensajeVortex mensajeVortex = MensajeVortex.create(contenido, identificacion, tags);
+		return mensajeVortex;
 	}
 }
