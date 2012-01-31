@@ -14,7 +14,7 @@ package net.gaia.vortex.http.controller;
 
 import java.util.List;
 
-import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
+import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
@@ -23,7 +23,7 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
  * @author D. García
  */
 public class NoRemoteSession implements RemoteSession {
-	private NodoVortexEmbebido nodoVortex;
+	private NodoVortex nodoVortex;
 
 	/**
 	 * @see net.gaia.vortex.http.controller.RemoteSession#getSessionId()
@@ -52,7 +52,7 @@ public class NoRemoteSession implements RemoteSession {
 		return null;
 	}
 
-	public static NoRemoteSession create(final NodoVortexEmbebido nodo) {
+	public static NoRemoteSession create(final NodoVortex nodo) {
 		final NoRemoteSession sinSesion = new NoRemoteSession();
 		sinSesion.nodoVortex = nodo;
 		return sinSesion;

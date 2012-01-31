@@ -19,7 +19,7 @@ import net.gaia.vortex.http.protocol.VortexWrapper;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
-import net.gaia.vortex.protocol.messages.meta.ReemplazarTags;
+import net.gaia.vortex.protocol.messages.tags.ReemplazarTags;
 
 import com.google.common.collect.Lists;
 

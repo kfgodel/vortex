@@ -30,7 +30,7 @@
     <dependent-module archiveName="commons-io-2.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/commons-io/commons-io/2.0.1/commons-io-2.0.1.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="dgarcia-commons-1.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/ar/com/fdvs/dgarcia/dgarcia-commons/1.0.1-SNAPSHOT/dgarcia-commons-1.0.1-SNAPSHOT.jar">
+    <dependent-module archiveName="dgarcia-commons-1.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/ar/com/fdvs/dgarcia/dgarcia-commons/1.0.1/dgarcia-commons-1.0.1.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="dom4j-1.6.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar">
@@ -138,16 +138,16 @@
     <dependent-module archiveName="springockito-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/kubek2k/mockito/spring/springockito/1.0.0-SNAPSHOT/springockito-1.0.0-SNAPSHOT.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="task-processor-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/net/gaia/task-processor/0.0.1-SNAPSHOT/task-processor-0.0.1-SNAPSHOT.jar">
+    <dependent-module archiveName="task-processor-0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/net/gaia/task-processor/0.1/task-processor-0.1.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="validation-api-1.0.0.GA.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="vortex-embedded-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/net/gaia/vortex-embedded/0.0.1-SNAPSHOT/vortex-embedded-0.0.1-SNAPSHOT.jar">
+    <dependent-module archiveName="vortex-embedded-0.2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/net/gaia/vortex-embedded/0.2/vortex-embedded-0.2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="vortex-messages-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/net/gaia/vortex-messages/1.0-SNAPSHOT/vortex-messages-1.0-SNAPSHOT.jar">
+    <dependent-module archiveName="vortex-messages-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/net/gaia/vortex-messages/1.0/vortex-messages-1.0.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="xml-apis-1.0.b2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar">

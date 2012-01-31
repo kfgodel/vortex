@@ -14,8 +14,8 @@ package net.gaia.vortex.http.controller;
 
 import java.util.List;
 
-import net.gaia.vortex.lowlevel.api.EncoladorDeMensajesHandler;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
+import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**

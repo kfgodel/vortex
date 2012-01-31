@@ -19,10 +19,10 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.http.protocol.VortexWrapper;
-import net.gaia.vortex.lowlevel.api.EncoladorDeMensajesHandler;
-import net.gaia.vortex.lowlevel.api.NodoVortexEmbebido;
+import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
-import net.gaia.vortex.lowlevel.impl.NodoVortexConTasks;
+import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
+import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 
 import org.springframework.stereotype.Component;
 
@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 public class RemoteSessionController {
 
 	private final ConcurrentHashMap<Long, RemoteSessionImpl> remoteSessions = new ConcurrentHashMap<Long, RemoteSessionImpl>();
-	private final NodoVortexEmbebido nodoVortex;
+	private final NodoVortex nodoVortex;
 	private final AtomicLong secuenciadorIds = new AtomicLong(1);
 	private final NoRemoteSession sinSesionVortex;
 
