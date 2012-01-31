@@ -45,10 +45,10 @@ public class NoRemoteSession implements RemoteSession {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.controller.RemoteSession#getMensajesRecibidos()
+	 * @see net.gaia.vortex.http.controller.RemoteSession#quitarMensajesRecibidos()
 	 */
 	@Override
-	public List<MensajeVortex> getMensajesRecibidos() {
+	public List<MensajeVortex> quitarMensajesRecibidos() {
 		return null;
 	}
 

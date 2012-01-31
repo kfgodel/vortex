@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ImportResource;
  * @author D. García
  */
 @Configuration
-@ImportResource({ "classpath:spring/persistence-context.xml", "classpath:spring/cron-context.xml" })
+@ImportResource({ "classpath:spring/cron-context.xml" })
 public class SpringConfig {
 
 }

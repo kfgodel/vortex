@@ -67,7 +67,7 @@ public class VortexWrapper {
 	public static VortexWrapper createFrom(final RemoteSession session) {
 		final VortexWrapper wrapper = new VortexWrapper();
 		wrapper.sessionId = session.getSessionId();
-		wrapper.mensajes = session.getMensajesRecibidos();
+		wrapper.mensajes = session.quitarMensajesRecibidos();
 		return wrapper;
 	}
 

@@ -14,9 +14,14 @@ package net.gaia.vortex.http.controller;
 
 import java.util.List;
 
+import net.gaia.vortex.externals.time.VortexTime;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+
+import org.joda.time.DateTime;
+
+import com.google.common.base.Objects;
 
 /**
  * Esta calse representa una sesión remotea que tiene asociada un ID para identificarla remotamente
@@ -26,8 +31,12 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
 public class RemoteSessionImpl implements RemoteSession {
 
 	private Long sessionId;
+	public static final String sessionId_FIELD = "sessionId";
 	private SesionVortex sesionVortex;
+	public static final String sesionVortex_FIELD = "sesionVortex";
 	private EncoladorDeMensajesHandler mensajesParaElCliente;
+	private DateTime lastActivityMoment;
+	public static final String lastActivityMoment_FIELD = "lastActivityMoment";
 
 	public static RemoteSessionImpl create(final Long idDeSesion, final SesionVortex sesionVortex,
 			final EncoladorDeMensajesHandler encoladorDeLaSesion) {
@@ -35,7 +44,15 @@ public class RemoteSessionImpl implements RemoteSession {
 		sesion.mensajesParaElCliente = encoladorDeLaSesion;
 		sesion.sesionVortex = sesionVortex;
 		sesion.sessionId = idDeSesion;
+		sesion.registerActivity();
 		return sesion;
+	}
+
+	/**
+	 * Registra en esta sesión que se realizó actividad, actualizando la fecha de última actividad
+	 */
+	private void registerActivity() {
+		this.lastActivityMoment = VortexTime.currentMoment();
 	}
 
 	/**
@@ -51,18 +68,44 @@ public class RemoteSessionImpl implements RemoteSession {
 	 */
 	@Override
 	public void enviarAlNodo(final List<MensajeVortex> mensajes) {
+		registerActivity();
 		for (final MensajeVortex mensajeVortex : mensajes) {
 			sesionVortex.enviar(mensajeVortex);
 		}
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.controller.RemoteSession#getMensajesRecibidos()
+	 * @see net.gaia.vortex.http.controller.RemoteSession#quitarMensajesRecibidos()
 	 */
 	@Override
-	public List<MensajeVortex> getMensajesRecibidos() {
+	public List<MensajeVortex> quitarMensajesRecibidos() {
+		registerActivity();
 		final List<MensajeVortex> mensajesQuitados = mensajesParaElCliente.quitarTodos();
 		return mensajesQuitados;
 	}
 
+	/**
+	 * Devuelve el momento en que esta sesión tuvo actividad
+	 * 
+	 * @return El momento que representa la referencia para conocer si esta sesión es vieja
+	 */
+	public DateTime getLastActivityMoment() {
+		return this.lastActivityMoment;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(sessionId_FIELD, sessionId)
+				.add(lastActivityMoment_FIELD, lastActivityMoment).add(sesionVortex_FIELD, sesionVortex).toString();
+	}
+
+	/**
+	 * Cierra la sesión actual, cerrando la sesión vortex asociada
+	 */
+	public void cerrar() {
+		this.sesionVortex.cerrar();
+	}
 }

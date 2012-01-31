@@ -12,18 +12,26 @@
  */
 package net.gaia.vortex.http.controller;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
+import net.gaia.vortex.externals.time.VortexTime;
 import net.gaia.vortex.http.protocol.VortexWrapper;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
 import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.PeriodType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,6 +42,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RemoteSessionController {
+	private static final Logger LOG = LoggerFactory.getLogger(RemoteSessionController.class);
 
 	private final ConcurrentHashMap<Long, RemoteSessionImpl> remoteSessions = new ConcurrentHashMap<Long, RemoteSessionImpl>();
 	private final NodoVortex nodoVortex;
@@ -104,5 +113,40 @@ public class RemoteSessionController {
 		final long proximoId = secuenciadorIds.getAndIncrement();
 		final RemoteSessionImpl sesionRemota = RemoteSessionImpl.create(proximoId, sesionVortex, encoladorDeLaSesion);
 		return sesionRemota;
+	}
+
+	/**
+	 * Elimina las sesiones remotas que no tuvieron actividad en el último período dentro de un
+	 * lapso razonable
+	 */
+	public void removeOldRemoteSessions() {
+		LOG.debug("Iniciando limpieza de sesiones viejas");
+		final Collection<RemoteSessionImpl> allRemoteSessions = remoteSessions.values();
+		final Iterator<RemoteSessionImpl> iterator = allRemoteSessions.iterator();
+
+		while (iterator.hasNext()) {
+			final RemoteSessionImpl remoteSession = iterator.next();
+			if (esUnaSesionVieja(remoteSession)) {
+				LOG.info("Eliminando sesión vieja: {}", remoteSession);
+				iterator.remove();
+				remoteSession.cerrar();
+			}
+		}
+	}
+
+	/**
+	 * Indica si la sesión pasada se considera vieja por no tener actividad en un período
+	 * predefinido
+	 * 
+	 * @param remoteSession
+	 *            La sesión a evaluar
+	 * @return true si se considera una sesión vieja (sin actividad en un día)
+	 */
+	private boolean esUnaSesionVieja(final RemoteSessionImpl remoteSession) {
+		final DateTime momentOfLastActivity = remoteSession.getLastActivityMoment();
+		final Interval intervaloTranscurrido = new Interval(momentOfLastActivity, VortexTime.currentMoment());
+		final int diasTranscurridos = intervaloTranscurrido.toPeriod(PeriodType.days()).getDays();
+		final boolean esUnaSesionVieja = diasTranscurridos > 1;
+		return esUnaSesionVieja;
 	}
 }

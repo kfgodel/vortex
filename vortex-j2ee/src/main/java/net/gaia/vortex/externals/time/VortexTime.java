@@ -1,5 +1,5 @@
 /**
- * 22/08/2011 14:16:38 Copyright (C) 2011 Darío L. García
+ * 31/01/2012 18:14:25 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,20 +10,25 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.model.servidor.ids;
+package net.gaia.vortex.externals.time;
+
+import org.joda.time.DateTime;
 
 /**
- * Esta interfaz define los métodos necesarios para asignar numero de secuencia a los mensajes
+ * Esta clase sirve de referencia para obtener el tiempo actual en el código
  * 
  * @author D. García
  */
-public interface SecuenciadorMensajes {
+public class VortexTime {
 
 	/**
-	 * Devuelve el número de secuencia proximo disponible, incrementando el siguiente
+	 * Devuelve el DateTime que se considera como momento actual. <br>
+	 * Este método cambia el objeto devuelto en el tiempo
 	 * 
-	 * @return El número de secuencia a utilizar
+	 * @return El momento considerado actual
 	 */
-	public Long proximoNumeroSecuencia();
+	public static DateTime currentMoment() {
+		return new DateTime();
+	}
 
 }

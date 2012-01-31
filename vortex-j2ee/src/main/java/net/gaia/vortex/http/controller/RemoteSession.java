@@ -37,6 +37,6 @@ public interface RemoteSession {
 	 * 
 	 * @return Los mensajes quitados de la cola de recepción
 	 */
-	public abstract List<MensajeVortex> getMensajesRecibidos();
+	public abstract List<MensajeVortex> quitarMensajesRecibidos();
 
 }

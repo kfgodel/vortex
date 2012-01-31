@@ -111,21 +111,6 @@ public class HttpTranslator {
 	}
 
 	/**
-	 * Devuelve la cadena que corresponde al tipo de contenido del objeto pasado
-	 * 
-	 * @param valorComoObjeto
-	 *            El objeto a evaluar
-	 * @return
-	 */
-	private String getTipoDeContenidoFromTipoDeValor(final Object valorComoObjeto) {
-		if (valorComoObjeto == null) {
-			throw new UnhandledConditionException("Se indico como valor de un metamensaje el valor null");
-		}
-		final String tipoDeContenido = valorComoObjeto.getClass().getName();
-		return tipoDeContenido;
-	}
-
-	/**
 	 * Crea una versión objeto con la interpretación del parámetro del request que corresponde al
 	 * wrapper http
 	 * 
@@ -197,20 +182,4 @@ public class HttpTranslator {
 		}
 	}
 
-	/**
-	 * devuelve la clase de objeto que se corresponde con el contenido en base al tipo declarado
-	 * 
-	 * @param tipoContenidoDeclarado
-	 *            El tipo declarado del contenido
-	 * @return La clase para recrear el objeto
-	 */
-	private Class<?> getTipoEsperadoFromTipoDeContenido(final String tipoContenidoDeclarado) {
-		try {
-			final Class<?> claseDemetamensaje = Class.forName(tipoContenidoDeclarado);
-			return claseDemetamensaje;
-		} catch (final Exception e) {
-			throw new UnhandledConditionException("Se produjo un error al intentar obtener el metamensaje de tipo: "
-					+ tipoContenidoDeclarado, e);
-		}
-	}
 }
