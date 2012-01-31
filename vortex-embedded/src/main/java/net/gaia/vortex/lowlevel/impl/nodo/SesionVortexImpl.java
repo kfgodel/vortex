@@ -26,6 +26,8 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa la sesión vortex creada desde el nodo y dada al cliente para poder enviar y
  * recibir mensajes
@@ -39,8 +41,11 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 	 * Receptor de los mensajes de esta sesión
 	 */
 	private ReceptorVortexConSesion receptorEmisor;
+	public static final String receptorEmisor_FIELD = "receptorEmisor";
 	private NodoVortexConTasks nodo;
+	public static final String nodo_FIELD = "nodo";
 	private AtomicBoolean cerrada;
+	public static final String cerrada_FIELD = "cerrada";
 	private MensajeVortexHandler handlerDelReceptor;
 
 	/**
@@ -117,5 +122,14 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 
 	public ReceptorVortexConSesion getReceptorEmisor() {
 		return receptorEmisor;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(cerrada_FIELD, cerrada.get()).add(receptorEmisor_FIELD, receptorEmisor)
+				.add(nodo_FIELD, nodo).toString();
 	}
 }
