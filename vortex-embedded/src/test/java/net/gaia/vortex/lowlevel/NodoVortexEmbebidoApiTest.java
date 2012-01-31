@@ -31,10 +31,10 @@ import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
-import net.gaia.vortex.protocol.messages.meta.AgregarTags;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
 import net.gaia.vortex.protocol.messages.routing.AcuseDuplicado;
 import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
+import net.gaia.vortex.protocol.messages.tags.AgregarTags;
 import net.gaia.vortex.tests.VortexTest;
 
 import org.junit.After;

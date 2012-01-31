@@ -17,7 +17,7 @@ import net.gaia.vortex.lowlevel.impl.ids.GeneradorMensajesDeNodo;
 import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
-import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
+import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

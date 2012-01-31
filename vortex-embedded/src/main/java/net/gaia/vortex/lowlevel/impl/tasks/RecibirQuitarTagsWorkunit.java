@@ -20,7 +20,7 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
 import net.gaia.vortex.meta.Loggers;
-import net.gaia.vortex.protocol.messages.meta.QuitarTags;
+import net.gaia.vortex.protocol.messages.tags.QuitarTags;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

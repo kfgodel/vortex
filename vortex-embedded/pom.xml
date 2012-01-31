@@ -18,14 +18,14 @@
 		<dependency>
 		  <groupId>net.gaia</groupId>
 		  <artifactId>vortex-messages</artifactId>
-		  <version>1.0-SNAPSHOT</version>
+		  <version>1.0</version>
 		</dependency>
 		
 		<!-- Motor de tareas  -->
 		<dependency>
 		  <groupId>net.gaia</groupId>
 		  <artifactId>task-processor</artifactId>
-		  <version>0.0.1-SNAPSHOT</version>
+		  <version>0.1</version>
 		</dependency>
 		
 		
@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>ar.com.fdvs.dgarcia</groupId>
 			<artifactId>dgarcia-commons</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 
 		<!-- Spring -->	

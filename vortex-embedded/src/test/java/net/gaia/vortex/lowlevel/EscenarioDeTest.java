@@ -19,10 +19,10 @@ import java.util.concurrent.atomic.AtomicLong;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
-import net.gaia.vortex.protocol.messages.meta.CerrarConexion;
-import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
-import net.gaia.vortex.protocol.messages.meta.ReemplazarTags;
+import net.gaia.vortex.protocol.messages.MetamensajeVortex;
+import net.gaia.vortex.protocol.messages.conn.CerrarConexion;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
+import net.gaia.vortex.protocol.messages.tags.ReemplazarTags;
 
 import com.google.common.collect.Lists;
 

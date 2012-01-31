@@ -28,17 +28,17 @@ import net.gaia.vortex.lowlevel.impl.ids.GeneradorDeMensajesImpl;
 import net.gaia.vortex.lowlevel.impl.ids.GeneradorMensajesDeNodo;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
-import net.gaia.vortex.protocol.messages.meta.AgregarTags;
-import net.gaia.vortex.protocol.messages.meta.CerrarConexion;
-import net.gaia.vortex.protocol.messages.meta.LimpiarTags;
-import net.gaia.vortex.protocol.messages.meta.MetamensajeVortex;
-import net.gaia.vortex.protocol.messages.meta.QuitarTags;
-import net.gaia.vortex.protocol.messages.meta.ReemplazarTags;
+import net.gaia.vortex.protocol.messages.MetamensajeVortex;
+import net.gaia.vortex.protocol.messages.conn.CerrarConexion;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
 import net.gaia.vortex.protocol.messages.routing.AcuseDuplicado;
 import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 import net.gaia.vortex.protocol.messages.routing.SolicitudAcuseConsumo;
 import net.gaia.vortex.protocol.messages.routing.SolicitudEsperaAcuseConsumo;
+import net.gaia.vortex.protocol.messages.tags.AgregarTags;
+import net.gaia.vortex.protocol.messages.tags.LimpiarTags;
+import net.gaia.vortex.protocol.messages.tags.QuitarTags;
+import net.gaia.vortex.protocol.messages.tags.ReemplazarTags;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,8 +89,7 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 		handlerDeMensajes.set(handler);
 	}
 
-	public static ClienteVortexImpl create(final NodoVortex nodoVortex,
-			final HandlerDeMensajesApi handlerDeMensajes) {
+	public static ClienteVortexImpl create(final NodoVortex nodoVortex, final HandlerDeMensajesApi handlerDeMensajes) {
 		final ClienteVortexImpl cliente = new ClienteVortexImpl();
 		cliente.nodoVortex = nodoVortex;
 		cliente.handlerDeMensajes = new AtomicReference<HandlerDeMensajesApi>(handlerDeMensajes);

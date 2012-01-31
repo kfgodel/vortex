@@ -18,9 +18,9 @@ import java.util.Set;
 
 import net.gaia.vortex.hilevel.api.FiltroDeMensajesDelCliente;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
-import net.gaia.vortex.protocol.messages.meta.AgregarTags;
-import net.gaia.vortex.protocol.messages.meta.QuitarTags;
-import net.gaia.vortex.protocol.messages.meta.ReemplazarTags;
+import net.gaia.vortex.protocol.messages.tags.AgregarTags;
+import net.gaia.vortex.protocol.messages.tags.QuitarTags;
+import net.gaia.vortex.protocol.messages.tags.ReemplazarTags;
 import ar.com.fdvs.dgarcia.colecciones.sets.ConcurrentHashSet;
 
 import com.google.common.collect.Lists;

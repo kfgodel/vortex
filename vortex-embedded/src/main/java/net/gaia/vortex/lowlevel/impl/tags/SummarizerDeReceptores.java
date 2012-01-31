@@ -431,6 +431,9 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 				for (final String tagRegistrado : allTags) {
 					reporte.notificarTagIncorporadoAlNodoA(nuevoReceptor, tagRegistrado);
 				}
+
+				// Registramos al nuevo como receptor forzando que se cree su conjunto vacío
+				tagsPorReceptor.getOrCreateIfNullFor(nuevoReceptor);
 			}
 		});
 	}
