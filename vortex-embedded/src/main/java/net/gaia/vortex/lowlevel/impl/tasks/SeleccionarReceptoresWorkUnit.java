@@ -56,8 +56,8 @@ public class SeleccionarReceptoresWorkUnit implements WorkUnit {
 		final List<String> tagsDelMensaje = mensaje.getTagsDestino();
 		final ReceptorVortex emisor = contexto.getEmisor();
 		final SeleccionDeReceptores seleccion = registro.getReceptoresInteresadosMenosA(emisor, tagsDelMensaje);
-		Loggers.RUTEO.debug("INTERESADOS en mensaje[{}]: {} {}", new Object[] { mensaje,
-				seleccion.getSeleccionados().size(), seleccion.getSeleccionados() });
+		Loggers.RUTEO.debug("{} INTERESADOS en mensaje[{}]: {}", new Object[] { seleccion.getSeleccionados().size(),
+				mensaje, seleccion.getSeleccionados() });
 
 		// Creamos la estructura de control para realizar el ruteo
 		final ControlDeRuteo controlDeRuteo = this.contexto.getControl();

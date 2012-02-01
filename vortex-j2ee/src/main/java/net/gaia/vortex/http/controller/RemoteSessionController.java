@@ -97,6 +97,7 @@ public class RemoteSessionController {
 				final Long idDeLaSesionCreada = sesionCreada.getSessionId();
 				remoteSessions.put(idDeLaSesionCreada, sesionCreada);
 				remoteSession = sesionCreada;
+				LOG.debug("Sesión remota[{}] creada para el wrapper:[{}]", sesionCreada.getSessionId(), wrapper);
 			}
 		}
 		return remoteSession;
