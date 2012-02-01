@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>net.gaia</groupId>
 			<artifactId>vortex-embedded</artifactId>
-			<version>0.2.2</version>
+			<version>0.2.3-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Generación de JSON para comunicación -->

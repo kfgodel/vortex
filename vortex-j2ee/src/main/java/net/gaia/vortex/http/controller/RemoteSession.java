@@ -14,10 +14,12 @@ package net.gaia.vortex.http.controller;
 
 import java.util.List;
 
+import net.gaia.vortex.protocol.http.VortexWrapper;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
- *
+ * Esta interfaz representa una sesión abierta remotamente e identificada por un ID numerico
+ * 
  * @author D. García
  */
 public interface RemoteSession {
@@ -33,10 +35,10 @@ public interface RemoteSession {
 	public abstract void enviarAlNodo(final List<MensajeVortex> mensajes);
 
 	/**
-	 * Devuelve los mensajes recibidos para esta sesión del nodo
+	 * Genera el wrapper con los mensajes recibidos hasta el momento
 	 * 
-	 * @return Los mensajes quitados de la cola de recepción
+	 * @return El wrappper de los mensajes recibidos por esta sesión
 	 */
-	public abstract List<MensajeVortex> quitarMensajesRecibidos();
+	public abstract VortexWrapper recibirDelNodo();
 
 }

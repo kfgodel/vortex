@@ -21,11 +21,12 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.externals.time.VortexTime;
-import net.gaia.vortex.http.protocol.VortexWrapper;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
 import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
+import net.gaia.vortex.prog.Decision;
+import net.gaia.vortex.protocol.http.VortexWrapper;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -33,6 +34,8 @@ import org.joda.time.PeriodType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import com.tenpines.commons.annotations.HasDependencyOn;
 
 /**
  * Esta clase representa un controlador de interacción de mensajes vortex en los que no es posible
@@ -71,7 +74,7 @@ public class RemoteSessionController {
 		session.enviarAlNodo(wrapper.getMensajes());
 
 		// Después recolectamos los que tenemos que devolverle
-		final VortexWrapper respuesta = VortexWrapper.createFrom(session);
+		final VortexWrapper respuesta = session.recibirDelNodo();
 		return respuesta;
 	}
 
@@ -82,6 +85,7 @@ public class RemoteSessionController {
 	 *            El wrapper recibido
 	 * @return La sesión referida por ID o una nueva creada si no tenía ID
 	 */
+	@HasDependencyOn(Decision.SE_REQUIERE_SESION_SI_SE_USA_ID_O_SI_SE_USAN_METAMENSAJES)
 	private RemoteSession getOrCreateSessionFor(final VortexWrapper wrapper) {
 		RemoteSession remoteSession = null;
 		final Long sessionId = wrapper.getSessionId();

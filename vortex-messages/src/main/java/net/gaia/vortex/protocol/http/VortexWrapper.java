@@ -10,14 +10,11 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http.protocol;
+package net.gaia.vortex.protocol.http;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.gaia.annotations.HasDependencyOn;
-import net.gaia.vortex.http.controller.RemoteSession;
-import net.gaia.vortex.prog.Decision;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import com.google.common.base.Objects;
@@ -64,10 +61,10 @@ public class VortexWrapper {
 		return Objects.toStringHelper(this).add(sessionId_FIELD, sessionId).add(mensajes_FIELD, mensajes).toString();
 	}
 
-	public static VortexWrapper createFrom(final RemoteSession session) {
+	public static VortexWrapper create(final Long sessionId, final List<MensajeVortex> mensajes) {
 		final VortexWrapper wrapper = new VortexWrapper();
-		wrapper.sessionId = session.getSessionId();
-		wrapper.mensajes = session.quitarMensajesRecibidos();
+		wrapper.sessionId = sessionId;
+		wrapper.mensajes = mensajes;
 		return wrapper;
 	}
 
@@ -91,7 +88,6 @@ public class VortexWrapper {
 	 * 
 	 * @return
 	 */
-	@HasDependencyOn(Decision.SE_REQUIERE_SESION_SI_SE_USA_ID_O_SI_SE_USAN_METAMENSAJES)
 	public boolean requiereSesion() {
 		final boolean indicaIdDeSesion = this.sessionId != null;
 		if (indicaIdDeSesion) {

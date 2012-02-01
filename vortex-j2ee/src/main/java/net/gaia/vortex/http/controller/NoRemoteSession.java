@@ -15,6 +15,7 @@ package net.gaia.vortex.http.controller;
 import java.util.List;
 
 import net.gaia.vortex.lowlevel.api.NodoVortex;
+import net.gaia.vortex.protocol.http.VortexWrapper;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
@@ -44,17 +45,18 @@ public class NoRemoteSession implements RemoteSession {
 		}
 	}
 
-	/**
-	 * @see net.gaia.vortex.http.controller.RemoteSession#quitarMensajesRecibidos()
-	 */
-	@Override
-	public List<MensajeVortex> quitarMensajesRecibidos() {
-		return null;
-	}
-
 	public static NoRemoteSession create(final NodoVortex nodo) {
 		final NoRemoteSession sinSesion = new NoRemoteSession();
 		sinSesion.nodoVortex = nodo;
 		return sinSesion;
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.controller.RemoteSession#recibirDelNodo()
+	 */
+	@Override
+	public VortexWrapper recibirDelNodo() {
+		// No hay mensajes para esta sesión
+		return VortexWrapper.create(null, null);
 	}
 }

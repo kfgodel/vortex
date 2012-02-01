@@ -17,6 +17,7 @@ import java.util.List;
 import net.gaia.vortex.externals.time.VortexTime;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
+import net.gaia.vortex.protocol.http.VortexWrapper;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.joda.time.DateTime;
@@ -75,16 +76,6 @@ public class RemoteSessionImpl implements RemoteSession {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.controller.RemoteSession#quitarMensajesRecibidos()
-	 */
-	@Override
-	public List<MensajeVortex> quitarMensajesRecibidos() {
-		registerActivity();
-		final List<MensajeVortex> mensajesQuitados = mensajesParaElCliente.quitarTodos();
-		return mensajesQuitados;
-	}
-
-	/**
 	 * Devuelve el momento en que esta sesión tuvo actividad
 	 * 
 	 * @return El momento que representa la referencia para conocer si esta sesión es vieja
@@ -107,5 +98,16 @@ public class RemoteSessionImpl implements RemoteSession {
 	 */
 	public void cerrar() {
 		this.sesionVortex.cerrar();
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.controller.RemoteSession#recibirDelNodo()
+	 */
+	@Override
+	public VortexWrapper recibirDelNodo() {
+		registerActivity();
+		final List<MensajeVortex> mensajesQuitados = mensajesParaElCliente.quitarTodos();
+		final VortexWrapper wrapper = VortexWrapper.create(getSessionId(), mensajesQuitados);
+		return wrapper;
 	}
 }

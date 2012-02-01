@@ -15,7 +15,7 @@ package net.gaia.vortex.tests;
 import java.util.List;
 
 import net.gaia.vortex.dependencies.json.impl.InterpreteJackson;
-import net.gaia.vortex.http.protocol.VortexWrapper;
+import net.gaia.vortex.protocol.http.VortexWrapper;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
