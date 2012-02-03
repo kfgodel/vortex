@@ -24,18 +24,12 @@
 			<version>0.2.3-SNAPSHOT</version>
 		</dependency>
 		
-		<!-- Generación de JSON para comunicación -->
+		<!-- Conversion a JSON de vortex-->
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-lgpl</artifactId>
-			<version>1.8.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-lgpl</artifactId>
-			<version>1.8.3</version>
-		</dependency>
-		
+		  <groupId>net.gaia</groupId>
+		  <artifactId>vortex-json</artifactId>
+		  <version>1.0</version>
+		</dependency>				
 
 		<!-- Spring Web -->	
 		<dependency>
