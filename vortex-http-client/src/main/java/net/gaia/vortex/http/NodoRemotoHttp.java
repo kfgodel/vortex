@@ -12,13 +12,28 @@
  */
 package net.gaia.vortex.http;
 
+import java.util.List;
+
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
+import net.gaia.vortex.dependencies.json.InterpreteJson;
+import net.gaia.vortex.dependencies.json.impl.InterpreteJackson;
+import net.gaia.vortex.http.externals.http.ConectorHttp;
+import net.gaia.vortex.http.externals.http.ConectorHttpImpl;
+import net.gaia.vortex.http.sessions.SesionRemotaHttp;
+import net.gaia.vortex.http.sessions.SinSesionRemotaHttp;
+import net.gaia.vortex.http.tasks.ValidarMensajesPrevioEnvioWorkUnit;
+import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
+import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 /**
  * Esta clase representa un nodo vortex remoto con
@@ -28,14 +43,22 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
 public class NodoRemotoHttp implements NodoVortex {
 
 	private TaskProcessor processor;
+	private SinSesionRemotaHttp sinSesion;
+	private InterpreteJson interprete;
+
+	private String nombre;
+	public static final String nombre_FIELD = "nombre";
+
+	private ConectorHttp conector;
+	public static final String conector_FIELD = "conector";
 
 	/**
 	 * @see net.gaia.vortex.lowlevel.api.NodoVortex#crearNuevaSesion(net.gaia.vortex.lowlevel.api.MensajeVortexHandler)
 	 */
 	@Override
-	public SesionVortex crearNuevaSesion(final MensajeVortexHandler arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	public SesionVortex crearNuevaSesion(final MensajeVortexHandler handlerDeMensajes) {
+		final SesionRemotaHttp sesion = SesionRemotaHttp.create(this, handlerDeMensajes);
+		return sesion;
 	}
 
 	/**
@@ -43,8 +66,7 @@ public class NodoRemotoHttp implements NodoVortex {
 	 */
 	@Override
 	public void detenerYDevolverRecursos() {
-		// TODO Auto-generated method stub
-
+		processor.detener();
 	}
 
 	/**
@@ -52,13 +74,65 @@ public class NodoRemotoHttp implements NodoVortex {
 	 */
 	@Override
 	public void rutear(final MensajeVortex mensaje) {
-		// TODO Auto-generated method stub
-
+		// Comenzamos con la validación desde este thread para tirar excepciones en este método
+		final List<MensajeVortex> mensajes = Lists.newArrayList(mensaje);
+		// Usamos la sesión que no tiene sesión real cuando se pide ruteo directo
+		final ContextoDeOperacionHttp contexto = ContextoDeOperacionHttp.create(this, sinSesion);
+		final ValidarMensajesPrevioEnvioWorkUnit validacion = ValidarMensajesPrevioEnvioWorkUnit.create(contexto,
+				mensajes);
+		try {
+			validacion.doWork();
+		} catch (final InterruptedException e) {
+			throw new UnhandledConditionException("Se interrumpió la ejecución de la validación", e);
+		}
 	}
 
-	public static NodoRemotoHttp create(final String url) {
+	/**
+	 * Crea un pseudo nodo vortex que se conecta a un nodo real por HTTP usando la URL indicada
+	 * 
+	 * @param url
+	 *            La url a la que enviar requests con HTTP por los mensajes
+	 * @param nombreOpcional
+	 *            El nombre opcional para identificar a este nodo
+	 * @return El nodo creado
+	 */
+	public static NodoRemotoHttp create(final String url, final String nombreOpcional) {
 		final NodoRemotoHttp nodo = new NodoRemotoHttp();
 		nodo.processor = ExecutorBasedTaskProcesor.create(TaskProcessorConfiguration.create());
+		nodo.interprete = InterpreteJackson.create();
+		nodo.nombre = NodoVortexConTasks.getValidNameFrom(nombreOpcional);
+		nodo.conector = ConectorHttpImpl.create(url, nodo.interprete);
 		return nodo;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(nombre_FIELD, nombre).add(conector_FIELD, conector).toString();
+	}
+
+	public TaskProcessor getProcessor() {
+		return processor;
+	}
+
+	/**
+	 * Devuelve el intérprete Json usado en este nodo
+	 * 
+	 * @return El intérprete para conversiones de json
+	 */
+	public InterpreteJson getInterpreteJson() {
+		return interprete;
+	}
+
+	/**
+	 * Devuelve el conector HTTP de este nodo
+	 * 
+	 * @return El conector para utilizar en los envíos de requests
+	 */
+	public ConectorHttp getConector() {
+		return conector;
+	}
+
 }

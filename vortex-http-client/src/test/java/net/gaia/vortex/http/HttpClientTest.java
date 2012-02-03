@@ -33,7 +33,7 @@ public class HttpClientTest {
 	private NodoVortex nodo;
 
 	public void prepararTest() {
-		nodo = NodoRemotoHttp.create("http://kfgodel.info/vortex/controllers/main");
+		nodo = NodoRemotoHttp.create("http://kfgodel.info/vortex/controllers/main", "nodoTest");
 	}
 
 	public void deberiaPermitirEnviarUnMensajeAOtroCliente() {

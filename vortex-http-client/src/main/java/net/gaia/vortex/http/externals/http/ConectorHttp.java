@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http.externals;
+package net.gaia.vortex.http.externals.http;
 
 import net.gaia.vortex.protocol.http.VortexWrapper;
 
@@ -21,5 +21,12 @@ import net.gaia.vortex.protocol.http.VortexWrapper;
  */
 public interface ConectorHttp {
 
+	/**
+	 * Envía por HTTP el wrapper pasado al servidor remoto
+	 * 
+	 * @param enviado
+	 *            El wrapper con los mensajes a enviar
+	 * @return El wrapper con los mensajes recibidos
+	 */
 	public VortexWrapper enviarYRecibir(VortexWrapper enviado);
 }
