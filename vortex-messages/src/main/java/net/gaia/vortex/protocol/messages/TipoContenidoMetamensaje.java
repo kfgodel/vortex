@@ -85,7 +85,7 @@ public enum TipoContenidoMetamensaje {
 	 *            El tipo de contenido
 	 * @return null si el tipo indicado no se corresponde con un metamensaje registrado
 	 */
-	public static Class<?> getTipoFrom(final String tipoContenidoDeclarado) {
+	public static Class<? extends MetamensajeVortex> getTipoFrom(final String tipoContenidoDeclarado) {
 		final TipoContenidoMetamensaje[] allTipos = values();
 		for (final TipoContenidoMetamensaje tipoContenidoMetamensaje : allTipos) {
 			if (tipoContenidoMetamensaje.getTipoDeContenido().equals(tipoContenidoDeclarado)) {

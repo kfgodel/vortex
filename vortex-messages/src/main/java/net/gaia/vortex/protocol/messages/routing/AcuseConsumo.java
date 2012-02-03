@@ -26,8 +26,6 @@ public class AcuseConsumo implements Acuse {
 	private IdVortex idMensajeConsumido;
 	public static final String idMensajeConsumido_FIELD = "idMensajeConsumido";
 
-	private Integer valorConsumo;
-	public static final String valorConsumo_FIELD = "valorConsumo";
 	/**
 	 * Cantidad de clientes del nodo (otros nodos) interesados en el mensaje
 	 */
@@ -55,14 +53,6 @@ public class AcuseConsumo implements Acuse {
 
 	public void setIdMensajeConsumido(final IdVortex idMensajeConsumido) {
 		this.idMensajeConsumido = idMensajeConsumido;
-	}
-
-	public Integer getValorConsumo() {
-		return valorConsumo;
-	}
-
-	public void setValorConsumo(final Integer valorConsumo) {
-		this.valorConsumo = valorConsumo;
 	}
 
 	public Long getCantidadInteresados() {
@@ -95,11 +85,6 @@ public class AcuseConsumo implements Acuse {
 
 	public void setCantidadConsumidos(final Long cantidadConsumidos) {
 		this.cantidadConsumidos = cantidadConsumidos;
-		if (cantidadConsumidos != null && cantidadConsumidos.longValue() > 0) {
-			valorConsumo = 1;
-		} else {
-			valorConsumo = 0;
-		}
 	}
 
 	/**
@@ -112,7 +97,6 @@ public class AcuseConsumo implements Acuse {
 
 	public static AcuseConsumo create() {
 		final AcuseConsumo acuse = new AcuseConsumo();
-		acuse.valorConsumo = 0;
 		acuse.cantidadInteresados = 0L;
 		acuse.cantidadDuplicados = 0L;
 		acuse.cantidadFallados = 0L;
