@@ -126,7 +126,7 @@ public class NodoVortexConTasks implements NodoVortex {
 	 *            El nombre del nodo
 	 * @return Un identificador válido o el pasado
 	 */
-	private static String getValidNameFrom(final String nombreOpcional) {
+	public static String getValidNameFrom(final String nombreOpcional) {
 		if (nombreOpcional != null) {
 			return nombreOpcional;
 		}
