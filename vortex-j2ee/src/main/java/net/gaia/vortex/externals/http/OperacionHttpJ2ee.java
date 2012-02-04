@@ -17,6 +17,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.gaia.vortex.protocol.http.VortexWrapper;
+
 import org.apache.commons.io.IOUtils;
 
 import com.tenpines.commons.exceptions.UnhandledConditionException;
@@ -72,7 +74,7 @@ public class OperacionHttpJ2ee implements OperacionHttp {
 	 */
 	@Override
 	public String getWrapperJson() {
-		final String mensaje = getValorDeParametro(MENSAJE_VORTEX_PARAM_NAME);
+		final String mensaje = getValorDeParametro(VortexWrapper.MENSAJE_VORTEX_PARAM_NAME);
 		return mensaje;
 	}
 

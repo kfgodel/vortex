@@ -22,8 +22,6 @@ package net.gaia.vortex.externals.http;
  */
 public interface OperacionHttp {
 
-	public final String MENSAJE_VORTEX_PARAM_NAME = "mensajeVortex";
-
 	/**
 	 * Devuelve el texto que contiene el wrapper de los mensajes recibidos
 	 * 

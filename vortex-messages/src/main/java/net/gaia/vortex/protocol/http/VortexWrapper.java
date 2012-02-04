@@ -32,6 +32,7 @@ public class VortexWrapper {
 	public static final String sessionId_FIELD = "sessionId";
 
 	private List<MensajeVortex> mensajes;
+	public final static String MENSAJE_VORTEX_PARAM_NAME = "mensajeVortex";
 	public static final String mensajes_FIELD = "mensajes";
 
 	public Long getSessionId() {
