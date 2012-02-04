@@ -1,5 +1,5 @@
 /**
- * 01/02/2012 19:17:30 Copyright (C) 2011 Darío L. García
+ * 04/02/2012 15:25:34 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,23 +12,23 @@
  */
 package net.gaia.vortex.http.externals.http;
 
-import net.gaia.vortex.protocol.http.VortexWrapper;
-
 /**
- * Esta interfaz abstrae los detalles del envío por HTTP de los mensajes
+ * Esta clase representa un error en la conexión con un nodo vortex
  * 
  * @author D. García
  */
-public interface ConectorHttp {
+public class VortexConnectorException extends RuntimeException {
+	private static final long serialVersionUID = 4464378500610949839L;
 
-	/**
-	 * Envía por HTTP el wrapper pasado al servidor remoto
-	 * 
-	 * @param enviado
-	 *            El wrapper con los mensajes a enviar
-	 * @return El wrapper con los mensajes recibidos
-	 * @throws VortexConnectorException
-	 *             Si se produce un error en la conexión por IO o por fallas en la respuesta
-	 */
-	public VortexWrapper enviarYRecibir(VortexWrapper enviado) throws VortexConnectorException;
+	public VortexConnectorException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
+
+	public VortexConnectorException(final String message) {
+		super(message);
+	}
+
+	public VortexConnectorException(final Throwable cause) {
+		super(cause);
+	}
 }
