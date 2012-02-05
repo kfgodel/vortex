@@ -41,8 +41,9 @@ public class HttpClientTest {
 
 	@Before
 	public void prepararTest() {
-		// nodo = NodoRemotoHttp.create("http://kfgodel.info/vortex/controllers/main", "nodoTest");
-		nodo = NodoRemotoHttp.create("http://localhost:8080/vortex-j2ee/controllers/main", "nodoTest");
+		nodo = NodoRemotoHttp.create("http://kfgodel.info/vortex/controllers/main", "nodoTest");
+		// nodo = NodoRemotoHttp.create("http://localhost:8080/vortex-j2ee/controllers/main",
+		// "nodoTest");
 	}
 
 	@Test
