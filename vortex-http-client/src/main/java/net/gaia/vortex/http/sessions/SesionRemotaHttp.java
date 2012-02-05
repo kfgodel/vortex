@@ -38,6 +38,26 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 	private static final Logger LOG = LoggerFactory.getLogger(SesionRemotaHttp.class);
 
 	/**
+	 * Este mensaje es utilizado para encolar solicitudes de polling
+	 */
+	public static final MensajeVortex SOLICITUD_DE_POLLING = new MensajeVortex() {
+		@Override
+		public String toPrettyPrint() {
+			return "SOLICITUD DE POLLING";
+		};
+
+		@Override
+		public boolean esMetaMensaje() {
+			return false;
+		};
+
+		@Override
+		public String toString() {
+			return toPrettyPrint();
+		};
+	};
+
+	/**
 	 * Valor utilizado como ID de sesión para que el nodo nos asigne uno válido
 	 */
 	private static final Long VALUE_TO_REQUEST_NEW_ID = Long.valueOf(-1);
@@ -177,5 +197,14 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 	@Override
 	public void onErrorDeMensaje(final MensajeVortex mensajeAEnviar, final ErroresDelMensaje errores) {
 		this.handlerDeMensajes.onMensajeConErrores(mensajeAEnviar, errores);
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#poll()
+	 */
+	@Override
+	public void poll() {
+		LOG.debug("Polling solicitado para sesion[{}]", this);
+		enviar(SOLICITUD_DE_POLLING);
 	}
 }

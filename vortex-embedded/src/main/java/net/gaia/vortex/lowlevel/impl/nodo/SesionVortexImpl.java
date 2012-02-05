@@ -142,4 +142,12 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 	public void onMensajeConErrores(final MensajeVortex mensajeFallido, final ErroresDelMensaje errores) {
 		handlerDelReceptor.onMensajeConErrores(mensajeFallido, errores);
 	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#poll()
+	 */
+	@Override
+	public void poll() {
+		LOG.warn("La sesión en memoria no requiere polling de mensajes");
+	}
 }

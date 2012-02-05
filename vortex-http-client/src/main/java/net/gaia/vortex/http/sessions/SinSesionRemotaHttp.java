@@ -110,4 +110,12 @@ public class SinSesionRemotaHttp implements SesionVortex, SesionConId {
 	public void onErrorDeMensaje(final MensajeVortex mensajeAEnviar, final ErroresDelMensaje errores) {
 		LOG.error("Se produjo un error con el mensaje[" + mensajeAEnviar + "]: " + errores);
 	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#poll()
+	 */
+	@Override
+	public void poll() {
+		// No hay recepciones para esta sesión
+	}
 }

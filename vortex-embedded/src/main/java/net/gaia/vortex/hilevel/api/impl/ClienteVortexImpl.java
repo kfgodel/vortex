@@ -240,4 +240,12 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	public void onMensajeConErrores(final MensajeVortex mensajeFallido, final ErroresDelMensaje errores) {
 		LOG.error("Hubo un error no manejado con el mensaje[" + mensajeFallido + "]: " + errores);
 	}
+
+	/**
+	 * @see net.gaia.vortex.hilevel.api.ClienteVortex#poll()
+	 */
+	@Override
+	public void poll() {
+		sesionVortex.poll();
+	}
 }

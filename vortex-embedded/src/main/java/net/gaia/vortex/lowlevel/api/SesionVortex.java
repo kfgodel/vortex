@@ -42,4 +42,9 @@ public interface SesionVortex {
 	 * @return true si esta cerrada
 	 */
 	public boolean estaCerrada();
+
+	/**
+	 * Solicita al nodo los mensajes recibidos hasta el momento si es que no fueron recibidos ya
+	 */
+	void poll();
 }

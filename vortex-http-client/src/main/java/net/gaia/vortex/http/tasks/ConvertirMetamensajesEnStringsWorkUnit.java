@@ -12,10 +12,12 @@
  */
 package net.gaia.vortex.http.tasks;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.dependencies.json.InterpreteJson;
+import net.gaia.vortex.http.sessions.SesionRemotaHttp;
 import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
@@ -47,8 +49,15 @@ public class ConvertirMetamensajesEnStringsWorkUnit implements WorkUnit {
 			convertirValorAJson(mensaje);
 		}
 
-		// Realizamos el envío
-		final ArrayList<MensajeVortex> mensajes = Lists.newArrayList(mensaje);
+		// Preparamos la lista a enviar
+		final List<MensajeVortex> mensajes;
+		if (SesionRemotaHttp.SOLICITUD_DE_POLLING == mensaje) {
+			// Si sólo es polling, no se envía realmente
+			mensajes = Collections.emptyList();
+		} else {
+			mensajes = Lists.newArrayList(mensaje);
+		}
+		// Realizamos el envio
 		final EnviarMensajesWorkUnit envio = EnviarMensajesWorkUnit.create(contexto, mensajes);
 		contexto.getProcessor().process(envio);
 	}

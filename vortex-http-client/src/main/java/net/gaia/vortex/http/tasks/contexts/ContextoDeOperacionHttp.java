@@ -27,12 +27,21 @@ public class ContextoDeOperacionHttp {
 
 	private NodoRemotoHttp nodo;
 	private SesionConId sesion;
+	private boolean correspondeEnvio;
 
 	public static ContextoDeOperacionHttp create(final NodoRemotoHttp nodo, final SesionConId sesion) {
 		final ContextoDeOperacionHttp contexto = new ContextoDeOperacionHttp();
 		contexto.nodo = nodo;
 		contexto.sesion = sesion;
+		contexto.correspondeEnvio = true;
 		return contexto;
+	}
+
+	/**
+	 * Indica en este contexto que no se realizó un envío que sea necesario finalizar
+	 */
+	public void registrarComoNoEnvio() {
+		this.correspondeEnvio = false;
 	}
 
 	/**
@@ -67,6 +76,16 @@ public class ContextoDeOperacionHttp {
 	 */
 	public SesionConId getSesionInvolucrada() {
 		return sesion;
+	}
+
+	/**
+	 * Indica si este contexto corresponde a un envío de mensaje y por lo tanto se debe finalizar el
+	 * proceso
+	 * 
+	 * @return true si se envio un mensaje en este contexto, false si no
+	 */
+	public boolean correspondeAEnvio() {
+		return correspondeEnvio;
 	}
 
 }

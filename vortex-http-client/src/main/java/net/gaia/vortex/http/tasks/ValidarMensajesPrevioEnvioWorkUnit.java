@@ -14,6 +14,7 @@ package net.gaia.vortex.http.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.http.sessions.SesionConId;
+import net.gaia.vortex.http.sessions.SesionRemotaHttp;
 import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
 import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
@@ -62,6 +63,11 @@ public class ValidarMensajesPrevioEnvioWorkUnit implements WorkUnit {
 	 * @return
 	 */
 	private ErroresDelMensaje validarMensajeAEnviarPorHttp(final MensajeVortex mensajeAEnviar) {
+		if (mensajeAEnviar == SesionRemotaHttp.SOLICITUD_DE_POLLING) {
+			// El mensaje no se envía así que no hay nada que validar
+			return null;
+		}
+
 		final ContenidoVortex contenidoVortex = mensajeAEnviar.getContenido();
 		if (contenidoVortex == null) {
 			return ErroresDelMensaje.create("El mensaje no tiene contenido vortex: " + mensajeAEnviar.toPrettyPrint());

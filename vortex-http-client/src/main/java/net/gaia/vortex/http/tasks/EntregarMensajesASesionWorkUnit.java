@@ -43,9 +43,11 @@ public class EntregarMensajesASesionWorkUnit implements WorkUnit {
 			sesionReceptora.recibirDelNodo(mensajeRecibido);
 		}
 
-		// Terminamos el proceso de envío de este mensaje
-		final TerminarEnvioDeMensajeWorkUnit terminar = TerminarEnvioDeMensajeWorkUnit.create(contexto);
-		contexto.getProcessor().process(terminar);
+		if (contexto.correspondeAEnvio()) {
+			// Terminamos el proceso de envío de este mensaje
+			final TerminarEnvioDeMensajeWorkUnit terminar = TerminarEnvioDeMensajeWorkUnit.create(contexto);
+			contexto.getProcessor().process(terminar);
+		}
 	}
 
 	public static EntregarMensajesASesionWorkUnit create(final ContextoDeOperacionHttp contexto,

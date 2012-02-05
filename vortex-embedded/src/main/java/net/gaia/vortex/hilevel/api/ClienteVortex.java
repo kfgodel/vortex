@@ -49,4 +49,11 @@ public interface ClienteVortex {
 	 */
 	public FiltroDeMensajesDelCliente getFiltroDeMensajes();
 
+	/**
+	 * Este método fuerza la recepción de mensajes pendientes del nodo en este cliente.<br>
+	 * El método es necesario para aquellos nodos que no soporten el envío automático de los
+	 * mensajes
+	 */
+	public void poll();
+
 }
