@@ -7,6 +7,13 @@
 		Conjunto de clases que facilitan el desarrollo solucionando
 		problemas comunes
 	</description>
+	
+  	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.jdk>1.6</project.jdk>
+	</properties>
+	
+	
 	<build>
 		<plugins>
 			<plugin>
