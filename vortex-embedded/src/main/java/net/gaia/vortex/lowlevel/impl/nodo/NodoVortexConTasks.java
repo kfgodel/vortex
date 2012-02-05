@@ -14,8 +14,11 @@ package net.gaia.vortex.lowlevel.impl.nodo;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import net.gaia.annotations.HasDependencyOn;
+import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
@@ -35,7 +38,6 @@ import net.gaia.vortex.lowlevel.impl.tags.TagChangeListener;
 import net.gaia.vortex.lowlevel.impl.tasks.ComenzarProcesoDeMensajeWorkUnit;
 import net.gaia.vortex.lowlevel.impl.tasks.NotificarCambiosDeTagsEnNodoWorkUnit;
 import net.gaia.vortex.lowlevel.impl.tasks.ValidacionDeMensajeWorkUnit;
-import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
@@ -95,9 +97,29 @@ public class NodoVortexConTasks implements NodoVortex {
 		this.procesador = procesador;
 	}
 
-	@HasDependencyOn({ Decision.TODAVIA_NO_IMPLEMENTE_EL_GENERADOR_DE_MENSAJES,
-			Decision.TODAVIA_NO_IMPLEMENTE_LA_MEMORIA_DE_MENSAJES })
-	public static NodoVortexConTasks create(final TaskProcessor processor, final String nombreOpcional) {
+	/**
+	 * Crea un nodo con la configuración default utilizando un procesador de tareas de un sólo
+	 * thread
+	 * 
+	 * @param nombreOpcional
+	 *            El nombre opcional del nodo para distinguirlo de otros
+	 * @return EL nodo creado
+	 */
+	public static NodoVortexConTasks create(final String nombreOpcional) {
+		final TaskProcessor defaultProcessor = ExecutorBasedTaskProcesor.create();
+		return create(defaultProcessor, nombreOpcional);
+	}
+
+	/**
+	 * Crea un nodo vortex embebido que funciona completamente en memoria
+	 * 
+	 * @param processor
+	 *            El procesador para las tareas
+	 * @param nombreOpcional
+	 *            El nombre opcional de este nodo no null
+	 * @return EL nodo creado
+	 */
+	private static NodoVortexConTasks create(final TaskProcessor processor, final String nombreOpcional) {
 		final NodoVortexConTasks nodo = new NodoVortexConTasks();
 		nodo.registroReceptores = SummarizerDeReceptores.create(new TagChangeListener() {
 			@Override
@@ -109,6 +131,15 @@ public class NodoVortexConTasks implements NodoVortex {
 			}
 		});
 		nodo.procesador = processor;
+		processor.setExceptionHandler(new TaskExceptionHandler() {
+			@Override
+			public void onExceptionRaisedWhileProcessing(final SubmittedTask task,
+					final TaskProcessor processingProcessor) {
+				final WorkUnit work = task.getWork();
+				final Throwable failingError = task.getFailingError();
+				onErrorWithTask(work, failingError);
+			}
+		});
 		nodo.generadorMensajes = GeneradorDeMensajesImpl.create();
 		nodo.memoriaDeMensajes = MemoriaDeMensajesImpl.create();
 		nodo.memoriaDeRuteos = MemoriaDeRuteosImpl.create();
@@ -116,6 +147,18 @@ public class NodoVortexConTasks implements NodoVortex {
 		nodo.sinEmisorIdentificado = NullReceptorVortex.create();
 		nodo.nombre = getValidNameFrom(nombreOpcional);
 		return nodo;
+	}
+
+	/**
+	 * Invocado al producirse un error en la ejecución de una tarea
+	 * 
+	 * @param work
+	 *            La tarea fallida
+	 * @param failingError
+	 *            El error producido
+	 */
+	protected static void onErrorWithTask(final WorkUnit work, final Throwable failingError) {
+		LOG.error("Falló la tarea[" + work + "]: " + failingError, failingError);
 	}
 
 	/**

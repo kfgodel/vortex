@@ -16,7 +16,7 @@
 		</encoder>
 	</appender>
 	
-	<logger name="ar.dgarcia.http.simple" level="DEBUG" />
+	<logger name="net.gaia.vortex.http" level="DEBUG" />
   
 	<root level="info">
 	  <appender-ref ref="STDOUT" />

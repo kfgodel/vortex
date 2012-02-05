@@ -63,6 +63,7 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 			return;
 		}
 		cerrada.set(true);
+		LOG.debug("Sesion cerrada[{}]", this);
 	}
 
 	/**
@@ -74,6 +75,8 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 			LOG.warn("Se itentó enviar un mensaje desde una sesión[{}] cerrada: {}", this, mensaje);
 			return;
 		}
+
+		LOG.debug("Comienzo de envio en sesion[{}]: {}", this, mensaje.toPrettyPrint());
 
 		// Realizamos la validación desde este thread para tirar excepciones si no está bien el
 		// mensaje
@@ -143,6 +146,9 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 	 */
 	@Override
 	public void cambiarId(final Long nuevoId) {
-		sessionId = nuevoId;
+		if (!sessionId.equals(nuevoId)) {
+			LOG.info("Nuevo ID[{}] para sesión[{}]", nuevoId, this);
+		}
+		this.sessionId = nuevoId;
 	}
 }

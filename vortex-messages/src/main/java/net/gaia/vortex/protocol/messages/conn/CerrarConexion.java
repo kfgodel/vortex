@@ -14,6 +14,8 @@ package net.gaia.vortex.protocol.messages.conn;
 
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa el metamensaje de cierre de conexion. Con el cual una parte comunicante
  * pide que se cierre el canal
@@ -25,5 +27,13 @@ public class CerrarConexion implements MetamensajeVortex {
 	public static CerrarConexion create() {
 		final CerrarConexion cierre = new CerrarConexion();
 		return cierre;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
 	}
 }

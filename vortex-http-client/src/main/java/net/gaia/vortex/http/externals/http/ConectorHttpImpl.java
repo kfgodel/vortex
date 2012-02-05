@@ -15,6 +15,10 @@ package net.gaia.vortex.http.externals.http;
 import net.gaia.vortex.dependencies.json.InterpreteJson;
 import net.gaia.vortex.dependencies.json.JsonConversionException;
 import net.gaia.vortex.protocol.http.VortexWrapper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.dgarcia.http.simple.api.ConnectionProblemException;
 import ar.dgarcia.http.simple.api.HttpResponseProvider;
@@ -31,6 +35,7 @@ import com.google.common.base.Strings;
  * @author D. García
  */
 public class ConectorHttpImpl implements ConectorHttp {
+	private static final Logger LOG = LoggerFactory.getLogger(ConectorHttpImpl.class);
 
 	private String serverUrl;
 	public static final String serverUrl_FIELD = "serverUrl";
@@ -51,6 +56,7 @@ public class ConectorHttpImpl implements ConectorHttp {
 	 */
 	@Override
 	public VortexWrapper enviarYRecibir(final VortexWrapper enviado) throws VortexConnectorException {
+		LOG.debug("Wrapper a enviar por http: {}", enviado);
 		final StringRequest httpRequest = translateToHttp(enviado);
 		StringResponse httpResponse;
 		try {
@@ -60,6 +66,7 @@ public class ConectorHttpImpl implements ConectorHttp {
 					"Se produjo un error de IO en la conexion con el servidor: " + serverUrl, e);
 		}
 		final VortexWrapper recibido = translateFromHttp(httpResponse);
+		LOG.debug("Wrapper respondido[{}] a enviado: {}", recibido, enviado);
 		return recibido;
 	}
 

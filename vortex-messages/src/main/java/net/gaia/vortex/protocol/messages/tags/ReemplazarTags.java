@@ -16,6 +16,8 @@ import java.util.List;
 
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa el metamensaje de declaración de todos los tags de un cliente vortex, que
  * reemplaza los tags asociados anteriores
@@ -25,6 +27,7 @@ import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 public class ReemplazarTags implements MetamensajeVortex {
 
 	private List<String> tags;
+	public static final String tags_FIELD = "tags";
 
 	public List<String> getTags() {
 		return tags;
@@ -39,4 +42,13 @@ public class ReemplazarTags implements MetamensajeVortex {
 		reemplazar.tags = tags;
 		return reemplazar;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(tags_FIELD, tags).toString();
+	}
+
 }

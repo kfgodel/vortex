@@ -18,6 +18,8 @@ import java.util.Set;
 
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa el metamensaje de agregar tags asociados a un cliente
  * 
@@ -26,6 +28,7 @@ import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 public class AgregarTags implements MetamensajeVortex {
 
 	private List<String> tags;
+	public static final String tags_FIELD = "tags";
 
 	public List<String> getTags() {
 		return tags;
@@ -39,5 +42,13 @@ public class AgregarTags implements MetamensajeVortex {
 		final AgregarTags agregado = new AgregarTags();
 		agregado.tags = new ArrayList<String>(nuevosTags);
 		return agregado;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(tags_FIELD, tags).toString();
 	}
 }

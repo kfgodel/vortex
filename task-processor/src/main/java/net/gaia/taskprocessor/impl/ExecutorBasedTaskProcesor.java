@@ -54,6 +54,23 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	private LinkedBlockingQueue<TaskPlanner> delayedTasks;
 	private LinkedBlockingQueue<SubmittedRunnableTask> inmediatePendingTasks;
 
+	/**
+	 * Crea un procesador con la configuración por defecto de un thread para todas las tareas
+	 * 
+	 * @return El procesador de tareas creado
+	 */
+	public static ExecutorBasedTaskProcesor create() {
+		final TaskProcessorConfiguration defaultConfig = TaskProcessorConfiguration.create();
+		return create(defaultConfig);
+	}
+
+	/**
+	 * Crea un procesador con la configuración pasada
+	 * 
+	 * @param config
+	 *            La configuración a usar
+	 * @return El procesador creado
+	 */
 	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
 		final ExecutorBasedTaskProcesor processor = new ExecutorBasedTaskProcesor();
 		final int threadPoolSize = config.getThreadPoolSize();

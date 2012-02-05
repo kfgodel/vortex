@@ -15,6 +15,7 @@ package net.gaia.vortex.lowlevel.impl.ids;
 import java.util.Set;
 
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
 /**
  * Esta interfaz representa un generador de mensajes de nodo que permite generar nuevos mensajes
@@ -45,6 +46,6 @@ public interface GeneradorMensajesDeNodo {
 	 *            El contenido a enviar como metamensaje
 	 * @return El mensaje listo para ser enviado al receptor
 	 */
-	MensajeVortex generarMetaMensajePara(Object contenido);
+	MensajeVortex generarMetaMensajePara(MetamensajeVortex contenido);
 
 }

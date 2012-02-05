@@ -151,7 +151,7 @@ public class HttpTranslator {
 			// No necesita conversion, debería ser un String, lo confirmamos por las dudas
 			final Object valor = mensajeVortex.getContenido().getValor();
 			if (valor == null) {
-				// Es un valor valido
+				// Es un valor válido
 				return;
 			}
 			if (!(valor instanceof String)) {

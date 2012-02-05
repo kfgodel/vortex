@@ -30,6 +30,10 @@ import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 
 import com.google.common.base.Objects;
@@ -41,6 +45,7 @@ import com.google.common.collect.Lists;
  * @author D. García
  */
 public class NodoRemotoHttp implements NodoVortex {
+	private static final Logger LOG = LoggerFactory.getLogger(NodoRemotoHttp.class);
 
 	private TaskProcessor processor;
 	private SinSesionRemotaHttp sinSesion;
@@ -58,6 +63,7 @@ public class NodoRemotoHttp implements NodoVortex {
 	@Override
 	public SesionVortex crearNuevaSesion(final MensajeVortexHandler handlerDeMensajes) {
 		final SesionRemotaHttp sesion = SesionRemotaHttp.create(this, handlerDeMensajes);
+		LOG.debug("Nueva Sesión creada[{}] en nodo[{}]", sesion, this);
 		return sesion;
 	}
 

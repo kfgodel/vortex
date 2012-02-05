@@ -18,6 +18,8 @@ import java.util.Set;
 
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa el metamensaje para quitar tags asociados a un cliente vortex
  * 
@@ -26,6 +28,7 @@ import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 public class QuitarTags implements MetamensajeVortex {
 
 	private List<String> tags;
+	public static final String tags_FIELD = "tags";
 
 	public List<String> getTags() {
 		return tags;
@@ -40,4 +43,13 @@ public class QuitarTags implements MetamensajeVortex {
 		quitar.tags = new ArrayList<String>(quitados);
 		return quitar;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(tags_FIELD, tags).toString();
+	}
+
 }

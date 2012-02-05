@@ -15,11 +15,16 @@ package net.gaia.vortex.http;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
+import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.impl.ClienteVortexImpl;
+import net.gaia.vortex.http.meta.Decision;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import com.google.common.collect.Sets;
 
@@ -32,27 +37,47 @@ public class HttpClientTest {
 
 	private NodoVortex nodo;
 
+	@Before
 	public void prepararTest() {
-		nodo = NodoRemotoHttp.create("http://kfgodel.info/vortex/controllers/main", "nodoTest");
+		// nodo = NodoRemotoHttp.create("http://kfgodel.info/vortex/controllers/main", "nodoTest");
+		nodo = NodoRemotoHttp.create("http://localhost:8080/vortex-j2ee/controllers/main", "nodoTest");
 	}
 
+	@Test
+	@HasDependencyOn(Decision.EL_NODO_HTTP_NO_POLLEA_SOLO)
 	public void deberiaPermitirEnviarUnMensajeAOtroCliente() {
 		// Creamos el receptor con el tag del mensaje
 		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
 		final ClienteVortexImpl clienteReceptor = ClienteVortexImpl.create(nodo, encoladorDelReceptor);
-		clienteReceptor.getFiltroDeMensajes().agregarATagsActivos(Sets.newHashSet("java.lang.Object"));
+		final String tagCompartido = "TagParaPrueba";
 
-		// Creamos el emisor que no necesita un tag
+		// Publicamos los tags para el receptor
+		clienteReceptor.getFiltroDeMensajes().agregarATagsActivos(Sets.newHashSet(tagCompartido));
+
+		// Enviamos un mensaje cualquiera para asegurarnos que la publicación ya terminó
+		final MensajeVortexApi mensajeDeTest = MensajeVortexApi.create("Mensaje perdido1", "mensajeTest",
+				"mensajeTest!");
+		clienteReceptor.enviar(mensajeDeTest);
+
+		// Creamos el emisor que no necesita declarar tags
 		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
 		final ClienteVortexImpl clienteEmisor = ClienteVortexImpl.create(nodo, encoladorDelEmisor);
-		final Object contenidoEnviado = new Object();
-		final MensajeVortexApi mensaje = MensajeVortexApi.create(contenidoEnviado);
+
+		// Enviamos el mensaje desde el receptor
+		final String contenidoEnviado = "Hola mundo!";
+		final MensajeVortexApi mensaje = MensajeVortexApi.create(contenidoEnviado, "prueba", tagCompartido);
 		clienteEmisor.enviar(mensaje);
 
-		final MensajeVortexApi mensajeRecibido = encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1,
+		// Enviamos un mensaje cualquier para forzar el polling de los mensajes que recibimos
+		// remotamente
+		final MensajeVortexApi mensajeDePolling = MensajeVortexApi.create("Forzando polling", "polling", "polling!");
+		clienteReceptor.enviar(mensajeDePolling);
+
+		// Verificamos que el mensaje haya llegado
+		final MensajeVortexApi mensajeRecibido = encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(5,
 				TimeUnit.SECONDS));
 		final Object contenidoRecibido = mensajeRecibido.getContenido();
-		Assert.assertSame(contenidoEnviado, contenidoRecibido);
+		Assert.assertEquals(contenidoEnviado, contenidoRecibido);
 	}
 
 }

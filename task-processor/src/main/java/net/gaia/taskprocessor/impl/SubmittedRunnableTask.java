@@ -111,6 +111,9 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	private void invokeExceptionHandler() {
 		final TaskExceptionHandler exceptionHandler = processor.getExceptionHandler();
 		if (exceptionHandler == null) {
+			final Throwable exception = this.getFailingError();
+			LOG.error("No existe handler para la excepción en la tarea[" + this + "] del procesador[" + processor
+					+ "]: " + exception, exception);
 			return;
 		}
 		try {

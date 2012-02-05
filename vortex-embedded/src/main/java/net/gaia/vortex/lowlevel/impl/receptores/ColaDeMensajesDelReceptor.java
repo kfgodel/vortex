@@ -52,12 +52,12 @@ public class ColaDeMensajesDelReceptor {
 	}
 
 	/**
-	 * Agrega el mensaje como pendiente, e indica si es el proximo a procesar (el primero de la
+	 * Agrega el mensaje como pendiente, e indica si es el próximo a procesar (el primero de la
 	 * lista)
 	 * 
 	 * @param mensajeEnviado
 	 *            El mensaje recibido a agregar en la cola del receptor
-	 * @return true si el mensaje es el proximo en la cola, o false si se debe procesar otro antes
+	 * @return true si el mensaje es el próximo en la cola, o false si se debe procesar otro antes
 	 */
 	public boolean agregarPendiente(final MensajeVortex mensajeEnviado) {
 		final Boolean esElPrimero = doModification(new Callable<Boolean>() {

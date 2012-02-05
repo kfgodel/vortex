@@ -150,8 +150,8 @@ public class RemoteSessionController {
 	private boolean esUnaSesionVieja(final RemoteSessionImpl remoteSession) {
 		final DateTime momentOfLastActivity = remoteSession.getLastActivityMoment();
 		final Interval intervaloTranscurrido = new Interval(momentOfLastActivity, VortexTime.currentMoment());
-		final int diasTranscurridos = intervaloTranscurrido.toPeriod(PeriodType.days()).getDays();
-		final boolean esUnaSesionVieja = diasTranscurridos > 1;
+		final int horasTranscurridas = intervaloTranscurrido.toPeriod(PeriodType.days()).getHours();
+		final boolean esUnaSesionVieja = horasTranscurridas >= 2;
 		return esUnaSesionVieja;
 	}
 }

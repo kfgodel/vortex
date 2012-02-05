@@ -14,11 +14,20 @@ package net.gaia.vortex.protocol.messages.tags;
 
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa el metamensaje para eliminar todos los tags asociados a un cliente vortex
  * 
  * @author D. García
  */
 public class LimpiarTags implements MetamensajeVortex {
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 
 }

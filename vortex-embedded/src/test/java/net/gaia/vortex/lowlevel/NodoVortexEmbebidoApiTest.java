@@ -20,10 +20,8 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.annotations.HasDependencyOn;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
-import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
@@ -56,9 +54,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 
 	@Before
 	public void prepararTest() {
-		final ExecutorBasedTaskProcesor procesador = ExecutorBasedTaskProcesor.create(TaskProcessorConfiguration
-				.create());
-		nodoVortex = NodoVortexConTasks.create(procesador, null);
+		nodoVortex = NodoVortexConTasks.create(null);
 		escenarios = new EscenarioDeTest();
 	}
 

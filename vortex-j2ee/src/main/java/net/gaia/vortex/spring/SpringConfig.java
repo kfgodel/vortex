@@ -1,5 +1,9 @@
 package net.gaia.vortex.spring;
 
+import net.gaia.vortex.dependencies.json.InterpreteJson;
+import net.gaia.vortex.dependencies.json.impl.InterpreteJackson;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
@@ -13,5 +17,10 @@ import org.springframework.context.annotation.ImportResource;
 @Configuration
 @ImportResource({ "classpath:spring/cron-context.xml" })
 public class SpringConfig {
+
+	@Bean
+	public InterpreteJson getInterpreteJson() {
+		return InterpreteJackson.create();
+	}
 
 }

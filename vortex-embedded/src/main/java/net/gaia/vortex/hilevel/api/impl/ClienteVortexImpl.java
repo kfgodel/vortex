@@ -187,7 +187,7 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 					acuse.getIdMensajeFallado());
 		} else if (metaObjeto instanceof AcuseConsumo) {
 			final AcuseConsumo acuse = (AcuseConsumo) metaObjeto;
-			LOG.error("Recibimos el reporte de consumo de un mensaje[{}]: {}", nuevoMensaje, acuse);
+			LOG.error("Recibimos un acuse, y no está implementada la lógica[{}]: {}", nuevoMensaje, acuse);
 		} else if (metaObjeto instanceof SolicitudEsperaAcuseConsumo) {
 			final SolicitudEsperaAcuseConsumo solicitud = (SolicitudEsperaAcuseConsumo) metaObjeto;
 			LOG.error("Recibimos una solicitud de espera[{}] por el consumo que no pedimos", solicitud);

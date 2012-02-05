@@ -15,10 +15,7 @@ package net.gaia.vortex.hilevel;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.impl.ClienteVortexImpl;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
@@ -42,8 +39,7 @@ public class ClienteVortexTest {
 
 	@Before
 	public void prepararTest() {
-		final TaskProcessor processor = ExecutorBasedTaskProcesor.create(TaskProcessorConfiguration.create());
-		nodo = NodoVortexConTasks.create(processor, "NodoTest");
+		nodo = NodoVortexConTasks.create("NodoTest");
 	}
 
 	@After

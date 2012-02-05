@@ -18,6 +18,8 @@ import java.util.Set;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.gaia.vortex.protocol.messages.MetamensajeVortex;
+import net.gaia.vortex.protocol.messages.TipoContenidoMetamensaje;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -78,28 +80,11 @@ public class GeneradorDeMensajesImpl implements GeneradorMensajesDeNodo {
 	 * @see net.gaia.vortex.lowlevel.impl.ids.GeneradorMensajesDeNodo#generarMetaMensajePara(java.lang.Object)
 	 */
 	@Override
-	public MensajeVortex generarMetaMensajePara(final Object contenido) {
-		final String tipoDeContenido = generarDescripcionDeTipoPara(contenido);
+	public MensajeVortex generarMetaMensajePara(final MetamensajeVortex contenido) {
+		final String tipoDeContenido = TipoContenidoMetamensaje.getTipoDeContenidoFor(contenido);
 		final MensajeVortex metamensaje = generarMensajePara(contenido, tipoDeContenido,
 				Sets.newHashSet(MensajeVortex.TAG_INTERCAMBIO_VECINO));
 		return metamensaje;
-	}
-
-	/**
-	 * Devuelve el texto qeu describe el tipo de contenido. Utiliza el nombre de la clase como tipo
-	 * de contenido
-	 * 
-	 * @param contenido
-	 *            El contenido a evaluar
-	 * @return Una cadena que describe el tipo para todos los nodos
-	 */
-	private String generarDescripcionDeTipoPara(final Object contenido) {
-		if (contenido == null) {
-			return "null";
-		}
-		final Class<? extends Object> claseDelContenido = contenido.getClass();
-		final String tipoDeContenido = claseDelContenido.getName();
-		return tipoDeContenido;
 	}
 
 }

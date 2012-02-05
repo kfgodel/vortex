@@ -30,6 +30,8 @@ public class ContextoDeOperacionHttp {
 
 	public static ContextoDeOperacionHttp create(final NodoRemotoHttp nodo, final SesionConId sesion) {
 		final ContextoDeOperacionHttp contexto = new ContextoDeOperacionHttp();
+		contexto.nodo = nodo;
+		contexto.sesion = sesion;
 		return contexto;
 	}
 

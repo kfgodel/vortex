@@ -28,8 +28,8 @@ public class ConfiguracionDeNodo {
 
 	public static ConfiguracionDeNodo create() {
 		final ConfiguracionDeNodo configuracion = new ConfiguracionDeNodo();
-		configuracion.timeoutDeAcuseDeConsumo = TimeMagnitude.of(2, TimeUnit.SECONDS);
-		configuracion.esperaPorAcuseDeConsumo = TimeMagnitude.of(2, TimeUnit.SECONDS);
+		configuracion.timeoutDeAcuseDeConsumo = TimeMagnitude.of(10, TimeUnit.SECONDS);
+		configuracion.esperaPorAcuseDeConsumo = TimeMagnitude.of(60, TimeUnit.SECONDS);
 		return configuracion;
 	}
 

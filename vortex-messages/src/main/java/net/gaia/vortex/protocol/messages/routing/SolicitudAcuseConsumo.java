@@ -15,6 +15,8 @@ package net.gaia.vortex.protocol.messages.routing;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa el metamensaje de solicitud de {@link AcuseConsumo} realizada por el emisor
  * del mensaje para conocer el estatus del mismo o darlo por perdido
@@ -23,6 +25,7 @@ import net.gaia.vortex.protocol.messages.MetamensajeVortex;
  */
 public class SolicitudAcuseConsumo implements MetamensajeVortex {
 	private IdVortex idMensajeEnviado;
+	public static final String idMensajeEnviado_FIELD = "idMensajeEnviado";
 
 	public IdVortex getIdMensajeEnviado() {
 		return idMensajeEnviado;
@@ -36,5 +39,13 @@ public class SolicitudAcuseConsumo implements MetamensajeVortex {
 		final SolicitudAcuseConsumo solicitud = new SolicitudAcuseConsumo();
 		solicitud.idMensajeEnviado = idMensaje;
 		return solicitud;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(idMensajeEnviado_FIELD, idMensajeEnviado).toString();
 	}
 }
