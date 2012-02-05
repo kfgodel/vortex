@@ -43,14 +43,14 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 	private long internalId;
 	public static final String internalId_FIELD = "internalId";
 
-	private ColaDeMensajesDelReceptor cola;
+	private ColaDeMensajesVortex cola;
 
 	public static ReceptorVortexConSesion create(final MensajeVortexHandler handlerDeMensajes) {
 		final ReceptorVortexConSesion receptor = new ReceptorVortexConSesion();
 		receptor.handler = handlerDeMensajes;
 		receptor.tagsNotificados = new ConcurrentHashSet<String>();
 		receptor.internalId = idSequencer.getAndIncrement();
-		receptor.cola = ColaDeMensajesDelReceptor.create();
+		receptor.cola = ColaDeMensajesVortex.create();
 		return receptor;
 	}
 
@@ -103,7 +103,7 @@ public class ReceptorVortexConSesion implements ReceptorVortex {
 	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#getColaDeMensajes()
 	 */
 	@Override
-	public ColaDeMensajesDelReceptor getColaDeMensajes() {
+	public ColaDeMensajesVortex getColaDeMensajes() {
 		return cola;
 	}
 }

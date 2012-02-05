@@ -59,6 +59,6 @@ public interface ReceptorVortex {
 	 * 
 	 * @return La cola de mensajes del receptor
 	 */
-	public ColaDeMensajesDelReceptor getColaDeMensajes();
+	public ColaDeMensajesVortex getColaDeMensajes();
 
 }

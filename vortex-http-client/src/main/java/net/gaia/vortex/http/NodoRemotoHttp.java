@@ -12,8 +12,6 @@
  */
 package net.gaia.vortex.http;
 
-import java.util.List;
-
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
@@ -34,10 +32,7 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
-
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 
 /**
  * Esta clase representa un nodo vortex remoto con
@@ -80,17 +75,11 @@ public class NodoRemotoHttp implements NodoVortex {
 	 */
 	@Override
 	public void rutear(final MensajeVortex mensaje) {
-		// Comenzamos con la validación desde este thread para tirar excepciones en este método
-		final List<MensajeVortex> mensajes = Lists.newArrayList(mensaje);
 		// Usamos la sesión que no tiene sesión real cuando se pide ruteo directo
 		final ContextoDeOperacionHttp contexto = ContextoDeOperacionHttp.create(this, sinSesion);
 		final ValidarMensajesPrevioEnvioWorkUnit validacion = ValidarMensajesPrevioEnvioWorkUnit.create(contexto,
-				mensajes);
-		try {
-			validacion.doWork();
-		} catch (final InterruptedException e) {
-			throw new UnhandledConditionException("Se interrumpió la ejecución de la validación", e);
-		}
+				mensaje);
+		getProcessor().process(validacion);
 	}
 
 	/**
@@ -108,6 +97,7 @@ public class NodoRemotoHttp implements NodoVortex {
 		nodo.interprete = InterpreteJackson.create();
 		nodo.nombre = NodoVortexConTasks.getValidNameFrom(nombreOpcional);
 		nodo.conector = ConectorHttpImpl.create(url, nodo.interprete);
+		nodo.sinSesion = SinSesionRemotaHttp.create();
 		return nodo;
 	}
 

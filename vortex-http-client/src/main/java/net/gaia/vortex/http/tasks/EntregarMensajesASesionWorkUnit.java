@@ -42,6 +42,10 @@ public class EntregarMensajesASesionWorkUnit implements WorkUnit {
 		for (final MensajeVortex mensajeRecibido : mensajesRecibidos) {
 			sesionReceptora.recibirDelNodo(mensajeRecibido);
 		}
+
+		// Terminamos el proceso de envío de este mensaje
+		final TerminarEnvioDeMensajeWorkUnit terminar = TerminarEnvioDeMensajeWorkUnit.create(contexto);
+		contexto.getProcessor().process(terminar);
 	}
 
 	public static EntregarMensajesASesionWorkUnit create(final ContextoDeOperacionHttp contexto,

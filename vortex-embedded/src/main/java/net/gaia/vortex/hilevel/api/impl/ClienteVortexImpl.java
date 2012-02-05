@@ -21,6 +21,7 @@ import net.gaia.vortex.hilevel.api.FiltroDeMensajesDelCliente;
 import net.gaia.vortex.hilevel.api.HandlerDeMensajesApi;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.TagsDelNodo;
+import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
@@ -229,5 +230,14 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	protected void enviarMetaMensaje(final MetamensajeVortex metamensajeVortex) {
 		final MensajeVortex mensajeVortex = generadorMensajes.generarMetaMensajePara(metamensajeVortex);
 		enviarMensajeVortex(mensajeVortex);
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.api.MensajeVortexHandler#onMensajeConErrores(net.gaia.vortex.protocol.messages.MensajeVortex,
+	 *      net.gaia.vortex.lowlevel.api.ErroresDelMensaje)
+	 */
+	@Override
+	public void onMensajeConErrores(final MensajeVortex mensajeFallido, final ErroresDelMensaje errores) {
+		LOG.error("Hubo un error no manejado con el mensaje[" + mensajeFallido + "]: " + errores);
 	}
 }

@@ -23,8 +23,12 @@ import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
 import net.gaia.vortex.hilevel.api.HandlerDeMensajesApi;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
+import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Este handler de mensajes mantiene una lista interna de los mensajes recibidos y permite esperar a
@@ -33,6 +37,7 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
  * @author D. García
  */
 public class EncoladorDeMensajesHandler implements MensajeVortexHandler, HandlerDeMensajesApi {
+	private static final Logger LOG = LoggerFactory.getLogger(EncoladorDeMensajesHandler.class);
 
 	private LinkedBlockingQueue<Object> mensajes;
 
@@ -100,4 +105,12 @@ public class EncoladorDeMensajesHandler implements MensajeVortexHandler, Handler
 		return quitados;
 	}
 
+	/**
+	 * @see net.gaia.vortex.lowlevel.api.MensajeVortexHandler#onMensajeConErrores(net.gaia.vortex.protocol.messages.MensajeVortex,
+	 *      net.gaia.vortex.lowlevel.api.ErroresDelMensaje)
+	 */
+	@Override
+	public void onMensajeConErrores(final MensajeVortex mensajeFallido, final ErroresDelMensaje errores) {
+		LOG.error("Error en el mensaje[" + mensajeFallido + "]: " + errores);
+	}
 }

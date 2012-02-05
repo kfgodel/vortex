@@ -25,14 +25,14 @@ import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
  * 
  * @author D. García
  */
-public class ColaDeMensajesDelReceptor {
+public class ColaDeMensajesVortex {
 
 	private AtomicReference<MensajeVortex> mensajeActual;
 	private ConcurrentLinkedQueue<MensajeVortex> mensajesPendientes;
 	private ReentrantLock modificationLock;
 
-	public static ColaDeMensajesDelReceptor create() {
-		final ColaDeMensajesDelReceptor mensajes = new ColaDeMensajesDelReceptor();
+	public static ColaDeMensajesVortex create() {
+		final ColaDeMensajesVortex mensajes = new ColaDeMensajesVortex();
 		mensajes.mensajesPendientes = new ConcurrentLinkedQueue<MensajeVortex>();
 		mensajes.mensajeActual = new AtomicReference<MensajeVortex>();
 		mensajes.modificationLock = new ReentrantLock();

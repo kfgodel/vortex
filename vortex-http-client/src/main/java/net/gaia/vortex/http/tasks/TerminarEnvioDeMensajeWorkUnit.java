@@ -10,12 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.lowlevel.impl.tasks;
+package net.gaia.vortex.http.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
+import net.gaia.vortex.http.sessions.SesionConId;
+import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
 import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesVortex;
-import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -27,11 +27,10 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class TerminarProcesoDeMensajeWorkUnit implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(TerminarProcesoDeMensajeWorkUnit.class);
+public class TerminarEnvioDeMensajeWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(TerminarEnvioDeMensajeWorkUnit.class);
 
-	private ReceptorVortex receptor;
-	private NodoVortexConTasks nodo;
+	private ContextoDeOperacionHttp contexto;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
@@ -39,20 +38,20 @@ public class TerminarProcesoDeMensajeWorkUnit implements WorkUnit {
 	@Override
 	public void doWork() throws InterruptedException {
 		// Limpiamos el mensaje actual
-		final ColaDeMensajesVortex colaDeMensajes = receptor.getColaDeMensajes();
+		final SesionConId sesion = contexto.getSesionInvolucrada();
+		final ColaDeMensajesVortex colaDeMensajes = sesion.getColaDeMensajes();
 		final MensajeVortex mensajeProcesado = colaDeMensajes.terminarMensajeActual();
 		LOG.debug("Mensaje[{}] procesado completamente", mensajeProcesado);
 
 		// Seguimos con el próximo si hay
-		final ProcesarProximoMensajeDelReceptorWorkUnit procesarSiguiente = ProcesarProximoMensajeDelReceptorWorkUnit
-				.create(receptor, nodo);
-		nodo.getProcesador().process(procesarSiguiente);
+		final ProcesarProximoEnvioDeLaSesionWorkUnit procesarSiguiente = ProcesarProximoEnvioDeLaSesionWorkUnit
+				.create(contexto);
+		contexto.getProcessor().process(procesarSiguiente);
 	}
 
-	public static TerminarProcesoDeMensajeWorkUnit create(final ReceptorVortex receptor, final NodoVortexConTasks nodo) {
-		final TerminarProcesoDeMensajeWorkUnit terminar = new TerminarProcesoDeMensajeWorkUnit();
-		terminar.nodo = nodo;
-		terminar.receptor = receptor;
+	public static TerminarEnvioDeMensajeWorkUnit create(final ContextoDeOperacionHttp contexto) {
+		final TerminarEnvioDeMensajeWorkUnit terminar = new TerminarEnvioDeMensajeWorkUnit();
+		terminar.contexto = contexto;
 		return terminar;
 	}
 }

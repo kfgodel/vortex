@@ -12,23 +12,22 @@
  */
 package net.gaia.vortex.http.sessions;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.vortex.http.NodoRemotoHttp;
 import net.gaia.vortex.http.tasks.ValidarMensajesPrevioEnvioWorkUnit;
 import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
+import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
-
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 
 /**
  * Esta clase representa una sesión vortex remota a través de HTTP
@@ -53,6 +52,13 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 
 	private final AtomicBoolean cerrada = new AtomicBoolean(false);
 
+	private ColaDeMensajesVortex colaDeMensajes;
+
+	private static final AtomicLong secuencer = new AtomicLong(0);
+
+	private String sessionName;
+	public static final String sessionName_FIELD = "sessionName";
+
 	/**
 	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#cerrar()
 	 */
@@ -76,19 +82,20 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 			return;
 		}
 
-		LOG.debug("Comienzo de envio en sesion[{}]: {}", this, mensaje.toPrettyPrint());
+		LOG.debug("Comienzo de envio de mensaje[{}] en sesion[{}]", mensaje.toPrettyPrint(), this);
 
-		// Realizamos la validación desde este thread para tirar excepciones si no está bien el
-		// mensaje
-		final List<MensajeVortex> mensajes = Lists.newArrayList(mensaje);
+		// Agregamos el mensaje y verificamos si es el proximo a enviar
+		final boolean esElProximo = colaDeMensajes.agregarPendiente(mensaje);
+		if (!esElProximo) {
+			LOG.debug("Mensaje[{}] encolado hasta procesar previos", mensaje, this);
+			return;
+		}
+
+		// Lo primero a hacer es la validación del mensaje
 		final ContextoDeOperacionHttp contexto = ContextoDeOperacionHttp.create(nodo, this);
 		final ValidarMensajesPrevioEnvioWorkUnit validacion = ValidarMensajesPrevioEnvioWorkUnit.create(contexto,
-				mensajes);
-		try {
-			validacion.doWork();
-		} catch (final InterruptedException e) {
-			throw new UnhandledConditionException("Se interrumpió la ejecución de la validación", e);
-		}
+				mensaje);
+		contexto.getProcessor().process(validacion);
 	}
 
 	/**
@@ -104,6 +111,8 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 		sesion.handlerDeMensajes = handlerDeMensajes;
 		sesion.nodo = nodo;
 		sesion.sessionId = VALUE_TO_REQUEST_NEW_ID;
+		sesion.colaDeMensajes = ColaDeMensajesVortex.create();
+		sesion.sessionName = String.valueOf(secuencer.getAndIncrement());
 		return sesion;
 	}
 
@@ -112,7 +121,8 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(sessionId_FIELD, sessionId).add(nodo_FIELD, nodo).toString();
+		return Objects.toStringHelper(this).add(sessionName_FIELD, sessionName).add(sessionId_FIELD, sessionId)
+				.add(nodo_FIELD, nodo).toString();
 	}
 
 	/**
@@ -150,5 +160,22 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 			LOG.info("Nuevo ID[{}] para sesión[{}]", nuevoId, this);
 		}
 		this.sessionId = nuevoId;
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sessions.SesionConId#getColaDeMensajes()
+	 */
+	@Override
+	public ColaDeMensajesVortex getColaDeMensajes() {
+		return colaDeMensajes;
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sessions.SesionConId#onErrorDeMensaje(net.gaia.vortex.protocol.messages.MensajeVortex,
+	 *      net.gaia.vortex.lowlevel.api.ErroresDelMensaje)
+	 */
+	@Override
+	public void onErrorDeMensaje(final MensajeVortex mensajeAEnviar, final ErroresDelMensaje errores) {
+		this.handlerDeMensajes.onMensajeConErrores(mensajeAEnviar, errores);
 	}
 }

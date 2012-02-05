@@ -14,9 +14,10 @@ package net.gaia.vortex.lowlevel.impl.nodo;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
-import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesDelReceptor;
+import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortexConSesion;
 import net.gaia.vortex.lowlevel.impl.tasks.ComenzarProcesoDeMensajeWorkUnit;
 import net.gaia.vortex.lowlevel.impl.tasks.ProcesarCierreDeConexionWorkUnit;
@@ -61,7 +62,7 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 				nodo });
 		Loggers.RUTEO.info("RECIBIDO mensaje[{}] desde receptor[{}] en nodo[{}]. Contenido: [{}]", new Object[] {
 				mensajeEnviado, receptorEmisor, nodo, mensajeEnviado.toPrettyPrint() });
-		final ColaDeMensajesDelReceptor colaDeMensajes = receptorEmisor.getColaDeMensajes();
+		final ColaDeMensajesVortex colaDeMensajes = receptorEmisor.getColaDeMensajes();
 		final boolean esElProximo = colaDeMensajes.agregarPendiente(mensajeEnviado);
 		if (!esElProximo) {
 			LOG.debug("Mensaje[{}] encolado hasta procesar previos", mensajeEnviado, receptorEmisor);
@@ -131,5 +132,14 @@ public class SesionVortexImpl implements SesionVortex, MensajeVortexHandler {
 	public String toString() {
 		return Objects.toStringHelper(this).add(cerrada_FIELD, cerrada.get()).add(receptorEmisor_FIELD, receptorEmisor)
 				.add(nodo_FIELD, nodo).toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.api.MensajeVortexHandler#onMensajeConErrores(net.gaia.vortex.protocol.messages.MensajeVortex,
+	 *      net.gaia.vortex.lowlevel.api.ErroresDelMensaje)
+	 */
+	@Override
+	public void onMensajeConErrores(final MensajeVortex mensajeFallido, final ErroresDelMensaje errores) {
+		handlerDelReceptor.onMensajeConErrores(mensajeFallido, errores);
 	}
 }

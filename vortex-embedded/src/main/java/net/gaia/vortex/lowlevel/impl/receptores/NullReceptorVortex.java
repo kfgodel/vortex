@@ -26,7 +26,8 @@ import org.slf4j.LoggerFactory;
  * @author D. García
  */
 public class NullReceptorVortex implements ReceptorVortex {
-	private static final Logger LOG = LoggerFactory.getLogger(NullReceptorVortex.class);
+	static final Logger LOG = LoggerFactory.getLogger(NullReceptorVortex.class);
+	private ColaDeMensajesVortex nullColaDeMensajes;
 
 	/**
 	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#recibir(net.gaia.vortex.protocol.messages.MensajeVortex)
@@ -63,6 +64,7 @@ public class NullReceptorVortex implements ReceptorVortex {
 
 	public static NullReceptorVortex create() {
 		final NullReceptorVortex receptor = new NullReceptorVortex();
+		receptor.nullColaDeMensajes = new NullColaDeMensajesVortex();
 		return receptor;
 	}
 
@@ -70,24 +72,7 @@ public class NullReceptorVortex implements ReceptorVortex {
 	 * @see net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex#getColaDeMensajes()
 	 */
 	@Override
-	public ColaDeMensajesDelReceptor getColaDeMensajes() {
-		return new ColaDeMensajesDelReceptor() {
-			@Override
-			public boolean agregarPendiente(final MensajeVortex mensajeEnviado) {
-				LOG.error("Se intentó enclar un mensaje en el receptor nulo[{}]", mensajeEnviado);
-				return true;
-			}
-
-			@Override
-			public MensajeVortex tomarProximoMensaje() {
-				// Nunca hay próximo mensaje porque no se encolan
-				return null;
-			}
-
-			@Override
-			public MensajeVortex terminarMensajeActual() {
-				return null;
-			}
-		};
+	public ColaDeMensajesVortex getColaDeMensajes() {
+		return nullColaDeMensajes;
 	}
 }

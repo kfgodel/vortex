@@ -12,7 +12,10 @@
  */
 package net.gaia.vortex.http.sessions;
 
+import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesVortex;
+import net.gaia.vortex.lowlevel.impl.receptores.NullColaDeMensajesVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -27,6 +30,7 @@ import com.google.common.base.Objects;
  */
 public class SinSesionRemotaHttp implements SesionVortex, SesionConId {
 	private static final Logger LOG = LoggerFactory.getLogger(SinSesionRemotaHttp.class);
+	private ColaDeMensajesVortex nullCola;
 
 	/**
 	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#enviar(net.gaia.vortex.protocol.messages.MensajeVortex)
@@ -82,5 +86,28 @@ public class SinSesionRemotaHttp implements SesionVortex, SesionConId {
 	@Override
 	public void recibirDelNodo(final MensajeVortex mensajeRecibido) {
 		LOG.error("Se recibió un mensaje para la sesión nula: {}", mensajeRecibido.toPrettyPrint());
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sessions.SesionConId#getColaDeMensajes()
+	 */
+	@Override
+	public ColaDeMensajesVortex getColaDeMensajes() {
+		return nullCola;
+	}
+
+	public static SinSesionRemotaHttp create() {
+		final SinSesionRemotaHttp sinSesion = new SinSesionRemotaHttp();
+		sinSesion.nullCola = NullColaDeMensajesVortex.create();
+		return sinSesion;
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sessions.SesionConId#onErrorDeMensaje(net.gaia.vortex.protocol.messages.MensajeVortex,
+	 *      net.gaia.vortex.lowlevel.api.ErroresDelMensaje)
+	 */
+	@Override
+	public void onErrorDeMensaje(final MensajeVortex mensajeAEnviar, final ErroresDelMensaje errores) {
+		LOG.error("Se produjo un error con el mensaje[" + mensajeAEnviar + "]: " + errores);
 	}
 }

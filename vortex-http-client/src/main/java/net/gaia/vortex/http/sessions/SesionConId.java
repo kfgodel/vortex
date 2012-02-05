@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.http.sessions;
 
+import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
+import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 /**
@@ -43,5 +45,22 @@ public interface SesionConId {
 	 *            El mensaje que el nodo envia a esta sesión
 	 */
 	public void recibirDelNodo(MensajeVortex mensajeRecibido);
+
+	/**
+	 * Devuelve la cola de mensajes de la sesión
+	 * 
+	 * @return La cola de mensajes acumulados para envío de esta sesión
+	 */
+	public ColaDeMensajesVortex getColaDeMensajes();
+
+	/**
+	 * Invocado cuando durante el proceso de envío del mensaje se produce un error
+	 * 
+	 * @param mensajeAEnviar
+	 *            El mensaje fallido
+	 * @param errores
+	 *            La descripción del error
+	 */
+	public void onErrorDeMensaje(MensajeVortex mensajeAEnviar, ErroresDelMensaje errores);
 
 }

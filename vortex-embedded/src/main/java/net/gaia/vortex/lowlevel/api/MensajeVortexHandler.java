@@ -29,4 +29,14 @@ public interface MensajeVortexHandler {
 	 *            El mensaje recibido
 	 */
 	public void onMensajeRecibido(MensajeVortex nuevoMensaje);
+
+	/**
+	 * Invocado cuando se produce un error con un mensaje (ya sea al envío o recepción)
+	 * 
+	 * @param mensajeFallido
+	 *            El mensaje con el que se produjo el error
+	 * @param errores
+	 *            La descripción de los errores producidos
+	 */
+	public void onMensajeConErrores(MensajeVortex mensajeFallido, ErroresDelMensaje errores);
 }

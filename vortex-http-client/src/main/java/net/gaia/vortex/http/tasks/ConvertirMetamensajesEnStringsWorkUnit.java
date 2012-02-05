@@ -12,13 +12,15 @@
  */
 package net.gaia.vortex.http.tasks;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.dependencies.json.InterpreteJson;
 import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+
+import com.google.common.collect.Lists;
 
 /**
  * Esta clase representa la operación que realiza el nodo http para convertir en strings sus
@@ -29,7 +31,7 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
 public class ConvertirMetamensajesEnStringsWorkUnit implements WorkUnit {
 
 	private ContextoDeOperacionHttp contexto;
-	private List<MensajeVortex> mensajes;
+	private MensajeVortex mensaje;
 	private InterpreteJson interprete;
 
 	/**
@@ -41,14 +43,12 @@ public class ConvertirMetamensajesEnStringsWorkUnit implements WorkUnit {
 		interprete = contexto.getInterpreteJson();
 
 		// Realizamos las conversiones de cada metamensaje
-		for (final MensajeVortex mensajeVortex : mensajes) {
-			if (!mensajeVortex.esMetaMensaje()) {
-				continue;
-			}
-			convertirValorAJson(mensajeVortex);
+		if (mensaje.esMetaMensaje()) {
+			convertirValorAJson(mensaje);
 		}
 
 		// Realizamos el envío
+		final ArrayList<MensajeVortex> mensajes = Lists.newArrayList(mensaje);
 		final EnviarMensajesWorkUnit envio = EnviarMensajesWorkUnit.create(contexto, mensajes);
 		contexto.getProcessor().process(envio);
 	}
@@ -67,10 +67,10 @@ public class ConvertirMetamensajesEnStringsWorkUnit implements WorkUnit {
 	}
 
 	public static ConvertirMetamensajesEnStringsWorkUnit create(final ContextoDeOperacionHttp contexto,
-			final List<MensajeVortex> mensajesAEnviar) {
+			final MensajeVortex mensajeAEnviar) {
 		final ConvertirMetamensajesEnStringsWorkUnit convertir = new ConvertirMetamensajesEnStringsWorkUnit();
 		convertir.contexto = contexto;
-		convertir.mensajes = mensajesAEnviar;
+		convertir.mensaje = mensajeAEnviar;
 		return convertir;
 	}
 }

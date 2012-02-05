@@ -12,10 +12,10 @@
  */
 package net.gaia.vortex.http.tasks;
 
-import java.util.List;
-
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.vortex.http.sessions.SesionConId;
 import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
+import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
@@ -27,7 +27,7 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
  */
 public class ValidarMensajesPrevioEnvioWorkUnit implements WorkUnit {
 
-	private List<MensajeVortex> mensajesAEnviar;
+	private MensajeVortex mensajeAEnviar;
 	private ContextoDeOperacionHttp contexto;
 
 	/**
@@ -35,14 +35,22 @@ public class ValidarMensajesPrevioEnvioWorkUnit implements WorkUnit {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
-		// Verificamos cada mensaje
-		for (final MensajeVortex mensajeAEnviar : mensajesAEnviar) {
-			validarMensajeAEnviarPorHttp(mensajeAEnviar);
+		// Verificamos errores en el mensaje
+		final ErroresDelMensaje errores = validarMensajeAEnviarPorHttp(mensajeAEnviar);
+		if (errores != null) {
+			// Si hay errores no podemos continuar con este mensaje
+			final SesionConId sesionInvolucrada = contexto.getSesionInvolucrada();
+			sesionInvolucrada.onErrorDeMensaje(mensajeAEnviar, errores);
+
+			// Finalizamos este mensaje
+			final TerminarEnvioDeMensajeWorkUnit terminar = TerminarEnvioDeMensajeWorkUnit.create(contexto);
+			contexto.getProcessor().process(terminar);
+			return;
 		}
 
-		// Continuamos con el proceso
+		// Continuamos con el proceso convirtiendo a String metamensajes
 		final ConvertirMetamensajesEnStringsWorkUnit conversion = ConvertirMetamensajesEnStringsWorkUnit.create(
-				contexto, mensajesAEnviar);
+				contexto, mensajeAEnviar);
 		contexto.getProcessor().process(conversion);
 	}
 
@@ -51,12 +59,12 @@ public class ValidarMensajesPrevioEnvioWorkUnit implements WorkUnit {
 	 * que si es un mensaje su valor sea un string
 	 * 
 	 * @param mensajeAEnviar
+	 * @return
 	 */
-	private void validarMensajeAEnviarPorHttp(final MensajeVortex mensajeAEnviar) {
+	private ErroresDelMensaje validarMensajeAEnviarPorHttp(final MensajeVortex mensajeAEnviar) {
 		final ContenidoVortex contenidoVortex = mensajeAEnviar.getContenido();
 		if (contenidoVortex == null) {
-			throw new IllegalArgumentException("El mensaje no tiene contenido vortex: "
-					+ mensajeAEnviar.toPrettyPrint());
+			return ErroresDelMensaje.create("El mensaje no tiene contenido vortex: " + mensajeAEnviar.toPrettyPrint());
 		}
 		final Object valorAValidar = contenidoVortex.getValor();
 		final boolean valorEsNull = valorAValidar == null;
@@ -65,28 +73,29 @@ public class ValidarMensajesPrevioEnvioWorkUnit implements WorkUnit {
 
 		if (esMetamensaje && valorEsNull) {
 			// Hacemos esta validación de onda, quizás en el futuro pueda ser null
-			throw new IllegalArgumentException(
-					"El mensaje no puede indicar metamensaje como contenido y enviar null como valor: "
+			return ErroresDelMensaje
+					.create("El mensaje no puede indicar metamensaje como contenido y enviar null como valor: "
 							+ mensajeAEnviar.toPrettyPrint());
 		}
 		if (esMetamensaje && valorEsString) {
 			// Quizás esto no sea un error en el futuro pero a modo de reaseguro verificamos que
 			// como metamensajes no vengan strings para no convertirlos 2 veces
-			throw new IllegalArgumentException(
-					"El metamensaje no puede ser String. Por ser convertido a String automáticamente: "
+			return ErroresDelMensaje
+					.create("El metamensaje no puede ser String. Por ser convertido a String automáticamente: "
 							+ mensajeAEnviar.toPrettyPrint());
 		}
 		if (!esMetamensaje && !valorEsString) {
-			throw new IllegalArgumentException(
-					"El mensaje no puede tener un valor que no sea String al enviarlo por HTTP. Debe convertirse a String primero: "
+			return ErroresDelMensaje
+					.create("El mensaje no puede tener un valor que no sea String al enviarlo por HTTP. Debe convertirse a String primero: "
 							+ mensajeAEnviar.toPrettyPrint());
 		}
+		return null;
 	}
 
 	public static ValidarMensajesPrevioEnvioWorkUnit create(final ContextoDeOperacionHttp contexto,
-			final List<MensajeVortex> mensajes) {
+			final MensajeVortex mensaje) {
 		final ValidarMensajesPrevioEnvioWorkUnit validarMensajes = new ValidarMensajesPrevioEnvioWorkUnit();
-		validarMensajes.mensajesAEnviar = mensajes;
+		validarMensajes.mensajeAEnviar = mensaje;
 		validarMensajes.contexto = contexto;
 		return validarMensajes;
 	}

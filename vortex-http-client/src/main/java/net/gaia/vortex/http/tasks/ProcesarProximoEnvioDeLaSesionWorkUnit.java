@@ -10,12 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.lowlevel.impl.tasks;
+package net.gaia.vortex.http.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
+import net.gaia.vortex.http.sessions.SesionConId;
+import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
 import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesVortex;
-import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -27,37 +27,36 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class ProcesarProximoMensajeDelReceptorWorkUnit implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(ProcesarProximoMensajeDelReceptorWorkUnit.class);
+public class ProcesarProximoEnvioDeLaSesionWorkUnit implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(ProcesarProximoEnvioDeLaSesionWorkUnit.class);
 
-	private NodoVortexConTasks nodo;
-	private ReceptorVortex receptor;
+	private ContextoDeOperacionHttp contexto;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
-		LOG.debug("Tomando proximo mensaje disponible del receptor[{}]", receptor);
+		final SesionConId sesion = contexto.getSesionInvolucrada();
+		LOG.debug("Tomando proximo mensaje disponible de la sesión[{}]", sesion);
+
 		// Verificamos si podemos seguir procesando o ya hay otro mensaje en proceso
-		final ColaDeMensajesVortex colaDeMensajes = receptor.getColaDeMensajes();
+		final ColaDeMensajesVortex colaDeMensajes = sesion.getColaDeMensajes();
 		final MensajeVortex proximoMensaje = colaDeMensajes.tomarProximoMensaje();
 		if (proximoMensaje == null) {
-			LOG.debug("No quedan mensajes recibidos pendientes para el receptor[{}]. Descansando", receptor);
+			LOG.debug("No quedan mensajes pendientes para la sesión[{}]. Descansando", sesion);
 			return;
 		}
 
 		// Comenzamos con el procesamiento
-		final ComenzarProcesoDeMensajeWorkUnit comienzoDeProceso = ComenzarProcesoDeMensajeWorkUnit.create(
-				proximoMensaje, receptor, nodo);
-		nodo.getProcesador().process(comienzoDeProceso);
+		final ValidarMensajesPrevioEnvioWorkUnit validacion = ValidarMensajesPrevioEnvioWorkUnit.create(contexto,
+				proximoMensaje);
+		contexto.getProcessor().process(validacion);
 	}
 
-	public static ProcesarProximoMensajeDelReceptorWorkUnit create(final ReceptorVortex receptorEmisor,
-			final NodoVortexConTasks nodo) {
-		final ProcesarProximoMensajeDelReceptorWorkUnit name = new ProcesarProximoMensajeDelReceptorWorkUnit();
-		name.nodo = nodo;
-		name.receptor = receptorEmisor;
+	public static ProcesarProximoEnvioDeLaSesionWorkUnit create(final ContextoDeOperacionHttp contexto) {
+		final ProcesarProximoEnvioDeLaSesionWorkUnit name = new ProcesarProximoEnvioDeLaSesionWorkUnit();
+		name.contexto = contexto;
 		return name;
 	}
 
