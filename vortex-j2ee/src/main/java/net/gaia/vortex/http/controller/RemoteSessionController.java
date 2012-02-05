@@ -17,9 +17,6 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.externals.time.VortexTime;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
@@ -53,8 +50,7 @@ public class RemoteSessionController {
 	private final NoRemoteSession sinSesionVortex;
 
 	public RemoteSessionController() {
-		final TaskProcessor taskProcessor = ExecutorBasedTaskProcesor.create(TaskProcessorConfiguration.create());
-		nodoVortex = NodoVortexConTasks.create(taskProcessor, "nodo-http");
+		nodoVortex = NodoVortexConTasks.create("nodo-http");
 		sinSesionVortex = NoRemoteSession.create(nodoVortex);
 	}
 
