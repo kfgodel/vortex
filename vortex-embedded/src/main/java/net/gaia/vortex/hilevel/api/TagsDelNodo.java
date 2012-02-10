@@ -27,10 +27,25 @@ public class TagsDelNodo {
 
 	private ConcurrentHashSet<String> tagsDelNodo;
 
+	private ListenerDeTagsDelNodo listener;
+
+	/**
+	 * Crea un registro de los tags del nodo, con un listener opcional para los cambios
+	 * 
+	 * @return El registro de tags creado
+	 */
 	public static TagsDelNodo create() {
 		final TagsDelNodo tags = new TagsDelNodo();
 		tags.tagsDelNodo = new ConcurrentHashSet<String>();
 		return tags;
+	}
+
+	public ListenerDeTagsDelNodo getListener() {
+		return listener;
+	}
+
+	public void setListener(final ListenerDeTagsDelNodo listener) {
+		this.listener = listener;
 	}
 
 	/**
@@ -41,6 +56,9 @@ public class TagsDelNodo {
 	 */
 	public void agregar(final List<String> tags) {
 		tagsDelNodo.addAll(tags);
+		if (listener != null) {
+			listener.onCambiosDeTags(getAllTags());
+		}
 	}
 
 	/**
@@ -51,6 +69,9 @@ public class TagsDelNodo {
 	 */
 	public void quitar(final List<String> tags) {
 		tagsDelNodo.removeAll(tags);
+		if (listener != null) {
+			listener.onCambiosDeTags(getAllTags());
+		}
 	}
 
 	/**
@@ -61,6 +82,9 @@ public class TagsDelNodo {
 	public void reemplazar(final List<String> tags) {
 		tagsDelNodo.clear();
 		tagsDelNodo.addAll(tags);
+		if (listener != null) {
+			listener.onCambiosDeTags(getAllTags());
+		}
 	}
 
 	/**
@@ -68,6 +92,9 @@ public class TagsDelNodo {
 	 */
 	public void limpiar() {
 		tagsDelNodo.clear();
+		if (listener != null) {
+			listener.onCambiosDeTags(getAllTags());
+		}
 	}
 
 	/**

@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import net.gaia.vortex.hilevel.api.ClienteVortex;
 import net.gaia.vortex.hilevel.api.FiltroDeMensajesDelCliente;
 import net.gaia.vortex.hilevel.api.HandlerDeMensajesApi;
+import net.gaia.vortex.hilevel.api.ListenerDeTagsDelNodo;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.TagsDelNodo;
 import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
@@ -90,12 +91,38 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 		handlerDeMensajes.set(handler);
 	}
 
+	/**
+	 * Crea un cliente al nodo vortex indicado, sin recibir notificaciones en los cambios de tags
+	 * 
+	 * @param nodoVortex
+	 *            El nodo al que se conectará
+	 * @param handlerDeMensajes
+	 *            El handler para los mensajes
+	 * @return El cliente creado
+	 */
 	public static ClienteVortexImpl create(final NodoVortex nodoVortex, final HandlerDeMensajesApi handlerDeMensajes) {
+		return create(nodoVortex, handlerDeMensajes, null);
+	}
+
+	/**
+	 * Crea un nuevo cliente conectado al nodo indicado
+	 * 
+	 * @param nodoVortex
+	 *            El nodo al que se conectará este cliente
+	 * @param handlerDeMensajes
+	 *            El handler para recibir los mensajes
+	 * @param listenerDeTags
+	 *            El listener para recibir notificaciones por los tags
+	 * @return
+	 */
+	public static ClienteVortexImpl create(final NodoVortex nodoVortex, final HandlerDeMensajesApi handlerDeMensajes,
+			final ListenerDeTagsDelNodo listenerDeTags) {
 		final ClienteVortexImpl cliente = new ClienteVortexImpl();
 		cliente.nodoVortex = nodoVortex;
 		cliente.handlerDeMensajes = new AtomicReference<HandlerDeMensajesApi>(handlerDeMensajes);
 		cliente.generadorMensajes = GeneradorDeMensajesImpl.create();
 		cliente.tagsDelNodo = TagsDelNodo.create();
+		cliente.tagsDelNodo.setListener(listenerDeTags);
 		cliente.initialize();
 		cliente.filtroDeMensajes = FiltroDeMensajesDelClienteImpl.create(cliente);
 		return cliente;

@@ -12,10 +12,15 @@
  */
 package net.gaia.vortex.hilevel;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TimeMagnitude;
+import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
+import net.gaia.vortex.hilevel.api.ListenerDeTagsDelNodo;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.impl.ClienteVortexImpl;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
@@ -67,6 +72,15 @@ public class ClienteVortexTest {
 		Assert.assertSame(contenidoEnviado, contenidoRecibido);
 	}
 
+	public static class ListenerDeTagsDeTest implements ListenerDeTagsDelNodo {
+		public AtomicReference<Set<String>> tagsDelNodo = new AtomicReference<Set<String>>();
+
+		@Override
+		public void onCambiosDeTags(final Set<String> tagsDelNodo) {
+			this.tagsDelNodo.set(tagsDelNodo);
+		}
+	}
+
 	@Test
 	public void deberiaPermitirEnviarUnMensajeYSaberQueNoLeLlegoANadie() {
 
@@ -74,6 +88,28 @@ public class ClienteVortexTest {
 
 	@Test
 	public void deberiaPermitirSaberQueTagsTieneElNodoAlConectarse() {
+		// Creamos el listener que vamos a usar para las notificaciones
+		final ListenerDeTagsDeTest listenerDeTags = new ListenerDeTagsDeTest();
+		// Creamos la sesión para recibir la notificación de los tags
+		final EncoladorDeMensajesHandler encoladorDelAtento = EncoladorDeMensajesHandler.create();
+		final ClienteVortexImpl clienteAtento = ClienteVortexImpl.create(nodo, encoladorDelAtento, listenerDeTags);
+
+		// Creamos otra sesión con tags que deberían llegar a conocimiento de la primera
+		final ClienteVortexImpl clientePublicante = ClienteVortexImpl.create(nodo, EncoladorDeMensajesHandler.create());
+		final HashSet<String> tagsPublicados = Sets.newHashSet("TAG1", "TAG2");
+		clientePublicante.getFiltroDeMensajes().agregarATagsActivos(tagsPublicados);
+
+		// Verificamos que no haya llegado ningun mensaje para el primero ,y damos tiempo que se
+		// impacte la notificacion en el listener
+		try {
+			encoladorDelAtento.esperarProximoMensaje(TimeMagnitude.of(2, TimeUnit.SECONDS));
+			Assert.fail("No deberíamos recibir ningun mensaje");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción correcta
+		}
+
+		Assert.assertEquals("Deberíamos haber recibido como notificacion los tags de la otra sesion", tagsPublicados,
+				listenerDeTags.tagsDelNodo.get());
 
 	}
 
