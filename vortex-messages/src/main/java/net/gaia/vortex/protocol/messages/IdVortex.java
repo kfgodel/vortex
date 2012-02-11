@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.protocol.messages;
 
+import net.sf.oval.constraint.NotNull;
+
 import com.google.common.base.Objects;
 
 /**
@@ -22,15 +24,19 @@ import com.google.common.base.Objects;
  */
 public class IdVortex {
 
+	@NotNull
 	private Long numeroDeSecuencia;
 	public static final String numeroDeSecuencia_FIELD = "numeroDeSecuencia";
 
+	@NotNull
 	private String idDelEmisor;
 	public static final String idDelEmisor_FIELD = "idDelEmisor";
 
+	@NotNull
 	private String hashDelContenido;
 	public static final String hashDelContenido_FIELD = "hashDelContenido";
 
+	@NotNull
 	private Long timestamp;
 	public static final String timestamp_FIELD = "timestamp";
 

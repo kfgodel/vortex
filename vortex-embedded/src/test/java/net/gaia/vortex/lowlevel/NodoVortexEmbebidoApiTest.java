@@ -113,6 +113,29 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		assertEquals("Deberia indicad la causa de rechazo", AcuseFallaRecepcion.BAD_HASH_ERROR, acuse.getCodigoError());
 	}
 
+	@Test
+	public void deberiaRechazarUnMetamensajeInvalido() {
+
+		// Almacena los mensajes recibidos
+		final EncoladorDeMensajesHandler encolador = EncoladorDeMensajesHandler.create();
+
+		// Creamos la sesión para poder recibir la confirmación
+		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
+
+		// Enviamos el mensaje
+		final MensajeVortex mensajeEnviado = escenarios.crearMetamensajeAgregarTagsSinTags();
+		sesion.enviar(mensajeEnviado);
+
+		// Esperamos la respuesta
+		final MensajeVortex mensajeRecibido = encolador.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		final AcuseFallaRecepcion acuse = castContenidoAs(AcuseFallaRecepcion.class, mensajeRecibido);
+
+		assertEquals("La confirmacion debería ser para el mensaje mandado", mensajeEnviado.getIdentificacion(),
+				acuse.getIdMensajeFallado());
+		assertEquals("Deberia indicad la causa de rechazo", "contenido.valor.tags.isNull", acuse.getCodigoError());
+	}
+
 	/**
 	 * Obtiene el contenido del mensaje pasado y lo castea al tipo indicado validando que si no es
 	 * de ese tipo genere un error

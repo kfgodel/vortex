@@ -13,6 +13,7 @@
 package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.sf.oval.constraint.NotNull;
 
 import com.google.common.base.Objects;
 
@@ -22,6 +23,8 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 public class AcuseDuplicado implements Acuse {
+
+	@NotNull
 	private IdVortex idMensajeDuplicado;
 	public static final String idMensajeDuplicado_FIELD = "idMensajeDuplicado";
 

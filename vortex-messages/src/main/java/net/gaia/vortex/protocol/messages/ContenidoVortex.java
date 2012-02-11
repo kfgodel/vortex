@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.protocol.messages;
 
+import net.sf.oval.constraint.AssertValid;
+import net.sf.oval.constraint.NotNull;
+
 import com.google.common.base.Objects;
 
 /**
@@ -21,9 +24,11 @@ import com.google.common.base.Objects;
  */
 public class ContenidoVortex {
 
+	@NotNull
 	private String tipoContenido;
 	public static final String tipoContenido_FIELD = "tipoContenido";
 
+	@AssertValid
 	private Object valor;
 	public static final String valor_FIELD = "valor";
 

@@ -19,7 +19,6 @@ package net.gaia.vortex.meta;
  */
 public class Decision {
 
-	public static final String FALTAN_MAS_VALIDACIONES_DE_MENSAJE = "Hay que agregar más validaciones";
 	public static final String NO_ESTA_IMPLEMENTADO_EL_INTERES_DEL_RECEPTOR = "Debería agregar la lista de tags que le interesan";
 	public static final String LA_TAREA_DE_ENVIO_DE_ACUSE_REQUIERE_EMISOR_REAL = "Asumimos que el emisor ya fue definido antes de pasar a la tarea";
 	public static final String LA_TAREA_DE_ENVIO_DE_ACUSE_ASIGNA_EL_ID_DEL_MENSAJE = "No es necesario definir id de mensaje ya que se obtiene de contexto";

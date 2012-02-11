@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
+import net.sf.oval.constraint.NotNull;
 
 import com.google.common.base.Objects;
 
@@ -27,6 +28,7 @@ import com.google.common.base.Objects;
  */
 public class AgregarTags implements MetamensajeVortex {
 
+	@NotNull
 	private List<String> tags;
 	public static final String tags_FIELD = "tags";
 

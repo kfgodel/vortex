@@ -142,4 +142,18 @@ public class EscenarioDeTest {
 		return mensaje;
 	}
 
+	/**
+	 * Crea un metamensaje inválido de publicación de tags
+	 * 
+	 * @return El mensaje inválido
+	 */
+	public MensajeVortex crearMetamensajeAgregarTagsSinTags() {
+		final MensajeVortex mensaje = crearMetamensajeDePublicacionDeTags();
+		final ContenidoVortex contenido = mensaje.getContenido();
+		final ReemplazarTags reemplazo = (ReemplazarTags) contenido.getValor();
+		// Invalidamos el mensaje
+		reemplazo.setTags(null);
+		return mensaje;
+	}
+
 }

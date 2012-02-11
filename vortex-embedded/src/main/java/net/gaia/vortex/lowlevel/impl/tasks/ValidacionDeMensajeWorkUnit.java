@@ -12,13 +12,10 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
-import net.gaia.vortex.meta.Decision;
-import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
-import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
+import net.gaia.vortex.protocol.validator.VortexValidator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,13 +69,9 @@ public class ValidacionDeMensajeWorkUnit implements TareaParaReceptor {
 	 *            Mensaje a validar
 	 * @return El error con la descripción del mensaje
 	 */
-	@HasDependencyOn(Decision.FALTAN_MAS_VALIDACIONES_DE_MENSAJE)
 	private String validarMensaje(final MensajeVortex mensaje) {
-		final IdVortex identificacion = mensaje.getIdentificacion();
-		if (identificacion.getHashDelContenido() == null) {
-			return AcuseFallaRecepcion.BAD_HASH_ERROR;
-		}
-		return null;
+		final String firstErrorCode = VortexValidator.getFirstErrorCodeFrom(mensaje);
+		return firstErrorCode;
 	}
 
 	public static ValidacionDeMensajeWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {

@@ -13,6 +13,14 @@
   
   	<dependencies>
   	
+		<!-- Validación de mensajes -->
+		<dependency>
+			<groupId>net.sf.oval</groupId>
+			<artifactId>oval</artifactId>
+			<version>1.80</version>
+		</dependency>
+  	
+  	
 		<!-- Logging -->
 		<dependency>
 			<!-- Facade para todo lo que es logueo -->

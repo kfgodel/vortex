@@ -14,6 +14,10 @@ package net.gaia.vortex.protocol.messages;
 
 import java.util.List;
 
+import net.sf.oval.constraint.AssertValid;
+import net.sf.oval.constraint.MinSize;
+import net.sf.oval.constraint.NotNull;
+
 import com.google.common.base.Objects;
 
 /**
@@ -26,12 +30,18 @@ public class MensajeVortex {
 
 	public static final String TAG_INTERCAMBIO_VECINO = "CHE";
 
+	@NotNull
+	@AssertValid
 	private IdVortex identificacion;
 	public static final String identificacion_FIELD = "identificacion";
 
+	@NotNull
+	@AssertValid
 	private ContenidoVortex contenido;
 	public static final String contenido_FIELD = "contenido";
 
+	@NotNull
+	@MinSize(1)
 	private List<String> tagsDestino;
 	public static final String tagsDestino_FIELD = "tagsDestino";
 
@@ -104,7 +114,7 @@ public class MensajeVortex {
 	 * @return true si el contenido es una instancia de metamensaje
 	 */
 	public boolean esMetaMensaje() {
-		boolean esMetamensaje = this.getTagsDestino().contains(MensajeVortex.TAG_INTERCAMBIO_VECINO);
+		final boolean esMetamensaje = this.getTagsDestino().contains(MensajeVortex.TAG_INTERCAMBIO_VECINO);
 		return esMetamensaje;
 	}
 

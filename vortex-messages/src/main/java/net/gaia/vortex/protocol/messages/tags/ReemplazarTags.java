@@ -15,6 +15,7 @@ package net.gaia.vortex.protocol.messages.tags;
 import java.util.List;
 
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
+import net.sf.oval.constraint.NotNull;
 
 import com.google.common.base.Objects;
 
@@ -26,6 +27,7 @@ import com.google.common.base.Objects;
  */
 public class ReemplazarTags implements MetamensajeVortex {
 
+	@NotNull
 	private List<String> tags;
 	public static final String tags_FIELD = "tags";
 

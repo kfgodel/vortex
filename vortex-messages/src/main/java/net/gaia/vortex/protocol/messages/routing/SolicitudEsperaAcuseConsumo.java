@@ -14,6 +14,7 @@ package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
+import net.sf.oval.constraint.NotNull;
 
 import com.google.common.base.Objects;
 
@@ -24,6 +25,7 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 public class SolicitudEsperaAcuseConsumo implements MetamensajeVortex {
+	@NotNull
 	private IdVortex idMensajeRecibido;
 	public static final String idMensajeRecibido_FIELD = "idMensajeRecibido";
 

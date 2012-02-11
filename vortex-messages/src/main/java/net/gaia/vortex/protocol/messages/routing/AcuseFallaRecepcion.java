@@ -13,6 +13,8 @@
 package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.sf.oval.constraint.NotEmpty;
+import net.sf.oval.constraint.NotNull;
 
 import com.google.common.base.Objects;
 
@@ -22,8 +24,13 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 public class AcuseFallaRecepcion implements Acuse {
+
+	@NotNull
 	private IdVortex idMensajeFallado;
 	public static final String idMensajeFallado_FIELD = "idMensajeFallado";
+
+	@NotNull
+	@NotEmpty
 	private String codigoError;
 	public static final String codigoError_FIELD = "codigoError";
 
@@ -33,7 +40,7 @@ public class AcuseFallaRecepcion implements Acuse {
 	private String descripcionError;
 	public static final String descripcionError_FIELD = "descripcionError";
 
-	public static final String BAD_HASH_ERROR = "mensaje.identificacion.hashDelContenido.isnull";
+	public static final String BAD_HASH_ERROR = "identificacion.hashDelContenido.isNull";
 
 	public IdVortex getIdMensajeFallado() {
 		return idMensajeFallado;

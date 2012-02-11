@@ -13,6 +13,8 @@
 package net.gaia.vortex.protocol.messages.routing;
 
 import net.gaia.vortex.protocol.messages.IdVortex;
+import net.sf.oval.constraint.NotNegative;
+import net.sf.oval.constraint.NotNull;
 
 import com.google.common.base.Objects;
 
@@ -23,27 +25,37 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 public class AcuseConsumo implements Acuse {
+
+	@NotNull
 	private IdVortex idMensajeConsumido;
 	public static final String idMensajeConsumido_FIELD = "idMensajeConsumido";
 
 	/**
 	 * Cantidad de clientes del nodo (otros nodos) interesados en el mensaje
 	 */
+	@NotNull
+	@NotNegative
 	private Long cantidadInteresados;
 	public static final String cantidadInteresados_FIELD = "cantidadInteresados";
 	/**
 	 * Cantidad de ruteos que indicaron duplicado
 	 */
+	@NotNull
+	@NotNegative
 	private Long cantidadDuplicados;
 	public static final String cantidadDuplicados_FIELD = "cantidadDuplicados";
 	/**
 	 * Cantidad de ruteos que tuvieron fallas
 	 */
+	@NotNull
+	@NotNegative
 	private Long cantidadFallados;
 	public static final String cantidadFallados_FIELD = "cantidadFallados";
 	/**
 	 * Cantidad de clientes que indicaron consumo del mensaje
 	 */
+	@NotNull
+	@NotNegative
 	private Long cantidadConsumidos;
 	public static final String cantidadConsumidos_FIELD = "cantidadConsumidos";
 
