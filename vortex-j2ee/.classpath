@@ -11,6 +11,7 @@
   <classpathentry kind="var" path="M2_REPO/cglib/cglib/2.2/cglib-2.2.jar" sourcepath="M2_REPO/cglib/cglib/2.2/cglib-2.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/taglibs/com.springsource.org.apache.taglibs.standard/1.1.2/com.springsource.org.apache.taglibs.standard-1.1.2.jar" sourcepath="M2_REPO/org/apache/taglibs/com.springsource.org.apache.taglibs.standard/1.1.2/com.springsource.org.apache.taglibs.standard-1.1.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-io/commons-io/2.0.1/commons-io-2.0.1.jar" sourcepath="M2_REPO/commons-io/commons-io/2.0.1/commons-io-2.0.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/ar/com/fdvs/dgarcia/dgarcia-commons/1.0.2/dgarcia-commons-1.0.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/guava/guava/r09/guava-r09.jar" sourcepath="M2_REPO/com/google/guava/guava/r09/guava-r09-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/jackson/jackson-core-lgpl/1.8.3/jackson-core-lgpl-1.8.3.jar" sourcepath="M2_REPO/org/codehaus/jackson/jackson-core-lgpl/1.8.3/jackson-core-lgpl-1.8.3-sources.jar"/>
@@ -23,15 +24,16 @@
   <classpathentry kind="var" path="M2_REPO/ch/qos/logback/logback-classic/0.9.28/logback-classic-0.9.28.jar" sourcepath="M2_REPO/ch/qos/logback/logback-classic/0.9.28/logback-classic-0.9.28-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/ch/qos/logback/logback-core/0.9.28/logback-core-0.9.28.jar" sourcepath="M2_REPO/ch/qos/logback/logback-core/0.9.28/logback-core-0.9.28-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5.jar" sourcepath="M2_REPO/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/net/sf/oval/oval/1.80/oval-1.80.jar" sourcepath="M2_REPO/net/sf/oval/oval/1.80/oval-1.80-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/quartz-scheduler/quartz/1.7.3/quartz-1.7.3.jar" sourcepath="M2_REPO/org/quartz-scheduler/quartz/1.7.3/quartz-1.7.3-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-aop/3.0.6.RELEASE/spring-aop-3.0.6.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-aop/3.0.6.RELEASE/spring-aop-3.0.6.RELEASE-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-asm/3.0.6.RELEASE/spring-asm-3.0.6.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-asm/3.0.6.RELEASE/spring-asm-3.0.6.RELEASE-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-beans/3.0.6.RELEASE/spring-beans-3.0.6.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-beans/3.0.6.RELEASE/spring-beans-3.0.6.RELEASE-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context/3.0.6.RELEASE/spring-context-3.0.6.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-context/3.0.6.RELEASE/spring-context-3.0.6.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-asm/3.0.2.RELEASE/spring-asm-3.0.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-asm/3.0.2.RELEASE/spring-asm-3.0.2.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-beans/3.0.2.RELEASE/spring-beans-3.0.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-beans/3.0.2.RELEASE/spring-beans-3.0.2.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context/3.0.2.RELEASE/spring-context-3.0.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-context/3.0.2.RELEASE/spring-context-3.0.2.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context-support/3.0.2.RELEASE/spring-context-support-3.0.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-context-support/3.0.2.RELEASE/spring-context-support-3.0.2.RELEASE-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/3.0.6.RELEASE/spring-core-3.0.6.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-core/3.0.6.RELEASE/spring-core-3.0.6.RELEASE-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-expression/3.0.6.RELEASE/spring-expression-3.0.6.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-expression/3.0.6.RELEASE/spring-expression-3.0.6.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/3.0.2.RELEASE/spring-core-3.0.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-core/3.0.2.RELEASE/spring-core-3.0.2.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-expression/3.0.2.RELEASE/spring-expression-3.0.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-expression/3.0.2.RELEASE/spring-expression-3.0.2.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-jdbc/3.0.2.RELEASE/spring-jdbc-3.0.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-jdbc/3.0.2.RELEASE/spring-jdbc-3.0.2.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-orm/3.0.2.RELEASE/spring-orm-3.0.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-orm/3.0.2.RELEASE/spring-orm-3.0.2.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-test/3.0.2.RELEASE/spring-test-3.0.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-test/3.0.2.RELEASE/spring-test-3.0.2.RELEASE-sources.jar"/>

@@ -34,64 +34,7 @@
 			<artifactId>dgarcia-commons</artifactId>
 			<version>1.0.2</version>
 		</dependency>
-		
-		<!-- Spring -->	
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${org.springframework.version}</version>
-			<exclusions>
-				<exclusion>
-		          <groupId>commons-logging</groupId>
-		          <artifactId>commons-logging</artifactId>
-		        </exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-		<dependency>
-			<!-- Requerido por springockito -->
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-expression</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-		<dependency>
-			<!-- Requerido por springockito -->
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-		<dependency>
-			<!-- Requerido por springockito -->
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-		<dependency>
-			<!-- Requerido por springockito -->
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-asm</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-		<dependency>
-			<!-- Requerido por springockito -->
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-		
         
-        <!--  Manejo de fechas con onda-->
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.0</version>
-		</dependency>
-        
-		
 		<!-- Logging -->
 		<dependency>
 			<!-- Facade para todo lo que es logueo -->
@@ -139,13 +82,6 @@
 			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${org.springframework.version}</version>
-			<scope>test</scope>
-		</dependency>
-		
 		
 	</dependencies>
 	
