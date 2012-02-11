@@ -98,28 +98,46 @@ public class NodoVortexConTasks implements NodoVortex {
 	}
 
 	/**
-	 * Crea un nodo con la configuración default utilizando un procesador de tareas de un sólo
-	 * thread
+	 * Crea un nodo con la configuración default para ejecutar en memoria utilizando un procesador
+	 * de tareas de un sólo thread
 	 * 
 	 * @param nombreOpcional
 	 *            El nombre opcional del nodo para distinguirlo de otros
 	 * @return EL nodo creado
 	 */
 	public static NodoVortexConTasks create(final String nombreOpcional) {
-		final TaskProcessor defaultProcessor = ExecutorBasedTaskProcesor.create();
-		return create(defaultProcessor, nombreOpcional);
+		final ConfiguracionDeNodo configEnMemoria = ConfiguracionDeNodo.createEnMemoria();
+		return create(configEnMemoria, nombreOpcional);
 	}
 
 	/**
-	 * Crea un nodo vortex embebido que funciona completamente en memoria
+	 * Crea un nodo con la configuración pasada para ejecutar en memoria utilizando un procesador de
+	 * tareas de un sólo thread
 	 * 
+	 * @param config
+	 *            La configuración a utilizar
+	 * @param nombreOpcional
+	 *            El nombre del nodo
+	 * @return El nodo creado
+	 */
+	public static NodoVortexConTasks create(final ConfiguracionDeNodo config, final String nombreOpcional) {
+		final TaskProcessor defaultProcessor = ExecutorBasedTaskProcesor.create();
+		return create(config, defaultProcessor, nombreOpcional);
+	}
+
+	/**
+	 * Crea un nodo vortex embebido con la configuración indicada y el procesador de tareas pasado
+	 * 
+	 * @param config
+	 *            La configuración a utilizar
 	 * @param processor
 	 *            El procesador para las tareas
 	 * @param nombreOpcional
 	 *            El nombre opcional de este nodo no null
 	 * @return EL nodo creado
 	 */
-	private static NodoVortexConTasks create(final TaskProcessor processor, final String nombreOpcional) {
+	public static NodoVortexConTasks create(final ConfiguracionDeNodo config, final TaskProcessor processor,
+			final String nombreOpcional) {
 		final NodoVortexConTasks nodo = new NodoVortexConTasks();
 		nodo.registroReceptores = SummarizerDeReceptores.create(new TagChangeListener() {
 			@Override
@@ -143,7 +161,7 @@ public class NodoVortexConTasks implements NodoVortex {
 		nodo.generadorMensajes = GeneradorDeMensajesImpl.create();
 		nodo.memoriaDeMensajes = MemoriaDeMensajesImpl.create();
 		nodo.memoriaDeRuteos = MemoriaDeRuteosImpl.create();
-		nodo.configuracion = ConfiguracionDeNodo.create();
+		nodo.configuracion = config;
 		nodo.sinEmisorIdentificado = NullReceptorVortex.create();
 		nodo.nombre = getValidNameFrom(nombreOpcional);
 		return nodo;

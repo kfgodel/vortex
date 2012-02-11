@@ -21,6 +21,7 @@ import net.gaia.vortex.externals.time.VortexTime;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
+import net.gaia.vortex.lowlevel.impl.nodo.ConfiguracionDeNodo;
 import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.prog.Decision;
 import net.gaia.vortex.protocol.http.VortexWrapper;
@@ -50,7 +51,8 @@ public class RemoteSessionController {
 	private final NoRemoteSession sinSesionVortex;
 
 	public RemoteSessionController() {
-		nodoVortex = NodoVortexConTasks.create("nodo-http");
+		final ConfiguracionDeNodo configuracionHttp = ConfiguracionDeNodo.createEnHttp();
+		nodoVortex = NodoVortexConTasks.create(configuracionHttp, "nodo-http");
 		sinSesionVortex = NoRemoteSession.create(nodoVortex);
 	}
 

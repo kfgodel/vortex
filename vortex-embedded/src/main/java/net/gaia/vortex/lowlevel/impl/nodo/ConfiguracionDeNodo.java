@@ -26,10 +26,11 @@ public class ConfiguracionDeNodo {
 	private TimeMagnitude timeoutDeAcuseDeConsumo;
 	private TimeMagnitude esperaPorAcuseDeConsumo;
 
-	public static ConfiguracionDeNodo create() {
+	public static ConfiguracionDeNodo create(final int segundosEsperandoAcuseDeConsumo,
+			final int segundosAgregadosPorEsperaDeAcuse) {
 		final ConfiguracionDeNodo configuracion = new ConfiguracionDeNodo();
-		configuracion.timeoutDeAcuseDeConsumo = TimeMagnitude.of(10, TimeUnit.SECONDS);
-		configuracion.esperaPorAcuseDeConsumo = TimeMagnitude.of(60, TimeUnit.SECONDS);
+		configuracion.timeoutDeAcuseDeConsumo = TimeMagnitude.of(segundosEsperandoAcuseDeConsumo, TimeUnit.SECONDS);
+		configuracion.esperaPorAcuseDeConsumo = TimeMagnitude.of(segundosAgregadosPorEsperaDeAcuse, TimeUnit.SECONDS);
 		return configuracion;
 	}
 
@@ -51,6 +52,24 @@ public class ConfiguracionDeNodo {
 
 	public void setTimeoutDeAcuseDeConsumo(final TimeMagnitude timeoutDeAcuseDeConsumo) {
 		this.timeoutDeAcuseDeConsumo = timeoutDeAcuseDeConsumo;
+	}
+
+	/**
+	 * Crea una configuración default para un nodo en memoria
+	 * 
+	 * @return
+	 */
+	public static ConfiguracionDeNodo createEnMemoria() {
+		return create(2, 2);
+	}
+
+	/**
+	 * Crea una configuración default para un nodo en memoria
+	 * 
+	 * @return
+	 */
+	public static ConfiguracionDeNodo createEnHttp() {
+		return create(10, 60);
 	}
 
 }

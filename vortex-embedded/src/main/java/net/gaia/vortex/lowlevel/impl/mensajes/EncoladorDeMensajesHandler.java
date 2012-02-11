@@ -23,6 +23,7 @@ import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
 import net.gaia.vortex.hilevel.api.HandlerDeMensajesApi;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
+import net.gaia.vortex.hilevel.api.entregas.ReporteDeEntregaApi;
 import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
@@ -40,6 +41,7 @@ public class EncoladorDeMensajesHandler implements MensajeVortexHandler, Handler
 	private static final Logger LOG = LoggerFactory.getLogger(EncoladorDeMensajesHandler.class);
 
 	private LinkedBlockingQueue<Object> mensajes;
+	private LinkedBlockingQueue<ReporteDeEntregaApi> reportes;
 
 	/**
 	 * @see net.gaia.vortex.lowlevel.api.MensajeVortexHandler#onMensajeRecibido(net.gaia.vortex.protocol.MensajeVortex)
@@ -52,6 +54,7 @@ public class EncoladorDeMensajesHandler implements MensajeVortexHandler, Handler
 	public static EncoladorDeMensajesHandler create() {
 		final EncoladorDeMensajesHandler encolador = new EncoladorDeMensajesHandler();
 		encolador.mensajes = new LinkedBlockingQueue<Object>();
+		encolador.reportes = new LinkedBlockingQueue<ReporteDeEntregaApi>();
 		return encolador;
 	}
 
@@ -112,5 +115,34 @@ public class EncoladorDeMensajesHandler implements MensajeVortexHandler, Handler
 	@Override
 	public void onMensajeConErrores(final MensajeVortex mensajeFallido, final ErroresDelMensaje errores) {
 		LOG.error("Error en el mensaje[" + mensajeFallido + "]: " + errores);
+	}
+
+	/**
+	 * @see net.gaia.vortex.hilevel.api.HandlerDeMensajesApi#onReporteDeEntregaRecibido(net.gaia.vortex.hilevel.api.entregas.ReporteDeEntregaApi)
+	 */
+	@Override
+	public void onReporteDeEntregaRecibido(final ReporteDeEntregaApi reporte) {
+		reportes.add(reporte);
+	}
+
+	/**
+	 * Espera el próximo reporte recibido en este handler
+	 * 
+	 * @param timeout
+	 *            El tiempo a esperar como maximo
+	 * @return El reporte recibido
+	 */
+	public ReporteDeEntregaApi esperarProximoReporte(final TimeMagnitude timeout) {
+		final TimeUnit timeUnit = timeout.getTimeUnit();
+		final long quantity = timeout.getQuantity();
+		try {
+			final ReporteDeEntregaApi reporte = reportes.poll(quantity, timeUnit);
+			if (reporte == null) {
+				throw new TimeoutExceededException("Se acabó el timput antes de recibir un reporte");
+			}
+			return reporte;
+		} catch (final InterruptedException e) {
+			throw new InterruptedWaitException("El thread fue interrumpido esperando un reporte", e);
+		}
 	}
 }

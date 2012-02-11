@@ -22,6 +22,8 @@ import net.gaia.vortex.hilevel.api.HandlerDeMensajesApi;
 import net.gaia.vortex.hilevel.api.ListenerDeTagsDelNodo;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.TagsDelNodo;
+import net.gaia.vortex.hilevel.api.entregas.ReporteDeEntregaApi;
+import net.gaia.vortex.hilevel.api.entregas.StatusDeEntrega;
 import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
 import net.gaia.vortex.lowlevel.api.MensajeVortexHandler;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
@@ -29,6 +31,7 @@ import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.ids.GeneradorDeMensajesImpl;
 import net.gaia.vortex.lowlevel.impl.ids.GeneradorMensajesDeNodo;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
+import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 import net.gaia.vortex.protocol.messages.conn.CerrarConexion;
@@ -59,6 +62,7 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	private GeneradorMensajesDeNodo generadorMensajes;
 	private FiltroDeMensajesDelCliente filtroDeMensajes;
 	private TagsDelNodo tagsDelNodo;
+	private MemoriaDeEnvios envios;
 
 	public TagsDelNodo getTagsDelNodo() {
 		return tagsDelNodo;
@@ -73,6 +77,8 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 		final String tipoDeContenido = mensajeAEnviar.getTipoDeContenido();
 		final Set<String> tags = mensajeAEnviar.getTagsDelMensaje();
 		final MensajeVortex mensajeVortex = generadorMensajes.generarMensajePara(contenido, tipoDeContenido, tags);
+		final IdVortex idVortex = mensajeVortex.getIdentificacion();
+		envios.recordar(idVortex, mensajeAEnviar);
 		enviarMensajeVortex(mensajeVortex);
 	}
 
@@ -125,6 +131,7 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 		cliente.tagsDelNodo.setListener(listenerDeTags);
 		cliente.initialize();
 		cliente.filtroDeMensajes = FiltroDeMensajesDelClienteImpl.create(cliente);
+		cliente.envios = MemoriaDeEnvios.create();
 		return cliente;
 	}
 
@@ -144,6 +151,7 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	public void onMensajeRecibido(final MensajeVortex nuevoMensaje) {
 		if (nuevoMensaje.esMetaMensaje()) {
 			procesarMetaMensaje(nuevoMensaje);
+			return;
 		}
 		// Indicamos si consumimos el mensaje
 		final boolean aceptamosElMensaje = contestarAlNodoSiAceptamos(nuevoMensaje);
@@ -208,17 +216,16 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 		}
 		if (metaObjeto instanceof AcuseDuplicado) {
 			final AcuseDuplicado acuse = (AcuseDuplicado) metaObjeto;
-			LOG.error("Se rebotó por duplicado un mensaje que enviamos: {}", acuse.getIdMensajeDuplicado());
+			onAcuseDuplicadoRecibido(acuse);
 		} else if (metaObjeto instanceof AcuseFallaRecepcion) {
 			final AcuseFallaRecepcion acuse = (AcuseFallaRecepcion) metaObjeto;
-			LOG.error("Se rebotó por falla[{}] un mensaje que enviamos: {}", acuse.getCodigoError(),
-					acuse.getIdMensajeFallado());
+			onAcuseDeFallaRecibido(acuse);
 		} else if (metaObjeto instanceof AcuseConsumo) {
 			final AcuseConsumo acuse = (AcuseConsumo) metaObjeto;
-			LOG.error("Recibimos un acuse, y no está implementada la lógica[{}]: {}", nuevoMensaje, acuse);
+			onAcuseDeConsumoRecibido(acuse);
 		} else if (metaObjeto instanceof SolicitudEsperaAcuseConsumo) {
 			final SolicitudEsperaAcuseConsumo solicitud = (SolicitudEsperaAcuseConsumo) metaObjeto;
-			LOG.error("Recibimos una solicitud de espera[{}] por el consumo que no pedimos", solicitud);
+			LOG.error("Recibimos una solicitud de espera[{}] y no solicitamos ningun acuse de consumo", solicitud);
 		} else if (metaObjeto instanceof SolicitudAcuseConsumo) {
 			final SolicitudAcuseConsumo solicitud = (SolicitudAcuseConsumo) metaObjeto;
 			LOG.error(
@@ -237,6 +244,99 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 			tagsDelNodo.limpiar();
 		} else if (metaObjeto instanceof CerrarConexion) {
 			LOG.error("Nos pidieron cerrar la conexión y no está implementado");
+		} else {
+			LOG.error("Llegó un metamensaje que no sabemos como tratar: " + metaObjeto);
+		}
+	}
+
+	/**
+	 * Invocado al recibir un acuse de consumo
+	 * 
+	 * @param acuse
+	 *            El acuse recibido del nodo
+	 */
+	private void onAcuseDeConsumoRecibido(final AcuseConsumo acuse) {
+		final IdVortex idMensajeVortex = acuse.getIdMensajeConsumido();
+		LOG.debug("Nos llegó un acuse de consumo del nodo por el mensaje: {}", idMensajeVortex);
+		final MensajeVortexApi mensajeCliente = envios.olvidarMensajeDe(idMensajeVortex);
+		if (mensajeCliente == null) {
+			// Ya no tenemos registro, o nunca lo tuvimos
+			LOG.info("No conocemos el mensaje[{}] para el que llegó el acuse de consumo, ignorando", idMensajeVortex);
+		}
+
+		StatusDeEntrega status;
+		if (acuse.getCantidadInteresados().longValue() == 0) {
+			status = StatusDeEntrega.SIN_INTERESADOS;
+			LOG.debug("Llegó un acuse de consumo sin interesados para el mensaje: {}", mensajeCliente);
+		} else if (acuse.getCantidadConsumidos().longValue() == 0) {
+			status = StatusDeEntrega.NO_CONSUMIDO;
+			LOG.debug("Llego un acuse de consumo sin consumisiones para el mensaje: {}", mensajeCliente);
+		} else {
+			status = StatusDeEntrega.CONSUMIDO;
+			LOG.debug("Llego un acuse de consumo exitoso para el mensaje: {}", mensajeCliente);
+		}
+
+		final ReporteDeEntregaApi reporteDeConsumo = ReporteDeEntregaApi.create(mensajeCliente, status);
+		reporteDeConsumo.setCantidadConsumidos(acuse.getCantidadConsumidos());
+		reporteDeConsumo.setCantidadDuplicados(acuse.getCantidadDuplicados());
+		reporteDeConsumo.setCantidadFallados(acuse.getCantidadFallados());
+		reporteDeConsumo.setCantidadInteresados(acuse.getCantidadInteresados());
+		onReporteDeEntregaDisponible(reporteDeConsumo);
+	}
+
+	/**
+	 * Invocado al recibir un acuse de falla
+	 * 
+	 * @param acuse
+	 *            El acuse recibido
+	 */
+	private void onAcuseDeFallaRecibido(final AcuseFallaRecepcion acuse) {
+		final IdVortex idMensajeVortex = acuse.getIdMensajeFallado();
+		LOG.debug("Nos llegó un acuse de falla del nodo por el mensaje: {}", idMensajeVortex);
+		final MensajeVortexApi mensajeCliente = envios.olvidarMensajeDe(idMensajeVortex);
+		if (mensajeCliente == null) {
+			// Ya no tenemos registro, o nunca lo tuvimos
+			LOG.info("No conocemos el mensaje[{}] para el que llegó un acuse de falla, ignorando", idMensajeVortex);
+		}
+
+		LOG.debug("Se rebotó por falla un mensaje que enviamos: {}", mensajeCliente);
+		final ReporteDeEntregaApi reporteDeFalla = ReporteDeEntregaApi.create(mensajeCliente,
+				StatusDeEntrega.RECHAZADO_POR_ERROR);
+		reporteDeFalla.setCodigoError(acuse.getCodigoError());
+		reporteDeFalla.setDescripcionError(acuse.getDescripcionError());
+		onReporteDeEntregaDisponible(reporteDeFalla);
+	}
+
+	/**
+	 * Invocado al recibir un acuse de duplicado del nodo
+	 * 
+	 * @param acuse
+	 *            El acuse de duplicado recibido
+	 */
+	private void onAcuseDuplicadoRecibido(final AcuseDuplicado acuse) {
+		final IdVortex idMensajeVortex = acuse.getIdMensajeDuplicado();
+		LOG.debug("Nos llegó un acuse de duplicado del nodo por el mensaje: {}", idMensajeVortex);
+		final MensajeVortexApi mensajeCliente = envios.olvidarMensajeDe(idMensajeVortex);
+		if (mensajeCliente == null) {
+			// Ya no tenemos registro, o nunca lo tuvimos
+			LOG.info("No conocemos el mensaje[{}] para el que llegó un acuse de duplicado, ignorando", idMensajeVortex);
+		}
+
+		LOG.debug("Se rebotó por duplicado un mensaje que enviamos: {}", mensajeCliente);
+		final ReporteDeEntregaApi reporteDeDuplicado = ReporteDeEntregaApi.create(mensajeCliente,
+				StatusDeEntrega.RECHAZADO_POR_DUPLICADO);
+		onReporteDeEntregaDisponible(reporteDeDuplicado);
+	}
+
+	/**
+	 * @param reporteDeDuplicado
+	 */
+	private void onReporteDeEntregaDisponible(final ReporteDeEntregaApi reporteDeDuplicado) {
+		try {
+			handlerDeMensajes.get().onReporteDeEntregaRecibido(reporteDeDuplicado);
+		} catch (final Exception e) {
+			LOG.error("Se produjo un error en el handler de mensajes al notificarle un reporte de entrega: "
+					+ reporteDeDuplicado, e);
 		}
 	}
 

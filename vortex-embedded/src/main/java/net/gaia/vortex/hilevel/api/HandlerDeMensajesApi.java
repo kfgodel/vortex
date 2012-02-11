@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.hilevel.api;
 
+import net.gaia.vortex.hilevel.api.entregas.ReporteDeEntregaApi;
+
 /**
  * Esta interfaz define los métodos que debe implementar el handler utilizado para recibir los
  * mensajes de alto nivel de un nodo vortex
@@ -27,5 +29,13 @@ public interface HandlerDeMensajesApi {
 	 *            El mensaje recibido
 	 */
 	public void onMensajeRecibido(MensajeVortexApi mensajeRecibido);
+
+	/**
+	 * Este método es invocado al recibir un reporte de entrega de un mensaje enviado previamente
+	 * 
+	 * @param reporte
+	 *            El reporte del mensaje con el estado del envío
+	 */
+	public void onReporteDeEntregaRecibido(ReporteDeEntregaApi reporte);
 
 }

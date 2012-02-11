@@ -22,6 +22,8 @@ import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.hilevel.api.ListenerDeTagsDelNodo;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
+import net.gaia.vortex.hilevel.api.entregas.ReporteDeEntregaApi;
+import net.gaia.vortex.hilevel.api.entregas.StatusDeEntrega;
 import net.gaia.vortex.hilevel.api.impl.ClienteVortexImpl;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
@@ -49,7 +51,7 @@ public class ClienteVortexTest {
 
 	@After
 	public void limpiarTest() {
-
+		nodo.detenerYDevolverRecursos();
 	}
 
 	@Test
@@ -72,6 +74,24 @@ public class ClienteVortexTest {
 		Assert.assertSame(contenidoEnviado, contenidoRecibido);
 	}
 
+	@Test
+	public void deberiaPermitirEnviarUnMensajeYSaberQueNoLeLlegoANadie() {
+		// Creamos el emisor del mensaje
+		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
+		final ClienteVortexImpl clienteEmisor = ClienteVortexImpl.create(nodo, encoladorDelEmisor);
+
+		// Enviamos el mensaje
+		final MensajeVortexApi mensaje = MensajeVortexApi.create("Hola", "tipo1Tesst1", "TAG1");
+		clienteEmisor.enviar(mensaje);
+
+		// Verificamos que no debería llegarle a nadie
+		final ReporteDeEntregaApi reporte = encoladorDelEmisor
+				.esperarProximoReporte(TimeMagnitude.of(4, TimeUnit.SECONDS));
+		Assert.assertFalse("Deberia indicar que el mensaje no fue exitoso", reporte.fueExitoso());
+		Assert.assertEquals("Deberia indicar que no hubo interesados", reporte.getStatus(),
+				StatusDeEntrega.SIN_INTERESADOS);
+	}
+
 	public static class ListenerDeTagsDeTest implements ListenerDeTagsDelNodo {
 		public AtomicReference<Set<String>> tagsDelNodo = new AtomicReference<Set<String>>();
 
@@ -82,17 +102,12 @@ public class ClienteVortexTest {
 	}
 
 	@Test
-	public void deberiaPermitirEnviarUnMensajeYSaberQueNoLeLlegoANadie() {
-
-	}
-
-	@Test
 	public void deberiaPermitirSaberQueTagsTieneElNodoAlConectarse() {
 		// Creamos el listener que vamos a usar para las notificaciones
 		final ListenerDeTagsDeTest listenerDeTags = new ListenerDeTagsDeTest();
 		// Creamos la sesión para recibir la notificación de los tags
 		final EncoladorDeMensajesHandler encoladorDelAtento = EncoladorDeMensajesHandler.create();
-		final ClienteVortexImpl clienteAtento = ClienteVortexImpl.create(nodo, encoladorDelAtento, listenerDeTags);
+		ClienteVortexImpl.create(nodo, encoladorDelAtento, listenerDeTags);
 
 		// Creamos otra sesión con tags que deberían llegar a conocimiento de la primera
 		final ClienteVortexImpl clientePublicante = ClienteVortexImpl.create(nodo, EncoladorDeMensajesHandler.create());
