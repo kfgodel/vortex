@@ -13,10 +13,11 @@
 package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.envios.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.envios.EsperaDeAccion;
 import net.gaia.vortex.lowlevel.impl.nodo.ConfiguracionDeNodo;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class EsperarAcuseConsumoWorkUnit implements WorkUnit {
+public class EsperarAcuseConsumoWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(EsperarAcuseConsumoWorkUnit.class);
 
 	private ContextoDeEnvio contexto;
@@ -36,6 +37,16 @@ public class EsperarAcuseConsumoWorkUnit implements WorkUnit {
 		final EsperarAcuseConsumoWorkUnit espera = new EsperarAcuseConsumoWorkUnit();
 		espera.contexto = contexto;
 		return espera;
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ContextoDeRuteoDeMensaje contextoDeRuteo = contexto.getContextoDeRuteo();
+		final ReceptorVortex emisor = contextoDeRuteo.getEmisor();
+		return emisor == receptor;
 	}
 
 	/**

@@ -12,9 +12,10 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.envios.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.envios.IdentificadorDeEnvio;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ruteo.ControlDeRuteo;
 import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class RegistrarMensajeFallidoWorkUnit implements WorkUnit {
+public class RegistrarMensajeFallidoWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(RegistrarMensajeFallidoWorkUnit.class);
 
 	private ContextoDeEnvio contexto;
@@ -39,6 +40,16 @@ public class RegistrarMensajeFallidoWorkUnit implements WorkUnit {
 		registrar.contexto = contexto;
 		registrar.acuse = acuse;
 		return registrar;
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ContextoDeRuteoDeMensaje contextoDeRuteo = contexto.getContextoDeRuteo();
+		final ReceptorVortex emisor = contextoDeRuteo.getEmisor();
+		return emisor == receptor;
 	}
 
 	/**

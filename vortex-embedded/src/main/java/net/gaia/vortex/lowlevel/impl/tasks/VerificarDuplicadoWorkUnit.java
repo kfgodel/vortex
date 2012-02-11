@@ -13,8 +13,8 @@
 package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.mensajes.MemoriaDeMensajes;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
@@ -27,10 +27,19 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class VerificarDuplicadoWorkUnit implements WorkUnit {
+public class VerificarDuplicadoWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(VerificarDuplicadoWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ReceptorVortex emisor = contexto.getEmisor();
+		return emisor == receptor;
+	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()

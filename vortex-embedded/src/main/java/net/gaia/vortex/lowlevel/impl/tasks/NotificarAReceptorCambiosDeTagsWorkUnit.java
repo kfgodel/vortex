@@ -15,7 +15,6 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.tags.NotificacionDeCambioDeTags;
@@ -29,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class NotificarAReceptorCambiosDeTagsWorkUnit implements WorkUnit {
+public class NotificarAReceptorCambiosDeTagsWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(NotificarAReceptorCambiosDeTagsWorkUnit.class);
 
 	private NotificacionDeCambioDeTags notificacion;
@@ -41,6 +40,15 @@ public class NotificarAReceptorCambiosDeTagsWorkUnit implements WorkUnit {
 		notificar.notificacion = notificacion;
 		notificar.nodo = nodo;
 		return notificar;
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ReceptorVortex notificado = notificacion.getReceptor();
+		return notificado == receptor;
 	}
 
 	/**

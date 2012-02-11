@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.envios.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.envios.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.envios.MensajesEnEspera;
@@ -32,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class RecibirAcuseConsumoWorkUnit implements WorkUnit {
+public class RecibirAcuseConsumoWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(RecibirAcuseConsumoWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
@@ -43,6 +42,15 @@ public class RecibirAcuseConsumoWorkUnit implements WorkUnit {
 		recibir.contexto = contexto;
 		recibir.acuse = acuse;
 		return recibir;
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ReceptorVortex emisor = contexto.getEmisor();
+		return emisor == receptor;
 	}
 
 	/**

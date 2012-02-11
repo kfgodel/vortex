@@ -13,7 +13,6 @@
 package net.gaia.vortex.lowlevel.impl.tasks;
 
 import net.gaia.annotations.HasDependencyOn;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.meta.Decision;
@@ -30,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class DevolverAcuseFallaRecepcionWorkUnit implements WorkUnit {
+public class DevolverAcuseFallaRecepcionWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(DevolverAcuseFallaRecepcionWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
@@ -46,6 +45,15 @@ public class DevolverAcuseFallaRecepcionWorkUnit implements WorkUnit {
 			contexto.getProcesador().process(terminarProceso);
 		}
 	};
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ReceptorVortex emisor = contexto.getEmisor();
+		return emisor == receptor;
+	}
 
 	/**
 	 * Crea una tarea de devolución de mensaje de confirmación con el cual el emisor puede obtener

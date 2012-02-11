@@ -15,7 +15,6 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 import java.util.HashSet;
 import java.util.List;
 
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.tags.TagSummarizer;
@@ -30,11 +29,20 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class RecibirQuitarTagsWorkunit implements WorkUnit {
+public class RecibirQuitarTagsWorkunit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(RecibirQuitarTagsWorkunit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 	private QuitarTags mensaje;
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ReceptorVortex emisor = contexto.getEmisor();
+		return emisor == receptor;
+	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()

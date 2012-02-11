@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
@@ -24,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class EntregarMensajeWorkUnit implements WorkUnit {
+public class EntregarMensajeWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(EntregarMensajeWorkUnit.class);
 
 	private ReceptorVortex receptor;
@@ -38,6 +37,14 @@ public class EntregarMensajeWorkUnit implements WorkUnit {
 		LOG.debug("Entregando mensaje[{}] a receptor[{}]", mensaje, receptor);
 		// Le damos el mensaje al receptor destinado
 		receptor.recibir(mensaje);
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		return this.receptor == receptor;
 	}
 
 	public static EntregarMensajeWorkUnit create(final ReceptorVortex destino, final MensajeVortex mensajeAEnviar) {

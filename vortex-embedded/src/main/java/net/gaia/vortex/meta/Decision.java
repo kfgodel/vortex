@@ -26,12 +26,10 @@ public class Decision {
 	public static final String EL_TIMEOUT_DE_RECEPCION_QUITA_EL_MENSAJE_DE_ESPERA = "El mensaje se saca de espera para evitar que se registre la confirmación si llega justo, y permite darlo por perdido";
 	public static final String PARA_CONTINUAR_EL_RUTEO_DESPUES_DEL_ENVIO_SE_UTILIZAN_CONTADORES = "Quizás no es la mejor estrategia porque los contadores pueden no actualizarse. Quizás debería haber un timeout también?";
 	public static final String EL_TIMEOUT_DE_CONSUMO_QUITA_EL_MENSAJE_DE_ESPERA = "El código asume que esto se mantiene";
-	public static final String TODAVIA_NO_IMPLEMENTE_PRORROGA = "Tengo que agregar el calculo de espera para poder usar las prorrogas";
 	public static final String TODAVIA_NO_IMPLEMENTE_REENVIO_DE_MENSAJE_PERDIDO = "Si el receptor nos devuelve que se perdio lo consideramos rechazo";
 	public static final String CONFIO_EN_QUE_NO_HAY_ACUSES_REPETIDOS = "Si un nodo mandara acuses de más, habría que cambiar las listas por sets";
 	public static final String LA_DIFERENCIA_DE_SETS_DE_TAGS_REQUIERE_LA_MISMA_IMPL_DE_SETS = "Los sets usados en la diferencia tienen que tener la misma relacion de equivalencia para que la differencia de bien";
 	public static final String TODAVIA_NO_IMPLEMENTE_EL_AJUSTE_DE_PESOS = "No hay cambios en la elección de los receptores para el ruteo basado en los acuses";
 	public static final String AL_QUITAR_TAG_SE_ELIMINA_SU_ENTRADA_DEL_MAPA = "Si no hay más interesados en un tag, se elimina del nodo";
-	public static final String TODAVIA_NO_IMPLEMENTE_LA_LIMPIEZA_DE_TAREAS = "Las tareas para receptores cerrados se siguen ejecutando";
 	public static final String EL_NODO_PROCESA_LOS_MENSAJES_DE_UN_RECEPTOR_EN_EL_ORDEN_QUE_LOS_RECIBE = "Un cliente puede confiar que un mensaje enviado posteriormente actuará con la base del enviado anteriormente";
 }

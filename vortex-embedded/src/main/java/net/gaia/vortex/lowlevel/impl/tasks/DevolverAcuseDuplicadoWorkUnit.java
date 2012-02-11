@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.meta.Loggers;
@@ -27,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class DevolverAcuseDuplicadoWorkUnit implements WorkUnit {
+public class DevolverAcuseDuplicadoWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(DevolverAcuseDuplicadoWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
@@ -42,6 +41,15 @@ public class DevolverAcuseDuplicadoWorkUnit implements WorkUnit {
 			contexto.getProcesador().process(terminarProceso);
 		}
 	};
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ReceptorVortex emisor = contexto.getEmisor();
+		return emisor == receptor;
+	}
 
 	public static DevolverAcuseDuplicadoWorkUnit create(final ContextoDeRuteoDeMensaje contexto) {
 		final DevolverAcuseDuplicadoWorkUnit devolucion = new DevolverAcuseDuplicadoWorkUnit();

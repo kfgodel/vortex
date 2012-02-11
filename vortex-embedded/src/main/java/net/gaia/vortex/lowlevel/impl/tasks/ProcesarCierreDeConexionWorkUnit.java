@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
@@ -20,7 +19,6 @@ import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
 import net.gaia.vortex.lowlevel.impl.ruteo.MemoriaDeRuteos;
-import net.gaia.vortex.meta.Decision;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class ProcesarCierreDeConexionWorkUnit implements WorkUnit {
+public class ProcesarCierreDeConexionWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(ProcesarCierreDeConexionWorkUnit.class);
 
 	private NodoVortexConTasks nodo;
@@ -45,18 +43,30 @@ public class ProcesarCierreDeConexionWorkUnit implements WorkUnit {
 	}
 
 	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		return this.receptorCerrado == receptor;
+	}
+
+	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
 		LOG.debug("Limpiando tareas del receptor[{}] por cierre recibido", receptorCerrado);
-		@HasDependencyOn(Decision.TODAVIA_NO_IMPLEMENTE_LA_LIMPIEZA_DE_TAREAS)
 		final TaskProcessor procesador = nodo.getProcesador();
 		procesador.removeTasksMatching(new TaskCriteria() {
 			@Override
 			public boolean matches(final WorkUnit workUnit) {
-				// TODO: Implementar!
-				return false;
+				if ((workUnit instanceof TareaParaReceptor)) {
+					// Si no es para un receptor no corresponde quitarla
+					return false;
+				}
+				final TareaParaReceptor tareaDelNodo = (TareaParaReceptor) workUnit;
+				final boolean correspondeRemoverla = tareaDelNodo.esPara(receptorCerrado);
+				return correspondeRemoverla;
 			}
 		});
 

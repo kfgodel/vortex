@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
@@ -27,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class RecibirCerrarConexionWorkUnit implements WorkUnit {
+public class RecibirCerrarConexionWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(RecibirCerrarConexionWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
@@ -36,6 +35,15 @@ public class RecibirCerrarConexionWorkUnit implements WorkUnit {
 		final RecibirCerrarConexionWorkUnit cierre = new RecibirCerrarConexionWorkUnit();
 		cierre.contexto = contexto;
 		return cierre;
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ReceptorVortex emisor = contexto.getEmisor();
+		return emisor == receptor;
 	}
 
 	/**

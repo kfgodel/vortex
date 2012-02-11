@@ -14,7 +14,6 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import java.util.Set;
 
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.meta.Loggers;
@@ -29,12 +28,20 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class NotificarAReceptorTagsQuitadosWorkUnit implements WorkUnit {
+public class NotificarAReceptorTagsQuitadosWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(NotificarAReceptorTagsQuitadosWorkUnit.class);
 
 	private NodoVortexConTasks nodo;
 	private ReceptorVortex receptor;
 	private Set<String> tagsQuitados;
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		return this.receptor == receptor;
+	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()

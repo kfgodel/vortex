@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.envios.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.envios.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.envios.MensajesEnEspera;
@@ -29,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class ProcesarEnvioDeMensajeWorkUnit implements WorkUnit {
+public class ProcesarEnvioDeMensajeWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(ProcesarEnvioDeMensajeWorkUnit.class);
 
 	private ContextoDeEnvio contexto;
@@ -41,12 +40,21 @@ public class ProcesarEnvioDeMensajeWorkUnit implements WorkUnit {
 	}
 
 	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ReceptorVortex destino = contexto.getReceptorInteresado();
+		return destino == receptor;
+	}
+
+	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
-		LOG.debug("Procesando envío de mensaje[{}] a receptor[{}]", contexto.getMensaje(), contexto.getIdDeEnvio()
-				.getReceptorDestino());
+		LOG.debug("Procesando envío de mensaje[{}] a receptor[{}]", contexto.getMensaje(),
+				contexto.getReceptorInteresado());
 
 		// Primero lo registramos en espera de consumo por si llega rápido el acuse de consumo
 		final MemoriaDeMensajes memoriaDeMensajes = this.contexto.getMemoriaDeMensajes();

@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 
 /**
@@ -20,7 +20,7 @@ import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
  * 
  * @author D. García
  */
-public class ProcesarRecepcionDeMensajeWorkUnit implements WorkUnit {
+public class ProcesarRecepcionDeMensajeWorkUnit implements TareaParaReceptor {
 
 	private ContextoDeRuteoDeMensaje contexto;
 
@@ -28,6 +28,15 @@ public class ProcesarRecepcionDeMensajeWorkUnit implements WorkUnit {
 		final ProcesarRecepcionDeMensajeWorkUnit recibir = new ProcesarRecepcionDeMensajeWorkUnit();
 		recibir.contexto = contexto;
 		return recibir;
+	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ReceptorVortex emisor = contexto.getEmisor();
+		return emisor == receptor;
 	}
 
 	/**

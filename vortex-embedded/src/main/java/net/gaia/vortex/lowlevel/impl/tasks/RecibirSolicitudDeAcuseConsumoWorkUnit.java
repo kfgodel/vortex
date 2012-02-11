@@ -12,13 +12,10 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.annotations.HasDependencyOn;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.lowlevel.impl.envios.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.lowlevel.impl.ruteo.MemoriaDeRuteos;
-import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.meta.Loggers;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.SolicitudAcuseConsumo;
@@ -31,17 +28,25 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class RecibirSolicitudDeAcuseConsumoWorkUnit implements WorkUnit {
+public class RecibirSolicitudDeAcuseConsumoWorkUnit implements TareaParaReceptor {
 	private static final Logger LOG = LoggerFactory.getLogger(RecibirSolicitudDeAcuseConsumoWorkUnit.class);
 
 	private ContextoDeRuteoDeMensaje contexto;
 	private SolicitudAcuseConsumo solicitud;
 
 	/**
+	 * @see net.gaia.vortex.lowlevel.impl.tasks.TareaParaReceptor#esPara(net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
+	 */
+	@Override
+	public boolean esPara(final ReceptorVortex receptor) {
+		final ReceptorVortex emisor = contexto.getEmisor();
+		return emisor == receptor;
+	}
+
+	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	@Override
-	@HasDependencyOn(Decision.TODAVIA_NO_IMPLEMENTE_PRORROGA)
 	public void doWork() throws InterruptedException {
 		LOG.debug("Recibiendo solicitud de acuse de consumo para mensaje[{}]", contexto.getMensaje());
 
