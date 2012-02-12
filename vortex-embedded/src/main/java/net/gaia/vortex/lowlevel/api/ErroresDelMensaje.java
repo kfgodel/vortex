@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.lowlevel.api;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa un resumen de los errores en un mensaje. Permite conocer el motivo de la
  * falla
@@ -21,8 +23,10 @@ package net.gaia.vortex.lowlevel.api;
 public class ErroresDelMensaje {
 
 	private String descripcion;
+	public static final String descripcion_FIELD = "descripcion";
 
 	private Throwable excepcion;
+	public static final String excepcion_FIELD = "excepcion";
 
 	public Throwable getExcepcion() {
 		return excepcion;
@@ -44,5 +48,14 @@ public class ErroresDelMensaje {
 		final ErroresDelMensaje name = new ErroresDelMensaje();
 		name.descripcion = descripcion;
 		return name;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(descripcion_FIELD, descripcion).add(excepcion_FIELD, excepcion)
+				.toString();
 	}
 }

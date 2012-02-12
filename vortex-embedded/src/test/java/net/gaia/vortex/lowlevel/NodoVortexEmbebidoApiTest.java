@@ -48,25 +48,27 @@ import com.google.common.collect.Lists;
  */
 public class NodoVortexEmbebidoApiTest extends VortexTest {
 
-	private NodoVortex nodoVortex;
+	private NodoVortex nodoPrincipal;
+	private NodoVortex nodoSecundario;
 
 	private EscenarioDeTest escenarios;
 
 	@Before
 	public void prepararTest() {
-		nodoVortex = NodoVortexConTasks.create(null);
+		nodoPrincipal = NodoVortexConTasks.create("nodoPrincipal");
+		nodoSecundario = NodoVortexConTasks.create("nodoSecundario");
 		escenarios = new EscenarioDeTest();
 	}
 
 	@After
 	public void limpiarTest() {
-		nodoVortex.detenerYDevolverRecursos();
+		nodoPrincipal.detenerYDevolverRecursos();
 	}
 
 	@Test
 	public void deberiaPermitirEnviarUnMensajeSinRemitente() {
 		final MensajeVortex mensajeVortex = escenarios.crearMensajeDeTest();
-		nodoVortex.rutear(mensajeVortex);
+		nodoPrincipal.rutear(mensajeVortex);
 	}
 
 	@Test
@@ -76,7 +78,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final EncoladorDeMensajesHandler encolador = EncoladorDeMensajesHandler.create();
 
 		// Creamos la sesión para poder recibir la confirmación
-		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
+		final SesionVortex sesion = nodoPrincipal.crearNuevaSesion(encolador);
 
 		// Enviamos un mensaje bien armado
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest();
@@ -97,7 +99,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final EncoladorDeMensajesHandler encolador = EncoladorDeMensajesHandler.create();
 
 		// Creamos la sesión para poder recibir la confirmación
-		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
+		final SesionVortex sesion = nodoPrincipal.crearNuevaSesion(encolador);
 
 		// Enviamos el mensaje
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTestSinHash();
@@ -120,7 +122,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final EncoladorDeMensajesHandler encolador = EncoladorDeMensajesHandler.create();
 
 		// Creamos la sesión para poder recibir la confirmación
-		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
+		final SesionVortex sesion = nodoPrincipal.crearNuevaSesion(encolador);
 
 		// Enviamos el mensaje
 		final MensajeVortex mensajeEnviado = escenarios.crearMetamensajeAgregarTagsSinTags();
@@ -164,7 +166,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final EncoladorDeMensajesHandler encolador = EncoladorDeMensajesHandler.create();
 
 		// Creamos la sesión para poder recibir la confirmación
-		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
+		final SesionVortex sesion = nodoPrincipal.crearNuevaSesion(encolador);
 
 		// Enviamos el mensaje
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest();
@@ -192,7 +194,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final EncoladorDeMensajesHandler encolador = EncoladorDeMensajesHandler.create();
 
 		// Creamos la sesión para poder recibir la confirmación
-		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
+		final SesionVortex sesion = nodoPrincipal.crearNuevaSesion(encolador);
 
 		// Enviamos el mensaje
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest();
@@ -224,7 +226,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final EncoladorDeMensajesHandler encolador = EncoladorDeMensajesHandler.create();
 
 		// Creamos la sesión para poder recibir la confirmación
-		final SesionVortex sesion = nodoVortex.crearNuevaSesion(encolador);
+		final SesionVortex sesion = nodoPrincipal.crearNuevaSesion(encolador);
 
 		// Declaramos los tags que recibimos
 		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags("TAG1", "TAG2");
@@ -249,7 +251,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();
 
 		// Creamos la sesión para declarar las publicaciones de tag
-		final SesionVortex sesionPrimero = nodoVortex.crearNuevaSesion(encoladorDelPrimero);
+		final SesionVortex sesionPrimero = nodoPrincipal.crearNuevaSesion(encoladorDelPrimero);
 		final List<String> tagsDelPrimero = Lists.newArrayList("Tag1", "Tag2");
 		sesionPrimero.enviar(escenarios.crearMetamensajeDePublicacionDeTags(tagsDelPrimero));
 
@@ -261,7 +263,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 
 		// Conectamos al segundo cliente
 		final EncoladorDeMensajesHandler encoladorDelSegundo = EncoladorDeMensajesHandler.create();
-		nodoVortex.crearNuevaSesion(encoladorDelSegundo);
+		nodoPrincipal.crearNuevaSesion(encoladorDelSegundo);
 
 		// Por sólo conectarnos deberíamos recibir los tags del primero como intereses del nodo
 		final MensajeVortex mensajeRecibido = encoladorDelSegundo.esperarProximoMensaje(TimeMagnitude.of(1,
@@ -281,13 +283,13 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();
 
 		// Creamos la sesión para declarar las publicaciones de tag
-		final SesionVortex sesionPrimero = nodoVortex.crearNuevaSesion(encoladorDelPrimero);
+		final SesionVortex sesionPrimero = nodoPrincipal.crearNuevaSesion(encoladorDelPrimero);
 		final List<String> tagsDelPrimero = Lists.newArrayList("Tag1", "Tag2");
 		sesionPrimero.enviar(escenarios.crearMetamensajeDePublicacionDeTags(tagsDelPrimero));
 
 		// Conectamos al segundo cliente
 		final EncoladorDeMensajesHandler encoladorDelSegundo = EncoladorDeMensajesHandler.create();
-		final SesionVortex sesionDelSegundo = nodoVortex.crearNuevaSesion(encoladorDelSegundo);
+		final SesionVortex sesionDelSegundo = nodoPrincipal.crearNuevaSesion(encoladorDelSegundo);
 
 		// Publicamos los tags que le interesan al segundo
 		final List<String> tagsDelSegundo = Lists.newArrayList("Tag2", "tag3");
@@ -309,7 +311,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
 
 		// Creamos la sesión para poder recibir los mensajes
-		final SesionVortex sesionDelReceptor = nodoVortex.crearNuevaSesion(encoladorDelReceptor);
+		final SesionVortex sesionDelReceptor = nodoPrincipal.crearNuevaSesion(encoladorDelReceptor);
 
 		// Declaramos los tags que recibimos
 		sesionDelReceptor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1", "Tag2"));
@@ -322,7 +324,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 
 		// Enviamos el mensaje sin un cliente
 		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTestConIDNuevo("Tag1");
-		nodoVortex.rutear(mensajeEnviado);
+		nodoPrincipal.rutear(mensajeEnviado);
 
 		// Esperamos recibirlo desde el cliente
 		final MensajeVortex mensajeRecibido = encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1,
@@ -341,7 +343,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		// Almacena los mensajes recibidos
 		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
 		// Creamos la sesión para poder recibir los mensajes
-		final SesionVortex sesionDelReceptor = nodoVortex.crearNuevaSesion(encoladorDelReceptor);
+		final SesionVortex sesionDelReceptor = nodoPrincipal.crearNuevaSesion(encoladorDelReceptor);
 		// Declaramos los tags que recibimos
 		sesionDelReceptor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1", "Tag2"));
 
@@ -357,7 +359,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		// Creamos la segunda sesión
 		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
 		// Creamos la sesión para enviar mensajes
-		final SesionVortex sesionDelEmisor = nodoVortex.crearNuevaSesion(encoladorDelEmisor);
+		final SesionVortex sesionDelEmisor = nodoPrincipal.crearNuevaSesion(encoladorDelEmisor);
 
 		// Quitamos la notificación de los tags del primero que recibimos al crear la sesión
 		encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -407,14 +409,14 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		// Almacena los mensajes recibidos por el primero
 		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();
 		// Creamos la sesión para poder recibir los mensajes
-		final SesionVortex sesionDelPrimero = nodoVortex.crearNuevaSesion(encoladorDelPrimero);
+		final SesionVortex sesionDelPrimero = nodoPrincipal.crearNuevaSesion(encoladorDelPrimero);
 		// Declaramos los tags que recibimos
 		sesionDelPrimero.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1"));
 
 		// Creamos la segunda sesión
 		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
 		// Creamos la sesión para enviar mensajes
-		final SesionVortex sesionDelEmisor = nodoVortex.crearNuevaSesion(encoladorDelEmisor);
+		final SesionVortex sesionDelEmisor = nodoPrincipal.crearNuevaSesion(encoladorDelEmisor);
 		// Declaramos los tags que vamos a enviar
 		sesionDelEmisor.enviar(escenarios.crearMetamensajeDePublicacionDeTags("Tag1", "Tag2"));
 
@@ -453,7 +455,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		// Almacena los mensajes recibidos por el primero
 		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();
 		// Creamos la sesión para poder recibir los mensajes
-		final SesionVortex sesionDelPrimero = nodoVortex.crearNuevaSesion(encoladorDelPrimero);
+		final SesionVortex sesionDelPrimero = nodoPrincipal.crearNuevaSesion(encoladorDelPrimero);
 		// Cerramos la sesión impidiendo mandar más mensajes desde ella
 		sesionDelPrimero.cerrar();
 	}
@@ -463,7 +465,7 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		// Almacena los mensajes recibidos por el primero
 		final EncoladorDeMensajesHandler encoladorDelPrimero = EncoladorDeMensajesHandler.create();
 		// Creamos la sesión para poder recibir los mensajes
-		final SesionVortex sesionDelPrimero = nodoVortex.crearNuevaSesion(encoladorDelPrimero);
+		final SesionVortex sesionDelPrimero = nodoPrincipal.crearNuevaSesion(encoladorDelPrimero);
 
 		sesionDelPrimero.enviar(escenarios.crearMensajeDeCierreDeConexion());
 
@@ -475,5 +477,36 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 		}
 
 		// TODO: Verificar que esté cerrada
+	}
+
+	@Test
+	public void deberiaPermitirEnviarUnMensajeDesdeUnNodoAOtroEnOtroNodo() {
+		// Creamos el otro nodo y los interconectamos
+		nodoPrincipal.interconectarCon(nodoSecundario);
+
+		// Creamos la sesión receptora
+		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
+		final SesionVortex sesionReceptora = nodoSecundario.crearNuevaSesion(encoladorDelReceptor);
+		// Publicamos el tag que nos interesa recibir
+		final String tagComun = "TAG1";
+		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(tagComun);
+		sesionReceptora.enviar(publicacionDeTags);
+
+		// Creamos la sesión emisora
+		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
+		final SesionVortex sesionEmisora = nodoPrincipal.crearNuevaSesion(encoladorDelEmisor);
+
+		// Esperamos que nos llegue del otro nodo la publicación de tags
+		encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Una vez que nos publicaron sabemos que puede recibir el mensaje
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest(tagComun);
+		sesionEmisora.enviar(mensajeEnviado);
+
+		// Verificamos que llegue a destino
+		final MensajeVortex mensajeRecibido = encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1,
+				TimeUnit.SECONDS));
+
+		Assert.assertSame("Deberíamos recibir el mismo mensaje enviado", mensajeEnviado, mensajeRecibido);
 	}
 }

@@ -274,4 +274,23 @@ public class NodoVortexConTasks implements NodoVortex {
 		detenerYDevolverRecursos();
 		super.finalize();
 	}
+
+	/**
+	 * @see net.gaia.vortex.lowlevel.api.NodoVortex#interconectarCon(net.gaia.vortex.lowlevel.api.NodoVortex)
+	 */
+	@Override
+	public void interconectarCon(final NodoVortex nodoVecino) {
+		LOG.debug("Creando interconexión desde nodo[{}] a nodo[{}]", this, nodoVecino);
+		final HandlerTemporal handlerTemporalParaSesionRemota = HandlerTemporal.create();
+		final SesionVortex sesionRemota = nodoVecino.crearNuevaSesion(handlerTemporalParaSesionRemota);
+		LOG.debug("Sesión remota[{}] creada con handler temporal hacia nodo[{}]", sesionRemota, nodoVecino);
+
+		final HandlerDeInterconexion handlerParaSesionLocal = HandlerDeInterconexion.create(sesionRemota);
+		final SesionVortex sesionLocal = crearNuevaSesion(handlerParaSesionLocal);
+		LOG.debug("Sesión local[{}] creada con handler definitivo desde nodo[{}]", sesionLocal, this);
+
+		final HandlerDeInterconexion handlerParaSesionRemota = HandlerDeInterconexion.create(sesionLocal);
+		handlerTemporalParaSesionRemota.setHandlerReemplazo(handlerParaSesionRemota);
+		LOG.debug("Sesión remota[{}] interconectada con handler definitivo", sesionRemota);
+	}
 }
