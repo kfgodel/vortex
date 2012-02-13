@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.lowlevel.impl.nodo;
+package net.gaia.vortex.lowlevel.impl.inter;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReference;
@@ -78,6 +78,16 @@ public class HandlerTemporal implements MensajeVortexHandler {
 	 *            El nuevo handler utilizado
 	 */
 	public void setHandlerReemplazo(final MensajeVortexHandler reemplazo) {
+		if (reemplazo == null) {
+			throw new IllegalArgumentException("El handler reemplazo no puede ser null");
+		}
 		this.handlerReemplazo.set(reemplazo);
+		// Ya no se acumularán más, los acumulados los derivamos al nuevo handler
+		for (final MensajeVortex acumulado : acumulados) {
+			LOG.debug("Handler temporal delegando mensaje acumulado[{}]", acumulado);
+			reemplazo.onMensajeRecibido(acumulado);
+		}
+		// No necesitamos más el buffer
+		this.acumulados = null;
 	}
 }

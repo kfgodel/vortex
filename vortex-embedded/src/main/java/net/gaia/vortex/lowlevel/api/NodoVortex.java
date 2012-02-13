@@ -47,13 +47,4 @@ public interface NodoVortex {
 	 * Detiene la ejecución de este nodo y devuelve los recursos asociados
 	 */
 	void detenerYDevolverRecursos();
-
-	/**
-	 * Conecta este nodo con el nodo vecino indicado
-	 * 
-	 * @param nodoVecino
-	 *            El nodo con el cuál se crearan inter-sesiones
-	 */
-	void interconectarCon(NodoVortex nodoVecino);
-
 }

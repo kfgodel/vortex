@@ -24,6 +24,7 @@ import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
+import net.gaia.vortex.lowlevel.impl.inter.InterconexionDeNodos;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
 import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import net.gaia.vortex.meta.Decision;
@@ -482,7 +483,8 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 	@Test
 	public void deberiaPermitirEnviarUnMensajeDesdeUnNodoAOtroEnOtroNodo() {
 		// Creamos el otro nodo y los interconectamos
-		nodoPrincipal.interconectarCon(nodoSecundario);
+		final InterconexionDeNodos interconexionDeNodos = InterconexionDeNodos.create(nodoPrincipal, nodoSecundario);
+		interconexionDeNodos.interconectar();
 
 		// Creamos la sesión receptora
 		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
@@ -508,5 +510,42 @@ public class NodoVortexEmbebidoApiTest extends VortexTest {
 				TimeUnit.SECONDS));
 
 		Assert.assertSame("Deberíamos recibir el mismo mensaje enviado", mensajeEnviado, mensajeRecibido);
+	}
+
+	@Test
+	public void deberiaPermitirDesconectarDosNodoParaImpedirRecepcionDeMensajes() {
+		// Creamos el otro nodo y los interconectamos
+		final InterconexionDeNodos interconexionDeNodos = InterconexionDeNodos.create(nodoPrincipal, nodoSecundario);
+		interconexionDeNodos.interconectar();
+
+		// Creamos la sesión receptora
+		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
+		final SesionVortex sesionReceptora = nodoSecundario.crearNuevaSesion(encoladorDelReceptor);
+		// Publicamos el tag que nos interesa recibir
+		final String tagComun = "TAG1";
+		final MensajeVortex publicacionDeTags = escenarios.crearMetamensajeDePublicacionDeTags(tagComun);
+		sesionReceptora.enviar(publicacionDeTags);
+
+		// Creamos la sesión emisora
+		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
+		final SesionVortex sesionEmisora = nodoPrincipal.crearNuevaSesion(encoladorDelEmisor);
+
+		// Esperamos que nos llegue del otro nodo la publicación de tags
+		encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Desconectamos los nodos para que no reciba el mensaje que mandamos
+		interconexionDeNodos.desconectar();
+
+		// Intentamos enviar el mensaje
+		final MensajeVortex mensajeEnviado = escenarios.crearMensajeDeTest(tagComun);
+		sesionEmisora.enviar(mensajeEnviado);
+
+		// Verificamos que no llegue a destino
+		try {
+			encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("No debería recibir ningun mensaje");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción correcta
+		}
 	}
 }
