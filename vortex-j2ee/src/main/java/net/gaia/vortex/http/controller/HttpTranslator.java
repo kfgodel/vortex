@@ -28,6 +28,7 @@ import net.gaia.vortex.protocol.messages.TipoContenidoMetamensaje;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.google.common.base.Strings;
@@ -40,6 +41,7 @@ import com.tenpines.commons.exceptions.UnhandledConditionException;
  * @author D. García
  */
 @Component
+@Scope("singleton")
 public class HttpTranslator {
 	private static final Logger LOG = LoggerFactory.getLogger(HttpTranslator.class);
 

@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author D. García
  */
 @Controller
-public class MainController {
-	private static final Logger LOG = LoggerFactory.getLogger(MainController.class);
+public class NakedController {
+	private static final Logger LOG = LoggerFactory.getLogger(NakedController.class);
 
 	@Autowired
 	private HttpTranslator translator;
 
-	@RequestMapping(value = "main")
-	public void getFirstPage(final HttpServletRequest request, final HttpServletResponse response) {
+	@RequestMapping(value = "naked")
+	public void onPlainRequest(final HttpServletRequest request, final HttpServletResponse response) {
 		LOG.debug("Llegó un request: \"" + request.getRequestURI() + "\"");
 
 		final OperacionHttp pedido = OperacionHttpJ2ee.create(request, response);
