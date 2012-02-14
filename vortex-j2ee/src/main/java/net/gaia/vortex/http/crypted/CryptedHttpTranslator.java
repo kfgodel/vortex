@@ -58,7 +58,7 @@ public class CryptedHttpTranslator implements HttpTranslator {
 
 	private final TextEncryptor encryptor;
 
-	private final Map<Long, SesionEncriptada> sesionesPorId;
+	private final Map<String, SesionEncriptada> sesionesPorId;
 	private final AtomicLong secuencia;
 
 	/**
@@ -69,7 +69,7 @@ public class CryptedHttpTranslator implements HttpTranslator {
 	public CryptedHttpTranslator() {
 		encryptor = RSATextEncryptor.create();
 		this.clavesDelServidor = encryptor.generateKeys();
-		this.sesionesPorId = new ConcurrentHashMap<Long, SesionEncriptada>();
+		this.sesionesPorId = new ConcurrentHashMap<String, SesionEncriptada>();
 		this.secuencia = new AtomicLong(0);
 	}
 
@@ -83,13 +83,17 @@ public class CryptedHttpTranslator implements HttpTranslator {
 			LOG.warn("Se recibió un request encriptado sin wrapper. Devolviendo vacío");
 			return;
 		}
-		final SesionEncriptada sesionDelCliente = getSesionDelCliente(wrapperEncriptado.getSessionId());
+		// Verificamos que exista la sesión indicada
+		final SesionEncriptada sesionDelCliente = getSesionDelCliente(wrapperEncriptado.getSessionIdEncriptada());
 		if (sesionDelCliente == null) {
 			LOG.warn("Se recibió un request encriptado sin sesion asociada. Devolviendo vacío");
 			return;
 		}
-		final CryptoKey claveEncriptacionDelCliente = sesionDelCliente.getClavePublica();
+		// Desencriptamos el mensaje original
 		final String wrapperDesencriptado = desencriptar(wrapperEncriptado.getContenido());
+
+		// Derivamos el mensaje como si fuera uno normal
+		final CryptoKey claveEncriptacionDelCliente = sesionDelCliente.getClavePublica();
 		final OperacionHttpEncriptada operacionEncriptada = OperacionHttpEncriptada.create(wrapperDesencriptado,
 				pedido, encryptor, claveEncriptacionDelCliente);
 		translator.translate(operacionEncriptada);
@@ -118,12 +122,15 @@ public class CryptedHttpTranslator implements HttpTranslator {
 	/**
 	 * Devuelve la sesión con los datos de encriptado del cliente identificado por ID
 	 * 
-	 * @param sessionId
+	 * @param idDeSesionEncriptado
 	 *            El identificador de la sesión encriptada
 	 * @return La sesión correspondiente al cliente o null si no existe una
 	 */
-	private SesionEncriptada getSesionDelCliente(final Long sessionId) {
-		final SesionEncriptada sesion = sesionesPorId.get(sessionId);
+	private SesionEncriptada getSesionDelCliente(final String idDeSesionEncriptado) {
+		// Desencriptamos el ID recibido
+		final String idDeSesionDesencriptado = encryptor.decrypt(idDeSesionEncriptado,
+				clavesDelServidor.getDecriptionKey());
+		final SesionEncriptada sesion = sesionesPorId.get(idDeSesionDesencriptado);
 		return sesion;
 	}
 
@@ -166,15 +173,16 @@ public class CryptedHttpTranslator implements HttpTranslator {
 		final CryptoKey clavePublicaCliente = encryptor.deserialize(clavePublicaClienteSerializada);
 
 		// Generamos la sesión del cliente
-		final SesionEncriptada sesionEncriptada = SesionEncriptada.create(secuencia.getAndIncrement(),
-				clavePublicaCliente);
+		final String nuevoId = getProximoIdDeSesion();
+		final SesionEncriptada sesionEncriptada = SesionEncriptada.create(nuevoId, clavePublicaCliente);
 
 		// Encriptamos su ID para que sólo él sepa cual es
-		final String idDeSesionEncriptado = encryptor.encrypt(sesionEncriptada.getSessionId().toString(),
-				clavePublicaCliente);
+		final String idDeSesion = sesionEncriptada.getSessionId().toString();
+		final String idDeSesionEncriptado = encryptor.encrypt(idDeSesion, clavePublicaCliente);
 
 		// Obtenemos la versión serializada de la clave publica del servidor
-		final String clavePublicaDeServidorSerializada = encryptor.serialize(this.clavesDelServidor.getEncriptionKey());
+		final CryptoKey clavePublicaDelServidor = this.clavesDelServidor.getEncriptionKey();
+		final String clavePublicaDeServidorSerializada = encryptor.serialize(clavePublicaDelServidor);
 
 		// Generamos la concesion y la enviamos
 		final ConcesionDeSesionYClave concesionDeSesion = ConcesionDeSesionYClave.create(
@@ -182,6 +190,15 @@ public class CryptedHttpTranslator implements HttpTranslator {
 		final String concesionComoJson = interprete.toJson(concesionDeSesion);
 		pedidoHttp.responder(concesionComoJson);
 
+	}
+
+	/**
+	 * Calcula el próximo valor para el ID de sesión e incrementa el actual
+	 * 
+	 * @return Un nuevo ID generado
+	 */
+	private String getProximoIdDeSesion() {
+		return String.valueOf(secuencia.getAndIncrement());
 	}
 
 	/**

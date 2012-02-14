@@ -24,21 +24,27 @@ import com.google.common.base.Objects;
  */
 public class WrapperEncriptado {
 
+	/**
+	 * Id de la sesión encriptada otorgada por el nodo, encriptada con la clave pública del nodo
+	 */
 	@NotNull
-	private Long sessionId;
-	public static final String sessionId_FIELD = "sessionId";
+	private String sessionIdEncriptada;
+	public static final String sessionIdEncriptada_FIELD = "sessionIdEncriptada";
 
+	/**
+	 * Contenido encriptado con la clave pública del nodo
+	 */
 	@NotNull
 	@NotEmpty
 	private String contenido;
 	public static final String contenido_FIELD = "contenido";
 
-	public Long getSessionId() {
-		return sessionId;
+	public String getSessionIdEncriptada() {
+		return sessionIdEncriptada;
 	}
 
-	public void setSessionId(final Long sessionId) {
-		this.sessionId = sessionId;
+	public void setSessionIdEncriptada(final String sessionIdEncriptada) {
+		this.sessionIdEncriptada = sessionIdEncriptada;
 	}
 
 	public String getContenido() {
@@ -54,7 +60,8 @@ public class WrapperEncriptado {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(sessionId_FIELD, sessionId).add(contenido_FIELD, contenido).toString();
+		return Objects.toStringHelper(this).add(sessionIdEncriptada_FIELD, sessionIdEncriptada)
+				.add(contenido_FIELD, contenido).toString();
 	}
 
 }

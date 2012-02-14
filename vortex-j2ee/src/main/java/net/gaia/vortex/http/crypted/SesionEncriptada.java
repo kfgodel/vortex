@@ -26,7 +26,7 @@ public class SesionEncriptada {
 	private CryptoKey clavePublica;
 	public static final String clavePublica_FIELD = "clavePublica";
 
-	private Long sessionId;
+	private String sessionId;
 	public static final String sessionId_FIELD = "sessionId";
 
 	/**
@@ -38,18 +38,18 @@ public class SesionEncriptada {
 		return clavePublica;
 	}
 
-	public Long getSessionId() {
+	public String getSessionId() {
 		return sessionId;
 	}
 
-	public void setSessionId(final Long sessionId) {
+	public void setSessionId(final String sessionId) {
 		this.sessionId = sessionId;
 	}
 
-	public static SesionEncriptada create(final Long sessionId, final CryptoKey clave) {
+	public static SesionEncriptada create(final String nuevoId, final CryptoKey clave) {
 		final SesionEncriptada sesion = new SesionEncriptada();
 		sesion.clavePublica = clave;
-		sesion.sessionId = sessionId;
+		sesion.sessionId = nuevoId;
 		return sesion;
 	}
 
