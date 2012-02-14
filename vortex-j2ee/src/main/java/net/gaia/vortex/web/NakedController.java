@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.gaia.vortex.externals.http.OperacionHttp;
 import net.gaia.vortex.externals.http.OperacionHttpJ2ee;
-import net.gaia.vortex.http.controller.HttpTranslator;
+import net.gaia.vortex.http.controller.NakedHttpTranslator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class NakedController {
 	private static final Logger LOG = LoggerFactory.getLogger(NakedController.class);
 
 	@Autowired
-	private HttpTranslator translator;
+	private NakedHttpTranslator translator;
 
 	@RequestMapping(value = "naked")
 	public void onPlainRequest(final HttpServletRequest request, final HttpServletResponse response) {

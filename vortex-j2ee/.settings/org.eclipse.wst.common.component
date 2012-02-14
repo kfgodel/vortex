@@ -27,6 +27,9 @@
     <dependent-module archiveName="dgarcia-commons-1.0.2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/ar/com/fdvs/dgarcia/dgarcia-commons/1.0.2/dgarcia-commons-1.0.2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
+    <dependent-module archiveName="encryption-0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/ar/dgarcia/encryption/0.1/encryption-0.1.jar">
+      <dependency-type>uses</dependency-type>
+    </dependent-module>
     <dependent-module archiveName="guava-r09.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/com/google/guava/guava/r09/guava-r09.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>

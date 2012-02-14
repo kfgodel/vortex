@@ -15,7 +15,6 @@ package net.gaia.vortex.protocol.validator;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.sf.oval.ConstraintViolation;
 import net.sf.oval.Validator;
 import net.sf.oval.configuration.annotation.AnnotationsConfigurer;
@@ -50,7 +49,7 @@ public class VortexValidator {
 	 *            El mensaje a analizar
 	 * @return null si no encuentra ningún error
 	 */
-	public static String getFirstErrorCodeFrom(final MensajeVortex mensaje) {
+	public static String getFirstErrorCodeFrom(final Object mensaje) {
 		final List<ConstraintViolation> violations = getInternalValidator().validate(mensaje);
 		if (violations.isEmpty()) {
 			return null;

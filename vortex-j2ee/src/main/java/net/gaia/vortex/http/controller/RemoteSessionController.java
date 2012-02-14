@@ -31,6 +31,7 @@ import org.joda.time.Interval;
 import org.joda.time.PeriodType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.tenpines.commons.annotations.HasDependencyOn;
@@ -42,6 +43,7 @@ import com.tenpines.commons.annotations.HasDependencyOn;
  * @author D. García
  */
 @Component
+@Scope("singleton")
 public class RemoteSessionController {
 	private static final Logger LOG = LoggerFactory.getLogger(RemoteSessionController.class);
 
@@ -95,14 +97,23 @@ public class RemoteSessionController {
 			if (!wrapper.requiereSesion()) {
 				remoteSession = sinSesionVortex;
 			} else {
-				final RemoteSessionImpl sesionCreada = createRemoteSession();
-				final Long idDeLaSesionCreada = sesionCreada.getSessionId();
-				remoteSessions.put(idDeLaSesionCreada, sesionCreada);
-				remoteSession = sesionCreada;
-				LOG.debug("Sesión remota[{}] creada para el wrapper:[{}]", sesionCreada.getSessionId(), wrapper);
+				remoteSession = createSession();
+				LOG.debug("Sesión remota[{}] creada para el wrapper:[{}]", remoteSession.getSessionId(), wrapper);
 			}
 		}
 		return remoteSession;
+	}
+
+	/**
+	 * Crea una nueva sesión registrándola en las sesiones de este controlador
+	 * 
+	 * @return La nueva sesión creada
+	 */
+	public RemoteSessionImpl createSession() {
+		final RemoteSessionImpl sesionCreada = createRemoteSession();
+		final Long idDeLaSesionCreada = sesionCreada.getSessionId();
+		remoteSessions.put(idDeLaSesionCreada, sesionCreada);
+		return sesionCreada;
 	}
 
 	/**

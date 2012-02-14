@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.gaia.vortex.externals.http.OperacionHttp;
 import net.gaia.vortex.externals.http.OperacionHttpJ2ee;
-import net.gaia.vortex.http.controller.HttpTranslator;
+import net.gaia.vortex.http.crypted.CryptedHttpTranslator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,14 +35,14 @@ public class CryptedController {
 	private static final Logger LOG = LoggerFactory.getLogger(CryptedController.class);
 
 	@Autowired
-	private HttpTranslator translator;
+	private CryptedHttpTranslator translator;
 
 	@RequestMapping(value = "keys")
 	public void onKeysRequested(final HttpServletRequest request, final HttpServletResponse response) {
 		LOG.debug("Llegó un request: \"" + request.getRequestURI() + "\"");
 
 		final OperacionHttp pedido = OperacionHttpJ2ee.create(request, response);
-		translator.translate(pedido);
+		translator.grantKeys(pedido);
 	}
 
 	@RequestMapping(value = "crypted")

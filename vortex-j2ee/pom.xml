@@ -31,6 +31,15 @@
 		  <version>1.0</version>
 		</dependency>				
 
+		<!-- Encriptado de mensajes -->
+		<dependency>
+		  <groupId>ar.dgarcia</groupId>
+		  <artifactId>encryption</artifactId>
+		  <version>0.1</version>
+		</dependency>
+		
+
+
 		<!-- Spring Web -->	
 		<dependency>
 			<groupId>org.springframework</groupId>

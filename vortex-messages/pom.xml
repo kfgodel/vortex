@@ -137,6 +137,20 @@
 					<downloadSources>true</downloadSources>
 				</configuration>
 			</plugin>
+			<!-- Agrega los fuentes en el repo -->
+	      <plugin>
+	        <artifactId>maven-source-plugin</artifactId>
+	        <version>2.1.2</version>
+	        <executions>
+	          <execution>
+	            <id>attach-source</id>
+	            <phase>verify</phase>
+	            <goals>
+	              <goal>jar-no-fork</goal>
+	            </goals>
+	          </execution>
+	        </executions>
+	      </plugin>
 		</plugins>
 	</build>
 

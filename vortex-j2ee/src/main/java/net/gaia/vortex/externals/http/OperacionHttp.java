@@ -27,7 +27,7 @@ public interface OperacionHttp {
 	 * 
 	 * @return El wrapper de los mensajes recibidos por http
 	 */
-	String getWrapperJson();
+	String getMensajeVortex();
 
 	/**
 	 * Escribe el texto pasado como respuesta HTTP

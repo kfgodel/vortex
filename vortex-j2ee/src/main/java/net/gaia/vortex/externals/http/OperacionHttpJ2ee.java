@@ -70,10 +70,10 @@ public class OperacionHttpJ2ee implements OperacionHttp {
 	}
 
 	/**
-	 * @see net.gaia.vortex.externals.http.OperacionHttp#getWrapperJson()
+	 * @see net.gaia.vortex.externals.http.OperacionHttp#getMensajeVortex()
 	 */
 	@Override
-	public String getWrapperJson() {
+	public String getMensajeVortex() {
 		final String mensaje = getValorDeParametro(VortexWrapper.MENSAJE_VORTEX_PARAM_NAME);
 		return mensaje;
 	}

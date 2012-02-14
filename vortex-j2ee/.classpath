@@ -13,6 +13,7 @@
   <classpathentry kind="var" path="M2_REPO/commons-io/commons-io/2.0.1/commons-io-2.0.1.jar" sourcepath="M2_REPO/commons-io/commons-io/2.0.1/commons-io-2.0.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/ar/com/fdvs/dgarcia/dgarcia-commons/1.0.2/dgarcia-commons-1.0.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/ar/dgarcia/encryption/0.1/encryption-0.1.jar" sourcepath="M2_REPO/ar/dgarcia/encryption/0.1/encryption-0.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/guava/guava/r09/guava-r09.jar" sourcepath="M2_REPO/com/google/guava/guava/r09/guava-r09-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/jackson/jackson-core-lgpl/1.8.3/jackson-core-lgpl-1.8.3.jar" sourcepath="M2_REPO/org/codehaus/jackson/jackson-core-lgpl/1.8.3/jackson-core-lgpl-1.8.3-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/jackson/jackson-mapper-lgpl/1.8.3/jackson-mapper-lgpl-1.8.3.jar" sourcepath="M2_REPO/org/codehaus/jackson/jackson-mapper-lgpl/1.8.3/jackson-mapper-lgpl-1.8.3-sources.jar"/>
