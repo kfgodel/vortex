@@ -21,10 +21,14 @@ import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.hilevel.api.ClienteVortex;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.impl.ClienteVortexImpl;
+import net.gaia.vortex.http.api.NodoRemotoHttp;
+import net.gaia.vortex.http.api.config.ConfiguracionConEncriptacion;
+import net.gaia.vortex.http.api.config.ConfiguracionSinEncriptacion;
 import net.gaia.vortex.http.meta.Decision;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,14 +45,78 @@ public class HttpClientTest {
 
 	@Before
 	public void prepararTest() {
-		nodo = NodoRemotoHttp.create("http://kfgodel.info/vortex/controllers/main", "nodoTest");
 		// nodo = NodoRemotoHttp.create("http://localhost:8080/vortex-j2ee/controllers/main",
 		// "nodoTest");
+	}
+
+	@After
+	public void devolverRecursos() {
+		nodo.detenerYDevolverRecursos();
 	}
 
 	@Test
 	@HasDependencyOn(Decision.EL_NODO_HTTP_NO_POLLEA_SOLO)
 	public void deberiaPermitirEnviarUnMensajeAOtroCliente() {
+		final ConfiguracionSinEncriptacion config = ConfiguracionSinEncriptacion
+				.create("http://kfgodel.info/vortex/controllers/naked");
+		nodo = NodoRemotoHttp.create(config, "nodoTest");
+
+		// Creamos el receptor con el tag del mensaje
+		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
+		final ClienteVortex clienteReceptor = ClienteVortexImpl.create(nodo, encoladorDelReceptor);
+		final String tagCompartido = "TagParaPrueba";
+
+		// Publicamos los tags para el receptor
+		clienteReceptor.getFiltroDeMensajes().agregarATagsActivos(Sets.newHashSet(tagCompartido));
+
+		// Polleamos los mensajes para asegurarnos que la publicación fue procesada
+		clienteReceptor.poll();
+		// Y verificamos que no hay mensajes recibidos
+		try {
+			encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(2, TimeUnit.SECONDS));
+			Assert.fail("No deberíamos recibir ningun mensaje del nodo");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción correcta
+		}
+
+		// Creamos el emisor que no necesita declarar tags
+		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
+		final ClienteVortexImpl clienteEmisor = ClienteVortexImpl.create(nodo, encoladorDelEmisor);
+
+		// Enviamos el mensaje desde el emisor
+		final String contenidoEnviado = "Hola mundo!";
+		final MensajeVortexApi mensaje = MensajeVortexApi.create(contenidoEnviado, "prueba", tagCompartido);
+		clienteEmisor.enviar(mensaje);
+
+		// Verificamos si recibimos el mensajes. Le damos 5 segundos de oportunidades
+		int attempts = 5;
+		while (attempts > 0) {
+			// Enviamos un mensaje cualquier para forzar el polling de los mensajes que recibimos
+			// remotamente
+			clienteReceptor.poll();
+
+			try {
+				// Verificamos que el mensaje haya llegado
+				final MensajeVortexApi mensajeRecibido = encoladorDelReceptor.esperarProximoMensaje(TimeMagnitude.of(1,
+						TimeUnit.SECONDS));
+				final Object contenidoRecibido = mensajeRecibido.getContenido();
+				Assert.assertEquals(contenidoEnviado, contenidoRecibido);
+				break;
+			} catch (final TimeoutExceededException e) {
+				// Falló esta vez, veremos la próxima
+			}
+			attempts--;
+		}
+
+	}
+
+	@Test
+	@HasDependencyOn(Decision.EL_NODO_HTTP_NO_POLLEA_SOLO)
+	public void deberiaPermitirEnviarUnMensajeAOtroClienteUsandoEncriptacion() {
+		final ConfiguracionConEncriptacion config = ConfiguracionConEncriptacion.create(
+				"http://kfgodel.info/vortex/controllers/keys", "http://kfgodel.info/vortex/controllers/crypted");
+		nodo = NodoRemotoHttp.create(config, "nodoTest");
+
 		// Creamos el receptor con el tag del mensaje
 		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
 		final ClienteVortex clienteReceptor = ClienteVortexImpl.create(nodo, encoladorDelReceptor);

@@ -64,4 +64,10 @@ public class WrapperEncriptado {
 				.add(contenido_FIELD, contenido).toString();
 	}
 
+	public static WrapperEncriptado create(final String idDeSesionEncriptada, final String contenido) {
+		final WrapperEncriptado wrapper = new WrapperEncriptado();
+		wrapper.sessionIdEncriptada = idDeSesionEncriptada;
+		wrapper.contenido = contenido;
+		return wrapper;
+	}
 }

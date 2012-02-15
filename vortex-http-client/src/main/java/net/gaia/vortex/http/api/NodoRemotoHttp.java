@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http;
+package net.gaia.vortex.http.api;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
@@ -18,7 +18,6 @@ import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.dependencies.json.InterpreteJson;
 import net.gaia.vortex.dependencies.json.impl.InterpreteJackson;
 import net.gaia.vortex.http.externals.http.ConectorHttp;
-import net.gaia.vortex.http.externals.http.ConectorHttpImpl;
 import net.gaia.vortex.http.sessions.SesionRemotaHttp;
 import net.gaia.vortex.http.sessions.SinSesionRemotaHttp;
 import net.gaia.vortex.http.tasks.ValidarMensajesPrevioEnvioWorkUnit;
@@ -91,12 +90,12 @@ public class NodoRemotoHttp implements NodoVortex {
 	 *            El nombre opcional para identificar a este nodo
 	 * @return El nodo creado
 	 */
-	public static NodoRemotoHttp create(final String url, final String nombreOpcional) {
+	public static NodoRemotoHttp create(final ConfiguracionDeNodoRemotoHttp config, final String nombreOpcional) {
 		final NodoRemotoHttp nodo = new NodoRemotoHttp();
 		nodo.processor = ExecutorBasedTaskProcesor.create(TaskProcessorConfiguration.create());
 		nodo.interprete = InterpreteJackson.create();
 		nodo.nombre = NodoVortexConTasks.getValidNameFrom(nombreOpcional);
-		nodo.conector = ConectorHttpImpl.create(url, nodo.interprete);
+		nodo.conector = config.getConectorHttp(nodo.interprete);
 		nodo.sinSesion = SinSesionRemotaHttp.create();
 		return nodo;
 	}

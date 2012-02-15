@@ -15,7 +15,7 @@ package net.gaia.vortex.http.sessions;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.vortex.http.NodoRemotoHttp;
+import net.gaia.vortex.http.api.NodoRemotoHttp;
 import net.gaia.vortex.http.tasks.ValidarMensajesPrevioEnvioWorkUnit;
 import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
 import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;

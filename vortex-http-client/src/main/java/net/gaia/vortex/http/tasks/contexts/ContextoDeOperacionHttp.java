@@ -14,7 +14,7 @@ package net.gaia.vortex.http.tasks.contexts;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.dependencies.json.InterpreteJson;
-import net.gaia.vortex.http.NodoRemotoHttp;
+import net.gaia.vortex.http.api.NodoRemotoHttp;
 import net.gaia.vortex.http.externals.http.ConectorHttp;
 import net.gaia.vortex.http.sessions.SesionConId;
 
