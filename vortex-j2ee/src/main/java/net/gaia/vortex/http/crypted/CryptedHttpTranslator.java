@@ -173,8 +173,7 @@ public class CryptedHttpTranslator implements HttpTranslator {
 		final CryptoKey clavePublicaCliente = encryptor.deserialize(clavePublicaClienteSerializada);
 
 		// Generamos la sesión del cliente
-		final String nuevoId = getProximoIdDeSesion();
-		final SesionEncriptada sesionEncriptada = SesionEncriptada.create(nuevoId, clavePublicaCliente);
+		final SesionEncriptada sesionEncriptada = createNewClientSession(clavePublicaCliente);
 
 		// Encriptamos su ID para que sólo él sepa cual es
 		final String idDeSesion = sesionEncriptada.getSessionId().toString();
@@ -190,6 +189,20 @@ public class CryptedHttpTranslator implements HttpTranslator {
 		final String concesionComoJson = interprete.toJson(concesionDeSesion);
 		pedidoHttp.responder(concesionComoJson);
 
+	}
+
+	/**
+	 * Crea una nueva sesión encriptada para utilizar en las comunicaciones con los clientes
+	 * 
+	 * @param clavePublicaCliente
+	 *            La clave publica del cliente
+	 * @return La sesión creada
+	 */
+	private SesionEncriptada createNewClientSession(final CryptoKey clavePublicaCliente) {
+		final String nuevoId = getProximoIdDeSesion();
+		final SesionEncriptada sesionEncriptada = SesionEncriptada.create(nuevoId, clavePublicaCliente);
+		sesionesPorId.put(nuevoId, sesionEncriptada);
+		return sesionEncriptada;
 	}
 
 	/**
