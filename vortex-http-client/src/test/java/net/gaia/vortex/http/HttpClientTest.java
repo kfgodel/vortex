@@ -30,6 +30,7 @@ import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
@@ -41,6 +42,11 @@ import com.google.common.collect.Sets;
  */
 public class HttpClientTest {
 
+	/**
+	 * 
+	 */
+	// private static final String SERVER_URL = "http://kfgodel.info/vortex/controllers";
+	private static final String SERVER_URL = "http://localhost:8080/vortex-j2ee/controllers";
 	private NodoVortex nodo;
 
 	@Before
@@ -54,11 +60,11 @@ public class HttpClientTest {
 		nodo.detenerYDevolverRecursos();
 	}
 
+	@Ignore("Ignorados porque dependen de un server externo")
 	@Test
 	@HasDependencyOn(Decision.EL_NODO_HTTP_NO_POLLEA_SOLO)
 	public void deberiaPermitirEnviarUnMensajeAOtroCliente() {
-		final ConfiguracionSinEncriptacion config = ConfiguracionSinEncriptacion
-				.create("http://kfgodel.info/vortex/controllers/naked");
+		final ConfiguracionSinEncriptacion config = ConfiguracionSinEncriptacion.create(SERVER_URL + "/naked");
 		nodo = NodoRemotoHttp.create(config, "nodoTest");
 
 		// Creamos el receptor con el tag del mensaje
@@ -110,11 +116,12 @@ public class HttpClientTest {
 
 	}
 
+	@Ignore("Ignorados porque dependen de un server externo")
 	@Test
 	@HasDependencyOn(Decision.EL_NODO_HTTP_NO_POLLEA_SOLO)
 	public void deberiaPermitirEnviarUnMensajeAOtroClienteUsandoEncriptacion() {
-		final ConfiguracionConEncriptacion config = ConfiguracionConEncriptacion.create(
-				"http://kfgodel.info/vortex/controllers/keys", "http://kfgodel.info/vortex/controllers/crypted");
+		final ConfiguracionConEncriptacion config = ConfiguracionConEncriptacion.create(SERVER_URL + "/keys",
+				SERVER_URL + "/crypted");
 		nodo = NodoRemotoHttp.create(config, "nodoTest");
 
 		// Creamos el receptor con el tag del mensaje

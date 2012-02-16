@@ -77,7 +77,8 @@ public class ConectorHttpCrypted extends ConectorHttpNaked {
 	@Override
 	protected StringRequest translateToHttp(final VortexWrapper enviado) {
 		final String wrapperSinEncriptar = translateToJson(enviado);
-		final String contenidoEncriptado = encryptor.encrypt(wrapperSinEncriptar, getClavePublicaDelNodoServidor());
+		CryptoKey clavePublicaDelNodo = getClavePublicaDelNodoServidor();
+		final String contenidoEncriptado = encryptor.encrypt(wrapperSinEncriptar, clavePublicaDelNodo);
 		LOG.debug("Wrapper encriptado: {}", wrapperSinEncriptar);
 		final WrapperEncriptado wrapperEncriptado = WrapperEncriptado.create(idDeSesionEncriptadoParaServidor,
 				contenidoEncriptado);
@@ -139,11 +140,11 @@ public class ConectorHttpCrypted extends ConectorHttpNaked {
 	}
 
 	/**
-	 * Devuelve la concesion interpretada del String pasado como JSON
+	 * Devuelve la concesión interpretada del String pasado como JSON
 	 * 
 	 * @param consesionComoJson
-	 *            El texto que representa una concesion de clave y sesion
-	 * @return la concesion interpretada
+	 *            El texto que representa una concesión de clave y sesión
+	 * @return la concesión interpretada
 	 */
 	private ConcesionDeSesionYClave translateConcesionFromJson(final String consesionComoJson) {
 		final ConcesionDeSesionYClave concesion;
