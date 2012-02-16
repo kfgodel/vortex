@@ -13,7 +13,6 @@
 package net.gaia.taskprocessor.impl;
 
 import java.util.Iterator;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -73,16 +72,39 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
 		final ExecutorBasedTaskProcesor processor = new ExecutorBasedTaskProcesor();
+		final RejectedTaskHandler rejectionHandler = RejectedTaskHandler.create(processor);
 		final int threadPoolSize = config.getThreadPoolSize();
 		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
 		processor.inmediateExecutor = new ThreadPoolExecutor(1, threadPoolSize, maxIdleTimePerThread.getQuantity(),
 				maxIdleTimePerThread.getTimeUnit(), new LinkedBlockingQueue<Runnable>(),
-				Executors.defaultThreadFactory());
-		processor.delayedExecutor = new ScheduledThreadPoolExecutor(1);
+				ProcessorThreadFactory.create("TaskProcessor"), rejectionHandler);
+		processor.delayedExecutor = new ScheduledThreadPoolExecutor(1, ProcessorThreadFactory.create("TaskDelayer"),
+				rejectionHandler);
 		processor.inmediatePendingTasks = new LinkedBlockingQueue<SubmittedRunnableTask>();
 		processor.delayedTasks = new LinkedBlockingQueue<TaskPlanner>();
 		processor.metrics = TaskProcessingMetricsImpl.create(processor.inmediatePendingTasks);
 		return processor;
+	}
+
+	/**
+	 * Invocado cuando alguno de los executors rechaza una tarea encolada para procesar
+	 * 
+	 * @param runnable
+	 *            El runnable que engloba a la tarea
+	 * @param executor
+	 *            El executor que rechaza la tarea
+	 */
+	protected void onTaskRejected(final Runnable runnable, final ThreadPoolExecutor executor) {
+		if (executor == inmediateExecutor) {
+			LOG.error("El executor de tareas inmediatas rechazó el runnable: " + runnable
+					+ ". Posible exceso de tasks?");
+		} else if (executor == delayedExecutor) {
+			LOG.error("El executor de tareas con retraso rechazó el runnable: " + runnable
+					+ ". Posible exceso de tasks?");
+		} else {
+			LOG.error("Un executor[" + executor + "] que no es nuestro[" + this + "] rechazó el runnable: " + runnable
+					+ ". Posible exceso de tasks?");
+		}
 	}
 
 	/**
