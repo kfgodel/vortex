@@ -12,7 +12,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.jdk>1.6</project.jdk>
-		<org.springframework.version>3.0.2.RELEASE</org.springframework.version>
+		<org.springframework.version>3.1.0.RELEASE</org.springframework.version>
 	</properties>
 
 	<dependencies>
@@ -39,6 +39,12 @@
 		</dependency>
 		
 
+		<!-- Agrega la posibilidad de detectar el ambiente automáticamente -->
+		<dependency>
+			 <groupId>com.tenpines.commons</groupId>
+			 <artifactId>profile-detector</artifactId>
+			 <version>1.0</version>
+		</dependency>
 
 		<!-- Spring Web -->	
 		<dependency>

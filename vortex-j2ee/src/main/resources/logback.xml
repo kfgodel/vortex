@@ -53,6 +53,12 @@
 	</appender>
 	
 	<logger name="net.gaia.vortex" level="DEBUG" />
+	
+	<!-- No queremos los detalles de la detección de ambiente -->
+	<logger name="com.tenpines.commons.profile" level="WARN" />
+	<!-- Pero sí la info de que ambiente se detecto-->
+	<logger name="com.tenpines.integration.spring" level="DEBUG" />
+	
   
   	<logger name="net.gaia.vortex.meta.Loggers.RUTEO" level="DEBUG">
 		<appender-ref ref="RUTEO_FILE" />
@@ -60,10 +66,8 @@
   
 
 	<root level="info">
-	  <!--  
-	  -->
-	  	<appender-ref ref="STDOUT" />
-	  <appender-ref ref="ROLLING_FILE" />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ROLLING_FILE" />
 	</root>
   
 </configuration>

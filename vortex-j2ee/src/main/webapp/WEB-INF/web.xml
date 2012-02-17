@@ -22,6 +22,13 @@
 		<param-value>classpath:/spring/web-application-context.xml</param-value>
 	</context-param>
 	
+	<context-param>
+		<!-- Usado por Spring para inicializar el contexto según el perfil de ambiente -->
+	  <param-name>contextInitializerClasses</param-name>
+	  <param-value>net.gaia.vortex.ambients.VortexSpringContextInitializer</param-value>
+	</context-param>
+	
+	
 	<filter>
 		<!-- Filtro para recibir los requests con el encoding UTF-8 -->
         <filter-name>encoding-filter</filter-name>

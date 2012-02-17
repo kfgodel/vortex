@@ -18,6 +18,16 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource({ "classpath:spring/cron-context.xml" })
 public class SpringConfig {
 
+	/**
+	 * Perfil utilizado para los beans utilizados en desarrollo
+	 */
+	public static final String DEV_PROFILE = "development";
+
+	/**
+	 * Perfil utilizado para los beans de producción
+	 */
+	public static final String PROD_PROFILE = "production";
+
 	@Bean
 	public InterpreteJson getInterpreteJson() {
 		return InterpreteJackson.create();
