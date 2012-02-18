@@ -15,6 +15,7 @@ package net.gaia.taskprocessor.tests;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import junit.framework.Assert;
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskProcessor;
@@ -29,7 +30,6 @@ import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.util.Assert;
 
 /**
  * Esta clase testea la api listener del {@link TaskProcessor}
@@ -54,10 +54,10 @@ public class TestTaskListenerApi {
 			}
 		});
 
-		Assert.isTrue(!accepted.get(), "Debería etar marcado como no aceptado todavía");
+		Assert.assertTrue("Debería etar marcado como no aceptado todavía", !accepted.get());
 		taskProcessor.process(new TestWorkUnit());
 		// Cuando el método retorna el listener ya debería haber sido invocado
-		Assert.isTrue(accepted.get(), "Debería etar marcado como aceptado");
+		Assert.assertTrue("Debería etar marcado como aceptado", accepted.get());
 	}
 
 	@Test
@@ -85,7 +85,7 @@ public class TestTaskListenerApi {
 
 		lockParaTestearTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		// Cuando el método retorna el listener ya debería haber sido invocado
-		Assert.isTrue(started.get(), "Debería etar marcado como aceptado");
+		Assert.assertTrue("Debería etar marcado como aceptado", started.get());
 
 	}
 
@@ -102,7 +102,7 @@ public class TestTaskListenerApi {
 
 		final SubmittedTask task = taskProcessor.process(new TestWorkUnit());
 		task.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(completed.get(), "Debería estar invocado el listener con la tarea completa");
+		Assert.assertTrue("Debería estar invocado el listener con la tarea completa", completed.get());
 	}
 
 	@Test
@@ -124,7 +124,7 @@ public class TestTaskListenerApi {
 		};
 		final SubmittedTask task = taskProcessor.process(tarea);
 		task.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(failed.get(), "Debería estar invocado el listener con la tarea fallida");
+		Assert.assertTrue("Debería estar invocado el listener con la tarea fallida", failed.get());
 	}
 
 	@Test
@@ -154,7 +154,7 @@ public class TestTaskListenerApi {
 		cancelledTask.cancel(true);
 		lockParaBloquearPrimera.release();
 		cancelledTask.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(cancelled.get(), "Debería estar invocado el listener con la tarea cancelada");
+		Assert.assertTrue("Debería estar invocado el listener con la tarea cancelada", cancelled.get());
 	}
 
 	@Test
@@ -192,8 +192,8 @@ public class TestTaskListenerApi {
 
 		lockParaEsperarNotificacionDeInterrupcion.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		// Cuando el método retorna el listener ya debería haber sido invocado
-		Assert.isTrue(interrupted.get(), "Debería estar marcado como interrumpida");
-		Assert.isTrue(!tarea.isProcessed(), "No debería estar procesada si está interrumpida");
+		Assert.assertTrue("Debería estar marcado como interrumpida", interrupted.get());
+		Assert.assertTrue("No debería estar procesada si está interrumpida", !tarea.isProcessed());
 	}
 
 }

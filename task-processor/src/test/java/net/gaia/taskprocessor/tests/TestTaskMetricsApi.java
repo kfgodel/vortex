@@ -14,6 +14,7 @@ package net.gaia.taskprocessor.tests;
 
 import java.util.concurrent.TimeUnit;
 
+import junit.framework.Assert;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessor;
@@ -25,7 +26,6 @@ import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.util.Assert;
 
 /**
  * Esta clase realiza test sobre la api para conocer las métricas del procesador
@@ -43,19 +43,19 @@ public class TestTaskMetricsApi {
 
 	@Test
 	public void deberíaPermitirConocerLaCantidadDeThreadsUsadosParaProcesarLasTareas() {
-		Assert.isTrue(TaskProcessorConfiguration.DEFAULT_THREAD_POOL_SIZE == taskProcessor.getThreadPoolSize(),
-				"Debería usar un thread por defecto");
+		Assert.assertTrue("Debería usar un thread por defecto",
+				TaskProcessorConfiguration.DEFAULT_THREAD_POOL_SIZE == taskProcessor.getThreadPoolSize());
 
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
 		config.setThreadPoolSize(2);
 		final TaskProcessor dualTaskprocessor = ExecutorBasedTaskProcesor.create(config);
-		Assert.isTrue(2 == dualTaskprocessor.getThreadPoolSize(), "Debería tener 2 threads");
+		Assert.assertTrue("Debería tener 2 threads", 2 == dualTaskprocessor.getThreadPoolSize());
 	}
 
 	@Test
 	public void deberíaPermitirConocerLaCantidadDeTareasProcesadas() throws InterruptedException {
 		final TaskProcessingMetrics metrics = taskProcessor.getMetrics();
-		Assert.isTrue(metrics.getProcessedTaskCount() == 0, "No debería tener tareas procesadas al crearse");
+		Assert.assertTrue("No debería tener tareas procesadas al crearse", metrics.getProcessedTaskCount() == 0);
 
 		final TestWorkUnit primerTarea = new TestWorkUnit();
 		final SubmittedTask submittedTask = taskProcessor.process(primerTarea);
@@ -63,13 +63,13 @@ public class TestTaskMetricsApi {
 
 		// Que la tarea no es garantía de que el contador esté actualizado, esperamos un poco
 		Thread.sleep(10);
-		Assert.isTrue(metrics.getProcessedTaskCount() == 1, "Debería contar la tarea procesada");
+		Assert.assertTrue("Debería contar la tarea procesada", metrics.getProcessedTaskCount() == 1);
 	}
 
 	@Test
 	public void deberíaPermitirConocerLaCantidadDeTareasPendientes() throws InterruptedException {
 		final TaskProcessingMetrics metrics = taskProcessor.getMetrics();
-		Assert.isTrue(metrics.getPendingTaskCount() == 0, "No debería tener tareas pendientes al crearse");
+		Assert.assertTrue("No debería tener tareas pendientes al crearse", metrics.getPendingTaskCount() == 0);
 
 		final WaitBarrier lockParaBloquearLaPrimerTarea = WaitBarrier.create();
 		final WaitBarrier lockTestearEstado = WaitBarrier.create();
@@ -85,7 +85,7 @@ public class TestTaskMetricsApi {
 		taskProcessor.process(new TestWorkUnit());
 
 		lockTestearEstado.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(metrics.getPendingTaskCount() == 1, "Debería contar la segunda tarea que espera la primera");
+		Assert.assertTrue("Debería contar la segunda tarea que espera la primera", metrics.getPendingTaskCount() == 1);
 		// Dejamos que sigan
 		lockParaBloquearLaPrimerTarea.release();
 	}

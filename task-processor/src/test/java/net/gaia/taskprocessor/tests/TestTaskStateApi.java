@@ -15,6 +15,7 @@ package net.gaia.taskprocessor.tests;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import junit.framework.Assert;
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
@@ -28,7 +29,6 @@ import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.util.Assert;
 
 /**
  * Esta clase prueba el contrato definido por el estado de una tarea
@@ -51,7 +51,7 @@ public class TestTaskStateApi {
 		final TestWorkUnit tarea = new TestWorkUnit();
 		final SubmittedTask pendiente = taskProcessor.process(tarea);
 		pendiente.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(pendiente.getCurrentState().wasProcessed());
+		Assert.assertTrue(pendiente.getCurrentState().wasProcessed());
 	}
 
 	/**
@@ -80,9 +80,9 @@ public class TestTaskStateApi {
 		lockToTestTaskCompletion.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final boolean isProcessing = pendiente.getCurrentState().isBeingProcessed();
-		Assert.isTrue(tarea.isProcessed(),
-				"Debería indicar que termino aunque este en proceso porque el estado es externo a la tarea");
-		Assert.isTrue(isProcessing, "Debería indicar que está siendo procesada");
+		Assert.assertTrue("Debería indicar que termino aunque este en proceso porque el estado es externo a la tarea",
+				tarea.isProcessed());
+		Assert.assertTrue("Debería indicar que está siendo procesada", isProcessing);
 		// Dejamos que termine
 		lockToCompleteTask.release();
 	}
@@ -111,8 +111,8 @@ public class TestTaskStateApi {
 		final SubmittedTask pendiente = this.taskProcessor.process(blockedTask);
 
 		lockParaTestearEstado.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(pendiente.getCurrentState().isPending(),
-				"La tarea debería estar bloqueada por la anterior por se un solo thread");
+		Assert.assertTrue("La tarea debería estar bloqueada por la anterior por se un solo thread", pendiente
+				.getCurrentState().isPending());
 
 		// Liberamos para que no quede colgado
 		lockParaCompletarAnterior.release();
@@ -149,7 +149,7 @@ public class TestTaskStateApi {
 		this.taskProcessor.process(tareaPosterior);
 
 		lockParaTestearEstado.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(SubmittedTask.getCurrentState().hasFailed(), "Debería detectar que falló con una excepción");
+		Assert.assertTrue("Debería detectar que falló con una excepción", SubmittedTask.getCurrentState().hasFailed());
 	}
 
 	/**
@@ -194,12 +194,14 @@ public class TestTaskStateApi {
 
 		// Esperamos que termine para que tenga un estado consistente
 		interrumpida.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(interrumpida.getCurrentState().wasCancelled(), "Debería estar interrumpida y también cancelada");
-		Assert.isTrue(interrumpida.getCurrentState().equals(SubmittedTaskState.INTERRUPTED));
-		Assert.isTrue(!canceladaDuranteElProcesamiento.isProcessed(), "No debería estar terminada si es interrumpida");
+		Assert.assertTrue("Debería estar interrumpida y también cancelada", interrumpida.getCurrentState()
+				.wasCancelled());
+		Assert.assertTrue(interrumpida.getCurrentState().equals(SubmittedTaskState.INTERRUPTED));
+		Assert.assertTrue("No debería estar terminada si es interrumpida",
+				!canceladaDuranteElProcesamiento.isProcessed());
 
-		Assert.isTrue(cancelada.getCurrentState().wasCancelled(), "Debería estar cancelada antes de empezar");
-		Assert.isTrue(cancelada.getCurrentState().equals(SubmittedTaskState.CANCELLED));
+		Assert.assertTrue("Debería estar cancelada antes de empezar", cancelada.getCurrentState().wasCancelled());
+		Assert.assertTrue(cancelada.getCurrentState().equals(SubmittedTaskState.CANCELLED));
 
 	}
 }

@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import junit.framework.Assert;
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
@@ -30,7 +31,6 @@ import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.util.Assert;
 
 /**
  * Esta clase prueba los casos de uso básicos del procesador de tareas
@@ -67,9 +67,9 @@ public class TestTaskProcessorApi {
 		final TestWorkUnit trabajo = new TestWorkUnit();
 		final SubmittedTask tarea = taskProcessor.process(trabajo);
 		tarea.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(trabajo.isProcessed(), "Después de la espera la tarea debería estar completa");
-		Assert.isTrue(tarea.getCurrentState().equals(SubmittedTaskState.COMPLETED),
-				"Debería estar marcada como completa");
+		Assert.assertTrue("Después de la espera la tarea debería estar completa", trabajo.isProcessed());
+		Assert.assertTrue("Debería estar marcada como completa",
+				tarea.getCurrentState().equals(SubmittedTaskState.COMPLETED));
 	}
 
 	@Test
@@ -102,9 +102,9 @@ public class TestTaskProcessorApi {
 		final SubmittedTask tercerTask = tercerProceso.get();
 		tercerTask.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		Assert.isTrue(primeraTarea.isProcessed());
-		Assert.isTrue(segundaTarea.isProcessed());
-		Assert.isTrue(tercerTarea.isProcessed());
+		Assert.assertTrue(primeraTarea.isProcessed());
+		Assert.assertTrue(segundaTarea.isProcessed());
+		Assert.assertTrue(tercerTarea.isProcessed());
 	}
 
 	@Test
@@ -122,7 +122,7 @@ public class TestTaskProcessorApi {
 				lockParaTestear.release();
 			}
 		});
-		Assert.isTrue(failedWork.get() == null, "No debería haber tarea fallida aun");
+		Assert.assertTrue("No debería haber tarea fallida aun", failedWork.get() == null);
 
 		final TestWorkUnit tarea = new TestWorkUnit() {
 			@Override
@@ -133,7 +133,7 @@ public class TestTaskProcessorApi {
 		taskProcessor.process(tarea);
 
 		lockParaTestear.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(failedWork.get() == tarea, "Debería estar registrado la tarea que falló");
+		Assert.assertTrue("Debería estar registrado la tarea que falló", failedWork.get() == tarea);
 	}
 
 	@Test
@@ -152,8 +152,8 @@ public class TestTaskProcessorApi {
 
 		final SubmittedTask task = this.taskProcessor.process(workFallido);
 		task.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(task.getFailingError() == expectedException,
-				"Debería fallar por la misma excepción lanzada de la tarea");
+		Assert.assertTrue("Debería fallar por la misma excepción lanzada de la tarea",
+				task.getFailingError() == expectedException);
 	}
 
 	/**
@@ -203,19 +203,19 @@ public class TestTaskProcessorApi {
 		lockParaCancelarTodas.release();
 		lockParaTestear.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		Assert.isTrue(!procesada.getCurrentState().wasCancelled(),
-				"Debería estar terminada exitosamente, no tiene efecto cancelarla");
-		Assert.isTrue(procesada.getCurrentState().equals(SubmittedTaskState.COMPLETED));
+		Assert.assertTrue("Debería estar terminada exitosamente, no tiene efecto cancelarla", !procesada
+				.getCurrentState().wasCancelled());
+		Assert.assertTrue(procesada.getCurrentState().equals(SubmittedTaskState.COMPLETED));
 
 		// Esperamos que termine para asegurarnos de que tenga un estado consistente
 		interrumpida.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.isTrue(interrumpida.getCurrentState().wasCancelled(),
-				"Debería estar interrumpida, por lo tanto cancelada");
+		Assert.assertTrue("Debería estar interrumpida, por lo tanto cancelada", interrumpida.getCurrentState()
+				.wasCancelled());
 		org.junit.Assert.assertEquals(SubmittedTaskState.INTERRUPTED, interrumpida.getCurrentState());
-		Assert.isTrue(!canceladaDuranteElProcesamiento.isProcessed(), "No debería haber terminado de procesar");
+		Assert.assertTrue("No debería haber terminado de procesar", !canceladaDuranteElProcesamiento.isProcessed());
 
-		Assert.isTrue(cancelada.getCurrentState().wasCancelled(), "Debería estar cancelada antes de empezar");
-		Assert.isTrue(cancelada.getCurrentState().equals(SubmittedTaskState.CANCELLED));
+		Assert.assertTrue("Debería estar cancelada antes de empezar", cancelada.getCurrentState().wasCancelled());
+		Assert.assertTrue(cancelada.getCurrentState().equals(SubmittedTaskState.CANCELLED));
 
 	}
 
@@ -228,15 +228,15 @@ public class TestTaskProcessorApi {
 
 		// Esperamos medio segundo y verificamos que todavía no se ejecutó
 		Thread.sleep(500);
-		Assert.isTrue(tarea.getCurrentState().isPending(), "La tarea debería estar pendiente todavía");
-		Assert.isTrue(!trabajo.isProcessed(), "Verificacion adicional de que la tarea no fue procesada todavía");
+		Assert.assertTrue("La tarea debería estar pendiente todavía", tarea.getCurrentState().isPending());
+		Assert.assertTrue("Verificacion adicional de que la tarea no fue procesada todavía", !trabajo.isProcessed());
 
 		// Esperamos que se ejecute
 		tarea.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Deberíamos estar cerca del segundo del momento en que se encargó
 		final long elapsed = System.currentTimeMillis() - momentoDeEncargo;
-		Assert.isTrue(Math.abs(elapsed - 1000) < 100,
-				"La tarea debería ser ejecutada con un error de decima de segundo");
+		Assert.assertTrue("La tarea debería ser ejecutada con un error de decima de segundo",
+				Math.abs(elapsed - 1000) < 100);
 	}
 }
