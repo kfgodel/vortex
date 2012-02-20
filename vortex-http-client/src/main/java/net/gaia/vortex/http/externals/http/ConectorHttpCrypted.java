@@ -26,6 +26,7 @@ import ar.dgarcia.encryptor.api.CryptoKey;
 import ar.dgarcia.encryptor.api.GeneratedKeys;
 import ar.dgarcia.encryptor.api.TextEncryptor;
 import ar.dgarcia.encryptor.impl.RSATextEncryptor;
+import ar.dgarcia.http.simple.api.HttpResponseProvider;
 import ar.dgarcia.http.simple.api.StringRequest;
 import ar.dgarcia.http.simple.api.StringResponse;
 
@@ -50,8 +51,10 @@ public class ConectorHttpCrypted extends ConectorHttpNaked {
 	public static final String urlParaPedidoDeKeys_FIELD = "urlParaPedidoDeKeys";
 
 	public static ConectorHttpCrypted createCrypted(final String urlParaPedidoDeClaves,
-			final String urlParaEnvioDeMensajes, final InterpreteJson interpreteJson) {
+			final String urlParaEnvioDeMensajes, final InterpreteJson interpreteJson,
+			final HttpResponseProvider httpProvider) {
 		final ConectorHttpCrypted conector = new ConectorHttpCrypted();
+		conector.setHttpProvider(httpProvider);
 		conector.initialize(urlParaEnvioDeMensajes, interpreteJson);
 		conector.encryptor = RSATextEncryptor.create();
 		conector.clavesDelCliente = conector.encryptor.generateKeys();
@@ -77,7 +80,7 @@ public class ConectorHttpCrypted extends ConectorHttpNaked {
 	@Override
 	protected StringRequest translateToHttp(final VortexWrapper enviado) {
 		final String wrapperSinEncriptar = translateToJson(enviado);
-		CryptoKey clavePublicaDelNodo = getClavePublicaDelNodoServidor();
+		final CryptoKey clavePublicaDelNodo = getClavePublicaDelNodoServidor();
 		final String contenidoEncriptado = encryptor.encrypt(wrapperSinEncriptar, clavePublicaDelNodo);
 		LOG.debug("Wrapper encriptado: {}", wrapperSinEncriptar);
 		final WrapperEncriptado wrapperEncriptado = WrapperEncriptado.create(idDeSesionEncriptadoParaServidor,

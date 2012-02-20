@@ -64,7 +64,7 @@ public class HttpClientTest {
 	@Test
 	@HasDependencyOn(Decision.EL_NODO_HTTP_NO_POLLEA_SOLO)
 	public void deberiaPermitirEnviarUnMensajeAOtroCliente() {
-		final ConfiguracionSinEncriptacion config = ConfiguracionSinEncriptacion.create(SERVER_URL + "/naked");
+		final ConfiguracionSinEncriptacion config = ConfiguracionSinEncriptacion.create(SERVER_URL + "/naked", null);
 		nodo = NodoRemotoHttp.create(config, "nodoTest");
 
 		// Creamos el receptor con el tag del mensaje
@@ -121,7 +121,7 @@ public class HttpClientTest {
 	@HasDependencyOn(Decision.EL_NODO_HTTP_NO_POLLEA_SOLO)
 	public void deberiaPermitirEnviarUnMensajeAOtroClienteUsandoEncriptacion() {
 		final ConfiguracionConEncriptacion config = ConfiguracionConEncriptacion.create(SERVER_URL + "/keys",
-				SERVER_URL + "/crypted");
+				SERVER_URL + "/crypted", null);
 		nodo = NodoRemotoHttp.create(config, "nodoTest");
 
 		// Creamos el receptor con el tag del mensaje

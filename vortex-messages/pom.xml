@@ -137,7 +137,7 @@
 					<downloadSources>true</downloadSources>
 				</configuration>
 			</plugin>
-			<!-- Agrega los fuentes en el repo -->
+		<!-- Agrega los fuentes en el repo -->
 	      <plugin>
 	        <artifactId>maven-source-plugin</artifactId>
 	        <version>2.1.2</version>

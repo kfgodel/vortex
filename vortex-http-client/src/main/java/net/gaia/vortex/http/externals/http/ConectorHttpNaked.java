@@ -44,8 +44,10 @@ public class ConectorHttpNaked implements ConectorHttp {
 	private InterpreteJson interprete;
 	private HttpResponseProvider httpProvider;
 
-	public static ConectorHttpNaked createNaked(final String url, final InterpreteJson interprete) {
+	public static ConectorHttpNaked createNaked(final String url, final InterpreteJson interprete,
+			final HttpResponseProvider httpProvider) {
 		final ConectorHttpNaked conector = new ConectorHttpNaked();
+		conector.setHttpProvider(httpProvider);
 		conector.initialize(url, interprete);
 		return conector;
 	}
@@ -59,7 +61,10 @@ public class ConectorHttpNaked implements ConectorHttp {
 	 *            El interprete JSON
 	 */
 	protected void initialize(final String url, final InterpreteJson interprete) {
-		this.setHttpProvider(ApacheResponseProvider.create());
+		if (getHttpProvider() == null) {
+			// Si no tenemos uno definido usamos el de apache
+			this.setHttpProvider(ApacheResponseProvider.create());
+		}
 		this.setServerUrl(url);
 		this.setInterprete(interprete);
 	}
@@ -205,7 +210,7 @@ public class ConectorHttpNaked implements ConectorHttp {
 		return httpProvider;
 	}
 
-	private void setHttpProvider(final HttpResponseProvider httpProvider) {
+	protected void setHttpProvider(final HttpResponseProvider httpProvider) {
 		this.httpProvider = httpProvider;
 	}
 }
