@@ -21,6 +21,7 @@ import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.hilevel.api.ClienteVortex;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.impl.ClienteVortexImpl;
+import net.gaia.vortex.hilevel.api.impl.ConfiguracionClienteVortex;
 import net.gaia.vortex.http.api.NodoRemotoHttp;
 import net.gaia.vortex.http.api.config.ConfiguracionConEncriptacion;
 import net.gaia.vortex.http.api.config.ConfiguracionSinEncriptacion;
@@ -69,7 +70,8 @@ public class HttpClientTest {
 
 		// Creamos el receptor con el tag del mensaje
 		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
-		final ClienteVortex clienteReceptor = ClienteVortexImpl.create(nodo, encoladorDelReceptor);
+		final ClienteVortex clienteReceptor = ClienteVortexImpl.create(ConfiguracionClienteVortex.create(nodo,
+				encoladorDelReceptor));
 		final String tagCompartido = "TagParaPrueba";
 
 		// Publicamos los tags para el receptor
@@ -87,7 +89,8 @@ public class HttpClientTest {
 
 		// Creamos el emisor que no necesita declarar tags
 		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
-		final ClienteVortexImpl clienteEmisor = ClienteVortexImpl.create(nodo, encoladorDelEmisor);
+		final ClienteVortexImpl clienteEmisor = ClienteVortexImpl.create(ConfiguracionClienteVortex.create(nodo,
+				encoladorDelEmisor));
 
 		// Enviamos el mensaje desde el emisor
 		final String contenidoEnviado = "Hola mundo!";
@@ -126,7 +129,8 @@ public class HttpClientTest {
 
 		// Creamos el receptor con el tag del mensaje
 		final EncoladorDeMensajesHandler encoladorDelReceptor = EncoladorDeMensajesHandler.create();
-		final ClienteVortex clienteReceptor = ClienteVortexImpl.create(nodo, encoladorDelReceptor);
+		final ClienteVortex clienteReceptor = ClienteVortexImpl.create(ConfiguracionClienteVortex.create(nodo,
+				encoladorDelReceptor));
 		final String tagCompartido = "TagParaPrueba";
 
 		// Publicamos los tags para el receptor
@@ -144,7 +148,8 @@ public class HttpClientTest {
 
 		// Creamos el emisor que no necesita declarar tags
 		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
-		final ClienteVortexImpl clienteEmisor = ClienteVortexImpl.create(nodo, encoladorDelEmisor);
+		final ClienteVortexImpl clienteEmisor = ClienteVortexImpl.create(ConfiguracionClienteVortex.create(nodo,
+				encoladorDelEmisor));
 
 		// Enviamos el mensaje desde el emisor
 		final String contenidoEnviado = "Hola mundo!";

@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import net.gaia.vortex.hilevel.api.ClienteVortex;
 import net.gaia.vortex.hilevel.api.FiltroDeMensajesDelCliente;
 import net.gaia.vortex.hilevel.api.HandlerDeMensajesApi;
-import net.gaia.vortex.hilevel.api.ListenerDeTagsDelNodo;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.TagsDelNodo;
 import net.gaia.vortex.hilevel.api.entregas.ReporteDeEntregaApi;
@@ -64,6 +63,11 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	private TagsDelNodo tagsDelNodo;
 	private MemoriaDeEnvios envios;
 
+	/**
+	 * La configuración de este cliente
+	 */
+	private ConfiguracionClienteVortex configuracion;
+
 	public TagsDelNodo getTagsDelNodo() {
 		return tagsDelNodo;
 	}
@@ -98,19 +102,6 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	}
 
 	/**
-	 * Crea un cliente al nodo vortex indicado, sin recibir notificaciones en los cambios de tags
-	 * 
-	 * @param nodoVortex
-	 *            El nodo al que se conectará
-	 * @param handlerDeMensajes
-	 *            El handler para los mensajes
-	 * @return El cliente creado
-	 */
-	public static ClienteVortexImpl create(final NodoVortex nodoVortex, final HandlerDeMensajesApi handlerDeMensajes) {
-		return create(nodoVortex, handlerDeMensajes, null);
-	}
-
-	/**
 	 * Crea un nuevo cliente conectado al nodo indicado
 	 * 
 	 * @param nodoVortex
@@ -121,14 +112,14 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	 *            El listener para recibir notificaciones por los tags
 	 * @return
 	 */
-	public static ClienteVortexImpl create(final NodoVortex nodoVortex, final HandlerDeMensajesApi handlerDeMensajes,
-			final ListenerDeTagsDelNodo listenerDeTags) {
+	public static ClienteVortexImpl create(final ConfiguracionClienteVortex configuracion) {
 		final ClienteVortexImpl cliente = new ClienteVortexImpl();
-		cliente.nodoVortex = nodoVortex;
-		cliente.handlerDeMensajes = new AtomicReference<HandlerDeMensajesApi>(handlerDeMensajes);
+		cliente.configuracion = configuracion;
+		cliente.nodoVortex = configuracion.getNodoVortex();
+		cliente.handlerDeMensajes = new AtomicReference<HandlerDeMensajesApi>(configuracion.getHandlerDeMensajes());
 		cliente.generadorMensajes = GeneradorDeMensajesImpl.create();
 		cliente.tagsDelNodo = TagsDelNodo.create();
-		cliente.tagsDelNodo.setListener(listenerDeTags);
+		cliente.tagsDelNodo.setListener(configuracion.getListenerDeTags());
 		cliente.initialize();
 		cliente.filtroDeMensajes = FiltroDeMensajesDelClienteImpl.create(cliente);
 		cliente.envios = MemoriaDeEnvios.create();
