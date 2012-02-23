@@ -17,6 +17,8 @@ import java.util.List;
 
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.google.common.base.Objects;
 
 /**
@@ -26,14 +28,27 @@ import com.google.common.base.Objects;
  * 
  * @author D. García
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VortexWrapper {
+
+	public final static String MENSAJE_VORTEX_PARAM_NAME = "mensajeVortex";
 
 	private Long sessionId;
 	public static final String sessionId_FIELD = "sessionId";
 
 	private List<MensajeVortex> mensajes;
-	public final static String MENSAJE_VORTEX_PARAM_NAME = "mensajeVortex";
 	public static final String mensajes_FIELD = "mensajes";
+
+	private Long extensionDeSesion;
+	public static final String extensionDeSesion_FIELD = "extensionDeSesion";
+
+	public Long getExtensionDeSesion() {
+		return extensionDeSesion;
+	}
+
+	public void setExtensionDeSesion(final Long extensionDeSesion) {
+		this.extensionDeSesion = extensionDeSesion;
+	}
 
 	public Long getSessionId() {
 		return sessionId;
@@ -59,7 +74,8 @@ public class VortexWrapper {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(sessionId_FIELD, sessionId).add(mensajes_FIELD, mensajes).toString();
+		return Objects.toStringHelper(this).add(sessionId_FIELD, sessionId)
+				.add(extensionDeSesion_FIELD, extensionDeSesion).add(mensajes_FIELD, mensajes).toString();
 	}
 
 	public static VortexWrapper create(final Long sessionId, final List<MensajeVortex> mensajes) {

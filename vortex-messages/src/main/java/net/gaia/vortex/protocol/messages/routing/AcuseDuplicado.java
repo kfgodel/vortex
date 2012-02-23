@@ -15,6 +15,8 @@ package net.gaia.vortex.protocol.messages.routing;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.sf.oval.constraint.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.google.common.base.Objects;
 
 /**
@@ -22,6 +24,7 @@ import com.google.common.base.Objects;
  * 
  * @author D. García
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AcuseDuplicado implements Acuse {
 
 	@NotNull

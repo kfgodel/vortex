@@ -16,6 +16,8 @@ import net.gaia.vortex.protocol.messages.IdVortex;
 import net.sf.oval.constraint.NotNegative;
 import net.sf.oval.constraint.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.google.common.base.Objects;
 
 /**
@@ -24,6 +26,7 @@ import com.google.common.base.Objects;
  * 
  * @author D. García
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AcuseConsumo implements Acuse {
 
 	@NotNull

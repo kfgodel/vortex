@@ -18,6 +18,8 @@ import net.sf.oval.constraint.AssertValid;
 import net.sf.oval.constraint.MinSize;
 import net.sf.oval.constraint.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.google.common.base.Objects;
 
 /**
@@ -26,6 +28,7 @@ import com.google.common.base.Objects;
  * 
  * @author D. García
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MensajeVortex {
 
 	public static final String TAG_INTERCAMBIO_VECINO = "CHE";

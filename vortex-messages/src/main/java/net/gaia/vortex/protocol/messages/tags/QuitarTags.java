@@ -19,6 +19,8 @@ import java.util.Set;
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 import net.sf.oval.constraint.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.google.common.base.Objects;
 
 /**
@@ -26,6 +28,7 @@ import com.google.common.base.Objects;
  * 
  * @author D. García
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class QuitarTags implements MetamensajeVortex {
 
 	@NotNull

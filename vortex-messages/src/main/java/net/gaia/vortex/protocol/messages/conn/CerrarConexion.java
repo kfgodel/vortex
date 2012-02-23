@@ -14,6 +14,8 @@ package net.gaia.vortex.protocol.messages.conn;
 
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.google.common.base.Objects;
 
 /**
@@ -22,10 +24,15 @@ import com.google.common.base.Objects;
  * 
  * @author D. García
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CerrarConexion implements MetamensajeVortex {
 
-	public static CerrarConexion create() {
+	private String reason;
+	public static final String reason_FIELD = "reason";
+
+	public static CerrarConexion create(final String reason) {
 		final CerrarConexion cierre = new CerrarConexion();
+		cierre.reason = reason;
 		return cierre;
 	}
 
@@ -34,6 +41,6 @@ public class CerrarConexion implements MetamensajeVortex {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).toString();
+		return Objects.toStringHelper(this).add(reason_FIELD, reason).toString();
 	}
 }
