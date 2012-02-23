@@ -102,8 +102,6 @@ public class VortexWrapper {
 	/**
 	 * Indica si el cliente que envío este wrapper requiere una nueva sesión si no tiene una.<br>
 	 * Requiere sesión, si indica ID, o si el ID es nulo pero envía metamensajes
-	 * 
-	 * @return
 	 */
 	public boolean requiereSesion() {
 		final boolean indicaIdDeSesion = this.sessionId != null;

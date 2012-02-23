@@ -21,6 +21,8 @@ import net.gaia.vortex.protocol.http.VortexWrapper;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Objects;
 
@@ -30,14 +32,20 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 public class RemoteSessionImpl implements RemoteSession {
+	private static final Logger LOG = LoggerFactory.getLogger(RemoteSessionImpl.class);
 
 	private Long sessionId;
 	public static final String sessionId_FIELD = "sessionId";
+
 	private SesionVortex sesionVortex;
 	public static final String sesionVortex_FIELD = "sesionVortex";
+
 	private EncoladorDeMensajesHandler mensajesParaElCliente;
-	private DateTime lastActivityMoment;
-	public static final String lastActivityMoment_FIELD = "lastActivityMoment";
+
+	private DateTime proximoVencimiento;
+	public static final String proximoVencimiento_FIELD = "proximoVencimiento";
+
+	private Long maximoTiempoSinActividadEnSegundos;
 
 	public static RemoteSessionImpl create(final Long idDeSesion, final SesionVortex sesionVortex,
 			final EncoladorDeMensajesHandler encoladorDeLaSesion) {
@@ -45,15 +53,15 @@ public class RemoteSessionImpl implements RemoteSession {
 		sesion.mensajesParaElCliente = encoladorDeLaSesion;
 		sesion.sesionVortex = sesionVortex;
 		sesion.sessionId = idDeSesion;
-		sesion.registerActivity();
 		return sesion;
 	}
 
-	/**
-	 * Registra en esta sesión que se realizó actividad, actualizando la fecha de última actividad
-	 */
-	private void registerActivity() {
-		this.lastActivityMoment = VortexTime.currentMoment();
+	public Long getMaximoTiempoSinActividadEnSegundos() {
+		return maximoTiempoSinActividadEnSegundos;
+	}
+
+	public void setMaximoTiempoSinActividadEnSegundos(final Long maximoTiempoSinActividadEnSegundos) {
+		this.maximoTiempoSinActividadEnSegundos = maximoTiempoSinActividadEnSegundos;
 	}
 
 	/**
@@ -69,19 +77,9 @@ public class RemoteSessionImpl implements RemoteSession {
 	 */
 	@Override
 	public void enviarAlNodo(final List<MensajeVortex> mensajes) {
-		registerActivity();
 		for (final MensajeVortex mensajeVortex : mensajes) {
 			sesionVortex.enviar(mensajeVortex);
 		}
-	}
-
-	/**
-	 * Devuelve el momento en que esta sesión tuvo actividad
-	 * 
-	 * @return El momento que representa la referencia para conocer si esta sesión es vieja
-	 */
-	public DateTime getLastActivityMoment() {
-		return this.lastActivityMoment;
 	}
 
 	/**
@@ -90,7 +88,7 @@ public class RemoteSessionImpl implements RemoteSession {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).add(sessionId_FIELD, sessionId)
-				.add(lastActivityMoment_FIELD, lastActivityMoment).add(sesionVortex_FIELD, sesionVortex).toString();
+				.add(proximoVencimiento_FIELD, proximoVencimiento).add(sesionVortex_FIELD, sesionVortex).toString();
 	}
 
 	/**
@@ -105,9 +103,36 @@ public class RemoteSessionImpl implements RemoteSession {
 	 */
 	@Override
 	public VortexWrapper recibirDelNodo() {
-		registerActivity();
 		final List<MensajeVortex> mensajesQuitados = mensajesParaElCliente.quitarTodos();
 		final VortexWrapper wrapper = VortexWrapper.create(getSessionId(), mensajesQuitados);
 		return wrapper;
+	}
+
+	public DateTime getProximoVencimiento() {
+		return proximoVencimiento;
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.controller.RemoteSession#extenderVencimiento(java.lang.Long)
+	 */
+	@Override
+	public void extenderVencimiento(final Long extensionSolicitada) {
+		final DateTime currentMoment = VortexTime.currentMoment();
+		this.proximoVencimiento = currentMoment.plusSeconds(extensionSolicitada.intValue());
+	}
+
+	/**
+	 * Indica si esta sesión se considera vencida dada su tiempo de vida pactado con el cliente
+	 * 
+	 * @return true si ya se pasó el límite de tiempo y esta sesión no tuvo actividad
+	 */
+	public boolean estaVencida() {
+		if (proximoVencimiento == null) {
+			LOG.error("La sesión[" + this + "] no tiene momento de vencimiento, considerando inmortal");
+			return false;
+		}
+		final DateTime currentMoment = VortexTime.currentMoment();
+		final boolean sePasoElVencimiento = currentMoment.isAfter(proximoVencimiento);
+		return sePasoElVencimiento;
 	}
 }

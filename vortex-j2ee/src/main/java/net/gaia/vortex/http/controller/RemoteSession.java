@@ -27,7 +27,7 @@ public interface RemoteSession {
 	public abstract Long getSessionId();
 
 	/**
-	 * Envia los mensajes pasado al nodo
+	 * Envía los mensajes pasado al nodo
 	 * 
 	 * @param mensajes
 	 *            Los mensajes a enviar
@@ -40,5 +40,13 @@ public interface RemoteSession {
 	 * @return El wrappper de los mensajes recibidos por esta sesión
 	 */
 	public abstract VortexWrapper recibirDelNodo();
+
+	/**
+	 * Alarga el tiempo de vida de esta sesión por la cantidad de segundos indicada
+	 * 
+	 * @param extensionSolicitada
+	 *            El tiempo extra en segundos
+	 */
+	public abstract void extenderVencimiento(Long extensionSolicitada);
 
 }

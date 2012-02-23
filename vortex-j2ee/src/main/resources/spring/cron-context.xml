@@ -24,8 +24,8 @@
   		<property name="jobDetail" ref="receptoresJobDetail"/>
 		<!-- Esperamos 5s para empezar -->
   		<property name="startDelay" value="5000"/>
-		<!-- Ejecutamos cada 1 hora -->
-  		<property name="repeatInterval" value="3600000"/>
+		<!-- Ejecutamos cada 5 min -->
+  		<property name="repeatInterval" value="300000"/>
 	</bean>
 	
 	

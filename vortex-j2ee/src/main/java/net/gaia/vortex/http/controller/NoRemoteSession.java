@@ -59,4 +59,12 @@ public class NoRemoteSession implements RemoteSession {
 		// No hay mensajes para esta sesión
 		return VortexWrapper.create(null, null);
 	}
+
+	/**
+	 * @see net.gaia.vortex.http.controller.RemoteSession#extenderVencimiento(java.lang.Long)
+	 */
+	@Override
+	public void extenderVencimiento(final Long extensionSolicitada) {
+		// No tiene vencimiento
+	}
 }
