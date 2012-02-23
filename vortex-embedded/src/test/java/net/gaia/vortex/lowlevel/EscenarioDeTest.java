@@ -126,7 +126,7 @@ public class EscenarioDeTest {
 	 * Crea el mensaje para cerrar la conexión desde el protocolo
 	 */
 	public MensajeVortex crearMensajeDeCierreDeConexion() {
-		final MetamensajeVortex cierreConexion = CerrarConexion.create();
+		final MetamensajeVortex cierreConexion = CerrarConexion.create("Test");
 		return crearMetamensaje(cierreConexion);
 	}
 
