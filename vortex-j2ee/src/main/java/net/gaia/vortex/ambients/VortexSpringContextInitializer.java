@@ -38,7 +38,8 @@ public class VortexSpringContextInitializer extends AmbientBasedContextInitializ
 	/**
 	 * Este perfil corresponde al ambiente de desarrollo de la casa de Dario
 	 */
-	public static AmbientProfileSupport DEV_DARIO;
+	public static AmbientProfileSupport DEV_HOME_DARIO;
+	public static AmbientProfileSupport DEV_NOTE_DARIO;
 	public static AmbientProfileSupport PROD_MOSQUITO;
 
 	private static final AmbientSensor HOSTNAME = HostnameSensor.create();
@@ -56,13 +57,17 @@ public class VortexSpringContextInitializer extends AmbientBasedContextInitializ
 	 * Inicializa el estado de esta intancia
 	 */
 	private void init() {
-		DEV_DARIO = AmbientProfileSupport.create("Desktop Dario (desarrollo)");
-		DEV_DARIO.setValueFor(HOSTNAME, "Ikari01");
+		DEV_HOME_DARIO = AmbientProfileSupport.create("Desktop Dario (desarrollo)");
+		DEV_HOME_DARIO.setValueFor(HOSTNAME, "Ikari01");
+		DEV_NOTE_DARIO = AmbientProfileSupport.create("Notebook Dario (desarrollo)");
+		DEV_NOTE_DARIO.setValueFor(HOSTNAME, "ExpeUEW7");
 		PROD_MOSQUITO = AmbientProfileSupport.create("Server Mosquito (produccion)");
 		PROD_MOSQUITO.setValueFor(HOSTNAME, "mosquito");
 
 		configurationsPerProfile = new HashMap<AmbientProfile, SpringBasedConfigurationSupport>();
-		configurationsPerProfile.put(DEV_DARIO, VortexDevelopmentAmbientConfiguration.create());
+		final VortexDevelopmentAmbientConfiguration development = VortexDevelopmentAmbientConfiguration.create();
+		configurationsPerProfile.put(DEV_HOME_DARIO, development);
+		configurationsPerProfile.put(DEV_NOTE_DARIO, development);
 		configurationsPerProfile.put(PROD_MOSQUITO, VortexProductionAmbientConfiguration.create());
 	}
 
@@ -93,7 +98,7 @@ public class VortexSpringContextInitializer extends AmbientBasedContextInitializ
 	@Override
 	protected Set<AmbientProfile> getKnownProfiles() {
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		final Set<AmbientProfile> profiles = (Set) Sets.newHashSet(DEV_DARIO, PROD_MOSQUITO);
+		final Set<AmbientProfile> profiles = (Set) Sets.newHashSet(DEV_HOME_DARIO, PROD_MOSQUITO, DEV_NOTE_DARIO);
 		return profiles;
 	}
 
