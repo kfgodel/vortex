@@ -13,7 +13,6 @@
 package net.gaia.vortex.http.api.config;
 
 import net.gaia.vortex.dependencies.json.InterpreteJson;
-import net.gaia.vortex.http.api.ConfiguracionDeNodoRemotoHttp;
 import net.gaia.vortex.http.externals.http.ConectorHttp;
 import net.gaia.vortex.http.externals.http.ConectorHttpCrypted;
 import ar.dgarcia.http.simple.api.HttpResponseProvider;
@@ -24,18 +23,17 @@ import ar.dgarcia.http.simple.api.HttpResponseProvider;
  * 
  * @author D. García
  */
-public class ConfiguracionConEncriptacion implements ConfiguracionDeNodoRemotoHttp {
+public class ConfiguracionConEncriptacion extends ConfigurationNodoHttpSupport {
 
 	private String urlForKeys;
 	private String urlForMessages;
-	private HttpResponseProvider httpResponseProvider;
 
 	public static ConfiguracionConEncriptacion create(final String urlForKeys, final String urlForMessages,
 			final HttpResponseProvider optionalHttpResponseProvider) {
 		final ConfiguracionConEncriptacion config = new ConfiguracionConEncriptacion();
+		config.initialize(optionalHttpResponseProvider, null);
 		config.urlForKeys = urlForKeys;
 		config.urlForMessages = urlForMessages;
-		config.httpResponseProvider = optionalHttpResponseProvider;
 		return config;
 	}
 
@@ -45,7 +43,7 @@ public class ConfiguracionConEncriptacion implements ConfiguracionDeNodoRemotoHt
 	@Override
 	public ConectorHttp getConectorHttp(final InterpreteJson interprete) {
 		final ConectorHttpCrypted conector = ConectorHttpCrypted.createCrypted(urlForKeys, urlForMessages, interprete,
-				httpResponseProvider);
+				getHttpResponseProvider());
 		return conector;
 	}
 

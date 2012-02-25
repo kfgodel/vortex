@@ -41,9 +41,17 @@ public class EnviarMensajesWorkUnit implements WorkUnit {
 		final Long currentSessionId = sesionEmisora.getSessionId();
 		final VortexWrapper wrapperAEnviar = VortexWrapper.create(currentSessionId, mensajes);
 
+		// Pedimos una extensión de la sesión por cada mensaje enviado
+		final Long segundosSinActividadEnSesion = contexto.getCantidadDeSegundosSolicitadosSinActividad();
+		wrapperAEnviar.setExtensionDeSesion(segundosSinActividadEnSesion);
+
 		// Enviamos el mensaje
 		final ConectorHttp conector = contexto.getConectorHttp();
 		final VortexWrapper wrapperRecibido = conector.enviarYRecibir(wrapperAEnviar);
+
+		// Verificamos cuando nos otorgaron de vida en la sesión
+		final Long segundosOtorgadosPorServer = wrapperRecibido.getExtensionDeSesion();
+		contexto.setCantidadDeSegundosOtorgadosSinActividad(segundosOtorgadosPorServer);
 
 		// Procesamos las respuestas recibidas
 		final RecibirMensajesWorkUnit recibirMensajes = RecibirMensajesWorkUnit.create(contexto, wrapperRecibido);

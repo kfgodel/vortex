@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.vortex.http.api.NodoRemotoHttp;
+import net.gaia.vortex.http.tasks.EnviarHearbeatWorkUnit;
 import net.gaia.vortex.http.tasks.ValidarMensajesPrevioEnvioWorkUnit;
 import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
 import net.gaia.vortex.lowlevel.api.ErroresDelMensaje;
@@ -133,6 +134,7 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 		sesion.sessionId = VALUE_TO_REQUEST_NEW_ID;
 		sesion.colaDeMensajes = ColaDeMensajesVortex.create();
 		sesion.sessionName = String.valueOf(secuencer.getAndIncrement());
+		sesion.tareaDeHeartbeat = EnviarHearbeatWorkUnit.create();
 		return sesion;
 	}
 

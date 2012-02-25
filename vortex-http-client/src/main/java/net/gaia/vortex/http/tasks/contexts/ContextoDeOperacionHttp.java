@@ -88,4 +88,25 @@ public class ContextoDeOperacionHttp {
 		return correspondeEnvio;
 	}
 
+	/**
+	 * Devuelve la cantidad de segundos sin actividad que require la sesión
+	 * 
+	 * @return La cantidad de segundos de la sesión
+	 */
+	public Long getCantidadDeSegundosSolicitadosSinActividad() {
+		return sesion.getSegundosSinActividadSolicitados();
+	}
+
+	/**
+	 * Establece en este contexto la cantidad de segundos que el server nos otorga como máximo para
+	 * permanecer sin actividad
+	 * 
+	 * @param segundosOtorgadosPorServer
+	 *            La cantidad de segundos dentro de la cual tenemos que enviar un mensaje para no
+	 *            perder la sesión
+	 */
+	public void setCantidadDeSegundosOtorgadosSinActividad(final Long segundosOtorgadosPorServer) {
+		sesion.setSegundosSinActividadotorgados(segundosOtorgadosPorServer);
+	}
+
 }

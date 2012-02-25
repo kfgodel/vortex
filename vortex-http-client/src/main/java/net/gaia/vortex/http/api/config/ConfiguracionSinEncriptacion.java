@@ -13,7 +13,6 @@
 package net.gaia.vortex.http.api.config;
 
 import net.gaia.vortex.dependencies.json.InterpreteJson;
-import net.gaia.vortex.http.api.ConfiguracionDeNodoRemotoHttp;
 import net.gaia.vortex.http.externals.http.ConectorHttp;
 import net.gaia.vortex.http.externals.http.ConectorHttpNaked;
 import ar.dgarcia.http.simple.api.HttpResponseProvider;
@@ -24,17 +23,15 @@ import ar.dgarcia.http.simple.api.HttpResponseProvider;
  * 
  * @author D. García
  */
-public class ConfiguracionSinEncriptacion implements ConfiguracionDeNodoRemotoHttp {
+public class ConfiguracionSinEncriptacion extends ConfigurationNodoHttpSupport {
 
 	private String urlForNakedMessages;
-
-	private HttpResponseProvider httpResponseProvider;
 
 	public static ConfiguracionSinEncriptacion create(final String urlForNakedMessages,
 			final HttpResponseProvider optionalHttpResponseProvider) {
 		final ConfiguracionSinEncriptacion config = new ConfiguracionSinEncriptacion();
+		config.initialize(optionalHttpResponseProvider, null);
 		config.urlForNakedMessages = urlForNakedMessages;
-		config.httpResponseProvider = optionalHttpResponseProvider;
 		return config;
 	}
 
@@ -44,7 +41,7 @@ public class ConfiguracionSinEncriptacion implements ConfiguracionDeNodoRemotoHt
 	@Override
 	public ConectorHttp getConectorHttp(final InterpreteJson interprete) {
 		final ConectorHttpNaked conector = ConectorHttpNaked.createNaked(urlForNakedMessages, interprete,
-				httpResponseProvider);
+				getHttpResponseProvider());
 		return conector;
 	}
 

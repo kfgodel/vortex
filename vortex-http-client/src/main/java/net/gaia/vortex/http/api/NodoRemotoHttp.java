@@ -49,6 +49,8 @@ public class NodoRemotoHttp implements NodoVortex {
 	public static final String nombre_FIELD = "nombre";
 
 	private ConectorHttp conector;
+
+	private ConfiguracionDeNodoRemotoHttp configuracion;
 	public static final String conector_FIELD = "conector";
 
 	/**
@@ -92,6 +94,7 @@ public class NodoRemotoHttp implements NodoVortex {
 	 */
 	public static NodoRemotoHttp create(final ConfiguracionDeNodoRemotoHttp config, final String nombreOpcional) {
 		final NodoRemotoHttp nodo = new NodoRemotoHttp();
+		nodo.configuracion = config;
 		nodo.processor = ExecutorBasedTaskProcesor.create(TaskProcessorConfiguration.create());
 		nodo.interprete = InterpreteJackson.create();
 		nodo.nombre = NodoVortexConTasks.getValidNameFrom(nombreOpcional);

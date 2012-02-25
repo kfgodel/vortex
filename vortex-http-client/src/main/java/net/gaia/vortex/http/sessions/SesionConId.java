@@ -63,4 +63,20 @@ public interface SesionConId {
 	 */
 	public void onErrorDeMensaje(MensajeVortex mensajeAEnviar, ErroresDelMensaje errores);
 
+	/**
+	 * Devuelve la cantidad de segundos que esta sesión solicita como máximo para permanecer sin
+	 * actividad
+	 * 
+	 * @return La cantidad de segundos
+	 */
+	public Long getSegundosSinActividadSolicitados();
+
+	/**
+	 * Establece la cantidad máxima de segundos que esta sesión puede permanecer sin actividad
+	 * 
+	 * @param segundosOtorgadosPorServer
+	 *            Los segundos que el server nos garantiza antes de matar la sesión
+	 */
+	public void setSegundosSinActividadotorgados(Long segundosOtorgadosPorServer);
+
 }
