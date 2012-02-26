@@ -37,8 +37,16 @@ public class RecibirMensajesWorkUnit implements WorkUnit {
 	public void doWork() throws InterruptedException {
 		// Tomamos el id que nos asigna el nodo
 		final Long nuevoId = recibido.getSessionId();
-		final SesionConId sesionReceptora = contexto.getSesionInvolucrada();
-		sesionReceptora.cambiarId(nuevoId);
+		if (nuevoId != null) {
+			final SesionConId sesionReceptora = contexto.getSesionInvolucrada();
+			sesionReceptora.cambiarId(nuevoId);
+		}
+
+		// Verificamos cuando nos otorgaron de vida en la sesión
+		final Long segundosOtorgadosPorServer = recibido.getExtensionDeSesion();
+		if (segundosOtorgadosPorServer != null) {
+			contexto.setCantidadDeSegundosOtorgadosSinActividad(segundosOtorgadosPorServer);
+		}
 
 		// Quitamos los mensajes del wrapper y pasamos a desconvertir los metamensajes
 		final List<MensajeVortex> mensajesRecibidos = recibido.getMensajes();

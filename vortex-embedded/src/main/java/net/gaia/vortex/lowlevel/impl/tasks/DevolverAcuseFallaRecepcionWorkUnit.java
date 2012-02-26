@@ -23,9 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Esta clase representa la tarea de devolver una confirmación de recepción del mensaje. Según si
- * hubo error o no, esta tarea creará una confirmación positiva o negativa.<br>
- * Si no existe receptor o el mensaje no posee ID, esta tarea sólo loguea el error
+ * Esta clase representa la operación del nodo al devolver un acuse de falla
  * 
  * @author D. García
  */

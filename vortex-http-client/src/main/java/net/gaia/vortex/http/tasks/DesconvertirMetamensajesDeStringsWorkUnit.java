@@ -16,6 +16,7 @@ import java.util.List;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.dependencies.json.InterpreteJson;
+import net.gaia.vortex.dependencies.json.JsonConversionException;
 import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
@@ -24,6 +25,8 @@ import net.gaia.vortex.protocol.messages.TipoContenidoMetamensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 
 /**
  * Esta clase representa la operación realizada por el nodo para desconvertir los metamensajes
@@ -55,6 +58,7 @@ public class DesconvertirMetamensajesDeStringsWorkUnit implements WorkUnit {
 		interprete = contexto.getInterpreteJson();
 
 		// Desconvertimos cada metamensaje
+
 		for (final MensajeVortex mensajeRecibido : mensajesRecibidos) {
 			if (!mensajeRecibido.esMetaMensaje()) {
 				continue;
@@ -74,7 +78,7 @@ public class DesconvertirMetamensajesDeStringsWorkUnit implements WorkUnit {
 	 * @param mensajeRecibido
 	 *            El mensaje recibido
 	 */
-	private void desconvertirValorDeJson(final MensajeVortex mensajeRecibido) {
+	private void desconvertirValorDeJson(final MensajeVortex mensajeRecibido) throws JsonConversionException {
 		final ContenidoVortex contenidoVortex = mensajeRecibido.getContenido();
 		final String tipoContenido = contenidoVortex.getTipoContenido();
 		final Class<? extends MetamensajeVortex> tipoEsperado = TipoContenidoMetamensaje.getTipoFrom(tipoContenido);
@@ -91,7 +95,12 @@ public class DesconvertirMetamensajesDeStringsWorkUnit implements WorkUnit {
 					+ mensajeRecibido.toPrettyPrint());
 			return;
 		}
-		final MetamensajeVortex metamensaje = interprete.fromJson(metamensajeComoJson, tipoEsperado);
-		contenidoVortex.setValor(metamensaje);
+		try {
+			final MetamensajeVortex metamensaje = interprete.fromJson(metamensajeComoJson, tipoEsperado);
+			contenidoVortex.setValor(metamensaje);
+		} catch (final JsonConversionException e) {
+			throw new UnhandledConditionException("Se produjo un error al convertir un metamensaje desde String: "
+					+ metamensajeComoJson, e);
+		}
 	}
 }

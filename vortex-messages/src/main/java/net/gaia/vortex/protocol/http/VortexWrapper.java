@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.gaia.vortex.protocol.messages.MensajeVortex;
+import net.sf.oval.constraint.NotNegative;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
@@ -39,6 +40,7 @@ public class VortexWrapper {
 	private List<MensajeVortex> mensajes;
 	public static final String mensajes_FIELD = "mensajes";
 
+	@NotNegative
 	private Long extensionDeSesion;
 	public static final String extensionDeSesion_FIELD = "extensionDeSesion";
 
