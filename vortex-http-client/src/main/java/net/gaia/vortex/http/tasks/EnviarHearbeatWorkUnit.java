@@ -150,6 +150,8 @@ public class EnviarHearbeatWorkUnit implements WorkUnit {
 	public void recalcularEjecucion() {
 		final long momentoEjecucionAnterior = proximaEjecucion;
 		calcularProximaEjecucion();
+		LOG.debug("Recalculando envio de heartbeat para sesion[{}] a los {} milis", contexto.getSesionInvolucrada()
+				.getSessionId(), proximaEjecucion);
 		final boolean debeEjecutarseAntesDeLoPrevisto = proximaEjecucion < momentoEjecucionAnterior;
 		if (debeEjecutarseAntesDeLoPrevisto) {
 			// Tenemos que cancelar la tarea actual
@@ -163,6 +165,7 @@ public class EnviarHearbeatWorkUnit implements WorkUnit {
 	 * Cancela la ejecución de esta tarea en el procesador
 	 */
 	public void cancelarEjecucion() {
+		LOG.debug("Cancelando envio de heartbeat para sesion[{}]", contexto.getSesionInvolucrada().getSessionId());
 		contexto.getProcessor().removeTasksMatching(new TaskCriteria() {
 			@Override
 			public boolean matches(final WorkUnit workUnit) {
