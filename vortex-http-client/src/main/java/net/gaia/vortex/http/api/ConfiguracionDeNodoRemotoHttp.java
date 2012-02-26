@@ -41,4 +41,12 @@ public interface ConfiguracionDeNodoRemotoHttp {
 	 */
 	public Long getMaximaCantidadDeSegundosSinActividad();
 
+	/**
+	 * Devuelve la cantidad de segundos que se debe esperar entre request de polling para solicitar
+	 * nuevos mensajes al nodo http.<br>
+	 * Si el valor es null indica que no se usa polling automático
+	 * 
+	 * @return El tiempo de período de polling o null
+	 */
+	public Long getPeriodoDePollingEnSegundos();
 }

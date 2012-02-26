@@ -15,7 +15,6 @@ package net.gaia.vortex.http;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.hilevel.api.ClienteVortex;
@@ -25,7 +24,6 @@ import net.gaia.vortex.hilevel.api.impl.ConfiguracionClienteVortex;
 import net.gaia.vortex.http.api.NodoRemotoHttp;
 import net.gaia.vortex.http.api.config.ConfiguracionConEncriptacion;
 import net.gaia.vortex.http.api.config.ConfiguracionSinEncriptacion;
-import net.gaia.vortex.http.meta.Decision;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
 
@@ -63,7 +61,6 @@ public class HttpClientTest {
 
 	@Ignore("Ignorados porque dependen de un server externo")
 	@Test
-	@HasDependencyOn(Decision.EL_NODO_HTTP_NO_POLLEA_SOLO)
 	public void deberiaPermitirEnviarUnMensajeAOtroCliente() {
 		final ConfiguracionSinEncriptacion config = ConfiguracionSinEncriptacion.create(SERVER_URL + "/naked", null);
 		nodo = NodoRemotoHttp.create(config, "nodoTest");
@@ -121,7 +118,6 @@ public class HttpClientTest {
 
 	@Ignore("Ignorados porque dependen de un server externo")
 	@Test
-	@HasDependencyOn(Decision.EL_NODO_HTTP_NO_POLLEA_SOLO)
 	public void deberiaPermitirEnviarUnMensajeAOtroClienteUsandoEncriptacion() {
 		final ConfiguracionConEncriptacion config = ConfiguracionConEncriptacion.create(SERVER_URL + "/keys",
 				SERVER_URL + "/crypted", null);

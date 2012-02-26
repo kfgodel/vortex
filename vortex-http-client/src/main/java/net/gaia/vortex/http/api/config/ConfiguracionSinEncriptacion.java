@@ -17,20 +17,23 @@ import net.gaia.vortex.http.externals.http.ConectorHttp;
 import net.gaia.vortex.http.externals.http.ConectorHttpNaked;
 import ar.dgarcia.http.simple.api.HttpResponseProvider;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa la configuración del nodo a utilizar cuando no se utiliza encriptación para
  * el envío de mensajes
  * 
  * @author D. García
  */
-public class ConfiguracionSinEncriptacion extends ConfigurationNodoHttpSupport {
+public class ConfiguracionSinEncriptacion extends ConfiguracionNodoHttpSupport {
 
 	private String urlForNakedMessages;
+	public static final String urlForNakedMessages_FIELD = "urlForNakedMessages";
 
 	public static ConfiguracionSinEncriptacion create(final String urlForNakedMessages,
 			final HttpResponseProvider optionalHttpResponseProvider) {
 		final ConfiguracionSinEncriptacion config = new ConfiguracionSinEncriptacion();
-		config.initialize(optionalHttpResponseProvider, null);
+		config.initialize(optionalHttpResponseProvider);
 		config.urlForNakedMessages = urlForNakedMessages;
 		return config;
 	}
@@ -43,6 +46,16 @@ public class ConfiguracionSinEncriptacion extends ConfigurationNodoHttpSupport {
 		final ConectorHttpNaked conector = ConectorHttpNaked.createNaked(urlForNakedMessages, interprete,
 				getHttpResponseProvider());
 		return conector;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(urlForNakedMessages_FIELD, urlForNakedMessages)
+				.add(maximaCantidadDeSegundosSinActividad_FIELD, getMaximaCantidadDeSegundosSinActividad())
+				.add(periodoDePollingEnSegundos_FIELD, getPeriodoDePollingEnSegundos()).toString();
 	}
 
 }

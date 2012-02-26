@@ -19,6 +19,4 @@ package net.gaia.vortex.http.meta;
  */
 public class Decision {
 
-	public static final String EL_NODO_HTTP_NO_POLLEA_SOLO = "El polling de los mensajes recibidos, en este momento, es responsabilidad del cliente";
-
 }

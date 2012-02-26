@@ -134,4 +134,13 @@ public class SinSesionRemotaHttp implements SesionVortex, SesionConId {
 	public void cambiarCantidadSegundosSinActividad(final Long segundosOtorgadosPorServer) {
 		// No tenemos segundos de inactividad por que no es sesión
 	}
+
+	/**
+	 * @see net.gaia.vortex.http.sessions.SesionConId#getPeriodoDePollingEnSegundos()
+	 */
+	@Override
+	public Long getPeriodoDePollingEnSegundos() {
+		// No hay polling si no hay sesion
+		return null;
+	}
 }

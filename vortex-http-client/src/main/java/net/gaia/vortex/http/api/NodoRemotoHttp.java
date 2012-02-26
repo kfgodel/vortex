@@ -60,6 +60,9 @@ public class NodoRemotoHttp implements NodoVortex {
 	public SesionVortex crearNuevaSesion(final MensajeVortexHandler handlerDeMensajes) {
 		final SesionRemotaHttp sesion = SesionRemotaHttp.create(this, handlerDeMensajes);
 		LOG.debug("Nueva Sesión creada[{}] en nodo[{}]", sesion, this);
+		// Agregamos las tareas extras de la sesion
+		getProcessor().process(sesion.getTareaDeHeartbeat());
+		getProcessor().process(sesion.getTareaDePolling());
 		return sesion;
 	}
 

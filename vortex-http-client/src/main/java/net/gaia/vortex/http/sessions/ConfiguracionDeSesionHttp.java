@@ -3,6 +3,10 @@
  */
 package net.gaia.vortex.http.sessions;
 
+import java.util.concurrent.atomic.AtomicLong;
+
+import net.gaia.vortex.http.api.ConfiguracionDeNodoRemotoHttp;
+
 import com.google.common.base.Objects;
 
 /**
@@ -12,21 +16,36 @@ import com.google.common.base.Objects;
  */
 public class ConfiguracionDeSesionHttp {
 
-	private Long maximaCantidadDeSegundosSinActividad;
+	private AtomicLong maximaCantidadDeSegundosSinActividad;
 	public static final String maximaCantidadDeSegundosSinActividad_FIELD = "maximaCantidadDeSegundosSinActividad";
 
+	private AtomicLong periodoDePollingEnSegundos;
+	public static final String periodoDePollingEnSegundos_FIELD = "periodoDePollingEnSegundos";
+
 	public Long getMaximaCantidadDeSegundosSinActividad() {
-		return maximaCantidadDeSegundosSinActividad;
+		return maximaCantidadDeSegundosSinActividad.get();
 	}
 
 	public void setMaximaCantidadDeSegundosSinActividad(final Long maximaCantidadDeSegundosSinActividad) {
-		this.maximaCantidadDeSegundosSinActividad = maximaCantidadDeSegundosSinActividad;
+		this.maximaCantidadDeSegundosSinActividad.set(maximaCantidadDeSegundosSinActividad);
 	}
 
-	public static ConfiguracionDeSesionHttp create(final Long maxSegundos) {
+	public static ConfiguracionDeSesionHttp create(final ConfiguracionDeNodoRemotoHttp configuracionDeNodo) {
 		final ConfiguracionDeSesionHttp configuracion = new ConfiguracionDeSesionHttp();
-		configuracion.maximaCantidadDeSegundosSinActividad = maxSegundos;
+		final Long maximaCantidadDeSegundosSinActividadDelNodo = configuracionDeNodo
+				.getMaximaCantidadDeSegundosSinActividad();
+		configuracion.maximaCantidadDeSegundosSinActividad = new AtomicLong(maximaCantidadDeSegundosSinActividadDelNodo);
+		final Long periodoDePollingDelNodo = configuracionDeNodo.getPeriodoDePollingEnSegundos();
+		configuracion.periodoDePollingEnSegundos = new AtomicLong(periodoDePollingDelNodo);
 		return configuracion;
+	}
+
+	public Long getPeriodoDePollingEnSegundos() {
+		return periodoDePollingEnSegundos.get();
+	}
+
+	public void setPeriodoDePollingEnSegundos(final Long periodoDePollingEnSegundos) {
+		this.periodoDePollingEnSegundos.set(periodoDePollingEnSegundos);
 	}
 
 	/**
@@ -35,6 +54,7 @@ public class ConfiguracionDeSesionHttp {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)
-				.add(maximaCantidadDeSegundosSinActividad_FIELD, maximaCantidadDeSegundosSinActividad).toString();
+				.add(maximaCantidadDeSegundosSinActividad_FIELD, maximaCantidadDeSegundosSinActividad.get())
+				.add(periodoDePollingEnSegundos_FIELD, periodoDePollingEnSegundos).toString();
 	}
 }

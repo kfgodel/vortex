@@ -22,16 +22,31 @@ import ar.dgarcia.http.simple.api.HttpResponseProvider;
  * 
  * @author D. García
  */
-public abstract class ConfigurationNodoHttpSupport implements ConfiguracionDeNodoRemotoHttp {
+public abstract class ConfiguracionNodoHttpSupport implements ConfiguracionDeNodoRemotoHttp {
 
 	/**
 	 * Cantidad default de segundos sin actividad
 	 */
-	private static final long DEFAULT_MAX_SECONDS = TimeUnit.SECONDS.convert(30, TimeUnit.SECONDS);
+	public static final long DEFAULT_MAX_INACTIVITY_SECONDS = TimeUnit.SECONDS.convert(10, TimeUnit.MINUTES);
+	public static final long DEFAULT_POLLING_SECONDS = TimeUnit.SECONDS.convert(30, TimeUnit.SECONDS);
 
 	private HttpResponseProvider httpResponseProvider;
+	public static final String httpResponseProvider_FIELD = "httpResponseProvider";
 
-	private Long maximaCantidadDeSegundosSinActividad = DEFAULT_MAX_SECONDS;
+	private Long maximaCantidadDeSegundosSinActividad;
+	public static final String maximaCantidadDeSegundosSinActividad_FIELD = "maximaCantidadDeSegundosSinActividad";
+
+	private Long periodoDePollingEnSegundos;
+	public static final String periodoDePollingEnSegundos_FIELD = "periodoDePollingEnSegundos";
+
+	@Override
+	public Long getPeriodoDePollingEnSegundos() {
+		return periodoDePollingEnSegundos;
+	}
+
+	public void setPeriodoDePollingEnSegundos(final Long periodoDePollingEnSegundos) {
+		this.periodoDePollingEnSegundos = periodoDePollingEnSegundos;
+	}
 
 	public HttpResponseProvider getHttpResponseProvider() {
 		return httpResponseProvider;
@@ -41,6 +56,7 @@ public abstract class ConfigurationNodoHttpSupport implements ConfiguracionDeNod
 		this.httpResponseProvider = httpResponseProvider;
 	}
 
+	@Override
 	public Long getMaximaCantidadDeSegundosSinActividad() {
 		return maximaCantidadDeSegundosSinActividad;
 	}
@@ -52,12 +68,9 @@ public abstract class ConfigurationNodoHttpSupport implements ConfiguracionDeNod
 	/**
 	 * Inicializa esta instancia
 	 */
-	protected void initialize(final HttpResponseProvider httpResponseProvider,
-			final Long maximaCantidadDeSegundosSinActividad) {
+	protected void initialize(final HttpResponseProvider httpResponseProvider) {
 		this.httpResponseProvider = httpResponseProvider;
-		this.maximaCantidadDeSegundosSinActividad = maximaCantidadDeSegundosSinActividad;
-		if (maximaCantidadDeSegundosSinActividad == null) {
-			this.maximaCantidadDeSegundosSinActividad = DEFAULT_MAX_SECONDS;
-		}
+		this.maximaCantidadDeSegundosSinActividad = DEFAULT_MAX_INACTIVITY_SECONDS;
+		this.periodoDePollingEnSegundos = DEFAULT_POLLING_SECONDS;
 	}
 }

@@ -85,4 +85,16 @@ public interface SesionConId {
 	 * @return true si la sesión está cerrada o si no tiene sesión
 	 */
 	public boolean estaCerrada();
+
+	/**
+	 * Devuele la cantidad de segundos entre polling
+	 * 
+	 * @return null si no usa polling
+	 */
+	public Long getPeriodoDePollingEnSegundos();
+
+	/**
+	 * Realiza una comunicación con el nodo para verificar si tiene mensajes para recibir
+	 */
+	public void poll();
 }

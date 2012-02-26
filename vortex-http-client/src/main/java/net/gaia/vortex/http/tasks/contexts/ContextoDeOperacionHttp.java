@@ -109,4 +109,13 @@ public class ContextoDeOperacionHttp {
 		sesion.cambiarCantidadSegundosSinActividad(segundosOtorgadosPorServer);
 	}
 
+	/**
+	 * Devuelve el tamaño del periodo de polling en segundos
+	 * 
+	 * @return El tiempo entre polling y polling
+	 */
+	public Long getPeriodoDePollingEnSegundos() {
+		return sesion.getPeriodoDePollingEnSegundos();
+	}
+
 }

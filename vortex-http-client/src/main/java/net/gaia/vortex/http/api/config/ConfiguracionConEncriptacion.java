@@ -17,21 +17,26 @@ import net.gaia.vortex.http.externals.http.ConectorHttp;
 import net.gaia.vortex.http.externals.http.ConectorHttpCrypted;
 import ar.dgarcia.http.simple.api.HttpResponseProvider;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa la configuración del nodo a utilizar cuando no se utiliza encriptación para
  * el envío de mensajes
  * 
  * @author D. García
  */
-public class ConfiguracionConEncriptacion extends ConfigurationNodoHttpSupport {
+public class ConfiguracionConEncriptacion extends ConfiguracionNodoHttpSupport {
 
 	private String urlForKeys;
+	public static final String urlForKeys_FIELD = "urlForKeys";
+
 	private String urlForMessages;
+	public static final String urlForMessages_FIELD = "urlForMessages";
 
 	public static ConfiguracionConEncriptacion create(final String urlForKeys, final String urlForMessages,
 			final HttpResponseProvider optionalHttpResponseProvider) {
 		final ConfiguracionConEncriptacion config = new ConfiguracionConEncriptacion();
-		config.initialize(optionalHttpResponseProvider, null);
+		config.initialize(optionalHttpResponseProvider);
 		config.urlForKeys = urlForKeys;
 		config.urlForMessages = urlForMessages;
 		return config;
@@ -47,4 +52,13 @@ public class ConfiguracionConEncriptacion extends ConfigurationNodoHttpSupport {
 		return conector;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(urlForKeys_FIELD, urlForKeys).add(urlForMessages_FIELD, urlForMessages)
+				.add(maximaCantidadDeSegundosSinActividad_FIELD, getMaximaCantidadDeSegundosSinActividad())
+				.add(periodoDePollingEnSegundos_FIELD, getPeriodoDePollingEnSegundos()).toString();
+	}
 }

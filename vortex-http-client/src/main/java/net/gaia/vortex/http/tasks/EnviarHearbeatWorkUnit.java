@@ -12,15 +12,12 @@
  */
 package net.gaia.vortex.http.tasks;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.http.tasks.contexts.ContextoDeOperacionHttp;
-import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,13 +44,14 @@ public class EnviarHearbeatWorkUnit implements WorkUnit {
 		// Verificamos que la sesion no esté cerrada
 		if (contexto.getSesionInvolucrada().estaCerrada()) {
 			// No tenemos que hacer más nada. Dejamos de ejecutarnos
+			LOG.debug("HEARTBEAT detenido por sesion cerrada[{}]", contexto.getSesionInvolucrada());
 			return;
 		}
 
 		if (proximaEjecucion == null) {
 			// Es la primera vez, tenemos que esperar para mandar el primer heartbeat
 			calcularProximaEjecucion();
-			LOG.debug("Programando primer hearbeat de la sesion[{}]", contexto.getSesionInvolucrada());
+			LOG.debug("Programando primer HEARTBEAT de la sesion[{}]", contexto.getSesionInvolucrada());
 			programarProximaEjecucion();
 			return;
 		}
@@ -66,11 +64,11 @@ public class EnviarHearbeatWorkUnit implements WorkUnit {
 			return;
 		}
 
-		// Es hora de mandar el heartbeat!
-		LOG.debug("HEARTBEAT enviado para sesion[{}]", contexto.getSesionInvolucrada().getSessionId());
-		final List<MensajeVortex> mensajes = Collections.emptyList();
-		final EnviarMensajesWorkUnit enviarVacio = EnviarMensajesWorkUnit.create(contexto, mensajes);
-		contexto.getProcessor().process(enviarVacio);
+		// Es hora de mandar el heartbeat! Usamos polling como heartbeat para que respete la cola de
+		// envios
+		LOG.debug("Enviando HEARTBEAT para sesion[{}]", contexto.getSesionInvolucrada().getSessionId());
+		final ProgramarPollingWorkUnit polling = ProgramarPollingWorkUnit.create(contexto);
+		contexto.getProcessor().process(polling);
 
 		// Programamos la próxima ejecución
 		calcularProximaEjecucion();
@@ -150,8 +148,8 @@ public class EnviarHearbeatWorkUnit implements WorkUnit {
 	public void recalcularEjecucion() {
 		final long momentoEjecucionAnterior = proximaEjecucion;
 		calcularProximaEjecucion();
-		LOG.debug("Recalculando envio de heartbeat para sesion[{}] a los {} milis", contexto.getSesionInvolucrada()
-				.getSessionId(), proximaEjecucion);
+		LOG.debug("Postergando HEARTBEAT para sesion[{}] dentro de {} segs", contexto.getSesionInvolucrada()
+				.getSessionId(), calcularMillisFaltantesParaProximaEjecucion() / 1000d);
 		final boolean debeEjecutarseAntesDeLoPrevisto = proximaEjecucion < momentoEjecucionAnterior;
 		if (debeEjecutarseAntesDeLoPrevisto) {
 			// Tenemos que cancelar la tarea actual
@@ -165,7 +163,7 @@ public class EnviarHearbeatWorkUnit implements WorkUnit {
 	 * Cancela la ejecución de esta tarea en el procesador
 	 */
 	public void cancelarEjecucion() {
-		LOG.debug("Cancelando envio de heartbeat para sesion[{}]", contexto.getSesionInvolucrada().getSessionId());
+		LOG.debug("Cancelando envio de HEARTBEAT para sesion[{}]", contexto.getSesionInvolucrada().getSessionId());
 		contexto.getProcessor().removeTasksMatching(new TaskCriteria() {
 			@Override
 			public boolean matches(final WorkUnit workUnit) {
