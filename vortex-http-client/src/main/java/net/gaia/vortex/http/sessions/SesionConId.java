@@ -69,7 +69,7 @@ public interface SesionConId {
 	 * 
 	 * @return La cantidad de segundos
 	 */
-	public Long getSegundosSinActividadSolicitados();
+	public Long getCantidadSegundosSinActividadActuales();
 
 	/**
 	 * Establece la cantidad máxima de segundos que esta sesión puede permanecer sin actividad
@@ -77,6 +77,12 @@ public interface SesionConId {
 	 * @param segundosOtorgadosPorServer
 	 *            Los segundos que el server nos garantiza antes de matar la sesión
 	 */
-	public void setSegundosSinActividadotorgados(Long segundosOtorgadosPorServer);
+	public void cambiarCantidadSegundosSinActividad(Long segundosOtorgadosPorServer);
 
+	/**
+	 * Indica si esta sesión está cerrada
+	 * 
+	 * @return true si la sesión está cerrada o si no tiene sesión
+	 */
+	public boolean estaCerrada();
 }

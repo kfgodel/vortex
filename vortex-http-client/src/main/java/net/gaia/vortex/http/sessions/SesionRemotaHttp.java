@@ -15,6 +15,7 @@ package net.gaia.vortex.http.sessions;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+import net.gaia.vortex.http.api.ConfiguracionDeNodoRemotoHttp;
 import net.gaia.vortex.http.api.NodoRemotoHttp;
 import net.gaia.vortex.http.tasks.EnviarHearbeatWorkUnit;
 import net.gaia.vortex.http.tasks.ValidarMensajesPrevioEnvioWorkUnit;
@@ -81,6 +82,13 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 	public static final String sessionName_FIELD = "sessionName";
 
 	/**
+	 * Tarea utilizada para mantener la comunicación http si no hay mensajes
+	 */
+	private EnviarHearbeatWorkUnit tareaDeHeartbeat;
+
+	private ConfiguracionDeSesionHttp configuracion;
+
+	/**
 	 * @see net.gaia.vortex.lowlevel.api.SesionVortex#cerrar()
 	 */
 	@Override
@@ -90,6 +98,7 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 			return;
 		}
 		cerrada.set(true);
+		this.tareaDeHeartbeat.cancelarEjecucion();
 		LOG.debug("Sesion cerrada[{}]", this);
 	}
 
@@ -134,8 +143,22 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 		sesion.sessionId = VALUE_TO_REQUEST_NEW_ID;
 		sesion.colaDeMensajes = ColaDeMensajesVortex.create();
 		sesion.sessionName = String.valueOf(secuencer.getAndIncrement());
-		sesion.tareaDeHeartbeat = EnviarHearbeatWorkUnit.create();
+
+		// Creamos la configuracion interna de esta sesion
+		final ConfiguracionDeNodoRemotoHttp configuracionDeNodo = nodo.getConfiguracion();
+		final Long cantidadDeSegundos = configuracionDeNodo.getMaximaCantidadDeSegundosSinActividad();
+		sesion.configuracion = ConfiguracionDeSesionHttp.create(cantidadDeSegundos);
+
+		// Creamos la tarea de heartbeat para que mantenga la sesión viva
+		final ContextoDeOperacionHttp contexto = ContextoDeOperacionHttp.create(nodo, sesion);
+		sesion.tareaDeHeartbeat = EnviarHearbeatWorkUnit.create(contexto);
+		// La agregamos para que comience procesarse
+		nodo.getProcessor().process(sesion.tareaDeHeartbeat);
 		return sesion;
+	}
+
+	public ConfiguracionDeSesionHttp getConfiguracion() {
+		return configuracion;
 	}
 
 	/**
@@ -208,5 +231,22 @@ public class SesionRemotaHttp implements SesionVortex, SesionConId {
 	public void poll() {
 		LOG.debug("Polling solicitado para sesion[{}]", this);
 		enviar(SOLICITUD_DE_POLLING);
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sessions.SesionConId#getCantidadSegundosSinActividadActuales()
+	 */
+	@Override
+	public Long getCantidadSegundosSinActividadActuales() {
+		return this.configuracion.getMaximaCantidadDeSegundosSinActividad();
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sessions.SesionConId#cambiarCantidadSegundosSinActividad(java.lang.Long)
+	 */
+	@Override
+	public void cambiarCantidadSegundosSinActividad(final Long segundosOtorgadosPorServer) {
+		this.configuracion.setMaximaCantidadDeSegundosSinActividad(segundosOtorgadosPorServer);
+		this.tareaDeHeartbeat.recalcularEjecucion();
 	}
 }

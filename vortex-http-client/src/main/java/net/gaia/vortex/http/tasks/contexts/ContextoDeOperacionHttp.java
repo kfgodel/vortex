@@ -94,7 +94,7 @@ public class ContextoDeOperacionHttp {
 	 * @return La cantidad de segundos de la sesión
 	 */
 	public Long getCantidadDeSegundosSolicitadosSinActividad() {
-		return sesion.getSegundosSinActividadSolicitados();
+		return sesion.getCantidadSegundosSinActividadActuales();
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class ContextoDeOperacionHttp {
 	 *            perder la sesión
 	 */
 	public void setCantidadDeSegundosOtorgadosSinActividad(final Long segundosOtorgadosPorServer) {
-		sesion.setSegundosSinActividadotorgados(segundosOtorgadosPorServer);
+		sesion.cambiarCantidadSegundosSinActividad(segundosOtorgadosPorServer);
 	}
 
 }

@@ -133,4 +133,7 @@ public class NodoRemotoHttp implements NodoVortex {
 		return conector;
 	}
 
+	public ConfiguracionDeNodoRemotoHttp getConfiguracion() {
+		return configuracion;
+	}
 }

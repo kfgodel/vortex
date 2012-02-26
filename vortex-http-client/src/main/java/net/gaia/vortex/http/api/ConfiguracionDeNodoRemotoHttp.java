@@ -33,4 +33,12 @@ public interface ConfiguracionDeNodoRemotoHttp {
 	 */
 	ConectorHttp getConectorHttp(InterpreteJson interprete);
 
+	/**
+	 * Devuelve la cantidad de segundos que una sesión puede permanecer sin actividad hasta ser
+	 * eliminada por el nodo. Este valor es el inicial y puede negociarse por sesión
+	 * 
+	 * @return El valor inicial default para las sesiones creadas en el nodo
+	 */
+	public Long getMaximaCantidadDeSegundosSinActividad();
+
 }
