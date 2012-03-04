@@ -21,9 +21,9 @@ import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
 import net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorDeRuteo;
-import net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorFlooding;
 import net.gaia.vortex.lowlevel.impl.ruteo.ReportePerformanceRuteo;
 import net.gaia.vortex.lowlevel.impl.ruteo.SeleccionDeReceptores;
+import net.gaia.vortex.lowlevel.impl.ruteo.flooding.OptimizadorFlooding;
 import net.gaia.vortex.meta.Decision;
 import ar.com.dgarcia.coding.caching.Instantiator;
 import ar.com.dgarcia.coding.caching.SimpleCacheConcurrentMap;
@@ -457,15 +457,21 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 			@Override
 			public void run() {
 				// Por cada tag recolectamos los receptores interesados
-				for (final String tagIncluidoEnMensaje : tagsDelMensaje) {
-					final Set<ReceptorVortex> interesadosEnElTag = receptoresPorTag.get(tagIncluidoEnMensaje);
-					if (interesadosEnElTag != null) {
-						interesadosEnElMensaje.incluirTodos(interesadosEnElTag);
+				for (final String tagDelMensaje : tagsDelMensaje) {
+					final Set<ReceptorVortex> interesadosEnElTag = receptoresPorTag.get(tagDelMensaje);
+					if (interesadosEnElTag == null) {
+						// No hay interesados en ese tag
+						continue;
+					}
+					// Vemos que receptores son los que deben recibir de acuerdo a la optimización
+					for (final ReceptorVortex interesadoEnElTag : interesadosEnElTag) {
+						if (optimizador.debeRecibirMensajeConTag(tagDelMensaje, interesadoEnElTag)) {
+							interesadosEnElMensaje.incluirA(interesadoEnElTag);
+						}
 					}
 				}
 			}
 		});
-		optimizador.filtrar(interesadosEnElMensaje);
 		return interesadosEnElMensaje;
 	}
 

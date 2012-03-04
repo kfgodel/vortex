@@ -10,9 +10,11 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.lowlevel.impl.ruteo;
+package net.gaia.vortex.lowlevel.impl.ruteo.flooding;
 
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorDeRuteo;
+import net.gaia.vortex.lowlevel.impl.ruteo.ReportePerformanceRuteo;
 
 /**
  * Esta clase representa el optimizador de ruteo que en realidad no optimiza. Sólo envía el mensaje
@@ -28,11 +30,13 @@ public class OptimizadorFlooding implements OptimizadorDeRuteo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorDeRuteo#filtrar(net.gaia.vortex.lowlevel.impl.ruteo.SeleccionDeReceptores)
+	 * @see net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorDeRuteo#debeRecibirMensajeConTag(java.lang.String,
+	 *      net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex)
 	 */
 	@Override
-	public void filtrar(final SeleccionDeReceptores interesadosEnElMensaje) {
-		// En flooding el mensaje les llega a todos
+	public boolean debeRecibirMensajeConTag(final String tagDelMensaje, final ReceptorVortex interesadoEnElTag) {
+		// Todos reciben los mensajes que les interesan
+		return true;
 	}
 
 	/**

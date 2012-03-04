@@ -24,15 +24,6 @@ import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 public interface OptimizadorDeRuteo {
 
 	/**
-	 * De la selección de todos los nodos interesados en el tag, este método filtra excluyendo los
-	 * nodos que no son óptimos, y pueden ser excluidos de la entrega de mensajes
-	 * 
-	 * @param interesadosEnElMensaje
-	 *            La selección de los nodos interesados en el tag
-	 */
-	void filtrar(SeleccionDeReceptores interesadosEnElMensaje);
-
-	/**
 	 * Invocado después de agregar un receptor al nodo
 	 * 
 	 * @param nuevoReceptor
@@ -56,5 +47,16 @@ public interface OptimizadorDeRuteo {
 	 *            El reporte de performance
 	 */
 	void ajustarEnBaseA(ReportePerformanceRuteo reportePerformance);
+
+	/**
+	 * Indica si el receptor pasado debe recibir mensajes con el tag indicado
+	 * 
+	 * @param tagDelMensaje
+	 *            El tag para el cual se desea rutear
+	 * @param interesadoEnElTag
+	 *            El receptor evaluado
+	 * @return false si por razones de optimización el receptor no debe incluirse
+	 */
+	boolean debeRecibirMensajeConTag(String tagDelMensaje, ReceptorVortex interesadoEnElTag);
 
 }

@@ -59,12 +59,22 @@ public class SeleccionDeReceptores {
 	 */
 	public void incluirTodos(final Set<ReceptorVortex> receptores) {
 		for (final ReceptorVortex receptorIncluible : receptores) {
-			// Agregamos todos menos al excluido
-			if (receptorIncluible.equals(receptorExcluido)) {
-				continue;
-			}
-			this.getSeleccionados().add(receptorIncluible);
+			incluirA(receptorIncluible);
 		}
+	}
+
+	/**
+	 * Incluye el receptor pasado en esta selección sólo si no es el receptor excluído
+	 * 
+	 * @param receptorIncluible
+	 *            El receptor a incluir
+	 */
+	public void incluirA(final ReceptorVortex receptorIncluible) {
+		if (receptorIncluible.equals(receptorExcluido)) {
+			// Agregamos todos menos al excluído
+			return;
+		}
+		this.getSeleccionados().add(receptorIncluible);
 	}
 
 	/**
