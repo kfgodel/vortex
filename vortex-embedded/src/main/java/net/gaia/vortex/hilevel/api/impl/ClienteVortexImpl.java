@@ -63,11 +63,6 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	private TagsDelNodo tagsDelNodo;
 	private MemoriaDeEnvios envios;
 
-	/**
-	 * La configuración de este cliente
-	 */
-	private ConfiguracionClienteVortex configuracion;
-
 	public TagsDelNodo getTagsDelNodo() {
 		return tagsDelNodo;
 	}
@@ -114,7 +109,6 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	 */
 	public static ClienteVortexImpl create(final ConfiguracionClienteVortex configuracion) {
 		final ClienteVortexImpl cliente = new ClienteVortexImpl();
-		cliente.configuracion = configuracion;
 		cliente.nodoVortex = configuracion.getNodoVortex();
 		cliente.handlerDeMensajes = new AtomicReference<HandlerDeMensajesApi>(configuracion.getHandlerDeMensajes());
 		cliente.generadorMensajes = GeneradorDeMensajesImpl.create();

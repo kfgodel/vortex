@@ -55,14 +55,14 @@ public class SeleccionarReceptoresWorkUnit implements TareaParaReceptor {
 	 */
 	@Override
 	public void doWork() throws InterruptedException {
-		// Obtenemos el registro del nodo de receptores para buscar interesados
-		final RegistroDeReceptores registro = contexto.getRegistroDeReceptoresDelNodo();
-
 		// Queremos los interesados en el tag del mensaje
 		final MensajeVortex mensaje = this.contexto.getMensaje();
 		LOG.debug("Eligiendo receptores interesados para el mensaje[{}]", mensaje);
 		final List<String> tagsDelMensaje = mensaje.getTagsDestino();
 		final ReceptorVortex emisor = contexto.getEmisor();
+
+		// Obtenemos el registro del nodo de receptores para buscar interesados
+		final RegistroDeReceptores registro = contexto.getRegistroDeReceptoresDelNodo();
 		final SeleccionDeReceptores seleccion = registro.getReceptoresInteresadosMenosA(emisor, tagsDelMensaje);
 		Loggers.RUTEO.debug("{} INTERESADOS en mensaje[{}]: {}", new Object[] { seleccion.getSeleccionados().size(),
 				mensaje, seleccion.getSeleccionados() });

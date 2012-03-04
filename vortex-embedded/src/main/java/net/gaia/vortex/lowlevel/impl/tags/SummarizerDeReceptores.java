@@ -20,6 +20,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
+import net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorDeRuteo;
+import net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorFlooding;
 import net.gaia.vortex.lowlevel.impl.ruteo.ReportePerformanceRuteo;
 import net.gaia.vortex.lowlevel.impl.ruteo.SeleccionDeReceptores;
 import net.gaia.vortex.meta.Decision;
@@ -40,6 +42,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	private SimpleCacheConcurrentMap<String, Set<ReceptorVortex>> receptoresPorTag;
 	private SimpleCacheConcurrentMap<ReceptorVortex, Set<String>> tagsPorReceptor;
 	private TagChangeListener listener;
+	private OptimizadorDeRuteo optimizador;
 
 	public static SummarizerDeReceptores create(final TagChangeListener listener) {
 		final SummarizerDeReceptores summarizer = new SummarizerDeReceptores();
@@ -59,6 +62,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 					}
 				});
 		summarizer.listener = listener;
+		summarizer.optimizador = OptimizadorFlooding.create();
 		return summarizer;
 	}
 
@@ -436,6 +440,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 				tagsPorReceptor.getOrCreateIfNullFor(nuevoReceptor);
 			}
 		});
+		optimizador.nodoAgregado(nuevoReceptor);
 	}
 
 	/**
@@ -460,6 +465,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 				}
 			}
 		});
+		optimizador.filtrar(interesadosEnElMensaje);
 		return interesadosEnElMensaje;
 	}
 
@@ -469,7 +475,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	@Override
 	@HasDependencyOn(Decision.TODAVIA_NO_IMPLEMENTE_EL_AJUSTE_DE_PESOS)
 	public void ajustarPesosDeAcuerdoA(final ReportePerformanceRuteo reportePerformance) {
-		// TODO Por ahora no hacemos nada
+		optimizador.ajustarEnBaseA(reportePerformance);
 	}
 
 	/**
@@ -519,6 +525,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 				tagsPorReceptor.remove(receptorQuitado);
 			}
 		});
+		optimizador.nodoQuitado(receptorQuitado);
 	}
 
 }
