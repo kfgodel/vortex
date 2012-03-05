@@ -21,8 +21,30 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
  */
 public class ReportePerformanceRuteo {
 
+	private MensajeVortex mensaje;
+	private ControlDeRuteo controlDeRuteo;
+
 	public static ReportePerformanceRuteo create(final ControlDeRuteo controlDeRuteo, final MensajeVortex mensaje) {
 		final ReportePerformanceRuteo reporte = new ReportePerformanceRuteo();
+		reporte.mensaje = mensaje;
+		reporte.controlDeRuteo = controlDeRuteo;
 		return reporte;
 	}
+
+	public MensajeVortex getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(final MensajeVortex mensaje) {
+		this.mensaje = mensaje;
+	}
+
+	public ControlDeRuteo getControlDeRuteo() {
+		return controlDeRuteo;
+	}
+
+	public void setControlDeRuteo(final ControlDeRuteo controlDeRuteo) {
+		this.controlDeRuteo = controlDeRuteo;
+	}
+
 }
