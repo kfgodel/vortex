@@ -22,6 +22,8 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.MetamensajeVortex;
 import net.gaia.vortex.protocol.messages.conn.CerrarConexion;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
+import net.gaia.vortex.protocol.messages.routing.AcuseDuplicado;
+import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 import net.gaia.vortex.protocol.messages.tags.ReemplazarTags;
 
 import com.google.common.collect.Lists;
@@ -154,6 +156,34 @@ public class EscenarioDeTest {
 		// Invalidamos el mensaje
 		reemplazo.setTags(null);
 		return mensaje;
+	}
+
+	/**
+	 * Crea un nuevo mensaje de prueba indicando como que se recibió duplicado el mensaje pasado
+	 * 
+	 * @param mensajeDeReferencia
+	 *            El mensaje que se indicará como duplicado
+	 * @return El mensaje de respuesta como duplicado
+	 */
+	public MensajeVortex crearMetamensajeDeDuplicado(final MensajeVortex mensajeDeReferencia) {
+		final AcuseDuplicado acuseDeDuplicado = AcuseDuplicado.create();
+		acuseDeDuplicado.setIdMensajeDuplicado(mensajeDeReferencia.getIdentificacion());
+		final MensajeVortex mensajeDeDuplicado = crearMetamensaje(acuseDeDuplicado);
+		return mensajeDeDuplicado;
+	}
+
+	/**
+	 * Crea un nuevo mensaje de prueba indicando como fallido el mensaje recibido
+	 * 
+	 * @param mensajeDeReferencia
+	 *            El mensaje a indicar como fallido
+	 * @return El mensaje creado
+	 */
+	public MensajeVortex crearMetamensajeDeFallido(final MensajeVortex mensajeDeReferencia) {
+		final AcuseFallaRecepcion acuseDeFallo = AcuseFallaRecepcion.create("ERROR");
+		acuseDeFallo.setIdMensajeFallado(mensajeDeReferencia.getIdentificacion());
+		final MensajeVortex mensajeDeFallido = crearMetamensaje(acuseDeFallo);
+		return mensajeDeFallido;
 	}
 
 }

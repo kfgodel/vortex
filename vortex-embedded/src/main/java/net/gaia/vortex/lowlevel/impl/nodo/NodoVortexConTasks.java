@@ -147,7 +147,7 @@ public class NodoVortexConTasks implements NodoVortex {
 						.create(nodo, reporte);
 				nodo.getProcesador().process(notificacionGlobal);
 			}
-		});
+		}, config.getOptimizador());
 		nodo.procesador = processor;
 		processor.setExceptionHandler(new TaskExceptionHandler() {
 			@Override

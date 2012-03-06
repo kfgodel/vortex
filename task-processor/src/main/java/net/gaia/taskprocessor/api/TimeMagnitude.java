@@ -60,4 +60,32 @@ public class TimeMagnitude {
 	public static TimeMagnitude of(final int quantity, final TimeUnit unit) {
 		return of((long) quantity, unit);
 	}
+
+	/**
+	 * Suma a esta magnitud la cantidad de tiempo indicada por la magnitud pasada y expresando el
+	 * resultado en la unidad de esta instancia
+	 * 
+	 * @param other
+	 *            La magnitud de tiempo añadida a esta
+	 * @return El resultado de la suma de los tiempos en la unidad de esta instancia
+	 */
+	public TimeMagnitude plus(final TimeMagnitude other) {
+		final long otherQuantityInThisUnit = other.getQuantityIn(this.timeUnit);
+		final long summedValue = this.quantity + otherQuantityInThisUnit;
+		final TimeMagnitude result = TimeMagnitude.of(summedValue, this.timeUnit);
+		return result;
+	}
+
+	/**
+	 * Expresa la cantidad de esta instancia en unidades del tipo de unidad de tiempo pasada
+	 * 
+	 * @param referenceUnit
+	 *            El tipo de unidades a utilizar para expresar esta cantidad
+	 * @return La cantidad de esta instancia expresada con la unidad pasada. Si esta cantidad no
+	 *         llega a una unidad de la pasada se devuelve 0
+	 */
+	public long getQuantityIn(final TimeUnit referenceUnit) {
+		final long inOtherUnit = referenceUnit.convert(this.quantity, this.timeUnit);
+		return inOtherUnit;
+	}
 }

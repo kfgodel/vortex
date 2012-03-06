@@ -15,6 +15,8 @@ package net.gaia.vortex.lowlevel.impl.nodo;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TimeMagnitude;
+import net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorDeRuteo;
+import net.gaia.vortex.lowlevel.impl.ruteo.flooding.OptimizadorFlooding;
 
 /**
  * Esta clase representa la info de configuración de un nodo vortex
@@ -25,13 +27,23 @@ public class ConfiguracionDeNodo {
 
 	private TimeMagnitude timeoutDeAcuseDeConsumo;
 	private TimeMagnitude esperaPorAcuseDeConsumo;
+	private OptimizadorDeRuteo optimizador;
 
 	public static ConfiguracionDeNodo create(final int segundosEsperandoAcuseDeConsumo,
 			final int segundosAgregadosPorEsperaDeAcuse) {
 		final ConfiguracionDeNodo configuracion = new ConfiguracionDeNodo();
 		configuracion.timeoutDeAcuseDeConsumo = TimeMagnitude.of(segundosEsperandoAcuseDeConsumo, TimeUnit.SECONDS);
 		configuracion.esperaPorAcuseDeConsumo = TimeMagnitude.of(segundosAgregadosPorEsperaDeAcuse, TimeUnit.SECONDS);
+		configuracion.optimizador = OptimizadorFlooding.create();
 		return configuracion;
+	}
+
+	public OptimizadorDeRuteo getOptimizador() {
+		return optimizador;
+	}
+
+	public void setOptimizador(final OptimizadorDeRuteo optimiziador) {
+		this.optimizador = optimiziador;
 	}
 
 	public TimeMagnitude getTimeoutDeAcuseDeConsumo() {
@@ -70,6 +82,21 @@ public class ConfiguracionDeNodo {
 	 */
 	public static ConfiguracionDeNodo createEnHttp() {
 		return create(10, 60);
+	}
+
+	/**
+	 * Devuelve la cantidad de tiempo que se debe esperar como mínimo para considerar como perdido
+	 * un consumo que no llegó.<br>
+	 * Esta espera es el resultado de la espera por consumo + el timeout por solicitud de consumo no
+	 * contestada.<br>
+	 * Normalmente este valor se usa con un margen extra
+	 * 
+	 * @return El tiempo de espera mínimo en el que se puede pensar que el consumo no llegará desde
+	 *         un nodo
+	 */
+	public TimeMagnitude getEsperaMinimaDeConsumoNoIndicado() {
+		final TimeMagnitude esperaMinima = this.getEsperaPorAcuseDeConsumo().plus(this.getTimeoutDeAcuseDeConsumo());
+		return esperaMinima;
 	}
 
 }

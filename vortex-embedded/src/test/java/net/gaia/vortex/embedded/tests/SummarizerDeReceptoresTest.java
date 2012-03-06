@@ -18,6 +18,7 @@ import java.util.Set;
 import junit.framework.Assert;
 import net.gaia.vortex.lowlevel.impl.receptores.ColaDeMensajesVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
+import net.gaia.vortex.lowlevel.impl.ruteo.flooding.OptimizadorFlooding;
 import net.gaia.vortex.lowlevel.impl.tags.NotificacionDeCambioDeTags;
 import net.gaia.vortex.lowlevel.impl.tags.ReporteCambioDeTags;
 import net.gaia.vortex.lowlevel.impl.tags.SummarizerDeReceptores;
@@ -87,7 +88,7 @@ public class SummarizerDeReceptoresTest {
 	@Before
 	public void createSummarizer() {
 		listener = new TestTagListener();
-		summarizer = SummarizerDeReceptores.create(listener);
+		summarizer = SummarizerDeReceptores.create(listener, OptimizadorFlooding.create());
 	}
 
 	@Test

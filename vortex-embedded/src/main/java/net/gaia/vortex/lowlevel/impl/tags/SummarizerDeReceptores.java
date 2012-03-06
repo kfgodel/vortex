@@ -23,7 +23,6 @@ import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
 import net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorDeRuteo;
 import net.gaia.vortex.lowlevel.impl.ruteo.ReportePerformanceRuteo;
 import net.gaia.vortex.lowlevel.impl.ruteo.SeleccionDeReceptores;
-import net.gaia.vortex.lowlevel.impl.ruteo.flooding.OptimizadorFlooding;
 import net.gaia.vortex.meta.Decision;
 import ar.com.dgarcia.coding.caching.Instantiator;
 import ar.com.dgarcia.coding.caching.SimpleCacheConcurrentMap;
@@ -44,7 +43,8 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 	private TagChangeListener listener;
 	private OptimizadorDeRuteo optimizador;
 
-	public static SummarizerDeReceptores create(final TagChangeListener listener) {
+	public static SummarizerDeReceptores create(final TagChangeListener listener,
+			final OptimizadorDeRuteo optimizadorDeRuteo) {
 		final SummarizerDeReceptores summarizer = new SummarizerDeReceptores();
 		summarizer.modificationLock = new ReentrantLock();
 		summarizer.tagsPorReceptor = new SimpleCacheConcurrentMap<ReceptorVortex, Set<String>>(
@@ -62,7 +62,7 @@ public class SummarizerDeReceptores implements RegistroDeReceptores, TagSummariz
 					}
 				});
 		summarizer.listener = listener;
-		summarizer.optimizador = OptimizadorFlooding.create();
+		summarizer.optimizador = optimizadorDeRuteo;
 		return summarizer;
 	}
 
