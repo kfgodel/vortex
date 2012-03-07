@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorDeRuteo;
-import net.gaia.vortex.lowlevel.impl.ruteo.flooding.OptimizadorFlooding;
+import net.gaia.vortex.lowlevel.impl.ruteo.jajo.OptimizadorJaJo;
 
 /**
  * Esta clase representa la info de configuración de un nodo vortex
@@ -34,7 +34,7 @@ public class ConfiguracionDeNodo {
 		final ConfiguracionDeNodo configuracion = new ConfiguracionDeNodo();
 		configuracion.timeoutDeAcuseDeConsumo = TimeMagnitude.of(segundosEsperandoAcuseDeConsumo, TimeUnit.SECONDS);
 		configuracion.esperaPorAcuseDeConsumo = TimeMagnitude.of(segundosAgregadosPorEsperaDeAcuse, TimeUnit.SECONDS);
-		configuracion.optimizador = OptimizadorFlooding.create();
+		configuracion.optimizador = OptimizadorJaJo.create();
 		return configuracion;
 	}
 
