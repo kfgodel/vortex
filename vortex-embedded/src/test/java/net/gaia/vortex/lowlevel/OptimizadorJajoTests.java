@@ -15,11 +15,12 @@ package net.gaia.vortex.lowlevel;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TimeMagnitude;
+import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
 import net.gaia.vortex.lowlevel.impl.nodo.ConfiguracionDeNodo;
 import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
-import net.gaia.vortex.lowlevel.impl.ruteo.flooding.OptimizadorFlooding;
+import net.gaia.vortex.lowlevel.impl.ruteo.jajo.OptimizadorJaJo;
 import net.gaia.vortex.protocol.messages.ContenidoVortex;
 import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
@@ -35,7 +36,7 @@ import org.junit.Test;
  * 
  * @author D. García
  */
-public class OptimizadorFloodingTests {
+public class OptimizadorJajoTests {
 
 	private NodoVortexConTasks nodo;
 	private EscenarioDeTest escenarios;
@@ -43,7 +44,7 @@ public class OptimizadorFloodingTests {
 	@Before
 	public void crearNodo() {
 		final ConfiguracionDeNodo config = ConfiguracionDeNodo.createEnMemoria();
-		config.setOptimizador(OptimizadorFlooding.create());
+		config.setOptimizador(OptimizadorJaJo.create());
 		nodo = NodoVortexConTasks.create(config, "NodoTest");
 		escenarios = new EscenarioDeTest();
 	}
@@ -54,7 +55,7 @@ public class OptimizadorFloodingTests {
 	}
 
 	@Test
-	public void deberiaRecibirUnSegundoMensajeConMismoTagAPesarDeIndicarDuplicadoElPrimero() {
+	public void noDeberiaRecibirUnSegundoMensajeConMismoTagSiIndicaDuplicadoElPrimero() {
 		// Creamos la sesión para el envío e indicamos el tag que enviamos
 		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
 		final SesionVortex sesionEmisor = nodo.crearNuevaSesion(encoladorDelEmisor);
@@ -80,10 +81,10 @@ public class OptimizadorFloodingTests {
 		sesionReceptor.enviar(escenarios.crearMetamensajeDeDuplicado(primeroRecibido));
 
 		// Esperamos el acuse de consumo del emisor y verificamos que el receptor indicó duplicado
-		final MensajeVortex mensajeDeAcuseDeConsumo = encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude.of(2,
-				TimeUnit.SECONDS));
+		final MensajeVortex mensajeDeAcuseDeConsumoDelPrimero = encoladorDelEmisor.esperarProximoMensaje(TimeMagnitude
+				.of(2, TimeUnit.SECONDS));
 
-		final ContenidoVortex contenido = mensajeDeAcuseDeConsumo.getContenido();
+		final ContenidoVortex contenido = mensajeDeAcuseDeConsumoDelPrimero.getContenido();
 		final AcuseConsumo acuseDeConsumo = (AcuseConsumo) contenido.getValor();
 		Assert.assertEquals("Debería existir un duplicado", 1L, acuseDeConsumo.getCantidadDuplicados().longValue());
 
@@ -91,14 +92,35 @@ public class OptimizadorFloodingTests {
 		final MensajeVortex segundoMensaje = escenarios.crearMensajeDeTestConIDNuevo("TAG1");
 		sesionEmisor.enviar(segundoMensaje);
 
-		// Verificamos que el receptor recibe el segundo sin importar el primero duplicado
-		final MensajeVortex segundoRecibido = encoladorReceptor.esperarProximoMensaje(TimeMagnitude.of(2,
-				TimeUnit.SECONDS));
-		Assert.assertSame(segundoMensaje, segundoRecibido);
+		// Verificamos que el receptor NO recibe el segundo mensaje
+		try {
+			encoladorReceptor.esperarProximoMensaje(TimeMagnitude.of(2, TimeUnit.SECONDS));
+			Assert.fail("No debería ejecutarse la recepción");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperabamos
+		}
+
+		// Esperamos el acuse de consumo del emisor y verificamos que el segundo no le llego a nadie
+		final TimeMagnitude esperaMinimaPorPerdido = nodo.getConfiguracion().getEsperaMinimaDeConsumoNoIndicado();
+		final TimeMagnitude esperaMaximaDelTest = esperaMinimaPorPerdido.plus(TimeMagnitude.of(2, TimeUnit.SECONDS));
+		final MensajeVortex mensajeDeAcuseDeConsumoDelSegundo = encoladorDelEmisor
+				.esperarProximoMensaje(esperaMaximaDelTest);
+
+		final ContenidoVortex contenidoDelSegundo = mensajeDeAcuseDeConsumoDelSegundo.getContenido();
+		final AcuseConsumo acuseDeConsumoDelSegundo = (AcuseConsumo) contenidoDelSegundo.getValor();
+		Assert.assertEquals("Ni siquiera deberían haber interesados para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadInteresados().longValue());
+		Assert.assertEquals("No deberían haber consumidos para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadConsumidos().longValue());
+		Assert.assertEquals("No deberían haber duplicados para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadDuplicados().longValue());
+		Assert.assertEquals("No deberían haber fallidos para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadFallados().longValue());
+
 	}
 
 	@Test
-	public void deberiaRecibirUnSegundoMensajeConMismoTagAPesarDeIndicarFallidoElPrimero() {
+	public void noDeberiaRecibirUnSegundoMensajeConMismoTagSiIndicaFallidoElPrimero() {
 		// Creamos la sesión para el envío e indicamos el tag que enviamos
 		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
 		final SesionVortex sesionEmisor = nodo.crearNuevaSesion(encoladorDelEmisor);
@@ -135,14 +157,35 @@ public class OptimizadorFloodingTests {
 		final MensajeVortex segundoMensaje = escenarios.crearMensajeDeTestConIDNuevo("TAG1");
 		sesionEmisor.enviar(segundoMensaje);
 
-		// Verificamos que el receptor recibe el segundo sin importar el primero duplicado
-		final MensajeVortex segundoRecibido = encoladorReceptor.esperarProximoMensaje(TimeMagnitude.of(2,
-				TimeUnit.SECONDS));
-		Assert.assertSame(segundoMensaje, segundoRecibido);
+		// Verificamos que el receptor NO recibe el segundo mensaje
+		try {
+			encoladorReceptor.esperarProximoMensaje(TimeMagnitude.of(2, TimeUnit.SECONDS));
+			Assert.fail("No debería ejecutarse la recepción");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperabamos
+		}
+
+		// Esperamos el acuse de consumo del emisor y verificamos que el segundo no le llego a nadie
+		final TimeMagnitude esperaMinimaPorPerdido = nodo.getConfiguracion().getEsperaMinimaDeConsumoNoIndicado();
+		final TimeMagnitude esperaMaximaDelTest = esperaMinimaPorPerdido.plus(TimeMagnitude.of(2, TimeUnit.SECONDS));
+		final MensajeVortex mensajeDeAcuseDeConsumoDelSegundo = encoladorDelEmisor
+				.esperarProximoMensaje(esperaMaximaDelTest);
+
+		final ContenidoVortex contenidoDelSegundo = mensajeDeAcuseDeConsumoDelSegundo.getContenido();
+		final AcuseConsumo acuseDeConsumoDelSegundo = (AcuseConsumo) contenidoDelSegundo.getValor();
+		Assert.assertEquals("Ni siquiera deberían haber interesados para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadInteresados().longValue());
+		Assert.assertEquals("No deberían haber consumidos para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadConsumidos().longValue());
+		Assert.assertEquals("No deberían haber duplicados para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadDuplicados().longValue());
+		Assert.assertEquals("No deberían haber fallidos para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadFallados().longValue());
+
 	}
 
 	@Test
-	public void deberiaRecibirUnSegundoMensajeConMismoTagAPesarDeNoDevolverConsumoDelPrimero() {
+	public void noDeberiaRecibirUnSegundoMensajeConMismoTagSiNoIndicaConsumoDelPrimero() {
 		// Creamos la sesión para el envío e indicamos el tag que enviamos
 		final EncoladorDeMensajesHandler encoladorDelEmisor = EncoladorDeMensajesHandler.create();
 		final SesionVortex sesionEmisor = nodo.crearNuevaSesion(encoladorDelEmisor);
@@ -180,10 +223,28 @@ public class OptimizadorFloodingTests {
 		final MensajeVortex segundoMensaje = escenarios.crearMensajeDeTestConIDNuevo("TAG1");
 		sesionEmisor.enviar(segundoMensaje);
 
-		// Verificamos que el receptor recibe el segundo sin importar el primero duplicado
-		final MensajeVortex segundoRecibido = encoladorReceptor.esperarProximoMensaje(TimeMagnitude.of(2,
-				TimeUnit.SECONDS));
-		Assert.assertSame(segundoMensaje, segundoRecibido);
+		// Verificamos que el receptor NO recibe el segundo mensaje
+		try {
+			encoladorReceptor.esperarProximoMensaje(TimeMagnitude.of(2, TimeUnit.SECONDS));
+			Assert.fail("No debería ejecutarse la recepción");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperabamos
+		}
+
+		final MensajeVortex mensajeDeAcuseDeConsumoDelSegundo = encoladorDelEmisor
+				.esperarProximoMensaje(esperaMaximaDelTest);
+
+		final ContenidoVortex contenidoDelSegundo = mensajeDeAcuseDeConsumoDelSegundo.getContenido();
+		final AcuseConsumo acuseDeConsumoDelSegundo = (AcuseConsumo) contenidoDelSegundo.getValor();
+		Assert.assertEquals("Ni siquiera deberían haber interesados para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadInteresados().longValue());
+		Assert.assertEquals("No deberían haber consumidos para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadConsumidos().longValue());
+		Assert.assertEquals("No deberían haber duplicados para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadDuplicados().longValue());
+		Assert.assertEquals("No deberían haber fallidos para el segundo", 0L, acuseDeConsumoDelSegundo
+				.getCantidadFallados().longValue());
+
 	}
 
 }
