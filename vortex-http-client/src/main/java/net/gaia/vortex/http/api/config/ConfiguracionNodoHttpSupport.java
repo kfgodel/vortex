@@ -25,9 +25,9 @@ import ar.dgarcia.http.simple.api.HttpResponseProvider;
 public abstract class ConfiguracionNodoHttpSupport implements ConfiguracionDeNodoRemotoHttp {
 
 	/**
-	 * Cantidad default de segundos sin actividad
+	 * Cantidad default de segundos sin actividad (En android no hay minutos, por eso uso segundos)
 	 */
-	public static final long DEFAULT_MAX_INACTIVITY_SECONDS = TimeUnit.SECONDS.convert(10, TimeUnit.MINUTES);
+	public static final long DEFAULT_MAX_INACTIVITY_SECONDS = TimeUnit.SECONDS.convert(10 * 60, TimeUnit.SECONDS);
 	public static final long DEFAULT_POLLING_SECONDS = TimeUnit.SECONDS.convert(30, TimeUnit.SECONDS);
 
 	private HttpResponseProvider httpResponseProvider;
