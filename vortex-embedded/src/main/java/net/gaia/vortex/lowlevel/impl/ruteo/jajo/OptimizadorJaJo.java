@@ -66,6 +66,10 @@ public class OptimizadorJaJo implements OptimizadorDeRuteo {
 	public void nodoQuitado(final ReceptorVortex receptorQuitado) {
 		// Obtenemos los tags que deberían re-optimizarse
 		final FeedbackJajoDeRuteo feedback = this.feedbacksPorReceptor.remove(receptorQuitado);
+		if (feedback == null) {
+			// Ya fue quitado
+			return;
+		}
 		final Set<String> tagsInvalidadosAlQuitar = feedback.getTagsConDecisionDeEnvio();
 		if (!tagsInvalidadosAlQuitar.isEmpty()) {
 			Loggers.RUTEO.debug("OPTIM. Tags invalidados{} por receptor perdido[{}]", tagsInvalidadosAlQuitar,
