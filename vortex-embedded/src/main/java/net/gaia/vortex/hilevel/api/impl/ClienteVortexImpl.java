@@ -179,6 +179,7 @@ public class ClienteVortexImpl implements ClienteVortex, MensajeVortexHandler {
 	private boolean contestarAlNodoSiAceptamos(final MensajeVortex nuevoMensaje) {
 		final boolean aceptamosElMensaje = filtroDeMensajes.aceptaA(nuevoMensaje);
 		final AcuseConsumo acuseConsumo = AcuseConsumo.create();
+		acuseConsumo.setIdMensajeConsumido(nuevoMensaje.getIdentificacion());
 		if (aceptamosElMensaje) {
 			acuseConsumo.setCantidadConsumidos(1L);
 		}
