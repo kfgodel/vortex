@@ -6,7 +6,7 @@
 	<groupId>net.gaia</groupId>
 	<artifactId>vortex-j2ee</artifactId>
 	<packaging>war</packaging>
-	<version>0.2.5-SNAPSHOT</version>
+	<version>0.2.5</version>
 	<name>Gaia - Vortex</name>
 
 	<properties>
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>net.gaia</groupId>
 			<artifactId>vortex-embedded</artifactId>
-			<version>0.2.4</version>
+			<version>0.2.5</version>
 		</dependency>
 		
 		<!-- Conversion a JSON de vortex-->
