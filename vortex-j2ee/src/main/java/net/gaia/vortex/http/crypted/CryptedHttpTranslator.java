@@ -12,7 +12,10 @@
  */
 package net.gaia.vortex.http.crypted;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -21,12 +24,15 @@ import net.gaia.vortex.dependencies.json.JsonConversionException;
 import net.gaia.vortex.externals.http.OperacionHttp;
 import net.gaia.vortex.http.controller.HttpTranslator;
 import net.gaia.vortex.http.controller.NakedHttpTranslator;
+import net.gaia.vortex.http.controller.RemoteSessionImpl;
+import net.gaia.vortex.http.controller.SessionCreationListener;
 import net.gaia.vortex.protocol.http.crypted.ConcesionDeSesionYClave;
 import net.gaia.vortex.protocol.http.crypted.PedidoDeSesionYClave;
 import net.gaia.vortex.protocol.http.crypted.WrapperEncriptado;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -47,7 +53,7 @@ import com.tenpines.commons.exceptions.UnhandledConditionException;
  */
 @Component
 @Scope("singleton")
-public class CryptedHttpTranslator implements HttpTranslator {
+public class CryptedHttpTranslator implements HttpTranslator, SessionCreationListener, InitializingBean {
 	private static final Logger LOG = LoggerFactory.getLogger(CryptedHttpTranslator.class);
 
 	@Autowired
@@ -60,6 +66,7 @@ public class CryptedHttpTranslator implements HttpTranslator {
 
 	private final Map<String, SesionEncriptada> sesionesPorId;
 	private final AtomicLong secuencia;
+	private final ThreadLocal<SesionEncriptada> sesionEnContexto;
 
 	/**
 	 * Claves de este servidor
@@ -71,6 +78,7 @@ public class CryptedHttpTranslator implements HttpTranslator {
 		this.clavesDelServidor = encryptor.generateKeys();
 		this.sesionesPorId = new ConcurrentHashMap<String, SesionEncriptada>();
 		this.secuencia = new AtomicLong(0);
+		this.sesionEnContexto = new ThreadLocal<SesionEncriptada>();
 	}
 
 	/**
@@ -89,6 +97,9 @@ public class CryptedHttpTranslator implements HttpTranslator {
 			LOG.warn("Se recibió un request encriptado sin sesion asociada. Devolviendo vacío");
 			return;
 		}
+		// Registramos que hubo actividad para que no sea descartada
+		sesionDelCliente.registerActivity();
+
 		// Desencriptamos el mensaje original
 		final String wrapperDesencriptado = desencriptar(wrapperEncriptado.getContenido());
 
@@ -96,7 +107,33 @@ public class CryptedHttpTranslator implements HttpTranslator {
 		final CryptoKey claveEncriptacionDelCliente = sesionDelCliente.getClavePublica();
 		final OperacionHttpEncriptada operacionEncriptada = OperacionHttpEncriptada.create(wrapperDesencriptado,
 				pedido, encryptor, claveEncriptacionDelCliente);
-		translator.translate(operacionEncriptada);
+
+		// Procesamos el pedido pero ponemos la sesión encriptada como contexto para las sesiones
+		// creadas
+		ponerSesionEnContextoGlobal(sesionDelCliente);
+		try {
+			translator.translate(operacionEncriptada);
+		} finally {
+			sacarSesionDeContextoGlobal();
+		}
+	}
+
+	/**
+	 * Quita la sesión del threadlocal
+	 */
+	private void sacarSesionDeContextoGlobal() {
+		this.sesionEnContexto.remove();
+	}
+
+	/**
+	 * Pone la sesión pasada en el thread local de manera que la sesion vortex tenga una sesión
+	 * ecriptada asociada al crearse
+	 * 
+	 * @param sesionDelCliente
+	 *            La sesión a poner en el threadlocal
+	 */
+	private void ponerSesionEnContextoGlobal(final SesionEncriptada sesionDelCliente) {
+		this.sesionEnContexto.set(sesionDelCliente);
 	}
 
 	/**
@@ -236,4 +273,54 @@ public class CryptedHttpTranslator implements HttpTranslator {
 		return pedidoDeSesion;
 	}
 
+	/**
+	 * @see net.gaia.vortex.http.controller.SessionCreationListener#onSessionCreated(net.gaia.vortex.http.controller.RemoteSessionImpl)
+	 */
+	@Override
+	public void onSessionCreated(final RemoteSessionImpl sesionCreada) {
+		final SesionEncriptada sesionEncriptada = this.sesionEnContexto.get();
+		if (sesionEncriptada == null) {
+			return;
+		}
+		// Asociamos la sesión encriptada con la sesión vortex creada
+		sesionEncriptada.agregarSesionVortex(sesionCreada);
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.controller.SessionCreationListener#onSesionRemoved(net.gaia.vortex.http.controller.RemoteSessionImpl)
+	 */
+	@Override
+	public void onSesionRemoved(final RemoteSessionImpl sesionVortex) {
+		// Eliminamos la sesión de todas las encriptadas que puedan contenerla (debería ser sólo
+		// una)
+		final Collection<SesionEncriptada> sesionesEncriptadas = this.sesionesPorId.values();
+		for (final SesionEncriptada sesionEncriptada : sesionesEncriptadas) {
+			sesionEncriptada.quitarSesionVortex(sesionVortex);
+		}
+	}
+
+	/**
+	 * Limpia las sesiones actuales que ya no contienen sesiones vortex
+	 */
+	public void removeOldCryptedSessions() {
+		final Iterator<Entry<String, SesionEncriptada>> iterator = this.sesionesPorId.entrySet().iterator();
+		while (iterator.hasNext()) {
+			final Map.Entry<String, SesionEncriptada> entry = iterator.next();
+			final SesionEncriptada encriptada = entry.getValue();
+			if (encriptada.esVieja()) {
+				iterator.remove();
+				LOG.info("Sesión encriptada eliminada por vieja: {}", encriptada);
+			}
+		}
+
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// Hacemos que el controler nos notifique de las sesiones creadas
+		this.translator.getRemoteController().setListener(this);
+	}
 }

@@ -6,7 +6,7 @@
 	<groupId>net.gaia</groupId>
 	<artifactId>vortex-j2ee</artifactId>
 	<packaging>war</packaging>
-	<version>0.2.4</version>
+	<version>0.2.5-SNAPSHOT</version>
 	<name>Gaia - Vortex</name>
 
 	<properties>

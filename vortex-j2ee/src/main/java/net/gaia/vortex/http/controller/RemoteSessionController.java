@@ -61,11 +61,20 @@ public class RemoteSessionController {
 	private final NodoVortex nodoVortex;
 	private final AtomicLong secuenciadorIds = new AtomicLong(1);
 	private final NoRemoteSession sinSesionVortex;
+	private SessionCreationListener listener;
 
 	public RemoteSessionController() {
 		final ConfiguracionDeNodo configuracionHttp = ConfiguracionDeNodo.createEnHttp();
 		nodoVortex = NodoVortexConTasks.create(configuracionHttp, "nodo-http");
 		sinSesionVortex = NoRemoteSession.create(nodoVortex);
+	}
+
+	public SessionCreationListener getListener() {
+		return listener;
+	}
+
+	public void setListener(final SessionCreationListener listener) {
+		this.listener = listener;
 	}
 
 	/**
@@ -146,10 +155,13 @@ public class RemoteSessionController {
 	 * 
 	 * @return La nueva sesión creada
 	 */
-	public RemoteSessionImpl createSession() {
+	private RemoteSessionImpl createSession() {
 		final RemoteSessionImpl sesionCreada = createRemoteSession();
 		final Long idDeLaSesionCreada = sesionCreada.getSessionId();
 		remoteSessions.put(idDeLaSesionCreada, sesionCreada);
+		if (listener != null) {
+			listener.onSessionCreated(sesionCreada);
+		}
 		return sesionCreada;
 	}
 
@@ -181,6 +193,9 @@ public class RemoteSessionController {
 				LOG.info("Eliminando sesión vieja: {}", remoteSession);
 				iterator.remove();
 				remoteSession.cerrar();
+				if (listener != null) {
+					listener.onSesionRemoved(remoteSession);
+				}
 			}
 		}
 	}

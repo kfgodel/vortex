@@ -11,17 +11,19 @@
 		Este archivo define los elementos generales de la configuración de
 		quartz para poder ejecutar ciertas cosas en el tiempo
 	-->
+
+
 	
-	<!-- Definicion de la tarea para ejecutar el método de limpieza de receptores -->
-	<bean id="receptoresJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	<!-- Definición de la tarea de limpieza de sesiones Vortex -->
+	<bean id="removeOldVortexSessionsJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 	  <property name="targetObject" ref="remoteSessionController"/>
 	  <property name="targetMethod" value="removeOldRemoteSessions"/>
 	  <property name="concurrent" value="false"/>
 	</bean>
 	
-	<!-- Definimos cuando invocar la limpieza de receptores -->
-	<bean id="receptoresTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-  		<property name="jobDetail" ref="receptoresJobDetail"/>
+	<!-- Definimos del momento de la limpieza de sesiones Vortex -->
+	<bean id="removeOldVortexSessionsTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+  		<property name="jobDetail" ref="removeOldVortexSessionsJobDetail"/>
 		<!-- Esperamos 5s para empezar -->
   		<property name="startDelay" value="5000"/>
 		<!-- Ejecutamos cada 5 min -->
@@ -29,11 +31,31 @@
 	</bean>
 	
 	
+	
+	<!-- Definición de la tarea de limpieza de sesiones encriptadas -->
+	<bean id="removeOldCryptedSessionsJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	  <property name="targetObject" ref="cryptedHttpTranslator"/>
+	  <property name="targetMethod" value="removeOldCryptedSessions"/>
+	  <property name="concurrent" value="false"/>
+	</bean>
+	
+	<!-- Definimos del momento de la limpieza de sesiones encriptadas -->
+	<bean id="removeOldCryptedSessionsTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+  		<property name="jobDetail" ref="removeOldCryptedSessionsJobDetail"/>
+		<!-- Esperamos 5s para empezar -->
+  		<property name="startDelay" value="5000"/>
+		<!-- Ejecutamos cada 5 min -->
+  		<property name="repeatInterval" value="300000"/>
+	</bean>
+	
+	
+	
 	<!-- Definimos el ejecutor de las tareas -->
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 	  <property name="triggers">
 	    <list>
-	      <ref bean="receptoresTrigger"/>
+	      <ref bean="removeOldVortexSessionsTrigger"/>
+	      <ref bean="removeOldCryptedSessionsTrigger"/>
 	    </list>
 	  </property>
 	</bean>

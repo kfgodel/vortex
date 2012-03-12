@@ -12,6 +12,13 @@
  */
 package net.gaia.vortex.http.crypted;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import net.gaia.vortex.externals.time.VortexTime;
+import net.gaia.vortex.http.controller.RemoteSessionImpl;
+
+import org.joda.time.DateTime;
+
 import ar.dgarcia.encryptor.api.CryptoKey;
 
 import com.google.common.base.Objects;
@@ -28,6 +35,10 @@ public class SesionEncriptada {
 
 	private String sessionId;
 	public static final String sessionId_FIELD = "sessionId";
+
+	private ConcurrentLinkedQueue<RemoteSessionImpl> sesionesVortex;
+
+	private DateTime lastActivity;
 
 	/**
 	 * Devuelve la clave publicada por el cliente para enviarle mensajes
@@ -50,7 +61,13 @@ public class SesionEncriptada {
 		final SesionEncriptada sesion = new SesionEncriptada();
 		sesion.clavePublica = clave;
 		sesion.sessionId = nuevoId;
+		sesion.sesionesVortex = new ConcurrentLinkedQueue<RemoteSessionImpl>();
+		sesion.lastActivity = VortexTime.currentMoment();
 		return sesion;
+	}
+
+	public ConcurrentLinkedQueue<RemoteSessionImpl> getSesionesVortex() {
+		return sesionesVortex;
 	}
 
 	/**
@@ -60,5 +77,64 @@ public class SesionEncriptada {
 	public String toString() {
 		return Objects.toStringHelper(this).add(sessionId_FIELD, sessionId).add(clavePublica_FIELD, clavePublica)
 				.toString();
+	}
+
+	/**
+	 * Agrega la sesion vortex pasada como parte de las sesiones creadas en esta sesión encriptada
+	 * 
+	 * @param sesionCreada
+	 *            La sesión creada
+	 */
+	public void agregarSesionVortex(final RemoteSessionImpl sesionCreada) {
+		getSesionesVortex().add(sesionCreada);
+	}
+
+	/**
+	 * Indica si esta sesión encriptada está asociada a la sesión vortex pasada
+	 * 
+	 * @param vortexSession
+	 *            Sesión vortex a comprobar
+	 * @return true si esta sesión es contenedora de la sesión vortex
+	 */
+	public boolean poseeA(final RemoteSessionImpl vortexSession) {
+		final boolean esMia = this.getSesionesVortex().contains(vortexSession);
+		return esMia;
+	}
+
+	/**
+	 * Elimina la sesión vortex de esta sesión encriptada si es que la contiene
+	 * 
+	 * @param sesionVortex
+	 * @return
+	 */
+	public boolean quitarSesionVortex(final RemoteSessionImpl sesionVortex) {
+		final boolean removed = this.getSesionesVortex().remove(sesionVortex);
+		return removed;
+	}
+
+	/**
+	 * Indica si esta sesión se puede considerar vieja. Es vieja si pasó más de media hora sin tener
+	 * sesiones vortex
+	 * 
+	 * @return false si aun tiene sesiones vortex, o si todavía no paso 30min de inactividad. True
+	 *         si ya no tiene sesiones y pasaron 30min desde la ultima actividad
+	 */
+	public boolean esVieja() {
+		if (!this.getSesionesVortex().isEmpty()) {
+			// Aun tiene sesiones
+			return false;
+		}
+		// Vemos si paso media hora desde ultima actividada
+		final DateTime momentoEnvejecimiento = lastActivity.plusMinutes(30);
+		DateTime now = VortexTime.currentMoment();
+		final boolean yaPasoMediaHoraSinActividad = now.isAfter(momentoEnvejecimiento);
+		return yaPasoMediaHoraSinActividad;
+	}
+
+	/**
+	 * Registra en esta sesión que se produjo actividad en cuanto a mensajes
+	 */
+	public void registerActivity() {
+		this.lastActivity = VortexTime.currentMoment();
 	}
 }
