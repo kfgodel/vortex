@@ -51,19 +51,37 @@ public class ClimateStation {
 	 * @return
 	 */
 	private ClimateMeasure obtainCurrentMeasure() {
+		final DataSet current = internalReadMeasure();
+		final ClimateMeasure measure = ClimateMeasure.create(current);
+		return measure;
+	}
+
+	/**
+	 * Lee la medición actual de la estación
+	 * 
+	 * @return La medición de wunderground
+	 */
+	private DataSet internalReadMeasure() {
 		final HttpDataReaderService dataReader = new HttpDataReaderService();
 		dataReader.setWeatherStation(this.internalStation);
 		final DataSet current = dataReader.getCurrentData();
+		return current;
+	}
 
-		final Date measurementMoment = current.getDateTime();
-		final Integer humidity = current.getHumidity();
-		final Double pressure = current.getPressurehPa();
-		final Double temperature = current.getTemperature();
-		final ClimateMeasure measure = ClimateMeasure.create(measurementMoment);
-		measure.setHumidity(humidity);
-		measure.setPressure(pressure);
-		measure.setTemperature(temperature);
-		return measure;
+	/**
+	 * Actualiza la medición del clima de esta estación si existe una más moderna
+	 * 
+	 * @return Indica si la medición fue reemplazada
+	 */
+	public boolean refresh() {
+		final DataSet current = internalReadMeasure();
+		final Date newMeasureMoment = current.getDateTime();
+		if (lastMeasure != null && lastMeasure.getMeasurementMoment().equals(newMeasureMoment.getTime())) {
+			// Es la misma medición, no tiene sentido reemplazarla
+			return false;
+		}
+		lastMeasure = ClimateMeasure.create(current);
+		return true;
 	}
 
 }

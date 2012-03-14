@@ -12,7 +12,9 @@
  */
 package net.gaia.vortex.climate.externals;
 
-import java.util.Date;
+import com.google.common.base.Objects;
+
+import de.mbenning.weather.wunderground.api.domain.DataSet;
 
 /**
  * Esta clase representa una medición metereológica con variables climáticas y sus valores
@@ -21,17 +23,21 @@ import java.util.Date;
  */
 public class ClimateMeasure {
 
-	private Date measurementMoment;
+	private Long measurementMoment;
+	public static final String measurementMoment_FIELD = "measurementMoment";
 	private Double temperature;
+	public static final String temperature_FIELD = "temperature";
 	private Integer humidity;
+	public static final String humidity_FIELD = "humidity";
 	private Double pressure;
+	public static final String pressure_FIELD = "pressure";
 
 	/**
 	 * Devuelve el momento de medición de esta medida
 	 * 
 	 * @return
 	 */
-	public Date getMeasurementMoment() {
+	public Long getMeasurementMoment() {
 		return measurementMoment;
 	}
 
@@ -62,13 +68,16 @@ public class ClimateMeasure {
 		return pressure;
 	}
 
-	public static ClimateMeasure create(final Date measurementMoment) {
+	public static ClimateMeasure create(final DataSet current) {
 		final ClimateMeasure measure = new ClimateMeasure();
-		measure.measurementMoment = measurementMoment;
+		measure.measurementMoment = current.getDateTime().getTime();
+		measure.humidity = current.getHumidity();
+		measure.pressure = current.getPressurehPa();
+		measure.temperature = current.getTemperature();
 		return measure;
 	}
 
-	public void setMeasurementMoment(final Date measurementMoment) {
+	public void setMeasurementMoment(final Long measurementMoment) {
 		this.measurementMoment = measurementMoment;
 	}
 
@@ -84,4 +93,13 @@ public class ClimateMeasure {
 		this.pressure = pressure;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(measurementMoment_FIELD, measurementMoment)
+				.add(temperature_FIELD, temperature).add(pressure_FIELD, pressure).add(humidity_FIELD, humidity)
+				.toString();
+	}
 }

@@ -12,8 +12,6 @@
  */
 package net.gaia.vortex.climate.tests;
 
-import java.util.Date;
-
 import net.gaia.vortex.climate.externals.ClimateMeasure;
 import net.gaia.vortex.climate.externals.ClimateServer;
 import net.gaia.vortex.climate.externals.ClimateStation;
@@ -39,7 +37,7 @@ public class ClimateServerApiTest {
 		final ClimateMeasure lastMeasure = station.getLastMeasure();
 		Assert.assertNotNull(lastMeasure);
 
-		final Date measurementMoment = lastMeasure.getMeasurementMoment();
+		final Long measurementMoment = lastMeasure.getMeasurementMoment();
 		Assert.assertNotNull(measurementMoment);
 
 		final Double currentTemperature = lastMeasure.getTemperature();
@@ -50,5 +48,14 @@ public class ClimateServerApiTest {
 
 		final Double currentPressure = lastMeasure.getPressure();
 		Assert.assertNotNull(currentPressure);
+	}
+
+	@Test
+	public void deberiaPermitirActualizarLaUltimaMedicion() {
+		final ClimateServer server = ClimateServer.create();
+		final ClimateStation station = server.getStation(KnownClimateStation.BUENOS_AIRES);
+		final boolean replaced = station.refresh();
+		// La primera vez siempre reemplaza
+		Assert.assertTrue(replaced);
 	}
 }

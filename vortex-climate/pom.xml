@@ -25,6 +25,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
+              <mainClass>net.gaia.vortex.climate.VortexClimateMain</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -50,16 +51,55 @@
           <wtpversion>2.0</wtpversion>
         </configuration>
       </plugin>
+      
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <archive>
+            <manifest>
+              <mainClass>net.gaia.vortex.climate.VortexClimateMain</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id> <!-- this is used for inheritance merges -->
+            <phase>package</phase> <!-- bind to the packaging phase -->
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+       </plugin>
+       
     </plugins>
   </build>
   <dependencies>
   
+  	<!-- Permite conocer el clima actual usando HTTP sobre los servidores de wunderground -->
 	<dependency>
 		<groupId>de.mbenning.weather.wunderground</groupId>
 		<artifactId>wunderground-core</artifactId>
 		<version>1.0.6</version>
     </dependency>
-  
+    
+    <!-- Permite la comunicación usando Vortex -->
+    <dependency>
+	  <groupId>net.gaia</groupId>
+	  <artifactId>vortex-http-client</artifactId>
+	  <version>0.1</version>
+    </dependency>
+
+	<!-- Permite ejecutar tareas en un motorcito de threads -->    
+	<dependency>
+	  <groupId>net.gaia</groupId>
+	  <artifactId>task-processor</artifactId>
+	  <version>0.2</version>
+    </dependency>  
   
     <dependency>
       <groupId>com.google.guava</groupId>
