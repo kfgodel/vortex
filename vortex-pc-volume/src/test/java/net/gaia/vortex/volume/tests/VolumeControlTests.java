@@ -31,6 +31,7 @@ import org.junit.Test;
  */
 public class VolumeControlTests {
 
+	@Ignore
 	@Test
 	public void deberiaIndicarCualEsElVolumenActual() throws LineUnavailableException {
 		final Mixer.Info[] mixers = AudioSystem.getMixerInfo();

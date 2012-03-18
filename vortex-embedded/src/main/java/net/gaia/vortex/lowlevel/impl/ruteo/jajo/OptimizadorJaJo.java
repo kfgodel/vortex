@@ -117,7 +117,7 @@ public class OptimizadorJaJo implements OptimizadorDeRuteo {
 		// A los fallidos los marcamos como rutas incorrectas
 		final Set<ReceptorVortex> ruteosFallidos = controlDeRuteo.getRuteosFallidos();
 		registrarDecision(DecisionDeRuteo.NO_ENVIAR, ruteosFallidos, tagsDelMensaje);
-		if (!ruteosPerdidos.isEmpty()) {
+		if (!ruteosFallidos.isEmpty()) {
 			Loggers.RUTEO.debug("OPTIM. Receptores excluidos por fallas: {}", ruteosFallidos);
 		}
 

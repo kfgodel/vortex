@@ -16,7 +16,7 @@
 		</encoder>
 	</appender>
 	
-	<logger name="net.gaia.vortex.volume" level="DEBUG" />
+	<logger name="net.gaia.vortex.pc_volume" level="DEBUG" />
   
 	<root level="info">
 	  <appender-ref ref="STDOUT" />
