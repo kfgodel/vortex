@@ -29,12 +29,4 @@ public interface BlueVortex {
 	 */
 	ConexionVortex crearConexion();
 
-	/**
-	 * Crea una conexión en estado de preparación, con lo que debe ser finalizar su preparación para
-	 * ser utilizable
-	 * 
-	 * @return Una pre-conexión que permite configurarla antes de utilizarla
-	 */
-	ConexionEnPreparacion prepararConexion();
-
 }

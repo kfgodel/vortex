@@ -13,10 +13,8 @@
 package net.gaia.vortex.bluevortex.tests;
 
 import junit.framework.Assert;
-import net.gaia.vortex.bluevortex.api.ConexionEnPreparacion;
 import net.gaia.vortex.bluevortex.api.ConexionVortex;
 import net.gaia.vortex.bluevortex.nn.HandlerConColaDeMensajes;
-import net.gaia.vortex.bluevortex.nn.TrueMessageFilter;
 
 import org.junit.Test;
 
@@ -38,10 +36,7 @@ public class TestBlueVortexApi extends BlueVortexTestSupport {
 
 	@Test
 	public void deberiaPermitirCrearUnaConexionParaRecibirTodosLosMensajes() {
-		final ConexionEnPreparacion preConexion = getVortex().prepararConexion();
-		preConexion.setMessageHandler(HandlerConColaDeMensajes.create());
-		preConexion.setMessageFilter(TrueMessageFilter.create());
-		final ConexionVortex conexionReceptora = preConexion.crearConexion();
-		Assert.assertNotNull(conexionReceptora);
+		final ConexionVortex conexion = getVortex().crearConexion();
+		conexion.setHandlerDeMensajes(HandlerConColaDeMensajes.create());
 	}
 }

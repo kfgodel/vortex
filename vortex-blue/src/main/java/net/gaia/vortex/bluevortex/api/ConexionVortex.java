@@ -19,4 +19,14 @@ package net.gaia.vortex.bluevortex.api;
  */
 public interface ConexionVortex {
 
+	/**
+	 * Cambia el handler de mensajes utilizado actualmente por esta conexión.<br>
+	 * Si no se define un filtro para los mensajes de esta conexión, al definir un handler se
+	 * recibirán todos los mensajes que circulen en la red
+	 * 
+	 * @param nuevoHandler
+	 *            El handler que reemplazará al actual
+	 */
+	void setHandlerDeMensajes(HandlerDeMensajes nuevoHandler);
+
 }

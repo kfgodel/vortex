@@ -13,7 +13,6 @@
 package net.gaia.vortex.bluevortex.impl;
 
 import net.gaia.vortex.bluevortex.api.BlueVortex;
-import net.gaia.vortex.bluevortex.api.ConexionEnPreparacion;
 import net.gaia.vortex.bluevortex.api.ConexionVortex;
 
 /**
@@ -39,15 +38,6 @@ public class BlueVortexImpl implements BlueVortex {
 	@Override
 	public ConexionVortex crearConexion() {
 		return ConexionVortexImpl.create();
-	}
-
-	/**
-	 * @see net.gaia.vortex.bluevortex.api.BlueVortex#prepararConexion()
-	 */
-	@Override
-	public ConexionEnPreparacion prepararConexion() {
-		final ConexionEnPreparacionImpl conexion = ConexionEnPreparacionImpl.create(this);
-		return conexion;
 	}
 
 }

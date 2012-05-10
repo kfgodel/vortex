@@ -12,7 +12,10 @@
  */
 package net.gaia.vortex.bluevortex.impl;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import net.gaia.vortex.bluevortex.api.ConexionVortex;
+import net.gaia.vortex.bluevortex.api.HandlerDeMensajes;
 
 /**
  * Esta clase es la implementación de la conexión vortex
@@ -21,6 +24,8 @@ import net.gaia.vortex.bluevortex.api.ConexionVortex;
  */
 public class ConexionVortexImpl implements ConexionVortex {
 
+	private AtomicReference<HandlerDeMensajes> handlerRef;
+
 	/**
 	 * Crea una nueva conexión básica
 	 * 
@@ -28,6 +33,15 @@ public class ConexionVortexImpl implements ConexionVortex {
 	 */
 	public static ConexionVortexImpl create() {
 		final ConexionVortexImpl conexion = new ConexionVortexImpl();
+		conexion.handlerRef = new AtomicReference<HandlerDeMensajes>();
 		return conexion;
+	}
+
+	/**
+	 * @see net.gaia.vortex.bluevortex.api.ConexionVortex#setHandlerDeMensajes(net.gaia.vortex.bluevortex.api.HandlerDeMensajes)
+	 */
+	@Override
+	public void setHandlerDeMensajes(final HandlerDeMensajes nuevoHandler) {
+		handlerRef.set(nuevoHandler);
 	}
 }

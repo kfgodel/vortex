@@ -13,6 +13,7 @@
 package net.gaia.vortex.bluevortex.tests;
 
 import net.gaia.vortex.bluevortex.api.ConexionVortex;
+import net.gaia.vortex.bluevortex.nn.HandlerConColaDeMensajes;
 
 import org.junit.Test;
 
@@ -31,7 +32,9 @@ public class TestBlueVortexRuteo extends BlueVortexTestSupport {
 	public void deberiaPermitirRecibirUnMensajeSinFiltros() {
 		final ConexionVortex conexionEmisora = getVortex().crearConexion();
 
+		final HandlerConColaDeMensajes colaDeRecepcion = HandlerConColaDeMensajes.create();
 		final ConexionVortex conexionReceptora = getVortex().crearConexion();
+		conexionReceptora.setHandlerDeMensajes(colaDeRecepcion);
 	}
 
 	/**
