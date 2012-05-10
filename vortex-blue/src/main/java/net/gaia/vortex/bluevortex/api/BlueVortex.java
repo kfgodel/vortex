@@ -21,4 +21,20 @@ package net.gaia.vortex.bluevortex.api;
  */
 public interface BlueVortex {
 
+	/**
+	 * Crea una nueva conexión con vortex que sólo permite enviar mensajes a la red.<br>
+	 * Se utiliza una configuración default
+	 * 
+	 * @return La conexión creada
+	 */
+	ConexionVortex crearConexion();
+
+	/**
+	 * Crea una conexión en estado de preparación, con lo que debe ser finalizar su preparación para
+	 * ser utilizable
+	 * 
+	 * @return Una pre-conexión que permite configurarla antes de utilizarla
+	 */
+	ConexionEnPreparacion prepararConexion();
+
 }

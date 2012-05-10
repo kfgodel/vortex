@@ -13,6 +13,8 @@
 package net.gaia.vortex.bluevortex.impl;
 
 import net.gaia.vortex.bluevortex.api.BlueVortex;
+import net.gaia.vortex.bluevortex.api.ConexionEnPreparacion;
+import net.gaia.vortex.bluevortex.api.ConexionVortex;
 
 /**
  * Esta clase es la implementación default de {@link BlueVortex}
@@ -21,9 +23,31 @@ import net.gaia.vortex.bluevortex.api.BlueVortex;
  */
 public class BlueVortexImpl implements BlueVortex {
 
+	/**
+	 * Crea una nueva instancia de vortex que representa una red de nodos para mensajes
+	 * 
+	 * @return La nueva instancia creada
+	 */
 	public static BlueVortexImpl create() {
 		final BlueVortexImpl vortex = new BlueVortexImpl();
 		return vortex;
+	}
+
+	/**
+	 * @see net.gaia.vortex.bluevortex.api.BlueVortex#crearConexion()
+	 */
+	@Override
+	public ConexionVortex crearConexion() {
+		return ConexionVortexImpl.create();
+	}
+
+	/**
+	 * @see net.gaia.vortex.bluevortex.api.BlueVortex#prepararConexion()
+	 */
+	@Override
+	public ConexionEnPreparacion prepararConexion() {
+		final ConexionEnPreparacionImpl conexion = ConexionEnPreparacionImpl.create(this);
+		return conexion;
 	}
 
 }
