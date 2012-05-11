@@ -12,7 +12,13 @@
  */
 package net.gaia.vortex.bluevortex.tests;
 
+import java.util.concurrent.TimeUnit;
+
+import junit.framework.Assert;
+import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.vortex.bluevortex.api.ConexionVortex;
+import net.gaia.vortex.bluevortex.api.ReporteDeEntrega;
+import net.gaia.vortex.bluevortex.api.async.AsyncValue;
 import net.gaia.vortex.bluevortex.nn.HandlerConColaDeMensajes;
 
 import org.junit.Test;
@@ -29,20 +35,31 @@ public class TestBlueVortexRuteo extends BlueVortexTestSupport {
 	 * Prueba que el caso más simple de uno a uno sea resuelto
 	 */
 	@Test
-	public void deberiaPermitirRecibirUnMensajeSinFiltros() {
-		final ConexionVortex conexionEmisora = getVortex().crearConexion();
-
+	public void deberiaPermitirEnvioYRecepcionSimple() {
 		final HandlerConColaDeMensajes colaDeRecepcion = HandlerConColaDeMensajes.create();
 		final ConexionVortex conexionReceptora = getVortex().crearConexion();
 		conexionReceptora.setHandlerDeMensajes(colaDeRecepcion);
+
+		final ConexionVortex conexionEmisora = getVortex().crearConexion();
+
+		final Object mensajeEnviado = new Object();
+		final ReporteDeEntrega reporte = conexionEmisora.enviar(mensajeEnviado);
+		final AsyncValue<Long> cantidadEntregados = reporte.getCantidadDeEntregados();
+		Assert.assertEquals("Debería indicar que el mensaje fue entregado a un receptor", 1, cantidadEntregados
+				.waitForValueUpTo(TimeMagnitude.of(1, TimeUnit.MINUTES)).intValue());
+
+		final Object mensajeRecibido = colaDeRecepcion.getCola().poll();
+		Assert.assertNotNull("Debería existir un mensaje recibido", mensajeRecibido);
+		Assert.assertSame("El mensaje recibido debería ser la misma instancia enviada", mensajeEnviado, mensajeRecibido);
 	}
 
 	/**
-	 * Verifica que al emisor no le llegue el mensaje que mandó
+	 * Verifica que al emisor no le llegue el mensaje que mandó.<br>
+	 * 
 	 */
 	@Test
 	public void elEmisorNoDeberiaRecibirSuPropioMensaje() {
-
+		// TODO Existe la posibilidad que el emisor quiera recibir sus propios mensajes?
 	}
 
 }

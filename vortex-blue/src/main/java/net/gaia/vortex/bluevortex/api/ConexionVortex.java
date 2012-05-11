@@ -29,4 +29,14 @@ public interface ConexionVortex {
 	 */
 	void setHandlerDeMensajes(HandlerDeMensajes nuevoHandler);
 
+	/**
+	 * Envía por esta conexión el objeto pasado como mensaje de la red vortex para ser recibido por
+	 * los interesados
+	 * 
+	 * @param mensaje
+	 *            El mensaje a enviar
+	 * @return El reporte que permite conocer el estado del envío
+	 */
+	ReporteDeEntrega enviar(Object mensaje);
+
 }

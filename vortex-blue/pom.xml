@@ -109,7 +109,17 @@
       <url>http://kfgodel.info:8081/nexus/content/groups/public/</url>
     </pluginRepository>
   </pluginRepositories>
+  
   <dependencies>
+  
+
+	<!-- Permite el proceso de tareas asíncrono -->  
+  	<dependency>
+	  <groupId>net.gaia</groupId>
+	  <artifactId>task-processor</artifactId>
+	  <version>0.2</version>
+  	</dependency>
+  
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
