@@ -24,18 +24,18 @@ import net.gaia.vortex.bluevortex.nn.HandlerConColaDeMensajes;
 import org.junit.Test;
 
 /**
- * Esta clase prueba ejemplos de ruteos de mensajes que deben ser recibidos por ciertos interesados
- * y por otros no
+ * Esta clase prueba ejemplos de ruteos de mensajes entre dos partes directamente conectadas al
+ * mismo nodo vortex
  * 
  * @author D. García
  */
-public class TestBlueVortexRuteo extends BlueVortexTestSupport {
+public class TestRuteoSinIntermediariosDirecto extends BlueVortexTestSupport {
 
 	/**
 	 * Prueba que el caso más simple de uno a uno sea resuelto
 	 */
 	@Test
-	public void deberiaPermitirEnvioYRecepcionSimple() {
+	public void deberiaPermitirEnviarYRecibirUnMensajeSinDeclararFiltros() {
 		final HandlerConColaDeMensajes colaDeRecepcion = HandlerConColaDeMensajes.create();
 		final ConexionVortex conexionReceptora = getVortex().crearConexion();
 		conexionReceptora.setHandlerDeMensajes(colaDeRecepcion);
@@ -54,12 +54,54 @@ public class TestBlueVortexRuteo extends BlueVortexTestSupport {
 	}
 
 	/**
+	 * Prueba que tanto el emisor como el receptor pueden estar ocupados mientras se realiza el
+	 * ruteo, y eso no impide la entrega del mensaje
+	 */
+	@Test
+	public void elRuteoDeMensajesDeberiaSerAsincrono() {
+
+	}
+
+	/**
 	 * Verifica que al emisor no le llegue el mensaje que mandó.<br>
 	 * 
 	 */
 	@Test
 	public void elEmisorNoDeberiaRecibirSuPropioMensaje() {
 		// TODO Existe la posibilidad que el emisor quiera recibir sus propios mensajes?
+	}
+
+	/**
+	 * Prueba que una fuente pueda llegar a dos destinos en el mismo mensaje
+	 */
+	@Test
+	public void elMismoMensajeDeberiaLlegarAInteresadosDistintos() {
+
+	}
+
+	/**
+	 * Prueba que si existe una pequeña diferencia en los filtros, los mensajes sean discriminados
+	 * correctamente
+	 */
+	@Test
+	public void mensajesSimilaresDeberianLlegarALosDestinosCorrectos() {
+
+	}
+
+	/**
+	 * Prueba que un receptor pueda empiece a recibir mensajes que antes no, si adapta su filtro
+	 */
+	@Test
+	public void seDeberiaRecibirElMensajeSiSeModificaElFiltroReceptorAceptandolo() {
+
+	}
+
+	/**
+	 * Prueba que al modificar el filtro rechazando un tipo de mensajes, ya no lleguen
+	 */
+	@Test
+	public void noDeberiaRecibirElMensajeSiSeModificaElFiltroRechazandolo() {
+
 	}
 
 }

@@ -13,7 +13,6 @@
 package net.gaia.vortex.bluevortex.tests;
 
 import net.gaia.vortex.bluevortex.api.BlueVortex;
-import net.gaia.vortex.bluevortex.impl.BlueVortexImpl;
 
 import org.junit.Before;
 
@@ -31,7 +30,6 @@ public class BlueVortexTestSupport {
 	 */
 	@Before
 	public void crearVortex() {
-		vortex = BlueVortexImpl.create();
 	}
 
 	public BlueVortex getVortex() {
