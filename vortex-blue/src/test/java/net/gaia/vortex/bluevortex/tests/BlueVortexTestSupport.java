@@ -40,4 +40,40 @@ public class BlueVortexTestSupport {
 		this.vortex = vortex;
 	}
 
+	protected NodoEnTest crearNodo(final String nombreNodo) {
+
+	}
+
+	/**
+	 * Envía un mensaje desde el nodo origen, verificando que sea recibido en el nodo destino dentro
+	 * de un plazo razonable
+	 * 
+	 * @param nodoOrigen
+	 *            El nodo desde el cual se envía el mensaje
+	 * @param nodosDestino
+	 *            Los nodos en los cuales se comprueba que sea recibido
+	 */
+	protected void verificarConectividadEntre(final NodoEnTest nodoOrigen, final NodoEnTest... nodosDestino) {
+		final Object mensaje = new Object();
+		nodoOrigen.enviar(mensaje);
+		for (final NodoEnTest nodoDestino : nodosDestino) {
+			nodoDestino.verificarQueRecibio(mensaje);
+		}
+	}
+
+	/**
+	 * Verifica que un mensaje mandado desde el nodo origen no llega al nodo destino después de
+	 * cierto tiempo "razonable"
+	 * 
+	 * @param nodoOrigen
+	 *            El nodo desde el cual se manda el mensaje
+	 * @param nodoDestino
+	 *            El nodo en el cual no debería llegar
+	 */
+	protected void verificarDesconexionEntre(final NodoEnTest nodoOrigen, final NodoEnTest nodoDestino) {
+		final Object mensaje = new Object();
+		nodoOrigen.enviar(mensaje);
+		nodoDestino.verificarQueNoLlego(mensaje);
+	}
+
 }
