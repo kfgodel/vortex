@@ -81,20 +81,4 @@ public class TestRuteoSinIntermediariosDirecto extends BlueVortexTestSupport {
 
 	}
 
-	/**
-	 * Prueba que un receptor pueda empiece a recibir mensajes que antes no, si adapta su filtro
-	 */
-	@Test
-	public void seDeberiaRecibirElMensajeSiSeModificaElFiltroReceptorAceptandolo() {
-
-	}
-
-	/**
-	 * Prueba que al modificar el filtro rechazando un tipo de mensajes, ya no lleguen
-	 */
-	@Test
-	public void noDeberiaRecibirElMensajeSiSeModificaElFiltroRechazandolo() {
-
-	}
-
 }

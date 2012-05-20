@@ -216,4 +216,20 @@ public class TestRuteoDinamico extends BlueVortexTestSupport {
 		Assert.assertTrue("El nodo C debería saber que ya hay emisores de sus mensajes", nodoC.tieneEmisores());
 	}
 
+	/**
+	 * Prueba que un receptor pueda empiezar a recibir mensajes que antes no, si adapta su filtro
+	 */
+	@Test
+	public void seDeberiaRecibirElMensajeSiSeModificaElFiltroReceptorAceptandolo() {
+
+	}
+
+	/**
+	 * Prueba que al modificar el filtro rechazando un tipo de mensajes, ya no lleguen
+	 */
+	@Test
+	public void noDeberiaRecibirElMensajeSiSeModificaElFiltroRechazandolo() {
+
+	}
+
 }
