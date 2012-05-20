@@ -69,7 +69,13 @@
   </pluginRepositories>
   
   <dependencies>
-  
+
+	<!-- Permite el proceso de tareas con un pool de threads -->  
+  	<dependency>
+	  <groupId>net.gaia</groupId>
+	  <artifactId>task-processor</artifactId>
+	  <version>0.2</version>
+  	</dependency>
   
   
   	<!-- Clases con código comun no disponible en la JDK -->
@@ -116,6 +122,12 @@
   <properties>
     <project.jdk>1.6</project.jdk>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <sonar.host.url>http://kfgodel.info:9000</sonar.host.url>
+    <sonar.jdbc.username>sonar</sonar.jdbc.username>
+    <sonar.jdbc.password>sonar</sonar.jdbc.password>
+    <sonar.jdbc.url>jdbc:postgresql://127.0.0.1:5434/sonarDb</sonar.jdbc.url>
+    <sonar.jdbc.driverClassName>org.postgresql.Driver</sonar.jdbc.driverClassName>
+    <sonar.jdbc.validationQuery>select 1</sonar.jdbc.validationQuery>
   </properties>
   
 </project>
