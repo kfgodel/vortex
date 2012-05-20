@@ -12,9 +12,17 @@
  */
 package net.gaia.vortex.core.impl;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicReference;
+
+import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.NodoPortal;
+import net.gaia.vortex.core.impl.tasks.EnviarMensajeAOtrosVecinosTask;
+import net.gaia.vortex.core.impl.tasks.EnviarMensajeATodosLosVecinosTask;
+import net.gaia.vortex.core.impl.tasks.InvocarHandlerDeMensajesTask;
 
 /**
  * Esta clase implementa el nodo de comunicaciones vortex
@@ -23,14 +31,21 @@ import net.gaia.vortex.core.api.NodoPortal;
  */
 public class NodoImpl implements NodoPortal {
 
+	private AtomicReference<HandlerDeMensajesVecinos> handlerRef;
+	private TaskProcessor processor;
+	private ConcurrentLinkedQueue<Nodo> nodosVecinos;
+
 	/**
 	 * @see net.gaia.vortex.core.api.Nodo#recibirMensajeDesde(net.gaia.vortex.core.api.Nodo,
 	 *      java.lang.Object)
 	 */
 	@Override
 	public void recibirMensajeDesde(final Nodo emisor, final Object mensaje) {
-		// TODO Auto-generated method stub
-
+		final InvocarHandlerDeMensajesTask invocarHandler = InvocarHandlerDeMensajesTask.create(handlerRef, mensaje);
+		this.processor.process(invocarHandler);
+		final EnviarMensajeAOtrosVecinosTask enviarAOtros = EnviarMensajeAOtrosVecinosTask.create(this, emisor,
+				mensaje, nodosVecinos, processor);
+		this.processor.process(enviarAOtros);
 	}
 
 	/**
@@ -38,8 +53,7 @@ public class NodoImpl implements NodoPortal {
 	 */
 	@Override
 	public void conectarCon(final Nodo vecino) {
-		// TODO Auto-generated method stub
-
+		nodosVecinos.add(vecino);
 	}
 
 	/**
@@ -47,8 +61,7 @@ public class NodoImpl implements NodoPortal {
 	 */
 	@Override
 	public void desconectarDe(final Nodo vecino) {
-		// TODO Auto-generated method stub
-
+		nodosVecinos.remove(vecino);
 	}
 
 	/**
@@ -56,8 +69,9 @@ public class NodoImpl implements NodoPortal {
 	 */
 	@Override
 	public void enviarAVecinos(final Object mensaje) {
-		// TODO Auto-generated method stub
-
+		final EnviarMensajeATodosLosVecinosTask tareaDeEnvios = EnviarMensajeATodosLosVecinosTask.create(this, mensaje,
+				nodosVecinos, processor);
+		this.processor.process(tareaDeEnvios);
 	}
 
 	/**
@@ -65,12 +79,17 @@ public class NodoImpl implements NodoPortal {
 	 */
 	@Override
 	public void setHandlerDeMensajesVecinos(final HandlerDeMensajesVecinos handler) {
-		// TODO Auto-generated method stub
-
+		if (handler == null) {
+			throw new IllegalArgumentException("El handler no puede ser null. Usar el NullHandler si es necesario");
+		}
+		handlerRef.set(handler);
 	}
 
 	public static NodoImpl create() {
 		final NodoImpl nodo = new NodoImpl();
+		nodo.handlerRef = new AtomicReference<HandlerDeMensajesVecinos>(NullHandler.create());
+		nodo.processor = ExecutorBasedTaskProcesor.create();
+		nodo.nodosVecinos = new ConcurrentLinkedQueue<Nodo>();
 		return nodo;
 	}
 }

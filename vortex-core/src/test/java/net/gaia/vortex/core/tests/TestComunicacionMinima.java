@@ -140,11 +140,13 @@ public class TestComunicacionMinima {
 		nodoReceptor.setHandlerDeMensajesVecinos(handlerCronometro);
 
 		// Mandamos un Millón
-		for (int i = 0; i < 1000000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			final MensajeCronometro mensajeCronometro = MensajeCronometro.create();
 			mensajeCronometro.marcarInicio();
 			nodoEmisor.enviarAVecinos(mensajeCronometro);
 		}
+
+		System.out.println(handlerCronometro.getNanosAcumulados());
 
 		final double cantidadDeMensajesPorSegundos = handlerCronometro.getMensajesPorSegundo();
 		Assert.assertTrue("La cantidad de mensajes entregados deberían ser mayor a 1000 por segundo: "

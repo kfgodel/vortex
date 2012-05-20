@@ -1,5 +1,5 @@
 /**
- * 20/05/2012 19:32:01 Copyright (C) 2011 Darío L. García
+ * 20/05/2012 20:32:46 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,43 +10,27 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.tests;
+package net.gaia.vortex.core.impl;
 
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 
 /**
- * Esta clase representa un handler de los mensajes que permite medir el tiempo de entrega
+ * Esta clase representa el handler utilizado cuando no se define un handler
  * 
  * @author D. García
  */
-public class HandlerCronometro implements HandlerDeMensajesVecinos {
-
-	private double nanosAcumulados;
-	private double cantidadDeMensajes;
+public class NullHandler implements HandlerDeMensajesVecinos {
 
 	/**
 	 * @see net.gaia.vortex.core.api.HandlerDeMensajesVecinos#onMensajeDeVecinoRecibido(java.lang.Object)
 	 */
 	@Override
 	public void onMensajeDeVecinoRecibido(final Object mensaje) {
-		final MensajeCronometro cronoMensaje = (MensajeCronometro) mensaje;
-		nanosAcumulados += cronoMensaje.getTranscurrido();
-		cantidadDeMensajes++;
+		// No hace nada por eso es el null handler :D
 	}
 
-	public double getNanosAcumulados() {
-		return nanosAcumulados;
-	}
-
-	public double getMensajesPorSegundo() {
-		final double mensajesPorSegundo = cantidadDeMensajes / (nanosAcumulados / 1000000);
-		return mensajesPorSegundo;
-	}
-
-	public static HandlerCronometro create() {
-		final HandlerCronometro handler = new HandlerCronometro();
-		handler.nanosAcumulados = 0;
-		handler.cantidadDeMensajes = 0;
-		return handler;
+	public static NullHandler create() {
+		final NullHandler name = new NullHandler();
+		return name;
 	}
 }
