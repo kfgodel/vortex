@@ -12,6 +12,10 @@
  */
 package net.gaia.vortex.core.tests;
 
+import java.util.concurrent.CountDownLatch;
+
+import net.gaia.taskprocessor.api.TimeMagnitude;
+import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 
 /**
@@ -21,32 +25,30 @@ import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
  */
 public class HandlerCronometro implements HandlerDeMensajesVecinos {
 
-	private double nanosAcumulados;
-	private double cantidadDeMensajes;
+	private CountDownLatch mensajesEsperados;
 
 	/**
 	 * @see net.gaia.vortex.core.api.HandlerDeMensajesVecinos#onMensajeDeVecinoRecibido(java.lang.Object)
 	 */
 	@Override
 	public void onMensajeDeVecinoRecibido(final Object mensaje) {
-		final MensajeCronometro cronoMensaje = (MensajeCronometro) mensaje;
-		nanosAcumulados += cronoMensaje.getTranscurrido();
-		cantidadDeMensajes++;
+		mensajesEsperados.countDown();
 	}
 
-	public double getNanosAcumulados() {
-		return nanosAcumulados;
-	}
-
-	public double getMensajesPorSegundo() {
-		final double mensajesPorSegundo = cantidadDeMensajes / (nanosAcumulados / 1000000);
-		return mensajesPorSegundo;
-	}
-
-	public static HandlerCronometro create() {
+	public static HandlerCronometro create(final int cantidadEsperada) {
 		final HandlerCronometro handler = new HandlerCronometro();
-		handler.nanosAcumulados = 0;
-		handler.cantidadDeMensajes = 0;
+		handler.mensajesEsperados = new CountDownLatch(cantidadEsperada);
 		return handler;
+	}
+
+	/**
+	 * Espera la entrega de todos los mensajes
+	 */
+	public void esperarEntregaDeMensajes(final TimeMagnitude timeout) {
+		try {
+			mensajesEsperados.await(timeout.getQuantity(), timeout.getTimeUnit());
+		} catch (final InterruptedException e) {
+			throw new InterruptedWaitException("La espera de todos los mensajes fue interrumpida");
+		}
 	}
 }

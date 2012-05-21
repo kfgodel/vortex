@@ -136,19 +136,23 @@ public class TestComunicacionMinima {
 	 */
 	@Test
 	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Mayor_A_1000_Mensajes_Por_Segundo() {
-		final HandlerCronometro handlerCronometro = HandlerCronometro.create();
+		final int cantidadDeMensajes = 1000000;
+		final HandlerCronometro handlerCronometro = HandlerCronometro.create(cantidadDeMensajes);
 		nodoReceptor.setHandlerDeMensajesVecinos(handlerCronometro);
 
-		// Mandamos un Millón
-		for (int i = 0; i < 100000; i++) {
-			final MensajeCronometro mensajeCronometro = MensajeCronometro.create();
-			mensajeCronometro.marcarInicio();
-			nodoEmisor.enviarAVecinos(mensajeCronometro);
+		final long startMillis = System.currentTimeMillis();
+		for (int i = 0; i < cantidadDeMensajes; i++) {
+			nodoEmisor.enviarAVecinos(new Object());
 		}
+		handlerCronometro.esperarEntregaDeMensajes(TimeMagnitude.of(1, TimeUnit.MICROSECONDS));
+		final long endMilis = System.currentTimeMillis();
+		final double elapsedMilis = endMilis - startMillis;
+		System.out.println(elapsedMilis / 1000 + "segs elapsed in " + cantidadDeMensajes + " msgs");
+		final double milisPorMensaje = elapsedMilis / cantidadDeMensajes;
+		System.out.println(milisPorMensaje + "ms por mensaje");
 
-		System.out.println(handlerCronometro.getNanosAcumulados());
-
-		final double cantidadDeMensajesPorSegundos = handlerCronometro.getMensajesPorSegundo();
+		final double cantidadDeMensajesPorSegundos = cantidadDeMensajes / (elapsedMilis / 1000);
+		System.out.println(cantidadDeMensajesPorSegundos + " mensajes por segundo");
 		Assert.assertTrue("La cantidad de mensajes entregados deberían ser mayor a 1000 por segundo: "
 				+ cantidadDeMensajesPorSegundos, cantidadDeMensajesPorSegundos > 1000d);
 	}

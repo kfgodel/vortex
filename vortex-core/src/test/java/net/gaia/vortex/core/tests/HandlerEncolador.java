@@ -14,7 +14,6 @@ package net.gaia.vortex.core.tests;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
@@ -55,7 +54,7 @@ public class HandlerEncolador implements HandlerDeMensajesVecinos {
 	 */
 	public Object esperarPorMensaje(final TimeMagnitude timeMagnitude) throws UnsuccessfulWaitException {
 		try {
-			final Object mensaje = mensajes.poll(timeMagnitude.getMillis(), TimeUnit.MILLISECONDS);
+			final Object mensaje = mensajes.poll(timeMagnitude.getQuantity(), timeMagnitude.getTimeUnit());
 			if (mensaje == null) {
 				throw new TimeoutExceededException("Pasó el tiempo de espera y no recibimos mensaje");
 			}
