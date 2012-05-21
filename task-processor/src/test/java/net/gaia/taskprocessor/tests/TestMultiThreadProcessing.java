@@ -40,11 +40,11 @@ public class TestMultiThreadProcessing {
 
 		// Contamos cauntas tareas por thread procesa cada uno
 		final ConcurrentMap<Thread, AtomicLong> tasksByThread = new ConcurrentHashMap<Thread, AtomicLong>();
-		final long cantidadDeTareas = 100000;
+		final int cantidadDeTareas = 100000;
 		// Sincronizador para esperar a todas las tareas
-		final CountDownLatch latch = new CountDownLatch((int) cantidadDeTareas);
+		final CountDownLatch latch = new CountDownLatch(cantidadDeTareas);
 
-		// Mandamos a procesarlas todas
+		// Procesamos todas
 		for (int i = 0; i < cantidadDeTareas; i++) {
 			final RegistrarThreadUsadoTask tarea = RegistrarThreadUsadoTask.create(tasksByThread, latch);
 			processor.process(tarea);
@@ -64,6 +64,43 @@ public class TestMultiThreadProcessing {
 		final double porcentajeDeCarga = ((double) processedTask) / cantidadDeTareas;
 		Assert.assertTrue("La cantidad de tareas procesadas por un thread deberia estar entre el 30% y 60%",
 				0.3 < porcentajeDeCarga && porcentajeDeCarga < 0.7);
+	}
+
+	/**
+	 * Verifica que si se puede se utilizan los threads en forma pareja
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void deberiaUtilizarLosTresThreadsParaProcesarLasTareas() throws InterruptedException {
+		final TaskProcessor processor = crearProcesorCon(3);
+
+		// Contamos cauntas tareas por thread procesa cada uno
+		final ConcurrentMap<Thread, AtomicLong> tasksByThread = new ConcurrentHashMap<Thread, AtomicLong>();
+		final int cantidadDeTareas = 100000;
+		// Sincronizador para esperar a todas las tareas
+		final CountDownLatch latch = new CountDownLatch(cantidadDeTareas);
+
+		// Procesamos todas
+		for (int i = 0; i < cantidadDeTareas; i++) {
+			final RegistrarThreadUsadoTask tarea = RegistrarThreadUsadoTask.create(tasksByThread, latch);
+			processor.process(tarea);
+		}
+
+		// Esperamos que terminen de procesar todas
+		latch.await(1, TimeUnit.MINUTES);
+
+		LOG.info("Tareas por thread: {}", tasksByThread);
+		Assert.assertEquals("Deberían existir sólo 3 entradas porque son dos threads", 3, tasksByThread.size());
+
+		// Verificamos que esten más o menos balanceados cerca de 33% cada thread
+		final Iterator<Entry<Thread, AtomicLong>> it = tasksByThread.entrySet().iterator();
+		it.hasNext();
+		final Entry<Thread, AtomicLong> firstThreadData = it.next();
+		final long processedTask = firstThreadData.getValue().get();
+		final double porcentajeDeCarga = ((double) processedTask) / cantidadDeTareas;
+		Assert.assertTrue("La cantidad de tareas procesadas por un thread deberia estar entre el 15% y 45%",
+				0.15 < porcentajeDeCarga && porcentajeDeCarga < 0.45);
 	}
 
 	/**
