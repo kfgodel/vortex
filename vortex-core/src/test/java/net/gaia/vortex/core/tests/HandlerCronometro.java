@@ -16,6 +16,8 @@ import java.util.concurrent.CountDownLatch;
 
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
+import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
+import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 
 /**
@@ -44,9 +46,12 @@ public class HandlerCronometro implements HandlerDeMensajesVecinos {
 	/**
 	 * Espera la entrega de todos los mensajes
 	 */
-	public void esperarEntregaDeMensajes(final TimeMagnitude timeout) {
+	public void esperarEntregaDeMensajes(final TimeMagnitude timeout) throws UnsuccessfulWaitException {
 		try {
-			mensajesEsperados.await(timeout.getQuantity(), timeout.getTimeUnit());
+			final boolean endedOk = mensajesEsperados.await(timeout.getQuantity(), timeout.getTimeUnit());
+			if (!endedOk) {
+				throw new TimeoutExceededException("Se acabo el tiempo de espera y no recibimos todos los mensajes");
+			}
 		} catch (final InterruptedException e) {
 			throw new InterruptedWaitException("La espera de todos los mensajes fue interrumpida");
 		}

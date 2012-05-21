@@ -31,7 +31,8 @@ public class ProcessorThreadFactory implements ThreadFactory {
 
 	@Override
 	public Thread newThread(final Runnable r) {
-		final Thread t = new Thread(group, r, threadPreffix + threadNumber.getAndIncrement(), 0);
+		String threadName = threadPreffix + threadNumber.getAndIncrement();
+		final Thread t = new Thread(group, r, threadName, 0);
 		if (t.isDaemon()) {
 			t.setDaemon(false);
 		}

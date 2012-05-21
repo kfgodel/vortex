@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 import net.gaia.vortex.core.api.Nodo;
@@ -88,7 +89,9 @@ public class NodoImpl implements NodoPortal {
 	public static NodoImpl create() {
 		final NodoImpl nodo = new NodoImpl();
 		nodo.handlerRef = new AtomicReference<HandlerDeMensajesVecinos>(NullHandler.create());
-		nodo.processor = ExecutorBasedTaskProcesor.create();
+		final TaskProcessorConfiguration processorConfig = TaskProcessorConfiguration.create();
+		processorConfig.setThreadPoolSize(2);
+		nodo.processor = ExecutorBasedTaskProcesor.create(processorConfig);
 		nodo.nodosVecinos = new ConcurrentLinkedQueue<Nodo>();
 		return nodo;
 	}

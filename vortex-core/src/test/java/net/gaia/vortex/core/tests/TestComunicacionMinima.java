@@ -136,7 +136,7 @@ public class TestComunicacionMinima {
 	 */
 	@Test
 	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Mayor_A_1000_Mensajes_Por_Segundo() {
-		final int cantidadDeMensajes = 1000000;
+		final int cantidadDeMensajes = 1000;
 		final HandlerCronometro handlerCronometro = HandlerCronometro.create(cantidadDeMensajes);
 		nodoReceptor.setHandlerDeMensajesVecinos(handlerCronometro);
 
@@ -144,7 +144,7 @@ public class TestComunicacionMinima {
 		for (int i = 0; i < cantidadDeMensajes; i++) {
 			nodoEmisor.enviarAVecinos(new Object());
 		}
-		handlerCronometro.esperarEntregaDeMensajes(TimeMagnitude.of(1, TimeUnit.MICROSECONDS));
+		handlerCronometro.esperarEntregaDeMensajes(TimeMagnitude.of(30, TimeUnit.SECONDS));
 		final long endMilis = System.currentTimeMillis();
 		final double elapsedMilis = endMilis - startMillis;
 		System.out.println(elapsedMilis / 1000 + "segs elapsed in " + cantidadDeMensajes + " msgs");
