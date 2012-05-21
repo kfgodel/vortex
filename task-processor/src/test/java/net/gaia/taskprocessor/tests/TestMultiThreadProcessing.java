@@ -29,13 +29,18 @@ import org.slf4j.LoggerFactory;
 public class TestMultiThreadProcessing {
 	private static final Logger LOG = LoggerFactory.getLogger(TestMultiThreadProcessing.class);
 
+	/**
+	 * Verifica que si se puede se utilizan los threads en forma pareja
+	 * 
+	 * @throws InterruptedException
+	 */
 	@Test
 	public void deberiaUtilizarAmbosThreadsParaProcesarLasTareas() throws InterruptedException {
 		final TaskProcessor processor = crearProcesorCon(2);
 
 		// Contamos cauntas tareas por thread procesa cada uno
 		final ConcurrentMap<Thread, AtomicLong> tasksByThread = new ConcurrentHashMap<Thread, AtomicLong>();
-		final long cantidadDeTareas = 1000000;
+		final long cantidadDeTareas = 100000;
 		// Sincronizador para esperar a todas las tareas
 		final CountDownLatch latch = new CountDownLatch((int) cantidadDeTareas);
 
@@ -48,7 +53,7 @@ public class TestMultiThreadProcessing {
 		// Esperamos que terminen de procesar todas
 		latch.await(1, TimeUnit.MINUTES);
 
-		LOG.debug("Tareas por thread: {}", tasksByThread);
+		LOG.info("Tareas por thread: {}", tasksByThread);
 		Assert.assertEquals("Deberían existir sólo dos entradas porque son dos threads", 2, tasksByThread.size());
 
 		// Verificamos que esten más o menos balanceados cerca de 50% cada thread
@@ -57,7 +62,7 @@ public class TestMultiThreadProcessing {
 		final Entry<Thread, AtomicLong> firstThreadData = it.next();
 		final long processedTask = firstThreadData.getValue().get();
 		final double porcentajeDeCarga = ((double) processedTask) / cantidadDeTareas;
-		Assert.assertTrue("La cantidad de tareas procesadas por un thread deberia estar entre el 30% y 70%",
+		Assert.assertTrue("La cantidad de tareas procesadas por un thread deberia estar entre el 30% y 60%",
 				0.3 < porcentajeDeCarga && porcentajeDeCarga < 0.7);
 	}
 

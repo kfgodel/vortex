@@ -75,8 +75,9 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 		final RejectedTaskHandler rejectionHandler = RejectedTaskHandler.create(processor);
 		final int threadPoolSize = config.getThreadPoolSize();
 		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
+		final int executorQueueSize = threadPoolSize;
 		processor.inmediateExecutor = new ThreadPoolExecutor(1, threadPoolSize, maxIdleTimePerThread.getQuantity(),
-				maxIdleTimePerThread.getTimeUnit(), new LinkedBlockingQueue<Runnable>(),
+				maxIdleTimePerThread.getTimeUnit(), new LinkedBlockingQueue<Runnable>(executorQueueSize),
 				ProcessorThreadFactory.create("TaskProcessor"), rejectionHandler);
 		processor.delayedExecutor = new ScheduledThreadPoolExecutor(1, ProcessorThreadFactory.create("TaskDelayer"),
 				rejectionHandler);
@@ -96,8 +97,14 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	protected void onTaskRejected(final Runnable runnable, final ThreadPoolExecutor executor) {
 		if (executor == inmediateExecutor) {
-			LOG.error("El executor de tareas inmediatas rechazó el runnable: " + runnable
-					+ ". Posible exceso de tasks?");
+			final int activeCount = executor.getActiveCount();
+			if (activeCount > 0) {
+				LOG.debug("El executor de tareas inmediatas rechazó el runnable: " + runnable
+						+ ". Probablemente no detectamos que estabamos al limite");
+			} else {
+				LOG.error("El executor de tareas inmediatas rechazó el runnable: " + runnable
+						+ " y no hay threads activos. Posible exceso de tasks?");
+			}
 		} else if (executor == delayedExecutor) {
 			LOG.error("El executor de tareas con retraso rechazó el runnable: " + runnable
 					+ ". Posible exceso de tasks?");
@@ -156,8 +163,12 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 			return;
 		}
 
-		// Por diseño usamos todos los threads del pool que podamos para las tareas
-		if (inmediateExecutor.getActiveCount() >= inmediateExecutor.getMaximumPoolSize()) {
+		// Por diseño usamos todos los threads del pool que podamos para las tareas, pero intentamos
+		// no exceder la capacidad
+		final int activeCount = inmediateExecutor.getActiveCount();
+		final int maximumPoolSize = inmediateExecutor.getMaximumPoolSize();
+		final boolean atFullCapacity = activeCount >= maximumPoolSize;
+		if (atFullCapacity) {
 			// Estamos en el limite, no agregamos más threads al procesamiento de tareas
 			return;
 		}
