@@ -49,6 +49,7 @@ public class EnviarMensajeATodosLosVecinosTask implements WorkUnit {
 		envio.mensaje = mensaje;
 		envio.vecinos = nodosVecinos;
 		envio.processor = processor;
+		envio.nodoEmisor = nodoEmisor;
 		return envio;
 	}
 }

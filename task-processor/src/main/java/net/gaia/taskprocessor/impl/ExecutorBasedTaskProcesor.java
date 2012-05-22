@@ -75,7 +75,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 		final RejectedTaskHandler rejectionHandler = RejectedTaskHandler.create(processor);
 		final int threadPoolSize = config.getThreadPoolSize();
 		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
-		final int executorQueueSize = threadPoolSize;
+		final int executorQueueSize = threadPoolSize * 3;
 		processor.inmediateExecutor = new ThreadPoolExecutor(1, threadPoolSize, maxIdleTimePerThread.getQuantity(),
 				maxIdleTimePerThread.getTimeUnit(), new LinkedBlockingQueue<Runnable>(executorQueueSize),
 				ProcessorThreadFactory.create("TaskProcessor"), rejectionHandler);
@@ -97,13 +97,15 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	protected void onTaskRejected(final Runnable runnable, final ThreadPoolExecutor executor) {
 		if (executor == inmediateExecutor) {
+			final int maximunSize = executor.getMaximumPoolSize();
+			final int poolSize = executor.getPoolSize();
 			final int activeCount = executor.getActiveCount();
-			if (activeCount > 0) {
+			if (poolSize < maximunSize && activeCount == 0) {
+				LOG.error("El executor de tareas inmediatas rechazó el runnable: " + runnable
+						+ " y no hay threads activos, ni estamos usando el máximo. Posible exceso de tasks?");
+			} else {
 				LOG.debug("El executor de tareas inmediatas rechazó el runnable: " + runnable
 						+ ". Probablemente no detectamos que estabamos al limite");
-			} else {
-				LOG.error("El executor de tareas inmediatas rechazó el runnable: " + runnable
-						+ " y no hay threads activos. Posible exceso de tasks?");
 			}
 		} else if (executor == delayedExecutor) {
 			LOG.error("El executor de tareas con retraso rechazó el runnable: " + runnable

@@ -39,6 +39,7 @@ public class EnviarMensajeAVecinoTask implements WorkUnit {
 		final EnviarMensajeAVecinoTask envio = new EnviarMensajeAVecinoTask();
 		envio.nodoVecino = nodoVecino;
 		envio.mensaje = mensaje;
+		envio.nodoEmisor = nodoEmisor;
 		return envio;
 	}
 }

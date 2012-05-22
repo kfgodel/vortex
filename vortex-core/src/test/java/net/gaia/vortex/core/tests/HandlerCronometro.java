@@ -13,6 +13,8 @@
 package net.gaia.vortex.core.tests;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
@@ -29,17 +31,26 @@ public class HandlerCronometro implements HandlerDeMensajesVecinos {
 
 	private CountDownLatch mensajesEsperados;
 
+	private AtomicLong nanosAcumulados;
+	private AtomicInteger cantidadMensajes;
+
 	/**
 	 * @see net.gaia.vortex.core.api.HandlerDeMensajesVecinos#onMensajeDeVecinoRecibido(java.lang.Object)
 	 */
 	@Override
 	public void onMensajeDeVecinoRecibido(final Object mensaje) {
+		final MensajeCronometro cronoMensaje = (MensajeCronometro) mensaje;
+		final long nanosDelMensaje = cronoMensaje.getTranscurrido();
+		nanosAcumulados.getAndAdd(nanosDelMensaje);
+		cantidadMensajes.incrementAndGet();
 		mensajesEsperados.countDown();
 	}
 
 	public static HandlerCronometro create(final int cantidadEsperada) {
 		final HandlerCronometro handler = new HandlerCronometro();
 		handler.mensajesEsperados = new CountDownLatch(cantidadEsperada);
+		handler.cantidadMensajes = new AtomicInteger();
+		handler.nanosAcumulados = new AtomicLong();
 		return handler;
 	}
 
@@ -55,5 +66,23 @@ public class HandlerCronometro implements HandlerDeMensajesVecinos {
 		} catch (final InterruptedException e) {
 			throw new InterruptedWaitException("La espera de todos los mensajes fue interrumpida");
 		}
+	}
+
+	/**
+	 * Devuelve la cantidad de nanosegundos acumulados en los envíos de mensajes
+	 * 
+	 * @return La medición total
+	 */
+	public long getAcumuladoDeMensajes() {
+		return this.nanosAcumulados.get();
+	}
+
+	/**
+	 * Devuelve la cantidad promedio de nanos esperados
+	 * 
+	 * @return La cantidad que esperarn en promedio los mensajes en ser atendidos
+	 */
+	public double getPromedioDeEsperaPorMensaje() {
+		return ((double) this.nanosAcumulados.get()) / cantidadMensajes.get();
 	}
 }
