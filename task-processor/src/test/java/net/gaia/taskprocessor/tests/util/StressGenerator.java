@@ -3,6 +3,8 @@
  */
 package net.gaia.taskprocessor.tests.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import net.gaia.taskprocessor.api.TimeMagnitude;
@@ -23,6 +25,7 @@ public class StressGenerator {
 	private Runnable ejecutable;
 	private long cantidadDeEjecucionesPorThread;
 	private CountDownLatch threadLatch;
+	private List<ThreadDeStress> threads;
 
 	public int getCantidadDeThreadsEnEjecucion() {
 		return cantidadDeThreadsEnEjecucion;
@@ -67,9 +70,11 @@ public class StressGenerator {
 	public void start() {
 		final int threadsEnParalelo = this.cantidadDeThreadsEnEjecucion;
 		this.threadLatch = new CountDownLatch(threadsEnParalelo);
+		this.threads = new ArrayList<ThreadDeStress>();
 		for (int i = 0; i < threadsEnParalelo; i++) {
 			final ThreadDeStress threadDeStress = ThreadDeStress.create(cantidadDeEjecucionesPorThread,
 					esperaEntreEjecucionesEnMilis, ejecutable, threadLatch);
+			threads.add(threadDeStress);
 			threadDeStress.start();
 		}
 	}
@@ -87,4 +92,5 @@ public class StressGenerator {
 			throw new InterruptedWaitException("Se interrumpio la espera de compleción de los threads", e);
 		}
 	}
+
 }

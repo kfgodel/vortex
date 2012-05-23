@@ -31,8 +31,12 @@ public class WaitBarrier {
 	private CountDownLatch latch;
 
 	public static WaitBarrier create() {
+		return create(1);
+	}
+
+	public static WaitBarrier create(final int tareasDisparadas) {
 		final WaitBarrier barrier = new WaitBarrier();
-		barrier.latch = new CountDownLatch(1);
+		barrier.latch = new CountDownLatch(tareasDisparadas);
 		return barrier;
 	}
 

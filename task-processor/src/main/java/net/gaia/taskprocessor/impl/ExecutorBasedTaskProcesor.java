@@ -104,7 +104,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 				LOG.error("El executor de tareas inmediatas rechazó el runnable: " + runnable
 						+ " y no hay threads activos, ni estamos usando el máximo. Posible exceso de tasks?");
 			} else {
-				LOG.debug("El executor de tareas inmediatas rechazó el runnable: " + runnable
+				LOG.trace("El executor de tareas inmediatas rechazó el runnable: " + runnable
 						+ ". Probablemente no detectamos que estabamos al limite");
 			}
 		} else if (executor == delayedExecutor) {

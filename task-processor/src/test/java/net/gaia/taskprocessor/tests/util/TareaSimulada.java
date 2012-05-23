@@ -4,6 +4,7 @@
 package net.gaia.taskprocessor.tests.util;
 
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.util.WaitBarrier;
 
 /**
  * Esta clase simula una tarea que tarda un tiempo en completarse
@@ -13,6 +14,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 public class TareaSimulada implements WorkUnit {
 
 	private long duracionDeTarea;
+	private WaitBarrier barreraDeTareas;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
@@ -20,11 +22,13 @@ public class TareaSimulada implements WorkUnit {
 	@Override
 	public void doWork() throws InterruptedException {
 		Thread.sleep(duracionDeTarea);
+		barreraDeTareas.release();
 	}
 
-	public static TareaSimulada create(final long milisEnCompletarTarea) {
-		final TareaSimulada name = new TareaSimulada();
-		name.duracionDeTarea = milisEnCompletarTarea;
-		return name;
+	public static TareaSimulada create(final long milisEnCompletarTarea, final WaitBarrier barreraDeTareas) {
+		final TareaSimulada tarea = new TareaSimulada();
+		tarea.duracionDeTarea = milisEnCompletarTarea;
+		tarea.barreraDeTareas = barreraDeTareas;
+		return tarea;
 	}
 }
