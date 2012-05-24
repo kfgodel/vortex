@@ -12,6 +12,23 @@
  */
 package net.gaia.taskprocessor.tests;
 
+import net.gaia.taskprocessor.tests.TaskProcessorAllTests.ExecutorTests;
+import net.gaia.taskprocessor.tests.TaskProcessorAllTests.KnittleTests;
+import net.gaia.taskprocessor.tests.executor.TestMultiThreadProcessing;
+import net.gaia.taskprocessor.tests.executor.TestProcessorPerformanceWithFixedTaskCount;
+import net.gaia.taskprocessor.tests.executor.TestProcessorPerformanceWithFixedTimebox;
+import net.gaia.taskprocessor.tests.executor.TestTaskListenerApi;
+import net.gaia.taskprocessor.tests.executor.TestTaskMetricsApi;
+import net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi;
+import net.gaia.taskprocessor.tests.executor.TestTaskStateApi;
+import net.gaia.taskprocessor.tests.knittle.TestKnittleListenerApi;
+import net.gaia.taskprocessor.tests.knittle.TestKnittleMetricsApi;
+import net.gaia.taskprocessor.tests.knittle.TestKnittlePerformanceWithFixedTaskCount;
+import net.gaia.taskprocessor.tests.knittle.TestKnittlePerformanceWithFixedTimebox;
+import net.gaia.taskprocessor.tests.knittle.TestKnittleProcessorApi;
+import net.gaia.taskprocessor.tests.knittle.TestKnittleStateApi;
+import net.gaia.taskprocessor.tests.knittle.TestMultiThreadKnittleProcessing;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -22,7 +39,23 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author D. García
  */
 @RunWith(Suite.class)
-@SuiteClasses({ TestTaskProcessorApi.class, TestTaskStateApi.class, TestTaskListenerApi.class, TestTaskMetricsApi.class })
+@SuiteClasses({ ExecutorTests.class, KnittleTests.class })
 public class TaskProcessorAllTests {
+
+	@RunWith(Suite.class)
+	@SuiteClasses({ TestTaskProcessorApi.class, TestTaskStateApi.class, TestTaskListenerApi.class,
+			TestTaskMetricsApi.class, TestMultiThreadProcessing.class,
+			TestProcessorPerformanceWithFixedTaskCount.class, TestProcessorPerformanceWithFixedTimebox.class })
+	public static class ExecutorTests {
+
+	}
+
+	@RunWith(Suite.class)
+	@SuiteClasses({ TestKnittleProcessorApi.class, TestKnittleStateApi.class, TestKnittleListenerApi.class,
+			TestKnittleMetricsApi.class, TestMultiThreadKnittleProcessing.class,
+			TestKnittlePerformanceWithFixedTaskCount.class, TestKnittlePerformanceWithFixedTimebox.class })
+	public static class KnittleTests {
+
+	}
 
 }

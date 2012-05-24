@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.impl;
+package net.gaia.taskprocessor.executor;
 
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -237,7 +237,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 		return failingError.get();
 	}
 
-	public Future<?> getOwnFuture() {
+	public FutureTask<?> getOwnFuture() {
 		return ownFuture;
 	}
 
@@ -285,7 +285,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	/**
 	 * Notifica al listener del procesor si existe alguno que la tarea se completó
 	 */
-	public void notifyListenerAcceptedTask() {
+	private void notifyListenerAcceptedTask() {
 		final TaskProcessorListener listener = processor.getProcessorListener();
 		if (listener == null) {
 			return;

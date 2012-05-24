@@ -10,9 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.impl;
+package net.gaia.taskprocessor.executor;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Esta clase representa un trabajador que se encarga de tomar las tareas que ya cumplieron su delay
@@ -24,7 +24,7 @@ public class TaskPlanner implements Runnable {
 
 	private SubmittedRunnableTask delayedTask;
 	private ExecutorBasedTaskProcesor processor;
-	private LinkedBlockingQueue<TaskPlanner> delayedQueue;
+	private ConcurrentLinkedQueue<TaskPlanner> delayedQueue;
 
 	public SubmittedRunnableTask getDelayedTask() {
 		return delayedTask;
@@ -56,7 +56,7 @@ public class TaskPlanner implements Runnable {
 	 * @param delayedTasks
 	 *            La cola de tareas a ejecutar en un futuro
 	 */
-	public void registerOn(final LinkedBlockingQueue<TaskPlanner> delayedTasks) {
+	public void registerOn(final ConcurrentLinkedQueue<TaskPlanner> delayedTasks) {
 		this.delayedQueue = delayedTasks;
 		delayedTasks.add(this);
 	}

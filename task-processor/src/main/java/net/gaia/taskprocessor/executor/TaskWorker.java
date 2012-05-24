@@ -10,9 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.impl;
+package net.gaia.taskprocessor.executor;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 
@@ -28,7 +28,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
  */
 public class TaskWorker implements Runnable {
 
-	private LinkedBlockingQueue<SubmittedRunnableTask> pendingTasks;
+	private ConcurrentLinkedQueue<SubmittedRunnableTask> pendingTasks;
 
 	private TaskProcessingMetricsImpl metrics;
 
@@ -48,10 +48,10 @@ public class TaskWorker implements Runnable {
 		// No quedan más tareas, terminamos
 	}
 
-	public static TaskWorker create(final LinkedBlockingQueue<SubmittedRunnableTask> pendingTasks,
+	public static TaskWorker create(final ConcurrentLinkedQueue<SubmittedRunnableTask> inmediatePendingTasks,
 			final TaskProcessingMetricsImpl metrics) {
 		final TaskWorker worker = new TaskWorker();
-		worker.pendingTasks = pendingTasks;
+		worker.pendingTasks = inmediatePendingTasks;
 		worker.metrics = metrics;
 		return worker;
 	}

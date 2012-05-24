@@ -1,7 +1,7 @@
 /**
  * 21/05/2012 11:20:40 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.taskprocessor.tests;
+package net.gaia.taskprocessor.tests.executor;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.tests.tasks.RegistrarThreadUsadoTask;
 
 import org.junit.Test;
@@ -107,7 +107,7 @@ public class TestMultiThreadProcessing {
 	 * @param cantidadDeThreads
 	 * @return
 	 */
-	private TaskProcessor crearProcesorCon(final int cantidadDeThreads) {
+	protected TaskProcessor crearProcesorCon(final int cantidadDeThreads) {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
 		config.setThreadPoolSize(cantidadDeThreads);
 		final TaskProcessor processor = ExecutorBasedTaskProcesor.create(config);

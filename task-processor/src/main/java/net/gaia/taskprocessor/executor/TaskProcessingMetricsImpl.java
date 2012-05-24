@@ -10,9 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.impl;
+package net.gaia.taskprocessor.executor;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
@@ -26,9 +26,9 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 public class TaskProcessingMetricsImpl implements TaskProcessingMetrics {
 
 	private AtomicLong processedCount;
-	private LinkedBlockingQueue<SubmittedRunnableTask> pendingTasks;
+	private ConcurrentLinkedQueue<SubmittedRunnableTask> pendingTasks;
 
-	public static TaskProcessingMetricsImpl create(final LinkedBlockingQueue<SubmittedRunnableTask> pendingTasks) {
+	public static TaskProcessingMetricsImpl create(final ConcurrentLinkedQueue<SubmittedRunnableTask> pendingTasks) {
 		final TaskProcessingMetricsImpl metrics = new TaskProcessingMetricsImpl();
 		metrics.processedCount = new AtomicLong(0);
 		metrics.pendingTasks = pendingTasks;

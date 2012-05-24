@@ -10,10 +10,11 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.impl;
+package net.gaia.taskprocessor.executor;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
@@ -53,8 +54,8 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	private ThreadPoolExecutor inmediateExecutor;
 	private TaskProcessingMetricsImpl metrics;
 
-	private LinkedBlockingQueue<TaskPlanner> delayedTasks;
-	private LinkedBlockingQueue<SubmittedRunnableTask> inmediatePendingTasks;
+	private ConcurrentLinkedQueue<TaskPlanner> delayedTasks;
+	private ConcurrentLinkedQueue<SubmittedRunnableTask> inmediatePendingTasks;
 
 	/**
 	 * Crea un procesador con la configuración por defecto de un thread para todas las tareas
@@ -84,8 +85,8 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 				ProcessorThreadFactory.create("TaskProcessor"), rejectionHandler);
 		processor.delayedExecutor = new ScheduledThreadPoolExecutor(1, ProcessorThreadFactory.create("TaskDelayer"),
 				rejectionHandler);
-		processor.inmediatePendingTasks = new LinkedBlockingQueue<SubmittedRunnableTask>();
-		processor.delayedTasks = new LinkedBlockingQueue<TaskPlanner>();
+		processor.inmediatePendingTasks = new ConcurrentLinkedQueue<SubmittedRunnableTask>();
+		processor.delayedTasks = new ConcurrentLinkedQueue<TaskPlanner>();
 		processor.metrics = TaskProcessingMetricsImpl.create(processor.inmediatePendingTasks);
 		return processor;
 	}

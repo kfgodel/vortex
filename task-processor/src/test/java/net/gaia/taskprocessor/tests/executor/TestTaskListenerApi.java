@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.tests;
+package net.gaia.taskprocessor.tests.executor;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -22,10 +22,10 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
-import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
-import net.gaia.taskprocessor.impl.TaskProcessorListenerSupport;
+import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.executor.TaskProcessorListenerSupport;
 import net.gaia.taskprocessor.meta.Decision;
-import net.gaia.taskprocessor.tests.TestTaskProcessorApi.TestWorkUnit;
+import net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit;
 import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
@@ -37,7 +37,7 @@ import org.junit.Test;
  * @author D. García
  */
 public class TestTaskListenerApi {
-	private TaskProcessor taskProcessor;
+	protected TaskProcessor taskProcessor;
 
 	@Before
 	public void crearProcesador() {
