@@ -53,4 +53,10 @@ public class ThreadDeStress extends Thread {
 		return thread;
 	}
 
+	/**
+	 * Detiene la ejecución de este test apenas pueda, poniendo a 0 la cantidad de tareas pendientes
+	 */
+	public void detener() {
+		cantidadDeEjecucionesPorThread = 0;
+	}
 }

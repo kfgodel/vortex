@@ -22,7 +22,9 @@ public class TareaSimulada implements WorkUnit {
 	@Override
 	public void doWork() throws InterruptedException {
 		Thread.sleep(duracionDeTarea);
-		barreraDeTareas.release();
+		if (barreraDeTareas != null) {
+			barreraDeTareas.release();
+		}
 	}
 
 	public static TareaSimulada create(final long milisEnCompletarTarea, final WaitBarrier barreraDeTareas) {

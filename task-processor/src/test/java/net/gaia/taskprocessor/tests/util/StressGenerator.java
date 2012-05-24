@@ -61,6 +61,7 @@ public class StressGenerator {
 
 	public static StressGenerator create() {
 		final StressGenerator name = new StressGenerator();
+		name.cantidadDeEjecucionesPorThread = Long.MAX_VALUE;
 		return name;
 	}
 
@@ -90,6 +91,15 @@ public class StressGenerator {
 			}
 		} catch (final InterruptedException e) {
 			throw new InterruptedWaitException("Se interrumpio la espera de compleción de los threads", e);
+		}
+	}
+
+	/**
+	 * Detiene la ejecución de los threads disparados
+	 */
+	public void detenerThreads() {
+		for (final ThreadDeStress thread : this.threads) {
+			thread.detener();
 		}
 	}
 

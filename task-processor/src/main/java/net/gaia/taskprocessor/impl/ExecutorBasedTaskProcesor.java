@@ -13,8 +13,11 @@
 package net.gaia.taskprocessor.impl;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -274,7 +277,23 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	@Override
 	public void detener() {
-		this.delayedExecutor.shutdownNow();
-		this.inmediateExecutor.shutdownNow();
+		// El método indica que es seguro el casteo
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		final List<ScheduledFuture<?>> pending = (List) this.delayedExecutor.shutdownNow();
+		for (final ScheduledFuture<?> pendingTask : pending) {
+			pendingTask.cancel(true);
+		}
+		// Quitamos las tareas la lista para no referenciarlas mientras vive esta instancia
+		this.delayedTasks.clear();
+
+		// Creo que siempre son future
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		final List<Future<?>> pendingExecution = (List) this.inmediateExecutor.shutdownNow();
+		for (final Future<?> pendingInmediate : pendingExecution) {
+			pendingInmediate.cancel(true);
+		}
+
+		// Quitamos las tareas de pendientes porque si hay hilos activos no paran hasta terminarlas
+		this.inmediatePendingTasks.clear();
 	}
 }
