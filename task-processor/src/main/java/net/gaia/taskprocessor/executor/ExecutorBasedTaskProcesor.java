@@ -18,13 +18,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskCriteria;
+import net.gaia.taskprocessor.api.TaskDelayerProcessor;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessor;
@@ -44,18 +42,18 @@ import com.google.common.base.Objects;
  * 
  * @author D. García
  */
-public class ExecutorBasedTaskProcesor implements TaskProcessor {
+public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProcessor, DelegateProcessor {
 	private static final Logger LOG = LoggerFactory.getLogger(ExecutorBasedTaskProcesor.class);
 
 	private TaskProcessorListener processorListener;
 	private TaskExceptionHandler exceptionHandler;
 
-	private ScheduledThreadPoolExecutor delayedExecutor;
-	private ThreadPoolExecutor inmediateExecutor;
 	private TaskProcessingMetricsImpl metrics;
 
-	private ConcurrentLinkedQueue<TaskPlanner> delayedTasks;
+	private ThreadPoolExecutor inmediateExecutor;
 	private ConcurrentLinkedQueue<SubmittedRunnableTask> inmediatePendingTasks;
+
+	private ExecutorDelayerProcessor delayerProcessor;
 
 	/**
 	 * Crea un procesador con la configuración por defecto de un thread para todas las tareas
@@ -76,48 +74,17 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
 		final ExecutorBasedTaskProcesor processor = new ExecutorBasedTaskProcesor();
-		final RejectedTaskHandler rejectionHandler = RejectedTaskHandler.create(processor);
 		final int threadPoolSize = config.getThreadPoolSize();
 		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
 		final int executorQueueSize = threadPoolSize * 3;
+
 		processor.inmediateExecutor = new ThreadPoolExecutor(1, threadPoolSize, maxIdleTimePerThread.getQuantity(),
 				maxIdleTimePerThread.getTimeUnit(), new LinkedBlockingQueue<Runnable>(executorQueueSize),
-				ProcessorThreadFactory.create("TaskProcessor"), rejectionHandler);
-		processor.delayedExecutor = new ScheduledThreadPoolExecutor(1, ProcessorThreadFactory.create("TaskDelayer"),
-				rejectionHandler);
+				ProcessorThreadFactory.create("TaskProcessor"), TaskWorkerRejectionHandler.create());
 		processor.inmediatePendingTasks = new ConcurrentLinkedQueue<SubmittedRunnableTask>();
-		processor.delayedTasks = new ConcurrentLinkedQueue<TaskPlanner>();
+		processor.delayerProcessor = ExecutorDelayerProcessor.create(processor);
 		processor.metrics = TaskProcessingMetricsImpl.create(processor.inmediatePendingTasks);
 		return processor;
-	}
-
-	/**
-	 * Invocado cuando alguno de los executors rechaza una tarea encolada para procesar
-	 * 
-	 * @param runnable
-	 *            El runnable que engloba a la tarea
-	 * @param executor
-	 *            El executor que rechaza la tarea
-	 */
-	protected void onTaskRejected(final Runnable runnable, final ThreadPoolExecutor executor) {
-		if (executor == inmediateExecutor) {
-			final int maximunSize = executor.getMaximumPoolSize();
-			final int poolSize = executor.getPoolSize();
-			final int activeCount = executor.getActiveCount();
-			if (poolSize < maximunSize && activeCount == 0) {
-				LOG.error("El executor de tareas inmediatas rechazó el runnable: " + runnable
-						+ " y no hay threads activos, ni estamos usando el máximo. Posible exceso de tasks?");
-			} else {
-				LOG.trace("El executor de tareas inmediatas rechazó el runnable: " + runnable
-						+ ". Probablemente no detectamos que estabamos al limite");
-			}
-		} else if (executor == delayedExecutor) {
-			LOG.error("El executor de tareas con retraso rechazó el runnable: " + runnable
-					+ ". Posible exceso de tasks?");
-		} else {
-			LOG.error("Un executor[" + executor + "] que no es nuestro[" + this + "] rechazó el runnable: " + runnable
-					+ ". Posible exceso de tasks?");
-		}
 	}
 
 	/**
@@ -127,7 +94,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	public SubmittedTask process(final WorkUnit work) {
 		// Creamos la tarea y la ejecutamos inmediatamente
 		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
-		processImmediatelyWithExecutor(task);
+		processImmediately(task);
 		return task;
 	}
 
@@ -137,31 +104,15 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	@Override
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit work) {
-		// Creamos la tarea para el trabajo
-		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
-
-		// Creamos el planner que la pasará a ejecución inmediata en su momento
-		final TaskPlanner planner = TaskPlanner.create(task, this);
-		final TimeUnit timeUnit = workDelay.getTimeUnit();
-		final long quantity = workDelay.getQuantity();
-
-		// Registramos en la lista interna
-		planner.registerOn(delayedTasks);
-
-		// Programamos el planner para que espere el delay
-		this.delayedExecutor.schedule(planner, quantity, timeUnit);
-		return task;
+		final SubmittedTask delayedTask = this.delayerProcessor.processDelayed(workDelay, work);
+		return delayedTask;
 	}
 
 	/**
-	 * Este método ejecuta la tarea pasada usando el executor interno para procesarla en el momento.<br>
-	 * La tarea será agregada a la cola de tareas pendientes en el momento y se agregará un
-	 * {@link TaskWorker} si es posible
-	 * 
-	 * @param task
-	 *            La tarea a procesar
+	 * @see net.gaia.taskprocessor.executor.DelegateProcessor#processImmediately(net.gaia.taskprocessor.executor.SubmittedRunnableTask)
 	 */
-	protected void processImmediatelyWithExecutor(final SubmittedRunnableTask task) {
+	@Override
+	public void processImmediately(final SubmittedRunnableTask task) {
 		final boolean added = this.inmediatePendingTasks.add(task);
 		if (!added) {
 			LOG.error("No fue posible agregar la tarea[{}] como pendiente. Cancelando", task.getWork());
@@ -239,17 +190,8 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	@Override
 	public void removeTasksMatching(final TaskCriteria criteria) {
-		// Quitamos las tareas postergadas primero
-		final Iterator<TaskPlanner> delayedIterator = this.delayedTasks.iterator();
-		while (delayedIterator.hasNext()) {
-			final TaskPlanner taskPlanner = delayedIterator.next();
-			final SubmittedRunnableTask delayedTask = taskPlanner.getDelayedTask();
-			final WorkUnit workUnit = delayedTask.getWork();
-
-			if (criteria.matches(workUnit)) {
-				delayedIterator.remove();
-			}
-		}
+		// Quitamos las tareas con delay primero
+		this.delayerProcessor.removeTasksMatching(criteria);
 
 		// Luego las de ejecución inmediata
 		final Iterator<SubmittedRunnableTask> inmediateIterator = this.inmediatePendingTasks.iterator();
@@ -269,8 +211,8 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	public String toString() {
 		return Objects.toStringHelper(this).add("Concurrentes", this.inmediateExecutor.getMaximumPoolSize())
 				.add("Activas", this.inmediateExecutor.getActiveCount())
-				.add("Pendientes", this.inmediatePendingTasks.size()).add("Postergadas", this.delayedTasks.size())
-				.toString();
+				.add("Pendientes", this.inmediatePendingTasks.size())
+				.add("Postergadas", this.delayerProcessor.getPendingCount()).toString();
 	}
 
 	/**
@@ -278,16 +220,11 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor {
 	 */
 	@Override
 	public void detener() {
-		// El método indica que es seguro el casteo
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		final List<ScheduledFuture<?>> pending = (List) this.delayedExecutor.shutdownNow();
-		for (final ScheduledFuture<?> pendingTask : pending) {
-			pendingTask.cancel(true);
-		}
-		// Quitamos las tareas la lista para no referenciarlas mientras vive esta instancia
-		this.delayedTasks.clear();
+		// Primero detenemos las que tienen delay
+		this.delayerProcessor.detener();
 
-		// Creo que siempre son future
+		
+		// Asumo que siempre son future por lo que vi en debug
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		final List<Future<?>> pendingExecution = (List) this.inmediateExecutor.shutdownNow();
 		for (final Future<?> pendingInmediate : pendingExecution) {

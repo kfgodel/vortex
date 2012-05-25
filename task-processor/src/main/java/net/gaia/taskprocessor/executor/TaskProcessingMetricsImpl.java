@@ -12,7 +12,7 @@
  */
 package net.gaia.taskprocessor.executor;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
@@ -26,9 +26,9 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 public class TaskProcessingMetricsImpl implements TaskProcessingMetrics {
 
 	private AtomicLong processedCount;
-	private ConcurrentLinkedQueue<SubmittedRunnableTask> pendingTasks;
+	private Queue<SubmittedRunnableTask> pendingTasks;
 
-	public static TaskProcessingMetricsImpl create(final ConcurrentLinkedQueue<SubmittedRunnableTask> pendingTasks) {
+	public static TaskProcessingMetricsImpl create(final Queue<SubmittedRunnableTask> pendingTasks) {
 		final TaskProcessingMetricsImpl metrics = new TaskProcessingMetricsImpl();
 		metrics.processedCount = new AtomicLong(0);
 		metrics.pendingTasks = pendingTasks;

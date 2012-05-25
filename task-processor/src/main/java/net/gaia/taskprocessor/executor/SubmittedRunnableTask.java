@@ -34,6 +34,8 @@ import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa la tarea enviada y aceptada por el {@link TaskProcessor} que es ejecutable
  * por un {@link Executor}
@@ -44,6 +46,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	private static final Logger LOG = LoggerFactory.getLogger(SubmittedRunnableTask.class);
 
 	private WorkUnit workUnit;
+	public static final String workUnit_FIELD = "workUnit";
 	private TaskProcessor processor;
 
 	/**
@@ -61,6 +64,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * Estado actual de la tarea
 	 */
 	private AtomicReference<SubmittedTaskState> currentState;
+	public static final String currentState_FIELD = "currentState";
 
 	public WorkUnit getWorkUnit() {
 		return workUnit;
@@ -70,6 +74,16 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 		this.workUnit = workUnit;
 	}
 
+	/**
+	 * Crea una tarea para ser ejecutada por un processor
+	 * 
+	 * @param unit
+	 *            El código para ejecutar como tarea por el procesador
+	 * @param processor
+	 *            El procesador qeu ejecutará la tarea efectivamente, y del cual se obtendrá
+	 *            listener y handler para notificaciones
+	 * @return La tarea creada
+	 */
 	public static SubmittedRunnableTask create(final WorkUnit unit, final TaskProcessor processor) {
 		final SubmittedRunnableTask task = new SubmittedRunnableTask();
 		task.workUnit = unit;
@@ -237,7 +251,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 		return failingError.get();
 	}
 
-	public FutureTask<?> getOwnFuture() {
+	private FutureTask<?> getOwnFuture() {
 		return ownFuture;
 	}
 
@@ -297,6 +311,15 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 					"Se produjo un error en el listener al notificarlo de la aceptación de la tarea. Ignorando error",
 					e);
 		}
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(currentState_FIELD, currentState).add(workUnit_FIELD, workUnit)
+				.toString();
 	}
 
 }

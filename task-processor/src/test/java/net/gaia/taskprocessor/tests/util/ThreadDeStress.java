@@ -34,6 +34,10 @@ public class ThreadDeStress extends Thread {
 			} catch (final Exception e) {
 				LOG.error("Se produjo un error en una de las ejecuciones en paralelo");
 			}
+			if (esperaEntreEjecucionesEnMilis < 1) {
+				// Si la espera es 0, no esperamos directamente
+				continue;
+			}
 			try {
 				Thread.sleep(esperaEntreEjecucionesEnMilis);
 			} catch (final InterruptedException e) {

@@ -1,5 +1,5 @@
 /**
- * 16/02/2012 20:16:41 Copyright (C) 2011 Darío L. García
+ * 25/05/2012 16:15:32 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -15,27 +15,29 @@ package net.gaia.taskprocessor.executor;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * Esta clase representa el handler de tareas rechazadas en los executors del procesador de tareas
+ * Esta clase define el comportamiento tomado cuando una tarea es rechazada por el executor delayed
  * 
  * @author D. García
  */
-public class RejectedTaskHandler implements RejectedExecutionHandler {
-
-	private ExecutorBasedTaskProcesor processor;
+public class TaskPlannerRejectionHandler implements RejectedExecutionHandler {
+	private static final Logger LOG = LoggerFactory.getLogger(TaskPlannerRejectionHandler.class);
 
 	/**
 	 * @see java.util.concurrent.RejectedExecutionHandler#rejectedExecution(java.lang.Runnable,
 	 *      java.util.concurrent.ThreadPoolExecutor)
 	 */
 	@Override
-	public void rejectedExecution(final Runnable r, final ThreadPoolExecutor executor) {
-		processor.onTaskRejected(r, executor);
+	public void rejectedExecution(final Runnable runnable, final ThreadPoolExecutor executor) {
+		LOG.error("El executor de tareas con retraso rechazó el runnable: " + runnable
+				+ ". Posible saturación del executor?");
 	}
 
-	public static RejectedTaskHandler create(final ExecutorBasedTaskProcesor procesor) {
-		final RejectedTaskHandler handler = new RejectedTaskHandler();
-		handler.processor = procesor;
+	public static TaskPlannerRejectionHandler create() {
+		final TaskPlannerRejectionHandler handler = new TaskPlannerRejectionHandler();
 		return handler;
 	}
 }

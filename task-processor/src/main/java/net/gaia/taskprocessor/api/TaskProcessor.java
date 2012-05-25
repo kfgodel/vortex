@@ -20,7 +20,7 @@ package net.gaia.taskprocessor.api;
  * 
  * @author D. García
  */
-public interface TaskProcessor {
+public interface TaskProcessor extends TaskDelayerProcessor {
 
 	/**
 	 * Agrega la tarea pasada para ser procesada por los hilos disponibles en este procesador apenas
@@ -81,28 +81,16 @@ public interface TaskProcessor {
 	TaskExceptionHandler getExceptionHandler();
 
 	/**
-	 * Agrega la tarea pasada en el scheduler interno, de manera de ser procesada después de que
-	 * pase el tiempo indicado como delay.<br>
-	 * Al momento de cumplirse el delay la tarea será agregada en la cola de pendientes, por lo que
-	 * su ejecución real podrá retrasarse dependiendo de la carga del procesador
-	 * 
-	 * @param workDelay
-	 *            Espera a realizar antes de procesar el trabajo
-	 * @param trabajo
-	 *            El trabajo a procesar
-	 * @return El {@link SubmittedTask} para poder controlar el estado de la tarea
-	 */
-	SubmittedTask processDelayed(TimeMagnitude workDelay, WorkUnit trabajo);
-
-	/**
 	 * Elimina de este procesador, las tareas pendientes que cumplen con el criterio pasado.<br>
 	 * Las tareas que se estén ejecutando no podrán ser eliminadas
 	 */
+	@Override
 	void removeTasksMatching(TaskCriteria criteria);
 
 	/**
 	 * Detiene la ejecución de tareas en este procesador.<br>
 	 * El procesador no es utilizable a partir de este método
 	 */
+	@Override
 	void detener();
 }

@@ -16,6 +16,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa un trabajador que resuelve las tareas pendientes de un
  * {@link TaskProcessor}.<br>
@@ -27,6 +30,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
  * @author D. García
  */
 public class TaskWorker implements Runnable {
+	private static final Logger LOG = LoggerFactory.getLogger(TaskWorker.class);
 
 	private ConcurrentLinkedQueue<SubmittedRunnableTask> pendingTasks;
 
@@ -42,10 +46,21 @@ public class TaskWorker implements Runnable {
 		SubmittedRunnableTask nextTask;
 		// Sacamos la siguiente tarea pendiente
 		while ((nextTask = pendingTasks.poll()) != null) {
-			nextTask.execute();
-			metrics.incrementProcessed();
+			perform(nextTask);
 		}
 		// No quedan más tareas, terminamos
+	}
+
+	/**
+	 * @param nextTask
+	 */
+	private void perform(final SubmittedRunnableTask nextTask) {
+		try {
+			nextTask.execute();
+		} catch (final Exception e) {
+			LOG.error("Se escapo una excepción no controlada de la tarea ejecutada. Omitiendo error", e);
+		}
+		metrics.incrementProcessed();
 	}
 
 	public static TaskWorker create(final ConcurrentLinkedQueue<SubmittedRunnableTask> inmediatePendingTasks,

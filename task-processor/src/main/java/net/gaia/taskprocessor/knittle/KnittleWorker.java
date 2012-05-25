@@ -12,11 +12,11 @@
  */
 package net.gaia.taskprocessor.knittle;
 
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
+import net.gaia.taskprocessor.executor.TaskProcessingMetricsImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +31,7 @@ public class KnittleWorker implements Runnable {
 
 	private LinkedBlockingQueue<SubmittedRunnableTask> sharedPendingTasks;
 	private AtomicBoolean running;
+	private TaskProcessingMetricsImpl metrics;
 
 	/**
 	 * @see java.lang.Runnable#run()
@@ -43,7 +44,7 @@ public class KnittleWorker implements Runnable {
 				perform(nextTask);
 			} catch (final InterruptedException e) {
 				final Thread currentThread = Thread.currentThread();
-				LOG.debug("El thread[" + currentThread + "] fue interrumpido esperando más tareas", e);
+				LOG.trace("El thread[" + currentThread + "] fue interrumpido esperando más tareas", e);
 			}
 		}
 	}
@@ -56,17 +57,29 @@ public class KnittleWorker implements Runnable {
 	 */
 	private void perform(final SubmittedRunnableTask nextTask) {
 		try {
-			final FutureTask<?> taskFuture = nextTask.getOwnFuture();
-			taskFuture.run();
+			nextTask.execute();
 		} catch (final Exception e) {
 			LOG.error("Se escapo una excepción no controlada de la tarea ejecutada. Omitiendo error", e);
 		}
+		metrics.incrementProcessed();
 	}
 
-	public static KnittleWorker create(final LinkedBlockingQueue<SubmittedRunnableTask> pendingTasks) {
+	public static KnittleWorker create(final LinkedBlockingQueue<SubmittedRunnableTask> pendingTasks,
+			final TaskProcessingMetricsImpl metrics) {
 		final KnittleWorker worker = new KnittleWorker();
 		worker.sharedPendingTasks = pendingTasks;
 		worker.running = new AtomicBoolean(true);
+		worker.metrics = metrics;
 		return worker;
+	}
+
+	/**
+	 * Detiene la ejecución de este worker apenas es posible (siempre que no esté esperando para
+	 * ejecutar más tareas).<br>
+	 * Si el thread está bloqueado esperando más tareas, esta instancia dejará de ejecutar al
+	 * interrumpir la espera
+	 */
+	public void stopRunning() {
+		this.running.set(false);
 	}
 }
