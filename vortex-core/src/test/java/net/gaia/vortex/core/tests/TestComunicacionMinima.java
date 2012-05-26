@@ -204,4 +204,30 @@ public class TestComunicacionMinima {
 		LOG.debug("Milis de espera promedio por mensaje: {}", promedioNanosPorMensaje / 1000000d);
 	}
 
+	@Test
+	public void elMensajeDeberiaLlegarADosReceptoresIndependientes() {
+		// Aramamos la red con otro receptor
+		final HandlerEncolador handlerReceptor1 = HandlerEncolador.create();
+		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor1);
+
+		final HandlerEncolador handlerReceptor2 = HandlerEncolador.create();
+		final NodoPortal nodoReceptor2 = NodoPortalImpl.create();
+		nodoReceptor2.setHandlerDeMensajesVecinos(handlerReceptor2);
+
+		nodoRuteador.conectarCon(nodoReceptor2);
+		nodoReceptor2.conectarCon(nodoRuteador);
+
+		// Mandamos el mensaje
+		final Object mensajeEnviado = new Object();
+		nodoEmisor.enviarAVecinos(mensajeEnviado);
+
+		// Verificamos que haya llegado a los dos
+		final Object mensajeRecibidoPor1 = handlerReceptor1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertEquals("El primer receptor debería haber recibido el mensaje", mensajeEnviado, mensajeRecibidoPor1);
+
+		final Object mensajeRecibidoPor2 = handlerReceptor2.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertEquals("El segundo receptor debería haber recibido el mensaje", mensajeEnviado,
+				mensajeRecibidoPor2);
+	}
+
 }

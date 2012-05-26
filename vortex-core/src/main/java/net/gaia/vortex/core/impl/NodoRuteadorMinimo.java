@@ -38,9 +38,27 @@ public class NodoRuteadorMinimo extends NodoSupport implements Nodo {
 		this.processor.process(enviarAOtros);
 	}
 
-	public static NodoRuteadorMinimo create() {
+	/**
+	 * Crea un nodo de ruteo mínimo compartiendo el procesador de tareas indicado
+	 * 
+	 * @param procesadorDeTareas
+	 *            El procesado a utilizar para rutear los mensajes asíncronamente
+	 * @return El nodo ruteador creado
+	 */
+	public static NodoRuteadorMinimo create(final TaskProcessor procesadorDeTareas) {
 		final NodoRuteadorMinimo nodo = new NodoRuteadorMinimo();
-		nodo.processor = ExecutorBasedTaskProcesor.create();
+		nodo.processor = procesadorDeTareas;
+		return nodo;
+	}
+
+	/**
+	 * Crea un nodo por default creando también su procesador de tareas interno
+	 * 
+	 * @return El nodo ruteador creado listo para usar
+	 */
+	public static NodoRuteadorMinimo create() {
+		final ExecutorBasedTaskProcesor procesadorDeTareas = ExecutorBasedTaskProcesor.create();
+		final NodoRuteadorMinimo nodo = create(procesadorDeTareas);
 		return nodo;
 	}
 
@@ -51,4 +69,14 @@ public class NodoRuteadorMinimo extends NodoSupport implements Nodo {
 	public void liberarRecursos() {
 		this.processor.detener();
 	}
+
+	/**
+	 * Devuelve el procesador utilizado por este nodo permitiendo compartirlo con otros nodos
+	 * 
+	 * @return El procesador de tareas utilizado por este nodo para rutear asíncronamente
+	 */
+	public TaskProcessor getProcessor() {
+		return processor;
+	}
+
 }
