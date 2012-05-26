@@ -13,6 +13,7 @@
 package net.gaia.vortex.core.impl;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.impl.tasks.EnviarMensajeAOtrosVecinosTask;
@@ -57,7 +58,9 @@ public class NodoRuteadorMinimo extends NodoSupport implements Nodo {
 	 * @return El nodo ruteador creado listo para usar
 	 */
 	public static NodoRuteadorMinimo create() {
-		final ExecutorBasedTaskProcesor procesadorDeTareas = ExecutorBasedTaskProcesor.create();
+		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
+		config.setThreadPoolSize(4);
+		final ExecutorBasedTaskProcesor procesadorDeTareas = ExecutorBasedTaskProcesor.create(config);
 		final NodoRuteadorMinimo nodo = create(procesadorDeTareas);
 		return nodo;
 	}

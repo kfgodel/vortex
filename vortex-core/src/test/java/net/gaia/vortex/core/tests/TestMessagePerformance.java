@@ -14,6 +14,7 @@ package net.gaia.vortex.core.tests;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.tests.util.StressGenerator;
 import net.gaia.util.SystemChronometer;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
@@ -38,12 +39,14 @@ public class TestMessagePerformance {
 	private NodoRuteadorMinimo ruteadorCentral;
 	private NodoPortalImpl nodoEmisor;
 	private NodoPortalImpl nodoReceptor;
+	private AtomicLong contadorTotalDeRecibidos;
 
 	@Before
 	public void crearRuteadorCentral() {
 		ruteadorCentral = NodoRuteadorMinimo.create();
 		nodoEmisor = NodoPortalImpl.create();
 		nodoReceptor = NodoPortalImpl.create();
+		contadorTotalDeRecibidos = new AtomicLong();
 	}
 
 	@After
@@ -57,9 +60,10 @@ public class TestMessagePerformance {
 		final int esperaEntreMensajesEnMillis = 0;
 		final int cantidadDeNodosReceptores = 10;
 		final int cantidadDeIntermediarios = 1;
-		armarTopologia(cantidadDeIntermediarios, cantidadDeNodosReceptores);
+		final boolean procesadorCompartido = false;
+		armarTopologia(cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
 		final String nombreDelTest = crearNombreDelTest(cantidadDeThreadsGeneradoresDeMensajes,
-				esperaEntreMensajesEnMillis, cantidadDeIntermediarios, cantidadDeNodosReceptores);
+				esperaEntreMensajesEnMillis, cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
 		procesarYmedirRuteos(cantidadDeThreadsGeneradoresDeMensajes, esperaEntreMensajesEnMillis, nombreDelTest);
 	}
 
@@ -69,9 +73,10 @@ public class TestMessagePerformance {
 		final int esperaEntreMensajesEnMillis = 0;
 		final int cantidadDeNodosReceptores = 1;
 		final int cantidadDeIntermediarios = 1;
-		armarTopologia(cantidadDeIntermediarios, cantidadDeNodosReceptores);
+		final boolean procesadorCompartido = false;
+		armarTopologia(cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
 		final String nombreDelTest = crearNombreDelTest(cantidadDeThreadsGeneradoresDeMensajes,
-				esperaEntreMensajesEnMillis, cantidadDeIntermediarios, cantidadDeNodosReceptores);
+				esperaEntreMensajesEnMillis, cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
 		procesarYmedirRuteos(cantidadDeThreadsGeneradoresDeMensajes, esperaEntreMensajesEnMillis, nombreDelTest);
 	}
 
@@ -81,9 +86,10 @@ public class TestMessagePerformance {
 		final int esperaEntreMensajesEnMillis = 1;
 		final int cantidadDeNodosReceptores = 10;
 		final int cantidadDeIntermediarios = 1;
-		armarTopologia(cantidadDeIntermediarios, cantidadDeNodosReceptores);
+		final boolean procesadorCompartido = false;
+		armarTopologia(cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
 		final String nombreDelTest = crearNombreDelTest(cantidadDeThreadsGeneradoresDeMensajes,
-				esperaEntreMensajesEnMillis, cantidadDeIntermediarios, cantidadDeNodosReceptores);
+				esperaEntreMensajesEnMillis, cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
 		procesarYmedirRuteos(cantidadDeThreadsGeneradoresDeMensajes, esperaEntreMensajesEnMillis, nombreDelTest);
 	}
 
@@ -93,40 +99,76 @@ public class TestMessagePerformance {
 		final int esperaEntreMensajesEnMillis = 0;
 		final int cantidadDeIntermediarios = 10;
 		final int cantidadDeNodosReceptores = 1;
-
-		// Definimos la topología
-		armarTopologia(cantidadDeIntermediarios, cantidadDeNodosReceptores);
-
+		final boolean procesadorCompartido = false;
+		armarTopologia(cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
 		final String nombreDelTest = crearNombreDelTest(cantidadDeThreadsGeneradoresDeMensajes,
-				esperaEntreMensajesEnMillis, cantidadDeIntermediarios, cantidadDeNodosReceptores);
+				esperaEntreMensajesEnMillis, cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
 		procesarYmedirRuteos(cantidadDeThreadsGeneradoresDeMensajes, esperaEntreMensajesEnMillis, nombreDelTest);
 	}
 
-	/**
-	 * @param cantidadDeThreadsGeneradoresDeMensajes
-	 * @param esperaEntreMensajesEnMillis
-	 * @param cantidadDeIntermediarios
-	 * @param cantidadDeNodosReceptores
-	 * @return
-	 */
+	@Test
+	public void UnThreadGeneradorUnNodoReceptorDiezInterMediariosDependientesSinEspera() throws InterruptedException {
+		final int cantidadDeThreadsGeneradoresDeMensajes = 1;
+		final int esperaEntreMensajesEnMillis = 0;
+		final int cantidadDeIntermediarios = 10;
+		final int cantidadDeNodosReceptores = 1;
+		final boolean procesadorCompartido = true;
+		armarTopologia(cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
+		final String nombreDelTest = crearNombreDelTest(cantidadDeThreadsGeneradoresDeMensajes,
+				esperaEntreMensajesEnMillis, cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
+		procesarYmedirRuteos(cantidadDeThreadsGeneradoresDeMensajes, esperaEntreMensajesEnMillis, nombreDelTest);
+	}
+
+	@Test
+	public void DiezThreadGeneradorUnNodoReceptorDiezInterMediariosIndependientesConEsperadDe1ms()
+			throws InterruptedException {
+		final int cantidadDeThreadsGeneradoresDeMensajes = 10;
+		final int esperaEntreMensajesEnMillis = 1;
+		final int cantidadDeIntermediarios = 10;
+		final int cantidadDeNodosReceptores = 1;
+		final boolean procesadorCompartido = false;
+		armarTopologia(cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
+		final String nombreDelTest = crearNombreDelTest(cantidadDeThreadsGeneradoresDeMensajes,
+				esperaEntreMensajesEnMillis, cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
+		procesarYmedirRuteos(cantidadDeThreadsGeneradoresDeMensajes, esperaEntreMensajesEnMillis, nombreDelTest);
+	}
+
+	@Test
+	public void DiezThreadGeneradorUnNodoReceptorDiezInterMediariosDependientesConEsperadDe1ms()
+			throws InterruptedException {
+		final int cantidadDeThreadsGeneradoresDeMensajes = 10;
+		final int esperaEntreMensajesEnMillis = 1;
+		final int cantidadDeIntermediarios = 10;
+		final int cantidadDeNodosReceptores = 1;
+		final boolean procesadorCompartido = true;
+		armarTopologia(cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
+		final String nombreDelTest = crearNombreDelTest(cantidadDeThreadsGeneradoresDeMensajes,
+				esperaEntreMensajesEnMillis, cantidadDeIntermediarios, cantidadDeNodosReceptores, procesadorCompartido);
+		procesarYmedirRuteos(cantidadDeThreadsGeneradoresDeMensajes, esperaEntreMensajesEnMillis, nombreDelTest);
+	}
+
 	private String crearNombreDelTest(final int cantidadDeThreadsGeneradoresDeMensajes,
 			final int esperaEntreMensajesEnMillis, final int cantidadDeIntermediarios,
-			final int cantidadDeNodosReceptores) {
+			final int cantidadDeNodosReceptores, final boolean procesadorCompartido) {
 		final String nombreDelTest = cantidadDeThreadsGeneradoresDeMensajes + "/" + esperaEntreMensajesEnMillis
-				+ "ms ->(" + cantidadDeIntermediarios + ")->" + cantidadDeNodosReceptores;
+				+ "ms ->(" + cantidadDeIntermediarios + ")" + (procesadorCompartido ? "S" : "") + "->"
+				+ cantidadDeNodosReceptores;
 		return nombreDelTest;
 	}
 
-	/**
-	 * @param cantidadDeIntermediarios
-	 * @param cantidadDeNodosReceptores
-	 */
-	private void armarTopologia(final int cantidadDeIntermediarios, final int cantidadDeNodosReceptores) {
+	private void armarTopologia(final int cantidadDeIntermediarios, final int cantidadDeNodosReceptores,
+			final boolean compartirProcesador) {
 		interconectarCon(nodoEmisor, ruteadorCentral);
 
+		final TaskProcessor procesadorCompartido = ruteadorCentral.getProcessor();
 		Nodo ultimoIntermediario = ruteadorCentral;
 		for (int i = 1; i < cantidadDeIntermediarios; i++) {
-			final NodoRuteadorMinimo intermediarioAdicional = NodoRuteadorMinimo.create();
+			final NodoRuteadorMinimo intermediarioAdicional;
+			if (compartirProcesador) {
+				intermediarioAdicional = NodoRuteadorMinimo.create(procesadorCompartido);
+			} else {
+				intermediarioAdicional = NodoRuteadorMinimo.create();
+			}
 			interconectarCon(ultimoIntermediario, intermediarioAdicional);
 			ultimoIntermediario = intermediarioAdicional;
 		}
@@ -135,6 +177,12 @@ public class TestMessagePerformance {
 		// Agregamos los otros receptores nulos al último nodo ruteador
 		for (int i = 1; i < cantidadDeNodosReceptores; i++) {
 			final NodoPortalImpl receptorAdicional = NodoPortalImpl.create();
+			receptorAdicional.setHandlerDeMensajesVecinos(new HandlerDeMensajesVecinos() {
+				@Override
+				public void onMensajeDeVecinoRecibido(final Object mensaje) {
+					contadorTotalDeRecibidos.incrementAndGet();
+				}
+			});
 			interconectarCon(ultimoIntermediario, receptorAdicional);
 		}
 	}
@@ -169,11 +217,12 @@ public class TestMessagePerformance {
 			}
 		});
 		// Y cada recibido
-		final AtomicLong contadorDeRecibidos = new AtomicLong();
+		final AtomicLong contadorIndividialDeRecibidos = new AtomicLong();
 		nodoReceptor.setHandlerDeMensajesVecinos(new HandlerDeMensajesVecinos() {
 			@Override
 			public void onMensajeDeVecinoRecibido(final Object mensaje) {
-				contadorDeRecibidos.incrementAndGet();
+				contadorIndividialDeRecibidos.incrementAndGet();
+				contadorTotalDeRecibidos.incrementAndGet();
 			}
 		});
 
@@ -184,16 +233,19 @@ public class TestMessagePerformance {
 
 		// Esperamos 10s para medir la perf
 		Thread.sleep(10000);
-		final long cantidadRecibidos = contadorDeRecibidos.get();
+		final long cantidadIndividualDeRecibidos = contadorIndividialDeRecibidos.get();
 		final long cantidadEnviada = contadorDeEnviados.get();
+		final long cantidadTotalDeRecibidos = contadorTotalDeRecibidos.get();
 		final long millisTranscurridos = crono.getElapsedMillis();
-		LOG.info("[{}]: En {} ms se enviaron {} mensajes y se recibieron {}", new Object[] { nombreDelTest,
-				millisTranscurridos, cantidadEnviada, cantidadRecibidos });
-		final double deliveryMeasure = (100d * cantidadRecibidos) / cantidadEnviada;
+		LOG.info("[{}]: En {} ms se enviaron {} mensajes y se recibieron {} de {} recepciones", new Object[] {
+				nombreDelTest, millisTranscurridos, cantidadEnviada, cantidadIndividualDeRecibidos,
+				cantidadTotalDeRecibidos });
+		final double deliveryMeasure = (100d * cantidadIndividualDeRecibidos) / cantidadEnviada;
 		final double inputMeasure = ((double) cantidadEnviada) / millisTranscurridos;
-		final double outputMeasure = ((double) cantidadRecibidos) / millisTranscurridos;
-		LOG.info("[{}]: Delivery:{}% Input:{}msg/ms Output:{}msg/ms", new Object[] { nombreDelTest, deliveryMeasure,
-				inputMeasure, outputMeasure });
+		final double individualOutputMeasure = ((double) cantidadIndividualDeRecibidos) / millisTranscurridos;
+		final double totalOutputMeasure = ((double) cantidadTotalDeRecibidos) / millisTranscurridos;
+		LOG.info("[{}]: Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms OutputT:{} msg/ms", new Object[] {
+				nombreDelTest, deliveryMeasure, inputMeasure, individualOutputMeasure, totalOutputMeasure });
 
 		stressGenerator.detenerThreads();
 	}
