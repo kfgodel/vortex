@@ -18,7 +18,9 @@ import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
-import net.gaia.vortex.core.impl.NodoMinimo;
+import net.gaia.vortex.core.api.NodoPortal;
+import net.gaia.vortex.core.impl.NodoPortalImpl;
+import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,24 +37,28 @@ import org.slf4j.LoggerFactory;
 public class TestComunicacionMinima {
 	private static final Logger LOG = LoggerFactory.getLogger(TestComunicacionMinima.class);
 
-	private NodoMinimo nodo;
+	private NodoRuteadorMinimo nodoRuteador;
 
-	private NodoMinimo nodoEmisor;
-	private NodoMinimo nodoReceptor;
+	private NodoPortal nodoEmisor;
+	private NodoPortal nodoReceptor;
 
 	@Before
 	public void crearNodos() {
-		nodo = NodoMinimo.create();
-		nodoEmisor = NodoMinimo.create();
-		nodoReceptor = NodoMinimo.create();
-		nodoEmisor.conectarCon(nodoReceptor);
+		nodoRuteador = NodoRuteadorMinimo.create();
+		nodoEmisor = NodoPortalImpl.create();
+		nodoReceptor = NodoPortalImpl.create();
+
+		nodoEmisor.conectarCon(nodoRuteador);
+
+		nodoRuteador.conectarCon(nodoReceptor);
+		nodoRuteador.conectarCon(nodoEmisor);
+
+		nodoReceptor.conectarCon(nodoRuteador);
 	}
 
 	@After
 	public void eliminarNodos() {
-		nodo.liberarRecursos();
-		nodoEmisor.liberarRecursos();
-		nodoReceptor.liberarRecursos();
+		nodoRuteador.liberarRecursos();
 	}
 
 	/**
@@ -61,7 +67,7 @@ public class TestComunicacionMinima {
 	@Test
 	public void el_Emisor_Deberia_Poder_Enviar_Por_Vortex_Cualquier_Objeto_Serializable() {
 		final Object mensaje = new Object();
-		nodo.enviarAVecinos(mensaje);
+		nodoEmisor.enviarAVecinos(mensaje);
 	}
 
 	/**
@@ -70,7 +76,7 @@ public class TestComunicacionMinima {
 	@Test
 	public void el_Receptor_Debería_Poder_Recibir_De_Vortex_Cualquier_Objeto_Serializable() {
 		final HandlerDeMensajesVecinos handlerParaMensajesRecibidos = HandlerEncolador.create();
-		nodo.setHandlerDeMensajesVecinos(handlerParaMensajesRecibidos);
+		nodoReceptor.setHandlerDeMensajesVecinos(handlerParaMensajesRecibidos);
 	}
 
 	/**
@@ -145,14 +151,21 @@ public class TestComunicacionMinima {
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayUnNodoEnElMedio() {
-		final NodoMinimo nodoEmisor = NodoMinimo.create();
-		final NodoMinimo nodoIntermedio = NodoMinimo.create();
-		final NodoMinimo nodoReceptor = NodoMinimo.create();
+		final NodoPortal nodoEmisor = NodoPortalImpl.create();
+		final NodoRuteadorMinimo nodoIntermedio1 = NodoRuteadorMinimo.create();
+		final NodoRuteadorMinimo nodoIntermedio2 = NodoRuteadorMinimo.create();
+		final NodoPortal nodoReceptor = NodoPortalImpl.create();
+
 		final HandlerEncolador handlerReceptor = HandlerEncolador.create();
 		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor);
 
-		nodoEmisor.conectarCon(nodoIntermedio);
-		nodoIntermedio.conectarCon(nodoReceptor);
+		nodoEmisor.conectarCon(nodoIntermedio1);
+		nodoIntermedio1.conectarCon(nodoIntermedio2);
+		nodoIntermedio2.conectarCon(nodoReceptor);
+
+		nodoReceptor.conectarCon(nodoIntermedio2);
+		nodoIntermedio2.conectarCon(nodoIntermedio1);
+		nodoIntermedio1.conectarCon(nodoEmisor);
 
 		final String mensajeEnviado = "Mensaje";
 		nodoEmisor.enviarAVecinos(mensajeEnviado);
@@ -189,16 +202,6 @@ public class TestComunicacionMinima {
 
 		final double promedioNanosPorMensaje = handlerCronometro.getPromedioDeEsperaPorMensaje();
 		LOG.debug("Milis de espera promedio por mensaje: {}", promedioNanosPorMensaje / 1000000d);
-
-		// System.out.println(elapsedNanos / 1000 + "segs elapsed in " + cantidadDeMensajes +
-		// " msgs");
-		// final double milisPorMensaje = elapsedNanos / cantidadDeMensajes;
-		// System.out.println(milisPorMensaje + "ms por mensaje");
-		//
-		// final double cantidadDeMensajesPorSegundos = cantidadDeMensajes / (elapsedNanos / 1000);
-		// System.out.println(cantidadDeMensajesPorSegundos + " mensajes por segundo");
-		// Assert.assertTrue("La cantidad de mensajes entregados deberían ser mayor a 1000 por segundo: "
-		// + cantidadDeMensajesPorSegundos, cantidadDeMensajesPorSegundos > 1000d);
 	}
 
 }

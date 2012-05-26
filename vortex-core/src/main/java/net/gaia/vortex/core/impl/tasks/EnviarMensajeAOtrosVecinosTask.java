@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.impl.tasks;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Collection;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
@@ -28,7 +28,7 @@ public class EnviarMensajeAOtrosVecinosTask implements WorkUnit {
 
 	private Nodo nodoEmisorOriginal;
 	private Object mensaje;
-	private ConcurrentLinkedQueue<Nodo> vecinos;
+	private Collection<Nodo> vecinos;
 	private TaskProcessor processor;
 	private Nodo nodoRelay;
 
@@ -48,7 +48,7 @@ public class EnviarMensajeAOtrosVecinosTask implements WorkUnit {
 	}
 
 	public static EnviarMensajeAOtrosVecinosTask create(final Nodo nodoRelay, final Nodo emisorOriginal,
-			final Object mensaje, final ConcurrentLinkedQueue<Nodo> nodosVecinos, final TaskProcessor processor) {
+			final Object mensaje, final Collection<Nodo> nodosVecinos, final TaskProcessor processor) {
 		final EnviarMensajeAOtrosVecinosTask envio = new EnviarMensajeAOtrosVecinosTask();
 		envio.nodoEmisorOriginal = emisorOriginal;
 		envio.nodoRelay = nodoRelay;
