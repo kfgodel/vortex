@@ -140,4 +140,13 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 		}
 		return bloque;
 	}
+
+	public static MetricasEnBloque create(final long duracionDelBloqueEnMilis) {
+		final MetricasEnBloque metricas = new MetricasEnBloque();
+		metricas.duracionDelBloqueEnMillis = duracionDelBloqueEnMilis;
+		metricas.metricasContinuas = MetricasPorTiempoImpl.create();
+		metricas.ultimoSnapshot = new AtomicReference<SnapshotDeMetricaPorTiempo>(
+				SnapshotDeMetricaPorTiempo.createZero());
+		return metricas;
+	}
 }
