@@ -17,6 +17,7 @@ import java.util.Collection;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.impl.metrics.MetricasDelNodoImpl;
 
 /**
  * Esta clase representa la tarea que realiza el nodo en la que envía el mensaje recibido desde un
@@ -31,6 +32,7 @@ public class EnviarMensajeAOtrosVecinosTask implements WorkUnit {
 	private Collection<Nodo> vecinos;
 	private TaskProcessor processor;
 	private Nodo nodoRelay;
+	private MetricasDelNodoImpl metricas;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
@@ -45,16 +47,21 @@ public class EnviarMensajeAOtrosVecinosTask implements WorkUnit {
 			final EnviarMensajeAVecinoTask envioAVecino = EnviarMensajeAVecinoTask.create(nodoRelay, mensaje, vecino);
 			processor.process(envioAVecino);
 		}
+		// Agregamos al final el registro del ruteo que realizamos
+		final RegistrarRuteoRealizado registrar = RegistrarRuteoRealizado.create(metricas);
+		processor.process(registrar);
 	}
 
 	public static EnviarMensajeAOtrosVecinosTask create(final Nodo nodoRelay, final Nodo emisorOriginal,
-			final Object mensaje, final Collection<Nodo> nodosVecinos, final TaskProcessor processor) {
+			final Object mensaje, final Collection<Nodo> nodosVecinos, final TaskProcessor processor,
+			final MetricasDelNodoImpl metricasDelNodo) {
 		final EnviarMensajeAOtrosVecinosTask envio = new EnviarMensajeAOtrosVecinosTask();
 		envio.nodoEmisorOriginal = emisorOriginal;
 		envio.nodoRelay = nodoRelay;
 		envio.mensaje = mensaje;
 		envio.vecinos = nodosVecinos;
 		envio.processor = processor;
+		envio.metricas = metricasDelNodo;
 		return envio;
 	}
 }

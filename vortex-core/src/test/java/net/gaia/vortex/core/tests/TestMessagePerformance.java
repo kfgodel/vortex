@@ -19,6 +19,8 @@ import net.gaia.taskprocessor.tests.util.StressGenerator;
 import net.gaia.util.SystemChronometer;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.metrics.MetricasDelNodo;
+import net.gaia.vortex.core.api.metrics.MetricasPorTiempo;
 import net.gaia.vortex.core.impl.NodoPortalImpl;
 import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
 
@@ -246,6 +248,21 @@ public class TestMessagePerformance {
 		final double totalOutputMeasure = ((double) cantidadTotalDeRecibidos) / millisTranscurridos;
 		LOG.info("[{}]: Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms OutputT:{} msg/ms", new Object[] {
 				nombreDelTest, deliveryMeasure, inputMeasure, individualOutputMeasure, totalOutputMeasure });
+
+		final MetricasDelNodo metricas = ruteadorCentral.getMetricas();
+		final MetricasPorTiempo metricasTotales = metricas.getMetricasTotales();
+		LOG.debug("[{}]: En nodo Totales - Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms", new Object[] {
+				nombreDelTest, metricasTotales.getTasaDeDelivery() * 100, metricasTotales.getVelocidadDeRecepcion(),
+				metricasTotales.getVelocidadDeEnvio() });
+		final MetricasPorTiempo cada10 = metricas.getMetricasEnBloqueDe5Segundos();
+		LOG.debug("[{}]: En nodo Cada 10s - Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms",
+				new Object[] { nombreDelTest, cada10.getTasaDeDelivery() * 100, cada10.getVelocidadDeRecepcion(),
+						cada10.getVelocidadDeEnvio() });
+		final MetricasPorTiempo cada1 = metricas.getMetricasEnBloqueDeUnSegundo();
+		LOG.debug(
+				"[{}]: En nodo Cada 1s - Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms",
+				new Object[] { nombreDelTest, cada1.getTasaDeDelivery() * 100, cada1.getVelocidadDeRecepcion(),
+						cada1.getVelocidadDeEnvio() });
 
 		stressGenerator.detenerThreads();
 	}

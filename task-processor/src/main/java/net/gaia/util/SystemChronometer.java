@@ -70,4 +70,23 @@ public class SystemChronometer {
 		return elapsedMillis;
 	}
 
+	/**
+	 * Devuelve la cantidad de nanos transcurridos desde el momento de inicio o creación, hasta el
+	 * momento actual
+	 * 
+	 * @return La cantidad de nanos medidos con {@link System#nanoTime()}
+	 */
+	public long getElapsedNanos() {
+		final long elapsedNanos = getNanos() - startNanos;
+		return elapsedNanos;
+	}
+
+	/**
+	 * Devuelve el momento en el que se inicio el conteo de tiempo en milis para este cronómetro
+	 * 
+	 * @return El momento de referencia cero en milis tomado de {@link System#currentTimeMillis()}
+	 */
+	public long getStartMillis() {
+		return this.startMillis;
+	}
 }

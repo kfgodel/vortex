@@ -16,6 +16,8 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.metrics.MetricasDelNodo;
+import net.gaia.vortex.core.impl.metrics.MetricasDelNodoImpl;
 import net.gaia.vortex.core.impl.tasks.EnviarMensajeAOtrosVecinosTask;
 
 /**
@@ -27,6 +29,7 @@ import net.gaia.vortex.core.impl.tasks.EnviarMensajeAOtrosVecinosTask;
 public class NodoRuteadorMinimo extends NodoSupport implements Nodo {
 
 	private TaskProcessor processor;
+	private MetricasDelNodoImpl metricas;
 
 	/**
 	 * @see net.gaia.vortex.core.api.Nodo#recibirMensajeDesde(net.gaia.vortex.core.api.Nodo,
@@ -34,8 +37,9 @@ public class NodoRuteadorMinimo extends NodoSupport implements Nodo {
 	 */
 	@Override
 	public void recibirMensajeDesde(final Nodo emisor, final Object mensaje) {
+		metricas.registrarRecepcion();
 		final EnviarMensajeAOtrosVecinosTask enviarAOtros = EnviarMensajeAOtrosVecinosTask.create(this, emisor,
-				mensaje, getNodosVecinos(), processor);
+				mensaje, getNodosVecinos(), processor, metricas);
 		this.processor.process(enviarAOtros);
 	}
 
@@ -49,6 +53,7 @@ public class NodoRuteadorMinimo extends NodoSupport implements Nodo {
 	public static NodoRuteadorMinimo create(final TaskProcessor procesadorDeTareas) {
 		final NodoRuteadorMinimo nodo = new NodoRuteadorMinimo();
 		nodo.processor = procesadorDeTareas;
+		nodo.metricas = MetricasDelNodoImpl.create();
 		return nodo;
 	}
 
@@ -82,4 +87,7 @@ public class NodoRuteadorMinimo extends NodoSupport implements Nodo {
 		return processor;
 	}
 
+	public MetricasDelNodo getMetricas() {
+		return metricas;
+	}
 }
