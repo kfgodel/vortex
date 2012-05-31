@@ -12,9 +12,15 @@
  */
 package ar.dgarcia.objectsockets.impl;
 
+import java.net.SocketAddress;
+
+import org.apache.mina.core.service.IoHandler;
+import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
+
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.api.ObjectSocketConfiguration;
+import ar.dgarcia.objectsockets.external.ObjectAcceptorIoHandler;
 
 /**
  * Esta clase representa el conector que permite acceder a un {@link ObjectSocket} como receptor de
@@ -24,9 +30,25 @@ import ar.dgarcia.objectsockets.api.ObjectSocketConfiguration;
  */
 public class ObjectSocketAcceptor implements Disposable {
 
+	private NioSocketAcceptor socketAcceptor;
+	private ObjectSocketConfiguration config;
+
 	public static ObjectSocketAcceptor create(final ObjectSocketConfiguration config) {
-		final ObjectSocketAcceptor name = new ObjectSocketAcceptor();
-		return name;
+		final ObjectSocketAcceptor acceptor = new ObjectSocketAcceptor();
+		acceptor.config = config;
+		acceptor.openSocket();
+		return acceptor;
+	}
+
+	/**
+	 * Crea el acceptor interno y bindea al socket indicado en la configuracion
+	 */
+	private void openSocket() {
+		socketAcceptor = new NioSocketAcceptor();
+		final IoHandler acceptorHandler = ObjectAcceptorIoHandler.create();
+		socketAcceptor.setHandler(acceptorHandler);
+		final SocketAddress openedAddress = config.getAddress();
+		socketAcceptor.bind(openedAddress);
 	}
 
 	/**
@@ -34,8 +56,7 @@ public class ObjectSocketAcceptor implements Disposable {
 	 */
 	@Override
 	public void closeAndDispose() {
-		// TODO Auto-generated method stub
-
+		socketAcceptor.dispose(true);
 	}
 
 }
