@@ -18,7 +18,6 @@ import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.api.ObjectSocketConfiguration;
 
-
 /**
  * Esta clase representa el conector utilizado para acceder a un ObjectSocket como cliente en un
  * {@link SocketAddress} remoto
@@ -33,7 +32,9 @@ public class ObjectSocketConnector implements Disposable {
 	}
 
 	/**
-	 * @return
+	 * Devuelve el {@link ObjectSocket} con el cual se pueden enviar objetos a través del socket
+	 * 
+	 * @return El socket para enviar los objetos
 	 */
 	public ObjectSocket getObjectSocket() {
 		// TODO Auto-generated method stub

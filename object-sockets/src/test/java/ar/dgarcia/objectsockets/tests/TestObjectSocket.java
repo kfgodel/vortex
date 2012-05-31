@@ -24,7 +24,6 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.api.ObjectSocketConfiguration;
 import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
-import ar.dgarcia.objectsockets.tests.QueueReceptionHandler;
 
 /**
  * Esta clase testea el uso de los sockets de objetos
@@ -38,29 +37,29 @@ public class TestObjectSocket {
 	 */
 	@Test
 	public void deberiaSerPosibleEnviarUnObjetoCualquierEntreDosSocketsLocales() {
-		// Levantamos el socket para recibir conexiones
-		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
-		final ObjectSocketConfiguration acceptorConfig = ObjectSocketConfiguration.create(sharedAddress);
+		// Levantamos el socket de escucha para recibir los mensajes en una cola
 		final QueueReceptionHandler handlerReceptor = QueueReceptionHandler.create();
-		acceptorConfig.setReceptionHandler(handlerReceptor);
-		final ObjectSocketAcceptor acceptor = ObjectSocketAcceptor.create(acceptorConfig);
+		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
+		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress,
+				handlerReceptor);
+		// Empezamos a escuchar en el puerto
+		final ObjectSocketAcceptor acceptor = ObjectSocketAcceptor.create(receptionConfig);
 
-		// Conectamos el cliente
-		final ObjectSocketConfiguration connectorConfig = ObjectSocketConfiguration.create(sharedAddress);
-		final ObjectSocketConnector connector = ObjectSocketConnector.create(connectorConfig);
+		// Conectamos el cliente al puerto compartido
+		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress);
+		final ObjectSocketConnector connector = ObjectSocketConnector.create(senderConfig);
 
+		// Enviamos un objeto cualquiera a traves del socket
 		final ObjectSocket clientSocket = connector.getObjectSocket();
-		// Enviamos un objeto cualquiera
 		final Object objetoEnviado = "Hola manola";
 		clientSocket.send(objetoEnviado);
 
 		// Verificamos que llegó el mensaje como un objeto equivalente
 		final Object recibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(10, TimeUnit.SECONDS));
-		Assert.assertEquals("Debería haber llegado una cadena identica, pero no la misma instancia", objetoEnviado,
-				recibido);
-		Assert.assertNotSame("Debería haber llegado una cadena identica, pero no la misma instancia", objetoEnviado,
-				recibido);
+		Assert.assertEquals("Deberían ser iguales", objetoEnviado, recibido);
+		Assert.assertNotSame("No debería ser la misma instancia por la serializacion", objetoEnviado, recibido);
 
+		// Cerramos los sockets
 		acceptor.closeAndDispose();
 		connector.closeAndDispose();
 	}

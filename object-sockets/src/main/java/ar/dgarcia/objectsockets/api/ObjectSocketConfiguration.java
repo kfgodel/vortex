@@ -14,6 +14,8 @@ package ar.dgarcia.objectsockets.api;
 
 import java.net.SocketAddress;
 
+import ar.dgarcia.objectsockets.tests.QueueReceptionHandler;
+
 /**
  * Esta clase representa la configuración de un socket de objetos
  * 
@@ -26,9 +28,7 @@ public class ObjectSocketConfiguration {
 	private ObjectReceptionHandler receptionHandler;
 
 	public static ObjectSocketConfiguration create(final SocketAddress socketAddress) {
-		final ObjectSocketConfiguration config = new ObjectSocketConfiguration();
-		config.address = socketAddress;
-		return config;
+		return create(socketAddress, null);
 	}
 
 	public SocketAddress getAddress() {
@@ -53,6 +53,14 @@ public class ObjectSocketConfiguration {
 
 	public void setSerializer(final ObjectSerializer serializer) {
 		this.serializer = serializer;
+	}
+
+	public static ObjectSocketConfiguration create(final SocketAddress socketAddress,
+			final QueueReceptionHandler handlerReceptor) {
+		final ObjectSocketConfiguration config = new ObjectSocketConfiguration();
+		config.address = socketAddress;
+		config.receptionHandler = handlerReceptor;
+		return config;
 	}
 
 }
