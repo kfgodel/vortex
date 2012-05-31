@@ -223,7 +223,6 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 		// Primero detenemos las que tienen delay
 		this.delayerProcessor.detener();
 
-		
 		// Asumo que siempre son future por lo que vi en debug
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		final List<Future<?>> pendingExecution = (List) this.inmediateExecutor.shutdownNow();
