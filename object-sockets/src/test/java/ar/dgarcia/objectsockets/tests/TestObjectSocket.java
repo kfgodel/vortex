@@ -21,8 +21,8 @@ import net.gaia.taskprocessor.api.TimeMagnitude;
 import org.junit.Test;
 
 import ar.dgarcia.objectsockets.api.ObjectSocket;
-import ar.dgarcia.objectsockets.api.ObjectSocketConfiguration;
 import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
+import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
 
 /**

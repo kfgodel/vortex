@@ -12,12 +12,32 @@
  */
 package ar.dgarcia.objectsockets.api;
 
+import ar.dgarcia.objectsockets.external.xml.CannotTextSerializeException;
+import ar.dgarcia.objectsockets.external.xml.CannotTextUnserialize;
+
 /**
  * Esta interfaz representa el contrato que requiere el {@link ObjectSocket} para poder enviar y
  * recibir objetos
  * 
  * @author D. García
  */
-public interface ObjectSerializer {
+public interface ObjectTextualizer {
 
+	/**
+	 * Convierte el objeto pasado en una representación de texto que permite reconstruirlo
+	 * 
+	 * @param value
+	 *            el objeto a convertir
+	 * @return La representación del objeto
+	 */
+	public String convertToString(final Object value) throws CannotTextSerializeException;
+
+	/**
+	 * Recrea el objeto original a partir de la cadena recibida
+	 * 
+	 * @param value
+	 *            El objeto representado como cadena
+	 * @return El objeto real
+	 */
+	public Object convertFromString(final String value) throws CannotTextUnserialize;
 }

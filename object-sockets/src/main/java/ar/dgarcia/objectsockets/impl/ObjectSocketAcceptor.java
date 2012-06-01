@@ -12,14 +12,15 @@
  */
 package ar.dgarcia.objectsockets.impl;
 
+import java.io.IOException;
 import java.net.SocketAddress;
 
+import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoHandler;
-import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
 import ar.dgarcia.objectsockets.api.Disposable;
+import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
-import ar.dgarcia.objectsockets.api.ObjectSocketConfiguration;
 import ar.dgarcia.objectsockets.external.ObjectAcceptorIoHandler;
 
 /**
@@ -30,7 +31,7 @@ import ar.dgarcia.objectsockets.external.ObjectAcceptorIoHandler;
  */
 public class ObjectSocketAcceptor implements Disposable {
 
-	private NioSocketAcceptor socketAcceptor;
+	private IoAcceptor socketAcceptor;
 	private ObjectSocketConfiguration config;
 
 	public static ObjectSocketAcceptor create(final ObjectSocketConfiguration config) {
@@ -41,14 +42,22 @@ public class ObjectSocketAcceptor implements Disposable {
 	}
 
 	/**
-	 * Crea el acceptor interno y bindea al socket indicado en la configuracion
+	 * Crea el acceptor interno y bindea al socket indicado en la configuración
 	 */
-	private void openSocket() {
-		socketAcceptor = new NioSocketAcceptor();
-		final IoHandler acceptorHandler = ObjectAcceptorIoHandler.create();
+	private void openSocket() throws ObjectSocketException {
+		socketAcceptor = config.newIoAcceptor();
+
+		final ObjectReceptionHandler receptionHandler = config.getReceptionHandler();
+		final IoHandler acceptorHandler = ObjectAcceptorIoHandler.create(receptionHandler);
 		socketAcceptor.setHandler(acceptorHandler);
+
 		final SocketAddress openedAddress = config.getAddress();
-		socketAcceptor.bind(openedAddress);
+		try {
+			socketAcceptor.bind(openedAddress);
+		} catch (final IOException e) {
+			throw new ObjectSocketException(
+					"No fue posible abrir el socket en la direccion indicada: " + openedAddress, e);
+		}
 	}
 
 	/**

@@ -13,10 +13,17 @@
 package ar.dgarcia.objectsockets.impl;
 
 import java.net.SocketAddress;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.mina.core.future.ConnectFuture;
+import org.apache.mina.core.service.IoConnector;
+import org.apache.mina.core.service.IoHandler;
+import org.apache.mina.core.session.IoSession;
 
 import ar.dgarcia.objectsockets.api.Disposable;
+import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
-import ar.dgarcia.objectsockets.api.ObjectSocketConfiguration;
+import ar.dgarcia.objectsockets.external.ObjectAcceptorIoHandler;
 
 /**
  * Esta clase representa el conector utilizado para acceder a un ObjectSocket como cliente en un
@@ -26,9 +33,36 @@ import ar.dgarcia.objectsockets.api.ObjectSocketConfiguration;
  */
 public class ObjectSocketConnector implements Disposable {
 
+	private ObjectSocketConfiguration config;
+	private IoConnector socketConnector;
+	private ObjectSocket objectSocket;
+
 	public static ObjectSocketConnector create(final ObjectSocketConfiguration config) {
-		final ObjectSocketConnector name = new ObjectSocketConnector();
-		return name;
+		final ObjectSocketConnector connector = new ObjectSocketConnector();
+		connector.config = config;
+		connector.connectSocket();
+		return connector;
+	}
+
+	/**
+	 * Conecta esta instancia al socket indicado
+	 */
+	private void connectSocket() {
+		socketConnector = config.newIoConnector();
+
+		final ObjectReceptionHandler receptionHandler = config.getReceptionHandler();
+		final IoHandler acceptorHandler = ObjectAcceptorIoHandler.create(receptionHandler);
+		socketConnector.setHandler(acceptorHandler);
+
+		final SocketAddress openedAddress = config.getAddress();
+		final ConnectFuture connectTask = socketConnector.connect(openedAddress);
+		final boolean connected = connectTask.awaitUninterruptibly(5, TimeUnit.SECONDS);
+		if (!connected) {
+			socketConnector.dispose(true);
+			throw new ObjectSocketException("No fue posible la conexion antes del tiempo máximo de espera");
+		}
+		final IoSession connectorSession = connectTask.getSession();
+		this.objectSocket = ObjectSocketImpl.create(connectorSession);
 	}
 
 	/**
@@ -37,8 +71,7 @@ public class ObjectSocketConnector implements Disposable {
 	 * @return El socket para enviar los objetos
 	 */
 	public ObjectSocket getObjectSocket() {
-		// TODO Auto-generated method stub
-		return null;
+		return objectSocket;
 	}
 
 	/**
@@ -46,7 +79,6 @@ public class ObjectSocketConnector implements Disposable {
 	 */
 	@Override
 	public void closeAndDispose() {
-		// TODO Auto-generated method stub
-
+		socketConnector.dispose(true);
 	}
 }
