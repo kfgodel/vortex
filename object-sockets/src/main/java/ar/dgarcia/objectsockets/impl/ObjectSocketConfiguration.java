@@ -19,7 +19,7 @@ import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoConnector;
 
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
-import ar.dgarcia.objectsockets.api.ObjectTextualizer;
+import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
 import ar.dgarcia.objectsockets.external.mina.components.MinaComponentsFactory;
 import ar.dgarcia.objectsockets.external.mina.components.SocketMinaFactory;
 import ar.dgarcia.objectsockets.external.xml.XmlTextualizer;

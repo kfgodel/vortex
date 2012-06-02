@@ -24,7 +24,7 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.core.write.DefaultWriteRequest;
 import org.apache.mina.core.write.WriteRequest;
 
-import ar.dgarcia.objectsockets.api.ObjectTextualizer;
+import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
 
 /**
  * Esta clase abstrae la capa de conversion de objeto a Strings y viceversa, antes de pasarlo a la

@@ -10,10 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.dgarcia.objectsockets.api;
+package ar.dgarcia.objectsockets.api.textual;
 
-import ar.dgarcia.objectsockets.external.xml.CannotTextSerializeException;
-import ar.dgarcia.objectsockets.external.xml.CannotTextUnserialize;
+import ar.dgarcia.objectsockets.api.ObjectSocket;
 
 /**
  * Esta interfaz representa el contrato que requiere el {@link ObjectSocket} para poder enviar y

@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.com.dgarcia.testing.stress.StressGenerator;
-import ar.dgarcia.objectsockets.api.ObjectTextualizer;
+import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
 import ar.dgarcia.objectsockets.external.xml.XmlTextualizer;
 
 /**
@@ -32,14 +32,34 @@ import ar.dgarcia.objectsockets.external.xml.XmlTextualizer;
  * 
  * @author D. García
  */
-public class TestTextualizer {
-	private static final Logger LOG = LoggerFactory.getLogger(TestTextualizer.class);
+public class TestXmlTextualizer {
+	private static final Logger LOG = LoggerFactory.getLogger(TestXmlTextualizer.class);
 
 	protected ObjectTextualizer textualizer;
+
+	private TestBean textualized;
+
+	@Before
+	public void crearTextualizable() {
+		textualized = new TestBean();
+		textualized.numero = 3;
+	}
 
 	@Before
 	public void crearTextualizer() {
 		textualizer = XmlTextualizer.create();
+	}
+
+	public static class TestBean {
+		private Integer numero;
+
+		public Integer getNumero() {
+			return numero;
+		}
+
+		public void setNumero(final Integer numero) {
+			this.numero = numero;
+		}
 	}
 
 	/**
@@ -47,8 +67,7 @@ public class TestTextualizer {
 	 */
 	@Test
 	public void deberiaPoderConvertirUnObjetoEnTexto() {
-		final Object value = new Object();
-		final String convertedValue = textualizer.convertToString(value);
+		final String convertedValue = textualizer.convertToString(textualized);
 		Assert.assertNotNull(convertedValue);
 		Assert.assertFalse(convertedValue.isEmpty());
 	}
@@ -58,11 +77,11 @@ public class TestTextualizer {
 	 */
 	@Test
 	public void deberíaPoderRecuperarUnObjectoDesdeTexto() {
-		final String value = "Un objeto";
-		final String convertedValue = textualizer.convertToString(value);
+		final String convertedValue = textualizer.convertToString(textualized);
 		final Object equivalentValue = textualizer.convertFromString(convertedValue);
-		Assert.assertTrue(equivalentValue instanceof String);
-		Assert.assertEquals(value, equivalentValue);
+		Assert.assertTrue(equivalentValue instanceof TestBean);
+		final TestBean duplicatedBean = (TestBean) equivalentValue;
+		Assert.assertEquals(textualized.numero, duplicatedBean.numero);
 	}
 
 	/**
