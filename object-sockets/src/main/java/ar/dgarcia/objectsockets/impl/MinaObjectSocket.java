@@ -42,4 +42,12 @@ public class MinaObjectSocket implements ObjectSocket {
 	public IoSession getMinaSession() {
 		return minaSession;
 	}
+
+	/**
+	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
+	 */
+	@Override
+	public void closeAndDispose() {
+		minaSession.close(true);
+	}
 }

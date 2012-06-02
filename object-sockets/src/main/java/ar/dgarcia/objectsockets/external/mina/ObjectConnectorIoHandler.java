@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.api.SocketErrorHandler;
+import ar.dgarcia.objectsockets.api.SocketEventHandler;
 import ar.dgarcia.objectsockets.impl.MinaObjectSocket;
 
 /**
@@ -35,6 +36,7 @@ public class ObjectConnectorIoHandler extends IoHandlerAdapter {
 	private ObjectReceptionHandler receptionHandler;
 	private SocketErrorHandler errorHandler;
 	private AtomicReference<MinaObjectSocket> socketRef;
+	private SocketEventHandler eventHandler;
 
 	/**
 	 * @see org.apache.mina.core.service.IoHandlerAdapter#messageReceived(org.apache.mina.core.session.IoSession,
@@ -84,10 +86,11 @@ public class ObjectConnectorIoHandler extends IoHandlerAdapter {
 	}
 
 	public static ObjectConnectorIoHandler create(final ObjectReceptionHandler receptionHandler,
-			final SocketErrorHandler errorHandler) {
+			final SocketErrorHandler errorHandler, final SocketEventHandler eventHandler) {
 		final ObjectConnectorIoHandler handler = new ObjectConnectorIoHandler();
 		handler.receptionHandler = receptionHandler;
 		handler.errorHandler = errorHandler;
+		handler.eventHandler = eventHandler;
 		handler.socketRef = new AtomicReference<MinaObjectSocket>();
 		return handler;
 	}
@@ -134,4 +137,37 @@ public class ObjectConnectorIoHandler extends IoHandlerAdapter {
 		}
 	}
 
+	/**
+	 * @see org.apache.mina.core.service.IoHandlerAdapter#sessionClosed(org.apache.mina.core.session.IoSession)
+	 */
+	@Override
+	public void sessionClosed(final IoSession session) throws Exception {
+		if (this.eventHandler == null) {
+			LOG.debug("Se cerró la sesión[{}] y no hay handler para avisarle en este handler[{}]", session, this);
+			return;
+		}
+		final MinaObjectSocket connectedSocket = getConnectedSocketFor(session);
+		try {
+			this.eventHandler.onSocketClosed(connectedSocket);
+		} catch (final Exception e) {
+			LOG.error("Se produjo un error en el handler del evento de cierre de socket", e);
+		}
+	}
+
+	/**
+	 * @see org.apache.mina.core.service.IoHandlerAdapter#sessionOpened(org.apache.mina.core.session.IoSession)
+	 */
+	@Override
+	public void sessionOpened(final IoSession session) throws Exception {
+		if (this.eventHandler == null) {
+			LOG.debug("Se abrió la sesión[{}] y no hay handler para avisarle en este handler[{}]", session, this);
+			return;
+		}
+		final MinaObjectSocket connectedSocket = getConnectedSocketFor(session);
+		try {
+			this.eventHandler.onSocketOpened(connectedSocket);
+		} catch (final Exception e) {
+			LOG.error("Se produjo un error en el handler del evento de apertura de socket", e);
+		}
+	}
 }

@@ -1,5 +1,5 @@
 /**
- * 30/05/2012 19:11:18 Copyright (C) 2011 Darío L. García
+ * 02/06/2012 18:00:40 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -13,20 +13,26 @@
 package ar.dgarcia.objectsockets.api;
 
 /**
- * Esta interfaz representa un socket por el que se envía y recibe información que permite enviar y
- * recibir objetos
+ * Esta interfaz define los métodos implementables por el hanler que requiere tratar los eventos del
+ * socket
  * 
  * @author D. García
  */
-public interface ObjectSocket extends Disposable {
+public interface SocketEventHandler {
 
 	/**
-	 * Envia el objeto indicado por este socket.<br>
-	 * El mensaje será serializado para ser convertido en un formato transmisible por el medio
+	 * Invocado cuando se crea el socket y se abre para la comunicación la otra parte
 	 * 
-	 * @param objetoEnviado
-	 *            El objeto a enviar
+	 * @param nuevoSocket
+	 *            El socket a utilizar
 	 */
-	void send(Object objetoEnviado);
+	public void onSocketOpened(ObjectSocket nuevoSocket);
+
+	/**
+	 * Invocado cuando se cierra el socket para la comunicaciones
+	 * 
+	 * @param socketCerrado
+	 */
+	public void onSocketClosed(ObjectSocket socketCerrado);
 
 }

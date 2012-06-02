@@ -22,6 +22,7 @@ import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.api.SocketErrorHandler;
+import ar.dgarcia.objectsockets.api.SocketEventHandler;
 import ar.dgarcia.objectsockets.external.mina.ObjectAcceptorIoHandler;
 
 /**
@@ -59,7 +60,8 @@ public class ObjectSocketAcceptor implements Disposable {
 
 		final ObjectReceptionHandler receptionHandler = config.getReceptionHandler();
 		final SocketErrorHandler errorHandler = config.getErrorHandler();
-		final IoHandler acceptorHandler = ObjectAcceptorIoHandler.create(receptionHandler, errorHandler);
+		final SocketEventHandler eventHandler = config.getEventHandler();
+		final IoHandler acceptorHandler = ObjectAcceptorIoHandler.create(receptionHandler, errorHandler, eventHandler);
 		socketAcceptor.setHandler(acceptorHandler);
 
 		final SocketAddress openedAddress = config.getAddress();

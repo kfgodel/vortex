@@ -15,6 +15,7 @@ import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.api.SocketErrorHandler;
+import ar.dgarcia.objectsockets.api.SocketEventHandler;
 import ar.dgarcia.objectsockets.impl.MinaObjectSocket;
 
 /**
@@ -29,6 +30,7 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 	private ObjectReceptionHandler receptionHandler;
 	private ConcurrentMap<IoSession, ObjectSocket> socketsBySession;
 	private SocketErrorHandler errorHandler;
+	private SocketEventHandler eventHandler;
 
 	/**
 	 * @see org.apache.mina.core.service.IoHandlerAdapter#sessionCreated(org.apache.mina.core.session.IoSession)
@@ -40,11 +42,37 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 	}
 
 	/**
+	 * @see org.apache.mina.core.service.IoHandlerAdapter#sessionOpened(org.apache.mina.core.session.IoSession)
+	 */
+	@Override
+	public void sessionOpened(final IoSession session) throws Exception {
+		if (this.eventHandler == null) {
+			LOG.debug("Se abrió la sesión[{}] y no hay handler para avisarle en este handler[{}]", session, this);
+			return;
+		}
+		final ObjectSocket connectedSocket = getConnectedSocketFor(session);
+		try {
+			this.eventHandler.onSocketOpened(connectedSocket);
+		} catch (final Exception e) {
+			LOG.error("Se produjo un error en el handler del evento de apertura de socket", e);
+		}
+	}
+
+	/**
 	 * @see org.apache.mina.core.service.IoHandlerAdapter#sessionClosed(org.apache.mina.core.session.IoSession)
 	 */
 	@Override
 	public void sessionClosed(final IoSession session) throws Exception {
-		socketsBySession.remove(session);
+		final ObjectSocket socket = socketsBySession.remove(session);
+		if (this.eventHandler == null) {
+			LOG.debug("Se cerró la sesión[{}] y no hay handler para avisarle en este handler[{}]", session, this);
+			return;
+		}
+		try {
+			this.eventHandler.onSocketClosed(socket);
+		} catch (final Exception e) {
+			LOG.error("Se produjo un error en el handler del evento de cierre de socket", e);
+		}
 	}
 
 	/**
@@ -73,10 +101,11 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 	}
 
 	public static ObjectAcceptorIoHandler create(final ObjectReceptionHandler receptionHandler,
-			final SocketErrorHandler errorHandler) {
+			final SocketErrorHandler errorHandler, final SocketEventHandler eventHandler) {
 		final ObjectAcceptorIoHandler handler = new ObjectAcceptorIoHandler();
 		handler.receptionHandler = receptionHandler;
 		handler.errorHandler = errorHandler;
+		handler.eventHandler = eventHandler;
 		handler.socketsBySession = new ConcurrentHashMap<IoSession, ObjectSocket>();
 		return handler;
 	}

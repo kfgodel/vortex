@@ -20,6 +20,7 @@ import org.apache.mina.core.service.IoConnector;
 
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.SocketErrorHandler;
+import ar.dgarcia.objectsockets.api.SocketEventHandler;
 import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
 import ar.dgarcia.objectsockets.external.json.JsonTextualizer;
 import ar.dgarcia.objectsockets.external.mina.components.MinaComponentsFactory;
@@ -37,6 +38,15 @@ public class ObjectSocketConfiguration {
 	private ObjectReceptionHandler receptionHandler;
 	private MinaComponentsFactory componentsFactory;
 	private SocketErrorHandler errorHandler;
+	private SocketEventHandler eventHandler;
+
+	public SocketEventHandler getEventHandler() {
+		return eventHandler;
+	}
+
+	public void setEventHandler(final SocketEventHandler eventHandler) {
+		this.eventHandler = eventHandler;
+	}
 
 	public SocketErrorHandler getErrorHandler() {
 		return errorHandler;
