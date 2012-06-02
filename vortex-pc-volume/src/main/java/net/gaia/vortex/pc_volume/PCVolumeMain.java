@@ -13,7 +13,7 @@
 package net.gaia.vortex.pc_volume;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.android.pcvolume.messages.PcVolumenChange;
 import net.gaia.vortex.dependencies.json.InterpreteJson;
 import net.gaia.vortex.dependencies.json.impl.InterpreteJackson;

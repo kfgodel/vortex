@@ -12,12 +12,12 @@
  */
 package net.gaia.vortex.climate.tests;
 
+import junit.framework.Assert;
 import net.gaia.vortex.climate.externals.ClimateMeasure;
 import net.gaia.vortex.climate.externals.ClimateServer;
 import net.gaia.vortex.climate.externals.ClimateStation;
 import net.gaia.vortex.climate.externals.KnownClimateStation;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /**

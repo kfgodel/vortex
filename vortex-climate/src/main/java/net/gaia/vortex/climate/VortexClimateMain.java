@@ -13,7 +13,7 @@
 package net.gaia.vortex.climate;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.climate.externals.ClimateMeasure;
 import net.gaia.vortex.climate.externals.ClimateServer;
 import net.gaia.vortex.climate.externals.ClimateStation;

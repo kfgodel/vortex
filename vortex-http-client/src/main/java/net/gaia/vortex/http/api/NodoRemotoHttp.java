@@ -14,7 +14,7 @@ package net.gaia.vortex.http.api;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.impl.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.dependencies.json.InterpreteJson;
 import net.gaia.vortex.dependencies.json.impl.InterpreteJackson;
 import net.gaia.vortex.http.externals.http.ConectorHttp;
