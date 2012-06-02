@@ -16,7 +16,7 @@
  * 
  * Copyright (C) 2010 Dario L. Garcia
  */
-package net.gaia.annotations;
+package ar.com.dgarcia.coding.anno;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

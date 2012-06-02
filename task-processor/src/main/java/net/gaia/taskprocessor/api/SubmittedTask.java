@@ -12,7 +12,8 @@
  */
 package net.gaia.taskprocessor.api;
 
-import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta interfaz representa una tarea pendiente. Una unidad de trabajo {@link WorkUnit} procesable

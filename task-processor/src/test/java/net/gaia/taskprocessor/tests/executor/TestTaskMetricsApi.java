@@ -19,13 +19,14 @@ import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit;
 import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase realiza test sobre la api para conocer las métricas del procesador

@@ -59,6 +59,12 @@
 			<version>r09</version>
 		</dependency>
 		
+		<!-- Algunas clases comunes -->
+		<dependency>
+		  <groupId>ar.com.dgarcia</groupId>
+		  <artifactId>dgarcia-commons</artifactId>
+		  <version>1.0.3</version>
+		</dependency>
 		
 		<!-- Test dependencies -->
 		<dependency>

@@ -15,10 +15,10 @@ package net.gaia.util;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
-import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
-import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
+import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
+import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa una barrera de espera para la compleción de una actividad realizada por

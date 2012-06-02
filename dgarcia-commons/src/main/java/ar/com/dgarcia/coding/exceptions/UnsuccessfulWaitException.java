@@ -1,5 +1,5 @@
 /**
- * 15/11/2011 23:52:25 Copyright (C) 2011 Darío L. García
+ * 15/11/2011 23:52:01 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,26 +10,27 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.api.exceptions;
+package ar.com.dgarcia.coding.exceptions;
 
 /**
- * Esta clase representa una excepción en el código de procesamiento de tareas.<br>
- * Esta es la superclase de todas las excepciones de este proyecto
+ * Esta clase representa la excepción de espera que no resulto satisfactoria. ya sea porque al
+ * terminar no se logró lo que se esperaba, o porque la espera fue interrumpida antes de tiempo
  * 
  * @author D. García
  */
-public class TaskProcessingException extends RuntimeException {
-	private static final long serialVersionUID = -521901232015021729L;
+public class UnsuccessfulWaitException extends RuntimeException {
+	private static final long serialVersionUID = 540003324408235780L;
 
-	public TaskProcessingException(final String message, final Throwable cause) {
+	public UnsuccessfulWaitException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public TaskProcessingException(final String message) {
+	public UnsuccessfulWaitException(final String message) {
 		super(message);
 	}
 
-	public TaskProcessingException(final Throwable cause) {
+	public UnsuccessfulWaitException(final Throwable cause) {
 		super(cause);
 	}
+
 }

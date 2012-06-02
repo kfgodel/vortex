@@ -127,9 +127,9 @@
 	  
 	<!-- Solo necesario por la magnitud de tiempo y excepciones -->
 	<dependency>
-	  <groupId>net.gaia</groupId>
-	  <artifactId>task-processor</artifactId>
-	  <version>0.2</version>
+	 <groupId>ar.com.dgarcia</groupId>
+	 <artifactId>dgarcia-commons</artifactId>
+	 <version>1.0.3</version>
 	</dependency>
 	
     <dependency>

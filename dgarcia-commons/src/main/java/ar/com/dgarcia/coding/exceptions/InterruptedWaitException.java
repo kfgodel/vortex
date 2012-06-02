@@ -1,5 +1,5 @@
 /**
- * 16/11/2011 00:12:37 Copyright (C) 2011 Darío L. García
+ * 16/11/2011 00:11:09 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,27 +10,25 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.api.exceptions;
+package ar.com.dgarcia.coding.exceptions;
 
 /**
- * Esta clase representa la excepción de espera fallida por timeout agotado antes del resultado
- * esperado
+ * Esta clase representa la excepción de espera interrumpida antes de tiempo
  * 
  * @author D. García
  */
-public class TimeoutExceededException extends UnsuccessfulWaitException {
-	private static final long serialVersionUID = 4935263982884444120L;
+public class InterruptedWaitException extends UnsuccessfulWaitException {
+	private static final long serialVersionUID = 4920356655210744214L;
 
-	public TimeoutExceededException(final String message, final Throwable cause) {
+	public InterruptedWaitException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public TimeoutExceededException(final String message) {
+	public InterruptedWaitException(final String message) {
 		super(message);
 	}
 
-	public TimeoutExceededException(final Throwable cause) {
+	public InterruptedWaitException(final Throwable cause) {
 		super(cause);
 	}
-
 }

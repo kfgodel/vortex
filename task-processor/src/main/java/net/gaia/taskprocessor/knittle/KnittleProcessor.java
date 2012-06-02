@@ -25,7 +25,6 @@ import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
-import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.executor.DelegateProcessor;
 import net.gaia.taskprocessor.executor.ExecutorDelayerProcessor;
@@ -35,6 +34,8 @@ import net.gaia.taskprocessor.executor.TaskProcessingMetricsImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 import com.google.common.base.Objects;
 

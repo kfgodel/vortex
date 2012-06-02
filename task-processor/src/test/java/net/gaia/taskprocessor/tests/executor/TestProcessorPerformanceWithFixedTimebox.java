@@ -16,15 +16,16 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.tests.util.CounterTaskListener;
-import net.gaia.taskprocessor.tests.util.StressGenerator;
 import net.gaia.taskprocessor.tests.util.TareaSimulada;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.time.TimeMagnitude;
+import ar.com.dgarcia.testing.stress.StressGenerator;
 
 /**
  * Esta clase testea la capacidad de ejecución de tareas del procesador durante una cantidad fija de

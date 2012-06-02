@@ -12,11 +12,18 @@
  */
 package ar.dgarcia.objectsockets.tests;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.time.TimeMagnitude;
+import ar.com.dgarcia.testing.stress.StressGenerator;
 import ar.dgarcia.objectsockets.api.ObjectTextualizer;
 import ar.dgarcia.objectsockets.external.xml.XmlTextualizer;
 
@@ -26,6 +33,7 @@ import ar.dgarcia.objectsockets.external.xml.XmlTextualizer;
  * @author D. García
  */
 public class TestTextualizer {
+	private static final Logger LOG = LoggerFactory.getLogger(TestTextualizer.class);
 
 	protected ObjectTextualizer textualizer;
 
@@ -58,12 +66,37 @@ public class TestTextualizer {
 	}
 
 	/**
-	 * Por la manera en la que cree el {@link SerializerCodecFactory} las instancias de serializer
-	 * son compartidas en la máquina por lo que varios threads podrían invocar al mismo tiempo
+	 * Para poder compartir la instancia del
 	 */
 	@Test
 	public void elSerializadorDeberiaPermitirEjecucionesConcurrentes() {
+		final StressGenerator generator = StressGenerator.create();
+		final AtomicLong cantidadDeErrores = new AtomicLong();
+		generator.setCantidadDeEjecucionesPorThread(10000);
+		generator.setCantidadDeThreadsEnEjecucion(4);
+		generator.setEsperaEntreEjecucionesEnMilis(0);
+		generator.setEjecutable(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					final String original = "Hola";
+					final String convertido = textualizer.convertToString(original);
+					final Object desconvertido = textualizer.convertFromString(convertido);
+					if (!original.equals(desconvertido)) {
+						cantidadDeErrores.incrementAndGet();
+					}
+				} catch (final Exception e) {
+					LOG.error("Fallo la textualizacion concurrente", e);
+					cantidadDeErrores.incrementAndGet();
+				}
+			}
+		});
+		generator.start();
 
+		generator.esperarTerminoDeThreads(TimeMagnitude.of(5, TimeUnit.SECONDS));
+
+		Assert.assertEquals("No deberían haber errores al ejecutar en paralelo la serializacion", 0,
+				cantidadDeErrores.get());
 	}
 
 }

@@ -1,7 +1,7 @@
 /**
  * 22/05/2012 10:38:34 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.taskprocessor.tests.util;
+package ar.com.dgarcia.testing.stress;
 
 import java.util.concurrent.CountDownLatch;
 

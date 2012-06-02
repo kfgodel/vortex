@@ -15,7 +15,7 @@
  * href="https://bean2bean.svn.sourceforge.net/svnroot/bean2bean"
  * rel="dc:source">bean2bean.svn.sourceforge.net</a>
  */
-package net.gaia.annotations;
+package ar.com.dgarcia.coding.anno;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -16,10 +16,10 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.taskprocessor.api.TimeMagnitude;
 
 import org.junit.Test;
 
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;

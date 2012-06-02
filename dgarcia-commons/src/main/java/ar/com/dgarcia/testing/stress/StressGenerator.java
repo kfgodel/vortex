@@ -1,16 +1,16 @@
 /**
  * 22/05/2012 09:49:51 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.taskprocessor.tests.util;
+package ar.com.dgarcia.testing.stress;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
-import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
-import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
+import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
+import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase permite ejecutar en paralelo y cada cierto tiempo indicado un runnable para testear el

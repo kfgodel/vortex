@@ -16,12 +16,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import junit.framework.Assert;
-import net.gaia.annotations.HasDependencyOn;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.executor.TaskProcessorListenerSupport;
 import net.gaia.taskprocessor.meta.Decision;
@@ -30,6 +27,10 @@ import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import ar.com.dgarcia.coding.anno.HasDependencyOn;
+import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase testea la api listener del {@link TaskProcessor}
