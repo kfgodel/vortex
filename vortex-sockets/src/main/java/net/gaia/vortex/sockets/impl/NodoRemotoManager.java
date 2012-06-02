@@ -12,9 +12,7 @@
  */
 package net.gaia.vortex.sockets.impl;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -56,7 +54,7 @@ public class NodoRemotoManager implements SocketEventHandler, Disposable, Object
 		final NodoSocketRemoto nodoRemoto = nodosRemotosPorSocket.remove(socketCerrado);
 		if (nodoRemoto == null) {
 			LOG.error("No se encontró el nodo remoto del socket[" + socketCerrado
-					+ "] para desconectarlo. Posiblemente el padre tenga un nodo de más");
+					+ "] para desconectarlo. Posiblemente al padre[" + nodoPadre + "] le sobre un nodo después");
 			return;
 		}
 		eliminarRemoto(nodoRemoto);
@@ -85,13 +83,9 @@ public class NodoRemotoManager implements SocketEventHandler, Disposable, Object
 	 */
 	@Override
 	public void closeAndDispose() {
-		final Set<Entry<ObjectSocket, NodoSocketRemoto>> remotosActivos = nodosRemotosPorSocket.entrySet();
-		final Iterator<Entry<ObjectSocket, NodoSocketRemoto>> iterator = remotosActivos.iterator();
-		while (iterator.hasNext()) {
-			final Entry<ObjectSocket, NodoSocketRemoto> remotoPorSocket = iterator.next();
-			final NodoSocketRemoto remoto = remotoPorSocket.getValue();
-			eliminarRemoto(remoto);
-			iterator.remove();
+		final Set<ObjectSocket> socketsActivos = nodosRemotosPorSocket.keySet();
+		for (final ObjectSocket socketActivo : socketsActivos) {
+			socketActivo.closeAndDispose();
 		}
 	}
 
