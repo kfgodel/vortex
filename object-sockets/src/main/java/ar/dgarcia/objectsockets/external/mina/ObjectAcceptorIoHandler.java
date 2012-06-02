@@ -1,7 +1,7 @@
 /**
  * 31/05/2012 19:18:43 Copyright (C) 2011 10Pines S.R.L.
  */
-package ar.dgarcia.objectsockets.external;
+package ar.dgarcia.objectsockets.external.mina;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -14,11 +14,11 @@ import org.slf4j.LoggerFactory;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
-import ar.dgarcia.objectsockets.impl.ObjectSocketImpl;
+import ar.dgarcia.objectsockets.impl.MinaObjectSocket;
 
 /**
- * Esta clase define el comportamiento del handler de mensajes recibidos de mina que son pasados al
- * handler del {@link ObjectSocket}
+ * Esta clase define el comportamiento del handler de mensajes de mina utilizado en el socket que
+ * acepta conexiones
  * 
  * @author D. García
  */
@@ -33,7 +33,7 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 	 */
 	@Override
 	public void sessionCreated(final IoSession session) throws Exception {
-		final ObjectSocketImpl objectSocket = ObjectSocketImpl.create(session);
+		final MinaObjectSocket objectSocket = MinaObjectSocket.create(session);
 		socketsBySession.put(session, objectSocket);
 	}
 
@@ -52,7 +52,7 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 	@Override
 	public void messageReceived(final IoSession session, final Object message) throws Exception {
 		if (receptionHandler == null) {
-			// Ni nos calentamos
+			LOG.debug("No existe handler de mensajes. Ignorando mensaje");
 			return;
 		}
 		final ObjectSocket objectSocket = socketsBySession.get(session);
@@ -62,7 +62,7 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 		try {
 			receptionHandler.onObjectReceived(message, objectSocket);
 		} catch (final Exception e) {
-			LOG.error("Se produjo un error en el handler del mensaje objeto", e);
+			LOG.error("Se produjo un error en el handler de recepción de mensajes del acceptor. Ignorando", e);
 		}
 	}
 

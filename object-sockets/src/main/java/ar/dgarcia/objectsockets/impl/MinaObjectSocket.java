@@ -21,7 +21,7 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * 
  * @author D. García
  */
-public class ObjectSocketImpl implements ObjectSocket {
+public class MinaObjectSocket implements ObjectSocket {
 
 	private IoSession minaSession;
 
@@ -33,9 +33,13 @@ public class ObjectSocketImpl implements ObjectSocket {
 		minaSession.write(objetoEnviado);
 	}
 
-	public static ObjectSocketImpl create(final IoSession minaSession) {
-		final ObjectSocketImpl socket = new ObjectSocketImpl();
+	public static MinaObjectSocket create(final IoSession minaSession) {
+		final MinaObjectSocket socket = new MinaObjectSocket();
 		socket.minaSession = minaSession;
 		return socket;
+	}
+
+	public IoSession getMinaSession() {
+		return minaSession;
 	}
 }

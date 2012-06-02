@@ -21,7 +21,7 @@ import org.apache.mina.core.service.IoHandler;
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
-import ar.dgarcia.objectsockets.external.ObjectAcceptorIoHandler;
+import ar.dgarcia.objectsockets.external.mina.ObjectAcceptorIoHandler;
 
 /**
  * Esta clase representa el conector que permite acceder a un {@link ObjectSocket} como receptor de
@@ -34,7 +34,16 @@ public class ObjectSocketAcceptor implements Disposable {
 	private IoAcceptor socketAcceptor;
 	private ObjectSocketConfiguration config;
 
-	public static ObjectSocketAcceptor create(final ObjectSocketConfiguration config) {
+	/**
+	 * Crea un socket para aceptar conexiones entrantes según la configuración pasada
+	 * 
+	 * @param config
+	 *            La configuración que determina la dirección a utilizar y opciones adicionales
+	 * @return El aceptador de nuevas conexiones en la dirección indicada
+	 * @throws ObjectSocketException
+	 *             Si se produjo un error al bindear con la dirección indicada
+	 */
+	public static ObjectSocketAcceptor create(final ObjectSocketConfiguration config) throws ObjectSocketException {
 		final ObjectSocketAcceptor acceptor = new ObjectSocketAcceptor();
 		acceptor.config = config;
 		acceptor.openSocket();

@@ -12,6 +12,7 @@
  */
 package ar.dgarcia.objectsockets.tests;
 
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +25,7 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
+import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
 /**
  * Esta clase testea el uso de los sockets de objetos
@@ -31,6 +33,42 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
  * @author D. García
  */
 public class TestObjectSocket {
+
+	/**
+	 * Prueba como falla el conector cuando no se puede conectar
+	 */
+	@Test
+	public void deberiaFallarAlConectarCuandoNoHaySocketEscuchando() {
+		// Creamos el socket cliente para conectarlo a un puerto no usado
+		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
+		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress);
+		try {
+			ObjectSocketConnector.create(senderConfig);
+			Assert.fail("Debería tirar una excepción por conexión rechazada!");
+		} catch (final ObjectSocketException e) {
+			// Es la excepción que esperábamos
+		}
+	}
+
+	/**
+	 * Prueba como falla el receptor cuando no se puede abrir el socket
+	 */
+	@Test
+	public void deberiaFallarAlEscucharSiElPuertoEstaUsado() {
+		// Creamos el socket de escucha
+		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
+		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress);
+		final ObjectSocketAcceptor primerAcceptor = ObjectSocketAcceptor.create(receptionConfig);
+		try {
+			ObjectSocketAcceptor.create(receptionConfig);
+			Assert.fail("Debería tirar una excepción por el puerto ocupado");
+		} catch (final ObjectSocketException e) {
+			// Excepción correcta
+			Assert.assertTrue("Debería ser un error de binding de puerto", e.getCause() instanceof BindException);
+		}
+		// Liberamos el puerto
+		primerAcceptor.closeAndDispose();
+	}
 
 	/**
 	 * Prueba que sea posible levantar una conexión local entre sockets y mandar un objeto

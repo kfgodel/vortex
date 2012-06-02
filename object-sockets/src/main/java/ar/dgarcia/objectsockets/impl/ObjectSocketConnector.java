@@ -13,17 +13,15 @@
 package ar.dgarcia.objectsockets.impl;
 
 import java.net.SocketAddress;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoConnector;
-import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IoSession;
 
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
-import ar.dgarcia.objectsockets.external.ObjectAcceptorIoHandler;
+import ar.dgarcia.objectsockets.external.mina.ObjectConnectorIoHandler;
 
 /**
  * Esta clase representa el conector utilizado para acceder a un ObjectSocket como cliente en un
@@ -37,7 +35,16 @@ public class ObjectSocketConnector implements Disposable {
 	private IoConnector socketConnector;
 	private ObjectSocket objectSocket;
 
-	public static ObjectSocketConnector create(final ObjectSocketConfiguration config) {
+	/**
+	 * Crea un conector con la configuración pasada abriendo un socket para ser usado
+	 * 
+	 * @param config
+	 *            La configuración que indica la dirección y las opciones de conexión
+	 * @return El conector establecido en la dirección de la config
+	 * @throws ObjectSocketException
+	 *             Si se produjo un error durante la conexión
+	 */
+	public static ObjectSocketConnector create(final ObjectSocketConfiguration config) throws ObjectSocketException {
 		final ObjectSocketConnector connector = new ObjectSocketConnector();
 		connector.config = config;
 		connector.connectSocket();
@@ -47,22 +54,26 @@ public class ObjectSocketConnector implements Disposable {
 	/**
 	 * Conecta esta instancia al socket indicado
 	 */
-	private void connectSocket() {
+	private void connectSocket() throws ObjectSocketException {
 		socketConnector = config.newIoConnector();
 
 		final ObjectReceptionHandler receptionHandler = config.getReceptionHandler();
-		final IoHandler acceptorHandler = ObjectAcceptorIoHandler.create(receptionHandler);
-		socketConnector.setHandler(acceptorHandler);
+		final ObjectConnectorIoHandler connectorHandler = ObjectConnectorIoHandler.create(receptionHandler);
+		socketConnector.setHandler(connectorHandler);
 
 		final SocketAddress openedAddress = config.getAddress();
 		final ConnectFuture connectTask = socketConnector.connect(openedAddress);
-		final boolean connected = connectTask.awaitUninterruptibly(5, TimeUnit.SECONDS);
-		if (!connected) {
+		try {
+			connectTask.await();
+		} catch (final InterruptedException e) {
+			throw new ObjectSocketException("Se interrumpió la espera de la conexión al socket", e);
+		}
+		if (!connectTask.isConnected()) {
 			socketConnector.dispose(true);
-			throw new ObjectSocketException("No fue posible la conexion antes del tiempo máximo de espera");
+			throw new ObjectSocketException("No fue posible conectar a la dirección [" + openedAddress + "]");
 		}
 		final IoSession connectorSession = connectTask.getSession();
-		this.objectSocket = ObjectSocketImpl.create(connectorSession);
+		this.objectSocket = connectorHandler.getOrCreateSocketFor(connectorSession);
 	}
 
 	/**
