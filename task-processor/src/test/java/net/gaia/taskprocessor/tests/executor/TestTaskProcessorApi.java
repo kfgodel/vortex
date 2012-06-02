@@ -25,12 +25,12 @@ import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.meta.Decision;
-import net.gaia.util.WaitBarrier;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
+import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**

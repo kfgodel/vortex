@@ -65,4 +65,11 @@ public class QueueReceptionHandler implements ObjectReceptionHandler {
 	public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 		receivedMessages.add(received);
 	}
+
+	/**
+	 * La cantidad de mensajes recibidos en cola
+	 */
+	public int getCantidadDeRecibidos() {
+		return receivedMessages.size();
+	}
 }

@@ -15,11 +15,11 @@ package net.gaia.vortex.core.tests;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
-import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
-import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
+import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
+import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
+import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase es una implementación del handler que mete los mensajes recibidos en una cola

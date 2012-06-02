@@ -16,11 +16,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
-import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
-import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
+import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
+import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
+import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa un handler de los mensajes que permite medir el tiempo de entrega

@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.util;
+package ar.com.dgarcia.lang.conc;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

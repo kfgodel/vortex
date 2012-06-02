@@ -21,10 +21,9 @@ import org.apache.mina.core.service.IoConnector;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.SocketErrorHandler;
 import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
+import ar.dgarcia.objectsockets.external.json.JsonTextualizer;
 import ar.dgarcia.objectsockets.external.mina.components.MinaComponentsFactory;
 import ar.dgarcia.objectsockets.external.mina.components.SocketMinaFactory;
-import ar.dgarcia.objectsockets.external.xml.XmlTextualizer;
-import ar.dgarcia.objectsockets.tests.QueueReceptionHandler;
 
 /**
  * Esta clase representa la configuración de un socket de objetos
@@ -76,12 +75,12 @@ public class ObjectSocketConfiguration {
 	}
 
 	public static ObjectSocketConfiguration create(final SocketAddress socketAddress,
-			final QueueReceptionHandler handlerReceptor) {
+			final ObjectReceptionHandler handlerReceptor) {
 		final ObjectSocketConfiguration config = new ObjectSocketConfiguration();
 		config.address = socketAddress;
 		config.receptionHandler = handlerReceptor;
 		config.componentsFactory = SocketMinaFactory.INSTANCE;
-		config.serializer = XmlTextualizer.create();
+		config.serializer = JsonTextualizer.create();
 		return config;
 	}
 

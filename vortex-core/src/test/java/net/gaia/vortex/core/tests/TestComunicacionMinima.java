@@ -15,8 +15,6 @@ package net.gaia.vortex.core.tests;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 import net.gaia.vortex.core.api.NodoPortal;
 import net.gaia.vortex.core.impl.NodoPortalImpl;
@@ -27,6 +25,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase testea las aserciones mínimas de vortex para permitir la comunicación entre dos partes

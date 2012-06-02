@@ -14,7 +14,8 @@ package net.gaia.vortex.core.impl.metrics;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.util.SystemChronometer;
+import ar.com.dgarcia.lang.time.SystemChronometer;
+
 import net.gaia.vortex.core.api.metrics.MetricasPorTiempo;
 
 /**

@@ -15,8 +15,6 @@ package net.gaia.vortex.core.tests;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.tests.util.StressGenerator;
-import net.gaia.util.SystemChronometer;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.metrics.MetricasDelNodo;
@@ -29,6 +27,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.time.SystemChronometer;
+import ar.com.dgarcia.testing.stress.StressGenerator;
 
 /**
  * Esta clase intenta medir la performance de ruteo de los mensajes en varios casos

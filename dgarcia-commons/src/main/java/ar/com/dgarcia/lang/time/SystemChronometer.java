@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.util;
+package ar.com.dgarcia.lang.time;
 
 /**
  * Esta clase representa un cronómetro que utiliza el tiempo medido por el sistema para para
@@ -22,6 +22,11 @@ package net.gaia.util;
  */
 public class SystemChronometer {
 
+	/**
+	 * Crea un nuevo cronómetro que empieza a contar el tiempo
+	 * 
+	 * @return El cronómetro creado iniciado en cero y contando
+	 */
 	public static SystemChronometer create() {
 		final SystemChronometer chrono = new SystemChronometer();
 		chrono.start();

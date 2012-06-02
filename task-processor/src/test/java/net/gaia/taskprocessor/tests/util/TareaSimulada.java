@@ -3,8 +3,8 @@
  */
 package net.gaia.taskprocessor.tests.util;
 
+import ar.com.dgarcia.lang.conc.WaitBarrier;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.util.WaitBarrier;
 
 /**
  * Esta clase simula una tarea que tarda un tiempo en completarse
