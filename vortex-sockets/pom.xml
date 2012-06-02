@@ -75,6 +75,13 @@
 	  <version>0.1</version>
   	</dependency>
   	
+  	<!-- Agrega los sockets de objetos -->
+  	<dependency>
+	  <groupId>ar.dgarcia</groupId>
+	  <artifactId>object-sockets</artifactId>
+	  <version>0.1</version>
+  	</dependency>
+  	
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>

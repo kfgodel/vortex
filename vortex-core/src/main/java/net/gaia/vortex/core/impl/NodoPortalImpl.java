@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.core.impl;
 
-import java.util.Collection;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
@@ -45,7 +44,9 @@ public class NodoPortalImpl extends NodoSupport implements NodoPortal {
 	 */
 	@Override
 	public void recibirMensajeDesde(final Nodo emisor, final Object mensaje) {
-		forwardearMensaje(emisor, mensaje);
+		// Forwardeamos el mensaje (antes de handlearlo) con la intención de que circule rápido en
+		// la red, y luego el handler puede demorarse
+		super.recibirMensajeDesde(emisor, mensaje);
 		invocarHandlerPara(mensaje);
 	}
 
@@ -63,36 +64,13 @@ public class NodoPortalImpl extends NodoSupport implements NodoPortal {
 	}
 
 	/**
-	 * Envía el mensaje pasado a todos los vecinos excepto al indicado como emisor
-	 * 
-	 * @param emisor
-	 *            El nodo que nos envío el mensaje a nosotros, null si vino de afuera
-	 * @param mensaje
-	 *            El mensaje a enviar a vecinos
-	 */
-	private void forwardearMensaje(final Nodo emisor, final Object mensaje) {
-		final Collection<Nodo> nodosVecinos = getNodosVecinos();
-		for (final Nodo nodoVecino : nodosVecinos) {
-			if (nodoVecino.equals(emisor)) {
-				continue;
-			}
-			try {
-				nodoVecino.recibirMensajeDesde(this, mensaje);
-			} catch (final Exception e) {
-				LOG.error("Se produjo un error en el nodo[" + nodoVecino + "] forwardeando el mensaje[" + mensaje
-						+ "] desde el nodo[" + this + "]. Ignorando");
-			}
-		}
-	}
-
-	/**
 	 * Envía el mensaje a los vecinos utilizando el thread actual para recorrer el conjunto
 	 * 
 	 * @see net.gaia.vortex.core.api.NodoPortal#enviarAVecinos(java.lang.Object)
 	 */
 	@Override
 	public void enviarAVecinos(final Object mensaje) {
-		forwardearMensaje(null, mensaje);
+		super.recibirMensajeDesde(this, mensaje);
 	}
 
 	/**

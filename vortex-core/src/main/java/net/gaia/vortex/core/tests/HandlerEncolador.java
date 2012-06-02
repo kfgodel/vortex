@@ -45,7 +45,7 @@ public class HandlerEncolador implements HandlerDeMensajesVecinos {
 	}
 
 	/**
-	 * Espera por el ultimo mensaje recibido la cantidad de tiempo indicado
+	 * Espera por el último mensaje recibido la cantidad de tiempo indicado
 	 * 
 	 * @param timeMagnitude
 	 *            El tiempo para esperar

@@ -40,7 +40,7 @@ public class EnviarMensajeAOtrosVecinosTask implements WorkUnit {
 	@Override
 	public void doWork() throws InterruptedException {
 		for (final Nodo vecino : vecinos) {
-			if (nodoEmisorOriginal.equals(vecino)) {
+			if (vecino.equals(nodoEmisorOriginal)) {
 				// No se lo mandamos a sí mismo
 				continue;
 			}
