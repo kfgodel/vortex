@@ -13,8 +13,14 @@
 package net.gaia.vortex.sockets.impl;
 
 import net.gaia.vortex.core.api.Nodo;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
+
+import com.google.common.base.Objects;
 
 /**
  * Esta clase representa un nodo que se comunica con otro a través de un socket de objetos
@@ -22,8 +28,10 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * @author D. García
  */
 public class NodoSocketRemoto implements Nodo, Disposable {
+	private static final Logger LOG = LoggerFactory.getLogger(NodoSocketRemoto.class);
 
 	private ObjectSocket socket;
+	public static final String socket_FIELD = "socket";
 
 	/**
 	 * @see net.gaia.vortex.core.impl.NodoSupport#recibirMensajeDesde(net.gaia.vortex.core.api.Nodo,
@@ -47,8 +55,7 @@ public class NodoSocketRemoto implements Nodo, Disposable {
 	 */
 	@Override
 	public void conectarCon(final Nodo vecino) {
-		// TODO Auto-generated method stub
-
+		LOG.error("Se intentó conectar un nodo remoto. Eso está bien?");
 	}
 
 	/**
@@ -56,13 +63,20 @@ public class NodoSocketRemoto implements Nodo, Disposable {
 	 */
 	@Override
 	public void desconectarDe(final Nodo vecino) {
-		// TODO Auto-generated method stub
-
+		LOG.error("Se intentó desconectar un nodo remoto. Eso está bien?");
 	}
 
 	public static NodoSocketRemoto create(final ObjectSocket socket) {
 		final NodoSocketRemoto remoto = new NodoSocketRemoto();
 		remoto.socket = socket;
 		return remoto;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(socket_FIELD, socket).toString();
 	}
 }

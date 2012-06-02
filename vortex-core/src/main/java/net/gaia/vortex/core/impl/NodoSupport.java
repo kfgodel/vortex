@@ -20,6 +20,8 @@ import net.gaia.vortex.core.api.Nodo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase define el comportamiento mínimo y común del {@link Nodo} de manera que pueda ser
  * extendida para agregar comportamiento adicional sin demasiado trabajo extra.<br>
@@ -32,6 +34,7 @@ public class NodoSupport implements Nodo {
 	private static final Logger LOG = LoggerFactory.getLogger(NodoSupport.class);
 
 	private final Collection<Nodo> nodosVecinos = new CopyOnWriteArrayList<Nodo>();
+	public static final String nodosVecinos_FIELD = "nodosVecinos";
 
 	/**
 	 * @see net.gaia.vortex.core.api.Nodo#recibirMensajeDesde(net.gaia.vortex.core.api.Nodo,
@@ -86,4 +89,11 @@ public class NodoSupport implements Nodo {
 		return nodosVecinos;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(nodosVecinos_FIELD, nodosVecinos).toString();
+	}
 }

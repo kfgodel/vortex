@@ -19,8 +19,8 @@ import junit.framework.Assert;
 import net.gaia.vortex.core.api.NodoPortal;
 import net.gaia.vortex.core.impl.NodoPortalImpl;
 import net.gaia.vortex.core.tests.HandlerEncolador;
-import net.gaia.vortex.sockets.impl.NodoSocketCliente;
-import net.gaia.vortex.sockets.impl.NodoSocketServidor;
+import net.gaia.vortex.sockets.api.NodoSocketCliente;
+import net.gaia.vortex.sockets.api.NodoSocketServidor;
 
 import org.junit.After;
 import org.junit.Before;
@@ -59,8 +59,8 @@ public class TestNodoSocket {
 
 	@After
 	public void eliminarNodos() {
-		nodoCliente.closeAndDispose();
 		nodoServidor.closeAndDispose();
+		nodoCliente.closeAndDispose();
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class TestNodoSocket {
 		final String mensajeEnviado = "texto de mensaje loco";
 		nodoEmisor.enviarAVecinos(mensajeEnviado);
 
-		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(10, TimeUnit.SECONDS));
 		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensajeEnviado, mensajeRecibido);
 	}
 

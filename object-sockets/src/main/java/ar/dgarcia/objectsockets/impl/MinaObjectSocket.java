@@ -16,6 +16,8 @@ import org.apache.mina.core.session.IoSession;
 
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase implementa el socket de objetos con mina
  * 
@@ -24,6 +26,7 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
 public class MinaObjectSocket implements ObjectSocket {
 
 	private IoSession minaSession;
+	public static final String minaSession_FIELD = "minaSession";
 
 	/**
 	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#send(java.lang.Object)
@@ -49,5 +52,13 @@ public class MinaObjectSocket implements ObjectSocket {
 	@Override
 	public void closeAndDispose() {
 		minaSession.close(true);
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(minaSession_FIELD, minaSession).toString() + this.hashCode();
 	}
 }
