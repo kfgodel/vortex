@@ -19,6 +19,7 @@ import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoConnector;
 
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
+import ar.dgarcia.objectsockets.api.SocketErrorHandler;
 import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
 import ar.dgarcia.objectsockets.external.mina.components.MinaComponentsFactory;
 import ar.dgarcia.objectsockets.external.mina.components.SocketMinaFactory;
@@ -36,6 +37,15 @@ public class ObjectSocketConfiguration {
 	private ObjectTextualizer serializer;
 	private ObjectReceptionHandler receptionHandler;
 	private MinaComponentsFactory componentsFactory;
+	private SocketErrorHandler errorHandler;
+
+	public SocketErrorHandler getErrorHandler() {
+		return errorHandler;
+	}
+
+	public void setErrorHandler(final SocketErrorHandler errorHandler) {
+		this.errorHandler = errorHandler;
+	}
 
 	public static ObjectSocketConfiguration create(final SocketAddress socketAddress) {
 		return create(socketAddress, null);

@@ -21,6 +21,7 @@ import org.apache.mina.core.session.IoSession;
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
+import ar.dgarcia.objectsockets.api.SocketErrorHandler;
 import ar.dgarcia.objectsockets.external.mina.ObjectConnectorIoHandler;
 
 /**
@@ -58,7 +59,9 @@ public class ObjectSocketConnector implements Disposable {
 		socketConnector = config.newIoConnector();
 
 		final ObjectReceptionHandler receptionHandler = config.getReceptionHandler();
-		final ObjectConnectorIoHandler connectorHandler = ObjectConnectorIoHandler.create(receptionHandler);
+		final SocketErrorHandler errorHandler = config.getErrorHandler();
+		final ObjectConnectorIoHandler connectorHandler = ObjectConnectorIoHandler.create(receptionHandler,
+				errorHandler);
 		socketConnector.setHandler(connectorHandler);
 
 		final SocketAddress openedAddress = config.getAddress();

@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
+import ar.dgarcia.objectsockets.api.SocketErrorHandler;
 import ar.dgarcia.objectsockets.impl.MinaObjectSocket;
 
 /**
@@ -32,6 +33,7 @@ public class ObjectConnectorIoHandler extends IoHandlerAdapter {
 	private static final Logger LOG = LoggerFactory.getLogger(ObjectConnectorIoHandler.class);
 
 	private ObjectReceptionHandler receptionHandler;
+	private SocketErrorHandler errorHandler;
 	private AtomicReference<MinaObjectSocket> socketRef;
 
 	/**
@@ -41,7 +43,7 @@ public class ObjectConnectorIoHandler extends IoHandlerAdapter {
 	@Override
 	public void messageReceived(final IoSession session, final Object message) throws Exception {
 		if (receptionHandler == null) {
-			LOG.debug("No existe handler de mensajes. Ignorando mensaje");
+			LOG.debug("No existe handler de mensajes para [{}]. Ignorando mensaje", this);
 			return;
 		}
 		final MinaObjectSocket socketPrevio = getConnectedSocketFor(session);
@@ -81,9 +83,11 @@ public class ObjectConnectorIoHandler extends IoHandlerAdapter {
 		return otroSocket;
 	}
 
-	public static ObjectConnectorIoHandler create(final ObjectReceptionHandler receptionHandler) {
+	public static ObjectConnectorIoHandler create(final ObjectReceptionHandler receptionHandler,
+			final SocketErrorHandler errorHandler) {
 		final ObjectConnectorIoHandler handler = new ObjectConnectorIoHandler();
 		handler.receptionHandler = receptionHandler;
+		handler.errorHandler = errorHandler;
 		handler.socketRef = new AtomicReference<MinaObjectSocket>();
 		return handler;
 	}
@@ -110,6 +114,24 @@ public class ObjectConnectorIoHandler extends IoHandlerAdapter {
 					+ connectorSession + "]");
 		}
 		return socketPrevio;
+	}
+
+	/**
+	 * @see org.apache.mina.core.service.IoHandlerAdapter#exceptionCaught(org.apache.mina.core.session.IoSession,
+	 *      java.lang.Throwable)
+	 */
+	@Override
+	public void exceptionCaught(final IoSession session, final Throwable cause) throws Exception {
+		if (errorHandler == null) {
+			LOG.debug("No existe handler de errores para [" + this + "]. Ignorando error", cause);
+			return;
+		}
+		final MinaObjectSocket socketPrevio = getConnectedSocketFor(session);
+		try {
+			errorHandler.onSocketError(cause, socketPrevio);
+		} catch (final Exception e) {
+			LOG.error("Se produjo un error en el handler de errores", e);
+		}
 	}
 
 }
