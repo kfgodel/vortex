@@ -17,6 +17,7 @@ import java.net.SocketAddress;
 import net.gaia.vortex.core.impl.NodoSupport;
 import net.gaia.vortex.sockets.impl.NodoRemotoManager;
 import ar.dgarcia.objectsockets.api.Disposable;
+import ar.dgarcia.objectsockets.external.xml.XmlTextualizer;
 import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
 
@@ -48,6 +49,7 @@ public class NodoSocketServidor extends NodoSupport implements Disposable {
 	 */
 	private void abrirSocket(final SocketAddress listenAddress) {
 		final ObjectSocketConfiguration socketConfig = ObjectSocketConfiguration.create(listenAddress);
+		socketConfig.setSerializer(XmlTextualizer.create());
 		socketConfig.setEventHandler(remotoManager);
 		socketConfig.setReceptionHandler(remotoManager);
 		socketAcceptor = ObjectSocketAcceptor.create(socketConfig);

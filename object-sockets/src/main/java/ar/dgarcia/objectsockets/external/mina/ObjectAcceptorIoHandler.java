@@ -127,4 +127,17 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 			LOG.error("Se produjo un error en el handler de errores", e);
 		}
 	}
+
+	/**
+	 * @see org.apache.mina.core.service.IoHandlerAdapter#messageSent(org.apache.mina.core.session.IoSession,
+	 *      java.lang.Object)
+	 */
+	@Override
+	public void messageSent(final IoSession session, final Object message) throws Exception {
+		if (!LOG.isDebugEnabled()) {
+			return;
+		}
+		final ObjectSocket socket = getConnectedSocketFor(session);
+		LOG.debug("Mensaje[{}] enviado por socket[{}] en handler[{}]", new Object[] { message, socket, this });
+	}
 }

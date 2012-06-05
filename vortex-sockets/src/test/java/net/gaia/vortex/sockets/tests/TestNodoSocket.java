@@ -75,4 +75,48 @@ public class TestNodoSocket {
 		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensajeEnviado, mensajeRecibido);
 	}
 
+	@Test
+	public void deberiaRecibirElMensajeDesdeDosReceptoresDistintosEnElServidor() {
+		final NodoPortalImpl nodoReceptor2 = NodoPortalImpl.create();
+		nodoReceptor2.conectarCon(nodoServidor);
+		nodoServidor.conectarCon(nodoReceptor2);
+
+		final HandlerEncolador handlerReceptor2 = HandlerEncolador.create();
+		nodoReceptor2.setHandlerDeMensajesVecinos(handlerReceptor2);
+
+		final HandlerEncolador handlerReceptor = HandlerEncolador.create();
+		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor);
+
+		final String mensajeEnviado = "texto de mensaje loco";
+		nodoEmisor.enviarAVecinos(mensajeEnviado);
+
+		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(10, TimeUnit.SECONDS));
+		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensajeEnviado, mensajeRecibido);
+
+		final Object mensajeRecibido2 = handlerReceptor2.esperarPorMensaje(TimeMagnitude.of(10, TimeUnit.SECONDS));
+		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensajeEnviado, mensajeRecibido2);
+	}
+
+	@Test
+	public void deberiaRecibirElMensajeDesdeDosReceptoresDistintosUnoEnElClienteYOtroEnElServidor() {
+		final NodoPortalImpl nodoReceptor2 = NodoPortalImpl.create();
+		nodoReceptor2.conectarCon(nodoCliente);
+		nodoCliente.conectarCon(nodoReceptor2);
+
+		final HandlerEncolador handlerReceptor2 = HandlerEncolador.create();
+		nodoReceptor2.setHandlerDeMensajesVecinos(handlerReceptor2);
+
+		final HandlerEncolador handlerReceptor = HandlerEncolador.create();
+		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor);
+
+		final String mensajeEnviado = "texto de mensaje loco";
+		nodoEmisor.enviarAVecinos(mensajeEnviado);
+
+		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(10, TimeUnit.SECONDS));
+		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensajeEnviado, mensajeRecibido);
+
+		final Object mensajeRecibido2 = handlerReceptor2.esperarPorMensaje(TimeMagnitude.of(10, TimeUnit.SECONDS));
+		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensajeEnviado, mensajeRecibido2);
+	}
+
 }
