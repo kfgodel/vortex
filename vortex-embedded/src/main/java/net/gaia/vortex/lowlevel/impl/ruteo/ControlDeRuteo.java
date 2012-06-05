@@ -17,13 +17,13 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.lowlevel.impl.envios.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.meta.Decision;
 import net.gaia.vortex.protocol.messages.IdVortex;
 import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
-import ar.com.fdvs.dgarcia.colecciones.sets.ConcurrentHashSet;
+import ar.com.dgarcia.coding.anno.HasDependencyOn;
+import ar.com.dgarcia.colecciones.sets.ConcurrentHashSet;
 
 /**
  * Esta clase representa la información de control del ruteo de manera de determinar cuando está

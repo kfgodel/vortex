@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 import net.gaia.vortex.meta.Decision;
@@ -21,6 +20,8 @@ import net.gaia.vortex.protocol.messages.routing.AcuseFallaRecepcion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.coding.anno.HasDependencyOn;
 
 /**
  * Esta clase representa la operación del nodo al devolver un acuse de falla

@@ -15,7 +15,6 @@ package net.gaia.vortex.climate.tasks;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.climate.VortexClimateMain;
 import net.gaia.vortex.climate.externals.ClimateMeasure;
@@ -23,6 +22,8 @@ import net.gaia.vortex.climate.externals.ClimateStation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa la tarea de actualización del clima en la red vortex

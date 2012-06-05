@@ -14,9 +14,9 @@ package net.gaia.vortex.lowlevel.impl.nodo;
 
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorDeRuteo;
 import net.gaia.vortex.lowlevel.impl.ruteo.jajo.OptimizadorJaJo;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa la info de configuración de un nodo vortex

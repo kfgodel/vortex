@@ -60,6 +60,12 @@
 			<groupId>net.gaia</groupId>
 			<artifactId>vortex-embedded</artifactId>
 			<version>0.2.4</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>dgarcia-commons</artifactId>
+					<groupId>ar.com.fdvs.dgarcia</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<!-- Conversion a JSON de vortex-->

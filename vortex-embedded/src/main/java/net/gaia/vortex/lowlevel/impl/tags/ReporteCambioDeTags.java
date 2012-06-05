@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
-
 import ar.com.dgarcia.coding.caching.Instantiator;
 import ar.com.dgarcia.coding.caching.SimpleCacheConcurrentMap;
 

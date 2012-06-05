@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.vortex.lowlevel.impl.envios.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.envios.EsperaDeAccion;
 import net.gaia.vortex.lowlevel.impl.nodo.ConfiguracionDeNodo;
@@ -21,6 +20,8 @@ import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa la operación de espera del acuse de consumo por parte del nodo al que se le

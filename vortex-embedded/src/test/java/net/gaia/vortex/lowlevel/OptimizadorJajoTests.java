@@ -14,8 +14,6 @@ package net.gaia.vortex.lowlevel;
 
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.mensajes.EncoladorDeMensajesHandler;
 import net.gaia.vortex.lowlevel.impl.nodo.ConfiguracionDeNodo;
@@ -29,6 +27,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase prueba el comportamiento del optimizador utilizando flooding para la entrega de

@@ -18,8 +18,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
-import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.hilevel.api.ListenerDeTagsDelNodo;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.entregas.ReporteDeEntregaApi;
@@ -33,6 +31,9 @@ import net.gaia.vortex.lowlevel.impl.nodo.NodoVortexConTasks;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 import com.google.common.collect.Sets;
 

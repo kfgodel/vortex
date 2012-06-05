@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.lowlevel.impl.envios;
 
-import net.gaia.taskprocessor.api.TimeMagnitude;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa la espera de una acción por parte del nodo hacia un cliente.<br>

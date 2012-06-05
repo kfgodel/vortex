@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ar.com.fdvs.dgarcia.colecciones.sets.ConcurrentHashSet;
+import ar.com.dgarcia.colecciones.sets.ConcurrentHashSet;
 
 /**
  * Esta clase representa la información de tags declarada por el nodo

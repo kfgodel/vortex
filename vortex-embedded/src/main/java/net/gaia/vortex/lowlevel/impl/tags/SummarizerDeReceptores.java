@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
-import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.receptores.RegistroDeReceptores;
 import net.gaia.vortex.lowlevel.impl.ruteo.OptimizadorDeRuteo;
 import net.gaia.vortex.lowlevel.impl.ruteo.ReportePerformanceRuteo;
 import net.gaia.vortex.lowlevel.impl.ruteo.SeleccionDeReceptores;
 import net.gaia.vortex.meta.Decision;
+import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.coding.caching.Instantiator;
 import ar.com.dgarcia.coding.caching.SimpleCacheConcurrentMap;
 

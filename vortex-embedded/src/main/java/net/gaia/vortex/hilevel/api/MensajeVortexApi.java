@@ -14,7 +14,7 @@ package net.gaia.vortex.hilevel.api;
 
 import java.util.Set;
 
-import ar.com.fdvs.dgarcia.colecciones.sets.Sets;
+import ar.com.dgarcia.colecciones.sets.Sets;
 
 import com.google.common.base.Objects;
 

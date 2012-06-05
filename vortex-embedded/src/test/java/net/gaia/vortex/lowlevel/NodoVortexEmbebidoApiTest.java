@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.annotations.HasDependencyOn;
-import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.lowlevel.api.NodoVortex;
 import net.gaia.vortex.lowlevel.api.SesionVortex;
 import net.gaia.vortex.lowlevel.impl.inter.InterconexionDeNodos;
@@ -39,6 +36,10 @@ import net.gaia.vortex.tests.VortexTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import ar.com.dgarcia.coding.anno.HasDependencyOn;
+import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 import com.google.common.collect.Lists;
 

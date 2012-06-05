@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.lowlevel.impl.tasks;
 
-import net.gaia.annotations.HasDependencyOn;
 import net.gaia.vortex.lowlevel.impl.envios.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
 import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
@@ -25,6 +24,8 @@ import net.gaia.vortex.protocol.messages.routing.AcuseConsumo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.coding.anno.HasDependencyOn;
 
 /**
  * Esta clase representa la tarea de devolver una confirmación de consumo con elementos en 0

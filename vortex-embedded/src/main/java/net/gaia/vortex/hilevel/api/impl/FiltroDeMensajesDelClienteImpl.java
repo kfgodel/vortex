@@ -21,7 +21,7 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
 import net.gaia.vortex.protocol.messages.tags.AgregarTags;
 import net.gaia.vortex.protocol.messages.tags.QuitarTags;
 import net.gaia.vortex.protocol.messages.tags.ReemplazarTags;
-import ar.com.fdvs.dgarcia.colecciones.sets.ConcurrentHashSet;
+import ar.com.dgarcia.colecciones.sets.ConcurrentHashSet;
 
 import com.google.common.collect.Lists;
 

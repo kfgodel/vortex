@@ -22,7 +22,7 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.com.fdvs.dgarcia.colecciones.sets.ConcurrentHashSet;
+import ar.com.dgarcia.colecciones.sets.ConcurrentHashSet;
 
 import com.google.common.base.Objects;
 

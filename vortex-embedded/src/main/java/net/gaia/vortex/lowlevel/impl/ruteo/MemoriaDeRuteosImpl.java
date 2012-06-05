@@ -17,7 +17,7 @@ import java.util.Set;
 
 import net.gaia.vortex.lowlevel.impl.envios.IdentificadorDeEnvio;
 import net.gaia.vortex.lowlevel.impl.receptores.ReceptorVortex;
-import ar.com.fdvs.dgarcia.colecciones.sets.ConcurrentHashSet;
+import ar.com.dgarcia.colecciones.sets.ConcurrentHashSet;
 
 /**
  * Esta clase es la implementación de la memoria de ruteos activos

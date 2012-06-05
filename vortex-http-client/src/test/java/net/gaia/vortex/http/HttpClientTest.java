@@ -15,8 +15,6 @@ package net.gaia.vortex.http;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
 import net.gaia.vortex.hilevel.api.ClienteVortex;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.impl.ClienteVortexImpl;
@@ -31,6 +29,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 import com.google.common.collect.Sets;
 

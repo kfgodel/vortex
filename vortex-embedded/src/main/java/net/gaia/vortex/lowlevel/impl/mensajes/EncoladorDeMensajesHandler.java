@@ -17,10 +17,6 @@ import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.taskprocessor.api.TimeMagnitude;
-import net.gaia.taskprocessor.api.exceptions.InterruptedWaitException;
-import net.gaia.taskprocessor.api.exceptions.TimeoutExceededException;
-import net.gaia.taskprocessor.api.exceptions.UnsuccessfulWaitException;
 import net.gaia.vortex.hilevel.api.HandlerDeMensajesApi;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
 import net.gaia.vortex.hilevel.api.entregas.ReporteDeEntregaApi;
@@ -30,6 +26,11 @@ import net.gaia.vortex.protocol.messages.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
+import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
+import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Este handler de mensajes mantiene una lista interna de los mensajes recibidos y permite esperar a

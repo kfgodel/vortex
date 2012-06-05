@@ -14,7 +14,6 @@ package net.gaia.vortex.lowlevel.impl.tasks;
 
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.taskprocessor.api.TimeMagnitude;
 import net.gaia.vortex.lowlevel.impl.envios.ContextoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.envios.ControlDeConsumoDeEnvio;
 import net.gaia.vortex.lowlevel.impl.envios.EsperaDeAccion;
@@ -26,6 +25,8 @@ import net.gaia.vortex.lowlevel.impl.ruteo.ContextoDeRuteoDeMensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa la acción realizada por el nodo cuando se vence el tiempo de espera de la
