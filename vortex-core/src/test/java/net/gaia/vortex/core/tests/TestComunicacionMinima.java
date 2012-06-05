@@ -13,6 +13,8 @@
 package net.gaia.vortex.core.tests;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
@@ -27,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
+import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
@@ -96,19 +99,68 @@ public class TestComunicacionMinima {
 	}
 
 	/**
-	 * T004. El thread del emisor no debería bloquearse durante la entrega del mensaje
+	 * T004. El thread del emisor no debería bloquearse durante la entrega del mensaje.<br>
+	 * Como implementación del test verificamos que el emisor puede seguir ejecutando mientras el
+	 * receptor está bloqueado
 	 */
 	@Test
 	public void el_Thread_Del_Emisor_No_Deberia_Bloquearse_Durante_La_Entrega_Del_Mensaje() {
+		final WaitBarrier bloqueoDelEmisor = WaitBarrier.create();
+		final WaitBarrier bloqueoDelReceptor = WaitBarrier.create();
+		final AtomicBoolean receptorBloqueado = new AtomicBoolean(false);
+		final HandlerDeMensajesVecinos handlerReceptor = new HandlerDeMensajesVecinos() {
 
+			@Override
+			public void onMensajeDeVecinoRecibido(final Object mensaje) {
+				receptorBloqueado.set(true);
+				// Hacemos que el emisor siga ejecutando si nos estaba esperando
+				bloqueoDelEmisor.release();
+				// Esperamos que el emisor nos de permiso de ejecutar
+				bloqueoDelReceptor.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+				receptorBloqueado.set(false);
+			}
+		};
+		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor);
+
+		final String mensajeEnviado = "texto de ejemplo";
+		nodoEmisor.enviarAVecinos(mensajeEnviado);
+
+		// Esperamos que el receptor reciba el mensaje
+		bloqueoDelEmisor.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		// En este punto el receptor debería estar bloqueado y nosotros como thread emisor libres
+		Assert.assertEquals("El receptor todavía debería estar bloqueado", true, receptorBloqueado.get());
+		bloqueoDelReceptor.release();
 	}
 
 	/**
 	 * T005. El thread del receptor debería poder ser independiente del usado para la entrega del
-	 * mensaje
+	 * mensaje.<br>
+	 * Como prueba verificamos que el thread utilizado para entregar el mensaje es distinto del
+	 * usado en el test y por lo tanto se podría cualquier otro thread como receptor del mensaje en
+	 * sí
 	 */
 	@Test
-	public void el_Thread_Del_Receptro_Debería_Poder_Ser_Independiente_Del_Usado_Para_La_Entrega_Del_Mensaje() {
+	public void el_Thread_Del_Receptor_Debería_Poder_Ser_Independiente_Del_Usado_Para_La_Entrega_Del_Mensaje() {
+		final WaitBarrier threadDeEntregaDefinido = WaitBarrier.create();
+		final AtomicReference<Thread> threadDeEntrega = new AtomicReference<Thread>();
+		final HandlerDeMensajesVecinos handlerReceptor = new HandlerDeMensajesVecinos() {
+			@Override
+			public void onMensajeDeVecinoRecibido(final Object mensaje) {
+				final Thread threadActual = Thread.currentThread();
+				threadDeEntrega.set(threadActual);
+				threadDeEntregaDefinido.release();
+			}
+		};
+		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor);
+
+		final String mensajeEnviado = "texto de ejemplo";
+		nodoEmisor.enviarAVecinos(mensajeEnviado);
+
+		// Esperamos que el thread utilizado para la entrega sea definido
+		threadDeEntregaDefinido.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		final Thread threadParaEntrega = threadDeEntrega.get();
+		Assert.assertNotSame("Deberían ser threads distintos", Thread.currentThread(), threadParaEntrega);
 
 	}
 
