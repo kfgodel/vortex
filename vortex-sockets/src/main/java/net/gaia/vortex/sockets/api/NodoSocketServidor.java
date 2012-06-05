@@ -1,5 +1,5 @@
 /**
- * 02/06/2012 18:42:04 Copyright (C) 2011 Darío L. García
+ * 04/06/2012 21:53:49 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,63 +12,30 @@
  */
 package net.gaia.vortex.sockets.api;
 
-import java.net.SocketAddress;
-
-import net.gaia.vortex.core.impl.NodoSupport;
-import net.gaia.vortex.sockets.impl.NodoRemotoManager;
+import net.gaia.vortex.core.api.Nodo;
 import ar.dgarcia.objectsockets.api.Disposable;
-import ar.dgarcia.objectsockets.external.xml.XmlTextualizer;
-import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
-import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
-
-import com.google.common.base.Objects;
+import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
 /**
- * Esta clase representa un nodo que puede actuar como servidor al escuchar y enviar en un socket
- * mensajes de otros nodos
+ * Esta interfaz representa el contrato de un nodo que utiliza un socket local para escuchar
+ * comunicaciones entrantes
  * 
  * @author D. García
  */
-public class NodoSocketServidor extends NodoSupport implements Disposable {
-
-	public static NodoSocketServidor create(final SocketAddress listenAddress) {
-		final NodoSocketServidor servidor = new NodoSocketServidor();
-		servidor.remotoManager = NodoRemotoManager.create(servidor);
-		servidor.abrirSocket(listenAddress);
-		return servidor;
-	}
-
-	private ObjectSocketAcceptor socketAcceptor;
-	private NodoRemotoManager remotoManager;
+public interface NodoSocketServidor extends Nodo, Disposable {
 
 	/**
 	 * Abre el socket indicado para aceptar conexiones entrantes
 	 * 
-	 * @param listenAddress
-	 *            El socket a escuchar
+	 * @throws ObjectSocketException
+	 *             Si no se puede abrir el socket de escucha
 	 */
-	private void abrirSocket(final SocketAddress listenAddress) {
-		final ObjectSocketConfiguration socketConfig = ObjectSocketConfiguration.create(listenAddress);
-		socketConfig.setSerializer(XmlTextualizer.create());
-		socketConfig.setEventHandler(remotoManager);
-		socketConfig.setReceptionHandler(remotoManager);
-		socketAcceptor = ObjectSocketAcceptor.create(socketConfig);
-	}
+	public abstract void abrirSocketLocal() throws ObjectSocketException;
 
 	/**
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
 	@Override
-	public void closeAndDispose() {
-		socketAcceptor.closeAndDispose();
-		remotoManager.closeAndDispose();
-	}
+	public abstract void closeAndDispose();
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
-	}
 }

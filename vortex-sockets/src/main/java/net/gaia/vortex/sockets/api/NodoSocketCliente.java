@@ -1,5 +1,5 @@
 /**
- * 02/06/2012 18:41:41 Copyright (C) 2011 Darío L. García
+ * 04/06/2012 21:47:29 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,62 +12,24 @@
  */
 package net.gaia.vortex.sockets.api;
 
-import java.net.SocketAddress;
-
-import net.gaia.vortex.core.impl.NodoSupport;
-import net.gaia.vortex.sockets.impl.NodoRemotoManager;
+import net.gaia.vortex.core.api.Nodo;
 import ar.dgarcia.objectsockets.api.Disposable;
-import ar.dgarcia.objectsockets.external.xml.XmlTextualizer;
-import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
-import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
-
-import com.google.common.base.Objects;
+import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
 /**
- * Esta clase representa un nodo socket que actúa como cliente enviando y recibiendo mensajes del
- * socket indicado
+ * Esta interfaz representa un nodo que utiliza sockets como cliente para conectarse a otro que lo
+ * escucha y permite la comunicación de mensajes vortex
  * 
  * @author D. García
  */
-public class NodoSocketCliente extends NodoSupport implements Disposable {
-
-	private ObjectSocketConnector socketConnector;
-	private NodoRemotoManager remotoManager;
-
-	public static NodoSocketCliente create(final SocketAddress clientAddress) {
-		final NodoSocketCliente cliente = new NodoSocketCliente();
-		cliente.remotoManager = NodoRemotoManager.create(cliente);
-		cliente.conectarASocket(clientAddress);
-		return cliente;
-	}
+public interface NodoSocketCliente extends Nodo, Disposable {
 
 	/**
-	 * Conecta como cliente este nodo a la dirección indicada
+	 * Conecta como cliente este nodo a la dirección indicada en la creación
 	 * 
-	 * @param clientAddress
+	 * @throws ObjectSocketException
+	 *             Si no se puede conectar con el socket remoto
 	 */
-	private void conectarASocket(final SocketAddress clientAddress) {
-		final ObjectSocketConfiguration socketConfig = ObjectSocketConfiguration.create(clientAddress);
-		socketConfig.setSerializer(XmlTextualizer.create());
-		socketConfig.setEventHandler(remotoManager);
-		socketConfig.setReceptionHandler(remotoManager);
-		socketConnector = ObjectSocketConnector.create(socketConfig);
-	}
+	public abstract void conectarASocketRomoto() throws ObjectSocketException;
 
-	/**
-	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
-	 */
-	@Override
-	public void closeAndDispose() {
-		socketConnector.closeAndDispose();
-		remotoManager.closeAndDispose();
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
-	}
 }

@@ -19,6 +19,8 @@ import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.impl.NodoPortalImpl;
 import net.gaia.vortex.sockets.api.NodoSocketCliente;
 import net.gaia.vortex.sockets.api.NodoSocketServidor;
+import net.gaia.vortex.sockets.impl.NodoObjectSocketCliente;
+import net.gaia.vortex.sockets.impl.NodoObjectSocketServidor;
 
 import org.junit.After;
 import org.junit.Before;
@@ -44,8 +46,8 @@ public class TestNodoSocketPerformance {
 	@Before
 	public void crearRuteadorCentral() {
 		final InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
-		nodoServidor = NodoSocketServidor.create(sharedTestAddress);
-		nodoCliente = NodoSocketCliente.create(sharedTestAddress);
+		nodoServidor = NodoObjectSocketServidor.createAndListenTo(sharedTestAddress);
+		nodoCliente = NodoObjectSocketCliente.createAndConnectTo(sharedTestAddress);
 		nodoEmisor = NodoPortalImpl.create();
 		nodoReceptor = NodoPortalImpl.create();
 
