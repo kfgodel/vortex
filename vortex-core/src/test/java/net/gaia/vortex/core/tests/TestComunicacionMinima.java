@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 import net.gaia.vortex.core.api.NodoPortal;
-import net.gaia.vortex.core.impl.NodoPortalImpl;
+import net.gaia.vortex.core.impl.NodoPortalSinThreads;
 import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
 
 import org.junit.After;
@@ -49,8 +49,8 @@ public class TestComunicacionMinima {
 	@Before
 	public void crearNodos() {
 		nodoRuteador = NodoRuteadorMinimo.create();
-		nodoEmisor = NodoPortalImpl.create();
-		nodoReceptor = NodoPortalImpl.create();
+		nodoEmisor = NodoPortalSinThreads.create();
+		nodoReceptor = NodoPortalSinThreads.create();
 
 		nodoEmisor.conectarCon(nodoRuteador);
 
@@ -204,10 +204,10 @@ public class TestComunicacionMinima {
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayUnNodoEnElMedio() {
-		final NodoPortal nodoEmisor = NodoPortalImpl.create();
+		final NodoPortal nodoEmisor = NodoPortalSinThreads.create();
 		final NodoRuteadorMinimo nodoIntermedio1 = NodoRuteadorMinimo.create();
 		final NodoRuteadorMinimo nodoIntermedio2 = NodoRuteadorMinimo.create();
-		final NodoPortal nodoReceptor = NodoPortalImpl.create();
+		final NodoPortal nodoReceptor = NodoPortalSinThreads.create();
 
 		final HandlerEncolador handlerReceptor = HandlerEncolador.create();
 		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor);
@@ -264,7 +264,7 @@ public class TestComunicacionMinima {
 		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor1);
 
 		final HandlerEncolador handlerReceptor2 = HandlerEncolador.create();
-		final NodoPortal nodoReceptor2 = NodoPortalImpl.create();
+		final NodoPortal nodoReceptor2 = NodoPortalSinThreads.create();
 		nodoReceptor2.setHandlerDeMensajesVecinos(handlerReceptor2);
 
 		nodoRuteador.conectarCon(nodoReceptor2);

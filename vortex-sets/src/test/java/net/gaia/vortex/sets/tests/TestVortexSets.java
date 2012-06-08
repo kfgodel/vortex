@@ -16,9 +16,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
+import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.NodoPortal;
+import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
 import net.gaia.vortex.sets.api.FiltroDeMensajes;
 import net.gaia.vortex.sets.api.HandlerTipadoDeMensajes;
-import net.gaia.vortex.sets.api.PortalSelectivo;
+import net.gaia.vortex.sets.impl.PortalSelectivoConNodoPortal;
 import net.gaia.vortex.sets.impl.filters.FiltroAceptaTodo;
 import net.gaia.vortex.sets.impl.filters.InstanciasNoNulas;
 import net.gaia.vortex.sets.test.HandlerTipadoEncolador;
@@ -37,13 +40,37 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  */
 public class TestVortexSets {
 
-	private PortalSelectivo portalEmisor;
-	private PortalSelectivo portalReceptor;
-	private PortalSelectivo portalReceptor2;
+	private PortalSelectivoConNodoPortal portalEmisor;
+	private PortalSelectivoConNodoPortal portalReceptor;
+	private PortalSelectivoConNodoPortal portalReceptor2;
 
 	@Before
 	public void crearPortalSelectivo() {
+		portalEmisor = PortalSelectivoConNodoPortal.create();
+		portalReceptor = PortalSelectivoConNodoPortal.create();
+		portalReceptor2 = PortalSelectivoConNodoPortal.create();
+		final NodoRuteadorMinimo nodoRuteador = NodoRuteadorMinimo.create();
+		final NodoPortal nodoEmisor = portalEmisor.getNodoPortal();
+		interconectarCon(nodoRuteador, nodoEmisor);
 
+		final NodoPortal nodoReceptor = portalReceptor.getNodoPortal();
+		interconectarCon(nodoRuteador, nodoReceptor);
+
+		final NodoPortal nodoReceptor2 = portalReceptor2.getNodoPortal();
+		interconectarCon(nodoRuteador, nodoReceptor2);
+	}
+
+	/**
+	 * Crea una conexión bidireccional entre los nodos pasados
+	 * 
+	 * @param nodoOrigen
+	 *            Uno de los nodos
+	 * @param nodoDestino
+	 *            El otro
+	 */
+	private void interconectarCon(final Nodo nodoOrigen, final Nodo nodoDestino) {
+		nodoOrigen.conectarCon(nodoDestino);
+		nodoDestino.conectarCon(nodoOrigen);
 	}
 
 	/**

@@ -23,17 +23,18 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase es la implementación del nodo portal que permite a código externo interactuar con la
- * red de vortex
+ * red de vortex.<br>
+ * Esta implementación no tiene threads propios si no que utiliza los del nodo conectado
  * 
  * @author D. García
  */
-public class NodoPortalImpl extends NodoSupport implements NodoPortal {
-	private static final Logger LOG = LoggerFactory.getLogger(NodoPortalImpl.class);
+public class NodoPortalSinThreads extends NodoSupport implements NodoPortal {
+	private static final Logger LOG = LoggerFactory.getLogger(NodoPortalSinThreads.class);
 
 	private AtomicReference<HandlerDeMensajesVecinos> handlerRef;
 
-	public static NodoPortalImpl create() {
-		final NodoPortalImpl nodo = new NodoPortalImpl();
+	public static NodoPortalSinThreads create() {
+		final NodoPortalSinThreads nodo = new NodoPortalSinThreads();
 		nodo.handlerRef = new AtomicReference<HandlerDeMensajesVecinos>(NullHandler.create());
 		return nodo;
 	}

@@ -16,7 +16,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.impl.NodoPortalImpl;
+import net.gaia.vortex.core.impl.NodoPortalSinThreads;
 import net.gaia.vortex.sockets.api.NodoSocketCliente;
 import net.gaia.vortex.sockets.api.NodoSocketServidor;
 import net.gaia.vortex.sockets.impl.NodoObjectSocketCliente;
@@ -40,16 +40,16 @@ public class TestNodoSocketPerformance {
 
 	private NodoSocketCliente nodoCliente;
 	private NodoSocketServidor nodoServidor;
-	private NodoPortalImpl nodoEmisor;
-	private NodoPortalImpl nodoReceptor;
+	private NodoPortalSinThreads nodoEmisor;
+	private NodoPortalSinThreads nodoReceptor;
 
 	@Before
 	public void crearRuteadorCentral() {
 		final InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
 		nodoServidor = NodoObjectSocketServidor.createAndListenTo(sharedTestAddress);
 		nodoCliente = NodoObjectSocketCliente.createAndConnectTo(sharedTestAddress);
-		nodoEmisor = NodoPortalImpl.create();
-		nodoReceptor = NodoPortalImpl.create();
+		nodoEmisor = NodoPortalSinThreads.create();
+		nodoReceptor = NodoPortalSinThreads.create();
 
 		interconectarCon(nodoEmisor, nodoCliente);
 		interconectarCon(nodoReceptor, nodoServidor);

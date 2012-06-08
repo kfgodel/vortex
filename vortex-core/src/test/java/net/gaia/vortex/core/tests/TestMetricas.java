@@ -14,7 +14,7 @@ package net.gaia.vortex.core.tests;
 
 import net.gaia.vortex.core.api.metrics.MetricasDelNodo;
 import net.gaia.vortex.core.api.metrics.MetricasPorTiempo;
-import net.gaia.vortex.core.impl.NodoPortalImpl;
+import net.gaia.vortex.core.impl.NodoPortalSinThreads;
 import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
 
 import org.junit.After;
@@ -35,14 +35,14 @@ public class TestMetricas {
 	private static final Logger LOG = LoggerFactory.getLogger(TestMetricas.class);
 
 	private NodoRuteadorMinimo ruteadorCentral;
-	private NodoPortalImpl nodoEmisor;
-	private NodoPortalImpl nodoReceptor;
+	private NodoPortalSinThreads nodoEmisor;
+	private NodoPortalSinThreads nodoReceptor;
 
 	@Before
 	public void crearRuteadorCentral() {
 		ruteadorCentral = NodoRuteadorMinimo.create();
-		nodoEmisor = NodoPortalImpl.create();
-		nodoReceptor = NodoPortalImpl.create();
+		nodoEmisor = NodoPortalSinThreads.create();
+		nodoReceptor = NodoPortalSinThreads.create();
 
 		nodoEmisor.conectarCon(ruteadorCentral);
 		ruteadorCentral.conectarCon(nodoEmisor);

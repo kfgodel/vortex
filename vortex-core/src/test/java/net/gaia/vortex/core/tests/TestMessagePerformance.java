@@ -19,7 +19,7 @@ import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.metrics.MetricasDelNodo;
 import net.gaia.vortex.core.api.metrics.MetricasPorTiempo;
-import net.gaia.vortex.core.impl.NodoPortalImpl;
+import net.gaia.vortex.core.impl.NodoPortalSinThreads;
 import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
 
 import org.junit.After;
@@ -40,15 +40,15 @@ public class TestMessagePerformance {
 	private static final Logger LOG = LoggerFactory.getLogger(TestMessagePerformance.class);
 
 	private NodoRuteadorMinimo ruteadorCentral;
-	private NodoPortalImpl nodoEmisor;
-	private NodoPortalImpl nodoReceptor;
+	private NodoPortalSinThreads nodoEmisor;
+	private NodoPortalSinThreads nodoReceptor;
 	private AtomicLong contadorTotalDeRecibidos;
 
 	@Before
 	public void crearRuteadorCentral() {
 		ruteadorCentral = NodoRuteadorMinimo.create();
-		nodoEmisor = NodoPortalImpl.create();
-		nodoReceptor = NodoPortalImpl.create();
+		nodoEmisor = NodoPortalSinThreads.create();
+		nodoReceptor = NodoPortalSinThreads.create();
 		contadorTotalDeRecibidos = new AtomicLong();
 	}
 
@@ -179,7 +179,7 @@ public class TestMessagePerformance {
 
 		// Agregamos los otros receptores nulos al último nodo ruteador
 		for (int i = 1; i < cantidadDeNodosReceptores; i++) {
-			final NodoPortalImpl receptorAdicional = NodoPortalImpl.create();
+			final NodoPortalSinThreads receptorAdicional = NodoPortalSinThreads.create();
 			receptorAdicional.setHandlerDeMensajesVecinos(new HandlerDeMensajesVecinos() {
 				@Override
 				public void onMensajeDeVecinoRecibido(final Object mensaje) {

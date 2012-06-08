@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.vortex.core.api.NodoPortal;
-import net.gaia.vortex.core.impl.NodoPortalImpl;
+import net.gaia.vortex.core.impl.NodoPortalSinThreads;
 import net.gaia.vortex.core.tests.HandlerEncolador;
 import net.gaia.vortex.sockets.api.NodoSocketCliente;
 import net.gaia.vortex.sockets.api.NodoSocketServidor;
@@ -49,8 +49,8 @@ public class TestNodoSocket {
 		nodoServidor = NodoObjectSocketServidor.createAndListenTo(sharedTestAddress);
 		nodoCliente = NodoObjectSocketCliente.createAndConnectTo(sharedTestAddress);
 
-		nodoEmisor = NodoPortalImpl.create();
-		nodoReceptor = NodoPortalImpl.create();
+		nodoEmisor = NodoPortalSinThreads.create();
+		nodoReceptor = NodoPortalSinThreads.create();
 
 		nodoEmisor.conectarCon(nodoCliente);
 		nodoCliente.conectarCon(nodoEmisor);
@@ -79,7 +79,7 @@ public class TestNodoSocket {
 
 	@Test
 	public void deberiaRecibirElMensajeDesdeDosReceptoresDistintosEnElServidor() {
-		final NodoPortalImpl nodoReceptor2 = NodoPortalImpl.create();
+		final NodoPortalSinThreads nodoReceptor2 = NodoPortalSinThreads.create();
 		nodoReceptor2.conectarCon(nodoServidor);
 		nodoServidor.conectarCon(nodoReceptor2);
 
@@ -101,7 +101,7 @@ public class TestNodoSocket {
 
 	@Test
 	public void deberiaRecibirElMensajeDesdeDosReceptoresDistintosUnoEnElClienteYOtroEnElServidor() {
-		final NodoPortalImpl nodoReceptor2 = NodoPortalImpl.create();
+		final NodoPortalSinThreads nodoReceptor2 = NodoPortalSinThreads.create();
 		nodoReceptor2.conectarCon(nodoCliente);
 		nodoCliente.conectarCon(nodoReceptor2);
 
