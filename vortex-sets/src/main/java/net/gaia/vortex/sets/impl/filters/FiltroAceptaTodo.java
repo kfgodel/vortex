@@ -1,5 +1,5 @@
 /**
- * 20/05/2012 18:24:47 Copyright (C) 2011 Darío L. García
+ * 07/06/2012 23:58:47 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,24 +10,27 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api;
+package net.gaia.vortex.sets.impl.filters;
+
+import net.gaia.vortex.sets.api.FiltroDeMensajes;
 
 /**
- * Esta interfaz permite indicar un handler para los mensajes recibidos en un nodo para el código
- * cliente.<br>
- * Las invocaciones son realizadas en threads del nodo receptor y deberían liberarlo lo antes
- * posible
+ * Esta clase es la implementación del filtro de mensajes que acepta todos los mensajes
  * 
  * @author D. García
  */
-public interface HandlerDeMensajesVecinos {
+public class FiltroAceptaTodo implements FiltroDeMensajes {
 
 	/**
-	 * Invocado en un {@link NodoPortal} al recibir un mensaje de nodos vecinos
-	 * 
-	 * @param mensaje
-	 *            El mensaje recibido
+	 * @see net.gaia.vortex.sets.api.FiltroDeMensajes#aceptaA(java.lang.Object)
 	 */
-	public void onMensajeDeVecinoRecibido(Object mensaje);
+	@Override
+	public boolean aceptaA(final Object mensajeRecibido) {
+		return true;
+	}
 
+	public static FiltroAceptaTodo create() {
+		final FiltroAceptaTodo filtro = new FiltroAceptaTodo();
+		return filtro;
+	}
 }
