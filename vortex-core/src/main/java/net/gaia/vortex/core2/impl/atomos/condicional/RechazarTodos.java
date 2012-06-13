@@ -17,17 +17,19 @@ import net.gaia.vortex.core2.api.atomos.Condicion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa la condicion que no es cumplida por ningun mensaje
  * 
  * @author D. García
  */
-public class CondicionNinguno implements Condicion {
+public class RechazarTodos implements Condicion {
 
-	private static final WeakSingleton<CondicionNinguno> ultimaReferencia = new WeakSingleton<CondicionNinguno>(
-			DefaultInstantiator.create(CondicionNinguno.class));
+	private static final WeakSingleton<RechazarTodos> ultimaReferencia = new WeakSingleton<RechazarTodos>(
+			DefaultInstantiator.create(RechazarTodos.class));
 
-	public static CondicionNinguno getInstancia() {
+	public static RechazarTodos getInstancia() {
 		return ultimaReferencia.get();
 	}
 
@@ -35,13 +37,20 @@ public class CondicionNinguno implements Condicion {
 	 * @see net.gaia.vortex.core2.api.atomos.Condicion#esCumplidaPor(net.gaia.vortex.core2.api.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public boolean esCumplidaPor(@SuppressWarnings("unused") final MensajeVortex mensaje) {
 		return false;
 	}
 
-	public static CondicionNinguno create() {
-		final CondicionNinguno condicion = new CondicionNinguno();
+	public static RechazarTodos create() {
+		final RechazarTodos condicion = new RechazarTodos();
 		return condicion;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 }

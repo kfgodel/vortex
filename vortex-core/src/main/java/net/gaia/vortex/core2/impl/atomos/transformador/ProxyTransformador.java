@@ -12,10 +12,16 @@
  */
 package net.gaia.vortex.core2.impl.atomos.transformador;
 
-import net.gaia.vortex.core2.api.MensajeVortex;
+import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.api.annon.Atomo;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
+import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
+import net.gaia.vortex.core2.api.atomos.Transformacion;
 import net.gaia.vortex.core2.impl.atomos.ProxySupport;
+import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
+
+import com.google.common.base.Objects;
 
 /**
  * Esta clase representa un {@link ComponenteProxy} que realiza una transformación en el mensaje
@@ -27,6 +33,7 @@ import net.gaia.vortex.core2.impl.atomos.ProxySupport;
 public class ProxyTransformador extends ProxySupport {
 
 	private Transformacion transformacion;
+	public static final String transformacion_FIELD = "transformacion";
 
 	public Transformacion getTransformacion() {
 		return transformacion;
@@ -42,20 +49,32 @@ public class ProxyTransformador extends ProxySupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.impl.atomos.ProxySupport#recibirMensaje(net.gaia.vortex.core2.api.MensajeVortex)
+	 * @see net.gaia.vortex.core2.impl.atomos.ProxySupport#agregarComportamientoA(net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado)
 	 */
 	@Override
-	public void recibirMensaje(final MensajeVortex mensajeRecibido) {
-		final MensajeVortex mensajeTransformado = transformacion.transformar(mensajeRecibido);
-		super.recibirMensaje(mensajeTransformado);
+	protected WorkUnit agregarComportamientoA(final EntregarMensajeADelegado entregaEnBackground) {
+		return TransformarElMensajeYDelegar.create(transformacion, entregaEnBackground);
 	}
 
-	public ProxyTransformador() {
-		this.setTransformacion(TransformacionNula.getInstancia());
-	}
-
-	public static ProxyTransformador create() {
+	public static ProxyTransformador create(final TaskProcessor processor, final Transformacion transformacion,
+			final ComponenteVortex delegado) {
 		final ProxyTransformador transformador = new ProxyTransformador();
+		transformador.initializeWith(processor, delegado, transformacion);
 		return transformador;
+	}
+
+	private void initializeWith(final TaskProcessor processor, final ComponenteVortex delegado,
+			final Transformacion transformacion) {
+		super.initializeWith(processor, delegado);
+		setTransformacion(transformacion);
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(transformacion_FIELD, transformacion)
+				.add(delegado_FIELD, getDelegado()).toString();
 	}
 }

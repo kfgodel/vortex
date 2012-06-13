@@ -12,12 +12,16 @@
  */
 package net.gaia.vortex.core2.impl.atomos.condicional;
 
-import net.gaia.vortex.core2.api.MensajeVortex;
+import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.api.annon.Atomo;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
+import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.api.atomos.Condicion;
 import net.gaia.vortex.core2.impl.atomos.ProxySupport;
-import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
+import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
+
+import com.google.common.base.Objects;
 
 /**
  * Esta clase representa un {@link ComponenteProxy} que puede filtrar mensajes recibidos en base a
@@ -29,6 +33,7 @@ import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 public class ProxyCondicional extends ProxySupport {
 
 	private Condicion condicion;
+	public static final String condicion_FIELD = "condicion";
 
 	public Condicion getCondicion() {
 		return condicion;
@@ -37,31 +42,38 @@ public class ProxyCondicional extends ProxySupport {
 	public void setCondicion(final Condicion condicion) {
 		if (condicion == null) {
 			throw new IllegalArgumentException("La condicion del proxy no puede ser null. A lo sumo una entre "
-					+ CondicionTodos.class + " y " + CondicionNinguno.class);
+					+ AceptarTodos.class + " y " + RechazarTodos.class);
 		}
 		this.condicion = condicion;
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core2.api.MensajeVortex)
+	 * @see net.gaia.vortex.core2.impl.atomos.ProxySupport#agregarComportamientoA(net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado)
 	 */
 	@Override
-	public void recibirMensaje(final MensajeVortex mensaje) {
-		if (condicion == null) {
-			throw new FaultyCodeException(
-					"El proxy condicional no tiene condicion. Fue creado por reflection y falto settear la condicion?");
-		}
-		if (!condicion.esCumplidaPor(mensaje)) {
-			// Descartamos el mensaje recibido
-			return;
-		}
-		// Delegamos en el delegado
-		super.recibirMensaje(mensaje);
+	protected WorkUnit agregarComportamientoA(final EntregarMensajeADelegado entregaEnBackground) {
+		return EvaluarCondicionYDelegar.create(condicion, entregaEnBackground);
 	}
 
-	public static ProxyCondicional create(final Condicion condicion) {
+	protected void initializeWith(final TaskProcessor processor, final ComponenteVortex delegado,
+			final Condicion condicion) {
+		super.initializeWith(processor, delegado);
+		setCondicion(condicion);
+	}
+
+	public static ProxyCondicional create(final TaskProcessor processor, final Condicion condicion,
+			final ComponenteVortex delegado) {
 		final ProxyCondicional condicional = new ProxyCondicional();
-		condicional.setCondicion(condicion);
+		condicional.initializeWith(processor, delegado, condicion);
 		return condicional;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(condicion_FIELD, condicion).add(delegado_FIELD, getDelegado())
+				.toString();
 	}
 }

@@ -17,17 +17,19 @@ import net.gaia.vortex.core2.api.atomos.Condicion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa una condicion que acepta todos los mensajes
  * 
  * @author D. García
  */
-public class CondicionTodos implements Condicion {
+public class AceptarTodos implements Condicion {
 
-	private static final WeakSingleton<CondicionTodos> ultimaReferencia = new WeakSingleton<CondicionTodos>(
-			DefaultInstantiator.create(CondicionTodos.class));
+	private static final WeakSingleton<AceptarTodos> ultimaReferencia = new WeakSingleton<AceptarTodos>(
+			DefaultInstantiator.create(AceptarTodos.class));
 
-	public static CondicionTodos getInstancia() {
+	public static AceptarTodos getInstancia() {
 		return ultimaReferencia.get();
 	}
 
@@ -35,12 +37,21 @@ public class CondicionTodos implements Condicion {
 	 * @see net.gaia.vortex.core2.api.atomos.Condicion#esCumplidaPor(net.gaia.vortex.core2.api.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public boolean esCumplidaPor(@SuppressWarnings("unused") final MensajeVortex mensaje) {
 		return true;
 	}
 
-	public static CondicionTodos create() {
-		final CondicionTodos condicion = new CondicionTodos();
+	public static AceptarTodos create() {
+		final AceptarTodos condicion = new AceptarTodos();
 		return condicion;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
+
 }

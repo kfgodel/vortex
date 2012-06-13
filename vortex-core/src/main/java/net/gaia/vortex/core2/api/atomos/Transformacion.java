@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.impl.atomos.transformador;
+package net.gaia.vortex.core2.api.atomos;
 
 import net.gaia.vortex.core2.api.MensajeVortex;
 

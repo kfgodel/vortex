@@ -12,21 +12,31 @@
  */
 package net.gaia.vortex.core2.impl.atomos;
 
+import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.api.MensajeVortex;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
+import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
+
+import com.google.common.base.Objects;
 
 /**
  * Esta clase implementa comportamiento base para las sub clases de {@link ComponenteProxy}
  * 
  * @author D. García
  */
-public abstract class ProxySupport implements ComponenteProxy {
+public abstract class ProxySupport extends ComponenteConProcesadorSupport implements ComponenteProxy {
 
 	private ComponenteVortex delegado;
+	public static final String delegado_FIELD = "delegado";
 
-	public ProxySupport() {
-		setDelegado(ComponenteNulo.getInstancia());
+	/**
+	 * @see net.gaia.vortex.core2.impl.atomos.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
+	 */
+	protected void initializeWith(final TaskProcessor processor, final ComponenteVortex delegado) {
+		super.initializeWith(processor);
+		setDelegado(delegado);
 	}
 
 	/**
@@ -50,7 +60,27 @@ public abstract class ProxySupport implements ComponenteProxy {
 	 */
 	@Override
 	public void recibirMensaje(final MensajeVortex mensaje) {
-		// Lo delegamos en el delegado
-		this.delegado.recibirMensaje(mensaje);
+		final EntregarMensajeADelegado entregaEnBackground = EntregarMensajeADelegado.create(mensaje, delegado);
+		final WorkUnit tareaEnBackground = agregarComportamientoA(entregaEnBackground);
+		procesarEnThreadPropio(tareaEnBackground);
+	}
+
+	/**
+	 * Permite a las sublcases agregar comportamiento adicional a la tarea de entrega
+	 * 
+	 * @param entregaEnBackground
+	 *            La tarea que entrega el mensaje al delegado
+	 * @return Un tarea que realice el comportamiento adicional para utilizar en el procesador
+	 */
+	protected WorkUnit agregarComportamientoA(final EntregarMensajeADelegado entregaEnBackground) {
+		return entregaEnBackground;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(delegado_FIELD, delegado).toString();
 	}
 }

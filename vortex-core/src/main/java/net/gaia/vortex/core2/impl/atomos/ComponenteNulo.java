@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa el componente nulo utilizado para no tener referencias en null
  * 
@@ -49,5 +51,13 @@ public class ComponenteNulo implements ComponenteVortex {
 	public static ComponenteNulo create() {
 		final ComponenteNulo componente = new ComponenteNulo();
 		return componente;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
 	}
 }

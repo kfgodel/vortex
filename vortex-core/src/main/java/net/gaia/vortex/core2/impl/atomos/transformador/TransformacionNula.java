@@ -13,9 +13,11 @@
 package net.gaia.vortex.core2.impl.atomos.transformador;
 
 import net.gaia.vortex.core2.api.MensajeVortex;
-import net.gaia.vortex.core2.impl.atomos.condicional.CondicionTodos;
+import net.gaia.vortex.core2.api.atomos.Transformacion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+
+import com.google.common.base.Objects;
 
 /**
  * Esta clase representa la transformación del mensaje que lo deja intacto
@@ -32,7 +34,7 @@ public class TransformacionNula implements Transformacion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.impl.atomos.transformador.Transformacion#transformar(net.gaia.vortex.core2.api.MensajeVortex)
+	 * @see net.gaia.vortex.core2.api.atomos.Transformacion#transformar(net.gaia.vortex.core2.api.MensajeVortex)
 	 */
 	@Override
 	public MensajeVortex transformar(final MensajeVortex mensaje) {
@@ -42,5 +44,13 @@ public class TransformacionNula implements Transformacion {
 	public static TransformacionNula create() {
 		final TransformacionNula transformacion = new TransformacionNula();
 		return transformacion;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
 	}
 }

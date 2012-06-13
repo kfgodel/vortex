@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.core2.impl.atomos.ejecutor;
 
+import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core2.api.annon.Atomo;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
@@ -26,8 +27,10 @@ import net.gaia.vortex.core2.impl.atomos.ProxySupport;
 @Atomo
 public class ProxyEjecutor extends ProxySupport {
 
-	public static ProxyEjecutor create() {
+	public static ProxyEjecutor create(final TaskProcessor processor, final ComponenteVortex delegado) {
 		final ProxyEjecutor ejecutor = new ProxyEjecutor();
+		ejecutor.initializeWith(processor, delegado);
 		return ejecutor;
 	}
+
 }

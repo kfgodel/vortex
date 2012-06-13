@@ -19,6 +19,8 @@ import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.api.atomos.Multiplexor;
 import net.gaia.vortex.core2.api.nodos.Nodo;
 
+import com.google.common.base.Objects;
+
 /**
  * Esta clase representa un {@link Nodo} en su implementación mínima
  * 
@@ -28,7 +30,10 @@ import net.gaia.vortex.core2.api.nodos.Nodo;
 public class NodoMinimo implements Nodo {
 
 	private Multiplexor comportamientoDeSalida;
+	public static final String comportamientoDeSalida_FIELD = "comportamientoDeSalida";
+
 	private ComponenteProxy comportamientoDeEntrada;
+	public static final String comportamientoDeEntrada_FIELD = "comportamientoDeEntrada";
 
 	/**
 	 * @see net.gaia.vortex.core2.api.atomos.Multiplexor#agregarDestino(net.gaia.vortex.core2.api.atomos.ComponenteVortex)
@@ -83,5 +88,14 @@ public class NodoMinimo implements Nodo {
 		nodo.setComportamientoDeSalida(salida);
 		nodo.setComportamientoDeEntrada(entrada);
 		return nodo;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(comportamientoDeEntrada_FIELD, comportamientoDeEntrada)
+				.add(comportamientoDeSalida_FIELD, comportamientoDeSalida).toString();
 	}
 }
