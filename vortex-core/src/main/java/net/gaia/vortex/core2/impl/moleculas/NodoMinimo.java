@@ -17,17 +17,17 @@ import net.gaia.vortex.core2.api.annon.Molecula;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.api.atomos.Multiplexor;
-import net.gaia.vortex.core2.api.nodos.Nodo;
+import net.gaia.vortex.core2.api.nodos.Hub;
 
 import com.google.common.base.Objects;
 
 /**
- * Esta clase representa un {@link Nodo} en su implementación mínima
+ * Esta clase representa un {@link Hub} en su implementación mínima
  * 
  * @author D. García
  */
 @Molecula
-public class NodoMinimo implements Nodo {
+public class NodoMinimo implements Hub {
 
 	private Multiplexor comportamientoDeSalida;
 	public static final String comportamientoDeSalida_FIELD = "comportamientoDeSalida";

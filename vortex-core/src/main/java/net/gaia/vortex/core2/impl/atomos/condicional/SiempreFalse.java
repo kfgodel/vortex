@@ -1,5 +1,5 @@
 /**
- * 13/06/2012 01:25:20 Copyright (C) 2011 Darío L. García
+ * 13/06/2012 01:31:40 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -13,36 +13,36 @@
 package net.gaia.vortex.core2.impl.atomos.condicional;
 
 import net.gaia.vortex.core2.api.MensajeVortex;
-import net.gaia.vortex.core2.api.atomos.Condicion;
+import net.gaia.vortex.core2.api.atomos.conditional.Condicion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
 
 import com.google.common.base.Objects;
 
 /**
- * Esta clase representa una condicion que acepta todos los mensajes
+ * Esta clase representa la condicion que no es cumplida por ningun mensaje
  * 
  * @author D. García
  */
-public class AceptarTodos implements Condicion {
+public class SiempreFalse implements Condicion {
 
-	private static final WeakSingleton<AceptarTodos> ultimaReferencia = new WeakSingleton<AceptarTodos>(
-			DefaultInstantiator.create(AceptarTodos.class));
+	private static final WeakSingleton<SiempreFalse> ultimaReferencia = new WeakSingleton<SiempreFalse>(
+			DefaultInstantiator.create(SiempreFalse.class));
 
-	public static AceptarTodos getInstancia() {
+	public static SiempreFalse getInstancia() {
 		return ultimaReferencia.get();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.Condicion#esCumplidaPor(net.gaia.vortex.core2.api.MensajeVortex)
+	 * @see net.gaia.vortex.core2.api.atomos.conditional.Condicion#esCumplidaPor(net.gaia.vortex.core2.api.MensajeVortex)
 	 */
 	@Override
 	public boolean esCumplidaPor(@SuppressWarnings("unused") final MensajeVortex mensaje) {
-		return true;
+		return false;
 	}
 
-	public static AceptarTodos create() {
-		final AceptarTodos condicion = new AceptarTodos();
+	public static SiempreFalse create() {
+		final SiempreFalse condicion = new SiempreFalse();
 		return condicion;
 	}
 
@@ -53,5 +53,4 @@ public class AceptarTodos implements Condicion {
 	public String toString() {
 		return Objects.toStringHelper(this).toString();
 	}
-
 }

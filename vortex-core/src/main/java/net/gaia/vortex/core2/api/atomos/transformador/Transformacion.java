@@ -1,5 +1,5 @@
 /**
- * 13/06/2012 00:44:34 Copyright (C) 2011 Darío L. García
+ * 13/06/2012 01:35:24 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,25 +10,26 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.api.atomos;
+package net.gaia.vortex.core2.api.atomos.transformador;
 
 import net.gaia.vortex.core2.api.MensajeVortex;
 
 /**
- * Esta interfaz representa una condición que puede ser evaluada sobre un mensaje para determinar si
- * la cumple o no
+ * Esta interfaz representa una transformación realizada a un mensaje vortex en al red
  * 
  * @author D. García
  */
-public interface Condicion {
+public interface Transformacion {
 
 	/**
-	 * Indica si el mensaje pasado cumple la condición o no representada por esta instancia
+	 * Invocado por un componente para modificar el mensaje de acuerdo a la transformación
+	 * representada por esta instancia.<br>
+	 * El mensaje resultante será en adelante
 	 * 
 	 * @param mensaje
-	 *            El mensaje a evaluar
-	 * @return true si la condición es cumplida por el mensaje
+	 *            El mensaje a modificar por esta transformación
+	 * @return El mensaje obtenido después de la transformación (puede ser la misma instancia)
 	 */
-	public boolean esCumplidaPor(MensajeVortex mensaje);
+	public MensajeVortex transformar(MensajeVortex mensaje);
 
 }

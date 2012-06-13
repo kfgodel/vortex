@@ -5,7 +5,7 @@ package net.gaia.vortex.core2.impl.atomos.condicional;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.api.MensajeVortex;
-import net.gaia.vortex.core2.api.atomos.Condicion;
+import net.gaia.vortex.core2.api.atomos.conditional.Condicion;
 import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
 
 import org.slf4j.Logger;
@@ -19,8 +19,8 @@ import com.google.common.base.Objects;
  * 
  * @author D. García
  */
-public class EvaluarCondicionYDelegar implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(EvaluarCondicionYDelegar.class);
+public class DelegarOpcionalmente implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(DelegarOpcionalmente.class);
 
 	private EntregarMensajeADelegado delegacion;
 	public static final String delegacion_FIELD = "delegacion";
@@ -50,8 +50,8 @@ public class EvaluarCondicionYDelegar implements WorkUnit {
 		delegacion.doWork();
 	}
 
-	public static EvaluarCondicionYDelegar create(final Condicion condicion, final EntregarMensajeADelegado delegacion) {
-		final EvaluarCondicionYDelegar evaluacion = new EvaluarCondicionYDelegar();
+	public static DelegarOpcionalmente create(final Condicion condicion, final EntregarMensajeADelegado delegacion) {
+		final DelegarOpcionalmente evaluacion = new DelegarOpcionalmente();
 		evaluacion.condicion = condicion;
 		evaluacion.delegacion = delegacion;
 		return evaluacion;

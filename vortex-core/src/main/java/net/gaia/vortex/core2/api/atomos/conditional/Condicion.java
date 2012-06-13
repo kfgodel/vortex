@@ -1,5 +1,5 @@
 /**
- * 13/06/2012 00:39:34 Copyright (C) 2011 Darío L. García
+ * 13/06/2012 00:44:34 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,20 +10,25 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.api.nodos;
+package net.gaia.vortex.core2.api.atomos.conditional;
 
-import net.gaia.vortex.core2.api.annon.Molecula;
-import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.api.atomos.Multiplexor;
+import net.gaia.vortex.core2.api.MensajeVortex;
 
 /**
- * Esta interfaz representa un nodo vortex. Por ahora es solo un tipo para usar en código de
- * reemplazo a {@link net.gaia.vortex.core.api.Nodo} para no referenciar a {@link Multiplexor}
- * directamente
+ * Esta interfaz representa una condición que puede ser evaluada sobre un mensaje para determinar si
+ * la cumple o no
  * 
  * @author D. García
  */
-@Molecula
-public interface Nodo extends Multiplexor, ComponenteVortex {
+public interface Condicion {
+
+	/**
+	 * Indica si el mensaje pasado cumple la condición o no representada por esta instancia
+	 * 
+	 * @param mensaje
+	 *            El mensaje a evaluar
+	 * @return true si la condición es cumplida por el mensaje
+	 */
+	public boolean esCumplidaPor(MensajeVortex mensaje);
 
 }

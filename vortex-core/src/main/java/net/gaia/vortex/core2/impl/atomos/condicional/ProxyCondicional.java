@@ -17,7 +17,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.api.annon.Atomo;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.api.atomos.Condicion;
+import net.gaia.vortex.core2.api.atomos.conditional.Condicion;
 import net.gaia.vortex.core2.impl.atomos.ProxySupport;
 import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
 
@@ -42,7 +42,7 @@ public class ProxyCondicional extends ProxySupport {
 	public void setCondicion(final Condicion condicion) {
 		if (condicion == null) {
 			throw new IllegalArgumentException("La condicion del proxy no puede ser null. A lo sumo una entre "
-					+ AceptarTodos.class + " y " + RechazarTodos.class);
+					+ SiempreTrue.class + " y " + SiempreFalse.class);
 		}
 		this.condicion = condicion;
 	}
@@ -52,7 +52,7 @@ public class ProxyCondicional extends ProxySupport {
 	 */
 	@Override
 	protected WorkUnit agregarComportamientoA(final EntregarMensajeADelegado entregaEnBackground) {
-		return EvaluarCondicionYDelegar.create(condicion, entregaEnBackground);
+		return DelegarOpcionalmente.create(condicion, entregaEnBackground);
 	}
 
 	protected void initializeWith(final TaskProcessor processor, final ComponenteVortex delegado,

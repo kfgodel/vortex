@@ -25,7 +25,7 @@ public interface Nodo {
 	 * asíncronamente el mensaje recibido a los otros nodos que está conectado
 	 * 
 	 * @param emisor
-	 *            El Nodo que se considera emisor del mensaje
+	 *            El Hub que se considera emisor del mensaje
 	 * @param mensaje
 	 *            El mensaje a enviar
 	 */

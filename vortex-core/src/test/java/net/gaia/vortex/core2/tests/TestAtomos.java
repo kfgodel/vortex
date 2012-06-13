@@ -9,10 +9,11 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core2.api.MensajeVortex;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.api.atomos.Transformacion;
-import net.gaia.vortex.core2.impl.atomos.condicional.AceptarTodos;
+import net.gaia.vortex.core2.api.atomos.transformador.Transformacion;
+import net.gaia.vortex.core2.impl.atomos.bifurcador.ProxyBifurcador;
 import net.gaia.vortex.core2.impl.atomos.condicional.ProxyCondicional;
-import net.gaia.vortex.core2.impl.atomos.condicional.RechazarTodos;
+import net.gaia.vortex.core2.impl.atomos.condicional.SiempreFalse;
+import net.gaia.vortex.core2.impl.atomos.condicional.SiempreTrue;
 import net.gaia.vortex.core2.impl.atomos.ejecutor.ProxyEjecutor;
 import net.gaia.vortex.core2.impl.atomos.multiplexor.MultiplexorParalelo;
 import net.gaia.vortex.core2.impl.atomos.transformador.ProxyTransformador;
@@ -66,14 +67,14 @@ public class TestAtomos {
 	@Test
 	public void elCondicionalDeberiaEntregarElMensajeSiCumpleLaCondicion() {
 		final ComponenteEncolador receptor = ComponenteEncolador.create();
-		final ProxyCondicional condicional = ProxyCondicional.create(processor, AceptarTodos.getInstancia(), receptor);
+		final ProxyCondicional condicional = ProxyCondicional.create(processor, SiempreTrue.getInstancia(), receptor);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, condicional, receptor);
 	}
 
 	@Test
 	public void elCondicionalNoDeberiaEntregarElMensajeSiNoCumpleLaCondicion() {
 		final ComponenteEncolador receptor = ComponenteEncolador.create();
-		final ProxyCondicional condicional = ProxyCondicional.create(processor, RechazarTodos.getInstancia(), receptor);
+		final ProxyCondicional condicional = ProxyCondicional.create(processor, SiempreFalse.getInstancia(), receptor);
 		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, condicional, receptor);
 	}
 
@@ -88,6 +89,26 @@ public class TestAtomos {
 		};
 		final ProxyTransformador transformador = ProxyTransformador.create(processor, transformacion, receptor);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje2, transformador, receptor);
+	}
+
+	@Test
+	public void elBifurcadorDeberiaElegirElDelegadoPorTrueSiLaCondicionEsCumplida() {
+		final ComponenteEncolador receptorPorTrue = ComponenteEncolador.create();
+		final ComponenteEncolador receptorPorFalse = ComponenteEncolador.create();
+		final ProxyBifurcador bifurcador = ProxyBifurcador.create(processor, SiempreTrue.create(), receptorPorTrue,
+				receptorPorFalse);
+		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorTrue);
+		verificarMensajeNoRecibido(0, receptorPorFalse);
+	}
+
+	@Test
+	public void elBifurcadorDeberiaElegirElDelegadoPorFalseSiLaCondicionNoEsCumplida() {
+		final ComponenteEncolador receptorPorTrue = ComponenteEncolador.create();
+		final ComponenteEncolador receptorPorFalse = ComponenteEncolador.create();
+		final ProxyBifurcador bifurcador = ProxyBifurcador.create(processor, SiempreFalse.create(), receptorPorTrue,
+				receptorPorFalse);
+		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorFalse);
+		verificarMensajeNoRecibido(0, receptorPorTrue);
 	}
 
 	/**
@@ -110,11 +131,18 @@ public class TestAtomos {
 		// Verificamos la respuesta
 		for (int i = 0; i < receptores.length; i++) {
 			final ComponenteEncolador receptor = receptores[i];
-			final MensajeVortex recibidoPorElReceptor = receptor.esperarPorMensaje(TimeMagnitude
-					.of(1, TimeUnit.SECONDS));
-			Assert.assertSame("El receptor " + i + " deberia haber recibido el mensaje esperado", mensajeEsperado,
-					recibidoPorElReceptor);
+			verificarQueRecibio(mensajeEsperado, i, receptor);
 		}
+	}
+
+	/**
+	 * Verifica que el receptor pasado tenga el mensaje esperado
+	 */
+	private void verificarQueRecibio(final MensajeVortex mensajeEsperado, final int i,
+			final ComponenteEncolador receptor) {
+		final MensajeVortex recibidoPorElReceptor = receptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertSame("El receptor " + i + " deberia haber recibido el mensaje esperado", mensajeEsperado,
+				recibidoPorElReceptor);
 	}
 
 	/**
@@ -137,12 +165,19 @@ public class TestAtomos {
 		// Verificamos la respuesta
 		for (int i = 0; i < receptores.length; i++) {
 			final ComponenteEncolador receptor = receptores[i];
-			try {
-				receptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-				Assert.fail("El mensaje no debería haber llegado al receptor " + i);
-			} catch (final TimeoutExceededException e) {
-				// Es la excepción esperada
-			}
+			verificarMensajeNoRecibido(i, receptor);
+		}
+	}
+
+	/**
+	 * Verifica que el receptor pasado no recibio ningun mensaje
+	 */
+	private void verificarMensajeNoRecibido(final int i, final ComponenteEncolador receptor) {
+		try {
+			receptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("El mensaje no debería haber llegado al receptor " + i);
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción esperada
 		}
 	}
 
