@@ -46,7 +46,7 @@ public class ActualizarClimaActualWorkUnit implements WorkUnit {
 		if (refreshed) {
 			final ClimateMeasure newMeasure = climateStation.getLastMeasure();
 			LOG.debug("Datos climáticos actualizados: {}", newMeasure);
-			final WorkUnit enviarNevaMedicion = EnviarNuevaMediciónWorkUnit.create(newMeasure);
+			final WorkUnit enviarNevaMedicion = EnviarNuevaMedicionWorkUnit.create(newMeasure);
 			processor.process(enviarNevaMedicion);
 		}
 		// Nos re-ejecutamos dentro de 30min

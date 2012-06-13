@@ -19,7 +19,7 @@ import net.gaia.vortex.climate.externals.ClimateServer;
 import net.gaia.vortex.climate.externals.ClimateStation;
 import net.gaia.vortex.climate.externals.KnownClimateStation;
 import net.gaia.vortex.climate.tasks.ActualizarClimaActualWorkUnit;
-import net.gaia.vortex.climate.tasks.EnviarNuevaMediciónWorkUnit;
+import net.gaia.vortex.climate.tasks.EnviarNuevaMedicionWorkUnit;
 import net.gaia.vortex.hilevel.api.ClienteVortex;
 import net.gaia.vortex.hilevel.api.HandlerDeMensajesApi;
 import net.gaia.vortex.hilevel.api.MensajeVortexApi;
@@ -138,7 +138,7 @@ public class VortexClimateMain implements HandlerDeMensajesApi {
 		// No revisamos qué tipo de mensaje es, como por ahora solo nos interesa un tag asumimos que
 		// nos piden el clima
 		final ClimateMeasure lastMeasure = this.buenosAiresStation.getLastMeasure();
-		final EnviarNuevaMediciónWorkUnit enviarMedicion = EnviarNuevaMediciónWorkUnit.create(lastMeasure);
+		final EnviarNuevaMedicionWorkUnit enviarMedicion = EnviarNuevaMedicionWorkUnit.create(lastMeasure);
 		this.processor.process(enviarMedicion);
 	}
 
