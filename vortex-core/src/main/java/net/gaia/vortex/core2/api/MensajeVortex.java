@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.core2.api;
 
+import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
+
 /**
  * Esta interfaz representa un mensaje vortex que es información que circula dentro de la red y
  * puede ser procesada, filtrada, transformada, etc.<br>
@@ -24,5 +26,13 @@ package net.gaia.vortex.core2.api;
  * @author D. García
  */
 public interface MensajeVortex {
+
+	/**
+	 * Establece en este mensaje quién es el emisor actual
+	 * 
+	 * @param emisor
+	 *            La instacia que representa al emisor
+	 */
+	void setEmisor(ComponenteVortex emisor);
 
 }

@@ -17,6 +17,7 @@ import net.gaia.vortex.core2.impl.atomos.condicional.SiempreTrue;
 import net.gaia.vortex.core2.impl.atomos.ejecutor.ProxyEjecutor;
 import net.gaia.vortex.core2.impl.atomos.multiplexor.MultiplexorParalelo;
 import net.gaia.vortex.core2.impl.atomos.transformador.ProxyTransformador;
+import net.gaia.vortex.core2.impl.mensajes.MensajeMapa;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,10 +40,8 @@ public class TestAtomos {
 
 	@Before
 	public void crearProcesador() {
-		mensaje1 = new MensajeVortex() {
-		};
-		mensaje2 = new MensajeVortex() {
-		};
+		mensaje1 = MensajeMapa.create();
+		mensaje2 = MensajeMapa.create();
 		processor = ExecutorBasedTaskProcesor.create();
 	}
 

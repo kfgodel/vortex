@@ -8,16 +8,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
-import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
-import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.NodoPortal;
+import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.impl.NodoPortalSinThreads;
 import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
-import net.gaia.vortex.core.tests.HandlerCronometro;
-import net.gaia.vortex.core.tests.HandlerEncolador;
-import net.gaia.vortex.core.tests.MensajeCronometro;
 import net.gaia.vortex.core2.api.MensajeVortex;
-import net.gaia.vortex.core2.impl.moleculas.NodoMinimo;
+import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
+import net.gaia.vortex.core2.api.nodos.Hub;
+import net.gaia.vortex.core2.impl.mensajes.MensajeMapa;
+import net.gaia.vortex.core2.impl.moleculas.HubMinimo;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,18 +27,22 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase realiza las pruebas definidas en A01 de la documentacion pero utilizando el la api del
- * {@link NodoMinimo}
+ * {@link HubMinimo}
  * 
  * @author D. García
  */
 public class TestA01ConNodoMinimo {
 
-	private Nodo nodoEmisor;
-	private Nodo nodoReceptor;
+	private Hub nodoEmisor;
+	private Hub nodoReceptor;
 	private MensajeVortex mensaje1;
+	private TaskProcessor processor;
 
 	@Before
 	public void crearNodos() {
+		processor = ExecutorBasedTaskProcesor.create();
+		mensaje1 = MensajeMapa.create();
+
 	}
 
 	/**
@@ -47,7 +50,8 @@ public class TestA01ConNodoMinimo {
 	 */
 	@Test
 	public void el_Emisor_Deberia_Poder_Enviar_Por_Vortex_Cualquier_Objeto_Serializable() {
-		nodoEmisor.recibirMensajeDesde(mensaje);
+		// Para enviar al red se le indica que reciba un mensaje
+		nodoEmisor.recibirMensaje(mensaje1);
 	}
 
 	/**
@@ -55,8 +59,9 @@ public class TestA01ConNodoMinimo {
 	 */
 	@Test
 	public void el_Receptor_Debería_Poder_Recibir_De_Vortex_Cualquier_Objeto_Serializable() {
-		final HandlerDeMensajesVecinos handlerParaMensajesRecibidos = HandlerEncolador.create();
-		nodoReceptor.setHandlerDeMensajesVecinos(handlerParaMensajesRecibidos);
+		// Para recibir de la red agregamos un receptor como destino
+		final ComponenteEncolador handlerParaRecibidos = ComponenteEncolador.create();
+		nodoReceptor.agregarDestino(handlerParaRecibidos);
 	}
 
 	/**
@@ -64,14 +69,13 @@ public class TestA01ConNodoMinimo {
 	 */
 	@Test
 	public void el_Mensaje_Enviado_Desde_El_Emisor_Y_El_Recibido_Por_El_Receptor_Deberian_Ser_Iguales() {
-		final HandlerEncolador handlerReceptor = HandlerEncolador.create();
-		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor);
+		final ComponenteEncolador handlerReceptor = ComponenteEncolador.create();
+		nodoReceptor.agregarDestino(handlerReceptor);
 
-		final String mensajeEnviado = "texto de mensaje loco";
-		nodoEmisor.enviarAVecinos(mensajeEnviado);
+		nodoEmisor.recibirMensaje(mensaje1);
 
 		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensajeEnviado, mensajeRecibido);
+		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensaje1, mensajeRecibido);
 	}
 
 	/**
@@ -84,10 +88,10 @@ public class TestA01ConNodoMinimo {
 		final WaitBarrier bloqueoDelEmisor = WaitBarrier.create();
 		final WaitBarrier bloqueoDelReceptor = WaitBarrier.create();
 		final AtomicBoolean receptorBloqueado = new AtomicBoolean(false);
-		final HandlerDeMensajesVecinos handlerReceptor = new HandlerDeMensajesVecinos() {
+		final ComponenteVortex handlerReceptor = new ComponenteVortex() {
 
 			@Override
-			public void onMensajeDeVecinoRecibido(final Object mensaje) {
+			public void recibirMensaje(final MensajeVortex mensaje) {
 				receptorBloqueado.set(true);
 				// Hacemos que el emisor siga ejecutando si nos estaba esperando
 				bloqueoDelEmisor.release();
@@ -96,10 +100,9 @@ public class TestA01ConNodoMinimo {
 				receptorBloqueado.set(false);
 			}
 		};
-		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor);
+		nodoReceptor.agregarDestino(handlerReceptor);
 
-		final String mensajeEnviado = "texto de ejemplo";
-		nodoEmisor.enviarAVecinos(mensajeEnviado);
+		nodoEmisor.recibirMensaje(mensaje1);
 
 		// Esperamos que el receptor reciba el mensaje
 		bloqueoDelEmisor.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -119,18 +122,17 @@ public class TestA01ConNodoMinimo {
 	public void el_Thread_Del_Receptor_Debería_Poder_Ser_Independiente_Del_Usado_Para_La_Entrega_Del_Mensaje() {
 		final WaitBarrier threadDeEntregaDefinido = WaitBarrier.create();
 		final AtomicReference<Thread> threadDeEntrega = new AtomicReference<Thread>();
-		final HandlerDeMensajesVecinos handlerReceptor = new HandlerDeMensajesVecinos() {
+		final ComponenteVortex handlerReceptor = new ComponenteVortex() {
 			@Override
-			public void onMensajeDeVecinoRecibido(final Object mensaje) {
+			public void recibirMensaje(final MensajeVortex mensaje) {
 				final Thread threadActual = Thread.currentThread();
 				threadDeEntrega.set(threadActual);
 				threadDeEntregaDefinido.release();
 			}
 		};
-		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor);
+		nodoReceptor.agregarDestino(handlerReceptor);
 
-		final String mensajeEnviado = "texto de ejemplo";
-		nodoEmisor.enviarAVecinos(mensajeEnviado);
+		nodoEmisor.recibirMensaje(mensaje1);
 
 		// Esperamos que el thread utilizado para la entrega sea definido
 		threadDeEntregaDefinido.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -145,11 +147,11 @@ public class TestA01ConNodoMinimo {
 	 */
 	@Test
 	public void el_Emisor_No_Deberia_Recibir_Su_Propio_Mensaje() {
-		final HandlerEncolador handlerReceptor = HandlerEncolador.create();
-		nodoEmisor.setHandlerDeMensajesVecinos(handlerReceptor);
+		final ComponenteEncolador handlerReceptor = ComponenteEncolador.create();
+		nodoEmisor.agregarDestino(handlerReceptor);
 
-		final String mensajeEnviado = "texto de mensaje loco";
-		nodoEmisor.enviarAVecinos(mensajeEnviado);
+		mensaje1.setEmisor(handlerReceptor);
+		nodoEmisor.recibirMensaje(mensaje1);
 
 		try {
 			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -161,102 +163,54 @@ public class TestA01ConNodoMinimo {
 	}
 
 	/**
-	 * T007. En memoria, el mensaje después de entrega debería conservar su identidad
-	 */
-	public void en_Memoria_El_Mensaje_Despues_De_Entrega_Debería_Conservar_Su_Identidad() {
-		final HandlerEncolador handlerReceptor = HandlerEncolador.create();
-		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor);
-
-		final Object mensajeEnviado = new Object();
-		nodoEmisor.enviarAVecinos(mensajeEnviado);
-
-		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertSame("El enviado y recibido deberían ser la misma instancia", mensajeEnviado, mensajeRecibido);
-
-	}
-
-	/**
 	 * Verifica que el mensaje llegue si hay intermediario
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayUnNodoEnElMedio() {
-		final NodoPortal nodoEmisor = NodoPortalSinThreads.create();
-		final NodoRuteadorMinimo nodoIntermedio1 = NodoRuteadorMinimo.create();
-		final NodoRuteadorMinimo nodoIntermedio2 = NodoRuteadorMinimo.create();
-		final NodoPortal nodoReceptor = NodoPortalSinThreads.create();
+		final Hub nodoEmisor = NodoPortalSinThreads.create();
+		final Hub nodoIntermedio1 = NodoRuteadorMinimo.create();
+		final Hub nodoIntermedio2 = NodoRuteadorMinimo.create();
+		final Hub nodoReceptor = NodoPortalSinThreads.create();
 
-		final HandlerEncolador handlerReceptor = HandlerEncolador.create();
-		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor);
+		final ComponenteEncolador handlerReceptor = ComponenteEncolador.create();
+		nodoReceptor.agregarDestino(handlerReceptor);
 
-		nodoEmisor.conectarCon(nodoIntermedio1);
-		nodoIntermedio1.conectarCon(nodoIntermedio2);
-		nodoIntermedio2.conectarCon(nodoReceptor);
+		nodoEmisor.agregarDestino(nodoIntermedio1);
+		nodoIntermedio1.agregarDestino(nodoIntermedio2);
+		nodoIntermedio2.agregarDestino(nodoReceptor);
 
-		nodoReceptor.conectarCon(nodoIntermedio2);
-		nodoIntermedio2.conectarCon(nodoIntermedio1);
-		nodoIntermedio1.conectarCon(nodoEmisor);
+		nodoReceptor.agregarDestino(nodoIntermedio2);
+		nodoIntermedio2.agregarDestino(nodoIntermedio1);
+		nodoIntermedio1.agregarDestino(nodoEmisor);
 
-		final String mensajeEnviado = "Mensaje";
-		nodoEmisor.enviarAVecinos(mensajeEnviado);
+		nodoEmisor.recibirMensaje(mensaje1);
 		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertEquals("El mensaje debería llegar igual al receptor", mensajeEnviado, mensajeRecibido);
-	}
-
-	/**
-	 * T008. En memoria, el tiempo de entrega normal debería ser inferior a 1ms (final o 1000
-	 * mensajes por segundo)
-	 */
-	@Test
-	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo() {
-		final int cantidadDeMensajes = 1000000;
-		final HandlerCronometro handlerCronometro = HandlerCronometro.create(cantidadDeMensajes);
-		nodoReceptor.setHandlerDeMensajesVecinos(handlerCronometro);
-
-		final long startNanos = System.nanoTime();
-		LOG.debug("Nanos inicio: {}", startNanos);
-		for (int i = 0; i < cantidadDeMensajes; i++) {
-			final MensajeCronometro mensajeCronometro = MensajeCronometro.create();
-			mensajeCronometro.marcarInicio();
-			nodoEmisor.enviarAVecinos(mensajeCronometro);
-		}
-
-		handlerCronometro.esperarEntregaDeMensajes(TimeMagnitude.of(30, TimeUnit.SECONDS));
-		LOG.debug("Nanos Fin: {}", System.nanoTime());
-		final long endNanos = System.nanoTime();
-		final long elapsedNanos = endNanos - startNanos;
-		LOG.debug("Milis totales en procesar {} mensajes: {}", cantidadDeMensajes, elapsedNanos / 1000000d);
-		LOG.debug("Milis dedicado por mensaje: {}", (elapsedNanos / 1000000d) / cantidadDeMensajes);
-		final double mensajesPorSegundo = (cantidadDeMensajes * 1000000000d) / elapsedNanos;
-		LOG.debug("Cantidad proyectada de mensajes procesables por segundo: {}", mensajesPorSegundo);
-
-		final double promedioNanosPorMensaje = handlerCronometro.getPromedioDeEsperaPorMensaje();
-		LOG.debug("Milis de espera promedio por mensaje: {}", promedioNanosPorMensaje / 1000000d);
+		Assert.assertEquals("El mensaje debería llegar igual al receptor", mensaje1, mensajeRecibido);
 	}
 
 	@Test
 	public void elMensajeDeberiaLlegarADosReceptoresIndependientes() {
 		// Aramamos la red con otro receptor
-		final HandlerEncolador handlerReceptor1 = HandlerEncolador.create();
-		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor1);
+		final ComponenteEncolador handlerReceptor1 = ComponenteEncolador.create();
+		nodoReceptor.agregarDestino(handlerReceptor1);
 
-		final HandlerEncolador handlerReceptor2 = HandlerEncolador.create();
-		final NodoPortal nodoReceptor2 = NodoPortalSinThreads.create();
-		nodoReceptor2.setHandlerDeMensajesVecinos(handlerReceptor2);
+		final ComponenteEncolador handlerReceptor2 = ComponenteEncolador.create();
+		final Hub nodoReceptor2;
+		nodoReceptor2.agregarDestino(handlerReceptor2);
 
-		nodoRuteador.conectarCon(nodoReceptor2);
-		nodoReceptor2.conectarCon(nodoRuteador);
+		final Hub nodoRuteador;
+		nodoRuteador.agregarDestino(nodoReceptor2);
+		nodoReceptor2.agregarDestino(nodoRuteador);
 
 		// Mandamos el mensaje
-		final Object mensajeEnviado = new Object();
-		nodoEmisor.enviarAVecinos(mensajeEnviado);
+		nodoEmisor.recibirMensaje(mensaje1);
 
 		// Verificamos que haya llegado a los dos
 		final Object mensajeRecibidoPor1 = handlerReceptor1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertEquals("El primer receptor debería haber recibido el mensaje", mensajeEnviado, mensajeRecibidoPor1);
+		Assert.assertEquals("El primer receptor debería haber recibido el mensaje", mensaje1, mensajeRecibidoPor1);
 
 		final Object mensajeRecibidoPor2 = handlerReceptor2.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertEquals("El segundo receptor debería haber recibido el mensaje", mensajeEnviado,
-				mensajeRecibidoPor2);
+		Assert.assertEquals("El segundo receptor debería haber recibido el mensaje", mensaje1, mensajeRecibidoPor2);
 	}
 
 }
