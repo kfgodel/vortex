@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.core2.impl.atomos.transformador;
 
-import net.gaia.vortex.core2.api.MensajeVortex;
-import net.gaia.vortex.core2.api.atomos.transformador.Transformacion;
+import net.gaia.vortex.core3.api.atomos.MensajeVortex;
+import net.gaia.vortex.core3.api.atomos.Transformacion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
 
@@ -34,7 +34,7 @@ public class TransformacionNula implements Transformacion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.transformador.Transformacion#transformar(net.gaia.vortex.core2.api.MensajeVortex)
+	 * @see net.gaia.vortex.core3.api.atomos.Transformacion#transformar(net.gaia.vortex.core3.api.atomos.MensajeVortex)
 	 */
 	@Override
 	public MensajeVortex transformar(final MensajeVortex mensaje) {

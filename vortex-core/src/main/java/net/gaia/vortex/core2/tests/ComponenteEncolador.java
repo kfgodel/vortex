@@ -6,8 +6,8 @@ package net.gaia.vortex.core2.tests;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import net.gaia.vortex.core2.api.MensajeVortex;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
+import net.gaia.vortex.core3.api.atomos.MensajeVortex;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
@@ -26,7 +26,7 @@ public class ComponenteEncolador implements ComponenteVortex {
 	public static final String mensajes_FIELD = "mensajes";
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core2.api.MensajeVortex)
+	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.atomos.MensajeVortex)
 	 */
 	@Override
 	public void recibirMensaje(final MensajeVortex mensaje) {

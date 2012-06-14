@@ -10,13 +10,11 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.api;
-
-import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
+package net.gaia.vortex.core3.api.atomos;
 
 /**
  * Esta interfaz representa un mensaje vortex que es información que circula dentro de la red y
- * puede ser procesada, filtrada, transformada, etc.<br>
+ * puede ser procesada, filtrada, transformada, etc por componentes vortex.<br>
  * A través de esta interfaz se abstrae la implementación concreta pero puede pensarse un mensaje
  * vortex como un mapa de clave valor con niveles de profundidad.<br>
  * <br>
@@ -26,13 +24,5 @@ import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
  * @author D. García
  */
 public interface MensajeVortex {
-
-	/**
-	 * Establece en este mensaje quién es el emisor actual
-	 * 
-	 * @param emisor
-	 *            La instacia que representa al emisor
-	 */
-	void setEmisor(ComponenteVortex emisor);
 
 }

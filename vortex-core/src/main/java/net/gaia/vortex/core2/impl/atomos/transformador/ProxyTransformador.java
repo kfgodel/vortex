@@ -14,12 +14,12 @@ package net.gaia.vortex.core2.impl.atomos.transformador;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core2.api.annon.Atomo;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.api.atomos.transformador.Transformacion;
 import net.gaia.vortex.core2.impl.atomos.ProxySupport;
 import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
+import net.gaia.vortex.core3.api.annon.Atomo;
+import net.gaia.vortex.core3.api.atomos.Transformacion;
 
 import com.google.common.base.Objects;
 

@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.core2.impl.atomos.condicional;
 
-import net.gaia.vortex.core2.api.MensajeVortex;
-import net.gaia.vortex.core2.api.atomos.conditional.Condicion;
+import net.gaia.vortex.core3.api.atomos.Condicion;
+import net.gaia.vortex.core3.api.atomos.MensajeVortex;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
 
@@ -34,7 +34,7 @@ public class SiempreTrue implements Condicion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.conditional.Condicion#esCumplidaPor(net.gaia.vortex.core2.api.MensajeVortex)
+	 * @see net.gaia.vortex.core3.api.atomos.Condicion#esCumplidaPor(net.gaia.vortex.core3.api.atomos.MensajeVortex)
 	 */
 	@Override
 	public boolean esCumplidaPor(@SuppressWarnings("unused") final MensajeVortex mensaje) {

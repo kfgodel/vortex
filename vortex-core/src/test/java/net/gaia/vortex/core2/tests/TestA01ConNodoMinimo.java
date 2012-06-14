@@ -12,11 +12,10 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.impl.NodoPortalSinThreads;
 import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
-import net.gaia.vortex.core2.api.MensajeVortex;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.api.nodos.Hub;
 import net.gaia.vortex.core2.impl.mensajes.MensajeMapa;
-import net.gaia.vortex.core2.impl.moleculas.HubMinimo;
+import net.gaia.vortex.core3.api.atomos.MensajeVortex;
 
 import org.junit.Before;
 import org.junit.Test;

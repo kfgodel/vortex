@@ -6,8 +6,8 @@ package net.gaia.vortex.core2.impl.mensajes;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import net.gaia.vortex.core2.api.MensajeVortex;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
+import net.gaia.vortex.core3.api.atomos.MensajeVortex;
 
 /**
  * Esta clase es la implementación del mensaje vortex usando un mapa interno
@@ -32,7 +32,7 @@ public class MensajeMapa implements MensajeVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.api.MensajeVortex#setEmisor(net.gaia.vortex.core2.api.atomos.ComponenteVortex)
+	 * @see net.gaia.vortex.core3.api.atomos.MensajeVortex#setEmisor(net.gaia.vortex.core2.api.atomos.ComponenteVortex)
 	 */
 	@Override
 	public void setEmisor(final ComponenteVortex emisor) {

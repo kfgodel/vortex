@@ -13,10 +13,10 @@
 package net.gaia.vortex.core2.impl.atomos.ejecutor;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core2.api.annon.Atomo;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.impl.atomos.ProxySupport;
+import net.gaia.vortex.core3.api.annon.Atomo;
 
 /**
  * Esta clase representa un {@link ComponenteProxy} que ejecuta el código de otro

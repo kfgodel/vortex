@@ -7,9 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
-import net.gaia.vortex.core2.api.MensajeVortex;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.api.atomos.transformador.Transformacion;
 import net.gaia.vortex.core2.impl.atomos.bifurcador.ProxyBifurcador;
 import net.gaia.vortex.core2.impl.atomos.condicional.ProxyCondicional;
 import net.gaia.vortex.core2.impl.atomos.condicional.SiempreFalse;
@@ -18,6 +16,8 @@ import net.gaia.vortex.core2.impl.atomos.ejecutor.ProxyEjecutor;
 import net.gaia.vortex.core2.impl.atomos.multiplexor.MultiplexorParalelo;
 import net.gaia.vortex.core2.impl.atomos.transformador.ProxyTransformador;
 import net.gaia.vortex.core2.impl.mensajes.MensajeMapa;
+import net.gaia.vortex.core3.api.atomos.MensajeVortex;
+import net.gaia.vortex.core3.api.atomos.Transformacion;
 
 import org.junit.Assert;
 import org.junit.Before;

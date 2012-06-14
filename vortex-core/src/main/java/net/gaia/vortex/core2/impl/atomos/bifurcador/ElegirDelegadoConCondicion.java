@@ -4,10 +4,10 @@
 package net.gaia.vortex.core2.impl.atomos.bifurcador;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core2.api.MensajeVortex;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.api.atomos.conditional.Condicion;
 import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
+import net.gaia.vortex.core3.api.atomos.Condicion;
+import net.gaia.vortex.core3.api.atomos.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

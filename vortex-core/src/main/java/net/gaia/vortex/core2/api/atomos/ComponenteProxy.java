@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core2.api.atomos;
 
-import net.gaia.vortex.core2.api.annon.Atomo;
+import net.gaia.vortex.core3.api.annon.Atomo;
 
 /**
  * Esta interfaz representa un componente vortex que puede delegar el mensaje recibido a otro

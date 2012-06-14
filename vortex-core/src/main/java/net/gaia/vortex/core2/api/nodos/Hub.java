@@ -12,9 +12,9 @@
  */
 package net.gaia.vortex.core2.api.nodos;
 
-import net.gaia.vortex.core2.api.annon.Molecula;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.api.atomos.Multiplexor;
+import net.gaia.vortex.core3.api.annon.Molecula;
 
 /**
  * Esta interfaz representa un componente vortex que reenvia el mensaje que recibe a todos los

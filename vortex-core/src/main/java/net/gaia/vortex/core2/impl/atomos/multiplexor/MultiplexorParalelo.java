@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core2.api.MensajeVortex;
-import net.gaia.vortex.core2.api.annon.Atomo;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.api.atomos.Multiplexor;
 import net.gaia.vortex.core2.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
+import net.gaia.vortex.core3.api.annon.Atomo;
+import net.gaia.vortex.core3.api.atomos.MensajeVortex;
 
 import com.google.common.base.Objects;
 
@@ -33,7 +33,7 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	public static final String destinos_FIELD = "destinos";
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core2.api.MensajeVortex)
+	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.atomos.MensajeVortex)
 	 */
 	@Override
 	public void recibirMensaje(final MensajeVortex mensaje) {

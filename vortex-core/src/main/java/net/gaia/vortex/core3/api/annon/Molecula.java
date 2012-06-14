@@ -1,5 +1,5 @@
 /**
- * 12/06/2012 23:43:45 Copyright (C) 2011 Darío L. García
+ * 12/06/2012 23:44:21 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.api.annon;
+package net.gaia.vortex.core3.api.annon;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -19,16 +19,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Esta annotation es aplicable a aquellos componentes básicos de Vortex que son utilizados para
- * definir comportamiento mínimo.<br>
- * A diferencia de una {@link Molecula} los átomos solo se conocen por referencia entre instancias,
- * con lo que su modificación en runtime puede pensarse como más "dura".
+ * Este annotation es aplicable a los componentes de vortex que representan un segundo nivel de
+ * complejidad.<br>
+ * Las moléculas usan a los {@link Atomo}s para definir su comportamiento, pero a diferencia de
+ * ellos las referencias entre moléculas son más flexibles y pueden modificarse en runtime mediante
+ * conexiones lo que permite mayor flexibilidad en los cambios de comportamiento.<br>
+ * <br>
+ * Las instancias de esta interfaz son utilizadas por los {@link Organismo}s para definir
+ * comportamientos mucho más complejo pero que es altamente variable y configurable
  * 
  * @author D. García
  */
 @Documented
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface Atomo {
+public @interface Molecula {
 
 }
