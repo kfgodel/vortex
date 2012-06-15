@@ -3,8 +3,8 @@
  */
 package net.gaia.vortex.core3.api.atomos.forward;
 
+import net.gaia.vortex.core3.api.Nodo;
 import net.gaia.vortex.core3.api.atomos.Emisor;
-import net.gaia.vortex.core3.api.atomos.Nodo;
 import net.gaia.vortex.core3.api.atomos.Receptor;
 
 /**

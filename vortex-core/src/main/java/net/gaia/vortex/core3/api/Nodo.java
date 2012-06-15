@@ -1,7 +1,10 @@
 /**
  * 14/06/2012 20:09:45 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core3.api.atomos;
+package net.gaia.vortex.core3.api;
+
+import net.gaia.vortex.core3.api.atomos.Emisor;
+import net.gaia.vortex.core3.api.atomos.Receptor;
 
 /**
  * Esta interfaz representa el componente principal de la red vortex que es tanto un receptor como

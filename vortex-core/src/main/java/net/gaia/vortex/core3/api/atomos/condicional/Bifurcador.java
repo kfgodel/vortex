@@ -12,7 +12,8 @@
  */
 package net.gaia.vortex.core3.api.atomos.condicional;
 
-import net.gaia.vortex.core3.api.atomos.Nodo;
+import net.gaia.vortex.core3.api.Nodo;
+import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.Receptor;
 
 /**
@@ -21,6 +22,7 @@ import net.gaia.vortex.core3.api.atomos.Receptor;
  * 
  * @author D. García
  */
+@Atomo
 public interface Bifurcador extends Nodo {
 
 	/**

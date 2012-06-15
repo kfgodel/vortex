@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.core3.api.atomos.condicional;
 
+import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.forward.Nexo;
 
 /**
@@ -21,6 +22,7 @@ import net.gaia.vortex.core3.api.atomos.forward.Nexo;
  * 
  * @author D. García
  */
+@Atomo
 public interface Filtro extends Nexo {
 
 	/**

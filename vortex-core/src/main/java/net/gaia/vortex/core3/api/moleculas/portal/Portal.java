@@ -1,7 +1,7 @@
 /**
  * 14/06/2012 20:38:40 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core3.api.moleculas;
+package net.gaia.vortex.core3.api.moleculas.portal;
 
 import net.gaia.vortex.core3.api.atomos.forward.Nexo;
 import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
