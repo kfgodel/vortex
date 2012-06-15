@@ -8,8 +8,8 @@ import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core2.impl.atomos.ComponenteNulo;
 import net.gaia.vortex.core3.api.annon.Atomo;
-import net.gaia.vortex.core3.api.atomos.Condicion;
-import net.gaia.vortex.core3.api.atomos.MensajeVortex;
+import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
+import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
 
 /**
  * Esta clase representa un componente de la red vortex que puede delegarle el mensaje recibido a
@@ -62,7 +62,7 @@ public class ProxyBifurcador extends ComponenteConProcesadorSupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.atomos.MensajeVortex)
+	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex)
 	 */
 	@Override
 	public void recibirMensaje(final MensajeVortex mensaje) {

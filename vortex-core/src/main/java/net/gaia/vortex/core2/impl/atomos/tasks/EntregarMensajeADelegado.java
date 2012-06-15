@@ -5,7 +5,7 @@ package net.gaia.vortex.core2.impl.atomos.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core3.api.atomos.MensajeVortex;
+import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

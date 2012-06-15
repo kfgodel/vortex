@@ -1,7 +1,11 @@
 /**
  * 14/06/2012 20:12:58 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core3.api.atomos;
+package net.gaia.vortex.core3.api.atomos.forward;
+
+import net.gaia.vortex.core3.api.atomos.Emisor;
+import net.gaia.vortex.core3.api.atomos.Nodo;
+import net.gaia.vortex.core3.api.atomos.Receptor;
 
 /**
  * Esta interfaz representa un componente de vortex que permite una unica conexion saliente. Al
@@ -31,5 +35,23 @@ public interface Nexo extends Nodo {
 	 */
 	@Override
 	public void desconectarDe(Receptor destino);
+
+	/**
+	 * Establece el único destino de este componente. Este método tiene el mismo efecto que
+	 * {@link #conectarCon(Receptor)} sólo que su invocación es menos ambigua respecto de la
+	 * cantidad de destinos
+	 * 
+	 * @param destino
+	 *            El nuevo destino que reemplazará al anterior
+	 */
+	public void setDestino(Receptor destino);
+
+	/**
+	 * Devuelve el único destino de este componente que recibe los mensajes que pasan por este
+	 * componente
+	 * 
+	 * @return El receptor que recibe los mensajes de este nexo
+	 */
+	public Receptor getDestino();
 
 }

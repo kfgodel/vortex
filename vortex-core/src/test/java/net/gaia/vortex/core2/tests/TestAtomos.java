@@ -16,8 +16,8 @@ import net.gaia.vortex.core2.impl.atomos.ejecutor.ProxyEjecutor;
 import net.gaia.vortex.core2.impl.atomos.multiplexor.MultiplexorParalelo;
 import net.gaia.vortex.core2.impl.atomos.transformador.ProxyTransformador;
 import net.gaia.vortex.core2.impl.mensajes.MensajeMapa;
-import net.gaia.vortex.core3.api.atomos.MensajeVortex;
-import net.gaia.vortex.core3.api.atomos.Transformacion;
+import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.atomos.transformacion.Transformacion;
 
 import org.junit.Assert;
 import org.junit.Before;

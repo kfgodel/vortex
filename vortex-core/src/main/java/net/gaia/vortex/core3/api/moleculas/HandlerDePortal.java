@@ -1,9 +1,9 @@
 /**
  * 14/06/2012 20:42:52 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core3.api;
+package net.gaia.vortex.core3.api.moleculas;
 
-import net.gaia.vortex.core3.api.atomos.Condicion;
+import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
 
 /**
  * Esta interfaz representa un handler de mensajes para utilizar con un {@link Portal} que tiene

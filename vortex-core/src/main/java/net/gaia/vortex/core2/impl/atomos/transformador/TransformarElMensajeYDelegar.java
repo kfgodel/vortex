@@ -5,8 +5,8 @@ package net.gaia.vortex.core2.impl.atomos.transformador;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
-import net.gaia.vortex.core3.api.atomos.MensajeVortex;
-import net.gaia.vortex.core3.api.atomos.Transformacion;
+import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.atomos.transformacion.Transformacion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -17,7 +17,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
-import net.gaia.vortex.core3.api.atomos.MensajeVortex;
+import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
 
 import com.google.common.base.Objects;
 
@@ -56,7 +56,7 @@ public abstract class ProxySupport extends ComponenteConProcesadorSupport implem
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.atomos.MensajeVortex)
+	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex)
 	 */
 	@Override
 	public void recibirMensaje(final MensajeVortex mensaje) {

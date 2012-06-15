@@ -10,7 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core3.api.atomos;
+package net.gaia.vortex.core3.api.atomos.condicional;
+
+import net.gaia.vortex.core3.api.atomos.forward.Nexo;
 
 /**
  * Esta interfaz representa un componente vortex que permite filtrar los mensajes pasados a otro

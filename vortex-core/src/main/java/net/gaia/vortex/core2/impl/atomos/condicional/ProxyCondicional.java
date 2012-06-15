@@ -19,7 +19,7 @@ import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.impl.atomos.ProxySupport;
 import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
 import net.gaia.vortex.core3.api.annon.Atomo;
-import net.gaia.vortex.core3.api.atomos.Condicion;
+import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
 
 import com.google.common.base.Objects;
 

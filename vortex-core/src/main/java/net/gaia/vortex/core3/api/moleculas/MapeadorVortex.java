@@ -1,9 +1,9 @@
 /**
  * 14/06/2012 20:33:20 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core3.api;
+package net.gaia.vortex.core3.api.moleculas;
 
-import net.gaia.vortex.core3.api.atomos.MensajeVortex;
+import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
 
 /**
  * Esta interfaz representa un elemento utilizado por los portales para la conversión de obejtos de

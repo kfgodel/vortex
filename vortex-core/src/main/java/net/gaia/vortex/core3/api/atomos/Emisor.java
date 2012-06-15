@@ -3,6 +3,7 @@
  */
 package net.gaia.vortex.core3.api.atomos;
 
+
 /**
  * Esta interfaz representa un componente de la red vortex que tiene la capacidad de enviar mensajes
  * a receptores a los que esta conectado.<br>
@@ -39,4 +40,5 @@ public interface Emisor {
 	 *            El destino a quitar
 	 */
 	public void desconectarDe(Receptor destino);
+
 }

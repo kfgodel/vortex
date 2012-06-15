@@ -1,7 +1,10 @@
 /**
  * 14/06/2012 20:27:48 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core3.api.atomos;
+package net.gaia.vortex.core3.api.atomos.transformacion;
+
+import net.gaia.vortex.core3.api.annon.Atomo;
+import net.gaia.vortex.core3.api.atomos.forward.Nexo;
 
 /**
  * Esta interfaz representa un componente vortex que realiza un transformacion de los mensajes
@@ -9,6 +12,7 @@ package net.gaia.vortex.core3.api.atomos;
  * 
  * @author D. García
  */
+@Atomo
 public interface Transformador extends Nexo {
 
 	/**
