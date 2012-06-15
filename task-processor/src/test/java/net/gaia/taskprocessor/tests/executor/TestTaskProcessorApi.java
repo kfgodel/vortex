@@ -14,6 +14,7 @@ package net.gaia.taskprocessor.tests.executor;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
@@ -30,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
+import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
@@ -49,14 +51,21 @@ public class TestTaskProcessorApi {
 
 	public static class TestWorkUnit implements WorkUnit {
 		private final AtomicBoolean processed = new AtomicBoolean(false);
+		private final WaitBarrier esperaProcesada = WaitBarrier.create(1);
 
 		@Override
-		public void doWork() throws InterruptedException {
+		public WorkUnit doWork() throws InterruptedException {
 			processed.set(true);
+			esperaProcesada.release();
+			return null;
 		}
 
 		public boolean isProcessed() {
 			return processed.get();
+		}
+
+		public void esperarQueSeProcese() throws TimeoutExceededException {
+			esperaProcesada.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		}
 	}
 
@@ -74,25 +83,25 @@ public class TestTaskProcessorApi {
 	}
 
 	@Test
-	public void deberíaPermitirEncadenarLaEjecucionDeTareas() {
+	public void deberíaPermitirAUnaTareaProcesarOtra() {
 		final AtomicReference<SubmittedTask> segundoProceso = new AtomicReference<SubmittedTask>();
 		final AtomicReference<SubmittedTask> tercerProceso = new AtomicReference<SubmittedTask>();
 
 		final TestWorkUnit tercerTarea = new TestWorkUnit();
 		final TestWorkUnit segundaTarea = new TestWorkUnit() {
 			@Override
-			public void doWork() throws InterruptedException {
+			public WorkUnit doWork() throws InterruptedException {
 				final SubmittedTask tercerTask = taskProcessor.process(tercerTarea);
 				tercerProceso.set(tercerTask);
-				super.doWork();
+				return super.doWork();
 			}
 		};
 		final TestWorkUnit primeraTarea = new TestWorkUnit() {
 			@Override
-			public void doWork() throws InterruptedException {
+			public WorkUnit doWork() throws InterruptedException {
 				final SubmittedTask segundoTask = taskProcessor.process(segundaTarea);
 				segundoProceso.set(segundoTask);
-				super.doWork();
+				return super.doWork();
 			}
 		};
 
@@ -117,7 +126,7 @@ public class TestTaskProcessorApi {
 		this.taskProcessor.setExceptionHandler(new TaskExceptionHandler() {
 			@Override
 			public void onExceptionRaisedWhileProcessing(final SubmittedTask task,
-					final TaskProcessor processingProcessor) {
+					@SuppressWarnings("unused") final TaskProcessor processingProcessor) {
 				final WorkUnit work = task.getWork();
 				failedWork.set(work);
 				lockParaTestear.release();
@@ -127,7 +136,7 @@ public class TestTaskProcessorApi {
 
 		final TestWorkUnit tarea = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public WorkUnit doWork() {
 				throw new RuntimeException("Debe fallar");
 			}
 		};
@@ -146,7 +155,7 @@ public class TestTaskProcessorApi {
 			 * @see net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit#doWork()
 			 */
 			@Override
-			public void doWork() {
+			public WorkUnit doWork() {
 				throw expectedException;
 			}
 		};
@@ -177,7 +186,7 @@ public class TestTaskProcessorApi {
 
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
 			@Override
-			public void doWork() throws InterruptedException {
+			public WorkUnit doWork() throws InterruptedException {
 				lockParaCancelarTodas.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 				// Cancelamos a todas durante el procesamiento de la del medio
@@ -190,7 +199,7 @@ public class TestTaskProcessorApi {
 				Thread.sleep(1000);
 
 				// Esta línea nunca llega a ejecutarse
-				super.doWork();
+				return super.doWork();
 			}
 		};
 
@@ -216,7 +225,8 @@ public class TestTaskProcessorApi {
 		Assert.assertTrue("No debería haber terminado de procesar", !canceladaDuranteElProcesamiento.isProcessed());
 
 		Assert.assertTrue("Debería estar cancelada antes de empezar", cancelada.getCurrentState().wasCancelled());
-		Assert.assertTrue(cancelada.getCurrentState().equals(SubmittedTaskState.CANCELLED));
+		Assert.assertEquals("la primera debería estar marcada como cancelada", SubmittedTaskState.CANCELLED,
+				cancelada.getCurrentState());
 
 	}
 
@@ -239,5 +249,48 @@ public class TestTaskProcessorApi {
 		final long elapsed = System.currentTimeMillis() - momentoDeEncargo;
 		Assert.assertTrue("La tarea debería ser ejecutada con un error de decima de segundo",
 				Math.abs(elapsed - 1000) < 100);
+	}
+
+	@Test
+	public void deberiaPermitirEjecutarTareasEncadenadas() {
+		final TestWorkUnit unidadSegunda = new TestWorkUnit();
+		final WorkUnit unidadPrimera = new WorkUnit() {
+			@Override
+			public WorkUnit doWork() throws InterruptedException {
+				// La inicial solo sirve para pasarle la posta a la segunda
+				return unidadSegunda;
+			}
+		};
+		final SubmittedTask tareaPrimera = taskProcessor.process(unidadPrimera);
+
+		unidadSegunda.esperarQueSeProcese();
+		Assert.assertTrue("Después de la espera la tarea debería estar completa", unidadSegunda.isProcessed());
+		Assert.assertEquals("la primera debería estar marcada como completa", SubmittedTaskState.COMPLETED,
+				tareaPrimera.getCurrentState());
+	}
+
+	@Test
+	public void deberiaPermitirEjecutarUnaTareaEnPartes() {
+		final AtomicInteger cantidadEjecuciones = new AtomicInteger(0);
+		final TestWorkUnit work = new TestWorkUnit() {
+			/**
+			 * @see net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit#doWork()
+			 */
+			@Override
+			public WorkUnit doWork() throws InterruptedException {
+				if (cantidadEjecuciones.getAndIncrement() == 0) {
+					// Ejecutamos una vez más
+					return this;
+				}
+				return super.doWork();
+			}
+		};
+
+		final SubmittedTask tarea = taskProcessor.process(work);
+		work.esperarQueSeProcese();
+		Assert.assertTrue("En la segunda ejecución la tarea debería estar procesada", work.isProcessed());
+		Assert.assertEquals("Deberían existir 2 ejecuciones", 2, cantidadEjecuciones.get());
+		Assert.assertEquals("La tarea debería estar completada en la primera ejecución", SubmittedTaskState.COMPLETED,
+				tarea.getCurrentState());
 	}
 }

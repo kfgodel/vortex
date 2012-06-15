@@ -20,6 +20,7 @@ import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.meta.Decision;
 import net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit;
@@ -70,10 +71,11 @@ public class TestTaskStateApi {
 
 		final TestWorkUnit tarea = new TestWorkUnit() {
 			@Override
-			public void doWork() throws InterruptedException {
+			public WorkUnit doWork() throws InterruptedException {
 				lockToTestTaskCompletion.release();
 				super.doWork();
 				lockToCompleteTask.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+				return null;
 			}
 		};
 		final SubmittedTask pendiente = this.taskProcessor.process(tarea);
@@ -101,10 +103,11 @@ public class TestTaskStateApi {
 		final WaitBarrier lockParaTestearEstado = WaitBarrier.create();
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
 			@Override
-			public void doWork() throws InterruptedException {
+			public WorkUnit doWork() throws InterruptedException {
 				super.doWork();
 				lockParaTestearEstado.release();
 				lockParaCompletarAnterior.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+				return null;
 			}
 		};
 		this.taskProcessor.process(blockingTask);
@@ -133,7 +136,7 @@ public class TestTaskStateApi {
 			 * @see net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit#doWork()
 			 */
 			@Override
-			public void doWork() {
+			public WorkUnit doWork() {
 				throw expectedException;
 			}
 		};
@@ -141,8 +144,9 @@ public class TestTaskStateApi {
 		final WaitBarrier lockParaTestearEstado = WaitBarrier.create();
 		final TestWorkUnit tareaPosterior = new TestWorkUnit() {
 			@Override
-			public void doWork() {
+			public WorkUnit doWork() {
 				lockParaTestearEstado.release();
+				return null;
 			}
 		};
 
@@ -171,7 +175,7 @@ public class TestTaskStateApi {
 
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
 			@Override
-			public void doWork() throws InterruptedException {
+			public WorkUnit doWork() throws InterruptedException {
 				lockParaCancelar.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 				// Cancelamos a todas durante el procesamiento de la del medio
@@ -181,7 +185,7 @@ public class TestTaskStateApi {
 
 				// Al hacer el sleep permitimos que el thread sea interrumpido
 				Thread.sleep(1000);
-				super.doWork();
+				return super.doWork();
 			}
 		};
 

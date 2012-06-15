@@ -23,7 +23,7 @@ public class RegistrarThreadUsadoTask implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	@Override
-	public void doWork() throws InterruptedException {
+	public WorkUnit doWork() throws InterruptedException {
 		final Thread currentThread = Thread.currentThread();
 		final AtomicLong firstCount = new AtomicLong(1);
 		final AtomicLong previousCount = countByThread.putIfAbsent(currentThread, firstCount);
@@ -31,6 +31,7 @@ public class RegistrarThreadUsadoTask implements WorkUnit {
 			previousCount.incrementAndGet();
 		}
 		latch.countDown();
+		return null;
 	}
 
 	public static RegistrarThreadUsadoTask create(final ConcurrentMap<Thread, AtomicLong> mapa,

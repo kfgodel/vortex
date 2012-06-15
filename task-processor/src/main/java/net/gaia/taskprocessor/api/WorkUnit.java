@@ -25,11 +25,13 @@ public interface WorkUnit {
 
 	/**
 	 * Ejecuta el código propio de la tarea en un hilo dedicado.<br>
-	 * Al terminar el método se considera terminada esta tarea.
+	 * Al terminar el método se considera terminada esta tarea, pero puede continuar en otra tarea.<br>
+	 * La tarea devuelta será encolada para se procesada apenas se disponga de hilos de ejecución.
 	 * 
+	 * @return
 	 * @throws InterruptedException
 	 *             Si el thread procesante es interrumpido y por lo tanto la tarea no puede
 	 *             considerarse completa
 	 */
-	public void doWork() throws InterruptedException;
+	public WorkUnit doWork() throws InterruptedException;
 }

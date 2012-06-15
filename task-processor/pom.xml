@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia</groupId>
   <artifactId>task-processor</artifactId>
-  <version>0.2</version>
+  <version>0.3</version>
   <name>Gaia Task processor</name>
   <description>Un pequeño motorcito que puede tener varios hilos para procesar tareas. Lo que permite implementar algoritmos en los que es facil definir los pasos tarea a tarea</description>
   

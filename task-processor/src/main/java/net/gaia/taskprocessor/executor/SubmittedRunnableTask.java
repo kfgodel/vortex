@@ -67,6 +67,11 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	private AtomicReference<SubmittedTaskState> currentState;
 	public static final String currentState_FIELD = "currentState";
 
+	/**
+	 * Unidad ejecutable para continuar el procesamiento
+	 */
+	private WorkUnit nextWorkUnit;
+
 	public WorkUnit getWorkUnit() {
 		return workUnit;
 	}
@@ -105,7 +110,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 		currentState.set(SubmittedTaskState.PROCESSING);
 		notifyListenerStartingProcess();
 		try {
-			this.workUnit.doWork();
+			nextWorkUnit = this.workUnit.doWork();
 			this.currentState.set(SubmittedTaskState.COMPLETED);
 			notifyListenerCompletedTask();
 		} catch (final InterruptedException e) {
@@ -262,6 +267,10 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 */
 	public void execute() {
 		this.ownFuture.run();
+		if (nextWorkUnit != null) {
+			// Todavía queda otra tarea para continuar
+			processor.process(nextWorkUnit);
+		}
 	}
 
 	/**

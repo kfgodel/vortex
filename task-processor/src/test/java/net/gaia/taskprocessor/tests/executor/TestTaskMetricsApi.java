@@ -19,6 +19,7 @@ import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit;
 
@@ -76,10 +77,11 @@ public class TestTaskMetricsApi {
 		final WaitBarrier lockTestearEstado = WaitBarrier.create();
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
 			@Override
-			public void doWork() throws InterruptedException {
+			public WorkUnit doWork() throws InterruptedException {
 				super.doWork();
 				lockTestearEstado.release();
 				lockParaBloquearLaPrimerTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+				return null;
 			}
 		};
 		taskProcessor.process(blockingTask);
