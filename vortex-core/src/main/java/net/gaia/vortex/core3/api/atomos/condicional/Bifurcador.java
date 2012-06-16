@@ -18,7 +18,8 @@ import net.gaia.vortex.core3.api.atomos.Receptor;
 
 /**
  * Esta interfaz representa un componente vortex que bifurca el mensaje entre dos posibles
- * receptores caminos basado en una condicion, para elegir según el mensaje el destino
+ * receptores basadondosé en una condicion. Elige el camino según el valor de la condicion al
+ * evaluar el mensaje
  * 
  * @author D. García
  */

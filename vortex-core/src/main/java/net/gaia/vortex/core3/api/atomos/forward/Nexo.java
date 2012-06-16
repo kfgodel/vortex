@@ -4,13 +4,12 @@
 package net.gaia.vortex.core3.api.atomos.forward;
 
 import net.gaia.vortex.core3.api.Nodo;
-import net.gaia.vortex.core3.api.atomos.Emisor;
 import net.gaia.vortex.core3.api.atomos.Receptor;
 
 /**
- * Esta interfaz representa un componente de vortex que permite una unica conexion saliente. Al
- * conectar este componente con un receptor se pierde la conexion previa.<br>
- * Esta interfaz es la forma básica de muchos componentes básicos de la red vortex predefinidos
+ * Esta interfaz representa un componente de vortex que permite una única conexion saliente, por lo
+ * que al conectar este componente con un nuevo receptor se pierde la conexion previa.<br>
+ * Esta interfaz es la abstracción máxima de muchos componentes básicos de la red vortex
  * 
  * 
  * @author D. García

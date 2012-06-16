@@ -18,6 +18,7 @@ import net.gaia.vortex.core3.api.atomos.forward.Nexo;
 /**
  * Esta interfaz representa un componente vortex que permite filtrar los mensajes pasados a otro
  * componente utilizando una condición.<br>
+ * Los mensajes que no cumplen con la condición son descartados
  * 
  * 
  * @author D. García

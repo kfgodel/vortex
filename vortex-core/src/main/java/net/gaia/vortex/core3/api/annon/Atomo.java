@@ -20,10 +20,16 @@ import java.lang.annotation.Target;
 
 /**
  * Esta annotation es aplicable a aquellos componentes básicos de Vortex que son utilizados para
- * definir comportamiento mínimo.<br>
- * El atomo tiene la capacidad de procesar atomicamente en su propio thread la tarea que representa
- * A diferencia de una {@link Molecula} los átomos solo se conocen por referencia entre instancias,
- * con lo que su modificación en runtime puede pensarse como más "dura".
+ * definir comportamiento mínimo que es utilizable por componentes más complejos.<br>
+ * El atomo tiene la capacidad de procesar atómicamente en su propio thread la tarea que representa.<br>
+ * <br>
+ * A diferencia de una {@link Molecula} los átomos no pueden cambiar su comportamiento interno, sólo
+ * pueden alterar a quién están conectados. Por lo que su modificación en runtime puede pensarse
+ * como "dura".<br>
+ * <br>
+ * Cabe aclarar que la distinción entre {@link Atomo}, {@link Molecula} y {@link Organismo} es un
+ * tanto arbitrario y en una red se pueden encontrar niveles de mezclados. La diferenciación es sólo
+ * teórica
  * 
  * @author D. García
  */

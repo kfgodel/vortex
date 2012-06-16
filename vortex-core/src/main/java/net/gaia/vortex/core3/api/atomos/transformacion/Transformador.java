@@ -7,7 +7,7 @@ import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.forward.Nexo;
 
 /**
- * Esta interfaz representa un componente vortex que realiza un transformacion de los mensajes
+ * Esta interfaz representa un componente vortex que realiza un transformación de los mensajes
  * recibidos antes de pasarlos al siguiente componente
  * 
  * @author D. García

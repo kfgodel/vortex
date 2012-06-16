@@ -1,7 +1,7 @@
 /**
  * 13/06/2012 10:48:33 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core2.impl.atomos.tasks;
+package net.gaia.vortex.core3.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;

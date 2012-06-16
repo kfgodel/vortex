@@ -10,6 +10,7 @@ import net.gaia.vortex.core2.impl.atomos.ComponenteNulo;
 import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
 import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.impl.tasks.ElegirDelegadoConCondicion;
 
 /**
  * Esta clase representa un componente de la red vortex que puede delegarle el mensaje recibido a

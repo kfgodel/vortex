@@ -15,11 +15,12 @@ package net.gaia.vortex.core3.api.atomos.mensaje;
 /**
  * Esta interfaz representa un mensaje vortex que es información que circula dentro de la red y
  * puede ser procesada, filtrada, transformada, etc por componentes vortex.<br>
- * A través de esta interfaz se abstrae la implementación concreta pero puede pensarse un mensaje
- * vortex como un mapa de clave valor con niveles de profundidad.<br>
+ * Puede pensarse un mensaje vortex como un mapa raíz de clave/valor, donde la clave es un texto, y
+ * el valor puede ser una primitiva u otro mapa igual (a la JSON). <br>
  * <br>
- * Un mensaje puede ser alterado durante la circulación en la red para rutearlo pero de manera
- * no-destructiva de la información original, lo que permite recibirlo en destino sin pérdida.
+ * Un mensaje puede ser alterado durante la circulación en la red para rutearlo, pero de manera
+ * no-destructiva. Lo que significa que la información original no se pierde y por lo tanto puede
+ * ser recibido en destino tal como se envió.
  * 
  * @author D. García
  */

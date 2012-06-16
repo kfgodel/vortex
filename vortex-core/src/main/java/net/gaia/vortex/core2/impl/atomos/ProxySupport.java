@@ -16,8 +16,8 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
 import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.impl.tasks.EntregarMensajeADelegado;
 
 import com.google.common.base.Objects;
 

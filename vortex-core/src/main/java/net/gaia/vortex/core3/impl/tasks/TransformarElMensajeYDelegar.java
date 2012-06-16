@@ -1,10 +1,9 @@
 /**
  * 13/06/2012 10:58:48 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core2.impl.atomos.transformador;
+package net.gaia.vortex.core3.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
 import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
 import net.gaia.vortex.core3.api.atomos.transformacion.Transformacion;
 

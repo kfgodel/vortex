@@ -1,10 +1,9 @@
 /**
  * 13/06/2012 11:27:27 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core2.impl.atomos.condicional;
+package net.gaia.vortex.core3.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core2.impl.atomos.tasks.EntregarMensajeADelegado;
 import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
 import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
 

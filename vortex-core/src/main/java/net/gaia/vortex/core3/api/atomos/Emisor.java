@@ -3,10 +3,10 @@
  */
 package net.gaia.vortex.core3.api.atomos;
 
-
 /**
  * Esta interfaz representa un componente de la red vortex que tiene la capacidad de enviar mensajes
- * a receptores a los que esta conectado.<br>
+ * a receptores a los que esta conectado. La implementación de esta interfaz implica que el
+ * componente puede mandar mensajes a otros, pero no implica que pueda recibirlos<br>
  * A través de esta interfaz un componente permite realizar conexiones a otros componentes para
  * generar una topología de red.<br>
  * <br>

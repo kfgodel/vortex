@@ -19,12 +19,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Este annotation es aplicable a los componentes vortex que representan mini redes de
- * {@link Molecula}s con identidad propia.<br>
- * Este es el tercer nivel de complejidad y combinación de componentes vortex que tiene el mayor
- * nivel de complejidad y de flexibilidad.<br>
- * Utilizando organismos en una aplicación, es posible tener comportamientos predefinidos que son
- * modificables como redes de moléculas
+ * Este annotation es aplicable a los componentes vortex que representan en sí mismos una red vortex
+ * conectable con otras redes.<br>
+ * Este es el mayor nivel de complejidad vortex utilizable en un programa y normalmente estará
+ * compuesta de varias {@link Molecula}s y {@link Atomo}s, aunque podría también incluir otros
+ * {@link Organismo}s como parte de sí.<br>
+ * <br>
+ * Cabe aclarar que la distinción entre {@link Atomo}, {@link Molecula} y {@link Organismo} es un
+ * tanto arbitrario y en una red se pueden encontrar niveles de mezclados. La diferenciación es sólo
+ * teórica
  * 
  * @author D. García
  */
