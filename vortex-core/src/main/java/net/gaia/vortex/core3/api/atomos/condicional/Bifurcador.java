@@ -15,6 +15,7 @@ package net.gaia.vortex.core3.api.atomos.condicional;
 import net.gaia.vortex.core3.api.Nodo;
 import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.Receptor;
+import net.gaia.vortex.core3.api.condiciones.Condicion;
 
 /**
  * Esta interfaz representa un componente vortex que bifurca el mensaje entre dos posibles

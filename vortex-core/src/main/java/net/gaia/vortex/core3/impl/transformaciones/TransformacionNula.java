@@ -10,17 +10,17 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.impl.atomos.transformador;
+package net.gaia.vortex.core3.impl.transformaciones;
 
-import net.gaia.vortex.core3.api.atomos.transformacion.Transformacion;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.transformaciones.Transformacion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
 
 import com.google.common.base.Objects;
 
 /**
- * Esta clase representa la transformación del mensaje que lo deja intacto
+ * Esta clase representa la transformación del mensaje que lo deja tal como lo recibe
  * 
  * @author D. García
  */
@@ -34,7 +34,7 @@ public class TransformacionNula implements Transformacion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core3.api.atomos.transformacion.Transformacion#transformar(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core3.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public MensajeVortex transformar(final MensajeVortex mensaje) {

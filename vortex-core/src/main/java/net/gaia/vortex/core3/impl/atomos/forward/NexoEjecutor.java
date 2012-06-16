@@ -10,13 +10,14 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.impl.atomos.ejecutor;
+package net.gaia.vortex.core3.impl.atomos.forward;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
-import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.impl.atomos.ProxySupport;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core3.api.annon.Atomo;
+import net.gaia.vortex.core3.api.atomos.Receptor;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
 
 /**
  * Esta clase representa un {@link ComponenteProxy} que ejecuta el código de otro
@@ -25,12 +26,20 @@ import net.gaia.vortex.core3.api.annon.Atomo;
  * @author D. García
  */
 @Atomo
-public class ProxyEjecutor extends ProxySupport {
+public class NexoEjecutor extends NexoSupport {
 
-	public static ProxyEjecutor create(final TaskProcessor processor, final ComponenteVortex delegado) {
-		final ProxyEjecutor ejecutor = new ProxyEjecutor();
+	public static NexoEjecutor create(final TaskProcessor processor, final Receptor delegado) {
+		final NexoEjecutor ejecutor = new NexoEjecutor();
 		ejecutor.initializeWith(processor, delegado);
 		return ejecutor;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core3.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
+	 */
+	@Override
+	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
+		return DelegarMensaje.create(mensaje, getDestino());
 	}
 
 }

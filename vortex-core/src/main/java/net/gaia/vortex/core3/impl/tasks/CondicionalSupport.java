@@ -5,7 +5,7 @@ package net.gaia.vortex.core3.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core3.api.atomos.Receptor;
-import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
+import net.gaia.vortex.core3.api.condiciones.Condicion;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 
 import org.slf4j.Logger;

@@ -7,7 +7,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.atomos.condicional.Bifurcador;
-import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
+import net.gaia.vortex.core3.api.condiciones.Condicion;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core3.impl.atomos.ReceptorNulo;

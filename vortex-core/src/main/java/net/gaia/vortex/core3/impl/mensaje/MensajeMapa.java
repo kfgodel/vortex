@@ -1,5 +1,5 @@
 /**
- * 13/06/2012 00:44:34 Copyright (C) 2011 Darío L. García
+ * 16/06/2012 19:03:38 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,27 +10,20 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core3.api.atomos.condicional;
+package net.gaia.vortex.core3.impl.mensaje;
 
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 
 /**
- * Esta interfaz representa una condición que puede ser evaluada sobre un mensaje para determinar si
- * la cumple o no.<br>
- * Normalmente las condiciones deben ser thread-safe, lo que permite la evaluación en paralelo de
- * multiples threads
+ * Esta clase es la implementación de un mensaje vortex utilizando un mapa para conservar la
+ * representación de estado de los datos transmitidos
  * 
  * @author D. García
  */
-public interface Condicion {
+public class MensajeMapa implements MensajeVortex {
 
-	/**
-	 * Indica si el mensaje pasado cumple la condición o no representada por esta instancia
-	 * 
-	 * @param mensaje
-	 *            El mensaje a evaluar
-	 * @return true si la condición es cumplida por el mensaje
-	 */
-	public boolean esCumplidaPor(MensajeVortex mensaje);
-
+	public static MensajeMapa create() {
+		final MensajeMapa mensaje = new MensajeMapa();
+		return mensaje;
+	}
 }

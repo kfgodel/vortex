@@ -1,12 +1,12 @@
 /**
  * 13/06/2012 12:25:29 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core2.tests;
+package net.gaia.vortex.core3.tests;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
+import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
@@ -20,21 +20,21 @@ import com.google.common.base.Objects;
  * 
  * @author D. García
  */
-public class ComponenteEncolador implements ComponenteVortex {
+public class ReceptorEncolador implements Receptor {
 
 	private BlockingQueue<MensajeVortex> mensajes;
 	public static final String mensajes_FIELD = "mensajes";
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core3.api.atomos.Receptor#recibir(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public void recibirMensaje(final MensajeVortex mensaje) {
+	public void recibir(final MensajeVortex mensaje) {
 		mensajes.add(mensaje);
 	}
 
-	public static ComponenteEncolador create() {
-		final ComponenteEncolador handler = new ComponenteEncolador();
+	public static ReceptorEncolador create() {
+		final ReceptorEncolador handler = new ReceptorEncolador();
 		handler.mensajes = new LinkedBlockingQueue<MensajeVortex>();
 		return handler;
 	}

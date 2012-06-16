@@ -1,5 +1,5 @@
 /**
- * 12/06/2012 22:16:23 Copyright (C) 2011 Darío L. García
+ * 13/06/2012 00:44:34 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,28 +10,27 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.api.atomos;
+package net.gaia.vortex.core3.api.condiciones;
 
-import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 
 /**
- * Esta interfaz representa el componente más básico y común de la red vortex que permite realizar
- * una acción al recibir un mensaje.<br>
- * A través de esta interfaz todos los componentes vortex son conectables entre sí, y el código
- * cliente de vortex puede interactuar con los mensajes recibidos.<br>
+ * Esta interfaz representa una condición que puede ser evaluada sobre un mensaje para determinar si
+ * la cumple o no.<br>
+ * Normalmente las condiciones deben ser thread-safe, lo que permite la evaluación en paralelo de
+ * multiples threads
  * 
  * @author D. García
  */
-@Atomo
-public interface ComponenteVortex {
+public interface Condicion {
 
 	/**
-	 * Invocado por componentes de la red vortex para que esta instancia reciba el mensaje
+	 * Indica si el mensaje pasado cumple la condición o no representada por esta instancia
 	 * 
 	 * @param mensaje
-	 *            El mensaje que la red entrega a esta instancia para que realice su acción
+	 *            El mensaje a evaluar
+	 * @return true si la condición es cumplida por el mensaje
 	 */
-	public void recibirMensaje(MensajeVortex mensaje);
+	public boolean esCumplidaPor(MensajeVortex mensaje);
 
 }

@@ -10,23 +10,22 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.api.nodos;
+package net.gaia.vortex.core3.api.moleculas.ruteo;
 
-import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.api.atomos.Multiplexor;
+import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core3.api.annon.Molecula;
 
 /**
- * Esta interfaz representa un componente vortex que reenvia el mensaje que recibe a todos los
+ * Esta interfaz representa un componente vortex que reenvía el mensaje que recibe a todos los
  * destinos que conoce, exceptuando al emisor del que lo recibió. De esta manera el mensaje no llega
  * al mismo lugar del que salió.<br>
- * Para que la identificacion del emisor del mensaje sea correcta el emisor del mensaje debe
+ * Para que la identificación del emisor del mensaje sea correcta el emisor del mensaje debe
  * identificarse en el mensaje con la misma instancia de {@link ComponenteVortex} que se utiliza
  * como destino de los mensajes
  * 
  * @author D. García
  */
 @Molecula
-public interface Hub extends Multiplexor, ComponenteVortex {
+public interface NodoHub extends Nodo {
 
 }

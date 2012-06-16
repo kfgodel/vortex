@@ -10,36 +10,40 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.impl.atomos.condicional;
+package net.gaia.vortex.core3.impl.atomos.condicional;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
-import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.impl.atomos.ProxySupport;
 import net.gaia.vortex.core3.api.annon.Atomo;
-import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
+import net.gaia.vortex.core3.api.atomos.Receptor;
+import net.gaia.vortex.core3.api.atomos.condicional.Filtro;
+import net.gaia.vortex.core3.api.condiciones.Condicion;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.impl.atomos.forward.NexoSupport;
+import net.gaia.vortex.core3.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.core3.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core3.impl.tasks.FiltrarMensaje;
-import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
 
 import com.google.common.base.Objects;
 
 /**
- * Esta clase representa un {@link ComponenteProxy} que puede filtrar mensajes recibidos en base a
- * una {@link Condicion}
+ * Esta clase es la implementación del {@link Filtro} utilizando threads independientes para el
+ * filtrado
  * 
  * @author D. García
  */
 @Atomo
-public class ProxyCondicional extends ProxySupport {
+public class NexoFiltro extends NexoSupport implements Filtro {
 
 	private Condicion condicion;
 	public static final String condicion_FIELD = "condicion";
 
+	@Override
 	public Condicion getCondicion() {
 		return condicion;
 	}
 
+	@Override
 	public void setCondicion(final Condicion condicion) {
 		if (condicion == null) {
 			throw new IllegalArgumentException("La condicion del proxy no puede ser null. A lo sumo una entre "
@@ -48,23 +52,13 @@ public class ProxyCondicional extends ProxySupport {
 		this.condicion = condicion;
 	}
 
-	/**
-	 * @see net.gaia.vortex.core2.impl.atomos.ProxySupport#agregarComportamientoA(net.gaia.vortex.core3.impl.tasks.DelegarMensaje)
-	 */
-	@Override
-	protected WorkUnit agregarComportamientoA(final DelegarMensaje entregaEnBackground) {
-		return FiltrarMensaje.create(condicion, entregaEnBackground);
-	}
-
-	protected void initializeWith(final TaskProcessor processor, final ComponenteVortex delegado,
-			final Condicion condicion) {
+	protected void initializeWith(final TaskProcessor processor, final Receptor delegado, final Condicion condicion) {
 		super.initializeWith(processor, delegado);
 		setCondicion(condicion);
 	}
 
-	public static ProxyCondicional create(final TaskProcessor processor, final Condicion condicion,
-			final ComponenteVortex delegado) {
-		final ProxyCondicional condicional = new ProxyCondicional();
+	public static NexoFiltro create(final TaskProcessor processor, final Condicion condicion, final Receptor delegado) {
+		final NexoFiltro condicional = new NexoFiltro();
 		condicional.initializeWith(processor, delegado, condicion);
 		return condicional;
 	}
@@ -74,7 +68,15 @@ public class ProxyCondicional extends ProxySupport {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(condicion_FIELD, condicion).add(delegado_FIELD, getDelegado())
+		return Objects.toStringHelper(this).add(condicion_FIELD, condicion).add(delegado_FIELD, getDestino())
 				.toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.core3.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
+	 */
+	@Override
+	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
+		return FiltrarMensaje.create(mensaje, condicion, getDestino());
 	}
 }

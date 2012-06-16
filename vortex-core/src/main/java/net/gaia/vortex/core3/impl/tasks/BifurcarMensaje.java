@@ -4,7 +4,7 @@
 package net.gaia.vortex.core3.impl.tasks;
 
 import net.gaia.vortex.core3.api.atomos.Receptor;
-import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
+import net.gaia.vortex.core3.api.condiciones.Condicion;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 
 /**

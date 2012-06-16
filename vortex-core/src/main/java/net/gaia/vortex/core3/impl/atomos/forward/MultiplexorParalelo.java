@@ -1,15 +1,15 @@
 /**
  * 13/06/2012 11:49:16 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core2.impl.atomos.multiplexor;
+package net.gaia.vortex.core3.impl.atomos.forward;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.api.atomos.Multiplexor;
 import net.gaia.vortex.core3.api.annon.Atomo;
+import net.gaia.vortex.core3.api.atomos.Receptor;
+import net.gaia.vortex.core3.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
@@ -29,26 +29,26 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	 * La lista de destinos, implementada con un {@link CopyOnWriteArrayList} porque esperamos más
 	 * recorridas que modificaciones
 	 */
-	private List<ComponenteVortex> destinos;
+	private List<Receptor> destinos;
 	public static final String destinos_FIELD = "destinos";
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core3.api.atomos.Receptor#recibir(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public void recibirMensaje(final MensajeVortex mensaje) {
+	public void recibir(final MensajeVortex mensaje) {
 		// Por cada destino derivamos la entrega al procesador interno
-		for (final ComponenteVortex destino : destinos) {
+		for (final Receptor destino : destinos) {
 			final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, destino);
 			procesarEnThreadPropio(entregaEnBackground);
 		}
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.Multiplexor#agregarDestino(net.gaia.vortex.core2.api.atomos.ComponenteVortex)
+	 * @see net.gaia.vortex.core3.api.atomos.forward.Multiplexor#conectarCon(net.gaia.vortex.core3.api.atomos.Receptor)
 	 */
 	@Override
-	public void agregarDestino(final ComponenteVortex destino) {
+	public void conectarCon(final Receptor destino) {
 		if (destino == null) {
 			throw new IllegalArgumentException("El destino del multiplexor no puede ser null");
 		}
@@ -56,10 +56,10 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.Multiplexor#quitarDestino(net.gaia.vortex.core2.api.atomos.ComponenteVortex)
+	 * @see net.gaia.vortex.core3.api.atomos.forward.Multiplexor#desconectarDe(net.gaia.vortex.core3.api.atomos.Receptor)
 	 */
 	@Override
-	public void quitarDestino(final ComponenteVortex destino) {
+	public void desconectarDe(final Receptor destino) {
 		destinos.remove(destino);
 	}
 
@@ -69,7 +69,7 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	@Override
 	protected void initializeWith(final TaskProcessor processor) {
 		super.initializeWith(processor);
-		destinos = new CopyOnWriteArrayList<ComponenteVortex>();
+		destinos = new CopyOnWriteArrayList<Receptor>();
 	}
 
 	public static MultiplexorParalelo create(final TaskProcessor processor) {

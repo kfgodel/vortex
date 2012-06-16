@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Objects;
 
 /**
- * Esta clase define el comportamiento mínimo y común del {@link Hub} de manera que pueda ser
+ * Esta clase define el comportamiento mínimo y común del {@link NodoHub} de manera que pueda ser
  * extendida para agregar comportamiento adicional sin demasiado trabajo extra.<br>
  * Esta implementación no toma en cuenta ciclos, ni ejecución asíncrona, por lo que puede producir
  * {@link StackOverflowError}, {@link OutOfMemoryError}, etc. Utilizar sólo como clase base

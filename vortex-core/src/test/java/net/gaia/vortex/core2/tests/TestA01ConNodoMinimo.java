@@ -13,9 +13,10 @@ import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.impl.NodoPortalSinThreads;
 import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.api.nodos.Hub;
 import net.gaia.vortex.core2.impl.mensajes.MensajeMapa;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.moleculas.ruteo.NodoHub;
+import net.gaia.vortex.core3.tests.ReceptorEncolador;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,8 +33,8 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  */
 public class TestA01ConNodoMinimo {
 
-	private Hub nodoEmisor;
-	private Hub nodoReceptor;
+	private NodoHub nodoEmisor;
+	private NodoHub nodoReceptor;
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
@@ -59,7 +60,7 @@ public class TestA01ConNodoMinimo {
 	@Test
 	public void el_Receptor_Debería_Poder_Recibir_De_Vortex_Cualquier_Objeto_Serializable() {
 		// Para recibir de la red agregamos un receptor como destino
-		final ComponenteEncolador handlerParaRecibidos = ComponenteEncolador.create();
+		final ReceptorEncolador handlerParaRecibidos = ReceptorEncolador.create();
 		nodoReceptor.agregarDestino(handlerParaRecibidos);
 	}
 
@@ -68,7 +69,7 @@ public class TestA01ConNodoMinimo {
 	 */
 	@Test
 	public void el_Mensaje_Enviado_Desde_El_Emisor_Y_El_Recibido_Por_El_Receptor_Deberian_Ser_Iguales() {
-		final ComponenteEncolador handlerReceptor = ComponenteEncolador.create();
+		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		nodoReceptor.agregarDestino(handlerReceptor);
 
 		nodoEmisor.recibirMensaje(mensaje1);
@@ -146,7 +147,7 @@ public class TestA01ConNodoMinimo {
 	 */
 	@Test
 	public void el_Emisor_No_Deberia_Recibir_Su_Propio_Mensaje() {
-		final ComponenteEncolador handlerReceptor = ComponenteEncolador.create();
+		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		nodoEmisor.agregarDestino(handlerReceptor);
 
 		mensaje1.setEmisor(handlerReceptor);
@@ -166,12 +167,12 @@ public class TestA01ConNodoMinimo {
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayUnNodoEnElMedio() {
-		final Hub nodoEmisor = NodoPortalSinThreads.create();
-		final Hub nodoIntermedio1 = NodoRuteadorMinimo.create();
-		final Hub nodoIntermedio2 = NodoRuteadorMinimo.create();
-		final Hub nodoReceptor = NodoPortalSinThreads.create();
+		final NodoHub nodoEmisor = NodoPortalSinThreads.create();
+		final NodoHub nodoIntermedio1 = NodoRuteadorMinimo.create();
+		final NodoHub nodoIntermedio2 = NodoRuteadorMinimo.create();
+		final NodoHub nodoReceptor = NodoPortalSinThreads.create();
 
-		final ComponenteEncolador handlerReceptor = ComponenteEncolador.create();
+		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		nodoReceptor.agregarDestino(handlerReceptor);
 
 		nodoEmisor.agregarDestino(nodoIntermedio1);
@@ -190,14 +191,14 @@ public class TestA01ConNodoMinimo {
 	@Test
 	public void elMensajeDeberiaLlegarADosReceptoresIndependientes() {
 		// Aramamos la red con otro receptor
-		final ComponenteEncolador handlerReceptor1 = ComponenteEncolador.create();
+		final ReceptorEncolador handlerReceptor1 = ReceptorEncolador.create();
 		nodoReceptor.agregarDestino(handlerReceptor1);
 
-		final ComponenteEncolador handlerReceptor2 = ComponenteEncolador.create();
-		final Hub nodoReceptor2;
+		final ReceptorEncolador handlerReceptor2 = ReceptorEncolador.create();
+		final NodoHub nodoReceptor2;
 		nodoReceptor2.agregarDestino(handlerReceptor2);
 
-		final Hub nodoRuteador;
+		final NodoHub nodoRuteador;
 		nodoRuteador.agregarDestino(nodoReceptor2);
 		nodoReceptor2.agregarDestino(nodoRuteador);
 

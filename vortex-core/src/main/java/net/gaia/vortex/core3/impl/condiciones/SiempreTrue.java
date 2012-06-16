@@ -10,9 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.impl.atomos.condicional;
+package net.gaia.vortex.core3.impl.condiciones;
 
-import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
+import net.gaia.vortex.core3.api.condiciones.Condicion;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
@@ -34,7 +34,7 @@ public class SiempreTrue implements Condicion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core3.api.atomos.condicional.Condicion#esCumplidaPor(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core3.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public boolean esCumplidaPor(@SuppressWarnings("unused") final MensajeVortex mensaje) {

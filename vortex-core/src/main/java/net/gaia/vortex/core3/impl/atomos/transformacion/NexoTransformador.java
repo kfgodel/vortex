@@ -10,17 +10,17 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.impl.atomos.transformador;
+package net.gaia.vortex.core3.impl.atomos.transformacion;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
-import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.impl.atomos.ProxySupport;
 import net.gaia.vortex.core3.api.annon.Atomo;
-import net.gaia.vortex.core3.api.atomos.transformacion.Transformacion;
-import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
+import net.gaia.vortex.core3.api.atomos.Receptor;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.transformaciones.Transformacion;
+import net.gaia.vortex.core3.impl.atomos.forward.NexoSupport;
 import net.gaia.vortex.core3.impl.tasks.TransformarYDelegar;
+import net.gaia.vortex.core3.impl.transformaciones.TransformacionNula;
 
 import com.google.common.base.Objects;
 
@@ -31,7 +31,7 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 @Atomo
-public class ProxyTransformador extends ProxySupport {
+public class NexoTransformador extends NexoSupport {
 
 	private Transformacion transformacion;
 	public static final String transformacion_FIELD = "transformacion";
@@ -49,22 +49,14 @@ public class ProxyTransformador extends ProxySupport {
 		this.transformacion = transformacion;
 	}
 
-	/**
-	 * @see net.gaia.vortex.core2.impl.atomos.ProxySupport#agregarComportamientoA(net.gaia.vortex.core3.impl.tasks.DelegarMensaje)
-	 */
-	@Override
-	protected WorkUnit agregarComportamientoA(final DelegarMensaje entregaEnBackground) {
-		return TransformarYDelegar.create(transformacion, entregaEnBackground);
-	}
-
-	public static ProxyTransformador create(final TaskProcessor processor, final Transformacion transformacion,
-			final ComponenteVortex delegado) {
-		final ProxyTransformador transformador = new ProxyTransformador();
+	public static NexoTransformador create(final TaskProcessor processor, final Transformacion transformacion,
+			final Receptor delegado) {
+		final NexoTransformador transformador = new NexoTransformador();
 		transformador.initializeWith(processor, delegado, transformacion);
 		return transformador;
 	}
 
-	private void initializeWith(final TaskProcessor processor, final ComponenteVortex delegado,
+	private void initializeWith(final TaskProcessor processor, final Receptor delegado,
 			final Transformacion transformacion) {
 		super.initializeWith(processor, delegado);
 		setTransformacion(transformacion);
@@ -75,7 +67,15 @@ public class ProxyTransformador extends ProxySupport {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(transformacion_FIELD, transformacion)
-				.add(delegado_FIELD, getDelegado()).toString();
+		return Objects.toStringHelper(this).add(transformacion_FIELD, transformacion).add(delegado_FIELD, getDestino())
+				.toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.core3.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
+	 */
+	@Override
+	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
+		return TransformarYDelegar.create(mensaje, transformacion, getDestino());
 	}
 }
