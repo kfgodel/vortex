@@ -19,8 +19,8 @@ import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.impl.atomos.ProxySupport;
 import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
-import net.gaia.vortex.core3.impl.tasks.DelegarOpcionalmente;
-import net.gaia.vortex.core3.impl.tasks.EntregarMensajeADelegado;
+import net.gaia.vortex.core3.impl.tasks.FiltrarMensaje;
+import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
 
 import com.google.common.base.Objects;
 
@@ -49,11 +49,11 @@ public class ProxyCondicional extends ProxySupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.impl.atomos.ProxySupport#agregarComportamientoA(net.gaia.vortex.core3.impl.tasks.EntregarMensajeADelegado)
+	 * @see net.gaia.vortex.core2.impl.atomos.ProxySupport#agregarComportamientoA(net.gaia.vortex.core3.impl.tasks.DelegarMensaje)
 	 */
 	@Override
-	protected WorkUnit agregarComportamientoA(final EntregarMensajeADelegado entregaEnBackground) {
-		return DelegarOpcionalmente.create(condicion, entregaEnBackground);
+	protected WorkUnit agregarComportamientoA(final DelegarMensaje entregaEnBackground) {
+		return FiltrarMensaje.create(condicion, entregaEnBackground);
 	}
 
 	protected void initializeWith(final TaskProcessor processor, final ComponenteVortex delegado,

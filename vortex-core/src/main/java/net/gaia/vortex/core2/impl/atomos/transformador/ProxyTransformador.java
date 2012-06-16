@@ -19,8 +19,8 @@ import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.impl.atomos.ProxySupport;
 import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.transformacion.Transformacion;
-import net.gaia.vortex.core3.impl.tasks.EntregarMensajeADelegado;
-import net.gaia.vortex.core3.impl.tasks.TransformarElMensajeYDelegar;
+import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
+import net.gaia.vortex.core3.impl.tasks.TransformarYDelegar;
 
 import com.google.common.base.Objects;
 
@@ -50,11 +50,11 @@ public class ProxyTransformador extends ProxySupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.impl.atomos.ProxySupport#agregarComportamientoA(net.gaia.vortex.core3.impl.tasks.EntregarMensajeADelegado)
+	 * @see net.gaia.vortex.core2.impl.atomos.ProxySupport#agregarComportamientoA(net.gaia.vortex.core3.impl.tasks.DelegarMensaje)
 	 */
 	@Override
-	protected WorkUnit agregarComportamientoA(final EntregarMensajeADelegado entregaEnBackground) {
-		return TransformarElMensajeYDelegar.create(transformacion, entregaEnBackground);
+	protected WorkUnit agregarComportamientoA(final DelegarMensaje entregaEnBackground) {
+		return TransformarYDelegar.create(transformacion, entregaEnBackground);
 	}
 
 	public static ProxyTransformador create(final TaskProcessor processor, final Transformacion transformacion,

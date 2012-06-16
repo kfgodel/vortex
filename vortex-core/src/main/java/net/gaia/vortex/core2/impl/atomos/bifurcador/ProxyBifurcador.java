@@ -6,11 +6,11 @@ package net.gaia.vortex.core2.impl.atomos.bifurcador;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.impl.atomos.ComponenteConProcesadorSupport;
-import net.gaia.vortex.core2.impl.atomos.ComponenteNulo;
 import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
 import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
-import net.gaia.vortex.core3.impl.tasks.ElegirDelegadoConCondicion;
+import net.gaia.vortex.core3.impl.atomos.ReceptorNulo;
+import net.gaia.vortex.core3.impl.tasks.BifurcarMensaje;
 
 /**
  * Esta clase representa un componente de la red vortex que puede delegarle el mensaje recibido a
@@ -45,7 +45,7 @@ public class ProxyBifurcador extends ComponenteConProcesadorSupport {
 	public void setDelegadoPorTrue(final ComponenteVortex delegadoPorTrue) {
 		if (delegadoPorTrue == null) {
 			throw new IllegalArgumentException("El delegado por true no puede ser null en el bifurcador. Usar el "
-					+ ComponenteNulo.class);
+					+ ReceptorNulo.class);
 		}
 		this.delegadoPorTrue = delegadoPorTrue;
 	}
@@ -57,7 +57,7 @@ public class ProxyBifurcador extends ComponenteConProcesadorSupport {
 	public void setDelegadoPorFalse(final ComponenteVortex delegadoPorFalse) {
 		if (delegadoPorFalse == null) {
 			throw new IllegalArgumentException("El delegado por false no puede ser null en el bifurcador. Usar el "
-					+ ComponenteNulo.class);
+					+ ReceptorNulo.class);
 		}
 		this.delegadoPorFalse = delegadoPorFalse;
 	}
@@ -67,7 +67,7 @@ public class ProxyBifurcador extends ComponenteConProcesadorSupport {
 	 */
 	@Override
 	public void recibirMensaje(final MensajeVortex mensaje) {
-		final ElegirDelegadoConCondicion elegirDelegado = ElegirDelegadoConCondicion.create(mensaje, condicion,
+		final BifurcarMensaje elegirDelegado = BifurcarMensaje.create(mensaje, condicion,
 				delegadoPorTrue, delegadoPorFalse);
 		procesarEnThreadPropio(elegirDelegado);
 	}

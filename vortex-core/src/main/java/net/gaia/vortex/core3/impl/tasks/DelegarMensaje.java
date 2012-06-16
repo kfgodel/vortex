@@ -4,7 +4,7 @@
 package net.gaia.vortex.core3.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
+import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -13,51 +13,37 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Objects;
 
 /**
- * Esta clase representa la tarea realizada en un thread propio para entregar el mensaje a un
- * componente vortex
+ * Esta clase es la tarea que realiza un componente vortex para delegar un mensaje a otro componente
+ * en un thread aislado
  * 
  * @author D. García
  */
-public class EntregarMensajeADelegado implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(EntregarMensajeADelegado.class);
+public class DelegarMensaje implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(DelegarMensaje.class);
 
-	private ComponenteVortex delegado;
+	private Receptor delegado;
 	public static final String delegado_FIELD = "delegado";
 
 	private MensajeVortex mensaje;
 	public static final String mensaje_FIELD = "mensaje";
 
-	public ComponenteVortex getDelegado() {
-		return delegado;
-	}
-
-	public void setDelegado(final ComponenteVortex delegado) {
-		this.delegado = delegado;
-	}
-
-	public MensajeVortex getMensaje() {
-		return mensaje;
-	}
-
-	public void setMensaje(final MensajeVortex mensaje) {
-		this.mensaje = mensaje;
-	}
-
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	@Override
-	public void doWork() throws InterruptedException {
+	public WorkUnit doWork() throws InterruptedException {
 		try {
-			delegado.recibirMensaje(mensaje);
+			delegado.recibir(mensaje);
 		} catch (final Exception e) {
 			LOG.error("Se produjo un error al entregar un mensaje[" + mensaje + "] a un delegado[" + delegado
 					+ "]. Ignorando", e);
 		}
+		// Nada más que hacer
+		return null;
 	}
 
-	public static EntregarMensajeADelegado create(final MensajeVortex mensaje, final ComponenteVortex delegado) {
-		final EntregarMensajeADelegado entregar = new EntregarMensajeADelegado();
+	public static DelegarMensaje create(final MensajeVortex mensaje, final Receptor delegado) {
+		final DelegarMensaje entregar = new DelegarMensaje();
 		entregar.mensaje = mensaje;
 		entregar.delegado = delegado;
 		return entregar;

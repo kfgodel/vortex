@@ -12,7 +12,7 @@ import net.gaia.vortex.core2.api.atomos.Multiplexor;
 import net.gaia.vortex.core2.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
-import net.gaia.vortex.core3.impl.tasks.EntregarMensajeADelegado;
+import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
 
 import com.google.common.base.Objects;
 
@@ -39,7 +39,7 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	public void recibirMensaje(final MensajeVortex mensaje) {
 		// Por cada destino derivamos la entrega al procesador interno
 		for (final ComponenteVortex destino : destinos) {
-			final EntregarMensajeADelegado entregaEnBackground = EntregarMensajeADelegado.create(mensaje, destino);
+			final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, destino);
 			procesarEnThreadPropio(entregaEnBackground);
 		}
 	}

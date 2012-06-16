@@ -17,7 +17,8 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
-import net.gaia.vortex.core3.impl.tasks.EntregarMensajeADelegado;
+import net.gaia.vortex.core3.impl.atomos.ReceptorNulo;
+import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
 
 import com.google.common.base.Objects;
 
@@ -46,7 +47,7 @@ public abstract class ProxySupport extends ComponenteConProcesadorSupport implem
 	public void setDelegado(final ComponenteVortex delegado) {
 		if (delegado == null) {
 			throw new IllegalArgumentException("El delegado del proxy no puede ser null. A lo sumo un "
-					+ ComponenteNulo.class);
+					+ ReceptorNulo.class);
 		}
 		this.delegado = delegado;
 	}
@@ -60,7 +61,7 @@ public abstract class ProxySupport extends ComponenteConProcesadorSupport implem
 	 */
 	@Override
 	public void recibirMensaje(final MensajeVortex mensaje) {
-		final EntregarMensajeADelegado entregaEnBackground = EntregarMensajeADelegado.create(mensaje, delegado);
+		final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, delegado);
 		final WorkUnit tareaEnBackground = agregarComportamientoA(entregaEnBackground);
 		procesarEnThreadPropio(tareaEnBackground);
 	}
@@ -72,7 +73,7 @@ public abstract class ProxySupport extends ComponenteConProcesadorSupport implem
 	 *            La tarea que entrega el mensaje al delegado
 	 * @return Un tarea que realice el comportamiento adicional para utilizar en el procesador
 	 */
-	protected WorkUnit agregarComportamientoA(final EntregarMensajeADelegado entregaEnBackground) {
+	protected WorkUnit agregarComportamientoA(final DelegarMensaje entregaEnBackground) {
 		return entregaEnBackground;
 	}
 

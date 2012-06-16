@@ -10,10 +10,10 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core2.impl.atomos;
+package net.gaia.vortex.core3.impl.atomos;
 
-import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core3.api.annon.Atomo;
+import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -25,31 +25,32 @@ import ar.com.dgarcia.coding.caching.WeakSingleton;
 import com.google.common.base.Objects;
 
 /**
- * Esta clase representa el componente nulo utilizado para no tener referencias en null
+ * Esta clase representa un componente nulo que no realiza acción al recibir un mensaje.<br>
+ * Este objeto permite no utilizar null
  * 
  * @author D. García
  */
 @Atomo
-public class ComponenteNulo implements ComponenteVortex {
-	private static final Logger LOG = LoggerFactory.getLogger(ComponenteNulo.class);
+public class ReceptorNulo implements Receptor {
+	private static final Logger LOG = LoggerFactory.getLogger(ReceptorNulo.class);
 
-	private static final WeakSingleton<ComponenteNulo> ultimaReferencia = new WeakSingleton<ComponenteNulo>(
-			DefaultInstantiator.create(ComponenteNulo.class));
+	private static final WeakSingleton<ReceptorNulo> ultimaReferencia = new WeakSingleton<ReceptorNulo>(
+			DefaultInstantiator.create(ReceptorNulo.class));
 
-	public static ComponenteNulo getInstancia() {
+	public static ReceptorNulo getInstancia() {
 		return ultimaReferencia.get();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core3.api.atomos.Receptor#recibir(net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex)
 	 */
 	@Override
-	public void recibirMensaje(final MensajeVortex mensaje) {
-		LOG.debug("Se recibió un mensaje[{}] en el componente nulo", mensaje);
+	public void recibir(final MensajeVortex mensaje) {
+		LOG.trace("Se recibió un mensaje[{}] en el componente nulo", mensaje);
 	}
 
-	public static ComponenteNulo create() {
-		final ComponenteNulo componente = new ComponenteNulo();
+	public static ReceptorNulo create() {
+		final ReceptorNulo componente = new ReceptorNulo();
 		return componente;
 	}
 
