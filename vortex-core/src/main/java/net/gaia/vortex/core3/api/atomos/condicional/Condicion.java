@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core3.api.atomos.condicional;
 
-import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 
 /**
  * Esta interfaz representa una condición que puede ser evaluada sobre un mensaje para determinar si

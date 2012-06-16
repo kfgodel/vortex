@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core3.api.atomos.mensaje;
+package net.gaia.vortex.core3.api.mensaje;
 
 /**
  * Esta interfaz representa un mensaje vortex que es información que circula dentro de la red y

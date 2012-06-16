@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.impl.atomos.bifurcador.ProxyBifurcador;
 import net.gaia.vortex.core2.impl.atomos.condicional.ProxyCondicional;
 import net.gaia.vortex.core2.impl.atomos.condicional.SiempreFalse;
 import net.gaia.vortex.core2.impl.atomos.condicional.SiempreTrue;
@@ -16,8 +15,9 @@ import net.gaia.vortex.core2.impl.atomos.ejecutor.ProxyEjecutor;
 import net.gaia.vortex.core2.impl.atomos.multiplexor.MultiplexorParalelo;
 import net.gaia.vortex.core2.impl.atomos.transformador.ProxyTransformador;
 import net.gaia.vortex.core2.impl.mensajes.MensajeMapa;
-import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
 import net.gaia.vortex.core3.api.atomos.transformacion.Transformacion;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.impl.atomos.condicional.NexoBifurcador;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -94,7 +94,7 @@ public class TestAtomos {
 	public void elBifurcadorDeberiaElegirElDelegadoPorTrueSiLaCondicionEsCumplida() {
 		final ComponenteEncolador receptorPorTrue = ComponenteEncolador.create();
 		final ComponenteEncolador receptorPorFalse = ComponenteEncolador.create();
-		final ProxyBifurcador bifurcador = ProxyBifurcador.create(processor, SiempreTrue.create(), receptorPorTrue,
+		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreTrue.create(), receptorPorTrue,
 				receptorPorFalse);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorTrue);
 		verificarMensajeNoRecibido(0, receptorPorFalse);
@@ -104,7 +104,7 @@ public class TestAtomos {
 	public void elBifurcadorDeberiaElegirElDelegadoPorFalseSiLaCondicionNoEsCumplida() {
 		final ComponenteEncolador receptorPorTrue = ComponenteEncolador.create();
 		final ComponenteEncolador receptorPorFalse = ComponenteEncolador.create();
-		final ProxyBifurcador bifurcador = ProxyBifurcador.create(processor, SiempreFalse.create(), receptorPorTrue,
+		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreFalse.create(), receptorPorTrue,
 				receptorPorFalse);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorFalse);
 		verificarMensajeNoRecibido(0, receptorPorTrue);

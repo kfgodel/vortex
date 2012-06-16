@@ -14,7 +14,7 @@ package net.gaia.vortex.core3.impl.atomos;
 
 import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.Receptor;
-import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class ReceptorNulo implements Receptor {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core3.api.atomos.Receptor#recibir(net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core3.api.atomos.Receptor#recibir(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {

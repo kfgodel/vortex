@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core3.api.atomos.transformacion;
 
-import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 
 /**
  * Esta interfaz representa una transformación realizada a un mensaje vortex en la red.<br>

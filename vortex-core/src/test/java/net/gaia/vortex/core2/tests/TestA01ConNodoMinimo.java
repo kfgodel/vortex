@@ -15,7 +15,7 @@ import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.api.nodos.Hub;
 import net.gaia.vortex.core2.impl.mensajes.MensajeMapa;
-import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 
 import org.junit.Before;
 import org.junit.Test;

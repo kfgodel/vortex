@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.core3.api.moleculas.portal;
 
-import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 
 /**
  * Esta interfaz representa un elemento utilizado por los portales para la conversión de obejtos de

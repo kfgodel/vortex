@@ -5,7 +5,7 @@ package net.gaia.vortex.core3.impl.tasks;
 
 import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.atomos.condicional.Condicion;
-import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 
 /**
  * Esta clase representa la tarea realizada en thread propio que evalua una condición para elegir el

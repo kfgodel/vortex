@@ -16,7 +16,8 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core2.api.atomos.ComponenteProxy;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core3.impl.atomos.ReceptorNulo;
 import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
 
@@ -33,7 +34,7 @@ public abstract class ProxySupport extends ComponenteConProcesadorSupport implem
 	public static final String delegado_FIELD = "delegado";
 
 	/**
-	 * @see net.gaia.vortex.core2.impl.atomos.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
+	 * @see net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
 	protected void initializeWith(final TaskProcessor processor, final ComponenteVortex delegado) {
 		super.initializeWith(processor);
@@ -57,7 +58,7 @@ public abstract class ProxySupport extends ComponenteConProcesadorSupport implem
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public void recibirMensaje(final MensajeVortex mensaje) {

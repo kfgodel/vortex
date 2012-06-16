@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.core3.api.atomos;
 
-import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 
 /**
  * Esta interfaz representa un componente de la red vortex que puede recibir un mensaje y realizar

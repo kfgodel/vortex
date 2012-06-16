@@ -9,9 +9,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core2.api.atomos.Multiplexor;
-import net.gaia.vortex.core2.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core3.api.annon.Atomo;
-import net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
 
 import com.google.common.base.Objects;
@@ -33,7 +33,7 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	public static final String destinos_FIELD = "destinos";
 
 	/**
-	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.atomos.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core2.api.atomos.ComponenteVortex#recibirMensaje(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public void recibirMensaje(final MensajeVortex mensaje) {
@@ -64,7 +64,7 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	}
 
 	/**
-	 * @see net.gaia.vortex.core2.impl.atomos.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
+	 * @see net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
 	@Override
 	protected void initializeWith(final TaskProcessor processor) {
