@@ -12,10 +12,12 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.impl.NodoPortalSinThreads;
 import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
-import net.gaia.vortex.core2.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core2.impl.mensajes.MensajeMapa;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.moleculas.portal.Portal;
 import net.gaia.vortex.core3.api.moleculas.ruteo.NodoHub;
+import net.gaia.vortex.core3.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.core3.impl.mensaje.MensajeMapa;
+import net.gaia.vortex.core3.impl.moleculas.portal.HandlerTipado;
 import net.gaia.vortex.core3.tests.ReceptorEncolador;
 
 import org.junit.Before;
@@ -31,10 +33,10 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class TestA01ConNodoMinimo {
+public class TestA01ConNodoPortal {
 
-	private NodoHub nodoEmisor;
-	private NodoHub nodoReceptor;
+	private Portal nodoEmisor;
+	private Portal nodoReceptor;
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
@@ -51,7 +53,8 @@ public class TestA01ConNodoMinimo {
 	@Test
 	public void el_Emisor_Deberia_Poder_Enviar_Por_Vortex_Cualquier_Objeto_Serializable() {
 		// Para enviar al red se le indica que reciba un mensaje
-		nodoEmisor.recibirMensaje(mensaje1);
+		final Object cualquierObjeto = new Object();
+		nodoEmisor.enviar(cualquierObjeto);
 	}
 
 	/**
@@ -59,9 +62,13 @@ public class TestA01ConNodoMinimo {
 	 */
 	@Test
 	public void el_Receptor_Debería_Poder_Recibir_De_Vortex_Cualquier_Objeto_Serializable() {
-		// Para recibir de la red agregamos un receptor como destino
-		final ReceptorEncolador handlerParaRecibidos = ReceptorEncolador.create();
-		nodoReceptor.agregarDestino(handlerParaRecibidos);
+		// Aceptamos todo lo que ande dando vueltas como object
+		nodoReceptor.recibirCon(new HandlerTipado<Object>(SiempreTrue.getInstancia()) {
+			@Override
+			public void onMensajeRecibido(final Object mensaje) {
+				// Invocado al recibir un mensaje
+			}
+		});
 	}
 
 	/**
@@ -70,9 +77,9 @@ public class TestA01ConNodoMinimo {
 	@Test
 	public void el_Mensaje_Enviado_Desde_El_Emisor_Y_El_Recibido_Por_El_Receptor_Deberian_Ser_Iguales() {
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
-		nodoReceptor.agregarDestino(handlerReceptor);
+		nodoReceptor.recibirCon(handlerReceptor);
 
-		nodoEmisor.recibirMensaje(mensaje1);
+		nodoEmisor.recibir(mensaje1);
 
 		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensaje1, mensajeRecibido);

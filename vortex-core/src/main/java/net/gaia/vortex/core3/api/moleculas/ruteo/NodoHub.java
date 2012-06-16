@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core3.api.moleculas.ruteo;
 
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core3.api.Nodo;
 import net.gaia.vortex.core3.api.annon.Molecula;
 
 /**
