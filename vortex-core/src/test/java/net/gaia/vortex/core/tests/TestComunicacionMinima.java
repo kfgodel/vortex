@@ -53,10 +53,9 @@ public class TestComunicacionMinima {
 		nodoReceptor = NodoPortalSinThreads.create();
 
 		nodoEmisor.conectarCon(nodoRuteador);
-
-		nodoRuteador.conectarCon(nodoReceptor);
 		nodoRuteador.conectarCon(nodoEmisor);
 
+		nodoRuteador.conectarCon(nodoReceptor);
 		nodoReceptor.conectarCon(nodoRuteador);
 	}
 
@@ -259,7 +258,7 @@ public class TestComunicacionMinima {
 
 	@Test
 	public void elMensajeDeberiaLlegarADosReceptoresIndependientes() {
-		// Aramamos la red con otro receptor
+		// Armamos la red con otro receptor
 		final HandlerEncolador handlerReceptor1 = HandlerEncolador.create();
 		nodoReceptor.setHandlerDeMensajesVecinos(handlerReceptor1);
 

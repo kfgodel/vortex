@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.core3.api.mensaje;
 
+import net.gaia.vortex.core3.api.atomos.Receptor;
+
 /**
  * Esta interfaz representa un mensaje vortex que es información que circula dentro de la red y
  * puede ser procesada, filtrada, transformada, etc por componentes vortex.<br>
@@ -26,4 +28,18 @@ package net.gaia.vortex.core3.api.mensaje;
  */
 public interface MensajeVortex {
 
+	/**
+	 * Devuelve la instancia que representa el componente vecino que nos pasó el mensaje
+	 * 
+	 * @return El componente que envía el mensaje
+	 */
+	public Receptor getRemitenteDirecto();
+
+	/**
+	 * Establece el remitente actual para este mensaje de manera que sea identificable su origen
+	 * 
+	 * @param remitente
+	 *            El remitente que no debe recibir el mensaje
+	 */
+	public void setRemitenteDirecto(Receptor remitente);
 }

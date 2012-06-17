@@ -49,9 +49,10 @@ public class TestAtomos {
 
 	@Test
 	public void elEjecutorDeberiaInvocarElComponenteIndicadoAlRecibirUnMensaje() {
+		final ReceptorEncolador ejecutante = ReceptorEncolador.create();
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final NexoEjecutor ejecutor = NexoEjecutor.create(processor, receptor);
-		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, ejecutor, receptor);
+		final NexoEjecutor ejecutor = NexoEjecutor.create(processor, ejecutante, receptor);
+		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, ejecutor, ejecutante, receptor);
 	}
 
 	@Test

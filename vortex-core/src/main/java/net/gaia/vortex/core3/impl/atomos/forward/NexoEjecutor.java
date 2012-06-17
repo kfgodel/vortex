@@ -16,8 +16,11 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.Receptor;
+import net.gaia.vortex.core3.api.atomos.forward.Ejecutor;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
+import net.gaia.vortex.core3.impl.tasks.EjecutarYDelegar;
+
+import com.google.common.base.Objects;
 
 /**
  * Esta clase representa un {@link ComponenteProxy} que ejecuta el código de otro
@@ -26,12 +29,25 @@ import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
  * @author D. García
  */
 @Atomo
-public class NexoEjecutor extends NexoSupport {
+public class NexoEjecutor extends NexoSupport implements Ejecutor {
 
-	public static NexoEjecutor create(final TaskProcessor processor, final Receptor delegado) {
+	private Receptor ejecutante;
+	public static final String ejecutante_FIELD = "ejecutante";
+
+	public static NexoEjecutor create(final TaskProcessor processor, final Receptor escucha, final Receptor delegado) {
 		final NexoEjecutor ejecutor = new NexoEjecutor();
 		ejecutor.initializeWith(processor, delegado);
+		ejecutor.setEjecutante(escucha);
 		return ejecutor;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add(ejecutante_FIELD, ejecutante).add(delegado_FIELD, getDestino())
+				.toString();
 	}
 
 	/**
@@ -39,7 +55,26 @@ public class NexoEjecutor extends NexoSupport {
 	 */
 	@Override
 	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
-		return DelegarMensaje.create(mensaje, getDestino());
+		return EjecutarYDelegar.create(mensaje, ejecutante, getDestino());
+	}
+
+	/**
+	 * @see net.gaia.vortex.core3.api.atomos.forward.Ejecutor#setEjecutante(net.gaia.vortex.core3.api.atomos.Receptor)
+	 */
+	@Override
+	public void setEjecutante(final Receptor escucha) {
+		if (escucha == null) {
+			throw new IllegalArgumentException("El receptor escucha no puede ser null para un ejecutor");
+		}
+		this.ejecutante = escucha;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core3.api.atomos.forward.Ejecutor#getEjecutante()
+	 */
+	@Override
+	public Receptor getEjecutante() {
+		return ejecutante;
 	}
 
 }
