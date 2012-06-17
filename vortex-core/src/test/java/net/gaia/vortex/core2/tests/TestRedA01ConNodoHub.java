@@ -20,6 +20,7 @@ import net.gaia.vortex.core3.impl.mensaje.MensajeMapa;
 import net.gaia.vortex.core3.impl.moleculas.ruteo.HubConNexo;
 import net.gaia.vortex.core3.tests.ReceptorEncolador;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,6 +55,11 @@ public class TestRedA01ConNodoHub {
 
 		interconectar(nodoEmisor, nodoRuteador);
 		interconectar(nodoRuteador, nodoReceptor);
+	}
+
+	@After
+	public void eliminarProcesador() {
+		processor.detener();
 	}
 
 	/**

@@ -20,6 +20,7 @@ import net.gaia.vortex.core3.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core3.impl.mensaje.MensajeMapa;
 import net.gaia.vortex.core3.tests.ReceptorEncolador;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,10 +42,15 @@ public class TestAtomos {
 	private TaskProcessor processor;
 
 	@Before
-	public void crearProcesador() {
+	public void crearProcesadorYNodos() {
 		mensaje1 = MensajeMapa.create();
 		mensaje2 = MensajeMapa.create();
 		processor = ExecutorBasedTaskProcesor.create();
+	}
+
+	@After
+	public void eliminarProcesador() {
+		processor.detener();
 	}
 
 	@Test

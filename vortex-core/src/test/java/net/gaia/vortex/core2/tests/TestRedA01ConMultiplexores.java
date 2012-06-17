@@ -17,6 +17,7 @@ import net.gaia.vortex.core3.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core3.impl.mensaje.MensajeMapa;
 import net.gaia.vortex.core3.tests.ReceptorEncolador;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,6 +48,11 @@ public class TestRedA01ConMultiplexores {
 		nodoReceptor = MultiplexorParalelo.create(processor);
 
 		nodoEmisor.conectarCon(nodoReceptor);
+	}
+
+	@After
+	public void eliminarProcesador() {
+		processor.detener();
 	}
 
 	/**

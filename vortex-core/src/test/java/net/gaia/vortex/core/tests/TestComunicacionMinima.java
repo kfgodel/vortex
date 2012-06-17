@@ -21,6 +21,9 @@ import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 import net.gaia.vortex.core.api.NodoPortal;
 import net.gaia.vortex.core.impl.NodoPortalSinThreads;
 import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
+import net.gaia.vortex.core3.tests.HandlerCronometro;
+import net.gaia.vortex.core3.tests.HandlerEncolador;
+import net.gaia.vortex.core3.tests.MensajeCronometro;
 
 import org.junit.After;
 import org.junit.Before;
