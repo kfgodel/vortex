@@ -12,7 +12,9 @@ import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport;
-import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
+import net.gaia.vortex.core3.impl.tasks.MultiplexarMensaje;
+import net.gaia.vortex.core3.prog.Decision;
+import ar.com.dgarcia.coding.anno.HasDependencyOn;
 
 import com.google.common.base.Objects;
 
@@ -36,12 +38,11 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	 * @see net.gaia.vortex.core3.api.atomos.Receptor#recibir(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
 	 */
 	@Override
+	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)
 	public void recibir(final MensajeVortex mensaje) {
 		// Por cada destino derivamos la entrega al procesador interno
-		for (final Receptor destino : destinos) {
-			final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, destino);
-			procesarEnThreadPropio(entregaEnBackground);
-		}
+		final MultiplexarMensaje multiplexion = MultiplexarMensaje.create(mensaje, destinos, getProcessor());
+		procesarEnThreadPropio(multiplexion);
 	}
 
 	/**
@@ -67,6 +68,7 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	 * @see net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
 	@Override
+	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)
 	protected void initializeWith(final TaskProcessor processor) {
 		super.initializeWith(processor);
 		destinos = new CopyOnWriteArrayList<Receptor>();

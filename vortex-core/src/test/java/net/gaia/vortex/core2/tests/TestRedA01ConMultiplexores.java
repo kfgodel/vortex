@@ -10,14 +10,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
-import net.gaia.vortex.core.impl.NodoPortalSinThreads;
-import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
+import net.gaia.vortex.core3.api.Nodo;
+import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core3.api.moleculas.portal.Portal;
-import net.gaia.vortex.core3.api.moleculas.ruteo.NodoHub;
-import net.gaia.vortex.core3.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.core3.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core3.impl.mensaje.MensajeMapa;
-import net.gaia.vortex.core3.impl.moleculas.portal.HandlerTipado;
 import net.gaia.vortex.core3.tests.ReceptorEncolador;
 
 import org.junit.Before;
@@ -28,15 +25,17 @@ import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
- * Esta clase realiza las pruebas definidas en A01 de la documentacion pero utilizando el la api del
- * {@link HubMinimo}
+ * Esta clase realiza las pruebas definidas en A01 de la documentación pero utilizando multiplexores
+ * como api mínima de Atomos, por lo que no se respeta exactamente los mismos casos.<br>
+ * De esta manera verificamos que es posible armar una red básica con atomos pero requiere especial
+ * atención en el diseño de la red y en la direccionalidad de las conexiones
  * 
  * @author D. García
  */
-public class TestA01ConNodoPortal {
+public class TestRedA01ConMultiplexores {
 
-	private Portal nodoEmisor;
-	private Portal nodoReceptor;
+	private Nodo nodoEmisor;
+	private Nodo nodoReceptor;
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
@@ -44,45 +43,49 @@ public class TestA01ConNodoPortal {
 	public void crearNodos() {
 		processor = ExecutorBasedTaskProcesor.create();
 		mensaje1 = MensajeMapa.create();
+		nodoEmisor = MultiplexorParalelo.create(processor);
+		nodoReceptor = MultiplexorParalelo.create(processor);
 
+		nodoEmisor.conectarCon(nodoReceptor);
 	}
 
 	/**
-	 * T001. El emisor debería poder enviar por vortex cualquier objeto serializable
+	 * T001. El emisor debería poder enviar por vortex cualquier objeto serializable<br>
+	 * En esta implementación no podemos enviar cualquier objeto así que sólo verificamos que se
+	 * puedan mandar los mensajes vortex
 	 */
 	@Test
 	public void el_Emisor_Deberia_Poder_Enviar_Por_Vortex_Cualquier_Objeto_Serializable() {
-		// Para enviar al red se le indica que reciba un mensaje
-		final Object cualquierObjeto = new Object();
-		nodoEmisor.enviar(cualquierObjeto);
+		// Para enviar a la red se le indica a un componente emisor que reciba
+		nodoEmisor.recibir(mensaje1);
 	}
 
 	/**
-	 * T002. El receptor debería poder recibir de vortex cualquier objeto serializable
+	 * T002. El receptor debería poder recibir de vortex cualquier objeto serializable<br>
+	 * En esta implementación no podemos mandar cualquier objeto así que verificamos que se puedan
+	 * recibir los mensajes vortex
 	 */
 	@Test
 	public void el_Receptor_Debería_Poder_Recibir_De_Vortex_Cualquier_Objeto_Serializable() {
-		// Aceptamos todo lo que ande dando vueltas como object
-		nodoReceptor.recibirCon(new HandlerTipado<Object>(SiempreTrue.getInstancia()) {
-			@Override
-			public void onMensajeRecibido(final Object mensaje) {
-				// Invocado al recibir un mensaje
-			}
-		});
+		// Para recibir de la red nos conectamos a un componente receptor
+		final ReceptorEncolador receptorDelCliente = ReceptorEncolador.create();
+		nodoReceptor.conectarCon(receptorDelCliente);
 	}
 
 	/**
-	 * T003. El mensaje enviado desde el emisor debería llegar al receptor
+	 * T003. El mensaje enviado desde el emisor debería llegar al receptor<br>
+	 * En este caso verificamos que el mensaje vortex recibido sea el mismo que el enviado porque
+	 * todo pasa en memoria
 	 */
 	@Test
 	public void el_Mensaje_Enviado_Desde_El_Emisor_Y_El_Recibido_Por_El_Receptor_Deberian_Ser_Iguales() {
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
-		nodoReceptor.recibirCon(handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
 		nodoEmisor.recibir(mensaje1);
 
-		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensaje1, mensajeRecibido);
+		final MensajeVortex mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertSame("El enviado y recibido deberían ser el mismo", mensaje1, mensajeRecibido);
 	}
 
 	/**
@@ -95,10 +98,10 @@ public class TestA01ConNodoPortal {
 		final WaitBarrier bloqueoDelEmisor = WaitBarrier.create();
 		final WaitBarrier bloqueoDelReceptor = WaitBarrier.create();
 		final AtomicBoolean receptorBloqueado = new AtomicBoolean(false);
-		final ComponenteVortex handlerReceptor = new ComponenteVortex() {
+		final Receptor handlerReceptor = new Receptor() {
 
 			@Override
-			public void recibirMensaje(final MensajeVortex mensaje) {
+			public void recibir(final MensajeVortex mensaje) {
 				receptorBloqueado.set(true);
 				// Hacemos que el emisor siga ejecutando si nos estaba esperando
 				bloqueoDelEmisor.release();
@@ -107,9 +110,9 @@ public class TestA01ConNodoPortal {
 				receptorBloqueado.set(false);
 			}
 		};
-		nodoReceptor.agregarDestino(handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
-		nodoEmisor.recibirMensaje(mensaje1);
+		nodoEmisor.recibir(mensaje1);
 
 		// Esperamos que el receptor reciba el mensaje
 		bloqueoDelEmisor.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -129,17 +132,17 @@ public class TestA01ConNodoPortal {
 	public void el_Thread_Del_Receptor_Debería_Poder_Ser_Independiente_Del_Usado_Para_La_Entrega_Del_Mensaje() {
 		final WaitBarrier threadDeEntregaDefinido = WaitBarrier.create();
 		final AtomicReference<Thread> threadDeEntrega = new AtomicReference<Thread>();
-		final ComponenteVortex handlerReceptor = new ComponenteVortex() {
+		final Receptor handlerReceptor = new Receptor() {
 			@Override
-			public void recibirMensaje(final MensajeVortex mensaje) {
+			public void recibir(final MensajeVortex mensaje) {
 				final Thread threadActual = Thread.currentThread();
 				threadDeEntrega.set(threadActual);
 				threadDeEntregaDefinido.release();
 			}
 		};
-		nodoReceptor.agregarDestino(handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
-		nodoEmisor.recibirMensaje(mensaje1);
+		nodoEmisor.recibir(mensaje1);
 
 		// Esperamos que el thread utilizado para la entrega sea definido
 		threadDeEntregaDefinido.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -150,15 +153,16 @@ public class TestA01ConNodoPortal {
 	}
 
 	/**
-	 * T006. El emisor no debería recibir su propio mensaje
+	 * T006. El emisor no debería recibir su propio mensaje.<br>
+	 * El multiplexor no puede distinguir origen del mensaje. La única manera que podemos asegurar
+	 * esto es por diseño de la red, de manera que el emisor no pueda escuchar los mensajes que
+	 * envía, en caso contrario se reciben siempre
 	 */
 	@Test
 	public void el_Emisor_No_Deberia_Recibir_Su_Propio_Mensaje() {
+		// Creamos el receptor pero sin conectarlo al emisor
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
-		nodoEmisor.agregarDestino(handlerReceptor);
-
-		mensaje1.setEmisor(handlerReceptor);
-		nodoEmisor.recibirMensaje(mensaje1);
+		nodoEmisor.recibir(mensaje1);
 
 		try {
 			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -167,57 +171,61 @@ public class TestA01ConNodoPortal {
 			// Es la excepción que esperábamos
 		}
 
+		// Si ahora lo conectamos al emisor, el mensaje nos llega
+		nodoEmisor.conectarCon(handlerReceptor);
+
+		nodoEmisor.recibir(mensaje1);
+		final MensajeVortex mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertSame("La segunda vez el emisor no discrimina de donde manda", mensaje1, mensajeRecibido);
 	}
 
 	/**
-	 * Verifica que el mensaje llegue si hay intermediario
+	 * Verifica que el mensaje llegue si hay intermediarios
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayUnNodoEnElMedio() {
-		final NodoHub nodoEmisor = NodoPortalSinThreads.create();
-		final NodoHub nodoIntermedio1 = NodoRuteadorMinimo.create();
-		final NodoHub nodoIntermedio2 = NodoRuteadorMinimo.create();
-		final NodoHub nodoReceptor = NodoPortalSinThreads.create();
+		final Nodo nodoEmisor = MultiplexorParalelo.create(processor);
+		final Nodo nodoIntermedio1 = MultiplexorParalelo.create(processor);
+		final Nodo nodoIntermedio2 = MultiplexorParalelo.create(processor);
+		final Nodo nodoReceptor = MultiplexorParalelo.create(processor);
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
-		nodoReceptor.agregarDestino(handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
-		nodoEmisor.agregarDestino(nodoIntermedio1);
-		nodoIntermedio1.agregarDestino(nodoIntermedio2);
-		nodoIntermedio2.agregarDestino(nodoReceptor);
+		nodoEmisor.conectarCon(nodoIntermedio1);
+		nodoIntermedio1.conectarCon(nodoIntermedio2);
+		nodoIntermedio2.conectarCon(nodoReceptor);
 
-		nodoReceptor.agregarDestino(nodoIntermedio2);
-		nodoIntermedio2.agregarDestino(nodoIntermedio1);
-		nodoIntermedio1.agregarDestino(nodoEmisor);
-
-		nodoEmisor.recibirMensaje(mensaje1);
-		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertEquals("El mensaje debería llegar igual al receptor", mensaje1, mensajeRecibido);
+		nodoEmisor.recibir(mensaje1);
+		final MensajeVortex mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertSame("El mensaje debería llegar igual al receptor", mensaje1, mensajeRecibido);
 	}
 
+	/**
+	 * Verifica que el mensaje llegue a puntas distintas
+	 */
 	@Test
 	public void elMensajeDeberiaLlegarADosReceptoresIndependientes() {
-		// Aramamos la red con otro receptor
+		// Armamos la red con otro receptor
 		final ReceptorEncolador handlerReceptor1 = ReceptorEncolador.create();
-		nodoReceptor.agregarDestino(handlerReceptor1);
+		nodoReceptor.conectarCon(handlerReceptor1);
 
 		final ReceptorEncolador handlerReceptor2 = ReceptorEncolador.create();
-		final NodoHub nodoReceptor2;
-		nodoReceptor2.agregarDestino(handlerReceptor2);
-
-		final NodoHub nodoRuteador;
-		nodoRuteador.agregarDestino(nodoReceptor2);
-		nodoReceptor2.agregarDestino(nodoRuteador);
+		final Nodo nodoReceptor2 = MultiplexorParalelo.create(processor);
+		nodoReceptor2.conectarCon(handlerReceptor2);
+		nodoEmisor.conectarCon(nodoReceptor2);
 
 		// Mandamos el mensaje
-		nodoEmisor.recibirMensaje(mensaje1);
+		nodoEmisor.recibir(mensaje1);
 
 		// Verificamos que haya llegado a los dos
-		final Object mensajeRecibidoPor1 = handlerReceptor1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertEquals("El primer receptor debería haber recibido el mensaje", mensaje1, mensajeRecibidoPor1);
+		final MensajeVortex mensajeRecibidoPor1 = handlerReceptor1.esperarPorMensaje(TimeMagnitude.of(1,
+				TimeUnit.SECONDS));
+		Assert.assertSame("El primer receptor debería haber recibido el mensaje", mensaje1, mensajeRecibidoPor1);
 
-		final Object mensajeRecibidoPor2 = handlerReceptor2.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertEquals("El segundo receptor debería haber recibido el mensaje", mensaje1, mensajeRecibidoPor2);
+		final MensajeVortex mensajeRecibidoPor2 = handlerReceptor2.esperarPorMensaje(TimeMagnitude.of(1,
+				TimeUnit.SECONDS));
+		Assert.assertSame("El segundo receptor debería haber recibido el mensaje", mensaje1, mensajeRecibidoPor2);
 	}
 
 }
