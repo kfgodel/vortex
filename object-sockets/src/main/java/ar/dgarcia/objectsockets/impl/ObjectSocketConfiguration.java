@@ -21,10 +21,10 @@ import org.apache.mina.core.service.IoConnector;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.SocketErrorHandler;
 import ar.dgarcia.objectsockets.api.SocketEventHandler;
-import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
-import ar.dgarcia.objectsockets.external.json.JsonTextualizer;
 import ar.dgarcia.objectsockets.external.mina.components.MinaComponentsFactory;
 import ar.dgarcia.objectsockets.external.mina.components.SocketMinaFactory;
+import ar.dgarcia.textualizer.api.ObjectTextualizer;
+import ar.dgarcia.textualizer.json.JsonTextualizer;
 
 /**
  * Esta clase representa la configuración de un socket de objetos

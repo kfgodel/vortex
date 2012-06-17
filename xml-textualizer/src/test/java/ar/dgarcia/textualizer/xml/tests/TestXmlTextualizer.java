@@ -1,5 +1,5 @@
 /**
- * 02/06/2012 16:42:07 Copyright (C) 2011 Darío L. García
+ * 31/05/2012 23:29:05 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,24 +10,23 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.dgarcia.objectsockets.tests;
+package ar.dgarcia.textualizer.xml.tests;
 
-import ar.dgarcia.textualizer.api.ObjectTextualizer;
-import ar.dgarcia.textualizer.json.JsonTextualizer;
+import org.junit.Before;
+
+import ar.dgarcia.textualizer.tests.TestTextualizerSupport;
+import ar.dgarcia.textualizer.xml.XmlTextualizer;
 
 /**
- * Esta clase prueba la performance del textualizador usando json
+ * Esta clase prueba el comportamiento de los conversores a y desde texto
  * 
  * @author D. García
  */
-public class TestJsonPerformance extends TestSocketPerformance {
+public class TestXmlTextualizer extends TestTextualizerSupport {
 
-	/**
-	 * @see ar.dgarcia.objectsockets.tests.TestXmlPerformance#createTextualizer()
-	 */
 	@Override
-	protected ObjectTextualizer createTextualizer() {
-		return JsonTextualizer.create();
+	@Before
+	public void crearTextualizer() {
+		textualizer = XmlTextualizer.create();
 	}
-
 }

@@ -10,18 +10,19 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.dgarcia.objectsockets.tests;
+package ar.dgarcia.textualizer.json.tests;
 
 import org.junit.Before;
 
-import ar.dgarcia.objectsockets.external.json.JsonTextualizer;
+import ar.dgarcia.textualizer.json.JsonTextualizer;
+import ar.dgarcia.textualizer.tests.TestTextualizerSupport;
 
 /**
  * Esta clase prueba la textualizacion de los objetos usando Json
  * 
  * @author D. García
  */
-public class TestJsonTextualizer extends TestXmlTextualizer {
+public class TestJsonTextualizer extends TestTextualizerSupport {
 
 	@Override
 	@Before

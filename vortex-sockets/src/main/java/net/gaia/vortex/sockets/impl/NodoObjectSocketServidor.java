@@ -16,10 +16,10 @@ import java.net.SocketAddress;
 
 import net.gaia.vortex.core.impl.NodoSupport;
 import net.gaia.vortex.sockets.api.NodoSocketServidor;
-import ar.dgarcia.objectsockets.external.json.JsonTextualizer;
 import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
 import ar.dgarcia.objectsockets.impl.ObjectSocketException;
+import ar.dgarcia.textualizer.json.JsonTextualizer;
 
 import com.google.common.base.Objects;
 

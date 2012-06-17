@@ -19,8 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
@@ -37,8 +35,6 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
  * @author D. García
  */
 public class TestSocketError {
-	private static final Logger LOG = LoggerFactory.getLogger(TestSocketError.class);
-
 	@Test
 	public void deberiaDetectarLaDesconexion() {
 		// El que escucha va a desconectarse al recibir el primer mensaje

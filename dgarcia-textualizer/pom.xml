@@ -3,10 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>ar.dgarcia</groupId>
-  <artifactId>object-sockets</artifactId>
+  <artifactId>dgarcia-textualizer</artifactId>
   <version>0.1</version>
-  <name>Object Sockets</name>
-  <description>Sockets que permiten el envio y recepción de objetos</description>
+  <name>Dgarcia-Textualizer</name>
+  <description>Conjunto de clases que permite convertir objetos en string y viceversa</description>
   <build>
     <plugins>
       <plugin>
@@ -20,7 +20,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
+        <version>2.3.2</version>
         <configuration>
           <archive>
             <manifest>
@@ -28,6 +28,11 @@
               <mainClass>nombre completo de clase main o borrame si no hay main</mainClass>
             </manifest>
           </archive>
+          <manifestEntries>
+            <Build-JVM>${java.vm.name} - ${java.vm.vendor}</Build-JVM>
+            <Build-OS>${os.name} - Version: ${os.version}</Build-OS>
+            <Application-Version>${project.version}</Application-Version>
+          </manifestEntries>
         </configuration>
       </plugin>
       <plugin>
@@ -92,36 +97,15 @@
   </pluginRepositories>
   <dependencies>
   
-	<!-- Comunicaciones a través de sockets -->
-	<dependency>
-      <groupId>org.apache.mina</groupId>
-      <artifactId>mina-core</artifactId>
-      <version>2.0.4</version>
-    </dependency>
-    
-    <!-- Textualizers a JSON -->
-    <dependency>
-	  <groupId>ar.dgarcia.textualizer</groupId>
-	  <artifactId>json-textualizer</artifactId>
-	  <version>0.1</version>
-	  <scope>provided</scope>
-    </dependency>
-    
-    <!-- Textualizers a XML -->
-    <dependency>
-	  <groupId>ar.dgarcia.textualizer</groupId>
-	  <artifactId>xml-textualizer</artifactId>
-	  <version>0.1</version>
-	  <scope>provided</scope>
-    </dependency>
-    
-	<!-- Solo necesario por la magnitud de tiempo y excepciones -->
+	<!-- Solo necesario por la magnitud de tiempo y excepciones en tests -->
 	<dependency>
 	 <groupId>ar.com.dgarcia</groupId>
 	 <artifactId>dgarcia-commons</artifactId>
 	 <version>1.0.3</version>
+	 <scope>test</scope>
 	</dependency>
-	
+  
+  
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>

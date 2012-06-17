@@ -17,11 +17,11 @@
  * Copyright (C) 2010 Dario L. Garcia
  */
 
-package ar.dgarcia.objectsockets.external.xml;
+package ar.dgarcia.textualizer.xml;
 
-import ar.dgarcia.objectsockets.api.textual.CannotTextSerializeException;
-import ar.dgarcia.objectsockets.api.textual.CannotTextUnserialize;
-import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
+import ar.dgarcia.textualizer.api.CannotTextSerializeException;
+import ar.dgarcia.textualizer.api.CannotTextUnserialize;
+import ar.dgarcia.textualizer.api.ObjectTextualizer;
 
 import com.google.common.base.Objects;
 import com.thoughtworks.xstream.XStream;
@@ -44,7 +44,7 @@ public class XmlTextualizer implements ObjectTextualizer {
 	}
 
 	/**
-	 * @see ar.dgarcia.objectsockets.api.textual.ObjectTextualizer#convertToString(java.lang.Object)
+	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertToString(java.lang.Object)
 	 */
 	@Override
 	public String convertToString(final Object value) throws CannotTextSerializeException {
@@ -58,7 +58,7 @@ public class XmlTextualizer implements ObjectTextualizer {
 	}
 
 	/**
-	 * @see ar.dgarcia.objectsockets.api.textual.ObjectTextualizer#convertFromString(java.lang.String)
+	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertFromString(java.lang.String)
 	 */
 	@Override
 	public Object convertFromString(final String value) throws CannotTextUnserialize {

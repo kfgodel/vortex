@@ -23,7 +23,7 @@ import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoConnector;
 
-import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
+import ar.dgarcia.textualizer.api.ObjectTextualizer;
 
 /**
  * Esta interfaz define qué implementaciones de componentes se deben utilizar conjuntas para las

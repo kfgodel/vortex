@@ -25,7 +25,7 @@ import org.apache.mina.core.service.IoConnector;
 import org.apache.mina.transport.vmpipe.VmPipeAcceptor;
 import org.apache.mina.transport.vmpipe.VmPipeConnector;
 
-import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
+import ar.dgarcia.textualizer.api.ObjectTextualizer;
 
 import com.google.common.base.Objects;
 

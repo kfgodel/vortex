@@ -10,13 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.dgarcia.objectsockets.external.json;
+package ar.dgarcia.textualizer.json;
 
 import java.io.IOException;
 
-import ar.dgarcia.objectsockets.api.textual.CannotTextSerializeException;
-import ar.dgarcia.objectsockets.api.textual.CannotTextUnserialize;
-import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
+import ar.dgarcia.textualizer.api.CannotTextSerializeException;
+import ar.dgarcia.textualizer.api.CannotTextUnserialize;
+import ar.dgarcia.textualizer.api.ObjectTextualizer;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -34,7 +34,7 @@ public class JsonTextualizer implements ObjectTextualizer {
 	private ObjectMapper mapper;
 
 	/**
-	 * @see ar.dgarcia.objectsockets.api.textual.ObjectTextualizer#convertToString(java.lang.Object)
+	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertToString(java.lang.Object)
 	 */
 	@Override
 	public String convertToString(final Object value) throws CannotTextSerializeException {
@@ -51,7 +51,7 @@ public class JsonTextualizer implements ObjectTextualizer {
 	}
 
 	/**
-	 * @see ar.dgarcia.objectsockets.api.textual.ObjectTextualizer#convertFromString(java.lang.String)
+	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertFromString(java.lang.String)
 	 */
 	@Override
 	public Object convertFromString(final String value) throws CannotTextUnserialize {

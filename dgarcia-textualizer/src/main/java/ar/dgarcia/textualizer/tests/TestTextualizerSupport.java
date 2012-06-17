@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.dgarcia.objectsockets.tests;
+package ar.dgarcia.textualizer.tests;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -24,16 +24,15 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.com.dgarcia.testing.stress.StressGenerator;
-import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
-import ar.dgarcia.objectsockets.external.xml.XmlTextualizer;
+import ar.dgarcia.textualizer.api.ObjectTextualizer;
 
 /**
  * Esta clase prueba el comportamiento de los conversores a y desde texto
  * 
  * @author D. García
  */
-public class TestXmlTextualizer {
-	private static final Logger LOG = LoggerFactory.getLogger(TestXmlTextualizer.class);
+public abstract class TestTextualizerSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(TestTextualizerSupport.class);
 
 	protected ObjectTextualizer textualizer;
 
@@ -46,9 +45,7 @@ public class TestXmlTextualizer {
 	}
 
 	@Before
-	public void crearTextualizer() {
-		textualizer = XmlTextualizer.create();
-	}
+	public abstract void crearTextualizer();
 
 	public static class TestBean {
 		private Integer numero;

@@ -25,9 +25,9 @@ import org.apache.mina.core.service.IoConnector;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
-import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
 import ar.dgarcia.objectsockets.external.mina.filters.Binary2StringCodecFilter;
 import ar.dgarcia.objectsockets.external.mina.filters.String2ObjectCodecFilter;
+import ar.dgarcia.textualizer.api.ObjectTextualizer;
 
 import com.google.common.base.Objects;
 

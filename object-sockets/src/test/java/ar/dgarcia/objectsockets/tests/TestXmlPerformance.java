@@ -12,25 +12,8 @@
  */
 package ar.dgarcia.objectsockets.tests;
 
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ar.com.dgarcia.lang.conc.WaitBarrier;
-import ar.com.dgarcia.lang.time.SystemChronometer;
-import ar.com.dgarcia.lang.time.TimeMagnitude;
-import ar.com.dgarcia.testing.stress.StressGenerator;
-import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
-import ar.dgarcia.objectsockets.api.ObjectSocket;
-import ar.dgarcia.objectsockets.api.textual.ObjectTextualizer;
-import ar.dgarcia.objectsockets.external.xml.XmlTextualizer;
-import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
-import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
-import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
+import ar.dgarcia.textualizer.api.ObjectTextualizer;
+import ar.dgarcia.textualizer.xml.XmlTextualizer;
 
 /**
  * Esta clase prueba la velocidad de transferencia de los objetos entre dos sockets usando XML como
@@ -38,105 +21,15 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
  * 
  * @author D. García
  */
-public class TestXmlPerformance {
-	private static final Logger LOG = LoggerFactory.getLogger(TestXmlPerformance.class);
-
+public class TestXmlPerformance extends TestSocketPerformance {
 	/**
 	 * Crea el textualizador para usar en los tests
 	 * 
 	 * @return
 	 */
+	@Override
 	protected ObjectTextualizer createTextualizer() {
 		return XmlTextualizer.create();
-	}
-
-	@Test
-	public void conObjetosMinimos() {
-		final String nombreDelTest = "Minis";
-		final Object objetoEnviado = "Hola manola";
-		final int cantidadDeMensajesEnviados = 100000;
-		runTest(nombreDelTest, objetoEnviado, cantidadDeMensajesEnviados);
-	}
-
-	/**
-	 * Envia la cantidad de mensajes indicados midiendo cuanto tardan en llegar
-	 * 
-	 * @param nombreDelTest
-	 *            El nombre para identificar el test
-	 * @param objetoEnviado
-	 *            El objeto a enviar
-	 * @param cantidadDeMensajesEnviados
-	 *            La cantidad de envios a realizar
-	 */
-	private void runTest(final String nombreDelTest, final Object objetoEnviado, final int cantidadDeMensajesEnviados) {
-		final WaitBarrier esperarRecibidos = WaitBarrier.create(cantidadDeMensajesEnviados);
-		final ObjectReceptionHandler handlerReceptor = new ObjectReceptionHandler() {
-			@Override
-			public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
-				esperarRecibidos.release();
-			}
-		};
-
-		// Levantamos el socket de escucha para recibir los mensajes en una cola
-		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
-		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress,
-				handlerReceptor);
-		final ObjectTextualizer currentTextualizer = createTextualizer();
-		receptionConfig.setSerializer(currentTextualizer);
-		// Empezamos a escuchar en el puerto
-		final ObjectSocketAcceptor acceptor = ObjectSocketAcceptor.create(receptionConfig);
-
-		// Conectamos el cliente al puerto compartido
-		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress);
-		senderConfig.setSerializer(currentTextualizer);
-		final ObjectSocketConnector connector = ObjectSocketConnector.create(senderConfig);
-
-		// Enviamos un objeto cualquiera a traves del socket
-		final ObjectSocket clientSocket = connector.getObjectSocket();
-
-		final StressGenerator generator = StressGenerator.create();
-		generator.setCantidadDeEjecucionesPorThread(cantidadDeMensajesEnviados);
-		generator.setCantidadDeThreadsEnEjecucion(1);
-		generator.setEsperaEntreEjecucionesEnMilis(0);
-		generator.setEjecutable(new Runnable() {
-			@Override
-			public void run() {
-				clientSocket.send(objetoEnviado);
-			}
-		});
-		final SystemChronometer crono = SystemChronometer.create();
-		generator.start();
-
-		esperarRecibidos.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.MINUTES));
-		final long elapsedMillis = crono.getElapsedMillis();
-		LOG.info("[{}] - Llevó {} ms transmitir {} objetos: {} objs/ms", new Object[] { nombreDelTest, elapsedMillis,
-				cantidadDeMensajesEnviados, ((double) cantidadDeMensajesEnviados) / elapsedMillis });
-
-		// Cerramos los sockets
-		acceptor.closeAndDispose();
-		connector.closeAndDispose();
-	}
-
-	@Test
-	public void conObjetosMedios() {
-		final String nombreDelTest = "Medios";
-		final int cantidadDeMensajesEnviados = 1000;
-		final ArrayList<Object> objetoEnviado = new ArrayList<Object>();
-		for (int i = 0; i < 1000; i++) {
-			objetoEnviado.add("Lolololo");
-		}
-		runTest(nombreDelTest, objetoEnviado, cantidadDeMensajesEnviados);
-	}
-
-	@Test
-	public void conObjetosGrandes() {
-		final String nombreDelTest = "Grande";
-		final int cantidadDeMensajesEnviados = 100;
-		final ArrayList<Object> objetoEnviado = new ArrayList<Object>();
-		for (int i = 0; i < 10000; i++) {
-			objetoEnviado.add("Lolololo");
-		}
-		runTest(nombreDelTest, objetoEnviado, cantidadDeMensajesEnviados);
 	}
 
 }
