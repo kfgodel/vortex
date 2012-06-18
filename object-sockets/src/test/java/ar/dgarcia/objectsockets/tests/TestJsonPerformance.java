@@ -27,7 +27,7 @@ public class TestJsonPerformance extends TestSocketPerformance {
 	 */
 	@Override
 	protected ObjectTextualizer createTextualizer() {
-		return JsonTextualizer.create();
+		return JsonTextualizer.createWithTypeMetadata();
 	}
 
 }

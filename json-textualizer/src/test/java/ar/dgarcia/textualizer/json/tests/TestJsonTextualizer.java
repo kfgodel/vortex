@@ -27,6 +27,6 @@ public class TestJsonTextualizer extends TestTextualizerSupport {
 	@Override
 	@Before
 	public void crearTextualizer() {
-		textualizer = JsonTextualizer.create();
+		textualizer = JsonTextualizer.createWithTypeMetadata();
 	};
 }

@@ -90,7 +90,7 @@ public class ObjectSocketConfiguration {
 		config.address = socketAddress;
 		config.receptionHandler = handlerReceptor;
 		config.componentsFactory = SocketMinaFactory.INSTANCE;
-		config.serializer = JsonTextualizer.create();
+		config.serializer = JsonTextualizer.createWithTypeMetadata();
 		return config;
 	}
 
