@@ -21,6 +21,7 @@ import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.atomos.condicional.Bifurcador;
 import net.gaia.vortex.core3.api.atomos.forward.Nexo;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.api.metricas.MetricasDelNodo;
 import net.gaia.vortex.core3.api.moleculas.ruteo.NodoHubConNexoCore;
 import net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core3.impl.atomos.ReceptorNulo;
@@ -33,6 +34,7 @@ import net.gaia.vortex.core3.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core3.impl.condiciones.RemitenteDistinto;
 import net.gaia.vortex.core3.impl.condiciones.TieneRemitente;
 import net.gaia.vortex.core3.impl.metricas.MetricasDelNodoImpl;
+import net.gaia.vortex.core3.impl.metricas.NodoConMetricas;
 import net.gaia.vortex.core3.impl.transformaciones.AsignarComoRemitente;
 
 import org.slf4j.Logger;
@@ -47,7 +49,7 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 @Molecula
-public class HubConNexo extends ComponenteConProcesadorSupport implements NodoHubConNexoCore {
+public class HubConNexo extends ComponenteConProcesadorSupport implements NodoHubConNexoCore, NodoConMetricas {
 	private static final Logger LOG = LoggerFactory.getLogger(HubConNexo.class);
 
 	private Bifurcador procesoDeEntrada;
@@ -185,7 +187,7 @@ public class HubConNexo extends ComponenteConProcesadorSupport implements NodoHu
 		return Objects.toStringHelper(this).add("destinos", cantidadDeDestinos).toString();
 	}
 
-	public MetricasDelNodoImpl getMetricas() {
+	public MetricasDelNodo getMetricas() {
 		return metricas;
 	}
 
