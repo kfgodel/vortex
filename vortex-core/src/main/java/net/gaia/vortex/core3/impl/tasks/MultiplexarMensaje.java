@@ -16,7 +16,6 @@ import java.util.Collection;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core.impl.tasks.RegistrarRuteoRealizado;
 import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core3.impl.metricas.ListenerDeMetricas;
