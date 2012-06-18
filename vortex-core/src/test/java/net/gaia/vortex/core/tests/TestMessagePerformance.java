@@ -17,10 +17,10 @@ import java.util.concurrent.atomic.AtomicLong;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.HandlerDeMensajesVecinos;
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.metrics.MetricasDelNodo;
-import net.gaia.vortex.core.api.metrics.MetricasPorTiempo;
 import net.gaia.vortex.core.impl.NodoPortalSinThreads;
 import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
+import net.gaia.vortex.core3.api.metricas.MetricasDelNodo;
+import net.gaia.vortex.core3.api.metricas.MetricasPorTiempo;
 
 import org.junit.After;
 import org.junit.Before;

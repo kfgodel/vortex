@@ -13,7 +13,9 @@
 package net.gaia.vortex.core.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core.impl.metrics.MetricasDelNodoImpl;
+import net.gaia.vortex.core3.impl.metricas.ListenerDeMetricas;
+
+import com.google.common.base.Objects;
 
 /**
  * Esta clase representa la tarea realizada por el nodo para registrar un ruteo en sus métricas
@@ -22,19 +24,28 @@ import net.gaia.vortex.core.impl.metrics.MetricasDelNodoImpl;
  */
 public class RegistrarRuteoRealizado implements WorkUnit {
 
-	private MetricasDelNodoImpl metricas;
+	private ListenerDeMetricas metricas;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	@Override
-	public void doWork() throws InterruptedException {
+	public WorkUnit doWork() throws InterruptedException {
 		metricas.registrarRuteo();
+		return null;
 	}
 
-	public static RegistrarRuteoRealizado create(final MetricasDelNodoImpl metricas) {
+	public static RegistrarRuteoRealizado create(final ListenerDeMetricas metricas) {
 		final RegistrarRuteoRealizado registrar = new RegistrarRuteoRealizado();
 		registrar.metricas = metricas;
 		return registrar;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
 	}
 }

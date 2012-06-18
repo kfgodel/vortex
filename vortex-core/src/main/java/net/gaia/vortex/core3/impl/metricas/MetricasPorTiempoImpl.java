@@ -10,13 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.metrics;
+package net.gaia.vortex.core3.impl.metricas;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 import ar.com.dgarcia.lang.time.SystemChronometer;
 
-import net.gaia.vortex.core.api.metrics.MetricasPorTiempo;
+import net.gaia.vortex.core3.api.metricas.MetricasPorTiempo;
 
 /**
  * Esta clase implementa el comportamiento que permite medir el desempeño del nodo en un período de
@@ -31,7 +31,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	private SystemChronometer cronometro;
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasPorTiempo#getCantidadDeMensajesRecibidos()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasPorTiempo#getCantidadDeMensajesRecibidos()
 	 */
 	@Override
 	public long getCantidadDeMensajesRecibidos() {
@@ -39,7 +39,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasPorTiempo#getCantidadDeMensajesRuteados()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasPorTiempo#getCantidadDeMensajesRuteados()
 	 */
 	@Override
 	public long getCantidadDeMensajesRuteados() {
@@ -47,7 +47,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasPorTiempo#getDuracionDeMedicionEnMilis()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasPorTiempo#getDuracionDeMedicionEnMilis()
 	 */
 	@Override
 	public long getDuracionDeMedicionEnMilis() {
@@ -77,7 +77,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasPorTiempo#getMomentoDeInicioDeLaMedicionEnMilis()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasPorTiempo#getMomentoDeInicioDeLaMedicionEnMilis()
 	 */
 	@Override
 	public long getMomentoDeInicioDeLaMedicionEnMilis() {

@@ -10,9 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.metrics;
+package net.gaia.vortex.core3.impl.metricas;
 
-import net.gaia.vortex.core.api.metrics.MetricasPorTiempo;
+import net.gaia.vortex.core3.api.metricas.MetricasPorTiempo;
 
 /**
  * Esta clase define métodos comunes para que no tengan que ser definidos por las subclases
@@ -22,7 +22,7 @@ import net.gaia.vortex.core.api.metrics.MetricasPorTiempo;
 public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasPorTiempo#getTasaDeDelivery()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasPorTiempo#getTasaDeDelivery()
 	 */
 	@Override
 	public double getTasaDeDelivery() {
@@ -37,7 +37,7 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasPorTiempo#getVelocidadDeRecepcion()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasPorTiempo#getVelocidadDeRecepcion()
 	 */
 	@Override
 	public double getVelocidadDeRecepcion() {
@@ -52,7 +52,7 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasPorTiempo#getVelocidadDeEnvio()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasPorTiempo#getVelocidadDeEnvio()
 	 */
 	@Override
 	public double getVelocidadDeEnvio() {
@@ -67,7 +67,7 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasPorTiempo#getMomentoDeFinDeLaMedicion()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasPorTiempo#getMomentoDeFinDeLaMedicion()
 	 */
 	@Override
 	public long getMomentoDeFinDeLaMedicion() {
@@ -76,7 +76,7 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasPorTiempo#getEdadEnMilis()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasPorTiempo#getEdadEnMilis()
 	 */
 	@Override
 	public long getEdadEnMilis() {

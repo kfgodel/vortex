@@ -12,6 +12,7 @@ import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core3.impl.metricas.ListenerDeMetricas;
 import net.gaia.vortex.core3.impl.tasks.MultiplexarMensaje;
 import net.gaia.vortex.core3.prog.Decision;
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
@@ -34,6 +35,8 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	private List<Receptor> destinos;
 	public static final String destinos_FIELD = "destinos";
 
+	private ListenerDeMetricas listenerMetricas;
+
 	/**
 	 * @see net.gaia.vortex.core3.api.atomos.Receptor#recibir(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
 	 */
@@ -41,7 +44,8 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)
 	public void recibir(final MensajeVortex mensaje) {
 		// Por cada destino derivamos la entrega al procesador interno
-		final MultiplexarMensaje multiplexion = MultiplexarMensaje.create(mensaje, destinos, getProcessor());
+		final MultiplexarMensaje multiplexion = MultiplexarMensaje.create(mensaje, destinos, getProcessor(),
+				listenerMetricas);
 		procesarEnThreadPropio(multiplexion);
 	}
 
@@ -62,6 +66,14 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	@Override
 	public void desconectarDe(final Receptor destino) {
 		destinos.remove(destino);
+	}
+
+	public ListenerDeMetricas getListenerMetricas() {
+		return listenerMetricas;
+	}
+
+	public void setListenerMetricas(final ListenerDeMetricas listenerMetricas) {
+		this.listenerMetricas = listenerMetricas;
 	}
 
 	/**

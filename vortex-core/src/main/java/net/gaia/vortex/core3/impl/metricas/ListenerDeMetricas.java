@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.metrics;
+package net.gaia.vortex.core3.impl.metricas;
 
 /**
  * Esta interfaz representa el contrato de métodos que debe tener un listener para calcular las

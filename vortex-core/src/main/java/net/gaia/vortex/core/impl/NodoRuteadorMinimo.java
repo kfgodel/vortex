@@ -16,9 +16,9 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.metrics.MetricasDelNodo;
-import net.gaia.vortex.core.impl.metrics.MetricasDelNodoImpl;
 import net.gaia.vortex.core.impl.tasks.EnviarMensajeAOtrosVecinosTask;
+import net.gaia.vortex.core3.api.metricas.MetricasDelNodo;
+import net.gaia.vortex.core3.impl.metricas.MetricasDelNodoImpl;
 
 /**
  * Esta clase implementa la versión más simple del nodo ruteador.<br>

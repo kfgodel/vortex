@@ -10,12 +10,15 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.tests;
+package net.gaia.vortex.core3.tests;
 
-import net.gaia.vortex.core.api.metrics.MetricasDelNodo;
-import net.gaia.vortex.core.api.metrics.MetricasPorTiempo;
-import net.gaia.vortex.core.impl.NodoPortalSinThreads;
-import net.gaia.vortex.core.impl.NodoRuteadorMinimo;
+import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.vortex.core3.api.metricas.MetricasDelNodo;
+import net.gaia.vortex.core3.api.metricas.MetricasPorTiempo;
+import net.gaia.vortex.core3.api.moleculas.portal.Portal;
+import net.gaia.vortex.core3.impl.moleculas.portal.PortalMapeador;
+import net.gaia.vortex.core3.impl.moleculas.ruteo.HubConNexo;
 
 import org.junit.After;
 import org.junit.Before;
@@ -34,25 +37,22 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
 public class TestMetricas {
 	private static final Logger LOG = LoggerFactory.getLogger(TestMetricas.class);
 
-	private NodoRuteadorMinimo ruteadorCentral;
-	private NodoPortalSinThreads nodoEmisor;
-	private NodoPortalSinThreads nodoReceptor;
+	private HubConNexo ruteadorCentral;
+	private Portal nodoEmisor;
+	private Portal nodoReceptor;
+	private TaskProcessor processor;
 
 	@Before
 	public void crearRuteadorCentral() {
-		ruteadorCentral = NodoRuteadorMinimo.create();
-		nodoEmisor = NodoPortalSinThreads.create();
-		nodoReceptor = NodoPortalSinThreads.create();
-
-		nodoEmisor.conectarCon(ruteadorCentral);
-		ruteadorCentral.conectarCon(nodoEmisor);
-		ruteadorCentral.conectarCon(nodoReceptor);
-		nodoReceptor.conectarCon(ruteadorCentral);
+		processor = ExecutorBasedTaskProcesor.create();
+		ruteadorCentral = HubConNexo.create(processor);
+		nodoEmisor = PortalMapeador.create(processor, ruteadorCentral);
+		nodoReceptor = PortalMapeador.create(processor, ruteadorCentral);
 	}
 
 	@After
 	public void eliminarRuteadorCentral() {
-		ruteadorCentral.liberarRecursos();
+		processor.detener();
 	}
 
 	@Test
@@ -63,11 +63,11 @@ public class TestMetricas {
 		stressGenerator.setCantidadDeThreadsEnEjecucion(1);
 		stressGenerator.setEsperaEntreEjecucionesEnMilis(1);
 
-		final Object mensaje = new Object();
+		final Object mensaje = "Hola manola";
 		stressGenerator.setEjecutable(new Runnable() {
 			@Override
 			public void run() {
-				nodoEmisor.enviarAVecinos(mensaje);
+				nodoEmisor.enviar(mensaje);
 			}
 		});
 
@@ -97,11 +97,11 @@ public class TestMetricas {
 		stressGenerator.setCantidadDeThreadsEnEjecucion(1);
 		stressGenerator.setEsperaEntreEjecucionesEnMilis(1);
 
-		final Object mensaje = new Object();
+		final Object mensaje = "Hola texto";
 		stressGenerator.setEjecutable(new Runnable() {
 			@Override
 			public void run() {
-				nodoEmisor.enviarAVecinos(mensaje);
+				nodoEmisor.enviar(mensaje);
 			}
 		});
 

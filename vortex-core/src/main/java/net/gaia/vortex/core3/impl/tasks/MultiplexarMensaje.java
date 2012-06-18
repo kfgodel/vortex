@@ -16,8 +16,10 @@ import java.util.Collection;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.vortex.core.impl.tasks.RegistrarRuteoRealizado;
 import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core3.impl.metricas.ListenerDeMetricas;
 
 import com.google.common.base.Objects;
 
@@ -38,6 +40,9 @@ public class MultiplexarMensaje implements WorkUnit {
 	private TaskProcessor processor;
 	public static final String processor_FIELD = "processor";
 
+	private ListenerDeMetricas listenerDeMetricas;
+	public static final String listenerDeMetricas_FIELD = "listenerDeMetricas";
+
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
@@ -47,15 +52,21 @@ public class MultiplexarMensaje implements WorkUnit {
 			final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, destino);
 			processor.process(entregaEnBackground);
 		}
-		return null;
+		if (listenerDeMetricas == null) {
+			// Nada más que hacer
+			return null;
+		}
+		// Si tenemos listener registramos que ya ruteamos cuando podamos
+		return RegistrarRuteoRealizado.create(listenerDeMetricas);
 	}
 
 	public static MultiplexarMensaje create(final MensajeVortex mensaje, final Collection<? extends Receptor> destinos,
-			final TaskProcessor processor) {
+			final TaskProcessor processor, final ListenerDeMetricas listenerMetricas) {
 		final MultiplexarMensaje multiplexion = new MultiplexarMensaje();
 		multiplexion.destinos = destinos;
 		multiplexion.mensaje = mensaje;
 		multiplexion.processor = processor;
+		multiplexion.listenerDeMetricas = listenerMetricas;
 		return multiplexion;
 	}
 

@@ -10,10 +10,10 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.metrics;
+package net.gaia.vortex.core3.impl.metricas;
 
-import net.gaia.vortex.core.api.metrics.MetricasDelNodo;
-import net.gaia.vortex.core.api.metrics.MetricasPorTiempo;
+import net.gaia.vortex.core3.api.metricas.MetricasDelNodo;
+import net.gaia.vortex.core3.api.metricas.MetricasPorTiempo;
 
 /**
  * Esta clase permite implementar las mediciones de desempeño del nodo
@@ -31,7 +31,7 @@ public class MetricasDelNodoImpl implements MetricasDelNodo, ListenerDeMetricas 
 	private MetricasEnBloque metricasPorCada5Segundos;
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasDelNodo#getMetricasTotales()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasDelNodo#getMetricasTotales()
 	 */
 	@Override
 	public MetricasPorTiempo getMetricasTotales() {
@@ -39,7 +39,7 @@ public class MetricasDelNodoImpl implements MetricasDelNodo, ListenerDeMetricas 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasDelNodo#getMetricasEnBloqueDeUnSegundo()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasDelNodo#getMetricasEnBloqueDeUnSegundo()
 	 */
 	@Override
 	public MetricasPorTiempo getMetricasEnBloqueDeUnSegundo() {
@@ -47,7 +47,7 @@ public class MetricasDelNodoImpl implements MetricasDelNodo, ListenerDeMetricas 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metrics.MetricasDelNodo#getMetricasEnBloqueDe5Segundos()
+	 * @see net.gaia.vortex.core3.api.metricas.MetricasDelNodo#getMetricasEnBloqueDe5Segundos()
 	 */
 	@Override
 	public MetricasPorTiempo getMetricasEnBloqueDe5Segundos() {

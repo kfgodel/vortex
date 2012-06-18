@@ -17,7 +17,7 @@ import java.util.Collection;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.impl.metrics.MetricasDelNodoImpl;
+import net.gaia.vortex.core3.impl.metricas.MetricasDelNodoImpl;
 
 /**
  * Esta clase representa la tarea que realiza el nodo en la que envía el mensaje recibido desde un

@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core3.api.Nodo;
 import net.gaia.vortex.core3.api.moleculas.portal.ErrorDeMapeoVortexException;
@@ -57,7 +58,9 @@ public class TestRedA01ConPortal {
 
 	@Before
 	public void crearNodos() {
-		processor = ExecutorBasedTaskProcesor.create();
+		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
+		config.setThreadPoolSize(4);
+		processor = ExecutorBasedTaskProcesor.create(config);
 		// Creamos un nodo central
 		nodoRuteador = HubConNexo.create(processor);
 		// Le agregamos las interconexiones en los extremos

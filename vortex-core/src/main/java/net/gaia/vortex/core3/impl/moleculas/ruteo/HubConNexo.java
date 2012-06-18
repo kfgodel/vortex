@@ -19,7 +19,6 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core3.api.annon.Molecula;
 import net.gaia.vortex.core3.api.atomos.Receptor;
 import net.gaia.vortex.core3.api.atomos.condicional.Bifurcador;
-import net.gaia.vortex.core3.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core3.api.atomos.forward.Nexo;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core3.api.moleculas.ruteo.NodoHubConNexoCore;
@@ -33,6 +32,7 @@ import net.gaia.vortex.core3.impl.atomos.forward.NexoNulo;
 import net.gaia.vortex.core3.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core3.impl.condiciones.RemitenteDistinto;
 import net.gaia.vortex.core3.impl.condiciones.TieneRemitente;
+import net.gaia.vortex.core3.impl.metricas.MetricasDelNodoImpl;
 import net.gaia.vortex.core3.impl.transformaciones.AsignarComoRemitente;
 
 import org.slf4j.Logger;
@@ -51,9 +51,10 @@ public class HubConNexo extends ComponenteConProcesadorSupport implements NodoHu
 	private static final Logger LOG = LoggerFactory.getLogger(HubConNexo.class);
 
 	private Bifurcador procesoDeEntrada;
-	private Multiplexor multiplexorDeSalidas;
+	private MultiplexorParalelo multiplexorDeSalidas;
 	private ConcurrentMap<Receptor, NexoFiltro> filtrosPorSalida;
 	private ReceptorVariable<Nexo> nexoCore;
+	private MetricasDelNodoImpl metricas;
 
 	/**
 	 * @see net.gaia.vortex.core3.api.moleculas.ruteo.NodoHubConNexoCore#getNexoCore()
@@ -114,6 +115,7 @@ public class HubConNexo extends ComponenteConProcesadorSupport implements NodoHu
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
+		metricas.registrarRecepcion();
 		procesoDeEntrada.recibir(mensaje);
 	}
 
@@ -153,9 +155,14 @@ public class HubConNexo extends ComponenteConProcesadorSupport implements NodoHu
 	@Override
 	protected void initializeWith(final TaskProcessor processor) {
 		super.initializeWith(processor);
+		// Creamos el registro de métricas
+		metricas = MetricasDelNodoImpl.create();
+
 		// Empezamos desde las salidas (por las referencias entre instancias)
 		filtrosPorSalida = new ConcurrentHashMap<Receptor, NexoFiltro>();
 		multiplexorDeSalidas = MultiplexorParalelo.create(processor);
+		// Hacemos que el multiplexor registre cuando termina de procesar
+		multiplexorDeSalidas.setListenerMetricas(metricas);
 		// Por defecto usamos un nexo nulo como core para pasar los mensajes al multiplexor
 		nexoCore = ReceptorVariable.<Nexo> create(NexoNulo.create(processor, multiplexorDeSalidas));
 		//
@@ -176,6 +183,10 @@ public class HubConNexo extends ComponenteConProcesadorSupport implements NodoHu
 			cantidadDeDestinos = filtrosPorSalida.size();
 		}
 		return Objects.toStringHelper(this).add("destinos", cantidadDeDestinos).toString();
+	}
+
+	public MetricasDelNodoImpl getMetricas() {
+		return metricas;
 	}
 
 }
