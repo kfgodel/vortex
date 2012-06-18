@@ -26,8 +26,11 @@ public interface Portal extends Nexo {
 	 * 
 	 * @param mensaje
 	 *            El objeto que representa un mensaje para ser utilizado por los agentes de la red
+	 * @throws ErrorDeMapeoVortexException
+	 *             si se produce un error al intentar convertir el objeto en un mensaje vortex para
+	 *             enviarlo a la red
 	 */
-	public void enviar(Object mensaje);
+	public void enviar(Object mensaje) throws ErrorDeMapeoVortexException;
 
 	/**
 	 * Agrega el handler indicado al conjunto utilizado por este portal para recibir mensajes desde

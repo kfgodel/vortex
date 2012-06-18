@@ -16,6 +16,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import net.gaia.vortex.core3.api.condiciones.Condicion;
+import net.gaia.vortex.core3.impl.condiciones.SoloInstancias;
 import net.gaia.vortex.core3.impl.moleculas.portal.HandlerTipado;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
@@ -34,6 +36,10 @@ public class HandlerCronometro extends HandlerTipado<MensajeCronometro> {
 	private AtomicLong nanosAcumulados;
 	private AtomicInteger cantidadMensajes;
 
+	public HandlerCronometro(final Condicion condicionNecesaria) {
+		super(condicionNecesaria);
+	}
+
 	/**
 	 * @see net.gaia.vortex.core3.api.moleculas.portal.HandlerDePortal#onMensajeRecibido(java.lang.Object)
 	 */
@@ -47,7 +53,7 @@ public class HandlerCronometro extends HandlerTipado<MensajeCronometro> {
 	}
 
 	public static HandlerCronometro create(final int cantidadEsperada) {
-		final HandlerCronometro handler = new HandlerCronometro();
+		final HandlerCronometro handler = new HandlerCronometro(SoloInstancias.de(MensajeCronometro.class));
 		handler.mensajesEsperados = new CountDownLatch(cantidadEsperada);
 		handler.cantidadMensajes = new AtomicInteger();
 		handler.nanosAcumulados = new AtomicLong();

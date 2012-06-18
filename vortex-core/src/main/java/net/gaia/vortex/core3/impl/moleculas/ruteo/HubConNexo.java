@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.core3.impl.moleculas.ruteo;
 
-import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -168,20 +167,15 @@ public class HubConNexo extends ComponenteConProcesadorSupport implements NodoHu
 	}
 
 	/**
-	 * Devuelve el conjunto de los receptores que están conectados a este hub
-	 * 
-	 * @return El conjunto de receptores para los mensajes que recibe este hub
-	 */
-	public Collection<Receptor> getDestinos() {
-		return filtrosPorSalida.keySet();
-	}
-
-	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("destinos", getDestinos().size()).toString();
+		int cantidadDeDestinos = 0;
+		if (filtrosPorSalida != null) {
+			cantidadDeDestinos = filtrosPorSalida.size();
+		}
+		return Objects.toStringHelper(this).add("destinos", cantidadDeDestinos).toString();
 	}
 
 }

@@ -20,6 +20,7 @@ import ar.dgarcia.textualizer.api.ObjectTextualizer;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
@@ -42,11 +43,14 @@ public class JsonTextualizer implements ObjectTextualizer {
 			final String jsonString = mapper.writeValueAsString(value);
 			return jsonString;
 		} catch (final JsonGenerationException e) {
-			throw new CannotTextSerializeException("Se produjo un error generando el texto json", e);
+			throw new CannotTextSerializeException("Se produjo un error generando el texto json para el valor[" + value
+					+ "]", e);
 		} catch (final JsonMappingException e) {
-			throw new CannotTextSerializeException("Se produjo un error al mapear el objeto a texto json", e);
+			throw new CannotTextSerializeException("Se produjo un error al mapear el objeto[" + value
+					+ "] a texto json", e);
 		} catch (final IOException e) {
-			throw new CannotTextSerializeException("Se produjo un error de IO serializando a json", e);
+			throw new CannotTextSerializeException("Se produjo un error de IO serializando a json el objeto [" + value
+					+ "]", e);
 		}
 	}
 
@@ -55,23 +59,61 @@ public class JsonTextualizer implements ObjectTextualizer {
 	 */
 	@Override
 	public Object convertFromString(final String value) throws CannotTextUnserialize {
+		return convertFromStringAs(Object.class, value);
+	}
+
+	/**
+	 * Recrea un objeto del tipo indicado como esperado a partir de una representación JSON en el
+	 * string
+	 * 
+	 * @param expectedType
+	 *            El tipo esperado de la desconversión
+	 * @param value
+	 *            El objeto representado como json
+	 * @return El objeto desconvertido de json
+	 * @throws CannotTextSerializeException
+	 *             Si se produce un error al deserializar el objeto al tipo indicado
+	 */
+	public <T> T convertFromStringAs(final Class<T> expectedType, final String value)
+			throws CannotTextSerializeException {
 		try {
-			final Object readValue = mapper.readValue(value, Object.class);
+			final T readValue = mapper.readValue(value, expectedType);
 			return readValue;
 		} catch (final JsonParseException e) {
-			throw new CannotTextSerializeException("Se produjo un error al interpretar el texto json", e);
+			throw new CannotTextSerializeException("Se produjo un error al interpretar el texto json[" + value
+					+ "] como el tipo[" + expectedType + "]", e);
 		} catch (final JsonMappingException e) {
-			throw new CannotTextSerializeException("Se produjo un error al mapear el texto json al objeto", e);
+			throw new CannotTextSerializeException("Se produjo un error al mapear el texto json[" + value
+					+ "] al objeto de tipo[" + expectedType + "]", e);
 		} catch (final IOException e) {
-			throw new CannotTextSerializeException("Se produjo un error de IO deserializando de json", e);
+			throw new CannotTextSerializeException("Se produjo un error de IO deserializando de json[" + value
+					+ "] al tipo[" + expectedType + "]", e);
 		}
 	}
 
-	public static JsonTextualizer create() {
+	/**
+	 * Crea un textualizer que incluye la metadata del tipo de cada objeto serializador de manera de
+	 * poder reconstruirlo sin requerir el tipo como parámetro extra
+	 * 
+	 * @return El textualizador que puede pasar a string y a objeto sin parámetros de tipo
+	 */
+	public static JsonTextualizer createWithTypeMetadata() {
+		final JsonTextualizer textualizer = createWithoutTypeMetadata();
+		textualizer.mapper.enableDefaultTyping(DefaultTyping.NON_FINAL);
+		return textualizer;
+	}
+
+	/**
+	 * Crea un textualizer que requiere un parámetro de tipo adicional para poder reconstruir desde
+	 * un String un objeto
+	 * 
+	 * @return El textualizador parcial
+	 */
+	public static JsonTextualizer createWithoutTypeMetadata() {
 		final JsonTextualizer textualizer = new JsonTextualizer();
 		final ObjectMapper jsonMapper = new ObjectMapper();
-		jsonMapper.enableDefaultTyping(DefaultTyping.NON_FINAL);
 		textualizer.mapper = jsonMapper;
+		textualizer.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		return textualizer;
 	}
 }

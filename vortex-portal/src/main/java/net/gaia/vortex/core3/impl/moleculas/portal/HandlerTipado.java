@@ -39,13 +39,6 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	}
 
 	/**
-	 * Constructor para subclases que asume siempre false como condicion necesaria hasta que se
-	 * indique una
-	 */
-	public HandlerTipado() {
-	}
-
-	/**
 	 * @see net.gaia.vortex.core3.api.moleculas.portal.HandlerDePortal#getTipoEsperado()
 	 */
 	@Override
@@ -70,9 +63,6 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	 */
 	@Override
 	public Condicion getCondicionNecesaria() {
-		if (condicionNecesaria == null) {
-			return SiempreFalse.getInstancia();
-		}
 		return condicionNecesaria;
 	}
 

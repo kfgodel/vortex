@@ -14,7 +14,9 @@ package net.gaia.vortex.core3.impl.condiciones;
 
 import net.gaia.vortex.core3.api.condiciones.Condicion;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
-import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Objects;
 
@@ -24,6 +26,7 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 public class SoloInstancias implements Condicion {
+	private static final Logger LOG = LoggerFactory.getLogger(SoloInstancias.class);
 
 	private Class<?> tipoEsperado;
 	public static final String tipoEsperado_FIELD = "tipoEsperado";
@@ -33,7 +36,30 @@ public class SoloInstancias implements Condicion {
 	 */
 	@Override
 	public boolean esCumplidaPor(final MensajeVortex mensaje) {
-		throw new UnhandledConditionException("No implementado");
+		if (mensaje.tieneValorComoPrimitiva()) {
+			final Object valorPrimitivo = mensaje.getValorComoPrimitiva();
+			final boolean esInstanciaDelTipoEsperado = tipoEsperado.isInstance(valorPrimitivo);
+			return esInstanciaDelTipoEsperado;
+		}
+		final String nombreDelTipoOriginal = mensaje.getNombreDelTipoOriginal();
+		if (nombreDelTipoOriginal == null) {
+			// No sabemos de que tipo era originalmente
+			if (Object.class.equals(tipoEsperado)) {
+				// Solo lo aceptamos si el tipo esperado es object (cualquier objeto serviría)
+				return true;
+			}
+			return false;
+		}
+		Class<?> tipoDelMensajeOriginal;
+		try {
+			tipoDelMensajeOriginal = Class.forName(nombreDelTipoOriginal);
+		} catch (final ClassNotFoundException e) {
+			LOG.debug("La clase[{}] no existe en el classpath. Asumiendop que no cumple con esta condicion[{}]",
+					nombreDelTipoOriginal, this);
+			return false;
+		}
+		final boolean esInstanciaDelTipoEsperado = tipoEsperado.isAssignableFrom(tipoDelMensajeOriginal);
+		return esInstanciaDelTipoEsperado;
 	}
 
 	public static SoloInstancias de(final Class<?> tipoEsperado) {

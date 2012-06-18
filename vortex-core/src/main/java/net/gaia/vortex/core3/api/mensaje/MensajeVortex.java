@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.core3.api.mensaje;
 
+import java.util.concurrent.ConcurrentMap;
+
 import net.gaia.vortex.core3.api.atomos.Receptor;
 
 /**
@@ -42,4 +44,54 @@ public interface MensajeVortex {
 	 *            El remitente que no debe recibir el mensaje
 	 */
 	public void setRemitenteDirecto(Receptor remitente);
+
+	/**
+	 * Devuelve el mapa de datos que contiene este mensaje y que representa un mensaje
+	 * 
+	 * @return El mapa que representa los datos de este objeto
+	 */
+	public ConcurrentMap<String, Object> getContenido();
+
+	/**
+	 * Devuelve el valor que este mensaje tiene definido como primitiva.<br>
+	 * Si este mensaje no representa una primitiva se devuelve null
+	 */
+	public Object getValorComoPrimitiva();
+
+	/**
+	 * Establece en este mensaje el valor que representa como primitiva. Para lo cual en el mapa
+	 * interno se guarda la primitiva pasada como un atributo del mapa
+	 * 
+	 * @param valor
+	 *            Un objeto que representa una primitiva de java (números,String, o array de
+	 *            primitiva)
+	 * @throws IllegalArgumentException
+	 *             Si el objeto pasado no es un primitiva
+	 */
+	public void setValorComoPrimitiva(Object valor);
+
+	/**
+	 * Indica si este mensaje tiene definida la key para valor de primitiva
+	 * 
+	 * @return true si debe considerarse el contenido de este mensaje como una primitiva
+	 */
+	public boolean tieneValorComoPrimitiva();
+
+	/**
+	 * Establece el nombre que identifica el tipo de mensaje original como parte de los datos del
+	 * contenido de este mensaje
+	 * 
+	 * @param nombreDeClaseCompleto
+	 *            El nombre completo de la clase concreta para ser utilizado en las condiciones
+	 */
+	public void setNombreDelTipoOriginal(String nombreDeClaseCompleto);
+
+	/**
+	 * Devuelve el nombre completo de la clase a partir de la cual se generó este mensaje si está
+	 * disponible como parte del contenido
+	 * 
+	 * @return El nombre completo de la clase original, o null si no existe ese dato en este mensaje
+	 */
+	public String getNombreDelTipoOriginal();
+
 }

@@ -104,6 +104,13 @@
 	  <artifactId>vortex-core</artifactId>
 	  <version>0.1</version>
 	</dependency>  	
+	
+	<!-- Permite implementar los mapeadores con json -->
+	<dependency>
+	  <groupId>ar.dgarcia.textualizer</groupId>
+	  <artifactId>json-textualizer</artifactId>
+	  <version>0.1</version>
+	</dependency>
   
     <dependency>
       <groupId>com.google.guava</groupId>

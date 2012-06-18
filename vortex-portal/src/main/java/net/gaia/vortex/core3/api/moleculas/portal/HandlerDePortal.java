@@ -14,7 +14,7 @@ import net.gaia.vortex.core3.api.condiciones.Condicion;
  * 
  * @author D. García
  */
-public interface HandlerDePortal<T> {
+public interface HandlerDePortal<T> extends HandlerDeMensaje<T> {
 
 	/**
 	 * Indica el tipo de objeto esperado en este handler
@@ -30,13 +30,4 @@ public interface HandlerDePortal<T> {
 	 * @return La condición a evaluar en cada mensaje antes de invocar este handler
 	 */
 	public Condicion getCondicionNecesaria();
-
-	/**
-	 * Invocado cuando el portal recibe un mensaje que cumple la condición pasada, y puede convertir
-	 * el mensaje en el tipo esperado
-	 * 
-	 * @param mensaje
-	 *            El mensaje recibido
-	 */
-	public void onMensajeRecibido(T mensaje);
 }

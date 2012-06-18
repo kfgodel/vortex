@@ -19,7 +19,6 @@ import net.gaia.vortex.core3.api.atomos.forward.Nexo;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core3.impl.atomos.ReceptorNulo;
-import net.gaia.vortex.core3.impl.tasks.DelegarMensaje;
 
 import com.google.common.base.Objects;
 
@@ -45,17 +44,6 @@ public abstract class NexoSupport extends ComponenteConProcesadorSupport impleme
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado) {
 		super.initializeWith(processor);
 		setDestino(delegado);
-	}
-
-	/**
-	 * Permite a las subclases agregar comportamiento adicional a la tarea de entrega
-	 * 
-	 * @param entregaEnBackground
-	 *            La tarea que entrega el mensaje al delegado
-	 * @return Un tarea que realice el comportamiento adicional para utilizar en el procesador
-	 */
-	protected WorkUnit agregarComportamientoA(final DelegarMensaje entregaEnBackground) {
-		return entregaEnBackground;
 	}
 
 	/**
@@ -112,8 +100,8 @@ public abstract class NexoSupport extends ComponenteConProcesadorSupport impleme
 	}
 
 	/**
-	 * Crea la tarea específica de esta subclase para el mensaje recibido de manera de se procesado
-	 * en background
+	 * Crea la tarea específica de esta subclase para el mensaje recibido de manera de ser procesado
+	 * en background por este componente
 	 * 
 	 * @param mensaje
 	 *            El mensaje a procesar por esta instancia

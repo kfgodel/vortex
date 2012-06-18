@@ -22,8 +22,10 @@ public interface MapeadorVortex {
 	 * descartado
 	 * 
 	 * @return El mensaje vortex que representa el objeto pasado
+	 * @throws ErrorDeMapeoVortexException
+	 *             Si se produce un error en la conversión
 	 */
-	public MensajeVortex convertirAVortex(Object mensaje);
+	public MensajeVortex convertirAVortex(Object mensaje) throws ErrorDeMapeoVortexException;
 
 	/**
 	 * Convierte el mensaje vortex pasado al tipo esperado.<br>
@@ -35,7 +37,9 @@ public interface MapeadorVortex {
 	 * @param tipoEsperado
 	 *            El tipo esperado de la conversion
 	 * @return El objeto que representa el mensaje indicado pero con el tipo esperado
+	 * @throws ErrorDeMapeoVortexException
+	 *             Si se produce un error en al conversión
 	 */
-	public <T> T convertirDesdeVortex(MensajeVortex mensaje, Class<T> tipoEsperado);
+	public <T> T convertirDesdeVortex(MensajeVortex mensaje, Class<T> tipoEsperado) throws ErrorDeMapeoVortexException;
 
 }

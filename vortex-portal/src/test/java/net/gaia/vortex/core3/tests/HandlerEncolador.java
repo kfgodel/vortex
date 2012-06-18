@@ -40,6 +40,7 @@ public abstract class HandlerEncolador<T> extends HandlerTipado<T> {
 	}
 
 	public HandlerEncolador() {
+		super(SoloInstancias.de(Object.class));
 		mensajes = new LinkedBlockingQueue<Object>();
 		setCondicionNecesaria(SoloInstancias.de(getTipoEsperado()));
 	}

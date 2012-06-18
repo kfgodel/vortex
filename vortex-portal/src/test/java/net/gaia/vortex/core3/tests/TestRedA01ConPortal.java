@@ -18,13 +18,15 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.impl.NodoPortalSinThreads;
+import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core3.api.Nodo;
+import net.gaia.vortex.core3.api.moleculas.portal.ErrorDeMapeoVortexException;
 import net.gaia.vortex.core3.api.moleculas.portal.Portal;
 import net.gaia.vortex.core3.api.moleculas.ruteo.NodoHub;
 import net.gaia.vortex.core3.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core3.impl.condiciones.SoloInstancias;
 import net.gaia.vortex.core3.impl.moleculas.portal.HandlerTipado;
+import net.gaia.vortex.core3.impl.moleculas.portal.PortalMapeador;
 import net.gaia.vortex.core3.impl.moleculas.ruteo.HubConNexo;
 
 import org.junit.After;
@@ -55,12 +57,12 @@ public class TestRedA01ConPortal {
 
 	@Before
 	public void crearNodos() {
+		processor = ExecutorBasedTaskProcesor.create();
+		// Creamos un nodo central
 		nodoRuteador = HubConNexo.create(processor);
-		nodoEmisor = NodoPortalSinThreads.create();
-		nodoReceptor = NodoPortalSinThreads.create();
-
-		interconectar(nodoEmisor, nodoRuteador);
-		interconectar(nodoRuteador, nodoReceptor);
+		// Le agregamos las interconexiones en los extremos
+		nodoEmisor = PortalMapeador.createWithConnections(processor, nodoRuteador);
+		nodoReceptor = PortalMapeador.createWithConnections(processor, nodoRuteador);
 	}
 
 	@After
@@ -68,12 +70,22 @@ public class TestRedA01ConPortal {
 		processor.detener();
 	}
 
+	@Test
+	public void noEsPosibleEnviarUnaInstanciDeObjectPorElPortal() {
+		try {
+			nodoEmisor.enviar(new Object());
+			Assert.fail("No debería haber aceptado el envío");
+		} catch (final ErrorDeMapeoVortexException e) {
+			// Es la excepción que esperabamos
+		}
+	}
+
 	/**
 	 * T001. El emisor debería poder enviar por vortex cualquier objeto serializable
 	 */
 	@Test
 	public void el_Emisor_Deberia_Poder_Enviar_Por_Vortex_Cualquier_Objeto_Serializable() {
-		final Object mensaje = new Object();
+		final String mensaje = "Hola";
 		nodoEmisor.enviar(mensaje);
 	}
 
@@ -210,17 +222,17 @@ public class TestRedA01ConPortal {
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayUnNodoEnElMedio() {
-		final Portal nodoEmisor = NodoPortalSinThreads.create();
+		// Creamos los nodos centrales interconectados
 		final NodoHub nodoIntermedio1 = HubConNexo.create(processor);
 		final NodoHub nodoIntermedio2 = HubConNexo.create(processor);
-		final Portal nodoReceptor = NodoPortalSinThreads.create();
+		interconectar(nodoIntermedio1, nodoIntermedio2);
+
+		// Le agregamos los extremos portales
+		final Portal nodoEmisor = PortalMapeador.createWithConnections(processor, nodoIntermedio1);
+		final Portal nodoReceptor = PortalMapeador.createWithConnections(processor, nodoIntermedio2);
 
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		nodoReceptor.recibirCon(handlerReceptor);
-
-		interconectar(nodoEmisor, nodoIntermedio1);
-		interconectar(nodoIntermedio1, nodoIntermedio2);
-		interconectar(nodoIntermedio2, nodoReceptor);
 
 		final String mensajeEnviado = "Mensaje";
 		nodoEmisor.enviar(mensajeEnviado);
@@ -235,7 +247,7 @@ public class TestRedA01ConPortal {
 	 */
 	@Test
 	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo() {
-		final int cantidadDeMensajes = 1000000;
+		final int cantidadDeMensajes = 100000;
 		final HandlerCronometro handlerCronometro = HandlerCronometro.create(cantidadDeMensajes);
 		nodoReceptor.recibirCon(handlerCronometro);
 
@@ -247,7 +259,7 @@ public class TestRedA01ConPortal {
 			nodoEmisor.enviar(mensajeCronometro);
 		}
 
-		handlerCronometro.esperarEntregaDeMensajes(TimeMagnitude.of(30, TimeUnit.SECONDS));
+		handlerCronometro.esperarEntregaDeMensajes(TimeMagnitude.of(1, TimeUnit.MINUTES));
 		LOG.debug("Nanos Fin: {}", System.nanoTime());
 		final long endNanos = System.nanoTime();
 		final long elapsedNanos = endNanos - startNanos;
@@ -267,10 +279,8 @@ public class TestRedA01ConPortal {
 		nodoReceptor.recibirCon(handlerReceptor1);
 
 		final HandlerEncoladorDeStrings handlerReceptor2 = HandlerEncoladorDeStrings.create();
-		final Portal nodoReceptor2 = NodoPortalSinThreads.create();
+		final Portal nodoReceptor2 = PortalMapeador.createWithConnections(processor, nodoRuteador);
 		nodoReceptor2.recibirCon(handlerReceptor2);
-
-		interconectar(nodoRuteador, nodoReceptor2);
 
 		// Mandamos el mensaje
 		final String mensajeEnviado = "Hola manola";

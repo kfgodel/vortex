@@ -16,6 +16,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core3.api.annon.Atomo;
 import net.gaia.vortex.core3.api.atomos.Receptor;
+import net.gaia.vortex.core3.api.atomos.transformacion.Transformador;
 import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core3.api.transformaciones.Transformacion;
 import net.gaia.vortex.core3.impl.atomos.forward.NexoSupport;
@@ -31,15 +32,17 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 @Atomo
-public class NexoTransformador extends NexoSupport {
+public class NexoTransformador extends NexoSupport implements Transformador {
 
 	private Transformacion transformacion;
 	public static final String transformacion_FIELD = "transformacion";
 
+	@Override
 	public Transformacion getTransformacion() {
 		return transformacion;
 	}
 
+	@Override
 	public void setTransformacion(final Transformacion transformacion) {
 		if (transformacion == null) {
 			throw new IllegalArgumentException(
