@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.core3.api.moleculas.portal;
 
-import net.gaia.vortex.core3.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.Condicion;
 
 /**
  * Esta interfaz representa un handler de mensajes para utilizar con un {@link Portal} que tiene

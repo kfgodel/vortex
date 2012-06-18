@@ -13,12 +13,12 @@
 package net.gaia.vortex.core3.impl.atomos.portal;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core3.api.annon.Atomo;
-import net.gaia.vortex.core3.api.atomos.Receptor;
-import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core3.api.moleculas.portal.HandlerDeMensaje;
 import net.gaia.vortex.core3.api.moleculas.portal.MapeadorVortex;
-import net.gaia.vortex.core3.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core3.impl.moleculas.portal.tasks.DesvortificarEInvocarHandler;
 
 import com.google.common.base.Objects;
@@ -54,7 +54,7 @@ public class Desvortificador<T> extends ComponenteConProcesadorSupport implement
 	}
 
 	/**
-	 * @see net.gaia.vortex.core3.api.atomos.Receptor#recibir(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {

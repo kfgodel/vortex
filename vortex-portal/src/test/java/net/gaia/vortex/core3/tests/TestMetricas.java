@@ -14,11 +14,11 @@ package net.gaia.vortex.core3.tests;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
-import net.gaia.vortex.core3.api.metricas.MetricasDelNodo;
-import net.gaia.vortex.core3.api.metricas.MetricasPorTiempo;
+import net.gaia.vortex.core.api.metricas.MetricasDelNodo;
+import net.gaia.vortex.core.api.metricas.MetricasPorTiempo;
+import net.gaia.vortex.core.impl.moleculas.ruteo.HubConNexo;
 import net.gaia.vortex.core3.api.moleculas.portal.Portal;
 import net.gaia.vortex.core3.impl.moleculas.portal.PortalMapeador;
-import net.gaia.vortex.core3.impl.moleculas.ruteo.HubConNexo;
 
 import org.junit.After;
 import org.junit.Before;

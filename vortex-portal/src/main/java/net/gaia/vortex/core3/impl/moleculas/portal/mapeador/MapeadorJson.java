@@ -15,10 +15,10 @@ package net.gaia.vortex.core3.impl.moleculas.portal.mapeador;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
-import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
 import net.gaia.vortex.core3.api.moleculas.portal.ErrorDeMapeoVortexException;
 import net.gaia.vortex.core3.api.moleculas.portal.MapeadorVortex;
-import net.gaia.vortex.core3.impl.mensaje.MensajeMapa;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
 import ar.dgarcia.textualizer.json.JsonTextualizer;
 
@@ -76,7 +76,7 @@ public class MapeadorJson implements MapeadorVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core3.api.moleculas.portal.MapeadorVortex#convertirDesdeVortex(net.gaia.vortex.core3.api.mensaje.MensajeVortex,
+	 * @see net.gaia.vortex.core3.api.moleculas.portal.MapeadorVortex#convertirDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex,
 	 *      java.lang.Class)
 	 */
 	@Override

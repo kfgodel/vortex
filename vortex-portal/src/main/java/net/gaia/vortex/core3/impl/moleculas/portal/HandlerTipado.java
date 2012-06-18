@@ -12,9 +12,9 @@
  */
 package net.gaia.vortex.core3.impl.moleculas.portal;
 
-import net.gaia.vortex.core3.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core3.api.moleculas.portal.HandlerDePortal;
-import net.gaia.vortex.core3.impl.condiciones.SiempreFalse;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.reflection.ReflectionUtils;
 

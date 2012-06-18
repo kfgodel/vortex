@@ -10,12 +10,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
-import net.gaia.vortex.core3.api.Nodo;
-import net.gaia.vortex.core3.api.atomos.Receptor;
-import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core3.impl.atomos.forward.MultiplexorParalelo;
-import net.gaia.vortex.core3.impl.mensaje.MensajeMapa;
-import net.gaia.vortex.core3.tests.ReceptorEncolador;
+import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
+import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import net.gaia.vortex.core.tests.ReceptorEncolador;
 
 import org.junit.After;
 import org.junit.Before;

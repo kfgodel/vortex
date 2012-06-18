@@ -12,10 +12,10 @@
  */
 package net.gaia.vortex.core3.tests;
 
-import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
 import net.gaia.vortex.core3.api.moleculas.portal.ErrorDeMapeoVortexException;
 import net.gaia.vortex.core3.api.moleculas.portal.MapeadorVortex;
-import net.gaia.vortex.core3.impl.mensaje.MensajeMapa;
 import net.gaia.vortex.core3.impl.moleculas.portal.mapeador.MapeadorJson;
 
 import org.junit.Assert;

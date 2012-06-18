@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.Assert;
 import net.gaia.vortex.core.api.NodoPortal;
 import net.gaia.vortex.core.impl.NodoPortalSinThreads;
-import net.gaia.vortex.core3.tests.HandlerEncolador;
+import net.gaia.vortex.core.tests.HandlerEncolador;
 import net.gaia.vortex.sockets.api.NodoSocketCliente;
 import net.gaia.vortex.sockets.api.NodoSocketServidor;
 import net.gaia.vortex.sockets.impl.NodoObjectSocketCliente;

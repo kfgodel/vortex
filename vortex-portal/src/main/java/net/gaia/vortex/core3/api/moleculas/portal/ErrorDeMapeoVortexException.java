@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core3.api.moleculas.portal;
 
-import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 
 /**
  * Esta clase representa un error en el mapeo de un objeto a {@link MensajeVortex} o la operación

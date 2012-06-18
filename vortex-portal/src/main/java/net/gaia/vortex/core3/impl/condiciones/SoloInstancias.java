@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.core3.impl.condiciones;
 
-import net.gaia.vortex.core3.api.condiciones.Condicion;
-import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class SoloInstancias implements Condicion {
 	public static final String tipoEsperado_FIELD = "tipoEsperado";
 
 	/**
-	 * @see net.gaia.vortex.core3.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core3.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public boolean esCumplidaPor(final MensajeVortex mensaje) {

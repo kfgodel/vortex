@@ -13,7 +13,7 @@
 package net.gaia.vortex.core3.impl.moleculas.portal.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core3.api.moleculas.portal.ErrorDeMapeoVortexException;
 import net.gaia.vortex.core3.api.moleculas.portal.HandlerDeMensaje;
 import net.gaia.vortex.core3.api.moleculas.portal.MapeadorVortex;

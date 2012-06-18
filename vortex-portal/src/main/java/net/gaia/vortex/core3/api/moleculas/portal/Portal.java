@@ -3,8 +3,8 @@
  */
 package net.gaia.vortex.core3.api.moleculas.portal;
 
-import net.gaia.vortex.core3.api.atomos.forward.Nexo;
-import net.gaia.vortex.core3.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.atomos.forward.Nexo;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 
 /**
  * Esta interfaz representa un componente vortex utilizable por código ajeno a vortex para
