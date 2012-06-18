@@ -32,4 +32,8 @@ public class CannotTextSerializeException extends RuntimeException {
 		super(message, exception);
 	}
 
+	public CannotTextSerializeException(final String message) {
+		super(message);
+	}
+
 }
