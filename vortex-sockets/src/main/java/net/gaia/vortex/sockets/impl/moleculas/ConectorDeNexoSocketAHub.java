@@ -13,8 +13,7 @@
 package net.gaia.vortex.sockets.impl.moleculas;
 
 import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
-import ar.dgarcia.objectsockets.api.ObjectSocket;
-import ar.dgarcia.objectsockets.api.SocketEventHandler;
+import net.gaia.vortex.sockets.api.NexoSocketEventListener;
 
 import com.google.common.base.Objects;
 
@@ -25,27 +24,25 @@ import com.google.common.base.Objects;
  * 
  * @author D. García
  */
-public class ConectorDeNexoSocketAHub implements SocketEventHandler {
+public class ConectorDeNexoSocketAHub implements NexoSocketEventListener {
 
 	private NodoHub hubConocido;
 	public static final String hubConocido_FIELD = "hubConocido";
 
 	/**
-	 * @see ar.dgarcia.objectsockets.api.SocketEventHandler#onSocketOpened(ar.dgarcia.objectsockets.api.ObjectSocket)
+	 * @see net.gaia.vortex.sockets.api.NexoSocketEventListener#onNexoSocketCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 	@Override
-	public void onSocketOpened(final ObjectSocket nuevoSocket) {
-		final NexoSocket nuevoNexo = NexoSocket.create(null, hubConocido, nuevoSocket);
+	public void onNexoSocketCreado(final NexoSocket nuevoNexo) {
 		hubConocido.conectarCon(nuevoNexo);
 	}
 
 	/**
-	 * @see ar.dgarcia.objectsockets.api.SocketEventHandler#onSocketClosed(ar.dgarcia.objectsockets.api.ObjectSocket)
+	 * @see net.gaia.vortex.sockets.api.NexoSocketEventListener#onNexoSocketCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 	@Override
-	public void onSocketClosed(final ObjectSocket socketCerrado) {
-		// TODO Auto-generated method stub
-
+	public void onNexoSocketCerrado(final NexoSocket nexoCerrado) {
+		hubConocido.desconectarDe(nexoCerrado);
 	}
 
 	public static ConectorDeNexoSocketAHub create(final NodoHub hubConocido) {

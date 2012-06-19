@@ -24,10 +24,6 @@ import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
 import net.gaia.vortex.core.impl.transformaciones.AsignarComoRemitente;
 import net.gaia.vortex.sockets.impl.atomos.Desocketizador;
 import net.gaia.vortex.sockets.impl.atomos.Socketizador;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
@@ -41,7 +37,6 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, Disposable {
-	private static final Logger LOG = LoggerFactory.getLogger(NexoSocket.class);
 
 	private ObjectSocket socket;
 	public static final String socket_FIELD = "socket";
