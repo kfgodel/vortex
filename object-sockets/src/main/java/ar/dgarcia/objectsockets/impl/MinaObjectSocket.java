@@ -12,8 +12,15 @@
  */
 package ar.dgarcia.objectsockets.impl;
 
-import org.apache.mina.core.session.IoSession;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
+import org.apache.mina.core.session.IoSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 
 import com.google.common.base.Objects;
@@ -23,10 +30,17 @@ import com.google.common.base.Objects;
  * 
  * @author D. García
  */
-public class MinaObjectSocket implements ObjectSocket {
+public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
+	private static final Logger LOG = LoggerFactory.getLogger(MinaObjectSocket.class);
 
 	private IoSession minaSession;
 	public static final String minaSession_FIELD = "minaSession";
+
+	private AtomicReference<ObjectReceptionHandler> handlerRef;
+	public static final String handlerRef_FIELD = "handlerRef";
+
+	private AtomicReference<Map<String, Object>> estadoRef;
+	public static final String estadoRef_FIELD = "estadoRef";
 
 	/**
 	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#send(java.lang.Object)
@@ -36,9 +50,19 @@ public class MinaObjectSocket implements ObjectSocket {
 		minaSession.write(objetoEnviado);
 	}
 
+	/**
+	 * Crea un nuevo socket con la sesión pasada que utilizará el handler nulo si no se indica otro
+	 * para recibir los mensajes
+	 * 
+	 * @param minaSession
+	 *            La sesión de mina para este socket
+	 * @return El socket creado
+	 */
 	public static MinaObjectSocket create(final IoSession minaSession) {
 		final MinaObjectSocket socket = new MinaObjectSocket();
 		socket.minaSession = minaSession;
+		socket.estadoRef = new AtomicReference<Map<String, Object>>();
+		socket.handlerRef = new AtomicReference<ObjectReceptionHandler>(HandlerNulo.getInstancia());
 		return socket;
 	}
 
@@ -60,5 +84,52 @@ public class MinaObjectSocket implements ObjectSocket {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).add(minaSession_FIELD, minaSession).toString() + this.hashCode();
+	}
+
+	/**
+	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#setHandler(ar.dgarcia.objectsockets.api.ObjectReceptionHandler)
+	 */
+	@Override
+	public void setHandler(final ObjectReceptionHandler handler) {
+		if (handler == null) {
+			throw new IllegalArgumentException("El handler del socket no puede ser null");
+		}
+		handlerRef.set(handler);
+	}
+
+	/**
+	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#getEstadoAsociado()
+	 */
+	@Override
+	public Map<String, Object> getEstadoAsociado() {
+		final Map<String, Object> mapaActual = estadoRef.get();
+		if (mapaActual != null) {
+			// Si ya existe uno usamos ese
+			return mapaActual;
+		}
+		final ConcurrentHashMap<String, Object> nuevoMapa = new ConcurrentHashMap<String, Object>();
+		final boolean seteoExitoso = estadoRef.compareAndSet(null, nuevoMapa);
+		if (seteoExitoso) {
+			// Pudimos setear el mapa que creamos como nuevo, usamos ese
+			return nuevoMapa;
+		}
+		// Nos ganó otro thread de mano, tenemos que usar el que definió el otro thread
+		final Map<String, Object> otroMapa = estadoRef.get();
+		return otroMapa;
+	}
+
+	/**
+	 * @see ar.dgarcia.objectsockets.api.ObjectReceptionHandler#onObjectReceived(java.lang.Object,
+	 *      ar.dgarcia.objectsockets.api.ObjectSocket)
+	 */
+	@Override
+	public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
+		final ObjectReceptionHandler handlerActual = handlerRef.get();
+		try {
+			handlerActual.onObjectReceived(received, receivedFrom);
+		} catch (final Exception e) {
+			LOG.error("Se produjo un error en el handler[" + handlerActual + "] del socket[" + receivedFrom
+					+ "] al recibir el mensaje[" + received + "]", e);
+		}
 	}
 }

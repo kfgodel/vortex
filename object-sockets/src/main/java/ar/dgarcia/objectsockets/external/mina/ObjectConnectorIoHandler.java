@@ -155,6 +155,14 @@ public class ObjectConnectorIoHandler extends IoHandlerAdapter {
 	}
 
 	/**
+	 * @see org.apache.mina.core.service.IoHandlerAdapter#sessionCreated(org.apache.mina.core.session.IoSession)
+	 */
+	@Override
+	public void sessionCreated(final IoSession session) throws Exception {
+		super.sessionCreated(session);
+	}
+
+	/**
 	 * @see org.apache.mina.core.service.IoHandlerAdapter#sessionOpened(org.apache.mina.core.session.IoSession)
 	 */
 	@Override

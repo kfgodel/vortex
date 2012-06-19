@@ -12,6 +12,8 @@
  */
 package ar.dgarcia.objectsockets.api;
 
+import java.util.Map;
+
 /**
  * Esta interfaz representa un socket por el que se envía y recibe información que permite enviar y
  * recibir objetos
@@ -28,5 +30,23 @@ public interface ObjectSocket extends Disposable {
 	 *            El objeto a enviar
 	 */
 	void send(Object objetoEnviado);
+
+	/**
+	 * Establece el handler de mensajes a utilizar por este socket cuando recibe mensajes desde el
+	 * medio. El handler pasado será invocado en posteriores recepciones
+	 * 
+	 * @param handler
+	 *            El handler del mensaje
+	 */
+	void setHandler(ObjectReceptionHandler handler);
+
+	/**
+	 * Devuelve un mapa interno de este socket que permite asociar estado al socket de manera que,
+	 * código cliente, pueda tratar al socket como si tuviera estado interno
+	 * 
+	 * @return El mapa interno de este socket al que se le puede asociar estado
+	 * 
+	 */
+	public Map<String, Object> getEstadoAsociado();
 
 }

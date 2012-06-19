@@ -3,14 +3,12 @@
  */
 package ar.dgarcia.objectsockets.external.mina;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.coding.anno.CantBeNull;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
@@ -25,12 +23,17 @@ import ar.dgarcia.objectsockets.impl.MinaObjectSocket;
  * @author D. García
  */
 public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
+
 	private static final Logger LOG = LoggerFactory.getLogger(ObjectAcceptorIoHandler.class);
 
 	private ObjectReceptionHandler receptionHandler;
-	private ConcurrentMap<IoSession, ObjectSocket> socketsBySession;
 	private SocketErrorHandler errorHandler;
 	private SocketEventHandler eventHandler;
+
+	/**
+	 * Constante que se usar para asociar un socket a la sesión
+	 */
+	private static final String OBJECT_SOCKET_ASOCIADO = "OBJECT_SOCKET_ASOCIADO";
 
 	/**
 	 * @see org.apache.mina.core.service.IoHandlerAdapter#sessionCreated(org.apache.mina.core.session.IoSession)
@@ -38,7 +41,8 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 	@Override
 	public void sessionCreated(final IoSession session) throws Exception {
 		final MinaObjectSocket objectSocket = MinaObjectSocket.create(session);
-		socketsBySession.put(session, objectSocket);
+		objectSocket.setHandler(receptionHandler);
+		session.setAttribute(OBJECT_SOCKET_ASOCIADO, objectSocket);
 	}
 
 	/**
@@ -63,11 +67,11 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 	 */
 	@Override
 	public void sessionClosed(final IoSession session) throws Exception {
-		final ObjectSocket socket = socketsBySession.remove(session);
 		if (this.eventHandler == null) {
 			LOG.debug("Se cerró la sesión[{}] y no hay handler para avisarle en este handler[{}]", session, this);
 			return;
 		}
+		final ObjectSocket socket = getConnectedSocketFor(session);
 		try {
 			this.eventHandler.onSocketClosed(socket);
 		} catch (final Exception e) {
@@ -81,32 +85,52 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 	 */
 	@Override
 	public void messageReceived(final IoSession session, final Object message) throws Exception {
-		if (receptionHandler == null) {
-			LOG.debug("No existe handler de mensajes para [{}]. Ignorando mensaje", this);
-			return;
-		}
-		final ObjectSocket objectSocket = getConnectedSocketFor(session);
+		final MinaObjectSocket objectSocket = getConnectedSocketFor(session);
 		if (objectSocket == null) {
 			throw new UnhandledConditionException("No encontré el socket para la session: " + session);
 		}
 		try {
-			receptionHandler.onObjectReceived(message, objectSocket);
+			objectSocket.onObjectReceived(message, objectSocket);
 		} catch (final Exception e) {
-			LOG.error("Se produjo un error en el handler de recepción de mensajes del acceptor. Ignorando", e);
+			LOG.error("Se produjo un error en el socket[" + objectSocket + "] al receibir el mensaje[" + message
+					+ "]. Ignorando", e);
 		}
 	}
 
-	private ObjectSocket getConnectedSocketFor(final IoSession session) {
-		return socketsBySession.get(session);
+	@CantBeNull
+	private MinaObjectSocket getConnectedSocketFor(final IoSession session) {
+		final Object attribute = session.getAttribute(OBJECT_SOCKET_ASOCIADO);
+		if (attribute == null) {
+			throw new UnhandledConditionException("No existe el socket asociado a la sesión mina[" + session + "]");
+		}
+		MinaObjectSocket socket;
+		try {
+			socket = (MinaObjectSocket) attribute;
+		} catch (final ClassCastException e) {
+			throw new UnhandledConditionException("El atributo de la sesion no era un socket como esperabamos: "
+					+ attribute, e);
+		}
+		return socket;
 	}
 
-	public static ObjectAcceptorIoHandler create(final ObjectReceptionHandler receptionHandler,
+	/**
+	 * Crea este handler de sockets que utilizará a su vez los handlers definidos
+	 * 
+	 * @param defaultReceptionHandler
+	 *            El handler default para utilizar con todos los mensajes en los sockets creados.
+	 *            (Después puede cambiarse por socket si es necesario)
+	 * @param errorHandler
+	 *            El handler para los errores en el socket
+	 * @param eventHandler
+	 *            El handler de los eventos de sockets
+	 * @return El handler creado
+	 */
+	public static ObjectAcceptorIoHandler create(final ObjectReceptionHandler defaultReceptionHandler,
 			final SocketErrorHandler errorHandler, final SocketEventHandler eventHandler) {
 		final ObjectAcceptorIoHandler handler = new ObjectAcceptorIoHandler();
-		handler.receptionHandler = receptionHandler;
+		handler.receptionHandler = defaultReceptionHandler;
 		handler.errorHandler = errorHandler;
 		handler.eventHandler = eventHandler;
-		handler.socketsBySession = new ConcurrentHashMap<IoSession, ObjectSocket>();
 		return handler;
 	}
 
