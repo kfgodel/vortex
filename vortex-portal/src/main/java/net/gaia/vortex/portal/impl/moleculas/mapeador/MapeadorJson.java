@@ -10,15 +10,15 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core3.impl.moleculas.portal.mapeador;
+package net.gaia.vortex.portal.impl.moleculas.mapeador;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
-import net.gaia.vortex.core3.api.moleculas.portal.ErrorDeMapeoVortexException;
-import net.gaia.vortex.core3.api.moleculas.portal.MapeadorVortex;
+import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
+import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
 import ar.dgarcia.textualizer.json.JsonTextualizer;
 
@@ -37,7 +37,7 @@ public class MapeadorJson implements MapeadorVortex {
 	private JsonTextualizer jsonMapper;
 
 	/**
-	 * @see net.gaia.vortex.core3.api.moleculas.portal.MapeadorVortex#convertirAVortex(java.lang.Object)
+	 * @see net.gaia.vortex.portal.api.moleculas.MapeadorVortex#convertirAVortex(java.lang.Object)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -76,7 +76,7 @@ public class MapeadorJson implements MapeadorVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core3.api.moleculas.portal.MapeadorVortex#convertirDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex,
+	 * @see net.gaia.vortex.portal.api.moleculas.MapeadorVortex#convertirDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex,
 	 *      java.lang.Class)
 	 */
 	@Override

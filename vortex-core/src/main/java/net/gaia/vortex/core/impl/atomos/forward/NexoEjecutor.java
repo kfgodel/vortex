@@ -46,7 +46,7 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(ejecutante_FIELD, ejecutante).add(delegado_FIELD, getDestino())
+		return Objects.toStringHelper(this).add(ejecutante_FIELD, ejecutante).add(destino_FIELD, getDestino())
 				.toString();
 	}
 

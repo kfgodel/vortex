@@ -10,10 +10,10 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core3.impl.moleculas.portal.tasks;
+package net.gaia.vortex.portal.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core3.api.moleculas.portal.HandlerDeMensaje;
+import net.gaia.vortex.portal.api.moleculas.HandlerDeMensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

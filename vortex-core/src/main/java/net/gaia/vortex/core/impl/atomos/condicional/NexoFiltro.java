@@ -68,7 +68,7 @@ public class NexoFiltro extends NexoSupport implements Filtro {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(condicion_FIELD, condicion).add(delegado_FIELD, getDestino())
+		return Objects.toStringHelper(this).add(condicion_FIELD, condicion).add(destino_FIELD, getDestino())
 				.toString();
 	}
 

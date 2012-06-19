@@ -10,11 +10,11 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core3.impl.moleculas.portal;
+package net.gaia.vortex.portal.impl.moleculas;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
-import net.gaia.vortex.core3.api.moleculas.portal.HandlerDePortal;
+import net.gaia.vortex.portal.api.moleculas.HandlerDePortal;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.reflection.ReflectionUtils;
 
@@ -39,7 +39,7 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core3.api.moleculas.portal.HandlerDePortal#getTipoEsperado()
+	 * @see net.gaia.vortex.portal.api.moleculas.HandlerDePortal#getTipoEsperado()
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -59,7 +59,7 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	 * Devuelve la condición necesaria de este handler, devolviendo la condición
 	 * {@link SiempreFalse} si la actual es null
 	 * 
-	 * @see net.gaia.vortex.core3.api.moleculas.portal.HandlerDePortal#getCondicionNecesaria()
+	 * @see net.gaia.vortex.portal.api.moleculas.HandlerDePortal#getCondicionNecesaria()
 	 */
 	@Override
 	public Condicion getCondicionNecesaria() {

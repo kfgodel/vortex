@@ -30,8 +30,8 @@ import com.google.common.base.Objects;
  */
 public abstract class NexoSupport extends ComponenteConProcesadorSupport implements Nexo {
 
-	private Receptor delegado;
-	public static final String delegado_FIELD = "delegado";
+	private Receptor destino;
+	public static final String destino_FIELD = "destino";
 
 	/**
 	 * Inicializa esta instancia con las dependencias mínimas
@@ -51,7 +51,7 @@ public abstract class NexoSupport extends ComponenteConProcesadorSupport impleme
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(delegado_FIELD, delegado).toString();
+		return Objects.toStringHelper(this).add(destino_FIELD, destino).toString();
 	}
 
 	/**
@@ -79,7 +79,7 @@ public abstract class NexoSupport extends ComponenteConProcesadorSupport impleme
 			throw new IllegalArgumentException("El delegado del proxy no puede ser null. A lo sumo un "
 					+ ReceptorNulo.class);
 		}
-		this.delegado = destino;
+		this.destino = destino;
 	}
 
 	/**
@@ -87,7 +87,7 @@ public abstract class NexoSupport extends ComponenteConProcesadorSupport impleme
 	 */
 	@Override
 	public Receptor getDestino() {
-		return delegado;
+		return destino;
 	}
 
 	/**

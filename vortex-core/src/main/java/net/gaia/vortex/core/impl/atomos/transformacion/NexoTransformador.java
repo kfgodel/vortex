@@ -70,7 +70,7 @@ public class NexoTransformador extends NexoSupport implements Transformador {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(transformacion_FIELD, transformacion).add(delegado_FIELD, getDestino())
+		return Objects.toStringHelper(this).add(transformacion_FIELD, transformacion).add(destino_FIELD, getDestino())
 				.toString();
 	}
 

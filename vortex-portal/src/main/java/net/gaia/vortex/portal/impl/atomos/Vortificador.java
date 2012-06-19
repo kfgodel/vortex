@@ -10,14 +10,14 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core3.impl.atomos.portal;
+package net.gaia.vortex.portal.impl.atomos;
 
 import net.gaia.vortex.core.api.annon.Atomo;
 import net.gaia.vortex.core.api.atomos.Emisor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core3.api.moleculas.portal.ErrorDeMapeoVortexException;
-import net.gaia.vortex.core3.api.moleculas.portal.MapeadorVortex;
+import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
+import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +63,7 @@ public class Vortificador implements Emisor {
 	 */
 	@Override
 	public void desconectarDe(final Receptor destino) {
-		LOG.info("Se intentó desconectar un destino[" + destino + "] con el vortificador. Ignorando");
+		LOG.info("Se intentó desconectar un destino[" + destino + "] del vortificador. Ignorando");
 	}
 
 	/**

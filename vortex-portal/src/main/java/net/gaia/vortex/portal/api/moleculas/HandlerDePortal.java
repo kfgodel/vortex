@@ -1,7 +1,7 @@
 /**
  * 14/06/2012 20:42:52 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core3.api.moleculas.portal;
+package net.gaia.vortex.portal.api.moleculas;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 

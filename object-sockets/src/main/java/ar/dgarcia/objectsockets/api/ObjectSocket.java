@@ -21,7 +21,7 @@ package ar.dgarcia.objectsockets.api;
 public interface ObjectSocket extends Disposable {
 
 	/**
-	 * Envia el objeto indicado por este socket.<br>
+	 * Envía el objeto indicado por este socket.<br>
 	 * El mensaje será serializado para ser convertido en un formato transmisible por el medio
 	 * 
 	 * @param objetoEnviado

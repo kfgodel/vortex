@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core3.impl.moleculas.portal;
+package net.gaia.vortex.portal.impl.moleculas;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
@@ -27,12 +27,12 @@ import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.RemitenteDistinto;
 import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
 import net.gaia.vortex.core.impl.transformaciones.AsignarComoRemitente;
-import net.gaia.vortex.core3.api.moleculas.portal.HandlerDePortal;
-import net.gaia.vortex.core3.api.moleculas.portal.MapeadorVortex;
-import net.gaia.vortex.core3.api.moleculas.portal.Portal;
-import net.gaia.vortex.core3.impl.atomos.portal.Desvortificador;
-import net.gaia.vortex.core3.impl.atomos.portal.Vortificador;
-import net.gaia.vortex.core3.impl.moleculas.portal.mapeador.MapeadorJson;
+import net.gaia.vortex.portal.api.moleculas.HandlerDePortal;
+import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
+import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.impl.atomos.Desvortificador;
+import net.gaia.vortex.portal.impl.atomos.Vortificador;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJson;
 
 /**
  * Esta clase representa un portal con la red vortex que utiliza un mapeador interno para convertir
@@ -48,7 +48,7 @@ public class PortalMapeador extends NexoSupport implements Portal {
 	private Multiplexor multiplexorDeEntrada;
 
 	/**
-	 * @see net.gaia.vortex.core3.api.moleculas.portal.Portal#enviar(java.lang.Object)
+	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
 	 */
 	@Override
 	public void enviar(final Object mensaje) {
@@ -69,7 +69,7 @@ public class PortalMapeador extends NexoSupport implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core3.api.moleculas.portal.Portal#recibirCon(net.gaia.vortex.core3.api.moleculas.portal.HandlerDePortal)
+	 * @see net.gaia.vortex.portal.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.moleculas.HandlerDePortal)
 	 */
 	@Override
 	public void recibirCon(final HandlerDePortal<?> handlerDelPortal) {

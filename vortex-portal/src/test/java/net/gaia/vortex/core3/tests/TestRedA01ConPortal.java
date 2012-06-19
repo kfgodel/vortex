@@ -24,11 +24,11 @@ import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.ruteo.HubConNexo;
-import net.gaia.vortex.core3.api.moleculas.portal.ErrorDeMapeoVortexException;
-import net.gaia.vortex.core3.api.moleculas.portal.Portal;
-import net.gaia.vortex.core3.impl.condiciones.SoloInstancias;
-import net.gaia.vortex.core3.impl.moleculas.portal.HandlerTipado;
-import net.gaia.vortex.core3.impl.moleculas.portal.PortalMapeador;
+import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
+import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
+import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
+import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 
 import org.junit.After;
 import org.junit.Before;
