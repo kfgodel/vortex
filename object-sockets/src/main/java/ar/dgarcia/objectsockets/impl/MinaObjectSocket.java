@@ -12,8 +12,8 @@
  */
 package ar.dgarcia.objectsockets.impl;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.mina.core.session.IoSession;
@@ -39,7 +39,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	private AtomicReference<ObjectReceptionHandler> handlerRef;
 	public static final String handlerRef_FIELD = "handlerRef";
 
-	private AtomicReference<Map<String, Object>> estadoRef;
+	private AtomicReference<ConcurrentMap<String, Object>> estadoRef;
 	public static final String estadoRef_FIELD = "estadoRef";
 
 	/**
@@ -58,11 +58,11 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	 *            La sesión de mina para este socket
 	 * @return El socket creado
 	 */
-	public static MinaObjectSocket create(final IoSession minaSession) {
+	public static MinaObjectSocket create(final IoSession minaSession, final ObjectReceptionHandler initialHandler) {
 		final MinaObjectSocket socket = new MinaObjectSocket();
 		socket.minaSession = minaSession;
-		socket.estadoRef = new AtomicReference<Map<String, Object>>();
-		socket.handlerRef = new AtomicReference<ObjectReceptionHandler>(HandlerNulo.getInstancia());
+		socket.estadoRef = new AtomicReference<ConcurrentMap<String, Object>>();
+		socket.handlerRef = new AtomicReference<ObjectReceptionHandler>(initialHandler);
 		return socket;
 	}
 
@@ -101,8 +101,8 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#getEstadoAsociado()
 	 */
 	@Override
-	public Map<String, Object> getEstadoAsociado() {
-		final Map<String, Object> mapaActual = estadoRef.get();
+	public ConcurrentMap<String, Object> getEstadoAsociado() {
+		final ConcurrentMap<String, Object> mapaActual = estadoRef.get();
 		if (mapaActual != null) {
 			// Si ya existe uno usamos ese
 			return mapaActual;
@@ -114,7 +114,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 			return nuevoMapa;
 		}
 		// Nos ganó otro thread de mano, tenemos que usar el que definió el otro thread
-		final Map<String, Object> otroMapa = estadoRef.get();
+		final ConcurrentMap<String, Object> otroMapa = estadoRef.get();
 		return otroMapa;
 	}
 

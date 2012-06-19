@@ -19,7 +19,7 @@
 	
 	<logger name="ar.dgarcia.objectsockets" level="DEBUG" />
 	<logger name="ar.dgarcia.objectsockets.external.mina.ObjectConnectorIoHandler" level="INFO"/>
-	<logger name="ar.dgarcia.objectsockets.external.mina.ObjectAcceptorIoHandler" level="INFO"/>
+	<logger name="ar.dgarcia.objectsockets.external.mina.ObjectSocketIoHandler" level="INFO"/>
 	
 	
   

@@ -17,21 +17,21 @@ import ar.dgarcia.objectsockets.api.SocketEventHandler;
 import ar.dgarcia.objectsockets.impl.MinaObjectSocket;
 
 /**
- * Esta clase define el comportamiento del handler de mensajes de mina utilizado en el socket que
- * acepta conexiones
+ * Esta clase define el comportamiento del handler de mensajes de mina utilizado para manejar los
+ * {@link ObjectSocket}
  * 
  * @author D. García
  */
-public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
+public class ObjectSocketIoHandler extends IoHandlerAdapter {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ObjectAcceptorIoHandler.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ObjectSocketIoHandler.class);
 
-	private ObjectReceptionHandler receptionHandler;
+	private ObjectReceptionHandler defaultReceptionHandler;
 	private SocketErrorHandler errorHandler;
 	private SocketEventHandler eventHandler;
 
 	/**
-	 * Constante que se usar para asociar un socket a la sesión
+	 * Constante que se usa para asociar un {@link ObjectSocket} a la sesión
 	 */
 	private static final String OBJECT_SOCKET_ASOCIADO = "OBJECT_SOCKET_ASOCIADO";
 
@@ -40,8 +40,7 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 	 */
 	@Override
 	public void sessionCreated(final IoSession session) throws Exception {
-		final MinaObjectSocket objectSocket = MinaObjectSocket.create(session);
-		objectSocket.setHandler(receptionHandler);
+		final MinaObjectSocket objectSocket = MinaObjectSocket.create(session, defaultReceptionHandler);
 		session.setAttribute(OBJECT_SOCKET_ASOCIADO, objectSocket);
 	}
 
@@ -97,8 +96,15 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 		}
 	}
 
+	/**
+	 * Devuelve el {@link ObjectSocket} creado y asociado a la sesión indicada
+	 * 
+	 * @param session
+	 *            La sesión de mina para el socket
+	 * @return El socket de la sesión
+	 */
 	@CantBeNull
-	private MinaObjectSocket getConnectedSocketFor(final IoSession session) {
+	public MinaObjectSocket getConnectedSocketFor(final IoSession session) {
 		final Object attribute = session.getAttribute(OBJECT_SOCKET_ASOCIADO);
 		if (attribute == null) {
 			throw new UnhandledConditionException("No existe el socket asociado a la sesión mina[" + session + "]");
@@ -125,10 +131,10 @@ public class ObjectAcceptorIoHandler extends IoHandlerAdapter {
 	 *            El handler de los eventos de sockets
 	 * @return El handler creado
 	 */
-	public static ObjectAcceptorIoHandler create(final ObjectReceptionHandler defaultReceptionHandler,
+	public static ObjectSocketIoHandler create(final ObjectReceptionHandler defaultReceptionHandler,
 			final SocketErrorHandler errorHandler, final SocketEventHandler eventHandler) {
-		final ObjectAcceptorIoHandler handler = new ObjectAcceptorIoHandler();
-		handler.receptionHandler = defaultReceptionHandler;
+		final ObjectSocketIoHandler handler = new ObjectSocketIoHandler();
+		handler.defaultReceptionHandler = defaultReceptionHandler;
 		handler.errorHandler = errorHandler;
 		handler.eventHandler = eventHandler;
 		return handler;

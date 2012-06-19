@@ -23,7 +23,7 @@ import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.api.SocketErrorHandler;
 import ar.dgarcia.objectsockets.api.SocketEventHandler;
-import ar.dgarcia.objectsockets.external.mina.ObjectConnectorIoHandler;
+import ar.dgarcia.objectsockets.external.mina.ObjectSocketIoHandler;
 
 /**
  * Esta clase representa el conector utilizado para acceder a un ObjectSocket como cliente en un
@@ -62,8 +62,8 @@ public class ObjectSocketConnector implements Disposable {
 		final ObjectReceptionHandler receptionHandler = config.getReceptionHandler();
 		final SocketErrorHandler errorHandler = config.getErrorHandler();
 		final SocketEventHandler eventHandler = config.getEventHandler();
-		final ObjectConnectorIoHandler connectorHandler = ObjectConnectorIoHandler.create(receptionHandler,
-				errorHandler, eventHandler);
+		final ObjectSocketIoHandler connectorHandler = ObjectSocketIoHandler.create(receptionHandler, errorHandler,
+				eventHandler);
 		socketConnector.setHandler(connectorHandler);
 
 		final SocketAddress openedAddress = config.getAddress();
@@ -78,7 +78,7 @@ public class ObjectSocketConnector implements Disposable {
 			throw new ObjectSocketException("No fue posible conectar a la dirección [" + openedAddress + "]");
 		}
 		final IoSession connectorSession = connectTask.getSession();
-		this.objectSocket = connectorHandler.getOrCreateSocketFor(connectorSession);
+		this.objectSocket = connectorHandler.getConnectedSocketFor(connectorSession);
 	}
 
 	/**

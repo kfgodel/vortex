@@ -12,7 +12,7 @@
  */
 package ar.dgarcia.objectsockets.api;
 
-import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Esta interfaz representa un socket por el que se envía y recibe información que permite enviar y
@@ -47,6 +47,6 @@ public interface ObjectSocket extends Disposable {
 	 * @return El mapa interno de este socket al que se le puede asociar estado
 	 * 
 	 */
-	public Map<String, Object> getEstadoAsociado();
+	public ConcurrentMap<String, Object> getEstadoAsociado();
 
 }
