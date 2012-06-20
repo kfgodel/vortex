@@ -17,6 +17,7 @@ import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJson;
+import net.gaia.vortex.portal.tests.MensajeCronometro;
 
 import org.junit.Assert;
 import org.junit.Before;

@@ -8,12 +8,11 @@ import java.util.concurrent.ConcurrentMap;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
 import ar.dgarcia.textualizer.api.CannotTextUnserialize;
 import ar.dgarcia.textualizer.api.ObjectTextualizer;
 import ar.dgarcia.textualizer.json.JsonTextualizer;
-
-import com.google.common.base.Objects;
 
 /**
  * Esta clase representa un textualizador de objetos que sabe como serializar los mensajes vortex en
@@ -51,7 +50,8 @@ public class VortexTextualizer implements ObjectTextualizer {
 	@Override
 	public Object convertFromString(final String jsonDelContenido) throws CannotTextUnserialize {
 		@SuppressWarnings("unchecked")
-		final Map<String, Object> contenidoRegenerado = jsonTextualizer.convertFromStringAs(Map.class, jsonDelContenido);
+		final Map<String, Object> contenidoRegenerado = jsonTextualizer
+				.convertFromStringAs(Map.class, jsonDelContenido);
 		final MensajeMapa mensajeReconstruido = MensajeMapa.create(contenidoRegenerado);
 		return mensajeReconstruido;
 	}
@@ -61,7 +61,7 @@ public class VortexTextualizer implements ObjectTextualizer {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).toString();
+		return ToString.de(this).toString();
 	}
 
 	public static VortexTextualizer create() {

@@ -10,20 +10,22 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.tests;
+package net.gaia.vortex.portal.tests;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa un cronómetro enviado como mensaje para medir el tiempo de entrega
  * 
  * @author D. García
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class MensajeCronometro {
+
 	private long nanosDeInicio;
+	public static final String nanosDeInicio_FIELD = "nanosDeInicio";
+
 	private long nanosDeFin;
+	public static final String nanosDeFin_FIELD = "nanosDeFin";
 
 	public static MensajeCronometro create() {
 		final MensajeCronometro cronometro = new MensajeCronometro();
@@ -68,6 +70,7 @@ public class MensajeCronometro {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).toString();
+		return ToString.de(this).add("transcurrido", getTranscurrido()).add(nanosDeInicio_FIELD, nanosDeInicio)
+				.add(nanosDeFin_FIELD, nanosDeFin).toString();
 	}
 }

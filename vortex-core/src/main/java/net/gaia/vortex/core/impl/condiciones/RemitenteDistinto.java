@@ -15,8 +15,7 @@ package net.gaia.vortex.core.impl.condiciones;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la condición que evalúa si el receptor es distinto del remitente y por lo
@@ -50,6 +49,7 @@ public class RemitenteDistinto implements Condicion {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(receptor_FIELD, receptor).toString();
+		return ToString.de(this).add(receptor_FIELD, receptor).toString();
 	}
+
 }

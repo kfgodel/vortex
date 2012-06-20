@@ -21,10 +21,12 @@ package ar.dgarcia.objectsockets.api;
 public interface SocketEventHandler {
 
 	/**
-	 * Invocado cuando se crea el socket y se abre para la comunicación la otra parte
+	 * Invocado cuando se crea el socket y se abre para la comunicación la otra parte.<br>
+	 * Antes de comenzar la comunicación real
+	 * 
 	 * 
 	 * @param nuevoSocket
-	 *            El socket a utilizar
+	 *            El socket recién creado que puede ser inicializado con estado adicional
 	 */
 	public void onSocketOpened(ObjectSocket nuevoSocket);
 
@@ -32,6 +34,7 @@ public interface SocketEventHandler {
 	 * Invocado cuando se cierra el socket para la comunicaciones
 	 * 
 	 * @param socketCerrado
+	 *            El socket que está siendo cerrado
 	 */
 	public void onSocketClosed(ObjectSocket socketCerrado);
 

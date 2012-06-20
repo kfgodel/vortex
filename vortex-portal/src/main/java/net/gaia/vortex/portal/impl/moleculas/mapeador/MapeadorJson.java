@@ -19,10 +19,9 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
 import ar.dgarcia.textualizer.json.JsonTextualizer;
-
-import com.google.common.base.Objects;
 
 /**
  * Esta clase implementa el mapeador de mensajes vortex y objetos utilizando JSON como paso
@@ -69,8 +68,8 @@ public class MapeadorJson implements MapeadorVortex {
 					+ "]", e);
 		}
 		final MensajeVortex mensajeVortex = MensajeMapa.create(mapaDeEstado);
-		Class<? extends Object> tipoDelMensaje = mensajeOriginal.getClass();
-		String nombreDelTipoOriginal = tipoDelMensaje.getName();
+		final Class<? extends Object> tipoDelMensaje = mensajeOriginal.getClass();
+		final String nombreDelTipoOriginal = tipoDelMensaje.getName();
 		mensajeVortex.setNombreDelTipoOriginal(nombreDelTipoOriginal);
 		return mensajeVortex;
 	}
@@ -121,6 +120,6 @@ public class MapeadorJson implements MapeadorVortex {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).toString();
+		return ToString.de(this).toString();
 	}
 }

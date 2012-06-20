@@ -59,8 +59,8 @@ public class TestMessagePerformance {
 		config.setThreadPoolSize(4);
 		processor = ExecutorBasedTaskProcesor.create(config);
 		ruteadorCentral = HubConNexo.create(processor);
-		nodoEmisor = PortalMapeador.create(processor, ruteadorCentral);
-		nodoReceptor = PortalMapeador.create(processor, ruteadorCentral);
+		nodoEmisor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
+		nodoReceptor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
 		contadorTotalDeRecibidos = new AtomicLong();
 	}
 

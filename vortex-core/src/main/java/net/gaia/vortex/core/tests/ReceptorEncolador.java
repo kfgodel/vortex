@@ -11,9 +11,8 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
-
-import com.google.common.base.Objects;
 
 /**
  * Esta clase implementa un componente que encola los mensajes que recibe
@@ -64,6 +63,6 @@ public class ReceptorEncolador implements Receptor {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(mensajes_FIELD, mensajes).toString();
+		return ToString.de(this).add(mensajes_FIELD, mensajes).toString();
 	}
 }

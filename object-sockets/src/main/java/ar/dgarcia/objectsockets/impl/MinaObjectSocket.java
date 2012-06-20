@@ -20,10 +20,9 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
-
-import com.google.common.base.Objects;
 
 /**
  * Esta clase implementa el socket de objetos con mina
@@ -83,7 +82,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(minaSession_FIELD, minaSession).toString() + this.hashCode();
+		return ToString.de(this).con(minaSession_FIELD, minaSession).toString();
 	}
 
 	/**

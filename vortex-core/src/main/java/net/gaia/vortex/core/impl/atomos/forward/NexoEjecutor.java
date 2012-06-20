@@ -19,8 +19,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Ejecutor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.tasks.EjecutarYDelegar;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa un {@link ComponenteProxy} que ejecuta el código de otro
@@ -46,8 +45,7 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(ejecutante_FIELD, ejecutante).add(destino_FIELD, getDestino())
-				.toString();
+		return ToString.de(this).add(ejecutante_FIELD, ejecutante).add(destino_FIELD, getDestino()).toString();
 	}
 
 	/**

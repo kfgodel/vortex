@@ -22,10 +22,9 @@ import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
-
-import com.google.common.base.Objects;
 
 /**
  * Esta clase representa un componente vortex que al recibir un mensaje desde un socket lo introduce
@@ -82,7 +81,7 @@ public class Desocketizador extends ComponenteConProcesadorSupport implements Em
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(destino_FIELD, destino).toString();
+		return ToString.de(this).add(destino_FIELD, destino).toString();
 	}
 
 	public static Desocketizador create(final TaskProcessor processor, final Receptor destino) {

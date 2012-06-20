@@ -16,8 +16,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa una condicion que acepta todos los mensajes
@@ -51,7 +50,7 @@ public class SiempreTrue implements Condicion {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).toString();
+		return ToString.de(this).toString();
 	}
 
 }

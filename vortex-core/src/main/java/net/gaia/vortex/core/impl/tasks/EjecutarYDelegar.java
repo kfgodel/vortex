@@ -19,7 +19,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la tarea realizada en thread propio por un componente que ejecuta un
@@ -69,7 +69,7 @@ public class EjecutarYDelegar implements WorkUnit {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(ejecutante_FIELD, ejecutante).add(delegado_FIELD, delegado)
+		return ToString.de(this).add(ejecutante_FIELD, ejecutante).add(delegado_FIELD, delegado)
 				.add(mensaje_FIELD, mensaje).toString();
 	}
 }

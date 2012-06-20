@@ -15,12 +15,13 @@ package net.gaia.vortex.sockets.tests;
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.impl.NodoPortalSinThreads;
-import net.gaia.vortex.sockets.api.NodoSocketCliente;
-import net.gaia.vortex.sockets.api.NodoSocketServidor;
-import net.gaia.vortex.sockets.impl.NodoObjectSocketCliente;
-import net.gaia.vortex.sockets.impl.NodoObjectSocketServidor;
+import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.portal.tests.HandlerCronometro;
+import net.gaia.vortex.portal.tests.MensajeCronometro;
+import net.gaia.vortex.sockets.impl.moleculas.HubSocket;
 
 import org.junit.After;
 import org.junit.Before;
@@ -38,21 +39,22 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestNodoSocketPerformance {
 	private static final Logger LOG = LoggerFactory.getLogger(TestNodoSocketPerformance.class);
 
-	private NodoSocketCliente nodoCliente;
-	private NodoSocketServidor nodoServidor;
-	private NodoPortalSinThreads nodoEmisor;
-	private NodoPortalSinThreads nodoReceptor;
+	private HubSocket nodoCliente;
+	private HubSocket nodoServidor;
+	private Portal nodoEmisor;
+	private Portal nodoReceptor;
+
+	private TaskProcessor processor;
 
 	@Before
 	public void crearRuteadorCentral() {
-		final InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
-		nodoServidor = NodoObjectSocketServidor.createAndListenTo(sharedTestAddress);
-		nodoCliente = NodoObjectSocketCliente.createAndConnectTo(sharedTestAddress);
-		nodoEmisor = NodoPortalSinThreads.create();
-		nodoReceptor = NodoPortalSinThreads.create();
+		processor = ExecutorBasedTaskProcesor.create(4);
 
-		interconectarCon(nodoEmisor, nodoCliente);
-		interconectarCon(nodoReceptor, nodoServidor);
+		final InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
+		nodoServidor = HubSocket.createAndListenTo(sharedTestAddress, processor);
+		nodoCliente = HubSocket.createAndConnectTo(sharedTestAddress, processor);
+		nodoReceptor = PortalMapeador.createForIOWith(processor, nodoServidor);
+		nodoEmisor = PortalMapeador.createForIOWith(processor, nodoCliente);
 
 	}
 
@@ -68,19 +70,19 @@ public class TestNodoSocketPerformance {
 	 */
 	@Test
 	public void en_Sockets_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo() {
-		final int cantidadDeMensajes = 1000000;
+		final int cantidadDeMensajes = 100000;
 		final HandlerCronometro handlerCronometro = HandlerCronometro.create(cantidadDeMensajes);
-		nodoReceptor.setHandlerDeMensajesVecinos(handlerCronometro);
+		nodoReceptor.recibirCon(handlerCronometro);
 
 		final long startNanos = System.nanoTime();
 		LOG.debug("Nanos inicio: {}", startNanos);
 		for (int i = 0; i < cantidadDeMensajes; i++) {
 			final MensajeCronometro mensajeCronometro = MensajeCronometro.create();
 			mensajeCronometro.marcarInicio();
-			nodoEmisor.enviarAVecinos(mensajeCronometro);
+			nodoEmisor.enviar(mensajeCronometro);
 		}
 
-		handlerCronometro.esperarEntregaDeMensajes(TimeMagnitude.of(30, TimeUnit.SECONDS));
+		handlerCronometro.esperarEntregaDeMensajes(TimeMagnitude.of(1, TimeUnit.MINUTES));
 		LOG.debug("Nanos Fin: {}", System.nanoTime());
 		final long endNanos = System.nanoTime();
 		final long elapsedNanos = endNanos - startNanos;
@@ -91,19 +93,6 @@ public class TestNodoSocketPerformance {
 
 		final double promedioNanosPorMensaje = handlerCronometro.getPromedioDeEsperaPorMensaje();
 		LOG.debug("Milis de espera promedio por mensaje: {}", promedioNanosPorMensaje / 1000000d);
-	}
-
-	/**
-	 * Crea una conexión bidireccional entre los nodos pasados
-	 * 
-	 * @param nodoOrigen
-	 *            Uno de los nodos
-	 * @param nodoDestino
-	 *            El otro
-	 */
-	private void interconectarCon(final Nodo nodoOrigen, final Nodo nodoDestino) {
-		nodoOrigen.conectarCon(nodoDestino);
-		nodoDestino.conectarCon(nodoOrigen);
 	}
 
 }

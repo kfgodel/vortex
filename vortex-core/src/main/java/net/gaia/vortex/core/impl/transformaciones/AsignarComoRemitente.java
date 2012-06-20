@@ -15,8 +15,7 @@ package net.gaia.vortex.core.impl.transformaciones;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la transformación que asigna el receptor indicado como remitente del
@@ -43,7 +42,7 @@ public class AsignarComoRemitente implements Transformacion {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(remitente_FIELD, remitente).toString();
+		return ToString.de(this).add(remitente_FIELD, remitente).toString();
 	}
 
 	public static AsignarComoRemitente a(final Receptor remitente) {

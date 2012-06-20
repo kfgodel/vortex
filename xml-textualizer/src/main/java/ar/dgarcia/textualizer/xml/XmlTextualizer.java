@@ -19,11 +19,11 @@
 
 package ar.dgarcia.textualizer.xml;
 
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
 import ar.dgarcia.textualizer.api.CannotTextUnserialize;
 import ar.dgarcia.textualizer.api.ObjectTextualizer;
 
-import com.google.common.base.Objects;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -82,7 +82,7 @@ public class XmlTextualizer implements ObjectTextualizer {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).toString();
+		return ToString.de(this).toString();
 	}
 
 }

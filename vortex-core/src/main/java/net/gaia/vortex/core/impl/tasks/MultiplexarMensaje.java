@@ -19,8 +19,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.metricas.ListenerDeMetricas;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la tarea realizada en un thread propio por un componente vortex que envía
@@ -74,7 +73,7 @@ public class MultiplexarMensaje implements WorkUnit {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(destinos_FIELD, destinos).add(mensaje_FIELD, mensaje)
+		return ToString.de(this).add(destinos_FIELD, destinos).add(mensaje_FIELD, mensaje)
 				.add(processor_FIELD, processor).toString();
 	}
 }

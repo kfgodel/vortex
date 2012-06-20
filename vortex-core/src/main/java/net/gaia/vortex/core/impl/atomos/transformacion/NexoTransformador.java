@@ -22,8 +22,7 @@ import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
 import net.gaia.vortex.core.impl.tasks.TransformarYDelegar;
 import net.gaia.vortex.core.impl.transformaciones.TransformacionNula;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa un {@link ComponenteProxy} que realiza una transformación en el mensaje
@@ -70,8 +69,7 @@ public class NexoTransformador extends NexoSupport implements Transformador {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(transformacion_FIELD, transformacion).add(destino_FIELD, getDestino())
-				.toString();
+		return ToString.de(this).add(transformacion_FIELD, transformacion).add(destino_FIELD, getDestino()).toString();
 	}
 
 	/**

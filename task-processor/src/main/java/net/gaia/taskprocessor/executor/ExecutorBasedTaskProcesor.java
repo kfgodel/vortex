@@ -234,4 +234,16 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 		// Quitamos las tareas de pendientes porque si hay hilos activos no paran hasta terminarlas
 		this.inmediatePendingTasks.clear();
 	}
+
+	/**
+	 * Crea un nuevo procesor con la cantidad de threads indicados
+	 * 
+	 * @param cantidadDeThreadsDedicados
+	 * @return El procesador creado
+	 */
+	public static TaskProcessor create(final int cantidadDeThreadsDedicados) {
+		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
+		config.setThreadPoolSize(cantidadDeThreadsDedicados);
+		return create(config);
+	}
 }

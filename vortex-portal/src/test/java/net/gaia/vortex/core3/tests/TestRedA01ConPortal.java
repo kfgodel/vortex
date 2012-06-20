@@ -29,6 +29,9 @@ import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.portal.tests.HandlerCronometro;
+import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
+import net.gaia.vortex.portal.tests.MensajeCronometro;
 
 import org.junit.After;
 import org.junit.Before;
@@ -64,8 +67,8 @@ public class TestRedA01ConPortal {
 		// Creamos un nodo central
 		nodoRuteador = HubConNexo.create(processor);
 		// Le agregamos las interconexiones en los extremos
-		nodoEmisor = PortalMapeador.createWithConnections(processor, nodoRuteador);
-		nodoReceptor = PortalMapeador.createWithConnections(processor, nodoRuteador);
+		nodoEmisor = PortalMapeador.createForIOWith(processor, nodoRuteador);
+		nodoReceptor = PortalMapeador.createForIOWith(processor, nodoRuteador);
 	}
 
 	@After
@@ -231,8 +234,8 @@ public class TestRedA01ConPortal {
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
-		final Portal nodoEmisor = PortalMapeador.createWithConnections(processor, nodoIntermedio1);
-		final Portal nodoReceptor = PortalMapeador.createWithConnections(processor, nodoIntermedio2);
+		final Portal nodoEmisor = PortalMapeador.createForIOWith(processor, nodoIntermedio1);
+		final Portal nodoReceptor = PortalMapeador.createForIOWith(processor, nodoIntermedio2);
 
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		nodoReceptor.recibirCon(handlerReceptor);
@@ -282,7 +285,7 @@ public class TestRedA01ConPortal {
 		nodoReceptor.recibirCon(handlerReceptor1);
 
 		final HandlerEncoladorDeStrings handlerReceptor2 = HandlerEncoladorDeStrings.create();
-		final Portal nodoReceptor2 = PortalMapeador.createWithConnections(processor, nodoRuteador);
+		final Portal nodoReceptor2 = PortalMapeador.createForIOWith(processor, nodoRuteador);
 		nodoReceptor2.recibirCon(handlerReceptor2);
 
 		// Mandamos el mensaje

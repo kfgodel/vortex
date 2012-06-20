@@ -42,20 +42,12 @@ public class ObjectSocketIoHandler extends IoHandlerAdapter {
 	public void sessionCreated(final IoSession session) throws Exception {
 		final MinaObjectSocket objectSocket = MinaObjectSocket.create(session, defaultReceptionHandler);
 		session.setAttribute(OBJECT_SOCKET_ASOCIADO, objectSocket);
-	}
-
-	/**
-	 * @see org.apache.mina.core.service.IoHandlerAdapter#sessionOpened(org.apache.mina.core.session.IoSession)
-	 */
-	@Override
-	public void sessionOpened(final IoSession session) throws Exception {
 		if (this.eventHandler == null) {
 			LOG.debug("Se abrió la sesión[{}] y no hay handler para avisarle en este handler[{}]", session, this);
 			return;
 		}
-		final ObjectSocket connectedSocket = getConnectedSocketFor(session);
 		try {
-			this.eventHandler.onSocketOpened(connectedSocket);
+			this.eventHandler.onSocketOpened(objectSocket);
 		} catch (final Exception e) {
 			LOG.error("Se produjo un error en el handler del evento de apertura de socket", e);
 		}

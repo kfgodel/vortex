@@ -20,7 +20,10 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.atomos.ReceptorNulo;
 
-import com.google.common.base.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase implementa comportamiento base para las sub clases de {@link Nexo} utilizando un
@@ -29,6 +32,7 @@ import com.google.common.base.Objects;
  * @author D. García
  */
 public abstract class NexoSupport extends ComponenteConProcesadorSupport implements Nexo {
+	private static final Logger LOG = LoggerFactory.getLogger(NexoSupport.class);
 
 	private Receptor destino;
 	public static final String destino_FIELD = "destino";
@@ -51,7 +55,7 @@ public abstract class NexoSupport extends ComponenteConProcesadorSupport impleme
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(destino_FIELD, destino).toString();
+		return ToString.de(this).con(destino_FIELD, getDestino()).toString();
 	}
 
 	/**
@@ -63,10 +67,17 @@ public abstract class NexoSupport extends ComponenteConProcesadorSupport impleme
 	}
 
 	/**
+	 * En esta implementación el nexo queda conectado al {@link ReceptorNulo}
+	 * 
 	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
 	@Override
 	public void desconectarDe(final Receptor destino) {
+		if (!getDestino().equals(destino)) {
+			LOG.debug("Se intentó desconectar un nexo[{}] de un destino[{}] al que no estaba conectado. Ignorando",
+					this, destino);
+			return;
+		}
 		setDestino(ReceptorNulo.getInstancia());
 	}
 

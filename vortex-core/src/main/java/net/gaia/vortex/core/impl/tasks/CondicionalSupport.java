@@ -11,7 +11,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase implementa la lógica base para las tareas en background condicionales
@@ -103,7 +103,7 @@ public class CondicionalSupport implements WorkUnit {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(condicion_FIELD, condicion).add(delegadoPorTrue_FIELD, delegadoPorTrue)
+		return ToString.de(this).add(condicion_FIELD, condicion).add(delegadoPorTrue_FIELD, delegadoPorTrue)
 				.add(delegadoPorFalse_FIELD, delegadoPorFalse).add(mensaje_FIELD, mensaje).toString();
 	}
 }

@@ -18,7 +18,7 @@ import net.gaia.vortex.portal.api.moleculas.HandlerDeMensaje;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la tarea realizada por un componente vortex para entregar el objeto al
@@ -61,7 +61,6 @@ public class InvocarHandler<T> implements WorkUnit {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(mensajeRecibido_FIELD, mensajeRecibido).add(handler_FIELD, handler)
-				.toString();
+		return ToString.de(this).add(mensajeRecibido_FIELD, mensajeRecibido).add(handler_FIELD, handler).toString();
 	}
 }

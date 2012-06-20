@@ -14,8 +14,7 @@ package net.gaia.vortex.core.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.impl.metricas.ListenerDeMetricas;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la tarea realizada por el nodo para registrar un ruteo en sus métricas
@@ -46,6 +45,6 @@ public class RegistrarRuteoRealizado implements WorkUnit {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).toString();
+		return ToString.de(this).toString();
 	}
 }

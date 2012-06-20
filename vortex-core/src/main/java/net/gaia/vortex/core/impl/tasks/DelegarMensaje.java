@@ -10,7 +10,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase es la tarea que realiza un componente vortex para delegar un mensaje a otro componente
@@ -54,6 +54,6 @@ public class DelegarMensaje implements WorkUnit {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(mensaje_FIELD, mensaje).add(delegado_FIELD, delegado).toString();
+		return ToString.de(this).add(mensaje_FIELD, mensaje).add(delegado_FIELD, delegado).toString();
 	}
 }

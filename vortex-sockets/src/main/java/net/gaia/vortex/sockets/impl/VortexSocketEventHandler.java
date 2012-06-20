@@ -5,7 +5,7 @@ package net.gaia.vortex.sockets.impl;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.impl.atomos.ReceptorNulo;
-import net.gaia.vortex.sockets.api.NexoSocketEventListener;
+import net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 
 import org.slf4j.Logger;
@@ -13,18 +13,18 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.anno.MayBeNull;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.api.SocketEventHandler;
 
-import com.google.common.base.Objects;
-
 /**
- * Esta clase representa el handler de eventos de sockets utilizado para el manejo de los
- * {@link NexoSocket}s asosicados a cada socket.<br>
- * A través de esta clase se asocia el socket al nexo y viceversa.<br>
- * Los nexos creados con esta clase están asociados al receptor nulo, de manera que los mensajes
- * recibidos pueden perderse si no se conecta el nexo creado a la red en el
- * {@link NexoSocketEventListener} asociado
+ * Esta clase representa el handler de eventos de sockets utilizado para el ciclo de vida de los
+ * {@link NexoSocket}s asociados a cada socket.<br>
+ * A través de esta clase cada socket creado genera un nuevo {@link NexoSocket} al que se asocia.<br>
+ * <br>
+ * Los nexos creados de esta manera, comienzan inicialmente asociados al receptor nulo, de manera
+ * que los mensajes recibidos pueden perderse si no se conecta el nexo creado a la red en el
+ * {@link EstrategiaDeConexionDeNexos} asociado
  * 
  * @author D. García
  */
@@ -39,15 +39,15 @@ public class VortexSocketEventHandler implements SocketEventHandler {
 	private TaskProcessor processor;
 	public static final String processor_FIELD = "processor";
 
-	private NexoSocketEventListener listener;
-	public static final String listener_FIELD = "listener";
+	private EstrategiaDeConexionDeNexos handler;
+	public static final String handler_FIELD = "handler";
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).toString();
+		return ToString.de(this).add(handler_FIELD, handler).toString();
 	}
 
 	/**
@@ -55,12 +55,14 @@ public class VortexSocketEventHandler implements SocketEventHandler {
 	 */
 	@Override
 	public void onSocketOpened(final ObjectSocket nuevoSocket) {
-		final NexoSocket nuevoNexo = NexoSocket.create(processor, ReceptorNulo.getInstancia(), nuevoSocket);
+		final NexoSocket nuevoNexo = NexoSocket.create(processor, nuevoSocket, ReceptorNulo.getInstancia());
 		nuevoSocket.getEstadoAsociado().put(NEXO_ASOCIADO_AL_SOCKET, nuevoNexo);
+		// El nexo se encargará de los mensajes recibidos por el socket
+		nuevoSocket.setHandler(nuevoNexo);
 		try {
-			listener.onNexoSocketCreado(nuevoNexo);
+			handler.onNexoSocketCreado(nuevoNexo);
 		} catch (final Exception e) {
-			LOG.error("Se produjo un error en el listener de socket abierto[" + listener + "] al pasarle el nexo["
+			LOG.error("Se produjo un error en el listener de socket abierto[" + handler + "] al pasarle el nexo["
 					+ nuevoNexo + "]. Ignorando error", e);
 		}
 	}
@@ -76,9 +78,9 @@ public class VortexSocketEventHandler implements SocketEventHandler {
 			return;
 		}
 		try {
-			listener.onNexoSocketCerrado(nexoCerrado);
+			handler.onNexoSocketCerrado(nexoCerrado);
 		} catch (final Exception e) {
-			LOG.error("Se produjo un error en el listener de socket cerrado[" + listener + "] al pasarle el nexo["
+			LOG.error("Se produjo un error en el listener de socket cerrado[" + handler + "] al pasarle el nexo["
 					+ nexoCerrado + "]. Ignorando error", e);
 		}
 		socketCerrado.getEstadoAsociado().remove(NEXO_ASOCIADO_AL_SOCKET);
@@ -108,13 +110,14 @@ public class VortexSocketEventHandler implements SocketEventHandler {
 	}
 
 	/**
-	 * Crea este handler que utilizará el procesor para los nexos creados y el listener para
-	 * notificarlos
+	 * Crea este handler de sockets que utilizará el procesor para los nexos creados y el handler de
+	 * nexos para asociarlos a una red
 	 */
-	public static VortexSocketEventHandler create(final TaskProcessor processor, final NexoSocketEventListener listener) {
+	public static VortexSocketEventHandler create(final TaskProcessor processor,
+			final EstrategiaDeConexionDeNexos listener) {
 		final VortexSocketEventHandler handler = new VortexSocketEventHandler();
 		handler.processor = processor;
-		handler.listener = listener;
+		handler.handler = listener;
 		return handler;
 	}
 }

@@ -23,8 +23,7 @@ import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.tasks.FiltrarMensaje;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase es la implementación del {@link Filtro} utilizando threads independientes para el
@@ -68,8 +67,7 @@ public class NexoFiltro extends NexoSupport implements Filtro {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(condicion_FIELD, condicion).add(destino_FIELD, getDestino())
-				.toString();
+		return ToString.de(this).con(condicion_FIELD, condicion).con(destino_FIELD, getDestino()).toString();
 	}
 
 	/**

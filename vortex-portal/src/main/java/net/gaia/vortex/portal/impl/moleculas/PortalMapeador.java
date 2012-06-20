@@ -20,6 +20,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.atomos.ReceptorVariable;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
@@ -46,6 +47,7 @@ public class PortalMapeador extends NexoSupport implements Portal {
 	private MapeadorVortex mapeadorVortex;
 	private Vortificador procesoDeSalida;
 	private Multiplexor multiplexorDeEntrada;
+	private ReceptorVariable<Receptor> receptorDeSalida;
 
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
@@ -61,11 +63,29 @@ public class PortalMapeador extends NexoSupport implements Portal {
 	 */
 	@Override
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado) {
+		receptorDeSalida = ReceptorVariable.create(delegado);
 		super.initializeWith(processor, delegado);
 		final NexoTransformador asignarThisComoRemitente = NexoTransformador.create(processor,
-				AsignarComoRemitente.a(this), delegado);
+				AsignarComoRemitente.a(this), receptorDeSalida);
 		procesoDeSalida = Vortificador.create(mapeadorVortex, asignarThisComoRemitente);
 		multiplexorDeEntrada = MultiplexorParalelo.create(processor);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
+	 */
+	@Override
+	public void setDestino(final Receptor destino) {
+		super.setDestino(destino);
+		this.receptorDeSalida.setReceptorActual(destino);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#getDestino()
+	 */
+	@Override
+	public Receptor getDestino() {
+		return receptorDeSalida.getReceptorActual();
 	}
 
 	/**
@@ -108,8 +128,8 @@ public class PortalMapeador extends NexoSupport implements Portal {
 	 *            El nodo con el cual este portal accede a la red vortex
 	 * @return El portal creado
 	 */
-	public static PortalMapeador createWithConnections(final TaskProcessor processor, final Nodo nexoConLaRed) {
-		final PortalMapeador portal = create(processor, nexoConLaRed);
+	public static PortalMapeador createForIOWith(final TaskProcessor processor, final Nodo nexoConLaRed) {
+		final PortalMapeador portal = createForOutputWith(processor, nexoConLaRed);
 		nexoConLaRed.conectarCon(portal);
 		return portal;
 	}
@@ -126,7 +146,7 @@ public class PortalMapeador extends NexoSupport implements Portal {
 	 *            El componente del que se recibirán los mensajes que vienen de la red
 	 * @return El portal creado
 	 */
-	public static PortalMapeador create(final TaskProcessor processor, final Receptor destino) {
+	public static PortalMapeador createForOutputWith(final TaskProcessor processor, final Receptor destino) {
 		final PortalMapeador portal = new PortalMapeador();
 		portal.mapeadorVortex = MapeadorJson.create();
 		portal.initializeWith(processor, destino);

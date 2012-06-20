@@ -46,8 +46,8 @@ public class TestMetricas {
 	public void crearRuteadorCentral() {
 		processor = ExecutorBasedTaskProcesor.create();
 		ruteadorCentral = HubConNexo.create(processor);
-		nodoEmisor = PortalMapeador.create(processor, ruteadorCentral);
-		nodoReceptor = PortalMapeador.create(processor, ruteadorCentral);
+		nodoEmisor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
+		nodoReceptor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
 	}
 
 	@After

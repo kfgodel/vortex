@@ -16,8 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa un receptor que puede ser modificado en runtime sin tener que reconectar
@@ -60,6 +59,7 @@ public class ReceptorVariable<R extends Receptor> implements Receptor {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("receptorActual", getReceptorActual()).toString();
+		return ToString.de(this).con("receptorActual", getReceptorActual()).toString();
 	}
+
 }

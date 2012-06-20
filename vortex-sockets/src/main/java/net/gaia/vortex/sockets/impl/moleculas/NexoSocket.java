@@ -16,6 +16,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.atomos.ReceptorVariable;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
@@ -24,11 +25,10 @@ import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
 import net.gaia.vortex.core.impl.transformaciones.AsignarComoRemitente;
 import net.gaia.vortex.sockets.impl.atomos.Desocketizador;
 import net.gaia.vortex.sockets.impl.atomos.Socketizador;
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
-
-import com.google.common.base.Objects;
 
 /**
  * Esta clase representa un componente vortex que une la red vortex con un socket de manera que los
@@ -47,6 +47,8 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	private Desocketizador procesoDesdeSocket;
 	public static final String procesoDesdeSocket_FIELD = "procesoDesdeSocket";
 
+	private ReceptorVariable<Receptor> destinoDesdeSocket;
+
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
@@ -56,18 +58,38 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	}
 
 	private void initializeWith(final TaskProcessor processor, final Receptor delegado, final ObjectSocket socket) {
+		// Creamos el receptor variable antes que nada
+		destinoDesdeSocket = ReceptorVariable.create(delegado);
 		super.initializeWith(processor, delegado);
 		// Guardamos la referencia para saber cual es nuestro socket
 		this.socket = socket;
+
 		// No envíamos por el socket los mensajes propios
 		procesoDesdeVortex = NexoFiltro.create(processor, RemitenteDistinto.de(this),
 				Socketizador.create(processor, socket));
 		// Indicamos que los mensajes recibidos desde el socket son nuestros
 		procesoDesdeSocket = Desocketizador.create(processor,
-				NexoTransformador.create(processor, AsignarComoRemitente.a(this), delegado));
+				NexoTransformador.create(processor, AsignarComoRemitente.a(this), destinoDesdeSocket));
 	}
 
-	public static NexoSocket create(final TaskProcessor processor, final Receptor delegado, final ObjectSocket socket) {
+	/**
+	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
+	 */
+	@Override
+	public void setDestino(final Receptor destino) {
+		super.setDestino(destino);
+		this.destinoDesdeSocket.setReceptorActual(destino);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#getDestino()
+	 */
+	@Override
+	public Receptor getDestino() {
+		return destinoDesdeSocket.getReceptorActual();
+	}
+
+	public static NexoSocket create(final TaskProcessor processor, final ObjectSocket socket, final Receptor delegado) {
 		final NexoSocket nexo = new NexoSocket();
 		nexo.initializeWith(processor, delegado, socket);
 		return nexo;
@@ -78,7 +100,7 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(socket_FIELD, socket).add(destino_FIELD, getDestino()).toString();
+		return ToString.de(this).add(socket_FIELD, socket).add(destino_FIELD, getDestino()).toString();
 	}
 
 	/**

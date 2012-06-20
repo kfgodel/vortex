@@ -22,7 +22,7 @@ import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa un componente vortex que linda en el límite de la red vortex y es utilizado
@@ -71,7 +71,7 @@ public class Vortificador implements Emisor {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(mapeador_FIELD, mapeador).add(delegado_FIELD, delegado).toString();
+		return ToString.de(this).add(mapeador_FIELD, mapeador).add(delegado_FIELD, delegado).toString();
 	}
 
 	public static Vortificador create(final MapeadorVortex mapeador, final Receptor delegado) {

@@ -25,11 +25,10 @@ import org.apache.mina.core.service.IoConnector;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.external.mina.filters.Binary2StringCodecFilter;
 import ar.dgarcia.objectsockets.external.mina.filters.String2ObjectCodecFilter;
 import ar.dgarcia.textualizer.api.ObjectTextualizer;
-
-import com.google.common.base.Objects;
 
 /**
  * Esta clase define qué objetos de mina deben ser usados para la comunicación a través de sockets
@@ -70,6 +69,6 @@ public class SocketMinaFactory implements MinaComponentsFactory {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).toString();
+		return ToString.de(this).toString();
 	}
 }

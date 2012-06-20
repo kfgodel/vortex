@@ -21,7 +21,7 @@ import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la tarea realizada por un componente vortex para convertir el mensaje
@@ -76,7 +76,7 @@ public class DesvortificarEInvocarHandler<T> implements WorkUnit {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(tipoEsperado_FIELD, tipoEsperado).add(mensaje_FIELD, mensaje)
+		return ToString.de(this).add(tipoEsperado_FIELD, tipoEsperado).add(mensaje_FIELD, mensaje)
 				.add(mapeador_FIELD, mapeador).add(handlerDeMensajes_FIELD, handlerDeMensajes).toString();
 	}
 

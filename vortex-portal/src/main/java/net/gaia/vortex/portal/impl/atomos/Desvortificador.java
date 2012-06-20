@@ -20,8 +20,7 @@ import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.portal.api.moleculas.HandlerDeMensaje;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.impl.tasks.DesvortificarEInvocarHandler;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa un componente que linda en el límite de la red vortex y es utilizado por el
@@ -68,7 +67,7 @@ public class Desvortificador<T> extends ComponenteConProcesadorSupport implement
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(tipoEsperado_FIELD, tipoEsperado)
-				.add(handlerDeMensajes_FIELD, handlerDeMensajes).add(mapeador_FIELD, mapeador).toString();
+		return ToString.de(this).add(tipoEsperado_FIELD, tipoEsperado).add(handlerDeMensajes_FIELD, handlerDeMensajes)
+				.add(mapeador_FIELD, mapeador).toString();
 	}
 }

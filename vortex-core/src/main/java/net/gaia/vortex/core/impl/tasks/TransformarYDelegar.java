@@ -11,7 +11,7 @@ import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la tarea realizada en un thread propio por componentes vortex para
@@ -64,7 +64,7 @@ public class TransformarYDelegar implements WorkUnit {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(transformacion_FIELD, transformacion).add(delegado_FIELD, delegado)
+		return ToString.de(this).add(transformacion_FIELD, transformacion).add(delegado_FIELD, delegado)
 				.add(mensaje_FIELD, mensajeOriginal).toString();
 	}
 }

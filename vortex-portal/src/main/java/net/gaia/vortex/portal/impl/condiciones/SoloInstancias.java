@@ -18,7 +18,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la condicion que solo admite instancias de una clase
@@ -73,6 +73,6 @@ public class SoloInstancias implements Condicion {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(tipoEsperado_FIELD, tipoEsperado).toString();
+		return ToString.de(this).add(tipoEsperado_FIELD, tipoEsperado).toString();
 	}
 }

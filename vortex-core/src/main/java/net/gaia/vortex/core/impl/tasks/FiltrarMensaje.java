@@ -7,8 +7,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.ReceptorNulo;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la tarea realizada en thread propio por un componente vortex para evaluar
@@ -30,7 +29,7 @@ public class FiltrarMensaje extends CondicionalSupport {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(condicion_FIELD, getCondicion())
-				.add(delegadoPorTrue_FIELD, getDelegadoPorTrue()).add(mensaje_FIELD, getMensaje()).toString();
+		return ToString.de(this).add(condicion_FIELD, getCondicion()).add(delegadoPorTrue_FIELD, getDelegadoPorTrue())
+				.add(mensaje_FIELD, getMensaje()).toString();
 	}
 }

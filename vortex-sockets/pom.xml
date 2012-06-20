@@ -87,6 +87,14 @@
 	  <groupId>ar.dgarcia.textualizer</groupId>
 	  <artifactId>json-textualizer</artifactId>
 	  <version>0.1</version>
+	</dependency>
+	
+	<!-- Portales para los tests -->
+	<dependency>
+	  <groupId>net.gaia.vortex</groupId>
+	  <artifactId>vortex-portal</artifactId>
+	  <version>0.1</version>
+	  <scope>test</scope>
 	</dependency>  	
   	
     <dependency>

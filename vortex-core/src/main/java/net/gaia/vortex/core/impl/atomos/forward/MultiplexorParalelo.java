@@ -16,8 +16,7 @@ import net.gaia.vortex.core.impl.metricas.ListenerDeMetricas;
 import net.gaia.vortex.core.impl.tasks.MultiplexarMensaje;
 import net.gaia.vortex.core.prog.Decision;
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
-
-import com.google.common.base.Objects;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa el multiplexor de mensajes que entrega a varios destinos lo que recibe
@@ -97,6 +96,7 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(destinos_FIELD, destinos).toString();
+		return ToString.de(this).con(destinos_FIELD, destinos).toString();
 	}
+
 }

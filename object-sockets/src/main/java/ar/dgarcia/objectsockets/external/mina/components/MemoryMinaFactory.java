@@ -25,9 +25,8 @@ import org.apache.mina.core.service.IoConnector;
 import org.apache.mina.transport.vmpipe.VmPipeAcceptor;
 import org.apache.mina.transport.vmpipe.VmPipeConnector;
 
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.textualizer.api.ObjectTextualizer;
-
-import com.google.common.base.Objects;
 
 /**
  * Esta clase define qué objetos de mina deben ser usados para tener comunicacion en memoria
@@ -58,6 +57,7 @@ public class MemoryMinaFactory implements MinaComponentsFactory {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).toString();
+		return ToString.de(this).toString();
 	}
+
 }

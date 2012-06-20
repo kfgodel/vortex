@@ -17,9 +17,8 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
-
-import com.google.common.base.Objects;
 
 /**
  * Esta clase representa la tarea realizada por un componente para enviar los datos por un socket
@@ -61,6 +60,6 @@ public class EnviarPorSocket implements WorkUnit {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(socket_FIELD, socket).add(datos_FIELD, datos).toString();
+		return ToString.de(this).add(socket_FIELD, socket).add(datos_FIELD, datos).toString();
 	}
 }
