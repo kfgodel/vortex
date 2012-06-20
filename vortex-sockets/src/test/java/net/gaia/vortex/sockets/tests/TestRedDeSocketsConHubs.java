@@ -27,9 +27,9 @@ import net.gaia.vortex.sockets.api.ClienteDeSocketVortex;
 import net.gaia.vortex.sockets.api.ServidorDeSocketVortex;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
+import net.gaia.vortex.sockets.impl.estrategias.RealizarConexiones;
+import net.gaia.vortex.sockets.impl.estrategias.RealizarConexionesPorFuera;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
-import net.gaia.vortex.sockets.impl.moleculas.RealizarConexiones;
-import net.gaia.vortex.sockets.impl.moleculas.RealizarConexionesPorFuera;
 
 import org.junit.After;
 import org.junit.Before;

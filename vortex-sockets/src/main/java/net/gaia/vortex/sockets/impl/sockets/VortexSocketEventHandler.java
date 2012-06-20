@@ -1,7 +1,7 @@
 /**
  * 19/06/2012 19:59:09 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.sockets.impl;
+package net.gaia.vortex.sockets.impl.sockets;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.impl.atomos.ReceptorNulo;

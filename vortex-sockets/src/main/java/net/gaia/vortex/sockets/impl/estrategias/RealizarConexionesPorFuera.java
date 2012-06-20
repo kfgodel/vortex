@@ -10,9 +10,10 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.impl.moleculas;
+package net.gaia.vortex.sockets.impl.estrategias;
 
 import net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos;
+import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

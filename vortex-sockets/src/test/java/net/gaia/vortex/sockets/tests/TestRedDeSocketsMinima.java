@@ -23,9 +23,9 @@ import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
+import net.gaia.vortex.sockets.impl.estrategias.RealizarConexiones;
+import net.gaia.vortex.sockets.impl.estrategias.RealizarConexionesPorFuera;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
-import net.gaia.vortex.sockets.impl.moleculas.RealizarConexiones;
-import net.gaia.vortex.sockets.impl.moleculas.RealizarConexionesPorFuera;
 
 import org.junit.After;
 import org.junit.Before;

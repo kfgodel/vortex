@@ -19,6 +19,8 @@ import net.gaia.vortex.sockets.api.ClienteDeSocketVortex;
 import net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos;
 import net.gaia.vortex.sockets.external.json.VortexTextualizer;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
+import net.gaia.vortex.sockets.impl.sockets.ReceptionHandlerNulo;
+import net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
