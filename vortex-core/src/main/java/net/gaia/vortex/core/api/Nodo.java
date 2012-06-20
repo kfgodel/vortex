@@ -7,7 +7,7 @@ import net.gaia.vortex.core.api.atomos.Emisor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 
 /**
- * Esta interfaz representa el componente protegonico de la red vortex que es tanto un receptor como
+ * Esta interfaz representa el componente protagónico de la red vortex que es tanto un receptor como
  * un emisor de mensajes que puede estar conectado con otros componentes.<br>
  * <br>
  * Las implementaciones concretas de esta interfaz definen el comportamiento esperable del tipo de
