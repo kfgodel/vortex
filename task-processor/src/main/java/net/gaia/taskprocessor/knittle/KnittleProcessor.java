@@ -35,9 +35,8 @@ import net.gaia.taskprocessor.executor.TaskProcessingMetricsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
-
-import com.google.common.base.Objects;
 
 /**
  * Esta clase representa un procesador de tareas que cuenta con un conjunto de threads siempre
@@ -231,8 +230,8 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("Concurrentes", this.getThreadPoolSize())
-				.add("Activas", this.getThreadPoolSize()).add("Pendientes", this.inmediatePendingTasks.size())
+		return ToString.de(this).add("Concurrentes", this.getThreadPoolSize()).add("Activas", this.getThreadPoolSize())
+				.add("Pendientes", this.inmediatePendingTasks.size())
 				.add("Postergadas", this.delayerProcessor.getPendingCount()).toString();
 	}
 }

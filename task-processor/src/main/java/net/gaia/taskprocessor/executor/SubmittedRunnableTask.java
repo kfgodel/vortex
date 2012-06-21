@@ -33,9 +33,8 @@ import org.slf4j.LoggerFactory;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
-
-import com.google.common.base.Objects;
 
 /**
  * Esta clase representa la tarea enviada y aceptada por el {@link TaskProcessor} que es ejecutable
@@ -328,8 +327,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add(currentState_FIELD, currentState).add(workUnit_FIELD, workUnit)
-				.toString();
+		return ToString.de(this).add(currentState_FIELD, currentState).add(workUnit_FIELD, workUnit).toString();
 	}
 
 }

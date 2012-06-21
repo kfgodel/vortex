@@ -19,52 +19,47 @@
 	</properties>
   
   	<dependencies>
-
-		<!-- Logging -->
-		<dependency>
-			<!-- Facade para todo lo que es logueo -->
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-		<dependency>
-			<!-- Implementación nativa de slf4j -->
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>0.9.28</version>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>0.9.28</version>
-		</dependency>
-		<dependency>
-			<!-- Adapter que las llamadas a commons-logging pasen por Slf4j-->
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-		<dependency>
-			<!-- Adapter que las llamadas a log4j pasen por Slf4j-->
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-		
-		
-		<!-- Extensiones a Java, especialmente para colecciones -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>r09</version>
-		</dependency>
-		
+  	
 		<!-- Algunas clases comunes -->
 		<dependency>
 		  <groupId>ar.com.dgarcia</groupId>
 		  <artifactId>dgarcia-commons</artifactId>
 		  <version>1.0.3</version>
 		</dependency>
+
+	<!--  Abstrae la herramienta de logueo concreta -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.6.4</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- Implementación del logueo, necesario para los tests-->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>1.0.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.0.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>1.6.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>log4j-over-slf4j</artifactId>
+      <version>1.6.4</version>
+      <scope>test</scope>
+    </dependency>
 		
 		<!-- Test dependencies -->
 		<dependency>
