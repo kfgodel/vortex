@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.sockets.impl.moleculas;
 
-import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
@@ -51,7 +51,7 @@ public class HubSocket extends HubConNexoSupport implements Disposable {
 	 *            El procesador para las tareas internas
 	 * @return El hub creado y escuchando en el socket indicado
 	 */
-	public static HubSocket createAndListenTo(final InetSocketAddress listeningAddress, final TaskProcessor processor) {
+	public static HubSocket createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor) {
 		final HubSocket hubSocket = new HubSocket();
 		hubSocket.initializeWith(processor);
 		hubSocket.servidor = ServidorDeNexoSocket
@@ -83,7 +83,7 @@ public class HubSocket extends HubConNexoSupport implements Disposable {
 	 *            El procesador de las tareas internas
 	 * @return
 	 */
-	public static HubSocket createAndConnectTo(final InetSocketAddress remoteAddress, final TaskProcessor processor) {
+	public static HubSocket createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor) {
 		final HubSocket hubSocket = new HubSocket();
 		hubSocket.initializeWith(processor);
 		hubSocket.cliente = ClienteDeNexoSocket.create(processor, remoteAddress, RealizarConexiones.con(hubSocket));

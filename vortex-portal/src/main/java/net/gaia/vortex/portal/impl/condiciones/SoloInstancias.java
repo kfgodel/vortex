@@ -21,7 +21,10 @@ import org.slf4j.LoggerFactory;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la condicion que solo admite instancias de una clase
+ * Esta clase representa la condicion que sólo admite instancias de una clase.<br>
+ * Debido a que no todos los mensajes tienen el tipo de la clase asociada, y como aunque lo tengan
+ * es posible que no esté en el classpath, o que este classpath sea distinto del original, se
+ * recomienda NO usar esta condición
  * 
  * @author D. García
  */
@@ -41,20 +44,26 @@ public class SoloInstancias implements Condicion {
 			final boolean esInstanciaDelTipoEsperado = tipoEsperado.isInstance(valorPrimitivo);
 			return esInstanciaDelTipoEsperado;
 		}
+		// Como optimización verificamos si justo es del tipo esperado
 		final String nombreDelTipoOriginal = mensaje.getNombreDelTipoOriginal();
+		if (tipoEsperado.getName().equals(nombreDelTipoOriginal)) {
+			// Es del mismo tipo que esperabamos
+			return true;
+		}
 		if (nombreDelTipoOriginal == null) {
 			// No sabemos de que tipo era originalmente
 			if (Object.class.equals(tipoEsperado)) {
-				// Solo lo aceptamos si el tipo esperado es object (cualquier objeto serviría)
+				// Solo lo aceptamos si el tipo esperado es object (todo es casteable a Object)
 				return true;
 			}
 			return false;
 		}
+		// Si indica un tipo, vemos si en una de esas esta en el classpath
 		Class<?> tipoDelMensajeOriginal;
 		try {
 			tipoDelMensajeOriginal = Class.forName(nombreDelTipoOriginal);
 		} catch (final ClassNotFoundException e) {
-			LOG.debug("La clase[{}] no existe en el classpath. Asumiendop que no cumple con esta condicion[{}]",
+			LOG.debug("La clase[{}] no existe en el classpath. Asumiendo que no cumple con esta condicion[{}]",
 					nombreDelTipoOriginal, this);
 			return false;
 		}
@@ -62,6 +71,14 @@ public class SoloInstancias implements Condicion {
 		return esInstanciaDelTipoEsperado;
 	}
 
+	/**
+	 * Crea una condición que verifica si el mensaje corresponde a una clase conocida. Usar esta
+	 * condición sólo para mensajes dentro de la misma VM
+	 * 
+	 * @param tipoEsperado
+	 *            El tipo esperado del mensaje
+	 * @return La condición creada
+	 */
 	public static SoloInstancias de(final Class<?> tipoEsperado) {
 		final SoloInstancias condicion = new SoloInstancias();
 		condicion.tipoEsperado = tipoEsperado;
