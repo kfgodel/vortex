@@ -80,7 +80,9 @@ public class ObjectSocketIoHandler extends IoHandlerAdapter {
 	public void messageReceived(final IoSession session, final Object message) throws Exception {
 		final MinaObjectSocket objectSocket = getConnectedSocketFor(session);
 		if (objectSocket == null) {
-			throw new UnhandledConditionException("No encontré el socket para la session: " + session);
+			LOG.error("No encontré el objectsocket asociado a la session: " + session + ". Cerrando sesion");
+			session.close(true);
+			return;
 		}
 		try {
 			objectSocket.onObjectReceived(message, objectSocket);
