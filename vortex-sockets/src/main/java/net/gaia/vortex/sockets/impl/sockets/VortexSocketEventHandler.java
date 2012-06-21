@@ -55,7 +55,7 @@ public class VortexSocketEventHandler implements SocketEventHandler {
 	 */
 	@Override
 	public void onSocketOpened(final ObjectSocket nuevoSocket) {
-		LOG.debug("Creando nexo para la conexión local[{}]->remota[{}]", nuevoSocket.getLocalAddress(),
+		LOG.debug("Creando nexo para la conexión local[{}] - remota[{}]", nuevoSocket.getLocalAddress(),
 				nuevoSocket.getRemoteAddress());
 		final NexoSocket nuevoNexo = NexoSocket.create(processor, nuevoSocket, ReceptorNulo.getInstancia());
 		nuevoSocket.getEstadoAsociado().put(NEXO_ASOCIADO_AL_SOCKET, nuevoNexo);
@@ -74,7 +74,7 @@ public class VortexSocketEventHandler implements SocketEventHandler {
 	 */
 	@Override
 	public void onSocketClosed(final ObjectSocket socketCerrado) {
-		LOG.debug("Cerrando nexo para la conexión local[{}]->remota[{}]", socketCerrado.getLocalAddress(),
+		LOG.debug("Cerrando nexo para la conexión local[{}] - remota[{}]", socketCerrado.getLocalAddress(),
 				socketCerrado.getRemoteAddress());
 		final NexoSocket nexoCerrado = getNexoDelSocket(socketCerrado);
 		if (nexoCerrado == null) {
