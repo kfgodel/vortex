@@ -82,7 +82,7 @@
 	  <version>0.1</version>
   	</dependency>
   	
-  	<!-- Agrega la textualizacion a json -->
+  	<!-- Agrega la textualizacion a json para enviar por sockets-->
 	<dependency>
 	  <groupId>ar.dgarcia.textualizer</groupId>
 	  <artifactId>json-textualizer</artifactId>
@@ -97,42 +97,47 @@
 	  <scope>test</scope>
 	</dependency>  	
   	
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>12.0</version>
-    </dependency>
+ 	<!--  Abstrae la herramienta de logueo concreta -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.6.4</version>
+      <scope>provided</scope>
     </dependency>
+    
+    <!-- Implementación del logueo, necesario para los tests-->
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
       <version>1.0.3</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>1.0.3</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
       <version>1.6.4</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
       <version>1.6.4</version>
+      <scope>test</scope>
     </dependency>
+    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.1</version>
       <scope>test</scope>
     </dependency>
+    
   </dependencies>
   <properties>
     <project.jdk>1.6</project.jdk>
