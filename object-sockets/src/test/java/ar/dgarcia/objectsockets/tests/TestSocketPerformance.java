@@ -30,6 +30,7 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
 import ar.dgarcia.textualizer.api.ObjectTextualizer;
+import ar.dgarcia.textualizer.json.JsonTextualizer;
 
 /**
  * Esta clase prueba la velocidad de transferencia de los objetos entre dos sockets usando XML como
@@ -77,14 +78,15 @@ public abstract class TestSocketPerformance {
 		// Levantamos el socket de escucha para recibir los mensajes en una cola
 		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
 		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress,
-				handlerReceptor);
+				handlerReceptor, JsonTextualizer.createWithTypeMetadata());
 		final ObjectTextualizer currentTextualizer = createTextualizer();
 		receptionConfig.setSerializer(currentTextualizer);
 		// Empezamos a escuchar en el puerto
 		final ObjectSocketAcceptor acceptor = ObjectSocketAcceptor.create(receptionConfig);
 
 		// Conectamos el cliente al puerto compartido
-		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress);
+		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress,
+				JsonTextualizer.createWithTypeMetadata());
 		senderConfig.setSerializer(currentTextualizer);
 		final ObjectSocketConnector connector = ObjectSocketConnector.create(senderConfig);
 

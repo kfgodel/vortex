@@ -26,6 +26,7 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
 import ar.dgarcia.objectsockets.impl.ObjectSocketException;
+import ar.dgarcia.textualizer.json.JsonTextualizer;
 
 /**
  * Esta clase testea el uso de los sockets de objetos
@@ -41,7 +42,8 @@ public class TestObjectSocket {
 	public void deberiaFallarAlConectarCuandoNoHaySocketEscuchando() {
 		// Creamos el socket cliente para conectarlo a un puerto no usado
 		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
-		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress);
+		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress,
+				JsonTextualizer.createWithTypeMetadata());
 		try {
 			ObjectSocketConnector.create(senderConfig);
 			Assert.fail("Debería tirar una excepción por conexión rechazada!");
@@ -57,7 +59,8 @@ public class TestObjectSocket {
 	public void deberiaFallarAlEscucharSiElPuertoEstaUsado() {
 		// Creamos el socket de escucha
 		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
-		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress);
+		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress,
+				JsonTextualizer.createWithTypeMetadata());
 		final ObjectSocketAcceptor primerAcceptor = ObjectSocketAcceptor.create(receptionConfig);
 		try {
 			ObjectSocketAcceptor.create(receptionConfig);
@@ -79,12 +82,13 @@ public class TestObjectSocket {
 		final QueueReceptionHandler handlerReceptor = QueueReceptionHandler.create();
 		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
 		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress,
-				handlerReceptor);
+				handlerReceptor, JsonTextualizer.createWithTypeMetadata());
 		// Empezamos a escuchar en el puerto
 		final ObjectSocketAcceptor acceptor = ObjectSocketAcceptor.create(receptionConfig);
 
 		// Conectamos el cliente al puerto compartido
-		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress);
+		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress,
+				JsonTextualizer.createWithTypeMetadata());
 		final ObjectSocketConnector connector = ObjectSocketConnector.create(senderConfig);
 
 		// Enviamos un objeto cualquiera a traves del socket

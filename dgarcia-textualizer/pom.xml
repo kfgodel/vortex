@@ -102,21 +102,22 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.6.4</version>
+      <scope>provided</scope>
     </dependency>
   
-	<!-- Solo necesario por la magnitud de tiempo y excepciones en tests -->
+	<!-- Necesario para el template de test -->
 	<dependency>
 	 <groupId>ar.com.dgarcia</groupId>
 	 <artifactId>dgarcia-commons</artifactId>
 	 <version>1.0.3</version>
-	 <scope>test</scope>
+	 <scope>provided</scope>
 	</dependency>
 	
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.1</version>
-      <scope>test</scope>
+      <scope>provided</scope>
     </dependency>
     
   </dependencies>

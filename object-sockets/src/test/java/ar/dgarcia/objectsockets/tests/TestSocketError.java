@@ -28,6 +28,7 @@ import ar.dgarcia.objectsockets.api.SocketEventHandler;
 import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
+import ar.dgarcia.textualizer.json.JsonTextualizer;
 
 /**
  * Esta clase prueba el manejo de errores
@@ -47,12 +48,13 @@ public class TestSocketError {
 						handlerReceptor.onObjectReceived(received, receivedFrom);
 						receivedFrom.closeAndDispose();
 					}
-				});
+				}, JsonTextualizer.createWithTypeMetadata());
 		// Empezamos a escuchar en el puerto
 		final ObjectSocketAcceptor acceptor = ObjectSocketAcceptor.create(receptionConfig);
 
 		// Conectamos el cliente al puerto compartido
-		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress);
+		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress,
+				JsonTextualizer.createWithTypeMetadata());
 		final WaitBarrier esperarNotificacionDeCierre = WaitBarrier.create();
 		final AtomicBoolean notificacionRecibida = new AtomicBoolean(false);
 		senderConfig.setEventHandler(new SocketEventHandler() {

@@ -66,8 +66,8 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	 */
 	@Override
 	public void aceptarConexionesRemotas() throws ObjectSocketException {
-		final ObjectSocketConfiguration socketConfig = ObjectSocketConfiguration.create(listeningAddress);
-		socketConfig.setSerializer(VortexTextualizer.create());
+		final ObjectSocketConfiguration socketConfig = ObjectSocketConfiguration.create(listeningAddress,
+				VortexTextualizer.create());
 		socketConfig.setEventHandler(socketHandler);
 		socketConfig.setReceptionHandler(ReceptionHandlerNulo.getInstancia());
 		internalAcceptor = ObjectSocketAcceptor.create(socketConfig);

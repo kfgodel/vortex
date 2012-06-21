@@ -75,8 +75,8 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 	 */
 	@Override
 	public NexoSocket conectarASocketRomoto() throws ObjectSocketException {
-		final ObjectSocketConfiguration socketConfig = ObjectSocketConfiguration.create(remoteAddress);
-		socketConfig.setSerializer(VortexTextualizer.create());
+		final ObjectSocketConfiguration socketConfig = ObjectSocketConfiguration.create(remoteAddress,
+				VortexTextualizer.create());
 		socketConfig.setEventHandler(socketHandler);
 		socketConfig.setReceptionHandler(ReceptionHandlerNulo.getInstancia());
 		internalConnector = ObjectSocketConnector.create(socketConfig);

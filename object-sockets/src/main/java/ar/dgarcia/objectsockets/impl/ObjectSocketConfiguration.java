@@ -24,7 +24,6 @@ import ar.dgarcia.objectsockets.api.SocketEventHandler;
 import ar.dgarcia.objectsockets.external.mina.components.MinaComponentsFactory;
 import ar.dgarcia.objectsockets.external.mina.components.SocketMinaFactory;
 import ar.dgarcia.textualizer.api.ObjectTextualizer;
-import ar.dgarcia.textualizer.json.JsonTextualizer;
 
 /**
  * Esta clase representa la configuración de un socket de objetos
@@ -56,8 +55,9 @@ public class ObjectSocketConfiguration {
 		this.errorHandler = errorHandler;
 	}
 
-	public static ObjectSocketConfiguration create(final SocketAddress socketAddress) {
-		return create(socketAddress, null);
+	public static ObjectSocketConfiguration create(final SocketAddress socketAddress,
+			final ObjectTextualizer textualizer) {
+		return create(socketAddress, null, textualizer);
 	}
 
 	public SocketAddress getAddress() {
@@ -85,12 +85,12 @@ public class ObjectSocketConfiguration {
 	}
 
 	public static ObjectSocketConfiguration create(final SocketAddress socketAddress,
-			final ObjectReceptionHandler handlerReceptor) {
+			final ObjectReceptionHandler handlerReceptor, final ObjectTextualizer textualizer) {
 		final ObjectSocketConfiguration config = new ObjectSocketConfiguration();
 		config.address = socketAddress;
 		config.receptionHandler = handlerReceptor;
 		config.componentsFactory = SocketMinaFactory.INSTANCE;
-		config.serializer = JsonTextualizer.createWithTypeMetadata();
+		config.serializer = textualizer;
 		return config;
 	}
 
