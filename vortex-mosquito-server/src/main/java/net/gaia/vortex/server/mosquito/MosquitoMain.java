@@ -106,11 +106,11 @@ public class MosquitoMain {
 	 */
 	private static Set<AmbientProfile> getKnownProfiles() {
 		final AmbientProfile dario_pc = ServerProfile.create("Desktop Dario (desarrollo)", "Ikari01",
-				ServerConfiguration.create(new InetSocketAddress("192.168.1.130", 61616)));
+				ServerConfiguration.create(new InetSocketAddress(61616)));
 		final AmbientProfile dario_notebook = ServerProfile.create("Notebook Dario (desarrollo)", "ExpeUEW7",
-				ServerConfiguration.create(new InetSocketAddress("localhost", 61616)));
+				ServerConfiguration.create(new InetSocketAddress(61616)));
 		final AmbientProfile mosquito = ServerProfile.create("Server Mosquito (produccion)", "mosquito",
-				ServerConfiguration.create(new InetSocketAddress("localhost", 61616)));
+				ServerConfiguration.create(new InetSocketAddress(61616)));
 		return Sets.newLinkedHashSet(dario_pc, dario_notebook, mosquito);
 	}
 }
