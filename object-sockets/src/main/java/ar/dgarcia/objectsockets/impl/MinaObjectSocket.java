@@ -12,6 +12,7 @@
  */
 package ar.dgarcia.objectsockets.impl;
 
+import java.net.SocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -130,5 +131,21 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 			LOG.error("Se produjo un error en el handler[" + handlerActual + "] del socket[" + receivedFrom
 					+ "] al recibir el mensaje[" + received + "]", e);
 		}
+	}
+
+	/**
+	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#getLocalAddress()
+	 */
+	@Override
+	public SocketAddress getLocalAddress() {
+		return minaSession.getLocalAddress();
+	}
+
+	/**
+	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#getRemoteAddress()
+	 */
+	@Override
+	public SocketAddress getRemoteAddress() {
+		return minaSession.getRemoteAddress();
 	}
 }

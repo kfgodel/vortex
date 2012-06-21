@@ -40,6 +40,7 @@ public class ObjectSocketIoHandler extends IoHandlerAdapter {
 	 */
 	@Override
 	public void sessionCreated(final IoSession session) throws Exception {
+		LOG.debug("Creando ObjectSocket para la nueva conexion: {}", session);
 		final MinaObjectSocket objectSocket = MinaObjectSocket.create(session, defaultReceptionHandler);
 		session.setAttribute(OBJECT_SOCKET_ASOCIADO, objectSocket);
 		if (this.eventHandler == null) {
@@ -58,6 +59,7 @@ public class ObjectSocketIoHandler extends IoHandlerAdapter {
 	 */
 	@Override
 	public void sessionClosed(final IoSession session) throws Exception {
+		LOG.debug("Cerrando ObjectSocket para la conexion: {}", session);
 		if (this.eventHandler == null) {
 			LOG.debug("Se cerró la sesión[{}] y no hay handler para avisarle en este handler[{}]", session, this);
 			return;
@@ -139,7 +141,8 @@ public class ObjectSocketIoHandler extends IoHandlerAdapter {
 	@Override
 	public void exceptionCaught(final IoSession session, final Throwable cause) throws Exception {
 		if (errorHandler == null) {
-			LOG.debug("No existe handler de errores para [" + this + "]. Ignorando error", cause);
+			LOG.error("No existe handler de errores para [" + this + "]. Cerrando conexion", cause);
+			session.close(true);
 			return;
 		}
 		final ObjectSocket socketPrevio = getConnectedSocketFor(session);

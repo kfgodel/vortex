@@ -12,6 +12,7 @@
  */
 package ar.dgarcia.objectsockets.api;
 
+import java.net.SocketAddress;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -48,5 +49,19 @@ public interface ObjectSocket extends Disposable {
 	 * 
 	 */
 	public ConcurrentMap<String, Object> getEstadoAsociado();
+
+	/**
+	 * Devuelve la dirección local utilizada por este socket
+	 * 
+	 * @return La dirección de este socket en esta máquina
+	 */
+	public SocketAddress getLocalAddress();
+
+	/**
+	 * Devuelve la dirección remota a la que este socket está conectada
+	 * 
+	 * @return La dirección publica de la otra máquina a la que estamos conectados
+	 */
+	public SocketAddress getRemoteAddress();
 
 }

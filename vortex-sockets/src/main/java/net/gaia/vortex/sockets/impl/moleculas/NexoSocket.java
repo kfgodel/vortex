@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.sockets.impl.moleculas;
 
+import java.net.SocketAddress;
+
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
@@ -119,4 +121,23 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	public void closeAndDispose() {
 		socket.closeAndDispose();
 	}
+
+	/**
+	 * Devuelve la dirección local utilizada por este socket
+	 * 
+	 * @return La dirección de este socket en esta máquina
+	 */
+	public SocketAddress getLocalAddress() {
+		return socket.getLocalAddress();
+	}
+
+	/**
+	 * Devuelve la dirección remota a la que este socket está conectada
+	 * 
+	 * @return La dirección publica de la otra máquina a la que estamos conectados
+	 */
+	public SocketAddress getRemoteAddress() {
+		return socket.getRemoteAddress();
+	}
+
 }
