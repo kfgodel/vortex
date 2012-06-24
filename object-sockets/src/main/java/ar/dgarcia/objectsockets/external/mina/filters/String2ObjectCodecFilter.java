@@ -23,6 +23,8 @@ import org.apache.mina.core.filterchain.IoFilterAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.core.write.DefaultWriteRequest;
 import org.apache.mina.core.write.WriteRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ar.dgarcia.textualizer.api.ObjectTextualizer;
 
@@ -33,6 +35,7 @@ import ar.dgarcia.textualizer.api.ObjectTextualizer;
  * @author D. Garcia
  */
 public class String2ObjectCodecFilter extends IoFilterAdapter {
+	private static final Logger LOG = LoggerFactory.getLogger(String2ObjectCodecFilter.class);
 
 	private ObjectTextualizer textualizer;
 
@@ -43,12 +46,15 @@ public class String2ObjectCodecFilter extends IoFilterAdapter {
 	@Override
 	public void messageReceived(final NextFilter nextFilter, final IoSession session, final Object message)
 			throws Exception {
+		LOG.trace("Interpretando mensaje recibido como string: [{}]", message);
 		if (!(message instanceof String)) {
+			LOG.trace("El mensaje[{}] no es un string. Omitiendo conversion", message);
 			super.messageReceived(nextFilter, session, message);
 			return;
 		}
 		final String textMessage = (String) message;
 		final ObjectTextualizer serializer = safeGetSerializerFrom(session);
+		LOG.debug("Des-serializando mensaje String[{}] a Object usando el textualizer[{}]", textMessage, serializer);
 		final Object originalMessage = serializer.convertFromString(textMessage);
 		super.messageReceived(nextFilter, session, originalMessage);
 	}
@@ -62,6 +68,7 @@ public class String2ObjectCodecFilter extends IoFilterAdapter {
 			throws Exception {
 		final Object originalMessage = writeRequest.getMessage();
 		final ObjectTextualizer serializer = safeGetSerializerFrom(session);
+		LOG.debug("Serializando mensaje[{}] a String usando el textualizer[{}]", originalMessage, serializer);
 		final String textMessage = serializer.convertToString(originalMessage);
 		final DefaultWriteRequest transformedWriteRequest = new DefaultWriteRequest(textMessage,
 				writeRequest.getFuture(), writeRequest.getDestination());
