@@ -57,6 +57,9 @@
 	<logger name="ar.dgarcia.objectsockets.external.mina.ObjectSocketIoHandler" level="DEBUG" />
 	<!-- Queremos el detalle de creación de nexos -->
 	<logger name="net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler" level="DEBUG" />
+	<!-- Queremos ver el detalle de los strings que llegan -->
+	<logger name="ar.dgarcia.objectsockets.external.mina.filters.String2ObjectCodecFilter" level="DEBUG" />
+	
 	
   
    	<logger name="net.gaia.vortex.meta.Loggers.RUTEO" level="DEBUG">
