@@ -34,6 +34,10 @@ public class JsonTextualizer implements ObjectTextualizer {
 
 	private ObjectMapper mapper;
 
+	public ObjectMapper getMapper() {
+		return mapper;
+	}
+
 	/**
 	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertToString(java.lang.Object)
 	 */
