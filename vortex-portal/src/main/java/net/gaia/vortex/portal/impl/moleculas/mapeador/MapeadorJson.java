@@ -13,7 +13,6 @@
 package net.gaia.vortex.portal.impl.moleculas.mapeador;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
@@ -21,7 +20,9 @@ import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
-import ar.dgarcia.textualizer.json.JsonTextualizer;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Esta clase implementa el mapeador de mensajes vortex y objetos utilizando JSON como paso
@@ -33,7 +34,7 @@ import ar.dgarcia.textualizer.json.JsonTextualizer;
  */
 public class MapeadorJson implements MapeadorVortex {
 
-	private JsonTextualizer jsonMapper;
+	private ObjectMapper jacksonMapper;
 
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.MapeadorVortex#convertirAVortex(java.lang.Object)
@@ -53,20 +54,14 @@ public class MapeadorJson implements MapeadorVortex {
 			mensajeConPrimitiva.setValorComoPrimitiva(mensajeOriginal);
 			return mensajeConPrimitiva;
 		}
-		String jsonString;
-		try {
-			jsonString = jsonMapper.convertToString(mensajeOriginal);
-		} catch (final CannotTextSerializeException e) {
-			throw new ErrorDeMapeoVortexException("Se produjo un error al pasar el objeto[" + mensajeOriginal
-					+ "] a json", e);
-		}
 		Map<String, Object> mapaDeEstado;
 		try {
-			mapaDeEstado = jsonMapper.convertFromStringAs(Map.class, jsonString);
-		} catch (final CannotTextSerializeException e) {
-			throw new ErrorDeMapeoVortexException("Se produjo un error al obtener el mapa desde json[" + jsonString
-					+ "]", e);
+			mapaDeEstado = jacksonMapper.convertValue(mensajeOriginal, Map.class);
+		} catch (final Exception e) {
+			throw new ErrorDeMapeoVortexException("Se produjo un error al convertir el objeto[" + mensajeOriginal
+					+ "] a mapa", e);
 		}
+
 		final MensajeVortex mensajeVortex = MensajeMapa.create(mapaDeEstado);
 		final Class<? extends Object> tipoDelMensaje = mensajeOriginal.getClass();
 		final String nombreDelTipoOriginal = tipoDelMensaje.getName();
@@ -91,27 +86,21 @@ public class MapeadorJson implements MapeadorVortex {
 			final Object valorPrimitivo = mensajeOriginal.getValorComoPrimitiva();
 			return (T) valorPrimitivo;
 		}
-		final ConcurrentMap<String, Object> contenidoVortex = mensajeOriginal.getContenido();
-		String jsonString;
+
+		final T objeto;
 		try {
-			jsonString = jsonMapper.convertToString(contenidoVortex);
-		} catch (final CannotTextSerializeException e) {
-			throw new ErrorDeMapeoVortexException("Se produjo un error al pasar el mapa" + contenidoVortex + " a json",
-					e);
-		}
-		T objeto;
-		try {
-			objeto = jsonMapper.convertFromStringAs(tipoEsperado, jsonString);
+			objeto = jacksonMapper.convertValue(mensajeOriginal, tipoEsperado);
 		} catch (final CannotTextSerializeException e) {
 			throw new ErrorDeMapeoVortexException("Se produjo un error al obtener el objeto de tipo[" + tipoEsperado
-					+ "] desde json[" + jsonString + "]", e);
+					+ "] desde el map[" + mensajeOriginal + "]", e);
 		}
 		return objeto;
 	}
 
 	public static MapeadorJson create() {
 		final MapeadorJson mapeador = new MapeadorJson();
-		mapeador.jsonMapper = JsonTextualizer.createWithoutTypeMetadata();
+		mapeador.jacksonMapper = new ObjectMapper();
+		mapeador.jacksonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		return mapeador;
 	}
 

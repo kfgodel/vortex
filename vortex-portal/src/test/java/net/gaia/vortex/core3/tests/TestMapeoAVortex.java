@@ -40,7 +40,7 @@ public class TestMapeoAVortex {
 	}
 
 	@Test
-	public void deberiaTardadMenosDe1msEnConvertirUnObjetoSimpleIdaYVueltaAObjeto() {
+	public void deberiaTardadMenosDe1msEnConvertirUnObjetoPrimitivaIdaYVueltaAObjeto() {
 		final Object objetoSimple = "Hola manola";
 		checkPerformance(objetoSimple);
 	}
