@@ -224,10 +224,10 @@ public class TestRedA01ConPortal {
 	}
 
 	/**
-	 * Verifica que el mensaje llegue si hay intermediario
+	 * Verifica que el mensaje llegue si hay más de un intermediario
 	 */
 	@Test
-	public void elMensajeDeberiaLlegarSiHayUnNodoEnElMedio() {
+	public void elMensajeDeberiaLlegarSiHayDosNodosEnElMedio() {
 		// Creamos los nodos centrales interconectados
 		final NodoHub nodoIntermedio1 = HubConNexo.create(processor);
 		final NodoHub nodoIntermedio2 = HubConNexo.create(processor);
@@ -245,6 +245,37 @@ public class TestRedA01ConPortal {
 
 		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.assertEquals("El mensaje debería llegar igual al receptor", mensajeEnviado, mensajeRecibido);
+	}
+
+	/**
+	 * Verifica que los hubs no generan loops entre sí al haber varios conectados
+	 */
+	@Test
+	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosHubsEnElMedioInterconectados() {
+		// Creamos los nodos centrales interconectados
+		final NodoHub nodoIntermedio1 = HubConNexo.create(processor);
+		final NodoHub nodoIntermedio2 = HubConNexo.create(processor);
+		interconectar(nodoIntermedio1, nodoIntermedio2);
+
+		// Le agregamos los extremos portales
+		final Portal nodoEmisor = PortalMapeador.createForIOWith(processor, nodoIntermedio1);
+		final Portal nodoReceptor = PortalMapeador.createForIOWith(processor, nodoIntermedio2);
+
+		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
+		nodoReceptor.recibirCon(handlerReceptor);
+
+		final String mensajeEnviado = "Mensaje";
+		nodoEmisor.enviar(mensajeEnviado);
+
+		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertEquals("El mensaje debería llegar la primera vez", mensajeEnviado, mensajeRecibido);
+
+		try {
+			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("No deberíamos haber recibido otro mensaje");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperábamos
+		}
 	}
 
 	/**
