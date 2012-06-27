@@ -19,9 +19,10 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
+import net.gaia.vortex.core.impl.atomos.ids.NexoIdentificador;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
 import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
-import net.gaia.vortex.core.impl.moleculas.ids.NexoIdentificador;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,20 +36,26 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class TestNexoIdentificador {
+public class TestComponentesIdentificadores {
 
 	private NexoIdentificador nexo;
 	private MensajeVortex mensajeEnviado;
-	private ReceptorEncolador receptorFinal;
+	private ReceptorEncolador receptorFinal1;
 	private IdentificadorVortex identificador;
 	private TaskProcessor processor;
+	private MultiplexorIdentificador multiplexor;
+	private ReceptorEncolador receptorFinal2;
 
 	@Before
 	public void crearDependencias() {
 		processor = ExecutorBasedTaskProcesor.create(4);
 		identificador = GeneradorDeIdsEstaticos.getInstancia().generarId();
-		receptorFinal = ReceptorEncolador.create();
-		nexo = NexoIdentificador.create(processor, identificador, receptorFinal);
+		receptorFinal1 = ReceptorEncolador.create();
+		receptorFinal2 = ReceptorEncolador.create();
+		nexo = NexoIdentificador.create(processor, identificador, receptorFinal1);
+		multiplexor = MultiplexorIdentificador.create(processor, identificador);
+		multiplexor.conectarCon(receptorFinal1);
+		multiplexor.conectarCon(receptorFinal2);
 		mensajeEnviado = MensajeMapa.create();
 	}
 
@@ -62,7 +69,7 @@ public class TestNexoIdentificador {
 		Assert.assertFalse("El mensaje no debería tener registro del pasaje por el ID",
 				mensajeEnviado.pasoPreviamentePor(identificador));
 		nexo.recibir(mensajeEnviado);
-		final MensajeVortex mensajeRecibido = receptorFinal.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		final MensajeVortex mensajeRecibido = receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.assertEquals("El mensaje recibido debería ser el enviado", mensajeEnviado, mensajeRecibido);
 		Assert.assertTrue("El mensaje debería registrar el pasajo por el identificador",
 				mensajeRecibido.pasoPreviamentePor(identificador));
@@ -76,11 +83,48 @@ public class TestNexoIdentificador {
 
 		nexo.recibir(mensajeEnviado);
 		try {
-			receptorFinal.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("El mensaje no debería haber llegado a destino");
 		} catch (final TimeoutExceededException e) {
 			// Es la excepción que esperabamos
 		}
 	}
 
+	@Test
+	public void elMensajeDeberiaLlegarAAmbosDestinosSiNuncaPasoPorElMultiplexor() {
+		Assert.assertFalse("El mensaje no debería tener registro del pasaje por el ID",
+				mensajeEnviado.pasoPreviamentePor(identificador));
+		multiplexor.recibir(mensajeEnviado);
+
+		final MensajeVortex mensajeRecibido1 = receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertEquals("El mensaje recibido debería ser el enviado", mensajeEnviado, mensajeRecibido1);
+		Assert.assertTrue("El mensaje debería registrar el pasajo por el identificador",
+				mensajeRecibido1.pasoPreviamentePor(identificador));
+
+		final MensajeVortex mensajeRecibido2 = receptorFinal2.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertEquals("El mensaje recibido debería ser el enviado", mensajeEnviado, mensajeRecibido2);
+		Assert.assertTrue("El mensaje debería registrar el pasajo por el identificador",
+				mensajeRecibido2.pasoPreviamentePor(identificador));
+	}
+
+	@Test
+	public void elMensajeNoDeberiaLlegarANingunoSiYaPasoPorElMultiplexor() {
+		mensajeEnviado.registrarPasajePor(identificador);
+		Assert.assertTrue("El mensaje debería registrar el pasajo por el identificador",
+				mensajeEnviado.pasoPreviamentePor(identificador));
+
+		multiplexor.recibir(mensajeEnviado);
+		try {
+			receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("El mensaje no debería haber llegado a destino");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperabamos
+		}
+		try {
+			receptorFinal2.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("El mensaje no debería haber llegado a destino");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperabamos
+		}
+	}
 }

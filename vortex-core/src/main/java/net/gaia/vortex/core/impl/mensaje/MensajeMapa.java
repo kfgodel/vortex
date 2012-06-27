@@ -18,9 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicReference;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
@@ -49,13 +47,11 @@ public class MensajeMapa implements MensajeVortex {
 	 */
 	public static final String CLASSNAME_KEY = "CLASSNAME_KEY";
 
-	private AtomicReference<Receptor> remitenteDirecto;
-	public static final String remitenteDirecto_FIELD = "remitenteDirecto";
-
 	private ConcurrentMap<String, Object> contenido;
 	public static final String contenido_FIELD = "contenido";
 
 	private Set<String> idsVisitados;
+	public static final String idsVisitados_FIELD = "idsVisitados";
 
 	public Set<String> getIdsVisitados() {
 		if (idsVisitados == null) {
@@ -117,22 +113,6 @@ public class MensajeMapa implements MensajeVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getRemitenteDirecto()
-	 */
-	@Override
-	public Receptor getRemitenteDirecto() {
-		return remitenteDirecto.get();
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#setRemitenteDirecto(net.gaia.vortex.core.api.atomos.Receptor)
-	 */
-	@Override
-	public void setRemitenteDirecto(final Receptor remitente) {
-		this.remitenteDirecto.set(remitente);
-	}
-
-	/**
 	 * Crea un mensaje vortex con contenido vacío
 	 * 
 	 * @return El mensaje creado
@@ -151,7 +131,6 @@ public class MensajeMapa implements MensajeVortex {
 	 */
 	public static MensajeMapa create(final Map<String, Object> contenidoIncial) {
 		final MensajeMapa mensaje = new MensajeMapa();
-		mensaje.remitenteDirecto = new AtomicReference<Receptor>();
 		mensaje.contenido = new ConcurrentHashMap<String, Object>(contenidoIncial);
 		mensaje.idsVisitados = mensaje.crearSetDeVisitadosDesdeMapa();
 		return mensaje;
@@ -162,8 +141,7 @@ public class MensajeMapa implements MensajeVortex {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(remitenteDirecto_FIELD, remitenteDirecto).add(contenido_FIELD, contenido)
-				.toString();
+		return ToString.de(this).add(contenido_FIELD, contenido).add(idsVisitados_FIELD, idsVisitados).toString();
 	}
 
 	/**

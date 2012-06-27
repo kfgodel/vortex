@@ -14,7 +14,6 @@ package net.gaia.vortex.core.api.mensaje;
 
 import java.util.concurrent.ConcurrentMap;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 
 /**
@@ -30,21 +29,6 @@ import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
  * @author D. García
  */
 public interface MensajeVortex {
-
-	/**
-	 * Devuelve la instancia que representa el componente vecino que nos pasó el mensaje
-	 * 
-	 * @return El componente que envía el mensaje
-	 */
-	public Receptor getRemitenteDirecto();
-
-	/**
-	 * Establece el remitente actual para este mensaje de manera que sea identificable su origen
-	 * 
-	 * @param remitente
-	 *            El remitente que no debe recibir el mensaje
-	 */
-	public void setRemitenteDirecto(Receptor remitente);
 
 	/**
 	 * Devuelve el mapa de datos que contiene este mensaje y que representa un mensaje

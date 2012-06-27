@@ -10,14 +10,15 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.moleculas.ids;
+package net.gaia.vortex.core.impl.atomos.ids;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.annon.Molecula;
+import net.gaia.vortex.core.api.annon.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.atomos.ReceptorNulo;
 import net.gaia.vortex.core.impl.atomos.ReceptorVariable;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
@@ -28,6 +29,8 @@ import net.gaia.vortex.core.impl.transformaciones.RegistrarPaso;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.strings.ToString;
+
 /**
  * Esta clase representa el nexo identificador de mensajes que combina dos acciones, agrega ID
  * propio de molecula visitada a los mensajes salientes, y descarta los mensajes entrantes que
@@ -37,12 +40,15 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-@Molecula
-public class NexoIdentificador implements Nexo {
+@Atomo
+public class NexoIdentificador extends ComponenteConProcesadorSupport implements Nexo {
 	private static final Logger LOG = LoggerFactory.getLogger(NexoIdentificador.class);
 
 	private ReceptorVariable<Receptor> destinoVariable;
 	private NexoFiltro filtroDeEntrada;
+
+	private IdentificadorVortex identificador;
+	public static final String identificador_FIELD = "identificador";
 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
@@ -111,10 +117,21 @@ public class NexoIdentificador implements Nexo {
 	 */
 	protected void initializeWith(final TaskProcessor processor, final IdentificadorVortex identificador,
 			final Receptor delegado) {
+		super.initializeWith(processor);
+		this.identificador = identificador;
 		destinoVariable = ReceptorVariable.create(delegado);
 		final NexoTransformador registrarPasoIdentificador = NexoTransformador.create(processor,
 				RegistrarPaso.por(identificador), destinoVariable);
 		filtroDeEntrada = NexoFiltro
 				.create(processor, NoPasoPreviamente.por(identificador), registrarPasoIdentificador);
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(identificador_FIELD, identificador).toString();
+	}
+
 }
