@@ -15,6 +15,7 @@ package net.gaia.vortex.core.api.mensaje;
 import java.util.concurrent.ConcurrentMap;
 
 import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 
 /**
  * Esta interfaz representa un mensaje vortex que es información que circula dentro de la red y
@@ -93,5 +94,22 @@ public interface MensajeVortex {
 	 * @return El nombre completo de la clase original, o null si no existe ese dato en este mensaje
 	 */
 	public String getNombreDelTipoOriginal();
+
+	/**
+	 * Indica si este mensaje ya tiene en su estado el registro del identificador pasado
+	 * 
+	 * @param identificador
+	 *            El identificador a evaluar en este mensaje
+	 * @return true si este mensaje tiene el identificador pasado en la lista de moleculas visitadas
+	 */
+	public boolean pasoPreviamentePor(IdentificadorVortex identificador);
+
+	/**
+	 * Registra en este mensaje el pasaje por un nodo con el ID indicado
+	 * 
+	 * @param identificador
+	 *            El identificador del nodo
+	 */
+	public void registrarPasajePor(IdentificadorVortex identificador);
 
 }

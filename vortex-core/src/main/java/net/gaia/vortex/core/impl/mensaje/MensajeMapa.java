@@ -12,14 +12,19 @@
  */
 package net.gaia.vortex.core.impl.mensaje;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
+import ar.com.dgarcia.colecciones.sets.ConcurrentHashSet;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -31,9 +36,17 @@ import ar.com.dgarcia.lang.strings.ToString;
 public class MensajeMapa implements MensajeVortex {
 
 	/**
+	 * Key utilizada para guardar el registro de moleculas visitadas
+	 */
+	private static final String MOLECULAS_VORTEX_VISITADAS_KEY = "moleculas_vortex_visitadas";
+	/**
 	 * Key utilizada para guardar el valor de una primitiva como mapa en este mensaje
 	 */
 	public static final String PRIMITIVA_VORTEX_KEY = "PRIMITIVA_VORTEX_KEY";
+	/**
+	 * Clave usada para agregar como dato el nombre completo de la clase a partir de la cual se
+	 * origina este mensaje
+	 */
 	public static final String CLASSNAME_KEY = "CLASSNAME_KEY";
 
 	private AtomicReference<Receptor> remitenteDirecto;
@@ -41,6 +54,59 @@ public class MensajeMapa implements MensajeVortex {
 
 	private ConcurrentMap<String, Object> contenido;
 	public static final String contenido_FIELD = "contenido";
+
+	private Set<String> idsVisitados;
+
+	public Set<String> getIdsVisitados() {
+		if (idsVisitados == null) {
+			idsVisitados = crearSetDeVisitadosDesdeMapa();
+		}
+		return idsVisitados;
+	}
+
+	/**
+	 * Creamos el set de los nodos visitados a partir de los datos actuales del mapa, reemplazamos
+	 * la entrada en el mapa con el set creado
+	 * 
+	 * @return El conjunto de nodos visitados inicialmente
+	 */
+	private Set<String> crearSetDeVisitadosDesdeMapa() {
+		final Collection<String> moleculasVisitadasSegunMapa = castearYVerificarContenidoDeVisitados();
+		final ConcurrentHashSet<String> visitados = new ConcurrentHashSet<String>();
+		visitados.addAll(moleculasVisitadasSegunMapa);
+		getContenido().put(MOLECULAS_VORTEX_VISITADAS_KEY, visitados);
+		return visitados;
+	}
+
+	/**
+	 * Verifica que el objeto pasado sea una colección de strings. En caso contrario produce una
+	 * excepción
+	 * 
+	 * @param object
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Collection<String> castearYVerificarContenidoDeVisitados() {
+		final Object object = getContenido().get(MOLECULAS_VORTEX_VISITADAS_KEY);
+		if (object == null) {
+			return Collections.emptySet();
+		}
+		Collection coleccionDeIds;
+		try {
+			coleccionDeIds = (Collection) object;
+		} catch (final ClassCastException e) {
+			throw new UnhandledConditionException("El mensaje tiene como atributo[" + MOLECULAS_VORTEX_VISITADAS_KEY
+					+ "] un valor que no es una coleccion de ids: " + object);
+		}
+		for (final Object posibleId : coleccionDeIds) {
+			if (posibleId instanceof String) {
+				continue;
+			}
+			throw new UnhandledConditionException("El atributo[" + MOLECULAS_VORTEX_VISITADAS_KEY
+					+ "] tiene en la coleccion un ID que no es string: " + posibleId);
+		}
+		return coleccionDeIds;
+	}
 
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getContenido()
@@ -87,6 +153,7 @@ public class MensajeMapa implements MensajeVortex {
 		final MensajeMapa mensaje = new MensajeMapa();
 		mensaje.remitenteDirecto = new AtomicReference<Receptor>();
 		mensaje.contenido = new ConcurrentHashMap<String, Object>(contenidoIncial);
+		mensaje.idsVisitados = mensaje.crearSetDeVisitadosDesdeMapa();
 		return mensaje;
 	}
 
@@ -163,5 +230,24 @@ public class MensajeMapa implements MensajeVortex {
 	@Override
 	public String getNombreDelTipoOriginal() {
 		return (String) getContenido().get(CLASSNAME_KEY);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#pasoPreviamentePor(net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex)
+	 */
+	@Override
+	public boolean pasoPreviamentePor(final IdentificadorVortex identificador) {
+		final String valorDelIdentificador = identificador.getValorActual();
+		final boolean yaTenemosRegistroDelIdentificador = getIdsVisitados().contains(valorDelIdentificador);
+		return yaTenemosRegistroDelIdentificador;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#registrarPasajePor(net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex)
+	 */
+	@Override
+	public void registrarPasajePor(final IdentificadorVortex identificador) {
+		final String valorDelIdentificador = identificador.getValorActual();
+		getIdsVisitados().add(valorDelIdentificador);
 	}
 }

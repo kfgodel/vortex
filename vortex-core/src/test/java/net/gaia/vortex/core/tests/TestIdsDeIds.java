@@ -35,7 +35,7 @@ public class TestIdsDeIds {
 	public void elIdDeVortexDeberíaTener64Caracteres() {
 		final IdentificadorVortex nuevoId = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		final String idComoString = nuevoId.getValorActual();
-		LOG.debug("ID generador: {}", idComoString);
+		LOG.debug("ID generado: {}", idComoString);
 		Assert.assertEquals("El largo debería ser de 64 caracteres", 64, idComoString.length());
 	}
 
@@ -44,7 +44,7 @@ public class TestIdsDeIds {
 		final IdentificadorVortex nuevoId = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		final String idComoString = nuevoId.getValorActual();
 		final Matcher matcher = Pattern.compile("[A-F0-9]{64}").matcher(idComoString);
-		LOG.debug("ID generador: {}", idComoString);
+		LOG.debug("ID generado: {}", idComoString);
 		Assert.assertTrue("El id debería matchear la expresion regular", matcher.matches());
 	}
 
