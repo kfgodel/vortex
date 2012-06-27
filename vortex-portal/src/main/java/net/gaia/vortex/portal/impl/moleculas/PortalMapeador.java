@@ -20,12 +20,15 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable;
 import net.gaia.vortex.core.impl.atomos.ReceptorVariable;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.RemitenteDistinto;
+import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
 import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
 import net.gaia.vortex.core.impl.transformaciones.AsignarComoRemitente;
 import net.gaia.vortex.portal.api.moleculas.HandlerDePortal;
@@ -42,12 +45,21 @@ import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJson;
  * @author D. García
  */
 @Molecula
-public class PortalMapeador extends NexoSupport implements Portal {
+public class PortalMapeador extends NexoSupport implements Portal, VortexIdentificable {
 
 	private MapeadorVortex mapeadorVortex;
 	private Vortificador procesoDeSalida;
 	private Multiplexor multiplexorDeEntrada;
 	private ReceptorVariable<Receptor> receptorDeSalida;
+	private IdentificadorVortex identificador;
+
+	/**
+	 * @see net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable#getIdentificador()
+	 */
+	@Override
+	public IdentificadorVortex getIdentificador() {
+		return identificador;
+	}
 
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
@@ -63,6 +75,7 @@ public class PortalMapeador extends NexoSupport implements Portal {
 	 */
 	@Override
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado) {
+		identificador = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		receptorDeSalida = ReceptorVariable.create(delegado);
 		super.initializeWith(processor, delegado);
 		final NexoTransformador asignarThisComoRemitente = NexoTransformador.create(processor,

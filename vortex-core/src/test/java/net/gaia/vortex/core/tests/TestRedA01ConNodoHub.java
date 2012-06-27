@@ -1,7 +1,7 @@
 /**
  * 13/06/2012 14:42:44 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core2.tests;
+package net.gaia.vortex.core.tests;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
