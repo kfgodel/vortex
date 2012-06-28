@@ -36,7 +36,7 @@ public class MensajeMapa implements MensajeVortex {
 	/**
 	 * Key utilizada para guardar el registro de moleculas visitadas
 	 */
-	private static final String MOLECULAS_VORTEX_VISITADAS_KEY = "moleculas_vortex_visitadas";
+	private static final String MOLECULAS_VORTEX_VISITADAS_KEY = "traza_identificadores";
 	/**
 	 * Key utilizada para guardar el valor de una primitiva como mapa en este mensaje
 	 */
