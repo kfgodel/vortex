@@ -16,15 +16,16 @@ import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.vortex.core.api.annon.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.ReceptorIdentificable;
 import net.gaia.vortex.core.impl.atomos.ReceptorVariable;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
-import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
-import net.gaia.vortex.core.impl.condiciones.RemitenteDistinto;
+import net.gaia.vortex.core.impl.atomos.ids.NexoIdentificador;
+import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
 import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
-import net.gaia.vortex.core.impl.transformaciones.AsignarComoRemitente;
 import net.gaia.vortex.sockets.impl.atomos.Desocketizador;
 import net.gaia.vortex.sockets.impl.atomos.Socketizador;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -34,11 +35,13 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
 
 /**
  * Esta clase representa un componente vortex que une la red vortex con un socket de manera que los
- * mensajes circulen por el socket representado como parte de la misma red
+ * mensajes circulen por el socket representado como parte de la misma red.<br>
+ * Este nexo tiene la capacidad de identificar los mensajes que recibe pudiendo descartar duplicados
  * 
  * @author D. García
  */
-public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, Disposable {
+@Molecula
+public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, Disposable, ReceptorIdentificable {
 
 	private ObjectSocket socket;
 	public static final String socket_FIELD = "socket";
@@ -49,7 +52,18 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	private Desocketizador procesoDesdeSocket;
 	public static final String procesoDesdeSocket_FIELD = "procesoDesdeSocket";
 
+	private IdentificadorVortex identificador;
+	public static final String identificador_FIELD = "identificador";
+
 	private ReceptorVariable<Receptor> destinoDesdeSocket;
+
+	/**
+	 * @see net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable#getIdentificador()
+	 */
+	@Override
+	public IdentificadorVortex getIdentificador() {
+		return identificador;
+	}
 
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core.api.mensaje.MensajeVortex)
@@ -60,6 +74,7 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	}
 
 	private void initializeWith(final TaskProcessor processor, final Receptor delegado, final ObjectSocket socket) {
+		identificador = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		// Creamos el receptor variable antes que nada
 		destinoDesdeSocket = ReceptorVariable.create(delegado);
 		super.initializeWith(processor, delegado);
@@ -67,11 +82,10 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 		this.socket = socket;
 
 		// No envíamos por el socket los mensajes propios
-		procesoDesdeVortex = NexoFiltro.create(processor, RemitenteDistinto.de(this),
-				Socketizador.create(processor, socket));
+		procesoDesdeVortex = NexoIdentificador.create(processor, identificador, Socketizador.create(processor, socket));
 		// Indicamos que los mensajes recibidos desde el socket son nuestros
 		procesoDesdeSocket = Desocketizador.create(processor,
-				NexoTransformador.create(processor, AsignarComoRemitente.a(this), destinoDesdeSocket));
+				NexoIdentificador.create(processor, identificador, destinoDesdeSocket));
 	}
 
 	/**

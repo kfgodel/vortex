@@ -18,7 +18,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.server.mosquito.config.ContextConfiguration;
-import net.gaia.vortex.sockets.impl.moleculas.HubSocket;
+import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -30,7 +30,7 @@ public class MosquitoSever {
 	private ContextConfiguration configuration;
 	public static final String configuration_FIELD = "configuration";
 
-	private HubSocket hubCentral;
+	private NodoSocket hubCentral;
 	public static final String hubCentral_FIELD = "hubCentral";
 
 	private TaskProcessor processor;
@@ -56,6 +56,6 @@ public class MosquitoSever {
 	public void aceptarConexiones() {
 		final SocketAddress listeningAddress = configuration.getListeningAddress();
 		Loggers.RUTEO.debug("Comenzando escucha de sockets en: {}", listeningAddress);
-		hubCentral = HubSocket.createAndListenTo(listeningAddress, processor);
+		hubCentral = NodoSocket.createAndListenTo(listeningAddress, processor);
 	}
 }

@@ -21,16 +21,16 @@ import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable;
+import net.gaia.vortex.core.api.moleculas.ids.ReceptorIdentificable;
 import net.gaia.vortex.core.impl.atomos.ReceptorVariable;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
-import net.gaia.vortex.core.impl.condiciones.RemitenteDistinto;
+import net.gaia.vortex.core.impl.condiciones.NoPasoPreviamente;
 import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
 import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
-import net.gaia.vortex.core.impl.transformaciones.AsignarComoRemitente;
+import net.gaia.vortex.core.impl.transformaciones.RegistrarPaso;
 import net.gaia.vortex.portal.api.moleculas.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.api.moleculas.Portal;
@@ -45,13 +45,14 @@ import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJson;
  * @author D. García
  */
 @Molecula
-public class PortalMapeador extends NexoSupport implements Portal, VortexIdentificable {
+public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdentificable {
 
 	private MapeadorVortex mapeadorVortex;
-	private Vortificador procesoDeSalida;
-	private Multiplexor multiplexorDeEntrada;
 	private ReceptorVariable<Receptor> receptorDeSalida;
 	private IdentificadorVortex identificador;
+	private Receptor procesoDeEntrada;
+	private Vortificador procesoDeSalida;
+	private Multiplexor multiplexorDeCondiciones;
 
 	/**
 	 * @see net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable#getIdentificador()
@@ -76,12 +77,15 @@ public class PortalMapeador extends NexoSupport implements Portal, VortexIdentif
 	@Override
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado) {
 		identificador = GeneradorDeIdsEstaticos.getInstancia().generarId();
+
 		receptorDeSalida = ReceptorVariable.create(delegado);
 		super.initializeWith(processor, delegado);
-		final NexoTransformador asignarThisComoRemitente = NexoTransformador.create(processor,
-				AsignarComoRemitente.a(this), receptorDeSalida);
-		procesoDeSalida = Vortificador.create(mapeadorVortex, asignarThisComoRemitente);
-		multiplexorDeEntrada = MultiplexorParalelo.create(processor);
+		final NexoTransformador registrarIdPropioEnMensaje = NexoTransformador.create(processor,
+				RegistrarPaso.por(identificador), receptorDeSalida);
+		procesoDeSalida = Vortificador.create(mapeadorVortex, registrarIdPropioEnMensaje);
+
+		multiplexorDeCondiciones = MultiplexorParalelo.create(processor);
+		procesoDeEntrada = NexoFiltro.create(processor, NoPasoPreviamente.por(identificador), multiplexorDeCondiciones);
 	}
 
 	/**
@@ -114,12 +118,9 @@ public class PortalMapeador extends NexoSupport implements Portal, VortexIdentif
 				mapeadorVortex, tipoEsperadoComoMensajes, handlerDeMensajesCasteado);
 
 		final Condicion condicionParaRecibirMensajeEnHandler = handlerDelPortal.getCondicionNecesaria();
-		final Receptor cumpleLaCondicionDelHandler = NexoFiltro.create(getProcessor(),
+		final NexoFiltro evaluarCondicionYHandlear = NexoFiltro.create(getProcessor(),
 				condicionParaRecibirMensajeEnHandler, convertirEnTipoEsperadoEInvocarHandler);
-
-		final Receptor filtrarMensajesPropios = NexoFiltro.create(getProcessor(), RemitenteDistinto.de(this),
-				cumpleLaCondicionDelHandler);
-		multiplexorDeEntrada.conectarCon(filtrarMensajesPropios);
+		multiplexorDeCondiciones.conectarCon(evaluarCondicionYHandlear);
 	}
 
 	/**
@@ -127,8 +128,8 @@ public class PortalMapeador extends NexoSupport implements Portal, VortexIdentif
 	 */
 	@Override
 	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
-		// Al recibir un mensaje se lo pasamos al multiplexor de entrada
-		return DelegarMensaje.create(mensaje, multiplexorDeEntrada);
+		// Al recibir un mensaje se lo pasamos al filtro de entrada
+		return DelegarMensaje.create(mensaje, procesoDeEntrada);
 	}
 
 	/**

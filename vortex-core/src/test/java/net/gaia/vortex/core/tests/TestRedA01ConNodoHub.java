@@ -10,15 +10,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
-import net.gaia.vortex.core.api.moleculas.ruteo.NodoHubConNexoCore;
-import net.gaia.vortex.core.impl.atomos.ReceptorNulo;
-import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
-import net.gaia.vortex.core.impl.moleculas.ruteo.HubConNexo;
-import net.gaia.vortex.core.tests.ReceptorEncolador;
+import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 
 import org.junit.After;
 import org.junit.Before;
@@ -39,9 +36,9 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  */
 public class TestRedA01ConNodoHub {
 
-	private NodoHubConNexoCore nodoEmisor;
-	private NodoHub nodoRuteador;
-	private NodoHub nodoReceptor;
+	private NodoMultiplexor nodoEmisor;
+	private NodoMultiplexor nodoRuteador;
+	private NodoMultiplexor nodoReceptor;
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
@@ -49,9 +46,9 @@ public class TestRedA01ConNodoHub {
 	public void crearNodos() {
 		processor = ExecutorBasedTaskProcesor.create();
 		mensaje1 = MensajeMapa.create();
-		nodoEmisor = HubConNexo.create(processor);
-		nodoRuteador = HubConNexo.create(processor);
-		nodoReceptor = HubConNexo.create(processor);
+		nodoEmisor = NodoMultiplexor.create(processor);
+		nodoRuteador = NodoMultiplexor.create(processor);
+		nodoReceptor = NodoMultiplexor.create(processor);
 
 		interconectar(nodoEmisor, nodoRuteador);
 		interconectar(nodoRuteador, nodoReceptor);
@@ -172,14 +169,16 @@ public class TestRedA01ConNodoHub {
 	 */
 	@Test
 	public void el_Emisor_No_Deberia_Recibir_Su_Propio_Mensaje() {
+		// Le conectamos un receptor directo al emisor para ver los que le llegan
 		final ReceptorEncolador recibidosPorElEmisor = ReceptorEncolador.create();
-		nodoEmisor.setNexoCore(NexoEjecutor.create(processor, recibidosPorElEmisor, ReceptorNulo.getInstancia()));
+		nodoEmisor.conectarCon(recibidosPorElEmisor);
 
+		// Mandamos el mensaje
 		nodoEmisor.recibir(mensaje1);
 
 		final MensajeVortex recibidoPrimero = recibidosPorElEmisor.esperarPorMensaje(TimeMagnitude.of(1,
 				TimeUnit.SECONDS));
-		Assert.assertSame("Deberíamos tener el mensaje como recibido al enviar", mensaje1, recibidoPrimero);
+		Assert.assertSame("Deberíamos tener el mensaje como recibido 1 vez por el envio", mensaje1, recibidoPrimero);
 
 		try {
 			recibidosPorElEmisor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -193,11 +192,11 @@ public class TestRedA01ConNodoHub {
 	 * Verifica que el mensaje llegue si hay intermediarios
 	 */
 	@Test
-	public void elMensajeDeberiaLlegarSiHayUnNodoEnElMedio() {
-		final NodoHub nodoEmisor = HubConNexo.create(processor);
-		final NodoHub nodoIntermedio1 = HubConNexo.create(processor);
-		final NodoHub nodoIntermedio2 = HubConNexo.create(processor);
-		final NodoHub nodoReceptor = HubConNexo.create(processor);
+	public void elMensajeDeberiaLlegarSiHayNodosEnElMedio() {
+		final NodoMultiplexor nodoEmisor = NodoMultiplexor.create(processor);
+		final NodoMultiplexor nodoIntermedio1 = NodoMultiplexor.create(processor);
+		final NodoMultiplexor nodoIntermedio2 = NodoMultiplexor.create(processor);
+		final NodoMultiplexor nodoReceptor = NodoMultiplexor.create(processor);
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		nodoReceptor.conectarCon(handlerReceptor);
@@ -207,8 +206,54 @@ public class TestRedA01ConNodoHub {
 		interconectar(nodoIntermedio2, nodoReceptor);
 
 		nodoEmisor.recibir(mensaje1);
+
 		final MensajeVortex mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.assertSame("El mensaje debería llegar igual al receptor", mensaje1, mensajeRecibido);
+
+		try {
+			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("No deberíamos haber recibido otro mensaje");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperábamos
+		}
+	}
+
+	/**
+	 * Verifica que los intermediarios no generen duplicados de mensajes
+	 */
+	@Test
+	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosNodosEnElMedioInterconectados() {
+		final NodoMultiplexor nodoEmisor = NodoMultiplexor.create(processor);
+		// Le conectamos un receptor directo al emisor para ver los que le llegan
+		final ReceptorEncolador recibidosPorElEmisor = ReceptorEncolador.create();
+		nodoEmisor.conectarCon(recibidosPorElEmisor);
+
+		final NodoMultiplexor nodoIntermedio1 = NodoMultiplexor.create(processor);
+		final NodoMultiplexor nodoIntermedio2 = NodoMultiplexor.create(processor);
+		final NodoMultiplexor nodoReceptor = NodoMultiplexor.create(processor);
+
+		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
+		nodoReceptor.conectarCon(handlerReceptor);
+
+		interconectar(nodoEmisor, nodoIntermedio1);
+		interconectar(nodoIntermedio1, nodoIntermedio2);
+		interconectar(nodoIntermedio2, nodoReceptor);
+
+		nodoEmisor.recibir(mensaje1);
+
+		final MensajeVortex mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertSame("El mensaje debería llegar igual al receptor", mensaje1, mensajeRecibido);
+
+		final MensajeVortex recibidoPrimero = recibidosPorElEmisor.esperarPorMensaje(TimeMagnitude.of(1,
+				TimeUnit.SECONDS));
+		Assert.assertSame("Deberíamos tener el mensaje como recibido 1 vez por el envio", mensaje1, recibidoPrimero);
+
+		try {
+			recibidosPorElEmisor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("No deberíamos haber recibido un segundo mensaje");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperábamos
+		}
 	}
 
 	/**
@@ -221,7 +266,7 @@ public class TestRedA01ConNodoHub {
 		nodoReceptor.conectarCon(handlerReceptor1);
 
 		final ReceptorEncolador handlerReceptor2 = ReceptorEncolador.create();
-		final NodoHub nodoReceptor2 = HubConNexo.create(processor);
+		final NodoMultiplexor nodoReceptor2 = NodoMultiplexor.create(processor);
 		nodoReceptor2.conectarCon(handlerReceptor2);
 
 		interconectar(nodoRuteador, nodoReceptor2);
@@ -241,7 +286,7 @@ public class TestRedA01ConNodoHub {
 	/**
 	 * Crea una conexión bidireccional entre los nodos pasados
 	 */
-	public void interconectar(final NodoHub origen, final NodoHub destino) {
+	public void interconectar(final Nodo origen, final Nodo destino) {
 		origen.conectarCon(destino);
 		destino.conectarCon(origen);
 	}

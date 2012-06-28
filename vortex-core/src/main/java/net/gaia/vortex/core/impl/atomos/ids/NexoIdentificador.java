@@ -32,11 +32,10 @@ import org.slf4j.LoggerFactory;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa el nexo identificador de mensajes que combina dos acciones, agrega ID
- * propio de molecula visitada a los mensajes salientes, y descarta los mensajes entrantes que
- * tengan el ID propio.<br>
- * Esta molécula mínima sirve para las que otras puedan evitar recibir sus propios mensajes (como un
- * hub)
+ * Esta clase representa el nexo que descarta los mensajes propios recibidos y pone una marca
+ * identificatoria a los salientes.<br>
+ * Este átomo más complejo sirve para las moléculas con ID que requieren evitar sus propios mensajes
+ * (como un hub)
  * 
  * @author D. García
  */

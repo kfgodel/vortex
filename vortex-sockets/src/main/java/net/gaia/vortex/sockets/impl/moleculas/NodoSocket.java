@@ -15,21 +15,20 @@ package net.gaia.vortex.sockets.impl.moleculas;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
-import net.gaia.vortex.core.impl.moleculas.ruteo.HubConNexoSupport;
+import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
 import net.gaia.vortex.sockets.impl.estrategias.RealizarConexiones;
 import ar.dgarcia.objectsockets.api.Disposable;
 
 /**
- * Esta clase representa un {@link NodoHub} conectado a un socket como cliente o como servidor del
- * cual recibe conexiones entrantes en forma de {@link NexoSocket}s conectados.<br>
- * Si el socket se desconecta por algún motivo, el {@link NexoSocket} se desconecta de este hub
+ * Esta clase representa un {@link NodoMultiplexor} conectado a un socket como cliente o como
+ * servidor del cual recibe conexiones entrantes en forma de {@link NexoSocket}s conectados.<br>
+ * Si el socket se desconecta por algún motivo, el {@link NexoSocket} se desconecta de este nodo
  * 
  * @author D. García
  */
-public class HubSocket extends HubConNexoSupport implements Disposable {
+public class NodoSocket extends NodoMultiplexor implements Disposable {
 
 	/**
 	 * Servidor de conexiones entrantes por socket
@@ -42,7 +41,7 @@ public class HubSocket extends HubConNexoSupport implements Disposable {
 	private ClienteDeNexoSocket cliente;
 
 	/**
-	 * Crea un nuevo {@link HubSocket} que actuará de servidor de conexiones entrantes en la
+	 * Crea un nuevo {@link NodoSocket} que actuará de servidor de conexiones entrantes en la
 	 * dirección indicada, permitiendo comunicarse remotamente al conectarse a este hub
 	 * 
 	 * @param listeningAddress
@@ -51,9 +50,9 @@ public class HubSocket extends HubConNexoSupport implements Disposable {
 	 *            El procesador para las tareas internas
 	 * @return El hub creado y escuchando en el socket indicado
 	 */
-	public static HubSocket createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor) {
-		final HubSocket hubSocket = new HubSocket();
-		hubSocket.initializeWith(processor);
+	public static NodoSocket createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor) {
+		final NodoSocket hubSocket = new NodoSocket();
+		hubSocket.inicializarCon(processor);
 		hubSocket.servidor = ServidorDeNexoSocket
 				.create(processor, listeningAddress, RealizarConexiones.con(hubSocket));
 		hubSocket.servidor.aceptarConexionesRemotas();
@@ -74,7 +73,7 @@ public class HubSocket extends HubConNexoSupport implements Disposable {
 	}
 
 	/**
-	 * Crea un nuevo {@link HubSocket} que se conectará a la dirección remota como cliente
+	 * Crea un nuevo {@link NodoSocket} que se conectará a la dirección remota como cliente
 	 * permitiendo comunicarse remotamente al conectarse a este hub
 	 * 
 	 * @param remoteAddress
@@ -83,9 +82,9 @@ public class HubSocket extends HubConNexoSupport implements Disposable {
 	 *            El procesador de las tareas internas
 	 * @return
 	 */
-	public static HubSocket createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor) {
-		final HubSocket hubSocket = new HubSocket();
-		hubSocket.initializeWith(processor);
+	public static NodoSocket createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor) {
+		final NodoSocket hubSocket = new NodoSocket();
+		hubSocket.inicializarCon(processor);
 		hubSocket.cliente = ClienteDeNexoSocket.create(processor, remoteAddress, RealizarConexiones.con(hubSocket));
 		hubSocket.cliente.conectarASocketRomoto();
 		return hubSocket;

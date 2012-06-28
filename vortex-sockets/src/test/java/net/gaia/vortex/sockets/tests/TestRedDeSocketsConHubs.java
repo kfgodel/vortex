@@ -18,8 +18,7 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
-import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
-import net.gaia.vortex.core.impl.moleculas.ruteo.HubConNexo;
+import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
@@ -52,8 +51,8 @@ public class TestRedDeSocketsConHubs {
 	private ClienteDeSocketVortex socketConnector;
 	private ServidorDeSocketVortex socketAcceptor;
 
-	private NodoHub hubServidor;
-	private NodoHub hubCliente;
+	private NodoMultiplexor hubServidor;
+	private NodoMultiplexor hubCliente;
 
 	private TaskProcessor processor;
 
@@ -64,12 +63,12 @@ public class TestRedDeSocketsConHubs {
 		processor = ExecutorBasedTaskProcesor.create(4);
 
 		// Creamos el hub al que se conectan los nexos del servidor
-		hubServidor = HubConNexo.create(processor);
+		hubServidor = NodoMultiplexor.create(processor);
 		// Creamos el portal receptor conectado al hub del servidor
 		nodoReceptor = PortalMapeador.createForIOWith(processor, hubServidor);
 
 		// Creamos el hub al que se conectan los nexos del cliente
-		hubCliente = HubConNexo.create(processor);
+		hubCliente = NodoMultiplexor.create(processor);
 		// Creamos el portal emisor conectado al hub cliente
 		nodoEmisor = PortalMapeador.createForOutputWith(processor, hubCliente);
 

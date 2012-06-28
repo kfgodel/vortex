@@ -16,7 +16,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.metricas.MetricasDelNodo;
 import net.gaia.vortex.core.api.metricas.MetricasPorTiempo;
-import net.gaia.vortex.core.impl.moleculas.ruteo.HubConNexo;
+import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 
@@ -37,7 +37,7 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
 public class TestMetricas {
 	private static final Logger LOG = LoggerFactory.getLogger(TestMetricas.class);
 
-	private HubConNexo ruteadorCentral;
+	private NodoMultiplexor ruteadorCentral;
 	private Portal nodoEmisor;
 	private Portal nodoReceptor;
 	private TaskProcessor processor;
@@ -45,7 +45,7 @@ public class TestMetricas {
 	@Before
 	public void crearRuteadorCentral() {
 		processor = ExecutorBasedTaskProcesor.create();
-		ruteadorCentral = HubConNexo.create(processor);
+		ruteadorCentral = NodoMultiplexor.create(processor);
 		nodoEmisor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
 		nodoReceptor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
 	}

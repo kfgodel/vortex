@@ -21,9 +21,8 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.moleculas.ruteo.HubConNexo;
+import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
@@ -53,7 +52,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestRedA01ConPortal {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConPortal.class);
 
-	private NodoHub nodoRuteador;
+	private NodoMultiplexor nodoRuteador;
 
 	private Portal nodoEmisor;
 	private Portal nodoReceptor;
@@ -65,7 +64,7 @@ public class TestRedA01ConPortal {
 		config.setThreadPoolSize(4);
 		processor = ExecutorBasedTaskProcesor.create(config);
 		// Creamos un nodo central
-		nodoRuteador = HubConNexo.create(processor);
+		nodoRuteador = NodoMultiplexor.create(processor);
 		// Le agregamos las interconexiones en los extremos
 		nodoEmisor = PortalMapeador.createForIOWith(processor, nodoRuteador);
 		nodoReceptor = PortalMapeador.createForIOWith(processor, nodoRuteador);
@@ -229,8 +228,8 @@ public class TestRedA01ConPortal {
 	@Test
 	public void elMensajeDeberiaLlegarSiHayDosNodosEnElMedio() {
 		// Creamos los nodos centrales interconectados
-		final NodoHub nodoIntermedio1 = HubConNexo.create(processor);
-		final NodoHub nodoIntermedio2 = HubConNexo.create(processor);
+		final NodoMultiplexor nodoIntermedio1 = NodoMultiplexor.create(processor);
+		final NodoMultiplexor nodoIntermedio2 = NodoMultiplexor.create(processor);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
@@ -253,8 +252,8 @@ public class TestRedA01ConPortal {
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosHubsEnElMedioInterconectados() {
 		// Creamos los nodos centrales interconectados
-		final NodoHub nodoIntermedio1 = HubConNexo.create(processor);
-		final NodoHub nodoIntermedio2 = HubConNexo.create(processor);
+		final NodoMultiplexor nodoIntermedio1 = NodoMultiplexor.create(processor);
+		final NodoMultiplexor nodoIntermedio2 = NodoMultiplexor.create(processor);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales

@@ -15,13 +15,8 @@ package net.gaia.vortex.core.impl.atomos.ids;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.annon.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
-import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa un hub que identifica los mensajes registrándose como nodo visitado, y
@@ -30,68 +25,29 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class MultiplexorIdentificador extends ComponenteConProcesadorSupport implements Multiplexor,
-		VortexIdentificable {
-
-	private IdentificadorVortex identificador;
-	public static final String identificador_FIELD = "identificador";
-	private Multiplexor multiplexorDeSalida;
-	private NexoIdentificador identificadorDeEntrada;
+public class MultiplexorIdentificador extends MultiplexorIdentificadorSupport {
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * Crea el atomo que servirá como proceso de entrada al recibir los mensajes
+	 * 
+	 * @param processor
+	 *            El procesador para las tareas internas
+	 * @param identificador
+	 *            El identificador asociado a este multiplexor
+	 * @param multiplexorDeSalida
+	 *            El multiplexor de las salidas
+	 * @return El receptor creado para procesar las entradas
 	 */
 	@Override
-	public void conectarCon(final Receptor destino) {
-		multiplexorDeSalida.conectarCon(destino);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
-	 */
-	@Override
-	public void desconectarDe(final Receptor destino) {
-		multiplexorDeSalida.desconectarDe(destino);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
-	 */
-	@Override
-	public void recibir(final MensajeVortex mensaje) {
-		identificadorDeEntrada.recibir(mensaje);
-	}
-
-	/**
-	 * Inicializa el estado de esta instancia
-	 */
-	protected void initializeWith(final TaskProcessor processor, final IdentificadorVortex identificador) {
-		super.initializeWith(processor);
-		this.identificador = identificador;
-		multiplexorDeSalida = MultiplexorParalelo.create(processor);
-		identificadorDeEntrada = NexoIdentificador.create(processor, identificador, multiplexorDeSalida);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable#getIdentificador()
-	 */
-	@Override
-	public IdentificadorVortex getIdentificador() {
-		return identificador;
+	protected Receptor crearProcesoDeEntrada(final TaskProcessor processor, final IdentificadorVortex identificador,
+			final MultiplexorParalelo multiplexorDeSalida) {
+		return NexoIdentificador.create(processor, identificador, multiplexorDeSalida);
 	}
 
 	public static MultiplexorIdentificador create(final TaskProcessor processor, final IdentificadorVortex identificador) {
-		final MultiplexorIdentificador hub = new MultiplexorIdentificador();
-		hub.initializeWith(processor, identificador);
-		return hub;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToString.de(this).con(identificador_FIELD, identificador).toString();
+		final MultiplexorIdentificador multiplexor = new MultiplexorIdentificador();
+		multiplexor.initializeWith(processor, identificador);
+		return multiplexor;
 	}
 
 }

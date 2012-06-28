@@ -22,9 +22,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.metricas.MetricasDelNodo;
 import net.gaia.vortex.core.api.metricas.MetricasPorTiempo;
-import net.gaia.vortex.core.impl.atomos.ReceptorNulo;
-import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
-import net.gaia.vortex.core.impl.moleculas.ruteo.HubConNexo;
+import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
@@ -47,7 +45,7 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
 public class TestMessagePerformance {
 	private static final Logger LOG = LoggerFactory.getLogger(TestMessagePerformance.class);
 
-	private HubConNexo ruteadorCentral;
+	private NodoMultiplexor ruteadorCentral;
 	private Portal nodoEmisor;
 	private Portal nodoReceptor;
 	private AtomicLong contadorTotalDeRecibidos;
@@ -58,7 +56,7 @@ public class TestMessagePerformance {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
 		config.setThreadPoolSize(4);
 		processor = ExecutorBasedTaskProcesor.create(config);
-		ruteadorCentral = HubConNexo.create(processor);
+		ruteadorCentral = NodoMultiplexor.create(processor);
 		nodoEmisor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
 		nodoReceptor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
 		contadorTotalDeRecibidos = new AtomicLong();
@@ -143,7 +141,7 @@ public class TestMessagePerformance {
 
 		Nodo ultimoIntermediario = ruteadorCentral;
 		for (int i = 1; i < cantidadDeIntermediarios; i++) {
-			final HubConNexo intermediarioAdicional = HubConNexo.create(processor);
+			final NodoMultiplexor intermediarioAdicional = NodoMultiplexor.create(processor);
 			interconectarCon(ultimoIntermediario, intermediarioAdicional);
 			ultimoIntermediario = intermediarioAdicional;
 		}
@@ -152,15 +150,14 @@ public class TestMessagePerformance {
 
 		// Agregamos los otros receptores nulos al último nodo ruteador
 		for (int i = 1; i < cantidadDeNodosReceptores; i++) {
-			final HubConNexo receptorAdicional = HubConNexo.create(processor);
+			final NodoMultiplexor receptorAdicional = NodoMultiplexor.create(processor);
 			final Receptor incrementarRecibidos = new Receptor() {
 				@Override
 				public void recibir(final MensajeVortex mensaje) {
 					contadorTotalDeRecibidos.incrementAndGet();
 				}
 			};
-			receptorAdicional.setNexoCore(NexoEjecutor.create(processor, incrementarRecibidos,
-					ReceptorNulo.getInstancia()));
+			receptorAdicional.conectarCon(incrementarRecibidos);
 			interconectarCon(ultimoIntermediario, receptorAdicional);
 		}
 	}

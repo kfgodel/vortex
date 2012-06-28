@@ -21,7 +21,7 @@ import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.portal.tests.HandlerCronometro;
 import net.gaia.vortex.portal.tests.MensajeCronometro;
-import net.gaia.vortex.sockets.impl.moleculas.HubSocket;
+import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
 import org.junit.After;
 import org.junit.Before;
@@ -39,8 +39,8 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestNodoSocketPerformance {
 	private static final Logger LOG = LoggerFactory.getLogger(TestNodoSocketPerformance.class);
 
-	private HubSocket nodoCliente;
-	private HubSocket nodoServidor;
+	private NodoSocket nodoCliente;
+	private NodoSocket nodoServidor;
 	private Portal nodoEmisor;
 	private Portal nodoReceptor;
 
@@ -51,8 +51,8 @@ public class TestNodoSocketPerformance {
 		processor = ExecutorBasedTaskProcesor.create(4);
 
 		final InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
-		nodoServidor = HubSocket.createAndListenTo(sharedTestAddress, processor);
-		nodoCliente = HubSocket.createAndConnectTo(sharedTestAddress, processor);
+		nodoServidor = NodoSocket.createAndListenTo(sharedTestAddress, processor);
+		nodoCliente = NodoSocket.createAndConnectTo(sharedTestAddress, processor);
 		nodoReceptor = PortalMapeador.createForIOWith(processor, nodoServidor);
 		nodoEmisor = PortalMapeador.createForIOWith(processor, nodoCliente);
 
