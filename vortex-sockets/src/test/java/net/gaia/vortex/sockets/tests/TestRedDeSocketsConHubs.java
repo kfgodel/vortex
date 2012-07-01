@@ -60,7 +60,7 @@ public class TestRedDeSocketsConHubs {
 
 	@Before
 	public void crearNodos() {
-		processor = ExecutorBasedTaskProcesor.create(4);
+		processor = ExecutorBasedTaskProcesor.createOptimun();
 
 		// Creamos el hub al que se conectan los nexos del servidor
 		hubServidor = NodoMultiplexor.create(processor);

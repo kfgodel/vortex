@@ -48,7 +48,7 @@ public class TestNodoSocketPerformance {
 
 	@Before
 	public void crearRuteadorCentral() {
-		processor = ExecutorBasedTaskProcesor.create(4);
+		processor = ExecutorBasedTaskProcesor.createOptimun();
 
 		final InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
 		nodoServidor = NodoSocket.createAndListenTo(sharedTestAddress, processor);

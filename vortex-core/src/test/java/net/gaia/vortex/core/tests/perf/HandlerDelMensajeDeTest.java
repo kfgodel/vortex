@@ -1,5 +1,5 @@
 /**
- * 27/05/2012 12:19:12 Copyright (C) 2011 Darío L. García
+ * 30/06/2012 21:22:43 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,26 +10,21 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.metricas;
+package net.gaia.vortex.core.tests.perf;
 
 /**
- * Esta interfaz representa el contrato de métodos que debe tener un listener para calcular las
- * métricas del nodo
+ * Esta interfaz está definida solo para testear la recepción del mensaje de test
  * 
  * @author D. García
  */
-public interface ListenerDeMetricas {
+public interface HandlerDelMensajeDeTest {
 
 	/**
-	 * Registra en esta métrica la recepción de un mensaje<br>
-	 * Normalmente habrá una recepción y un envío por mensaje
+	 * Invocado al recibir el mensaje en el receptor
+	 * 
+	 * @param mensaje
+	 *            El mensaje recibido
 	 */
-	void registrarInput();
-
-	/**
-	 * Registra en esta métrica el envío de un mensaje.<br>
-	 * Normalmente habrá una recepción y un envío por mensaje
-	 */
-	void registrarOutput();
+	public void recibir(MensajeModeloParaTests mensaje);
 
 }

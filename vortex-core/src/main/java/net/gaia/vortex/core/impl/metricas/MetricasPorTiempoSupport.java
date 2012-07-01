@@ -26,13 +26,13 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	 */
 	@Override
 	public double getTasaDeDelivery() {
-		final double cantidadDeMensajesRecibidos = getCantidadDeMensajesRecibidos();
+		final double cantidadDeMensajesRecibidos = getCantidadDeInputs();
 		if (cantidadDeMensajesRecibidos == 0) {
-			// No podemos dividir por 0
+			// No podemos dividir por 0. Enviamos todos lo que pudimos recibir
 			return 1.0;
 		}
-		final double cantidadDeMensajesRuteados = getCantidadDeMensajesRuteados();
-		final double tasaDeDelivery = cantidadDeMensajesRuteados / cantidadDeMensajesRecibidos;
+		final double cantidadDeMensajesEnviados = getCantidadDeOutputs();
+		final double tasaDeDelivery = cantidadDeMensajesEnviados / cantidadDeMensajesRecibidos;
 		return tasaDeDelivery;
 	}
 
@@ -41,7 +41,7 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	 */
 	@Override
 	public double getVelocidadDeRecepcion() {
-		final double cantidadDeMensajesRecibidos = getCantidadDeMensajesRecibidos();
+		final double cantidadDeMensajesRecibidos = getCantidadDeInputs();
 		final long milisTranscurridos = getDuracionDeMedicionEnMilis();
 		if (milisTranscurridos == 0) {
 			// No podemos dividir por 0
@@ -56,13 +56,13 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	 */
 	@Override
 	public double getVelocidadDeEnvio() {
-		final double cantidadDeMensajesRuteados = getCantidadDeMensajesRuteados();
+		final double cantidadDeMensajesEnviados = getCantidadDeOutputs();
 		final double milisTranscurridos = getDuracionDeMedicionEnMilis();
 		if (milisTranscurridos == 0) {
 			// No podemos dividir por 0
 			return 0;
 		}
-		final double velocidadDeEnvio = cantidadDeMensajesRuteados / milisTranscurridos;
+		final double velocidadDeEnvio = cantidadDeMensajesEnviados / milisTranscurridos;
 		return velocidadDeEnvio;
 	}
 

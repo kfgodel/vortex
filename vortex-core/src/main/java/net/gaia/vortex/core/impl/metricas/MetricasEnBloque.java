@@ -36,19 +36,19 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeMensajesRecibidos()
+	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeInputs()
 	 */
 	@Override
-	public long getCantidadDeMensajesRecibidos() {
-		return getUltimoBloque().getCantidadDeMensajesRecibidos();
+	public long getCantidadDeInputs() {
+		return getUltimoBloque().getCantidadDeInputs();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeMensajesRuteados()
+	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeOutputs()
 	 */
 	@Override
-	public long getCantidadDeMensajesRuteados() {
-		return getUltimoBloque().getCantidadDeMensajesRuteados();
+	public long getCantidadDeOutputs() {
+		return getUltimoBloque().getCantidadDeOutputs();
 	}
 
 	/**
@@ -68,21 +68,21 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.metricas.ListenerDeMetricas#registrarRecepcion()
+	 * @see net.gaia.vortex.core.impl.metricas.ListenerDeMetricas#registrarInput()
 	 */
 	@Override
-	public void registrarRecepcion() {
+	public void registrarInput() {
 		cortarBloqueDe(duracionDelBloqueEnMillis, metricasContinuas, ultimoSnapshot);
-		metricasContinuas.registrarRecepcion();
+		metricasContinuas.registrarInput();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.metricas.ListenerDeMetricas#registrarRuteo()
+	 * @see net.gaia.vortex.core.impl.metricas.ListenerDeMetricas#registrarOutput()
 	 */
 	@Override
-	public void registrarRuteo() {
+	public void registrarOutput() {
 		cortarBloqueDe(duracionDelBloqueEnMillis, metricasContinuas, ultimoSnapshot);
-		metricasContinuas.registrarRuteo();
+		metricasContinuas.registrarOutput();
 	}
 
 	/**

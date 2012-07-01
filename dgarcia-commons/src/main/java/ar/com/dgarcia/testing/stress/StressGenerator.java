@@ -59,9 +59,17 @@ public class StressGenerator {
 		this.cantidadDeEjecucionesPorThread = cantidadDeEjecuciones;
 	}
 
+	/**
+	 * Crea un generador de strees que ejecutará Long.MAX_VALUE veces la tarea indicada como
+	 * ejecutable.<br>
+	 * Se utiliza una espera de 0 entre ejecuciones (lo que implica que el thread no descansa)
+	 * 
+	 * @return El generador de stress sobre la tarea ejecutable
+	 */
 	public static StressGenerator create() {
 		final StressGenerator name = new StressGenerator();
 		name.cantidadDeEjecucionesPorThread = Long.MAX_VALUE;
+		name.esperaEntreEjecucionesEnMilis = 0;
 		return name;
 	}
 

@@ -23,7 +23,7 @@ public interface MetricasPorTiempo {
 	 * 
 	 * @return La cantidad de mensajes recibidos desde el inicio de esta métrica hasta el final
 	 */
-	public long getCantidadDeMensajesRecibidos();
+	public long getCantidadDeInputs();
 
 	/**
 	 * Devuelve la cantidad de mensajes que este nodo entregó a los nodos vecinos correspondientes.<br>
@@ -33,7 +33,7 @@ public interface MetricasPorTiempo {
 	 * @return La cantidad de mensajes que fueron ruteados desde el inicio de esta metrica hasta el
 	 *         final
 	 */
-	public long getCantidadDeMensajesRuteados();
+	public long getCantidadDeOutputs();
 
 	/**
 	 * Devuelve la cantidad de milisegundos que abarca el período de este métrica.<br>

@@ -49,7 +49,7 @@ public class TestRedDeSocketsMinima {
 
 	@Before
 	public void crearDependencias() {
-		processor = ExecutorBasedTaskProcesor.create(4);
+		processor = ExecutorBasedTaskProcesor.createOptimun();
 	}
 
 	@After

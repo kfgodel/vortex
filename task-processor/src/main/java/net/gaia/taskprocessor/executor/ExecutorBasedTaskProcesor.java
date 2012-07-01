@@ -235,14 +235,17 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	}
 
 	/**
-	 * Crea un nuevo procesor con la cantidad de threads indicados
+	 * Crea un nuevo procesor de tareas con la cantidad de threads igual a la de procesadores
+	 * disponibles. De esta manera se aprovecha al máximo la capacidad de la máquina sin excederse
+	 * en threads (suponiendo que las tareas son intensivas)
 	 * 
-	 * @param cantidadDeThreadsDedicados
-	 * @return El procesador creado
+	 * @return El procesador creado con la misma cantidad de thread dedicados que procesadores en
+	 *         esta máquina
 	 */
-	public static TaskProcessor create(final int cantidadDeThreadsDedicados) {
+	public static TaskProcessor createOptimun() {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setThreadPoolSize(cantidadDeThreadsDedicados);
+		final int procesadoresDisponibles = Runtime.getRuntime().availableProcessors();
+		config.setThreadPoolSize(procesadoresDisponibles);
 		return create(config);
 	}
 }

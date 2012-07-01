@@ -26,24 +26,24 @@ import net.gaia.vortex.core.api.metricas.MetricasPorTiempo;
  */
 public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements MetricasPorTiempo, ListenerDeMetricas {
 
-	private AtomicLong contadorDeRecibidos;
-	private AtomicLong contadorDeRuteados;
+	private AtomicLong contadorDeInputs;
+	private AtomicLong contadorDeOutputs;
 	private SystemChronometer cronometro;
 
 	/**
-	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeMensajesRecibidos()
+	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeInputs()
 	 */
 	@Override
-	public long getCantidadDeMensajesRecibidos() {
-		return contadorDeRecibidos.get();
+	public long getCantidadDeInputs() {
+		return contadorDeInputs.get();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeMensajesRuteados()
+	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeOutputs()
 	 */
 	@Override
-	public long getCantidadDeMensajesRuteados() {
-		return contadorDeRuteados.get();
+	public long getCantidadDeOutputs() {
+		return contadorDeOutputs.get();
 	}
 
 	/**
@@ -64,16 +64,16 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	 * Registra en esta métrica que se realizó una recepción de mensaje
 	 */
 	@Override
-	public void registrarRecepcion() {
-		this.contadorDeRecibidos.incrementAndGet();
+	public void registrarInput() {
+		this.contadorDeInputs.incrementAndGet();
 	}
 
 	/**
 	 * Registra en esta métrica que se realizó un ruteo de mensaje
 	 */
 	@Override
-	public void registrarRuteo() {
-		this.contadorDeRuteados.incrementAndGet();
+	public void registrarOutput() {
+		this.contadorDeOutputs.incrementAndGet();
 	}
 
 	/**
@@ -89,8 +89,8 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	 */
 	public void resetear() {
 		this.cronometro = SystemChronometer.create();
-		this.contadorDeRecibidos = new AtomicLong();
-		this.contadorDeRuteados = new AtomicLong();
+		this.contadorDeInputs = new AtomicLong();
+		this.contadorDeOutputs = new AtomicLong();
 	}
 
 }

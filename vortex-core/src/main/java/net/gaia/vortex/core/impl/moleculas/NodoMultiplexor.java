@@ -82,7 +82,7 @@ public class NodoMultiplexor extends MultiplexorIdentificadorSupport implements 
 		final Receptor registrarEntrada = new Receptor() {
 			@Override
 			public void recibir(final MensajeVortex mensaje) {
-				metricas.registrarRecepcion();
+				metricas.registrarInput();
 			}
 		};
 		final NexoEjecutor registradorDeEntradas = NexoEjecutor

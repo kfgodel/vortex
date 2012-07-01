@@ -38,7 +38,7 @@ public class MosquitoSever {
 	public static MosquitoSever create(final ContextConfiguration configuration) {
 		final MosquitoSever server = new MosquitoSever();
 		server.configuration = configuration;
-		server.processor = ExecutorBasedTaskProcesor.create(4);
+		server.processor = ExecutorBasedTaskProcesor.createOptimun();
 		return server;
 	}
 

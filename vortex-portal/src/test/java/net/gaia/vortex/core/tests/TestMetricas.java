@@ -80,8 +80,8 @@ public class TestMetricas {
 			final MetricasPorTiempo cadaSegundo = metricas.getMetricasEnBloqueDeUnSegundo();
 			LOG.debug("[{}]: En nodo Cada 1s - Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms- Rcv: {} Snt:{}",
 					new Object[] { "1s", cadaSegundo.getTasaDeDelivery() * 100, cadaSegundo.getVelocidadDeRecepcion(),
-							cadaSegundo.getVelocidadDeEnvio(), cadaSegundo.getCantidadDeMensajesRecibidos(),
-							cadaSegundo.getCantidadDeMensajesRuteados() });
+							cadaSegundo.getVelocidadDeEnvio(), cadaSegundo.getCantidadDeInputs(),
+							cadaSegundo.getCantidadDeOutputs() });
 			Thread.sleep(500);
 			if (crono.getElapsedMillis() > 9000) {
 				stressGenerator.detenerThreads();
@@ -116,7 +116,7 @@ public class TestMetricas {
 					"[{}]: En nodo Cada 10s - Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms- Rcv: {} Snt:{}",
 					new Object[] { "5s", cada5Segundo.getTasaDeDelivery() * 100,
 							cada5Segundo.getVelocidadDeRecepcion(), cada5Segundo.getVelocidadDeEnvio(),
-							cada5Segundo.getCantidadDeMensajesRecibidos(), cada5Segundo.getCantidadDeMensajesRuteados() });
+							cada5Segundo.getCantidadDeInputs(), cada5Segundo.getCantidadDeOutputs() });
 			Thread.sleep(2500);
 			if (crono.getElapsedMillis() > 45000) {
 				stressGenerator.detenerThreads();

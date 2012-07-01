@@ -30,7 +30,7 @@ public class RegistrarRuteoRealizado implements WorkUnit {
 	 */
 	@Override
 	public WorkUnit doWork() throws InterruptedException {
-		metricas.registrarRuteo();
+		metricas.registrarOutput();
 		return null;
 	}
 

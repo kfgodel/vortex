@@ -66,19 +66,19 @@ public class MetricasDelNodoImpl implements MetricasDelNodo, ListenerDeMetricas 
 	 * Registra en esta métrica una recepción de mensaje
 	 */
 	@Override
-	public void registrarRecepcion() {
-		metricasTotales.registrarRecepcion();
-		metricasPorCadaSegundo.registrarRecepcion();
-		metricasPorCada5Segundos.registrarRecepcion();
+	public void registrarInput() {
+		metricasTotales.registrarInput();
+		metricasPorCadaSegundo.registrarInput();
+		metricasPorCada5Segundos.registrarInput();
 	}
 
 	/**
 	 * Registra en esta métrica un ruteo realizado por el nodo
 	 */
 	@Override
-	public void registrarRuteo() {
-		metricasTotales.registrarRuteo();
-		metricasPorCadaSegundo.registrarRuteo();
-		metricasPorCada5Segundos.registrarRuteo();
+	public void registrarOutput() {
+		metricasTotales.registrarOutput();
+		metricasPorCadaSegundo.registrarOutput();
+		metricasPorCada5Segundos.registrarOutput();
 	}
 }

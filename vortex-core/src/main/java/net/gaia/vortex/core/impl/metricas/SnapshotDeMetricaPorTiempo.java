@@ -22,24 +22,24 @@ import net.gaia.vortex.core.api.metricas.MetricasPorTiempo;
 public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 
 	private long cantidadDeMensajesRecibidos;
-	private long cantidadDeMensajesRuteados;
+	private long cantidadDeMensajesEnviados;
 	private long duracionDeLaMedicion;
 	private long momentoDeInicioDeLaMedicion;
 
 	/**
-	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeMensajesRecibidos()
+	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeInputs()
 	 */
 	@Override
-	public long getCantidadDeMensajesRecibidos() {
+	public long getCantidadDeInputs() {
 		return cantidadDeMensajesRecibidos;
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeMensajesRuteados()
+	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeOutputs()
 	 */
 	@Override
-	public long getCantidadDeMensajesRuteados() {
-		return cantidadDeMensajesRuteados;
+	public long getCantidadDeOutputs() {
+		return cantidadDeMensajesEnviados;
 	}
 
 	/**
@@ -59,10 +59,10 @@ public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 	}
 
 	public static SnapshotDeMetricaPorTiempo createFrom(final MetricasPorTiempo metricas) {
-		final long inicio = metricas.getMomentoDeInicioDeLaMedicionEnMilis();
 		final long transcurrido = metricas.getDuracionDeMedicionEnMilis();
-		final long recibidos = metricas.getCantidadDeMensajesRecibidos();
-		final long enviados = metricas.getCantidadDeMensajesRuteados();
+		final long enviados = metricas.getCantidadDeOutputs();
+		final long recibidos = metricas.getCantidadDeInputs();
+		final long inicio = metricas.getMomentoDeInicioDeLaMedicionEnMilis();
 		return create(recibidos, enviados, transcurrido, inicio);
 	}
 
@@ -71,7 +71,7 @@ public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 			final long momentoDeInicioDeLaMedicion) {
 		final SnapshotDeMetricaPorTiempo snapshot = new SnapshotDeMetricaPorTiempo();
 		snapshot.cantidadDeMensajesRecibidos = cantidadDeMensajesRecibidos;
-		snapshot.cantidadDeMensajesRuteados = cantidadDeMensajesRuteados;
+		snapshot.cantidadDeMensajesEnviados = cantidadDeMensajesRuteados;
 		snapshot.duracionDeLaMedicion = duracionDeLaMedicion;
 		snapshot.momentoDeInicioDeLaMedicion = momentoDeInicioDeLaMedicion;
 		return snapshot;
@@ -107,7 +107,7 @@ public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 	}
 
 	public void setCantidadDeMensajesRuteados(final long cantidadDeMensajesRuteados) {
-		this.cantidadDeMensajesRuteados = cantidadDeMensajesRuteados;
+		this.cantidadDeMensajesEnviados = cantidadDeMensajesRuteados;
 	}
 
 }
