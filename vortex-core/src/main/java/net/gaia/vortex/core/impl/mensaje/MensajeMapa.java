@@ -183,6 +183,10 @@ public class MensajeMapa implements MensajeVortex {
 		if (valor.getClass().isArray()) {
 			return true;
 		}
+		if (valor instanceof Collection) {
+			// Es como si fuera un array
+			return true;
+		}
 		return false;
 	}
 
