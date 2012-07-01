@@ -1,5 +1,5 @@
 /**
- * 01/07/2012 01:25:48 Copyright (C) 2011 Darío L. García
+ * 01/07/2012 02:22:49 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,8 +12,9 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import java.util.Queue;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -26,15 +27,19 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.conc.WaitBarrier;
+import ar.com.dgarcia.lang.extensions.IndiceCicular;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
+import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
 /**
  * Esta clase mide la performance comparando con el {@link TestDePerformancePatron} utilizando una
- * cola para sincronizar el envío y recepción con hilos distintos
+ * cola por thread receptor para sincronizar el envío y recepción con hilos distintos
  * 
  * @author D. García
  */
-public class TestDePerformanceConColaCompartida {
+public class TestDePerformanceConColaIndividual {
 	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConColaCompartida.class);
 
 	@Test
@@ -107,34 +112,50 @@ public class TestDePerformanceConColaCompartida {
 	 */
 	private void testearEsquemaConCola(final int cantidadDeThreadsDeEnvio, final int cantidadDeThreadsDeRecepcion)
 			throws InterruptedException {
-		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->[...]->" + cantidadDeThreadsDeRecepcion + "R";
-		// Creamos la cola compartida
-		final BlockingQueue<MensajeModeloParaTests> colaCompartida = new LinkedBlockingQueue<MensajeModeloParaTests>();
+		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->" + cantidadDeThreadsDeRecepcion + "R[...]";
+
+		final List<BlockingQueue<MensajeModeloParaTests>> colasReceptoras = new CopyOnWriteArrayList<BlockingQueue<MensajeModeloParaTests>>();
 
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
+		final WaitBarrier esperarInicializacionDeReceptores = WaitBarrier.create(cantidadDeThreadsDeRecepcion);
+
 		// Generamos los threads para la recepción
 		final StressGenerator receptores = StressGenerator.create();
 		receptores.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeRecepcion);
-		receptores.setEjecutable(new Runnable() {
+		receptores.setFactoryDeRunnable(new FactoryDeRunnable() {
 			@Override
-			public void run() {
-				// Quitamos de la cola con timeout para poder terminar los threads en algun momento
-				try {
-					final MensajeModeloParaTests polled = colaCompartida.poll(1, TimeUnit.SECONDS);
-					if (polled != null) {
-						metricas.registrarOutput();
+			public Runnable getOrCreateRunnable() {
+				return new Runnable() {
+					private BlockingQueue<MensajeModeloParaTests> colaPropia;
+
+					@Override
+					public void run() {
+						if (colaPropia == null) {
+							colaPropia = new LinkedBlockingQueue<MensajeModeloParaTests>();
+							colasReceptoras.add(colaPropia);
+						}
+						esperarInicializacionDeReceptores.release();
+						// Quitamos de la cola con timeout para poder terminar los threads en algún
+						// momento
+						try {
+							final MensajeModeloParaTests polled = colaPropia.poll(1, TimeUnit.SECONDS);
+							if (polled != null) {
+								metricas.registrarOutput();
+							}
+						} catch (final InterruptedException e) {
+							LOG.error("Fallo el quitar la cola", e);
+						}
 					}
-				} catch (final InterruptedException e) {
-					LOG.error("Fallo el quitar la cola", e);
-				}
+				};
 			}
 		});
 
 		receptores.start();
+		esperarInicializacionDeReceptores.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		try {
-			correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, colaCompartida);
+			correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, colasReceptoras);
 		} finally {
 			receptores.detenerThreads();
 		}
@@ -150,27 +171,38 @@ public class TestDePerformanceConColaCompartida {
 	 *            El nombre de este test
 	 * @param metricas
 	 *            Las métricas para registrar los mensajes encolados
-	 * @param colaCompartida
+	 * @param colasReceptoras
 	 *            La cola de mensajes
 	 * @throws InterruptedException
 	 *             Si vuela algo
 	 */
 	private void correrThreadsEmisores(final int cantidadDeThreadsDeEnvio, final String nombreDelTest,
-			final MetricasPorTiempoImpl metricas, final Queue<MensajeModeloParaTests> colaCompartida)
+			final MetricasPorTiempoImpl metricas, final List<BlockingQueue<MensajeModeloParaTests>> colasReceptoras)
 			throws InterruptedException {
 		// Generamos el testeador
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
 		// Por cada ejecucion genera el mensaje y lo entrega al handler
-		stress.setEjecutable(new Runnable() {
+		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
 			@Override
-			public void run() {
-				final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
-				final boolean added = colaCompartida.add(mensaje);
-				if (added) {
-					metricas.registrarInput();
-				}
+			public Runnable getOrCreateRunnable() {
+				return new Runnable() {
+					// Agregamos en todas las colas
+					private final IndiceCicular indicePropio = IndiceCicular.desdeCeroExcluyendoA(colasReceptoras
+							.size());
+
+					@Override
+					public void run() {
+						final int colaAUsar = indicePropio.nextInt();
+						final BlockingQueue<MensajeModeloParaTests> colaReceptora = colasReceptoras.get(colaAUsar);
+						final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
+						final boolean added = colaReceptora.add(mensaje);
+						if (added) {
+							metricas.registrarInput();
+						}
+					}
+				};
 			}
 		});
 

@@ -32,7 +32,7 @@ public class ThreadDeStress extends Thread {
 			try {
 				ejecutable.run();
 			} catch (final Exception e) {
-				LOG.error("Se produjo un error en una de las ejecuciones en paralelo");
+				LOG.error("Se produjo un error en una de las ejecuciones en paralelo", e);
 			}
 			if (esperaEntreEjecucionesEnMilis < 1) {
 				// Si la espera es 0, no esperamos directamente
@@ -41,7 +41,7 @@ public class ThreadDeStress extends Thread {
 			try {
 				Thread.sleep(esperaEntreEjecucionesEnMilis);
 			} catch (final InterruptedException e) {
-				LOG.error("El thread fue interrumpido mienstras esperaba entre ejecuciones");
+				LOG.error("El thread fue interrumpido mienstras esperaba entre ejecuciones", e);
 			}
 		}
 		finishLatch.countDown();

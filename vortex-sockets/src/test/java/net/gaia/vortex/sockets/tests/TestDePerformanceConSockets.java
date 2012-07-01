@@ -1,5 +1,5 @@
 /**
- * 01/07/2012 01:25:48 Copyright (C) 2011 Darío L. García
+ * 01/07/2012 12:48:06 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,12 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.tests.perf;
+package net.gaia.vortex.sockets.tests;
 
-import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.vortex.core.impl.metricas.MetricasPorTiempoImpl;
 import net.gaia.vortex.core.impl.metricas.SnapshotDeMetricaPorTiempo;
@@ -26,73 +26,82 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.extensions.IndiceCicular;
+import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
 import ar.com.dgarcia.testing.stress.StressGenerator;
+import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
+import ar.dgarcia.objectsockets.api.ObjectSocket;
+import ar.dgarcia.objectsockets.api.SocketErrorHandler;
+import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
+import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
+import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
+import ar.dgarcia.textualizer.json.JsonTextualizer;
 
 /**
- * Esta clase mide la performance comparando con el {@link TestDePerformancePatron} utilizando una
- * cola para sincronizar el envío y recepción con hilos distintos
+ * Esta clase mide la performance comparando con el {@link TestDePerformancePatron} utilizando
+ * sockets para la comunicación entre emisor y receptor
  * 
  * @author D. García
  */
-public class TestDePerformanceConColaCompartida {
-	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConColaCompartida.class);
+public class TestDePerformanceConSockets {
+	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConSockets.class);
 
 	@Test
 	public void medirPerformanceCon1ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 1;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon2ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 2;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon4ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 4;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon8ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 8;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon16ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 16;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon32ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 32;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon200ThreadDedicadoATodoElProceso() throws InterruptedException {
 
 		final int cantidadDeThreads = 200;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon1x2() throws InterruptedException {
-		testearEsquemaConCola(1, 2);
+		testearEsquemaConSockets(1, 2);
 	}
 
 	@Test
 	public void medirPerformanceCon2x1() throws InterruptedException {
-		testearEsquemaConCola(2, 1);
+		testearEsquemaConSockets(2, 1);
 	}
 
 	@Test
 	public void medirPerformanceCon4x16() throws InterruptedException {
-		testearEsquemaConCola(4, 16);
+		testearEsquemaConSockets(4, 16);
 	}
 
 	/**
@@ -105,38 +114,56 @@ public class TestDePerformanceConColaCompartida {
 	 * @throws InterruptedException
 	 *             Si vuela todo
 	 */
-	private void testearEsquemaConCola(final int cantidadDeThreadsDeEnvio, final int cantidadDeThreadsDeRecepcion)
+	private void testearEsquemaConSockets(final int cantidadDeThreadsDeEnvio, final int cantidadDeThreadsDeRecepcion)
 			throws InterruptedException {
-		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->[...]->" + cantidadDeThreadsDeRecepcion + "R";
-		// Creamos la cola compartida
-		final BlockingQueue<MensajeModeloParaTests> colaCompartida = new LinkedBlockingQueue<MensajeModeloParaTests>();
+		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->" + cantidadDeThreadsDeRecepcion + "S->R";
+
+		final List<ObjectSocketAcceptor> servidores = new CopyOnWriteArrayList<ObjectSocketAcceptor>();
+		final List<ObjectSocketConnector> clientes = new CopyOnWriteArrayList<ObjectSocketConnector>();
 
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
-		// Generamos los threads para la recepción
-		final StressGenerator receptores = StressGenerator.create();
-		receptores.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeRecepcion);
-		receptores.setEjecutable(new Runnable() {
+		// Generamos tantos sockets conectados como receptores
+		final JsonTextualizer textualizer = JsonTextualizer.createWithTypeMetadata();
+		final SocketErrorHandler handlerDeErrores = new SocketErrorHandler() {
 			@Override
-			public void run() {
-				// Quitamos de la cola con timeout para poder terminar los threads en algun momento
-				try {
-					final MensajeModeloParaTests polled = colaCompartida.poll(1, TimeUnit.SECONDS);
-					if (polled != null) {
-						metricas.registrarOutput();
-					}
-				} catch (final InterruptedException e) {
-					LOG.error("Fallo el quitar la cola", e);
-				}
+			public void onSocketError(final Throwable cause, final ObjectSocket socket) {
+				LOG.error("Se produjo un error " + cause.getClass() + ": " + cause.getMessage());
+				socket.closeAndDispose();
 			}
-		});
+		};
+		for (int i = 0; i < cantidadDeThreadsDeRecepcion; i++) {
+			final SocketAddress direccion = new InetSocketAddress(10000 + i);
+			// Creamos el socket de escucha
+			final ObjectSocketConfiguration configServer = ObjectSocketConfiguration.create(direccion,
+					new ObjectReceptionHandler() {
+						@Override
+						public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
+							// Cada vez que recibimos registramos el mensaje
+							metricas.registrarOutput();
+						}
+					}, textualizer);
+			configServer.setErrorHandler(handlerDeErrores);
+			final ObjectSocketAcceptor nuevoAcceptor = ObjectSocketAcceptor.create(configServer);
+			servidores.add(nuevoAcceptor);
 
-		receptores.start();
+			// Creamos el socket cliente
+			final ObjectSocketConfiguration configCliente = ObjectSocketConfiguration.create(direccion, textualizer);
+			configCliente.setErrorHandler(handlerDeErrores);
+			final ObjectSocketConnector nuevoCiente = ObjectSocketConnector.create(configCliente);
+			clientes.add(nuevoCiente);
+		}
+
 		try {
-			correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, colaCompartida);
+			correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, clientes);
 		} finally {
-			receptores.detenerThreads();
+			for (final ObjectSocketConnector objectSocketConnector : clientes) {
+				objectSocketConnector.closeAndDispose();
+			}
+			for (final ObjectSocketAcceptor objectSocketAcceptor : servidores) {
+				objectSocketAcceptor.closeAndDispose();
+			}
 		}
 
 	}
@@ -150,27 +177,39 @@ public class TestDePerformanceConColaCompartida {
 	 *            El nombre de este test
 	 * @param metricas
 	 *            Las métricas para registrar los mensajes encolados
-	 * @param colaCompartida
+	 * @param clientes
 	 *            La cola de mensajes
 	 * @throws InterruptedException
 	 *             Si vuela algo
 	 */
 	private void correrThreadsEmisores(final int cantidadDeThreadsDeEnvio, final String nombreDelTest,
-			final MetricasPorTiempoImpl metricas, final Queue<MensajeModeloParaTests> colaCompartida)
+			final MetricasPorTiempoImpl metricas, final List<ObjectSocketConnector> clientes)
 			throws InterruptedException {
 		// Generamos el testeador
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
-		// Por cada ejecucion genera el mensaje y lo entrega al handler
-		stress.setEjecutable(new Runnable() {
+		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
+		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
 			@Override
-			public void run() {
-				final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
-				final boolean added = colaCompartida.add(mensaje);
-				if (added) {
-					metricas.registrarInput();
-				}
+			public Runnable getOrCreateRunnable() {
+				return new Runnable() {
+					// Agregamos en todas las colas
+					private final IndiceCicular indicePropio = IndiceCicular.desdeCeroExcluyendoA(clientes.size());
+
+					@Override
+					public void run() {
+						final int socketAUsar = indicePropio.nextInt();
+						final ObjectSocketConnector cliente = clientes.get(socketAUsar);
+						final ObjectSocket socketCliente = cliente.getObjectSocket();
+						if (socketCliente.isClosed()) {
+							return;
+						}
+						final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
+						socketCliente.send(mensaje);
+						metricas.registrarInput();
+					}
+				};
 			}
 		});
 

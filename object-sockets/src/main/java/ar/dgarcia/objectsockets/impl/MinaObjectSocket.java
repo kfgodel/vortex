@@ -148,4 +148,12 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	public SocketAddress getRemoteAddress() {
 		return minaSession.getRemoteAddress();
 	}
+
+	/**
+	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#isClosed()
+	 */
+	@Override
+	public boolean isClosed() {
+		return minaSession.isClosing() || !minaSession.isConnected();
+	}
 }

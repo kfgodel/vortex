@@ -37,7 +37,7 @@ public class TaskWorkerRejectionHandler implements RejectedExecutionHandler {
 		final int poolSize = executor.getPoolSize();
 		final int activeCount = executor.getActiveCount();
 		if (poolSize < maximunSize && activeCount == 0) {
-			LOG.error("El executor de tareas inmediatas rechazó el runnable: " + runnable
+			LOG.debug("El executor de tareas inmediatas rechazó el runnable: " + runnable
 					+ " y no hay threads activos, ni estamos usando el máximo. Posible exceso de tasks?");
 		} else {
 			LOG.trace("El executor de tareas inmediatas rechazó el runnable: " + runnable

@@ -22,10 +22,10 @@ public class StressGenerator {
 
 	private int cantidadDeThreadsEnEjecucion;
 	private long esperaEntreEjecucionesEnMilis;
-	private Runnable ejecutable;
 	private long cantidadDeEjecucionesPorThread;
 	private CountDownLatch threadLatch;
 	private List<ThreadDeStress> threads;
+	private FactoryDeRunnable factoryDeRunnable;
 
 	public int getCantidadDeThreadsEnEjecucion() {
 		return cantidadDeThreadsEnEjecucion;
@@ -43,12 +43,16 @@ public class StressGenerator {
 		this.esperaEntreEjecucionesEnMilis = esperaEntreEjecucionesEnMilis;
 	}
 
-	public Runnable getEjecutable() {
-		return ejecutable;
+	public void setEjecutable(final Runnable ejecutable) {
+		this.factoryDeRunnable = RunnableCompartido.create(ejecutable);
 	}
 
-	public void setEjecutable(final Runnable ejecutable) {
-		this.ejecutable = ejecutable;
+	public FactoryDeRunnable getFactoryDeRunnable() {
+		return factoryDeRunnable;
+	}
+
+	public void setFactoryDeRunnable(final FactoryDeRunnable factoryDeRunnable) {
+		this.factoryDeRunnable = factoryDeRunnable;
 	}
 
 	public long getCantidadDeEjecucionesPorThread() {
@@ -81,8 +85,9 @@ public class StressGenerator {
 		this.threadLatch = new CountDownLatch(threadsEnParalelo);
 		this.threads = new ArrayList<ThreadDeStress>();
 		for (int i = 0; i < threadsEnParalelo; i++) {
+			final Runnable ejecutableDelThread = this.factoryDeRunnable.getOrCreateRunnable();
 			final ThreadDeStress threadDeStress = ThreadDeStress.create(cantidadDeEjecucionesPorThread,
-					esperaEntreEjecucionesEnMilis, ejecutable, threadLatch);
+					esperaEntreEjecucionesEnMilis, ejecutableDelThread, threadLatch);
 			threads.add(threadDeStress);
 			threadDeStress.start();
 		}

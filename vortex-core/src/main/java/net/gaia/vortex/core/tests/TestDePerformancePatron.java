@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.tests.perf;
+package net.gaia.vortex.core.tests;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +21,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.com.dgarcia.lang.time.SystemChronometer;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
@@ -137,7 +136,6 @@ public class TestDePerformancePatron {
 			final MetricasPorTiempoImpl metricas) throws InterruptedException {
 		// Comenzamos el test
 		LOG.info("[{}] Comenzando mediciones", nombreDelTest);
-		final SystemChronometer crono = SystemChronometer.create();
 		metricas.resetear();
 		stress.start();
 
@@ -145,10 +143,8 @@ public class TestDePerformancePatron {
 		Thread.sleep(TIEMPO_DE_TEST.getMillis());
 		// Freezamos la medición
 		final SnapshotDeMetricaPorTiempo medicion = SnapshotDeMetricaPorTiempo.createFrom(metricas);
-		final long duracionDeLaMedicion = crono.getElapsedMillis();
 		// Detenemos el stress
 		stress.detenerThreads();
-		LOG.info("[{}] Medido durante {} ms", nombreDelTest, duracionDeLaMedicion);
 
 		// Mostramos los resultados
 		final long cantidadDeInputs = medicion.getCantidadDeInputs();

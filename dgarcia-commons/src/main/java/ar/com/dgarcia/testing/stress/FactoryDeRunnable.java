@@ -1,5 +1,5 @@
 /**
- * 30/06/2012 21:22:43 Copyright (C) 2011 Darío L. García
+ * 01/07/2012 12:08:54 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,21 +10,20 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.tests.perf;
+package ar.com.dgarcia.testing.stress;
 
 /**
- * Esta interfaz está definida solo para testear la recepción del mensaje de test
+ * Esta interfaz define el contrato para abstraer el lugar desde el cual se generan los runnables
  * 
  * @author D. García
  */
-public interface HandlerDelMensajeDeTest {
+public interface FactoryDeRunnable {
 
 	/**
-	 * Invocado al recibir el mensaje en el receptor
+	 * Devuelve el próximo runnable a ser utilizado
 	 * 
-	 * @param mensaje
-	 *            El mensaje recibido
+	 * @return El runnable creado o reutilizado
 	 */
-	public void recibir(MensajeModeloParaTests mensaje);
+	public Runnable getOrCreateRunnable();
 
 }

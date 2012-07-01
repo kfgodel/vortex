@@ -1,5 +1,5 @@
 /**
- * 01/07/2012 01:25:48 Copyright (C) 2011 Darío L. García
+ * 01/07/2012 13:49:29 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,89 +10,113 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.tests.perf;
+package net.gaia.vortex.portal.tests;
 
-import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
+import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.metricas.MetricasPorTiempoImpl;
 import net.gaia.vortex.core.impl.metricas.SnapshotDeMetricaPorTiempo;
+import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.core.tests.TestDePerformancePatron;
+import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
+import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
 /**
- * Esta clase mide la performance comparando con el {@link TestDePerformancePatron} utilizando una
- * cola para sincronizar el envío y recepción con hilos distintos
+ * Esta clase mide la performance comparando con el {@link TestDePerformancePatron} utilizando
+ * portales para la comunicación entre emisor y receptor
  * 
  * @author D. García
  */
-public class TestDePerformanceConColaCompartida {
-	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConColaCompartida.class);
+public class TestDePerformanceConPortales {
+	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConPortales.class);
+
+	private TaskProcessor processorEnvios;
+	private TaskProcessor processorRuteo;
+	private TaskProcessor processorRecepcion;
+
+	@Before
+	public void crearProcesador() {
+		processorEnvios = ExecutorBasedTaskProcesor.createOptimun();
+		processorRuteo = ExecutorBasedTaskProcesor.createOptimun();
+		processorRecepcion = ExecutorBasedTaskProcesor.createOptimun();
+	}
+
+	@After
+	public void liberarRecursos() {
+		processorEnvios.detener();
+		processorRecepcion.detener();
+		processorRuteo.detener();
+	}
 
 	@Test
 	public void medirPerformanceCon1ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 1;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon2ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 2;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon4ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 4;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon8ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 8;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon16ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 16;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon32ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 32;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon200ThreadDedicadoATodoElProceso() throws InterruptedException {
 
 		final int cantidadDeThreads = 200;
-		testearEsquemaConCola(cantidadDeThreads, cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon1x2() throws InterruptedException {
-		testearEsquemaConCola(1, 2);
+		testearEsquemaConSockets(1, 2);
 	}
 
 	@Test
 	public void medirPerformanceCon2x1() throws InterruptedException {
-		testearEsquemaConCola(2, 1);
+		testearEsquemaConSockets(2, 1);
 	}
 
 	@Test
 	public void medirPerformanceCon4x16() throws InterruptedException {
-		testearEsquemaConCola(4, 16);
+		testearEsquemaConSockets(4, 16);
 	}
 
 	/**
@@ -105,39 +129,27 @@ public class TestDePerformanceConColaCompartida {
 	 * @throws InterruptedException
 	 *             Si vuela todo
 	 */
-	private void testearEsquemaConCola(final int cantidadDeThreadsDeEnvio, final int cantidadDeThreadsDeRecepcion)
+	private void testearEsquemaConSockets(final int cantidadDeThreadsDeEnvio, final int cantidadDeThreadsDeRecepcion)
 			throws InterruptedException {
-		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->[...]->" + cantidadDeThreadsDeRecepcion + "R";
-		// Creamos la cola compartida
-		final BlockingQueue<MensajeModeloParaTests> colaCompartida = new LinkedBlockingQueue<MensajeModeloParaTests>();
+		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->V->" + cantidadDeThreadsDeRecepcion + "R";
+
+		final NodoMultiplexor nodoVortex = NodoMultiplexor.create(processorRuteo);
 
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
-		// Generamos los threads para la recepción
-		final StressGenerator receptores = StressGenerator.create();
-		receptores.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeRecepcion);
-		receptores.setEjecutable(new Runnable() {
-			@Override
-			public void run() {
-				// Quitamos de la cola con timeout para poder terminar los threads en algun momento
-				try {
-					final MensajeModeloParaTests polled = colaCompartida.poll(1, TimeUnit.SECONDS);
-					if (polled != null) {
-						metricas.registrarOutput();
-					}
-				} catch (final InterruptedException e) {
-					LOG.error("Fallo el quitar la cola", e);
+		// Generamos tantos portales como receptores tengamos
+		for (int i = 0; i < cantidadDeThreadsDeRecepcion; i++) {
+			final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(processorRecepcion, nodoVortex);
+			portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
+				@Override
+				public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
+					metricas.registrarOutput();
 				}
-			}
-		});
-
-		receptores.start();
-		try {
-			correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, colaCompartida);
-		} finally {
-			receptores.detenerThreads();
+			});
 		}
+
+		correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, nodoVortex);
 
 	}
 
@@ -150,27 +162,34 @@ public class TestDePerformanceConColaCompartida {
 	 *            El nombre de este test
 	 * @param metricas
 	 *            Las métricas para registrar los mensajes encolados
-	 * @param colaCompartida
+	 * @param clientes
 	 *            La cola de mensajes
 	 * @throws InterruptedException
 	 *             Si vuela algo
 	 */
 	private void correrThreadsEmisores(final int cantidadDeThreadsDeEnvio, final String nombreDelTest,
-			final MetricasPorTiempoImpl metricas, final Queue<MensajeModeloParaTests> colaCompartida)
-			throws InterruptedException {
+			final MetricasPorTiempoImpl metricas, final Receptor nodoVortex) throws InterruptedException {
 		// Generamos el testeador
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
-		// Por cada ejecucion genera el mensaje y lo entrega al handler
-		stress.setEjecutable(new Runnable() {
+		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
+		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
 			@Override
-			public void run() {
-				final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
-				final boolean added = colaCompartida.add(mensaje);
-				if (added) {
-					metricas.registrarInput();
-				}
+			public Runnable getOrCreateRunnable() {
+				return new Runnable() {
+					private Portal portalPropio;
+
+					@Override
+					public void run() {
+						if (portalPropio == null) {
+							portalPropio = PortalMapeador.createForOutputWith(processorEnvios, nodoVortex);
+						}
+						final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
+						portalPropio.enviar(mensaje);
+						metricas.registrarInput();
+					}
+				};
 			}
 		});
 

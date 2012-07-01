@@ -64,4 +64,11 @@ public interface ObjectSocket extends Disposable {
 	 */
 	public SocketAddress getRemoteAddress();
 
+	/**
+	 * Indica si la conexión está cerrada y por lo tanto no puede enviarse más mensajes
+	 * 
+	 * @return true si se produce un error al escribir por este socket
+	 */
+	public boolean isClosed();
+
 }

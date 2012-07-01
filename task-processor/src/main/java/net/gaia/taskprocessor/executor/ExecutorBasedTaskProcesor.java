@@ -248,4 +248,10 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 		config.setThreadPoolSize(procesadoresDisponibles);
 		return create(config);
 	}
+
+	public static ExecutorBasedTaskProcesor create(final int cantidadDeThreads) {
+		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
+		config.setThreadPoolSize(cantidadDeThreads);
+		return create(config);
+	}
 }
