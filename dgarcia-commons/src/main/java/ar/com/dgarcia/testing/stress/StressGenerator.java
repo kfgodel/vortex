@@ -6,6 +6,7 @@ package ar.com.dgarcia.testing.stress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
@@ -21,7 +22,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class StressGenerator {
 
 	private int cantidadDeThreadsEnEjecucion;
-	private long esperaEntreEjecucionesEnMilis;
+	private long esperaEntreEjecucionesEnNanos;
 	private long cantidadDeEjecucionesPorThread;
 	private CountDownLatch threadLatch;
 	private List<ThreadDeStress> threads;
@@ -36,11 +37,11 @@ public class StressGenerator {
 	}
 
 	public long getEsperaEntreEjecucionesEnMilis() {
-		return esperaEntreEjecucionesEnMilis;
+		return TimeUnit.NANOSECONDS.toMillis(esperaEntreEjecucionesEnNanos);
 	}
 
 	public void setEsperaEntreEjecucionesEnMilis(final long esperaEntreEjecucionesEnMilis) {
-		this.esperaEntreEjecucionesEnMilis = esperaEntreEjecucionesEnMilis;
+		this.esperaEntreEjecucionesEnNanos = TimeUnit.MILLISECONDS.toNanos(esperaEntreEjecucionesEnMilis);
 	}
 
 	public void setEjecutable(final Runnable ejecutable) {
@@ -73,7 +74,7 @@ public class StressGenerator {
 	public static StressGenerator create() {
 		final StressGenerator name = new StressGenerator();
 		name.cantidadDeEjecucionesPorThread = Long.MAX_VALUE;
-		name.esperaEntreEjecucionesEnMilis = 0;
+		name.esperaEntreEjecucionesEnNanos = 0;
 		return name;
 	}
 
@@ -87,7 +88,7 @@ public class StressGenerator {
 		for (int i = 0; i < threadsEnParalelo; i++) {
 			final Runnable ejecutableDelThread = this.factoryDeRunnable.getOrCreateRunnable();
 			final ThreadDeStress threadDeStress = ThreadDeStress.create(cantidadDeEjecucionesPorThread,
-					esperaEntreEjecucionesEnMilis, ejecutableDelThread, threadLatch);
+					esperaEntreEjecucionesEnNanos, ejecutableDelThread, threadLatch);
 			threads.add(threadDeStress);
 			threadDeStress.start();
 		}
@@ -114,6 +115,14 @@ public class StressGenerator {
 		for (final ThreadDeStress thread : this.threads) {
 			thread.detener();
 		}
+	}
+
+	public long getEsperaEntreEjecucionesEnNanos() {
+		return esperaEntreEjecucionesEnNanos;
+	}
+
+	public void setEsperaEntreEjecucionesEnNanos(final long esperaEntreEjecucionesEnNanos) {
+		this.esperaEntreEjecucionesEnNanos = esperaEntreEjecucionesEnNanos;
 	}
 
 }

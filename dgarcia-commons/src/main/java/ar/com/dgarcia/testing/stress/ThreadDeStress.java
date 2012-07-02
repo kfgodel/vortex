@@ -4,6 +4,7 @@
 package ar.com.dgarcia.testing.stress;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ public class ThreadDeStress extends Thread {
 	private static final Logger LOG = LoggerFactory.getLogger(ThreadDeStress.class);
 
 	private long cantidadDeEjecucionesPorThread;
-	private long esperaEntreEjecucionesEnMilis;
+	private long esperaEntreEjecucionesEnNanos;
 	private Runnable ejecutable;
 	private CountDownLatch finishLatch;
 
@@ -34,12 +35,14 @@ public class ThreadDeStress extends Thread {
 			} catch (final Exception e) {
 				LOG.error("Se produjo un error en una de las ejecuciones en paralelo", e);
 			}
-			if (esperaEntreEjecucionesEnMilis < 1) {
+			if (esperaEntreEjecucionesEnNanos < 1) {
 				// Si la espera es 0, no esperamos directamente
 				continue;
 			}
+			final long milisDeEspera = TimeUnit.NANOSECONDS.toMillis(esperaEntreEjecucionesEnNanos);
+			final int nanosRestantesDeEspera = (int) (esperaEntreEjecucionesEnNanos % (TimeUnit.MILLISECONDS.toNanos(1)));
 			try {
-				Thread.sleep(esperaEntreEjecucionesEnMilis);
+				Thread.sleep(milisDeEspera, nanosRestantesDeEspera);
 			} catch (final InterruptedException e) {
 				LOG.error("El thread fue interrumpido mienstras esperaba entre ejecuciones", e);
 			}
@@ -48,10 +51,10 @@ public class ThreadDeStress extends Thread {
 	}
 
 	public static ThreadDeStress create(final long cantidadDeEjecucionesPorThread,
-			final long esperaEntreEjecucionesEnMilis, final Runnable ejecutable, final CountDownLatch threadLatch) {
+			final long esperaEntreEjecucionesEnNanos, final Runnable ejecutable, final CountDownLatch threadLatch) {
 		final ThreadDeStress thread = new ThreadDeStress();
 		thread.cantidadDeEjecucionesPorThread = cantidadDeEjecucionesPorThread;
-		thread.esperaEntreEjecucionesEnMilis = esperaEntreEjecucionesEnMilis;
+		thread.esperaEntreEjecucionesEnNanos = esperaEntreEjecucionesEnNanos;
 		thread.ejecutable = ejecutable;
 		thread.finishLatch = threadLatch;
 		return thread;
