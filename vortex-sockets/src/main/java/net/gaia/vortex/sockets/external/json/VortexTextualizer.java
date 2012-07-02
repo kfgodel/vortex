@@ -4,7 +4,6 @@
 package net.gaia.vortex.sockets.external.json;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
@@ -39,7 +38,7 @@ public class VortexTextualizer implements ObjectTextualizer {
 					"El objeto a textualizar debe ser un mensaje vortex. El pasado no es serializable: " + value);
 		}
 		final MensajeVortex mensaje = (MensajeVortex) value;
-		final ConcurrentMap<String, Object> contenidoTextualizable = mensaje.getContenido();
+		final Map<String, Object> contenidoTextualizable = mensaje.getContenido();
 		final String jsonDelContenido = jsonTextualizer.convertToString(contenidoTextualizable);
 		return jsonDelContenido;
 	}

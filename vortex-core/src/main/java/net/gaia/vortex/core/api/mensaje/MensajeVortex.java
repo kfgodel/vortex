@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.api.mensaje;
 
-import java.util.concurrent.ConcurrentMap;
+import java.util.Map;
 
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 
@@ -35,7 +35,7 @@ public interface MensajeVortex {
 	 * 
 	 * @return El mapa que representa los datos de este objeto
 	 */
-	public ConcurrentMap<String, Object> getContenido();
+	public Map<String, Object> getContenido();
 
 	/**
 	 * Devuelve el valor que este mensaje tiene definido como primitiva.<br>

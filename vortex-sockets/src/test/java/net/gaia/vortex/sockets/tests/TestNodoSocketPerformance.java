@@ -70,7 +70,7 @@ public class TestNodoSocketPerformance {
 	 */
 	@Test
 	public void en_Sockets_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo() {
-		final int cantidadDeMensajes = 100000;
+		final int cantidadDeMensajes = 10000;
 		final HandlerCronometro handlerCronometro = HandlerCronometro.create(cantidadDeMensajes);
 		nodoReceptor.recibirCon(handlerCronometro);
 

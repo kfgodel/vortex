@@ -13,7 +13,6 @@
 package net.gaia.vortex.portal.impl.moleculas.mapeador;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
@@ -88,7 +87,7 @@ public class MapeadorJson implements MapeadorVortex {
 			return (T) valorPrimitivo;
 		}
 
-		final ConcurrentMap<String, Object> mapaDeContenido = mensajeOriginal.getContenido();
+		final Map<String, Object> mapaDeContenido = mensajeOriginal.getContenido();
 		final T objeto;
 		try {
 			objeto = jacksonMapper.convertValue(mapaDeContenido, tipoEsperado);

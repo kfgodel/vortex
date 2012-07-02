@@ -14,10 +14,9 @@ package net.gaia.vortex.core.impl.mensaje;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
@@ -47,7 +46,7 @@ public class MensajeMapa implements MensajeVortex {
 	 */
 	public static final String CLASSNAME_KEY = "CLASSNAME_KEY";
 
-	private ConcurrentMap<String, Object> contenido;
+	private Map<String, Object> contenido;
 	public static final String contenido_FIELD = "contenido";
 
 	private Set<String> idsVisitados;
@@ -108,7 +107,7 @@ public class MensajeMapa implements MensajeVortex {
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getContenido()
 	 */
 	@Override
-	public ConcurrentMap<String, Object> getContenido() {
+	public Map<String, Object> getContenido() {
 		return contenido;
 	}
 
@@ -131,7 +130,7 @@ public class MensajeMapa implements MensajeVortex {
 	 */
 	public static MensajeMapa create(final Map<String, Object> contenidoIncial) {
 		final MensajeMapa mensaje = new MensajeMapa();
-		mensaje.contenido = new ConcurrentHashMap<String, Object>(contenidoIncial);
+		mensaje.contenido = new HashMap<String, Object>(contenidoIncial);
 		mensaje.idsVisitados = mensaje.crearSetDeVisitadosDesdeMapa();
 		return mensaje;
 	}
