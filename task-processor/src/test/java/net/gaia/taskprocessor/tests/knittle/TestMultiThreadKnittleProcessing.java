@@ -18,7 +18,7 @@ public class TestMultiThreadKnittleProcessing extends TestMultiThreadProcessing 
 	@Override
 	protected TaskProcessor crearProcesorCon(final int cantidadDeThreads) {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setThreadPoolSize(cantidadDeThreads);
+		config.setMinimunThreadPoolSize(cantidadDeThreads);
 		final TaskProcessor processor = KnittleProcessor.create(config);
 		return processor;
 	}

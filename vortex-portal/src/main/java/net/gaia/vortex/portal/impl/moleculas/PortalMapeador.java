@@ -36,7 +36,7 @@ import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.atomos.Desvortificador;
 import net.gaia.vortex.portal.impl.atomos.Vortificador;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJson;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
 
 /**
  * Esta clase representa un portal con la red vortex que utiliza un mapeador interno para convertir
@@ -162,7 +162,7 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 	 */
 	public static PortalMapeador createForOutputWith(final TaskProcessor processor, final Receptor destino) {
 		final PortalMapeador portal = new PortalMapeador();
-		portal.mapeadorVortex = MapeadorJson.create();
+		portal.mapeadorVortex = MapeadorDefault.create();
 		portal.initializeWith(processor, destino);
 		return portal;
 	}

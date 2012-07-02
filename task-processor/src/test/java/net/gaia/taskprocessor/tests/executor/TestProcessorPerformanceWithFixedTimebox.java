@@ -146,7 +146,7 @@ public class TestProcessorPerformanceWithFixedTimebox {
 			final long duracionDeTareaEnMillis, final TimeMagnitude tiempoDeTesteo) {
 		// Configuramos y preparamos el procesador
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setThreadPoolSize(threasParaEjecucion);
+		config.setMinimunThreadPoolSize(threasParaEjecucion);
 		final TaskProcessor procesor = crearProcessor(config);
 		final StressGenerator stressGenerator = StressGenerator.create();
 		stressGenerator.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsGeneradores);

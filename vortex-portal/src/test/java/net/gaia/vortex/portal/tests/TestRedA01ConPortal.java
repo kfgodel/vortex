@@ -61,7 +61,7 @@ public class TestRedA01ConPortal {
 	@Before
 	public void crearNodos() {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setThreadPoolSize(4);
+		config.setMinimunThreadPoolSize(4);
 		processor = ExecutorBasedTaskProcesor.create(config);
 		// Creamos un nodo central
 		nodoRuteador = NodoMultiplexor.create(processor);

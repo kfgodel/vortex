@@ -215,7 +215,7 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	 * Inicia la ejecución de los threads indicados en la configuración
 	 */
 	private void start() {
-		final int threadsActivos = config.getThreadPoolSize();
+		final int threadsActivos = config.getMinimunThreadPoolSize();
 		for (int i = 0; i < threadsActivos; i++) {
 			final KnittleWorker worker = KnittleWorker.create(this.inmediatePendingTasks, this.metrics);
 			this.workers.add(worker);

@@ -14,7 +14,7 @@ package net.gaia.vortex.portal.tests;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJson;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,7 +36,7 @@ public class TestMapeoAVortex {
 
 	@Before
 	public void crearDependencias() {
-		mapeadorVortex = MapeadorJson.create();
+		mapeadorVortex = MapeadorDefault.create();
 	}
 
 	@Test

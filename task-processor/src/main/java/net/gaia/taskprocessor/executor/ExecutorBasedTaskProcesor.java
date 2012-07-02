@@ -14,10 +14,12 @@ package net.gaia.taskprocessor.executor;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
@@ -74,12 +76,19 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	 */
 	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
 		final ExecutorBasedTaskProcesor processor = new ExecutorBasedTaskProcesor();
-		final int threadPoolSize = config.getThreadPoolSize();
 		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
-		final int executorQueueSize = threadPoolSize * 3;
+		final int minimunPoolSize = config.getMinimunThreadPoolSize();
+		final int maximunPoolSize = config.getMaximunThreadPoolSize();
+		final BlockingQueue<Runnable> executorTaskQueue;
+		if (maximunPoolSize == Integer.MAX_VALUE) {
+			executorTaskQueue = new SynchronousQueue<Runnable>();
+		} else {
+			final int executorQueueSize = maximunPoolSize * 3;
+			executorTaskQueue = new LinkedBlockingQueue<Runnable>(executorQueueSize);
+		}
 
-		processor.inmediateExecutor = new ThreadPoolExecutor(1, threadPoolSize, maxIdleTimePerThread.getQuantity(),
-				maxIdleTimePerThread.getTimeUnit(), new LinkedBlockingQueue<Runnable>(executorQueueSize),
+		processor.inmediateExecutor = new ThreadPoolExecutor(minimunPoolSize, maximunPoolSize,
+				maxIdleTimePerThread.getQuantity(), maxIdleTimePerThread.getTimeUnit(), executorTaskQueue,
 				ProcessorThreadFactory.create("TaskProcessor"), TaskWorkerRejectionHandler.create());
 		processor.inmediatePendingTasks = new ConcurrentLinkedQueue<SubmittedRunnableTask>();
 		processor.delayerProcessor = ExecutorDelayerProcessor.create(processor);
@@ -243,15 +252,24 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	 *         esta máquina
 	 */
 	public static TaskProcessor createOptimun() {
-		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
 		final int procesadoresDisponibles = Runtime.getRuntime().availableProcessors();
-		config.setThreadPoolSize(procesadoresDisponibles);
+		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
+		config.setMinimunThreadPoolSize(procesadoresDisponibles);
+		config.setMaximunThreadPoolSize(procesadoresDisponibles * 2);
 		return create(config);
 	}
 
+	/**
+	 * Crea un nuevo procesador que utilizará la cantidad exacta de threads indicados
+	 * 
+	 * @param cantidadDeThreads
+	 *            La cantidad de threads a utilizar durante el tiempo de vida de este procesador
+	 * @return El procesador creado
+	 */
 	public static ExecutorBasedTaskProcesor create(final int cantidadDeThreads) {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setThreadPoolSize(cantidadDeThreads);
+		config.setMinimunThreadPoolSize(cantidadDeThreads);
+		config.setMaximunThreadPoolSize(cantidadDeThreads);
 		return create(config);
 	}
 }

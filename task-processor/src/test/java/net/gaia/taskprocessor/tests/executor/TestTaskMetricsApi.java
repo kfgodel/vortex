@@ -49,7 +49,7 @@ public class TestTaskMetricsApi {
 				TaskProcessorConfiguration.DEFAULT_THREAD_POOL_SIZE == taskProcessor.getThreadPoolSize());
 
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setThreadPoolSize(2);
+		config.setMinimunThreadPoolSize(2);
 		final TaskProcessor dualTaskprocessor = ExecutorBasedTaskProcesor.create(config);
 		Assert.assertTrue("Debería tener 2 threads", 2 == dualTaskprocessor.getThreadPoolSize());
 	}

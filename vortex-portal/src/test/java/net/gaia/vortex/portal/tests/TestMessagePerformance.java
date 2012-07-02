@@ -54,7 +54,7 @@ public class TestMessagePerformance {
 	@Before
 	public void crearRuteadorCentral() {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setThreadPoolSize(4);
+		config.setMinimunThreadPoolSize(4);
 		processor = ExecutorBasedTaskProcesor.create(config);
 		ruteadorCentral = NodoMultiplexor.create(processor);
 		nodoEmisor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);

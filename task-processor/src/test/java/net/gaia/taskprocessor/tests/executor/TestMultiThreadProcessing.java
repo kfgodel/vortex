@@ -109,7 +109,7 @@ public class TestMultiThreadProcessing {
 	 */
 	protected TaskProcessor crearProcesorCon(final int cantidadDeThreads) {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setThreadPoolSize(cantidadDeThreads);
+		config.setMinimunThreadPoolSize(cantidadDeThreads);
 		final TaskProcessor processor = ExecutorBasedTaskProcesor.create(config);
 		return processor;
 	}

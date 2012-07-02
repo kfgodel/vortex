@@ -146,7 +146,7 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 			final long esperaEntreEjecucionesEnMilis, final long duracionDeTareaEnMillis,
 			final TimeMagnitude esperaDeThreads) {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setThreadPoolSize(threasParaEjecucion);
+		config.setMinimunThreadPoolSize(threasParaEjecucion);
 		final TaskProcessor procesor = crearProcessor(config);
 		final StressGenerator stressGenerator = StressGenerator.create();
 		stressGenerator.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsGeneradores);

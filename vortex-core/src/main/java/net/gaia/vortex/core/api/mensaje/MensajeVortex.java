@@ -12,8 +12,6 @@
  */
 package net.gaia.vortex.core.api.mensaje;
 
-import java.util.Map;
-
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 
 /**
@@ -35,32 +33,7 @@ public interface MensajeVortex {
 	 * 
 	 * @return El mapa que representa los datos de este objeto
 	 */
-	public Map<String, Object> getContenido();
-
-	/**
-	 * Devuelve el valor que este mensaje tiene definido como primitiva.<br>
-	 * Si este mensaje no representa una primitiva se devuelve null
-	 */
-	public Object getValorComoPrimitiva();
-
-	/**
-	 * Establece en este mensaje el valor que representa como primitiva. Para lo cual en el mapa
-	 * interno se guarda la primitiva pasada como un atributo del mapa
-	 * 
-	 * @param valor
-	 *            Un objeto que representa una primitiva de java (números,String, o array de
-	 *            primitiva)
-	 * @throws IllegalArgumentException
-	 *             Si el objeto pasado no es un primitiva
-	 */
-	public void setValorComoPrimitiva(Object valor);
-
-	/**
-	 * Indica si este mensaje tiene definida la key para valor de primitiva
-	 * 
-	 * @return true si debe considerarse el contenido de este mensaje como una primitiva
-	 */
-	public boolean tieneValorComoPrimitiva();
+	public ContenidoVortex getContenido();
 
 	/**
 	 * Establece el nombre que identifica el tipo de mensaje original como parte de los datos del
@@ -95,5 +68,31 @@ public interface MensajeVortex {
 	 *            El identificador del nodo
 	 */
 	public void registrarPasajePor(IdentificadorVortex identificador);
+
+	/**
+	 * Devuelve el valor que este contenido tiene definido como primitiva.<br>
+	 * El valor como primitiva está registrado bajo la key {@link #PRIMITIVA_VORTEX_KEY}.<br>
+	 * Si este contenido no representa una primitiva se devuelve null
+	 */
+	public Object getValorComoPrimitiva();
+
+	/**
+	 * Establece en este contenido el valor que representa como primitiva. Para lo cual se utiliza
+	 * una clave especial reservada {@link #PRIMITIVA_VORTEX_KEY}
+	 * 
+	 * @param valor
+	 *            Un objeto que representa una primitiva a la JSON (números, String, o array de
+	 *            primitiva)
+	 * @throws IllegalArgumentException
+	 *             Si el objeto pasado no es un primitiva
+	 */
+	public void setValorComoPrimitiva(Object valor);
+
+	/**
+	 * Indica si este mensaje tiene definida la key para valor de primitiva
+	 * 
+	 * @return true si debe considerarse el contenido de este mensaje como una primitiva
+	 */
+	public boolean tieneValorComoPrimitiva();
 
 }

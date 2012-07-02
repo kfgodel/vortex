@@ -12,17 +12,14 @@
  */
 package net.gaia.vortex.portal.impl.moleculas.mapeador;
 
-import java.util.Map;
-
+import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
+import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
-import ar.dgarcia.textualizer.api.CannotTextSerializeException;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Esta clase implementa el mapeador de mensajes vortex y objetos utilizando JSON como paso
@@ -32,40 +29,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  * @author D. García
  */
-public class MapeadorJson implements MapeadorVortex {
+public class MapeadorDefault implements MapeadorVortex {
 
-	private ObjectMapper jacksonMapper;
+	private MapeadorDeObjetos mapeadorDeObjetos;
 
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.MapeadorVortex#convertirAVortex(java.lang.Object)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public MensajeVortex convertirAVortex(final Object mensajeOriginal) throws ErrorDeMapeoVortexException {
-		if (mensajeOriginal == null) {
+	public MensajeVortex convertirAVortex(final Object objetoOriginal) throws ErrorDeMapeoVortexException {
+		if (objetoOriginal == null) {
 			// Al menos por ahora no soportamos null como fuente de la conversion
 			throw new ErrorDeMapeoVortexException(
 					"El objeto original no puede ser null para ser convertido en mensaje vortex");
 		}
-		// Las primitivas viajan como tipo especial de mensaje
-		if (MensajeMapa.esPrimitivaVortex(mensajeOriginal)) {
-			// No podemos jsonizarlo, pero si podemos crear el mensaje de una
-			final MensajeMapa mensajeConPrimitiva = MensajeMapa.create();
-			mensajeConPrimitiva.setValorComoPrimitiva(mensajeOriginal);
-			return mensajeConPrimitiva;
-		}
-		Map<String, Object> mapaDeEstado;
-		try {
-			mapaDeEstado = jacksonMapper.convertValue(mensajeOriginal, Map.class);
-		} catch (final Exception e) {
-			throw new ErrorDeMapeoVortexException("Se produjo un error al convertir el objeto[" + mensajeOriginal
-					+ "] a mapa", e);
-		}
 
-		final MensajeVortex mensajeVortex = MensajeMapa.create(mapaDeEstado);
-		final Class<? extends Object> tipoDelMensaje = mensajeOriginal.getClass();
-		final String nombreDelTipoOriginal = tipoDelMensaje.getName();
-		mensajeVortex.setNombreDelTipoOriginal(nombreDelTipoOriginal);
+		ContenidoVortex contenidoDelMensaje;
+		// Las primitivas viajan como tipo especial de mensaje
+		if (ContenidoPrimitiva.esPrimitivaVortex(objetoOriginal)) {
+			contenidoDelMensaje = ContenidoPrimitiva.create(objetoOriginal);
+		} else {
+			contenidoDelMensaje = ContenidoVortexLazy.create(objetoOriginal, mapeadorDeObjetos);
+		}
+		final MensajeMapa mensajeVortex = MensajeMapa.create(contenidoDelMensaje);
 		return mensajeVortex;
 	}
 
@@ -75,33 +62,42 @@ public class MapeadorJson implements MapeadorVortex {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T convertirDesdeVortex(final MensajeVortex mensajeOriginal, final Class<T> tipoEsperado)
+	public <T> T convertirDesdeVortex(final MensajeVortex mensajeVortex, final Class<T> tipoEsperado)
 			throws ErrorDeMapeoVortexException {
-		if (mensajeOriginal == null) {
+		if (mensajeVortex == null) {
 			throw new ErrorDeMapeoVortexException("El mensaje vortex no puede ser null para ser convertido en "
 					+ tipoEsperado);
 		}
+
+		final ContenidoVortex contenidoVortex = mensajeVortex.getContenido();
+		// Vemos si podemos optimizar el proceso usando el objeto original
+		if (contenidoVortex instanceof ContenidoVortexLazy) {
+			final ContenidoVortexLazy contenidoLazy = (ContenidoVortexLazy) contenidoVortex;
+			final Object objetoOriginal = contenidoLazy.getObjetoOriginal();
+			if (tipoEsperado.isInstance(objetoOriginal)) {
+				// Estamos en memoria y justo nos piden lo que tenemos (no hace falta conversion)
+				return (T) objetoOriginal;
+			}
+			// Nos piden otro tipo del que tenemos, pasamos por la conversión
+		}
+
 		// Verificamos si no es un mensaje con primitiva
-		if (mensajeOriginal.tieneValorComoPrimitiva()) {
-			final Object valorPrimitivo = mensajeOriginal.getValorComoPrimitiva();
+		if (mensajeVortex.tieneValorComoPrimitiva()) {
+			final Object valorPrimitivo = mensajeVortex.getValorComoPrimitiva();
+			if (!tipoEsperado.isInstance(valorPrimitivo)) {
+				throw new UnhandledConditionException("Me piden un tipo[" + tipoEsperado
+						+ "] distinto de la primitiva[" + valorPrimitivo + "] que tengo. Conversión no implementada");
+			}
 			return (T) valorPrimitivo;
 		}
 
-		final Map<String, Object> mapaDeContenido = mensajeOriginal.getContenido();
-		final T objeto;
-		try {
-			objeto = jacksonMapper.convertValue(mapaDeContenido, tipoEsperado);
-		} catch (final CannotTextSerializeException e) {
-			throw new ErrorDeMapeoVortexException("Se produjo un error al obtener el objeto de tipo[" + tipoEsperado
-					+ "] desde el map[" + mensajeOriginal + "]", e);
-		}
+		final T objeto = mapeadorDeObjetos.convertirDesdeEstado(contenidoVortex, tipoEsperado);
 		return objeto;
 	}
 
-	public static MapeadorJson create() {
-		final MapeadorJson mapeador = new MapeadorJson();
-		mapeador.jacksonMapper = new ObjectMapper();
-		mapeador.jacksonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	public static MapeadorDefault create() {
+		final MapeadorDefault mapeador = new MapeadorDefault();
+		mapeador.mapeadorDeObjetos = MapeadorJackson.create();
 		return mapeador;
 	}
 

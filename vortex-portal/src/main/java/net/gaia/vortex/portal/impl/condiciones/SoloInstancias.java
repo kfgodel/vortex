@@ -13,11 +13,14 @@
 package net.gaia.vortex.portal.impl.condiciones;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.ContenidoVortexLazy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -39,6 +42,18 @@ public class SoloInstancias implements Condicion {
 	 */
 	@Override
 	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+		final ContenidoVortex contenido = mensaje.getContenido();
+
+		// Vemos si podemos chequear directamente contra el objeto original
+		if (contenido instanceof ContenidoVortexLazy) {
+			final Object objetoOriginal = ((ContenidoVortexLazy) contenido).getObjetoOriginal();
+			if (objetoOriginal != null) {
+				// Podemos evaluar directamente contra el objeto
+				final boolean esDelTipoEsperado = tipoEsperado.isInstance(objetoOriginal);
+				return esDelTipoEsperado;
+			}
+		}
+
 		if (mensaje.tieneValorComoPrimitiva()) {
 			final Object valorPrimitivo = mensaje.getValorComoPrimitiva();
 			final boolean esInstanciaDelTipoEsperado = tipoEsperado.isInstance(valorPrimitivo);
@@ -56,7 +71,10 @@ public class SoloInstancias implements Condicion {
 				// Solo lo aceptamos si el tipo esperado es object (todo es casteable a Object)
 				return true;
 			}
-			return false;
+			throw new UnhandledConditionException(
+					"No es posible determinar el tipo asociado al mensaje["
+							+ mensaje
+							+ "]. Por favor reemplace esta condición sobre el tipo del mensaje por condiciones sobre el estado del mensaje");
 		}
 		// Si indica un tipo, vemos si en una de esas esta en el classpath
 		Class<?> tipoDelMensajeOriginal;
@@ -65,7 +83,12 @@ public class SoloInstancias implements Condicion {
 		} catch (final ClassNotFoundException e) {
 			LOG.debug("La clase[{}] no existe en el classpath. Asumiendo que no cumple con esta condicion[{}]",
 					nombreDelTipoOriginal, this);
-			return false;
+			throw new UnhandledConditionException(
+					"La clase["
+							+ nombreDelTipoOriginal
+							+ "] del mensaje["
+							+ mensaje
+							+ "] no existe en el classpath. Por favor reemplace esta condición sobre el tipo del mensaje por condiciones sobre el estado del mensaje");
 		}
 		final boolean esInstanciaDelTipoEsperado = tipoEsperado.isAssignableFrom(tipoDelMensajeOriginal);
 		return esInstanciaDelTipoEsperado;

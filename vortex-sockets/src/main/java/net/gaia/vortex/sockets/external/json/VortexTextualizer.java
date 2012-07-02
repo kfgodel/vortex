@@ -3,10 +3,14 @@
  */
 package net.gaia.vortex.sockets.external.json;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
 import ar.dgarcia.textualizer.api.CannotTextUnserialize;
@@ -51,8 +55,45 @@ public class VortexTextualizer implements ObjectTextualizer {
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> contenidoRegenerado = jsonTextualizer
 				.convertFromStringAs(Map.class, jsonDelContenido);
-		final MensajeMapa mensajeReconstruido = MensajeMapa.create(contenidoRegenerado);
+		final ContenidoMapa contenido = ContenidoMapa.create(contenidoRegenerado);
+		final Collection<String> idsVisitados = castearYVerificarContenidoDeVisitados(contenidoRegenerado);
+		final MensajeMapa mensajeReconstruido = MensajeMapa.create(contenido, idsVisitados);
 		return mensajeReconstruido;
+	}
+
+	/**
+	 * Verifica que el mapa pasado sea tenga una colección de strings como datos de los nodos por
+	 * los que pasó.<br>
+	 * En caso contrario devuelve una colección vacía o produce una excepción si no es del tipo
+	 * esperado
+	 * 
+	 * @param contenidoRegenerado
+	 *            El mapa a revisar por la lista de IDs
+	 * 
+	 * @return La colección de IDs recuperada del mensaje
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Collection<String> castearYVerificarContenidoDeVisitados(final Map<String, Object> contenidoRegenerado) {
+		final Object object = contenidoRegenerado.get(MensajeMapa.TRAZA_IDENTIFICADORES_VORTEX_KEY);
+		if (object == null) {
+			return Collections.emptySet();
+		}
+		Collection coleccionDeIds;
+		try {
+			coleccionDeIds = (Collection) object;
+		} catch (final ClassCastException e) {
+			throw new UnhandledConditionException("El mensaje tiene como atributo["
+					+ MensajeMapa.TRAZA_IDENTIFICADORES_VORTEX_KEY + "] un valor que no es una coleccion de ids: "
+					+ object);
+		}
+		for (final Object posibleId : coleccionDeIds) {
+			if (posibleId instanceof String) {
+				continue;
+			}
+			throw new UnhandledConditionException("El atributo[" + MensajeMapa.TRAZA_IDENTIFICADORES_VORTEX_KEY
+					+ "] tiene en la coleccion un ID que no es string: " + posibleId);
+		}
+		return coleccionDeIds;
 	}
 
 	/**

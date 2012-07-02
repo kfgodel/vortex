@@ -32,7 +32,8 @@ public class TaskProcessorConfiguration {
 	@HasDependencyOn(Decision.SE_USA_UN_SOLO_THREAD_POR_DEFAULT)
 	public static final int DEFAULT_THREAD_POOL_SIZE = 1;
 
-	private int threadPoolSize;
+	private int minimunThreadPoolSize;
+	private int maximunThreadPoolSize;
 
 	private TimeMagnitude maxIdleTimePerThread;
 
@@ -44,18 +45,38 @@ public class TaskProcessorConfiguration {
 		this.maxIdleTimePerThread = maxIdleTimePerThread;
 	}
 
-	public int getThreadPoolSize() {
-		return threadPoolSize;
+	public int getMinimunThreadPoolSize() {
+		return minimunThreadPoolSize;
 	}
 
-	public void setThreadPoolSize(final int threadPoolSize) {
-		this.threadPoolSize = threadPoolSize;
+	public int getMaximunThreadPoolSize() {
+		return maximunThreadPoolSize;
+	}
+
+	/**
+	 * Establece el máximo tamaño del pool como un valor variable según la necesidad
+	 */
+	public void setVariableMaximunThreadPoolSize() {
+		setMaximunThreadPoolSize(Integer.MAX_VALUE);
+	}
+
+	public void setMaximunThreadPoolSize(final int maximunThreadPoolSize) {
+		this.maximunThreadPoolSize = maximunThreadPoolSize;
+	}
+
+	public void setMinimunThreadPoolSize(final int threadPoolSize) {
+		this.minimunThreadPoolSize = threadPoolSize;
+		if (threadPoolSize > maximunThreadPoolSize) {
+			setMaximunThreadPoolSize(threadPoolSize);
+		}
 	}
 
 	public static TaskProcessorConfiguration create() {
 		final TaskProcessorConfiguration config = new TaskProcessorConfiguration();
-		config.threadPoolSize = DEFAULT_THREAD_POOL_SIZE;
+		config.minimunThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
+		config.maximunThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
 		config.maxIdleTimePerThread = TimeMagnitude.of(5, TimeUnit.SECONDS);
 		return config;
 	}
+
 }

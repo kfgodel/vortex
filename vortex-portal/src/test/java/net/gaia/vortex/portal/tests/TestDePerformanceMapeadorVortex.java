@@ -20,7 +20,7 @@ import net.gaia.vortex.core.impl.metricas.SnapshotDeMetricaPorTiempo;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.core.tests.TestDePerformancePatron;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJson;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class TestDePerformanceMapeadorVortex {
 
 	@Before
 	public void crearMapeador() {
-		mapeador = MapeadorJson.create();
+		mapeador = MapeadorDefault.create();
 	}
 
 	@Test

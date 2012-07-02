@@ -14,13 +14,11 @@ package net.gaia.vortex.core.impl.mensaje;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
+import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.colecciones.sets.ConcurrentHashSet;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -35,103 +33,82 @@ public class MensajeMapa implements MensajeVortex {
 	/**
 	 * Key utilizada para guardar el registro de moleculas visitadas
 	 */
-	private static final String MOLECULAS_VORTEX_VISITADAS_KEY = "traza_identificadores";
-	/**
-	 * Key utilizada para guardar el valor de una primitiva como mapa en este mensaje
-	 */
-	public static final String PRIMITIVA_VORTEX_KEY = "PRIMITIVA_VORTEX_KEY";
+	public static final String TRAZA_IDENTIFICADORES_VORTEX_KEY = "traza_identificadores";
 	/**
 	 * Clave usada para agregar como dato el nombre completo de la clase a partir de la cual se
 	 * origina este mensaje
 	 */
 	public static final String CLASSNAME_KEY = "CLASSNAME_KEY";
 
-	private Map<String, Object> contenido;
+	private ContenidoVortex contenido;
 	public static final String contenido_FIELD = "contenido";
 
 	private Set<String> idsVisitados;
 	public static final String idsVisitados_FIELD = "idsVisitados";
 
 	public Set<String> getIdsVisitados() {
-		if (idsVisitados == null) {
-			idsVisitados = crearSetDeVisitadosDesdeMapa();
-		}
 		return idsVisitados;
 	}
 
 	/**
-	 * Creamos el set de los nodos visitados a partir de los datos actuales del mapa, reemplazamos
-	 * la entrada en el mapa con el set creado
+	 * Creamos el set de los nodos visitados a partir de los datos pasados como ids visitados.
+	 * Reemplazamos la entrada previa en el mapa con el set creado por esta instancia
 	 * 
+	 * @param moleculasVisitadasSegunMapa
+	 *            El conjunto de IDs visitados según estado previo
 	 * @return El conjunto de nodos visitados inicialmente
 	 */
-	private Set<String> crearSetDeVisitadosDesdeMapa() {
-		final Collection<String> moleculasVisitadasSegunMapa = castearYVerificarContenidoDeVisitados();
-		final ConcurrentHashSet<String> visitados = new ConcurrentHashSet<String>();
-		visitados.addAll(moleculasVisitadasSegunMapa);
-		getContenido().put(MOLECULAS_VORTEX_VISITADAS_KEY, visitados);
-		return visitados;
-	}
-
-	/**
-	 * Verifica que el objeto pasado sea una colección de strings. En caso contrario produce una
-	 * excepción
-	 * 
-	 * @param object
-	 * @return
-	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Collection<String> castearYVerificarContenidoDeVisitados() {
-		final Object object = getContenido().get(MOLECULAS_VORTEX_VISITADAS_KEY);
-		if (object == null) {
-			return Collections.emptySet();
-		}
-		Collection coleccionDeIds;
-		try {
-			coleccionDeIds = (Collection) object;
-		} catch (final ClassCastException e) {
-			throw new UnhandledConditionException("El mensaje tiene como atributo[" + MOLECULAS_VORTEX_VISITADAS_KEY
-					+ "] un valor que no es una coleccion de ids: " + object);
-		}
-		for (final Object posibleId : coleccionDeIds) {
-			if (posibleId instanceof String) {
-				continue;
-			}
-			throw new UnhandledConditionException("El atributo[" + MOLECULAS_VORTEX_VISITADAS_KEY
-					+ "] tiene en la coleccion un ID que no es string: " + posibleId);
-		}
-		return coleccionDeIds;
+	private void inicializarIdsVisitados(final Collection<String> moleculasVisitadasSegunMapa) {
+		this.idsVisitados = new ConcurrentHashSet<String>();
+		idsVisitados.addAll(moleculasVisitadasSegunMapa);
+		getContenido().put(TRAZA_IDENTIFICADORES_VORTEX_KEY, idsVisitados);
 	}
 
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getContenido()
 	 */
 	@Override
-	public Map<String, Object> getContenido() {
+	public ContenidoVortex getContenido() {
 		return contenido;
 	}
 
 	/**
-	 * Crea un mensaje vortex con contenido vacío
+	 * Crea un mensaje vacío sin registro de nodos visitados
 	 * 
 	 * @return El mensaje creado
 	 */
 	@SuppressWarnings("unchecked")
 	public static MensajeMapa create() {
-		return create(Collections.EMPTY_MAP);
+		final ContenidoVortex contenidoVacio = ContenidoMapa.create();
+		return create(contenidoVacio, Collections.EMPTY_SET);
 	}
 
 	/**
-	 * Crea un mensaje vortex con el contenido indicado
+	 * Crea un nuevo mensaje vortex con el estado pasado, pero sin registro de nodos visitados
+	 * previamente
+	 * 
+	 * @param contenido
+	 *            El contenido del mensaje
+	 * @return El mensaje creado
+	 */
+	@SuppressWarnings("unchecked")
+	public static MensajeMapa create(final ContenidoVortex contenido) {
+		return create(contenido, Collections.EMPTY_SET);
+	}
+
+	/**
+	 * Crea un mensaje vortex con el contenido indicado y el registro de nodos visitados pasado
 	 * 
 	 * @param contenidoIncial
 	 *            El contenido a portar por este mensaje
+	 * @param idsVisitados
+	 *            Los ids tomados como visitados
 	 * @return El mensaje creado
 	 */
-	public static MensajeMapa create(final Map<String, Object> contenidoIncial) {
+	public static MensajeMapa create(final ContenidoVortex contenido, final Collection<String> idsVisitados) {
 		final MensajeMapa mensaje = new MensajeMapa();
-		mensaje.contenido = new HashMap<String, Object>(contenidoIncial);
-		mensaje.idsVisitados = mensaje.crearSetDeVisitadosDesdeMapa();
+		mensaje.contenido = contenido;
+		mensaje.inicializarIdsVisitados(idsVisitados);
 		return mensaje;
 	}
 
@@ -148,7 +125,7 @@ public class MensajeMapa implements MensajeVortex {
 	 */
 	@Override
 	public Object getValorComoPrimitiva() {
-		return getContenido().get(PRIMITIVA_VORTEX_KEY);
+		return getContenido().get(ContenidoVortex.PRIMITIVA_VORTEX_KEY);
 	}
 
 	/**
@@ -156,37 +133,10 @@ public class MensajeMapa implements MensajeVortex {
 	 */
 	@Override
 	public void setValorComoPrimitiva(final Object valor) {
-		if (!esPrimitivaVortex(valor)) {
+		if (!ContenidoPrimitiva.esPrimitivaVortex(valor)) {
 			throw new IllegalArgumentException("El valor[" + valor + "] no puede ser aceptado como primitiva vortex");
 		}
-		getContenido().put(PRIMITIVA_VORTEX_KEY, valor);
-	}
-
-	/**
-	 * Indica si el valor pasado es considerable una primitiva vortex
-	 * 
-	 * @param valor
-	 *            El valor a evaluar
-	 * @return true si es un número, string, array o null
-	 */
-	public static boolean esPrimitivaVortex(final Object valor) {
-		if (valor == null) {
-			return false;
-		}
-		if (Number.class.isInstance(valor)) {
-			return true;
-		}
-		if (String.class.isInstance(valor)) {
-			return true;
-		}
-		if (valor.getClass().isArray()) {
-			return true;
-		}
-		if (valor instanceof Collection) {
-			// Es como si fuera un array
-			return true;
-		}
-		return false;
+		getContenido().put(ContenidoVortex.PRIMITIVA_VORTEX_KEY, valor);
 	}
 
 	/**
@@ -194,7 +144,7 @@ public class MensajeMapa implements MensajeVortex {
 	 */
 	@Override
 	public boolean tieneValorComoPrimitiva() {
-		return getContenido().containsKey(PRIMITIVA_VORTEX_KEY);
+		return getContenido().containsKey(ContenidoVortex.PRIMITIVA_VORTEX_KEY);
 	}
 
 	/**
