@@ -21,7 +21,6 @@ import net.gaia.vortex.core.impl.metricas.SnapshotDeMetricaPorTiempo;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.core.tests.TestDePerformancePatron;
-import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 
@@ -31,6 +30,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.extensions.BooleanEstocastico;
 import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
@@ -43,21 +43,15 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
 public class TestDePerformanceConPortales {
 	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConPortales.class);
 
-	private TaskProcessor processorEnvios;
 	private TaskProcessor processorRuteo;
-	private TaskProcessor processorRecepcion;
 
 	@Before
 	public void crearProcesador() {
-		processorEnvios = ExecutorBasedTaskProcesor.createOptimun();
 		processorRuteo = ExecutorBasedTaskProcesor.createOptimun();
-		processorRecepcion = ExecutorBasedTaskProcesor.createOptimun();
 	}
 
 	@After
 	public void liberarRecursos() {
-		processorEnvios.detener();
-		processorRecepcion.detener();
 		processorRuteo.detener();
 	}
 
@@ -139,18 +133,15 @@ public class TestDePerformanceConPortales {
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
 		// Generamos tantos portales como receptores tengamos
-		for (int i = 0; i < cantidadDeThreadsDeRecepcion; i++) {
-			final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(processorRecepcion, nodoVortex);
-			portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
-				@Override
-				public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
-					metricas.registrarOutput();
-				}
-			});
-		}
+		final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(processorRuteo, nodoVortex);
+		portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
+			@Override
+			public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
+				metricas.registrarOutput();
+			}
+		});
 
 		correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, nodoVortex);
-
 	}
 
 	/**
@@ -173,20 +164,26 @@ public class TestDePerformanceConPortales {
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
+		final PortalMapeador portalDeEnvio = PortalMapeador.createForOutputWith(processorRuteo, nodoVortex);
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
 			@Override
 			public Runnable getOrCreateRunnable() {
 				return new Runnable() {
-					private Portal portalPropio;
+					private final BooleanEstocastico booleano = BooleanEstocastico.create(0.0);
 
 					@Override
 					public void run() {
-						if (portalPropio == null) {
-							portalPropio = PortalMapeador.createForOutputWith(processorEnvios, nodoVortex);
+						// Vemos si tenemos que esperar
+						if (booleano.nextValue()) {
+							try {
+								Thread.sleep(1);
+							} catch (final InterruptedException e) {
+								// Omitimos la excepción
+							}
 						}
 						final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
-						portalPropio.enviar(mensaje);
+						portalDeEnvio.enviar(mensaje);
 						metricas.registrarInput();
 					}
 				};

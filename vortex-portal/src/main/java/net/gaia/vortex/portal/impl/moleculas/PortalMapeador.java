@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.portal.impl.moleculas;
 
+import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.Nodo;
@@ -38,6 +39,9 @@ import net.gaia.vortex.portal.impl.atomos.Desvortificador;
 import net.gaia.vortex.portal.impl.atomos.Vortificador;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa un portal con la red vortex que utiliza un mapeador interno para convertir
  * los objetos en mensajes vortex y vice-versa
@@ -46,6 +50,13 @@ import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
  */
 @Molecula
 public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdentificable {
+	/**
+	 * Cantidad de tareas que pueden haber en el procesador como pendientes antes de que existan
+	 * esperas forzadas en el envío. La espera será proporcional a las tareas pendientes
+	 */
+	private static final int TAREAS_LIMITE_SIN_ESPERA = 1000;
+
+	private static final Logger LOG = LoggerFactory.getLogger(PortalMapeador.class);
 
 	private MapeadorVortex mapeadorVortex;
 	private ReceptorVariable<Receptor> receptorDeSalida;
@@ -67,7 +78,29 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 	 */
 	@Override
 	public void enviar(final Object mensaje) {
+		retrasarEnvioSiProcesadorSaturado();
 		procesoDeSalida.vortificar(mensaje);
+	}
+
+	/**
+	 * Genera una espera proporcional a la cantidad de tareas acumuladas para frenar al thread que
+	 * envía el mensaje, de manera de permitir al procesador destinar recursos a terminar las tareas
+	 * actuales antes de aceptar nuevas.<br>
+	 * Esta medida mejora la performance global al permitir que las salidas estén equilibradas con
+	 * las entradas (reduce la memoria de mensajes acumulados y permite entradas y salidas más
+	 * rápidas)
+	 */
+	private void retrasarEnvioSiProcesadorSaturado() {
+		final TaskProcessingMetrics metricasProcesador = getProcessor().getMetrics();
+		final int pendientes = metricasProcesador.getPendingTaskCount();
+		final int espera = pendientes / TAREAS_LIMITE_SIN_ESPERA;
+		if (espera > 0) {
+			try {
+				Thread.sleep(espera);
+			} catch (final InterruptedException e) {
+				LOG.warn("Se interrumpió el thread mientras esperaba para dejar un mensaje en el portal", e);
+			}
+		}
 	}
 
 	/**
