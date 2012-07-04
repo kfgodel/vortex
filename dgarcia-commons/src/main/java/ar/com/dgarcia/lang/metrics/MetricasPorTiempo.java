@@ -13,24 +13,26 @@
 package ar.com.dgarcia.lang.metrics;
 
 /**
- * Esta interfaz define los valores disponibles como métricas del nodo en una cantidad de tiempo
+ * Esta interfaz define los valores disponibles como métricas de un intervalo de tiempo medido con
+ * el reloj de sistema
  * 
  * @author D. García
  */
 public interface MetricasPorTiempo {
 	/**
-	 * Devuelve la cantidad de mensajes que fueron recibidos por este nodo para ser ruteados
+	 * Devuelve la entradas que se registraron en el sistema medido
 	 * 
-	 * @return La cantidad de mensajes recibidos desde el inicio de esta métrica hasta el final
+	 * @return La cantidad de entradas que deberían tener su correspondiente y posterior salida del
+	 *         sistema
 	 */
 	public long getCantidadDeInputs();
 
 	/**
-	 * Devuelve la cantidad de mensajes que este nodo entregó a los nodos vecinos correspondientes.<br>
+	 * Devuelve la cantidad de salidas que este sistema registró.<br>
 	 * Esta medida puede ser un aproximado muy cercano, variando en pequeñas cantidades por la
 	 * manera en que se mide
 	 * 
-	 * @return La cantidad de mensajes que fueron ruteados desde el inicio de esta metrica hasta el
+	 * @return La cantidad de mensajes que fueron ruteados desde el inicio de esta métrica hasta el
 	 *         final
 	 */
 	public long getCantidadDeOutputs();
@@ -53,7 +55,8 @@ public interface MetricasPorTiempo {
 	/**
 	 * Devuelve la tasa entre la cantidad de mensajes enviados / la cantidad de mensajes recibidos
 	 * durante el período de esta métrica. Indicando que porcentaje de lo recibido fue entregado. Si
-	 * el nodo no está saturado este valor debería ser lo más cercano a 1.0 posible
+	 * el nodo no está saturado este valor debería ser lo más cercano a 1.0 posible.<br>
+	 * Para que esta métrica sea correcta por cada entrada debería existir una y sólo una salida.
 	 * 
 	 * @return El valor <= 1.0 que indica cuanto de lo que se recibió fue enviado
 	 */
@@ -92,5 +95,5 @@ public interface MetricasPorTiempo {
 	 * 
 	 * @return La edad en milis desde el momento de fin
 	 */
-	public long getEdadEnMilis();
+	public long getAntiguedadEnMilis();
 }

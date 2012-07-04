@@ -32,7 +32,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.com.dgarcia.lang.metrics.MetricasDelNodo;
+import ar.com.dgarcia.lang.metrics.MetricasDeCarga;
 import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
 import ar.com.dgarcia.lang.time.SystemChronometer;
 import ar.com.dgarcia.testing.stress.StressGenerator;
@@ -222,7 +222,7 @@ public class TestMessagePerformance {
 		LOG.info("[{}]: Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms OutputT:{} msg/ms", new Object[] {
 				nombreDelTest, deliveryMeasure, inputMeasure, individualOutputMeasure, totalOutputMeasure });
 
-		final MetricasDelNodo metricas = ruteadorCentral.getMetricas();
+		final MetricasDeCarga metricas = ruteadorCentral.getMetricas();
 		final MetricasPorTiempo metricasTotales = metricas.getMetricasTotales();
 		LOG.debug("[{}]: En nodo Totales - Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms", new Object[] {
 				nombreDelTest, metricasTotales.getTasaDeDelivery() * 100, metricasTotales.getVelocidadDeRecepcion(),

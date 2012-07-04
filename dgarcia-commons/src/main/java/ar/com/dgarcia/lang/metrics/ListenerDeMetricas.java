@@ -14,21 +14,23 @@ package ar.com.dgarcia.lang.metrics;
 
 /**
  * Esta interfaz representa el contrato de métodos que debe tener un listener para calcular las
- * métricas del nodo
+ * métricas de un sistema como una contabilización de entradas y salidas correspondientes
  * 
  * @author D. García
  */
 public interface ListenerDeMetricas {
 
 	/**
-	 * Registra en esta métrica la recepción de un mensaje<br>
-	 * Normalmente habrá una recepción y un envío por mensaje
+	 * Registra en esta métrica la recepción de un input en el sistema<br>
+	 * Normalmente debería haber un output por cada input, para que los datos de delivery sean
+	 * consistentes
 	 */
 	void registrarInput();
 
 	/**
-	 * Registra en esta métrica el envío de un mensaje.<br>
-	 * Normalmente habrá una recepción y un envío por mensaje
+	 * Registra en esta métrica generación de un output en el sistema.<br>
+	 * Normalmente debería haber un output por cada input, para que los datos de delivery sean
+	 * consistentes
 	 */
 	void registrarOutput();
 

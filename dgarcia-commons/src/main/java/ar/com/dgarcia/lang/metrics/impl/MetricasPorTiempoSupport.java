@@ -15,7 +15,8 @@ package ar.com.dgarcia.lang.metrics.impl;
 import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
 
 /**
- * Esta clase define métodos comunes para que no tengan que ser definidos por las subclases
+ * Esta clase define métodos comunes para que no tengan que ser definidos por las subclases.<br>
+ * Sobretodo en la definición de variables dependientes de otras
  * 
  * @author D. García
  */
@@ -76,10 +77,10 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getEdadEnMilis()
+	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getAntiguedadEnMilis()
 	 */
 	@Override
-	public long getEdadEnMilis() {
+	public long getAntiguedadEnMilis() {
 		final long now = System.currentTimeMillis();
 		final long edad = now - getMomentoDeFinDeLaMedicion();
 		return edad;

@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.com.dgarcia.lang.metrics.MetricasDelNodo;
+import ar.com.dgarcia.lang.metrics.MetricasDeCarga;
 import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
 import ar.com.dgarcia.lang.time.SystemChronometer;
 import ar.com.dgarcia.testing.stress.StressGenerator;
@@ -76,7 +76,7 @@ public class TestMetricas {
 		stressGenerator.start();
 
 		while (crono.getElapsedMillis() < 12000) {
-			final MetricasDelNodo metricas = ruteadorCentral.getMetricas();
+			final MetricasDeCarga metricas = ruteadorCentral.getMetricas();
 			final MetricasPorTiempo cadaSegundo = metricas.getMetricasEnBloqueDeUnSegundo();
 			LOG.debug(
 					"[{}]: En nodo Cada 1s - Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms- Rcv: {} Snt:{}",
@@ -111,7 +111,7 @@ public class TestMetricas {
 		stressGenerator.start();
 
 		while (crono.getElapsedMillis() < 60000) {
-			final MetricasDelNodo metricas = ruteadorCentral.getMetricas();
+			final MetricasDeCarga metricas = ruteadorCentral.getMetricas();
 			final MetricasPorTiempo cada5Segundo = metricas.getMetricasEnBloqueDe5Segundos();
 			LOG.debug(
 					"[{}]: En nodo Cada 10s - Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms- Rcv: {} Snt:{}",

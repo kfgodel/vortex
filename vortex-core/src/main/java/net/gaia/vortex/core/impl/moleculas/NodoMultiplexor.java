@@ -24,8 +24,8 @@ import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificadorSupport;
 import net.gaia.vortex.core.impl.atomos.ids.NexoIdentificador;
 import net.gaia.vortex.core.impl.metricas.NodoConMetricas;
 import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
-import ar.com.dgarcia.lang.metrics.MetricasDelNodo;
-import ar.com.dgarcia.lang.metrics.impl.MetricasDelNodoImpl;
+import ar.com.dgarcia.lang.metrics.MetricasDeCarga;
+import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 
 /**
  * Esta clase representa un nodo que puede identificar los mensajes para descartar los propios y si
@@ -37,7 +37,7 @@ import ar.com.dgarcia.lang.metrics.impl.MetricasDelNodoImpl;
 @Molecula
 public class NodoMultiplexor extends MultiplexorIdentificadorSupport implements Nodo, NodoConMetricas {
 
-	private MetricasDelNodoImpl metricas;
+	private MetricasDeCargaImpl metricas;
 
 	public static NodoMultiplexor create(final TaskProcessor processor) {
 		final NodoMultiplexor nodo = new NodoMultiplexor();
@@ -49,7 +49,7 @@ public class NodoMultiplexor extends MultiplexorIdentificadorSupport implements 
 	 * @see net.gaia.vortex.core.impl.metricas.NodoConMetricas#getMetricas()
 	 */
 	@Override
-	public MetricasDelNodo getMetricas() {
+	public MetricasDeCarga getMetricas() {
 		return metricas;
 	}
 
@@ -73,7 +73,7 @@ public class NodoMultiplexor extends MultiplexorIdentificadorSupport implements 
 	protected Receptor crearProcesoDeEntrada(final TaskProcessor processor, final IdentificadorVortex identificador,
 			final MultiplexorParalelo multiplexorDeSalida) {
 		// Agregamos métricas para este nodo
-		metricas = MetricasDelNodoImpl.create();
+		metricas = MetricasDeCargaImpl.create();
 
 		// Le indicamos al multiplexor que registre las salidas
 		getMultiplexorDeSalida().setListenerMetricas(metricas);

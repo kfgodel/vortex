@@ -19,8 +19,8 @@ import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
 
 /**
  * Esta clase representa una métrica por tiempo en la que se segmenta el tiempo en bloques de
- * duración fija, y se contabilizan los eventos del nodo por cada bloque de tiempo.<br>
- * ç Esta clase siempre devuelve como valores los del último bloque, y contabiliza los nuevos
+ * duración fija, y se contabilizan los eventos de entrada/salida por cada bloque de tiempo.<br>
+ * Esta clase siempre devuelve como valores medidos los del último bloque, y contabiliza los nuevos
  * eventos en el actual, garantizando que los datos nunca son más viejos que el tamaño del bloque
  * 
  * @author D. García
@@ -113,13 +113,13 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 		metricas.resetear();
 		// Definimos el tamaño de snapshot forzadamente al tamaño de bloque para que no den mal las
 		// divisiones (sabemos que las cantidades son válidas para el bloque, porque no cambiaron
-		// desde la ultima vez que chequeamos)
+		// desde la última vez que chequeamos)
 		nuevoSnapshot.setDuracionDeLaMedicion(duracionDelBloqueEnMillis);
 		referenciaASnapshot.set(nuevoSnapshot);
 	}
 
 	/**
-	 * Evalua si el bloque es más viejo que el tiempo indicado como vencimiento y devuelve el bloque
+	 * Evalúa si el bloque es más viejo que el tiempo indicado como vencimiento y devuelve el bloque
 	 * cero, si está vencido el pasado.<br>
 	 * Se considera vencido si el momento de fin del bloque es más viejo que la edad permitida en
 	 * milisegundos
@@ -134,7 +134,7 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	private SnapshotDeMetricaPorTiempo devolverBloqueSiNoEsMasViejoQue(final long edadMaximaEnMilis,
 			final AtomicReference<SnapshotDeMetricaPorTiempo> referencia) {
 		final SnapshotDeMetricaPorTiempo bloque = referencia.get();
-		final long edadDelBloque = bloque.getEdadEnMilis();
+		final long edadDelBloque = bloque.getAntiguedadEnMilis();
 		if (edadDelBloque > edadMaximaEnMilis) {
 			// Ya se venció la data
 			return SnapshotDeMetricaPorTiempo.createZero();

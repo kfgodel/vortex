@@ -15,7 +15,7 @@ package ar.com.dgarcia.lang.metrics.impl;
 import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
 
 /**
- * Esta clase representa una copia de la metrica en el tiempo en un momento dado
+ * Esta clase representa una instantánea tomada en un momento de una métrica por tiempo
  * 
  * @author D. García
  */

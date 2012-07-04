@@ -19,8 +19,8 @@ import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
 import ar.com.dgarcia.lang.time.SystemChronometer;
 
 /**
- * Esta clase implementa el comportamiento que permite medir el desempeño del nodo en un período de
- * tiempo
+ * Esta clase implementa la medición de entradas/salidas por un intervalo de tiempo utilizando el
+ * reloj de sistem
  * 
  * @author D. García
  */

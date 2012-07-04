@@ -13,15 +13,15 @@
 package ar.com.dgarcia.lang.metrics.impl;
 
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
-import ar.com.dgarcia.lang.metrics.MetricasDelNodo;
+import ar.com.dgarcia.lang.metrics.MetricasDeCarga;
 import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
 
 /**
- * Esta clase permite implementar las mediciones de desempeño del nodo
+ * Esta clase permite implementar las mediciones de desempeño del sistema
  * 
  * @author D. García
  */
-public class MetricasDelNodoImpl implements MetricasDelNodo, ListenerDeMetricas {
+public class MetricasDeCargaImpl implements MetricasDeCarga, ListenerDeMetricas {
 
 	private static final int UN_SEGUNDO = 1000;
 	private static final int CINCO_SEGUNDOS = 5 * UN_SEGUNDO;
@@ -32,7 +32,7 @@ public class MetricasDelNodoImpl implements MetricasDelNodo, ListenerDeMetricas 
 	private MetricasEnBloque metricasPorCada5Segundos;
 
 	/**
-	 * @see ar.com.dgarcia.lang.metrics.MetricasDelNodo#getMetricasTotales()
+	 * @see ar.com.dgarcia.lang.metrics.MetricasDeCarga#getMetricasTotales()
 	 */
 	@Override
 	public MetricasPorTiempo getMetricasTotales() {
@@ -40,7 +40,7 @@ public class MetricasDelNodoImpl implements MetricasDelNodo, ListenerDeMetricas 
 	}
 
 	/**
-	 * @see ar.com.dgarcia.lang.metrics.MetricasDelNodo#getMetricasEnBloqueDeUnSegundo()
+	 * @see ar.com.dgarcia.lang.metrics.MetricasDeCarga#getMetricasEnBloqueDeUnSegundo()
 	 */
 	@Override
 	public MetricasPorTiempo getMetricasEnBloqueDeUnSegundo() {
@@ -48,15 +48,15 @@ public class MetricasDelNodoImpl implements MetricasDelNodo, ListenerDeMetricas 
 	}
 
 	/**
-	 * @see ar.com.dgarcia.lang.metrics.MetricasDelNodo#getMetricasEnBloqueDe5Segundos()
+	 * @see ar.com.dgarcia.lang.metrics.MetricasDeCarga#getMetricasEnBloqueDe5Segundos()
 	 */
 	@Override
 	public MetricasPorTiempo getMetricasEnBloqueDe5Segundos() {
 		return metricasPorCada5Segundos;
 	}
 
-	public static MetricasDelNodoImpl create() {
-		final MetricasDelNodoImpl metricas = new MetricasDelNodoImpl();
+	public static MetricasDeCargaImpl create() {
+		final MetricasDeCargaImpl metricas = new MetricasDeCargaImpl();
 		metricas.metricasTotales = MetricasPorTiempoImpl.create();
 		metricas.metricasPorCadaSegundo = MetricasEnBloque.create(UN_SEGUNDO);
 		metricas.metricasPorCada5Segundos = MetricasEnBloque.create(CINCO_SEGUNDOS);

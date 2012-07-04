@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.impl.metricas;
 
-import ar.com.dgarcia.lang.metrics.MetricasDelNodo;
+import ar.com.dgarcia.lang.metrics.MetricasDeCarga;
 
 /**
  * Esta interfaz representa un componente vortex que ofrece métricas de performance para evaluar su
@@ -27,5 +27,5 @@ public interface NodoConMetricas {
 	 * 
 	 * @return Las metricas que indican valores para los mensajes recibidos y ruteado
 	 */
-	public MetricasDelNodo getMetricas();
+	public MetricasDeCarga getMetricas();
 }
