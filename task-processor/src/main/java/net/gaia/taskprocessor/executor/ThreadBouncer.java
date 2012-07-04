@@ -39,6 +39,7 @@ public class ThreadBouncer {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ThreadBouncer.class);
 
+	private TaskProcessor processor;
 	private Collection<?> colaDeTareas;
 	private int cantidadDeTareasSinEspera;
 	public static final String cantidadDeTareasSinEspera_FIELD = "cantidadDeTareasSinEspera";
@@ -53,9 +54,9 @@ public class ThreadBouncer {
 	 * 
 	 * @return El bouncer creado
 	 */
-	public static ThreadBouncer createForExecutorBased(final TaskProcessorConfiguration config,
-			final Collection<?> colaDeTareas) {
-		return create(config, colaDeTareas, TAREAS_POR_THREAD_EN_EXECUTOR);
+	public static ThreadBouncer createForExecutorBased(final ExecutorBasedTaskProcesor processor,
+			final TaskProcessorConfiguration config, final Collection<?> colaDeTareas) {
+		return create(processor, config, colaDeTareas, TAREAS_POR_THREAD_EN_EXECUTOR);
 	}
 
 	/**
@@ -68,9 +69,9 @@ public class ThreadBouncer {
 	 * 
 	 * @return El bouncer creado
 	 */
-	public static ThreadBouncer createForKnittle(final TaskProcessorConfiguration config,
-			final Collection<?> colaDeTareas) {
-		return create(config, colaDeTareas, TAREAS_POR_THREAD_EN_KNITTLE);
+	public static ThreadBouncer createForKnittle(final KnittleProcessor processor,
+			final TaskProcessorConfiguration config, final Collection<?> colaDeTareas) {
+		return create(processor, config, colaDeTareas, TAREAS_POR_THREAD_EN_KNITTLE);
 	}
 
 	/**
@@ -83,12 +84,13 @@ public class ThreadBouncer {
 	 *            La cola de tareas del procesador
 	 * @return El retrasador de tareas creado
 	 */
-	public static ThreadBouncer create(final TaskProcessorConfiguration config, final Collection<?> colaDeTareas,
-			final int tasksPerThreadFactor) {
+	public static ThreadBouncer create(final TaskProcessor processor, final TaskProcessorConfiguration config,
+			final Collection<?> colaDeTareas, final int tasksPerThreadFactor) {
 		final ThreadBouncer bouncer = new ThreadBouncer();
 		final int minimunPoolSize = config.getMinimunThreadPoolSize();
 		bouncer.cantidadDeTareasSinEspera = minimunPoolSize * tasksPerThreadFactor;
 		bouncer.colaDeTareas = colaDeTareas;
+		bouncer.processor = processor;
 		return bouncer;
 	}
 
@@ -116,14 +118,14 @@ public class ThreadBouncer {
 		}
 
 		// Sólo hacemos esperar final a threads externos
-		// final Thread currentThread = Thread.currentThread();
-		// if (currentThread instanceof ProcessorThread) {
-		// final ProcessorThread threadDeProcesador = (ProcessorThread) currentThread;
-		// if (threadDeProcesador.perteneceA(this)) {
-		// // Es un thread propio, no lo hacemos esperar
-		// return;
-		// }
-		// }
+		final Thread currentThread = Thread.currentThread();
+		if (currentThread instanceof ProcessorThread) {
+			final ProcessorThread threadDeProcesador = (ProcessorThread) currentThread;
+			if (threadDeProcesador.perteneceA(processor)) {
+				// Es un thread propio, no lo hacemos esperar
+				return;
+			}
+		}
 
 		// Si es un thread externo lo hacemos esperar en proporción a lo retrasado
 		final int esperaForzadaEnMillis = pendientes / cantidadDeTareasSinEspera;
@@ -134,5 +136,4 @@ public class ThreadBouncer {
 			LOG.error("Se interrumpió la espera forzada de un thread antes de aceptar nueva tarea");
 		}
 	}
-
 }

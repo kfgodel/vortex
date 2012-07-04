@@ -94,7 +94,8 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 				maxIdleTimePerThread.getQuantity(), maxIdleTimePerThread.getTimeUnit(), executorTaskQueue,
 				ProcessorThreadFactory.create("TaskProcessor", processor), TaskWorkerRejectionHandler.create());
 		processor.inmediatePendingTasks = new ConcurrentLinkedQueue<SubmittedRunnableTask>();
-		processor.threadBouncer = ThreadBouncer.createForExecutorBased(config, processor.inmediatePendingTasks);
+		processor.threadBouncer = ThreadBouncer.createForExecutorBased(processor, config,
+				processor.inmediatePendingTasks);
 		processor.delayerProcessor = ExecutorDelayerProcessor.create(processor);
 		processor.metrics = config.createMetricsFor(processor.inmediatePendingTasks);
 		return processor;
@@ -278,6 +279,14 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 		config.setMinimunThreadPoolSize(cantidadDeThreads);
 		config.setMaximunThreadPoolSize(cantidadDeThreads);
 		return create(config);
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.TaskProcessor#getPendingTaskCount()
+	 */
+	@Override
+	public int getPendingTaskCount() {
+		return this.inmediatePendingTasks.size();
 	}
 
 }

@@ -214,7 +214,7 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 		procesor.exceptionHandler = new AtomicReference<TaskExceptionHandler>();
 		procesor.processorListener = new AtomicReference<TaskProcessorListener>();
 		procesor.metrics = config.createMetricsFor(procesor.inmediatePendingTasks);
-		procesor.threadBouncer = ThreadBouncer.createForKnittle(config, procesor.inmediatePendingTasks);
+		procesor.threadBouncer = ThreadBouncer.createForKnittle(procesor, config, procesor.inmediatePendingTasks);
 		procesor.delayerProcessor = ExecutorDelayerProcessor.create(procesor);
 		procesor.start();
 		return procesor;
@@ -242,5 +242,22 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 		return ToString.de(this).add("Concurrentes", this.getThreadPoolSize()).add("Activas", this.getThreadPoolSize())
 				.add("Pendientes", this.inmediatePendingTasks.size())
 				.add("Postergadas", this.delayerProcessor.getPendingCount()).toString();
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.TaskProcessor#getPendingTaskCount()
+	 */
+	@Override
+	public int getPendingTaskCount() {
+		return inmediatePendingTasks.size();
+	}
+
+	/**
+	 * Crea un procesador con la configuración optimun
+	 * 
+	 * @return El procesador creado
+	 */
+	public static KnittleProcessor createOptimun() {
+		return create(TaskProcessorConfiguration.createOptimun());
 	}
 }

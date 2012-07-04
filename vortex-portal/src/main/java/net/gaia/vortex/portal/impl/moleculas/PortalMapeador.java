@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.portal.impl.moleculas;
 
-import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.Nodo;
@@ -78,7 +77,7 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 	 */
 	@Override
 	public void enviar(final Object mensaje) {
-		retrasarEnvioSiProcesadorSaturado();
+		// retrasarEnvioSiProcesadorSaturado();
 		procesoDeSalida.vortificar(mensaje);
 	}
 
@@ -91,8 +90,7 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 	 * rápidas)
 	 */
 	private void retrasarEnvioSiProcesadorSaturado() {
-		final TaskProcessingMetrics metricasProcesador = getProcessor().getMetrics();
-		final int pendientes = metricasProcesador.getPendingTaskCount();
+		final int pendientes = getProcessor().getPendingTaskCount();
 		final int espera = pendientes / TAREAS_LIMITE_SIN_ESPERA;
 		if (espera > 0) {
 			try {

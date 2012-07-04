@@ -93,4 +93,11 @@ public interface TaskProcessor extends TaskDelayerProcessor, ThreadOwner {
 	 */
 	@Override
 	void detener();
+
+	/**
+	 * Devuelve la cantidad de tareas pendientes para ser procesadas por este procesador
+	 * 
+	 * @return La cantidad de tareas a procesar
+	 */
+	int getPendingTaskCount();
 }
