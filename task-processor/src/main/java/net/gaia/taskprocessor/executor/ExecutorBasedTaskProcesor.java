@@ -58,11 +58,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 
 	private ExecutorDelayerProcessor delayerProcessor;
 
-	/**
-	 * Es la cantidad de tareas en la cual este procesador empieza a generar esperas a los threads
-	 * externos antes de aceptar la tarea porque detecta que está saturado
-	 */
-	private int cantidadCriticaDeTareas;
+	private ThreadBouncer threadBouncer;
 
 	/**
 	 * Crea un procesador con la configuración por defecto de un thread para todas las tareas
@@ -83,9 +79,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	 */
 	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
 		final ExecutorBasedTaskProcesor processor = new ExecutorBasedTaskProcesor();
-		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
 		final int minimunPoolSize = config.getMinimunThreadPoolSize();
-		processor.cantidadCriticaDeTareas = minimunPoolSize * 75;
 		final int maximunPoolSize = config.getMaximunThreadPoolSize();
 		final BlockingQueue<Runnable> executorTaskQueue;
 		if (maximunPoolSize == Integer.MAX_VALUE) {
@@ -95,10 +89,12 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 			executorTaskQueue = new LinkedBlockingQueue<Runnable>(executorQueueSize);
 		}
 
+		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
 		processor.inmediateExecutor = new ThreadPoolExecutor(minimunPoolSize, maximunPoolSize,
 				maxIdleTimePerThread.getQuantity(), maxIdleTimePerThread.getTimeUnit(), executorTaskQueue,
 				ProcessorThreadFactory.create("TaskProcessor", processor), TaskWorkerRejectionHandler.create());
 		processor.inmediatePendingTasks = new ConcurrentLinkedQueue<SubmittedRunnableTask>();
+		processor.threadBouncer = ThreadBouncer.createForExecutorBased(config, processor.inmediatePendingTasks);
 		processor.delayerProcessor = ExecutorDelayerProcessor.create(processor);
 		processor.metrics = config.createMetricsFor(processor.inmediatePendingTasks);
 		return processor;
@@ -109,48 +105,13 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	 */
 	@Override
 	public SubmittedTask process(final WorkUnit work) {
-		// A los threads externos los hacemos esperar si esstamos muy saturados
-		retrasarPedidoExternoSiProcesadorSaturado();
+		// A los threads externos los hacemos esperar si estamos muy saturados
+		threadBouncer.retrasarPedidoExternoSiProcesadorSaturado();
 
 		// Creamos la tarea y la ejecutamos inmediatamente
 		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
 		processImmediately(task);
 		return task;
-	}
-
-	/**
-	 * Retrasa el pedido si está hecho desde un thread externo a este procesador y el procesado está
-	 * muy saturado de tareas. Si el thread que realiza el pedido es interno de este procesador, se
-	 * procesa sin espera.<br>
-	 * Esta espera forzada permite un mejor desempeño del procesador al no priorizar tanto la
-	 * aceptación de tareas si no está pudiendo procesar las anteriores
-	 */
-	private void retrasarPedidoExternoSiProcesadorSaturado() {
-		// Verificamos si estamos saturados
-		final int pendientes = inmediatePendingTasks.size();
-		if (pendientes < cantidadCriticaDeTareas) {
-			// No estamos saturados, no es necesario forzar la espera
-			return;
-		}
-
-		// Sólo hacemos esperar final a threads externos
-		// final Thread currentThread = Thread.currentThread();
-		// if (currentThread instanceof ProcessorThread) {
-		// final ProcessorThread threadDeProcesador = (ProcessorThread) currentThread;
-		// if (threadDeProcesador.perteneceA(this)) {
-		// // Es un thread propio, no lo hacemos esperar
-		// return;
-		// }
-		// }
-
-		// Si es un thread externo lo hacemos esperar en proporción a lo retrasado
-		final int esperaForzadaEnMillis = pendientes / cantidadCriticaDeTareas;
-		final int esperaForzadaEnMilis = esperaForzadaEnMillis;
-		try {
-			Thread.sleep(esperaForzadaEnMilis);
-		} catch (final InterruptedException e) {
-			LOG.error("Se interrumpió la espera forzada de un thread antes de aceptar nueva tarea");
-		}
 	}
 
 	/**

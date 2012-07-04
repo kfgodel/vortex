@@ -16,7 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
-import net.gaia.taskprocessor.metrics.TaskProcessingMetricsImpl;
+import net.gaia.taskprocessor.metrics.TaskProcessingListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class KnittleWorker implements Runnable {
 
 	private LinkedBlockingQueue<SubmittedRunnableTask> sharedPendingTasks;
 	private AtomicBoolean running;
-	private TaskProcessingMetricsImpl metrics;
+	private TaskProcessingListener metrics;
 
 	/**
 	 * @see java.lang.Runnable#run()
@@ -65,7 +65,7 @@ public class KnittleWorker implements Runnable {
 	}
 
 	public static KnittleWorker create(final LinkedBlockingQueue<SubmittedRunnableTask> pendingTasks,
-			final TaskProcessingMetricsImpl metrics) {
+			final TaskProcessingListener metrics) {
 		final KnittleWorker worker = new KnittleWorker();
 		worker.sharedPendingTasks = pendingTasks;
 		worker.running = new AtomicBoolean(true);

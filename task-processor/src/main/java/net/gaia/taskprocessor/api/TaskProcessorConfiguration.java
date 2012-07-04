@@ -12,7 +12,7 @@
  */
 package net.gaia.taskprocessor.api;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
@@ -126,8 +126,7 @@ public class TaskProcessorConfiguration {
 	 *            La cola de tareas pendientes usada por el procesador
 	 * @return El registro para las métricas
 	 */
-	public TaskProcessingMetricsAndListener createMetricsFor(
-			final ConcurrentLinkedQueue<SubmittedRunnableTask> inmediatePendingTasks) {
+	public TaskProcessingMetricsAndListener createMetricsFor(final Queue<SubmittedRunnableTask> inmediatePendingTasks) {
 		if (isRegisterTaskMetrics()) {
 			return TaskProcessingMetricsImpl.create(inmediatePendingTasks);
 		}

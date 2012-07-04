@@ -30,7 +30,8 @@ import net.gaia.taskprocessor.executor.DelegateProcessor;
 import net.gaia.taskprocessor.executor.ExecutorDelayerProcessor;
 import net.gaia.taskprocessor.executor.ProcessorThreadFactory;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
-import net.gaia.taskprocessor.metrics.TaskProcessingMetricsImpl;
+import net.gaia.taskprocessor.executor.ThreadBouncer;
+import net.gaia.taskprocessor.metrics.TaskProcessingMetricsAndListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,13 +61,17 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 
 	private ExecutorDelayerProcessor delayerProcessor;
 
-	private TaskProcessingMetricsImpl metrics;
+	private TaskProcessingMetricsAndListener metrics;
+	private ThreadBouncer threadBouncer;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	@Override
 	public SubmittedTask process(final WorkUnit tarea) {
+		// Si estamos muy cargados hace esperar a los threads
+		threadBouncer.retrasarPedidoExternoSiProcesadorSaturado();
+
 		final SubmittedRunnableTask task = SubmittedRunnableTask.create(tarea, this);
 		processImmediately(task);
 		return task;
@@ -87,6 +92,7 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 			task.cancel(true);
 			return;
 		}
+		metrics.incrementPending();
 	}
 
 	/**
@@ -200,14 +206,15 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	 */
 	public static KnittleProcessor create(final TaskProcessorConfiguration config) {
 		final KnittleProcessor procesor = new KnittleProcessor();
+		procesor.config = config;
 		procesor.inmediatePendingTasks = new LinkedBlockingQueue<SubmittedRunnableTask>();
 		procesor.threadFactory = ProcessorThreadFactory.create("knittle", procesor);
 		procesor.workers = new ConcurrentLinkedQueue<KnittleWorker>();
 		procesor.threads = new ConcurrentLinkedQueue<Thread>();
 		procesor.exceptionHandler = new AtomicReference<TaskExceptionHandler>();
 		procesor.processorListener = new AtomicReference<TaskProcessorListener>();
-		procesor.metrics = TaskProcessingMetricsImpl.create(procesor.inmediatePendingTasks);
-		procesor.config = config;
+		procesor.metrics = config.createMetricsFor(procesor.inmediatePendingTasks);
+		procesor.threadBouncer = ThreadBouncer.createForKnittle(config, procesor.inmediatePendingTasks);
 		procesor.delayerProcessor = ExecutorDelayerProcessor.create(procesor);
 		procesor.start();
 		return procesor;
