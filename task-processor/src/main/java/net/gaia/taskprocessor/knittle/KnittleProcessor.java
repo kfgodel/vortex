@@ -190,7 +190,9 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	}
 
 	/**
-	 * Crea un nuevo procesador con la configuración pasada, reservando los threads indicados
+	 * Crea un nuevo procesador con la configuración pasada, reservando los threads indicados como
+	 * cantidad minima.<br>
+	 * Este procesador no toma en cuenta la cantidad máxima
 	 * 
 	 * @param config
 	 *            La configuración para crear el procesador

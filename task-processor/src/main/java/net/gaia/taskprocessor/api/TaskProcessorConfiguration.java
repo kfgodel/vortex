@@ -79,4 +79,19 @@ public class TaskProcessorConfiguration {
 		return config;
 	}
 
+	/**
+	 * Crea un configuración que utiliza como mínimo la cantidad de threads que hay como
+	 * procesadores disponibles en la máquina y como máximo el doble de esos threads. Asegurando que
+	 * el procesador tiene un buen balance de respuesta y recursos utilizados
+	 * 
+	 * @return La configuracion con los valores optimos
+	 */
+	public static TaskProcessorConfiguration createOptimun() {
+		final int procesadoresDisponibles = Runtime.getRuntime().availableProcessors();
+		final TaskProcessorConfiguration config = create();
+		config.setMaximunThreadPoolSize(procesadoresDisponibles * 2);
+		config.setMinimunThreadPoolSize(procesadoresDisponibles);
+		return config;
+	}
+
 }

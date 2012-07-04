@@ -252,11 +252,8 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	 *         esta máquina
 	 */
 	public static TaskProcessor createOptimun() {
-		final int procesadoresDisponibles = Runtime.getRuntime().availableProcessors();
-		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setMinimunThreadPoolSize(procesadoresDisponibles);
-		config.setMaximunThreadPoolSize(procesadoresDisponibles * 2);
-		return create(config);
+		final TaskProcessorConfiguration optimunConfig = TaskProcessorConfiguration.createOptimun();
+		return create(optimunConfig);
 	}
 
 	/**
