@@ -15,8 +15,6 @@ package net.gaia.vortex.portal.tests;
 import java.util.Arrays;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.metricas.MetricasPorTiempoImpl;
-import net.gaia.vortex.core.impl.metricas.SnapshotDeMetricaPorTiempo;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.core.tests.TestDePerformancePatron;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
@@ -27,6 +25,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.metrics.impl.MetricasPorTiempoImpl;
+import ar.com.dgarcia.lang.metrics.impl.SnapshotDeMetricaPorTiempo;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
 /**

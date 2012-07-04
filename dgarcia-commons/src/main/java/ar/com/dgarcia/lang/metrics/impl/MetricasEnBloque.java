@@ -10,11 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.metricas;
+package ar.com.dgarcia.lang.metrics.impl;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.gaia.vortex.core.api.metricas.MetricasPorTiempo;
+import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
+import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
 
 /**
  * Esta clase representa una métrica por tiempo en la que se segmenta el tiempo en bloques de

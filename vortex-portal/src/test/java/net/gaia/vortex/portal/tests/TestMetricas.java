@@ -14,8 +14,6 @@ package net.gaia.vortex.portal.tests;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
-import net.gaia.vortex.core.api.metricas.MetricasDelNodo;
-import net.gaia.vortex.core.api.metricas.MetricasPorTiempo;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
@@ -26,6 +24,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.metrics.MetricasDelNodo;
+import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
 import ar.com.dgarcia.lang.time.SystemChronometer;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
@@ -78,7 +78,8 @@ public class TestMetricas {
 		while (crono.getElapsedMillis() < 12000) {
 			final MetricasDelNodo metricas = ruteadorCentral.getMetricas();
 			final MetricasPorTiempo cadaSegundo = metricas.getMetricasEnBloqueDeUnSegundo();
-			LOG.debug("[{}]: En nodo Cada 1s - Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms- Rcv: {} Snt:{}",
+			LOG.debug(
+					"[{}]: En nodo Cada 1s - Delivery:{}% Input:{} msg/ms Output(i):{} msg/ms- Rcv: {} Snt:{}",
 					new Object[] { "1s", cadaSegundo.getTasaDeDelivery() * 100, cadaSegundo.getVelocidadDeRecepcion(),
 							cadaSegundo.getVelocidadDeEnvio(), cadaSegundo.getCantidadDeInputs(),
 							cadaSegundo.getCantidadDeOutputs() });

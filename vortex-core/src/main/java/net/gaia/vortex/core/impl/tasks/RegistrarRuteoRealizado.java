@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core.impl.metricas.ListenerDeMetricas;
+import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**

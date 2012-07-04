@@ -10,9 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.metricas;
+package ar.com.dgarcia.lang.metrics.impl;
 
-import net.gaia.vortex.core.api.metricas.MetricasPorTiempo;
+import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
 
 /**
  * Esta clase representa una copia de la metrica en el tiempo en un momento dado

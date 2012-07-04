@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.impl.metricas;
 
-import net.gaia.vortex.core.api.metricas.MetricasDelNodo;
+import ar.com.dgarcia.lang.metrics.MetricasDelNodo;
 
 /**
  * Esta interfaz representa un componente vortex que ofrece métricas de performance para evaluar su

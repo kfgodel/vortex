@@ -18,8 +18,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.vortex.core.impl.metricas.MetricasPorTiempoImpl;
-import net.gaia.vortex.core.impl.metricas.SnapshotDeMetricaPorTiempo;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.core.tests.TestDePerformancePatron;
 
@@ -29,6 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.extensions.IndiceCicular;
+import ar.com.dgarcia.lang.metrics.impl.MetricasPorTiempoImpl;
+import ar.com.dgarcia.lang.metrics.impl.SnapshotDeMetricaPorTiempo;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
 import ar.com.dgarcia.testing.stress.StressGenerator;

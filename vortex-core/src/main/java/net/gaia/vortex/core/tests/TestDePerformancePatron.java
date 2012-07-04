@@ -14,13 +14,12 @@ package net.gaia.vortex.core.tests;
 
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.vortex.core.impl.metricas.MetricasPorTiempoImpl;
-import net.gaia.vortex.core.impl.metricas.SnapshotDeMetricaPorTiempo;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.metrics.impl.MetricasPorTiempoImpl;
+import ar.com.dgarcia.lang.metrics.impl.SnapshotDeMetricaPorTiempo;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 

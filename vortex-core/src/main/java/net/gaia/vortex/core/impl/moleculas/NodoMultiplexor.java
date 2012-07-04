@@ -17,15 +17,15 @@ import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.annon.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.metricas.MetricasDelNodo;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
 import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificadorSupport;
 import net.gaia.vortex.core.impl.atomos.ids.NexoIdentificador;
-import net.gaia.vortex.core.impl.metricas.MetricasDelNodoImpl;
 import net.gaia.vortex.core.impl.metricas.NodoConMetricas;
 import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
+import ar.com.dgarcia.lang.metrics.MetricasDelNodo;
+import ar.com.dgarcia.lang.metrics.impl.MetricasDelNodoImpl;
 
 /**
  * Esta clase representa un nodo que puede identificar los mensajes para descartar los propios y si

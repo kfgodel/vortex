@@ -16,8 +16,6 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.metricas.MetricasPorTiempoImpl;
-import net.gaia.vortex.core.impl.metricas.SnapshotDeMetricaPorTiempo;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.core.tests.TestDePerformancePatron;
@@ -31,6 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.extensions.BooleanEstocastico;
+import ar.com.dgarcia.lang.metrics.impl.MetricasPorTiempoImpl;
+import ar.com.dgarcia.lang.metrics.impl.SnapshotDeMetricaPorTiempo;
 import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
