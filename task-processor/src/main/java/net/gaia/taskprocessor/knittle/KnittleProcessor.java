@@ -30,7 +30,7 @@ import net.gaia.taskprocessor.executor.DelegateProcessor;
 import net.gaia.taskprocessor.executor.ExecutorDelayerProcessor;
 import net.gaia.taskprocessor.executor.ProcessorThreadFactory;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
-import net.gaia.taskprocessor.executor.TaskProcessingMetricsImpl;
+import net.gaia.taskprocessor.metrics.TaskProcessingMetricsImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

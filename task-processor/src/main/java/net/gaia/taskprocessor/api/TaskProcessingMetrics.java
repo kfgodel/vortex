@@ -12,7 +12,10 @@
  */
 package net.gaia.taskprocessor.api;
 
+import ar.com.dgarcia.lang.metrics.MetricasDeCarga;
+
 /**
+ * Esta clase representa un registro de las métricas del procesador de tareas
  * 
  * @author D. García
  */
@@ -34,4 +37,11 @@ public interface TaskProcessingMetrics {
 	 */
 	int getPendingTaskCount();
 
+	/**
+	 * Devuelve la instancia que registra las métricas de este procesador en cuanto a performance y
+	 * carga de tareas
+	 * 
+	 * @return La instancia que permite evaluar la performance de este procesador
+	 */
+	public MetricasDeCarga getMetricasDeCarga();
 }

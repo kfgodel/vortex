@@ -15,6 +15,7 @@ package net.gaia.taskprocessor.executor;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.metrics.TaskProcessingListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class TaskWorker implements Runnable {
 
 	private ConcurrentLinkedQueue<SubmittedRunnableTask> pendingTasks;
 
-	private TaskProcessingMetricsImpl metrics;
+	private TaskProcessingListener metrics;
 
 	/**
 	 * Quita tareas pendientes de la cola de tareas, hasta que no quede nada
@@ -64,7 +65,7 @@ public class TaskWorker implements Runnable {
 	}
 
 	public static TaskWorker create(final ConcurrentLinkedQueue<SubmittedRunnableTask> inmediatePendingTasks,
-			final TaskProcessingMetricsImpl metrics) {
+			final TaskProcessingListener metrics) {
 		final TaskWorker worker = new TaskWorker();
 		worker.pendingTasks = inmediatePendingTasks;
 		worker.metrics = metrics;

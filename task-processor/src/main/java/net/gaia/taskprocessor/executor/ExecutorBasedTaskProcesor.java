@@ -31,6 +31,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.metrics.TaskProcessingMetricsAndListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,14 +51,18 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	private TaskProcessorListener processorListener;
 	private TaskExceptionHandler exceptionHandler;
 
-	private TaskProcessingMetricsImpl metrics;
+	private TaskProcessingMetricsAndListener metrics;
 
 	private ThreadPoolExecutor inmediateExecutor;
 	private ConcurrentLinkedQueue<SubmittedRunnableTask> inmediatePendingTasks;
 
 	private ExecutorDelayerProcessor delayerProcessor;
 
-	private TaskProcessorConfiguration config;
+	/**
+	 * Es la cantidad de tareas en la cual este procesador empieza a generar esperas a los threads
+	 * externos antes de aceptar la tarea porque detecta que está saturado
+	 */
+	private int cantidadCriticaDeTareas;
 
 	/**
 	 * Crea un procesador con la configuración por defecto de un thread para todas las tareas
@@ -78,9 +83,9 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	 */
 	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
 		final ExecutorBasedTaskProcesor processor = new ExecutorBasedTaskProcesor();
-		processor.config = config;
 		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
 		final int minimunPoolSize = config.getMinimunThreadPoolSize();
+		processor.cantidadCriticaDeTareas = minimunPoolSize * 75;
 		final int maximunPoolSize = config.getMaximunThreadPoolSize();
 		final BlockingQueue<Runnable> executorTaskQueue;
 		if (maximunPoolSize == Integer.MAX_VALUE) {
@@ -95,7 +100,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 				ProcessorThreadFactory.create("TaskProcessor", processor), TaskWorkerRejectionHandler.create());
 		processor.inmediatePendingTasks = new ConcurrentLinkedQueue<SubmittedRunnableTask>();
 		processor.delayerProcessor = ExecutorDelayerProcessor.create(processor);
-		processor.metrics = TaskProcessingMetricsImpl.create(processor.inmediatePendingTasks);
+		processor.metrics = config.createMetricsFor(processor.inmediatePendingTasks);
 		return processor;
 	}
 
@@ -123,15 +128,12 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	private void retrasarPedidoExternoSiProcesadorSaturado() {
 		// Verificamos si estamos saturados
 		final int pendientes = inmediatePendingTasks.size();
-		final int threadsUsables = config.getMinimunThreadPoolSize();
-		final int cantidadCrititcaDeTareas = threadsUsables * 75;
-		final int saturacion = pendientes / cantidadCrititcaDeTareas;
-		if (saturacion < 1) {
-			// No estamos saturados, no es necesario esperar
+		if (pendientes < cantidadCriticaDeTareas) {
+			// No estamos saturados, no es necesario forzar la espera
 			return;
 		}
 
-		// Sólo hacemos esperar a threads externos
+		// Sólo hacemos esperar final a threads externos
 		// final Thread currentThread = Thread.currentThread();
 		// if (currentThread instanceof ProcessorThread) {
 		// final ProcessorThread threadDeProcesador = (ProcessorThread) currentThread;
@@ -142,7 +144,8 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 		// }
 
 		// Si es un thread externo lo hacemos esperar en proporción a lo retrasado
-		final int esperaForzadaEnMilis = saturacion;
+		final int esperaForzadaEnMillis = pendientes / cantidadCriticaDeTareas;
+		final int esperaForzadaEnMilis = esperaForzadaEnMillis;
 		try {
 			Thread.sleep(esperaForzadaEnMilis);
 		} catch (final InterruptedException e) {
@@ -171,6 +174,9 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 			task.cancel(true);
 			return;
 		}
+
+		// Registramos que entró algo más para hacer
+		metrics.incrementPending();
 
 		// Por diseño usamos todos los threads del pool que podamos para las tareas, pero intentamos
 		// no exceder la capacidad
@@ -312,4 +318,5 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 		config.setMaximunThreadPoolSize(cantidadDeThreads);
 		return create(config);
 	}
+
 }

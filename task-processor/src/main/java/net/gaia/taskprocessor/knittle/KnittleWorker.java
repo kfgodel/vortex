@@ -16,7 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
-import net.gaia.taskprocessor.executor.TaskProcessingMetricsImpl;
+import net.gaia.taskprocessor.metrics.TaskProcessingMetricsImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

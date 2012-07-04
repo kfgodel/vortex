@@ -12,9 +12,14 @@
  */
 package net.gaia.taskprocessor.api;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
+import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
 import net.gaia.taskprocessor.meta.Decision;
+import net.gaia.taskprocessor.metrics.NullProcessingMetrics;
+import net.gaia.taskprocessor.metrics.TaskProcessingMetricsAndListener;
+import net.gaia.taskprocessor.metrics.TaskProcessingMetricsImpl;
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
@@ -36,6 +41,8 @@ public class TaskProcessorConfiguration {
 	private int maximunThreadPoolSize;
 
 	private TimeMagnitude maxIdleTimePerThread;
+
+	private boolean registerTaskMetrics;
 
 	public TimeMagnitude getMaxIdleTimePerThread() {
 		return maxIdleTimePerThread;
@@ -76,7 +83,23 @@ public class TaskProcessorConfiguration {
 		config.minimunThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
 		config.maximunThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
 		config.maxIdleTimePerThread = TimeMagnitude.of(5, TimeUnit.SECONDS);
+		config.registerTaskMetrics = false;
 		return config;
+	}
+
+	public boolean isRegisterTaskMetrics() {
+		return registerTaskMetrics;
+	}
+
+	/**
+	 * Indica si el procesador deberá llevar un registro con métricas de su desempeño.<br>
+	 * La utilización de métricas tiene un pequeño overhead por lo que está desactivada por defecto
+	 * 
+	 * @param registerTaskMetrics
+	 *            Las métricas a llevar
+	 */
+	public void setRegisterTaskMetrics(final boolean registerTaskMetrics) {
+		this.registerTaskMetrics = registerTaskMetrics;
 	}
 
 	/**
@@ -92,6 +115,23 @@ public class TaskProcessorConfiguration {
 		config.setMaximunThreadPoolSize(procesadoresDisponibles * 2);
 		config.setMinimunThreadPoolSize(procesadoresDisponibles);
 		return config;
+	}
+
+	/**
+	 * Crea la instancia para registrar métricas del procesador de acuerdo a esta configuración.<br>
+	 * Se utiliza una instancia nula si esta configuración indica que no se deben registrar las
+	 * métricas
+	 * 
+	 * @param inmediatePendingTasks
+	 *            La cola de tareas pendientes usada por el procesador
+	 * @return El registro para las métricas
+	 */
+	public TaskProcessingMetricsAndListener createMetricsFor(
+			final ConcurrentLinkedQueue<SubmittedRunnableTask> inmediatePendingTasks) {
+		if (isRegisterTaskMetrics()) {
+			return TaskProcessingMetricsImpl.create(inmediatePendingTasks);
+		}
+		return NullProcessingMetrics.getInstancia();
 	}
 
 }
