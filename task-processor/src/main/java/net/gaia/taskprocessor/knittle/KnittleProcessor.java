@@ -201,7 +201,7 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	public static KnittleProcessor create(final TaskProcessorConfiguration config) {
 		final KnittleProcessor procesor = new KnittleProcessor();
 		procesor.inmediatePendingTasks = new LinkedBlockingQueue<SubmittedRunnableTask>();
-		procesor.threadFactory = ProcessorThreadFactory.create("knittle");
+		procesor.threadFactory = ProcessorThreadFactory.create("knittle", procesor);
 		procesor.workers = new ConcurrentLinkedQueue<KnittleWorker>();
 		procesor.threads = new ConcurrentLinkedQueue<Thread>();
 		procesor.exceptionHandler = new AtomicReference<TaskExceptionHandler>();

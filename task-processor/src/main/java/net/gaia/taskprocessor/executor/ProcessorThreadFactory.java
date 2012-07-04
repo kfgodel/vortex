@@ -15,6 +15,8 @@ package net.gaia.taskprocessor.executor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.gaia.taskprocessor.api.ThreadOwner;
+
 /**
  * Esta clase representa la factory de thread para el procesador de tareas.<br>
  * Tomado y modificado de la implementación default
@@ -26,13 +28,14 @@ public class ProcessorThreadFactory implements ThreadFactory {
 	static final AtomicInteger factorySecuencer = new AtomicInteger(1);
 	final AtomicInteger threadNumber = new AtomicInteger(1);
 	private int factoryNumber;
-	ThreadGroup group;
+	private ThreadGroup group;
 	private String threadPreffix;
+	private ThreadOwner ownerProcessor;
 
 	@Override
 	public Thread newThread(final Runnable r) {
-		String threadName = threadPreffix + threadNumber.getAndIncrement();
-		final Thread t = new Thread(group, r, threadName, 0);
+		final String threadName = threadPreffix + threadNumber.getAndIncrement();
+		final Thread t = new ProcessorThread(ownerProcessor, group, r, threadName, 0);
 		if (t.isDaemon()) {
 			t.setDaemon(false);
 		}
@@ -44,14 +47,18 @@ public class ProcessorThreadFactory implements ThreadFactory {
 
 	/**
 	 * Crea la factory permitiendo especificar un prefijo para agregar a cada thread después del
-	 * número de factory
+	 * número de factory.<br>
+	 * Los threads creados tomarán al procesador indicado como propietario de los threads
 	 * 
 	 * @param threadPreffix
 	 *            prefijo adicional para identificar a los thread
+	 * @param threadOwner
+	 *            El procesador para el que se crea la factory de threads
 	 * @return La factory de threads
 	 */
-	public static ProcessorThreadFactory create(final String threadPreffix) {
+	public static ProcessorThreadFactory create(final String threadPreffix, final ThreadOwner threadOwner) {
 		final ProcessorThreadFactory factory = new ProcessorThreadFactory();
+		factory.ownerProcessor = threadOwner;
 		factory.factoryNumber = factorySecuencer.getAndIncrement();
 		factory.threadPreffix = threadPreffix + "-" + factory.factoryNumber + ".";
 		final SecurityManager securityManager = System.getSecurityManager();

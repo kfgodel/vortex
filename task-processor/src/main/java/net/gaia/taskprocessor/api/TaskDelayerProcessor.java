@@ -19,7 +19,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public interface TaskDelayerProcessor {
+public interface TaskDelayerProcessor extends ThreadOwner {
 
 	/**
 	 * Detiene la ejecución de tareas en este procesador.<br>

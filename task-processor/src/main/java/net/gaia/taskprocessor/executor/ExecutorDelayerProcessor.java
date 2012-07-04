@@ -94,8 +94,8 @@ public class ExecutorDelayerProcessor implements TaskDelayerProcessor {
 	public static ExecutorDelayerProcessor create(final DelegateProcessor otherProcessor) {
 		final ExecutorDelayerProcessor processor = new ExecutorDelayerProcessor();
 		processor.delayedTasks = new ConcurrentLinkedQueue<TaskPlanner>();
-		processor.delayedExecutor = new ScheduledThreadPoolExecutor(1, ProcessorThreadFactory.create("TaskDelayer"),
-				TaskPlannerRejectionHandler.create());
+		processor.delayedExecutor = new ScheduledThreadPoolExecutor(1, ProcessorThreadFactory.create("TaskDelayer",
+				processor), TaskPlannerRejectionHandler.create());
 		processor.delegateProcessor = otherProcessor;
 		return processor;
 	}

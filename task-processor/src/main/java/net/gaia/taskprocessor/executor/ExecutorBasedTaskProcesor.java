@@ -57,6 +57,8 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 
 	private ExecutorDelayerProcessor delayerProcessor;
 
+	private TaskProcessorConfiguration config;
+
 	/**
 	 * Crea un procesador con la configuración por defecto de un thread para todas las tareas
 	 * 
@@ -76,6 +78,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	 */
 	public static ExecutorBasedTaskProcesor create(final TaskProcessorConfiguration config) {
 		final ExecutorBasedTaskProcesor processor = new ExecutorBasedTaskProcesor();
+		processor.config = config;
 		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
 		final int minimunPoolSize = config.getMinimunThreadPoolSize();
 		final int maximunPoolSize = config.getMaximunThreadPoolSize();
@@ -89,7 +92,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 
 		processor.inmediateExecutor = new ThreadPoolExecutor(minimunPoolSize, maximunPoolSize,
 				maxIdleTimePerThread.getQuantity(), maxIdleTimePerThread.getTimeUnit(), executorTaskQueue,
-				ProcessorThreadFactory.create("TaskProcessor"), TaskWorkerRejectionHandler.create());
+				ProcessorThreadFactory.create("TaskProcessor", processor), TaskWorkerRejectionHandler.create());
 		processor.inmediatePendingTasks = new ConcurrentLinkedQueue<SubmittedRunnableTask>();
 		processor.delayerProcessor = ExecutorDelayerProcessor.create(processor);
 		processor.metrics = TaskProcessingMetricsImpl.create(processor.inmediatePendingTasks);
@@ -101,10 +104,50 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	 */
 	@Override
 	public SubmittedTask process(final WorkUnit work) {
+		// A los threads externos los hacemos esperar si esstamos muy saturados
+		retrasarPedidoExternoSiProcesadorSaturado();
+
 		// Creamos la tarea y la ejecutamos inmediatamente
 		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
 		processImmediately(task);
 		return task;
+	}
+
+	/**
+	 * Retrasa el pedido si está hecho desde un thread externo a este procesador y el procesado está
+	 * muy saturado de tareas. Si el thread que realiza el pedido es interno de este procesador, se
+	 * procesa sin espera.<br>
+	 * Esta espera forzada permite un mejor desempeño del procesador al no priorizar tanto la
+	 * aceptación de tareas si no está pudiendo procesar las anteriores
+	 */
+	private void retrasarPedidoExternoSiProcesadorSaturado() {
+		// Verificamos si estamos saturados
+		final int pendientes = inmediatePendingTasks.size();
+		final int threadsUsables = config.getMinimunThreadPoolSize();
+		final int cantidadCrititcaDeTareas = threadsUsables * 75;
+		final int saturacion = pendientes / cantidadCrititcaDeTareas;
+		if (saturacion < 1) {
+			// No estamos saturados, no es necesario esperar
+			return;
+		}
+
+		// Sólo hacemos esperar a threads externos
+		// final Thread currentThread = Thread.currentThread();
+		// if (currentThread instanceof ProcessorThread) {
+		// final ProcessorThread threadDeProcesador = (ProcessorThread) currentThread;
+		// if (threadDeProcesador.perteneceA(this)) {
+		// // Es un thread propio, no lo hacemos esperar
+		// return;
+		// }
+		// }
+
+		// Si es un thread externo lo hacemos esperar en proporción a lo retrasado
+		final int esperaForzadaEnMilis = saturacion;
+		try {
+			Thread.sleep(esperaForzadaEnMilis);
+		} catch (final InterruptedException e) {
+			LOG.error("Se interrumpió la espera forzada de un thread antes de aceptar nueva tarea");
+		}
 	}
 
 	/**

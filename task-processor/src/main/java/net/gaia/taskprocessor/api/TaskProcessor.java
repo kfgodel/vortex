@@ -20,7 +20,7 @@ package net.gaia.taskprocessor.api;
  * 
  * @author D. García
  */
-public interface TaskProcessor extends TaskDelayerProcessor {
+public interface TaskProcessor extends TaskDelayerProcessor, ThreadOwner {
 
 	/**
 	 * Agrega la tarea pasada para ser procesada por los hilos disponibles en este procesador apenas
