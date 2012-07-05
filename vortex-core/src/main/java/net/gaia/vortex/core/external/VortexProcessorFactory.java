@@ -14,6 +14,7 @@ package net.gaia.vortex.core.external;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.knittle.KnittleProcessor;
 
 /**
  * Esta clase representa una factory usada por los nodos para crear sus procesadores cuando no se
@@ -26,12 +27,23 @@ import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 public class VortexProcessorFactory {
 
 	/**
-	 * Crea un procesador de tareas para utilizar en una topología de nodos
+	 * Crea un procesador de tareas para utilizar en una topología de nodos que funciona mayormente
+	 * en memoria y poco o nada con sockets
 	 * 
 	 * @return El procesador de tareas para compartir entre todos los nodos
 	 */
-	public static TaskProcessor createProcessor() {
+	public static TaskProcessor createMostlyMemoryProcessor() {
 		return ExecutorBasedTaskProcesor.createOptimun();
+	}
+
+	/**
+	 * Crea un procesador de tareas para utilizar en una topología de nodos que funciona mayormente
+	 * utilizando sockets más que en memoria
+	 * 
+	 * @return El procesador de tareas para compartir entre todos los nodos
+	 */
+	public static TaskProcessor createMostlySocketProcessor() {
+		return KnittleProcessor.createOptimun();
 	}
 
 }

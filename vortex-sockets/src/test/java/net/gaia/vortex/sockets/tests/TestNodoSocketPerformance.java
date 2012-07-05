@@ -48,7 +48,7 @@ public class TestNodoSocketPerformance {
 
 	@Before
 	public void crearRuteadorCentral() {
-		processor = VortexProcessorFactory.createProcessor();
+		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
 
 		final InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
 		nodoServidor = NodoSocket.createAndListenTo(sharedTestAddress, processor);

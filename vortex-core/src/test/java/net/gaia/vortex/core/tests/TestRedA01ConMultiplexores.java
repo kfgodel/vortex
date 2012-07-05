@@ -44,7 +44,7 @@ public class TestRedA01ConMultiplexores {
 
 	@Before
 	public void crearNodos() {
-		processor = VortexProcessorFactory.createProcessor();
+		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
 		mensaje1 = MensajeMapa.create();
 		nodoEmisor = MultiplexorParalelo.create(processor);
 		nodoReceptor = MultiplexorParalelo.create(processor);

@@ -47,7 +47,7 @@ public class TestRedA01ConNodoHub {
 
 	@Before
 	public void crearNodos() {
-		processor = VortexProcessorFactory.createProcessor();
+		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
 		mensaje1 = MensajeMapa.create();
 		nodoEmisor = NodoMultiplexor.create(processor);
 		nodoRuteador = NodoMultiplexor.create(processor);

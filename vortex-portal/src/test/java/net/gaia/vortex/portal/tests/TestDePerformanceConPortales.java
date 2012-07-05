@@ -47,7 +47,7 @@ public class TestDePerformanceConPortales {
 
 	@Before
 	public void crearProcesador() {
-		processorRuteo = VortexProcessorFactory.createProcessor();
+		processorRuteo = VortexProcessorFactory.createMostlyMemoryProcessor();
 	}
 
 	@After

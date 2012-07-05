@@ -48,7 +48,7 @@ public class TestComponentesIdentificadores {
 
 	@Before
 	public void crearDependencias() {
-		processor = VortexProcessorFactory.createProcessor();
+		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
 		identificador = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		receptorFinal1 = ReceptorEncolador.create();
 		receptorFinal2 = ReceptorEncolador.create();

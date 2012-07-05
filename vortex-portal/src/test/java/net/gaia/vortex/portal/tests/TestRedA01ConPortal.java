@@ -56,7 +56,7 @@ public class TestRedA01ConPortal {
 
 	@Before
 	public void crearNodos() {
-		processor = VortexProcessorFactory.createProcessor();
+		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
 		// Creamos un nodo central
 		nodoRuteador = NodoMultiplexor.create(processor);
 		// Le agregamos las interconexiones en los extremos

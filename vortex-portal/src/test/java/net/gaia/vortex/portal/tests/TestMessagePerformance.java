@@ -52,7 +52,7 @@ public class TestMessagePerformance {
 
 	@Before
 	public void crearRuteadorCentral() {
-		processor = VortexProcessorFactory.createProcessor();
+		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
 		ruteadorCentral = NodoMultiplexor.create(processor);
 		nodoEmisor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
 		nodoReceptor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
