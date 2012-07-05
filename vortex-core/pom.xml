@@ -74,7 +74,7 @@
   	<dependency>
 	  <groupId>net.gaia</groupId>
 	  <artifactId>task-processor</artifactId>
-	  <version>0.3</version>
+	  <version>0.4</version>
   	</dependency>
   
     <!-- Clases de código comun mio -->

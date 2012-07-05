@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
@@ -60,7 +60,7 @@ public class TestRedDeSocketsConHubs {
 
 	@Before
 	public void crearNodos() {
-		processor = ExecutorBasedTaskProcesor.createOptimun();
+		processor = VortexProcessorFactory.createProcessor();
 
 		// Creamos el hub al que se conectan los nexos del servidor
 		hubServidor = NodoMultiplexor.create(processor);

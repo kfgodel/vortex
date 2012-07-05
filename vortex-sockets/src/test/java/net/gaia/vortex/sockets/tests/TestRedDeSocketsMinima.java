@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.ReceptorNulo;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
@@ -49,7 +49,7 @@ public class TestRedDeSocketsMinima {
 
 	@Before
 	public void crearDependencias() {
-		processor = ExecutorBasedTaskProcesor.createOptimun();
+		processor = VortexProcessorFactory.createProcessor();
 	}
 
 	@After

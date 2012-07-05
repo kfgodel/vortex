@@ -13,7 +13,7 @@
 package net.gaia.vortex.portal.tests;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
@@ -44,7 +44,7 @@ public class TestMetricas {
 
 	@Before
 	public void crearRuteadorCentral() {
-		processor = ExecutorBasedTaskProcesor.create();
+		processor = VortexProcessorFactory.createProcessor();
 		ruteadorCentral = NodoMultiplexor.create(processor);
 		nodoEmisor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
 		nodoReceptor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);

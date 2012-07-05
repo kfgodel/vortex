@@ -9,17 +9,19 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.lang.conc.WaitBarrier;
@@ -35,6 +37,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * @author D. García
  */
 public class TestRedA01ConNodoHub {
+	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConNodoHub.class);
 
 	private NodoMultiplexor nodoEmisor;
 	private NodoMultiplexor nodoRuteador;
@@ -44,7 +47,7 @@ public class TestRedA01ConNodoHub {
 
 	@Before
 	public void crearNodos() {
-		processor = ExecutorBasedTaskProcesor.create();
+		processor = VortexProcessorFactory.createProcessor();
 		mensaje1 = MensajeMapa.create();
 		nodoEmisor = NodoMultiplexor.create(processor);
 		nodoRuteador = NodoMultiplexor.create(processor);
@@ -291,4 +294,36 @@ public class TestRedA01ConNodoHub {
 		destino.conectarCon(origen);
 	}
 
+	/**
+	 * T008. En memoria, el tiempo de entrega normal debería ser inferior a 1ms (final o 1000
+	 * mensajes por segundo)
+	 */
+	@Test
+	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo() {
+		final int cantidadDeMensajes = 100000;
+		final WaitBarrier espeerarEntregas = WaitBarrier.create(cantidadDeMensajes);
+		nodoReceptor.conectarCon(new Receptor() {
+			@Override
+			public void recibir(final MensajeVortex mensaje) {
+				espeerarEntregas.release();
+			}
+		});
+
+		final long startNanos = System.nanoTime();
+		LOG.debug("Nanos inicio: {}", startNanos);
+		for (int i = 0; i < cantidadDeMensajes; i++) {
+			// Necesitamos crear un mensaje por cada envío porque son identificados
+			final MensajeMapa mensaje = MensajeMapa.create();
+			nodoEmisor.recibir(mensaje);
+		}
+
+		espeerarEntregas.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.MINUTES));
+		LOG.debug("Nanos Fin: {}", System.nanoTime());
+		final long endNanos = System.nanoTime();
+		final long elapsedNanos = endNanos - startNanos;
+		LOG.debug("Milis totales en procesar {} mensajes: {}", cantidadDeMensajes, elapsedNanos / 1000000d);
+		LOG.debug("Milis dedicado por mensaje: {}", (elapsedNanos / 1000000d) / cantidadDeMensajes);
+		final double mensajesPorSegundo = (cantidadDeMensajes * 1000000000d) / elapsedNanos;
+		LOG.debug("Cantidad proyectada de mensajes procesables por segundo: {}", mensajesPorSegundo);
+	}
 }

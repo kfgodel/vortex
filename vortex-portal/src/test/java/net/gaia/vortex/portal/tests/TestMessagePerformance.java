@@ -15,11 +15,10 @@ package net.gaia.vortex.portal.tests;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
@@ -53,9 +52,7 @@ public class TestMessagePerformance {
 
 	@Before
 	public void crearRuteadorCentral() {
-		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setMinimunThreadPoolSize(4);
-		processor = ExecutorBasedTaskProcesor.create(config);
+		processor = VortexProcessorFactory.createProcessor();
 		ruteadorCentral = NodoMultiplexor.create(processor);
 		nodoEmisor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);
 		nodoReceptor = PortalMapeador.createForOutputWith(processor, ruteadorCentral);

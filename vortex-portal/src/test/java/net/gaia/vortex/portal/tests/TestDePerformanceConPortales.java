@@ -13,8 +13,8 @@
 package net.gaia.vortex.portal.tests;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
@@ -47,7 +47,7 @@ public class TestDePerformanceConPortales {
 
 	@Before
 	public void crearProcesador() {
-		processorRuteo = ExecutorBasedTaskProcesor.createOptimun();
+		processorRuteo = VortexProcessorFactory.createProcessor();
 	}
 
 	@After

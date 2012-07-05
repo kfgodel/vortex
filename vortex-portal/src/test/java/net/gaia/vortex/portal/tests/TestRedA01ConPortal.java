@@ -18,9 +18,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
@@ -28,9 +27,6 @@ import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
-import net.gaia.vortex.portal.tests.HandlerCronometro;
-import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
-import net.gaia.vortex.portal.tests.MensajeCronometro;
 
 import org.junit.After;
 import org.junit.Before;
@@ -60,9 +56,7 @@ public class TestRedA01ConPortal {
 
 	@Before
 	public void crearNodos() {
-		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
-		config.setMinimunThreadPoolSize(4);
-		processor = ExecutorBasedTaskProcesor.create(config);
+		processor = VortexProcessorFactory.createProcessor();
 		// Creamos un nodo central
 		nodoRuteador = NodoMultiplexor.create(processor);
 		// Le agregamos las interconexiones en los extremos

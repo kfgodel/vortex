@@ -15,7 +15,7 @@ package net.gaia.vortex.server.mosquito;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.server.mosquito.config.ContextConfiguration;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
@@ -38,7 +38,7 @@ public class MosquitoSever {
 	public static MosquitoSever create(final ContextConfiguration configuration) {
 		final MosquitoSever server = new MosquitoSever();
 		server.configuration = configuration;
-		server.processor = ExecutorBasedTaskProcesor.createOptimun();
+		server.processor = VortexProcessorFactory.createProcessor();
 		return server;
 	}
 

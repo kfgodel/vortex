@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
 import net.gaia.vortex.core.impl.atomos.ids.NexoIdentificador;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
@@ -48,7 +48,7 @@ public class TestComponentesIdentificadores {
 
 	@Before
 	public void crearDependencias() {
-		processor = ExecutorBasedTaskProcesor.createOptimun();
+		processor = VortexProcessorFactory.createProcessor();
 		identificador = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		receptorFinal1 = ReceptorEncolador.create();
 		receptorFinal2 = ReceptorEncolador.create();

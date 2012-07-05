@@ -16,7 +16,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.portal.tests.HandlerCronometro;
@@ -48,7 +48,7 @@ public class TestNodoSocketPerformance {
 
 	@Before
 	public void crearRuteadorCentral() {
-		processor = ExecutorBasedTaskProcesor.createOptimun();
+		processor = VortexProcessorFactory.createProcessor();
 
 		final InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
 		nodoServidor = NodoSocket.createAndListenTo(sharedTestAddress, processor);

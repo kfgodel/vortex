@@ -6,10 +6,10 @@ package net.gaia.vortex.core.tests;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcador;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
@@ -18,7 +18,6 @@ import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
-import net.gaia.vortex.core.tests.ReceptorEncolador;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -45,7 +44,7 @@ public class TestAtomos {
 	public void crearProcesadorYNodos() {
 		mensaje1 = MensajeMapa.create();
 		mensaje2 = MensajeMapa.create();
-		processor = ExecutorBasedTaskProcesor.create();
+		processor = VortexProcessorFactory.createProcessor();
 	}
 
 	@After
