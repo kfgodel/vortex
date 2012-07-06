@@ -22,7 +22,6 @@ import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
-import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
@@ -70,13 +69,16 @@ public class TestRedA01ConPortal {
 	}
 
 	@Test
-	public void noEsPosibleEnviarUnaInstanciDeObjectPorElPortal() {
-		try {
-			nodoEmisor.enviar(new Object());
-			Assert.fail("No debería haber aceptado el envío");
-		} catch (final ErrorDeMapeoVortexException e) {
-			// Es la excepción que esperabamos
-		}
+	public void esPosibleEnviarUnaInstanciDeObjectPorElPortal() {
+		final HandlerEncolador<Object> handlerReceptor = new HandlerEncolador<Object>() {
+		};
+		nodoReceptor.recibirCon(handlerReceptor);
+
+		Object mensajeEnviado = new Object();
+		nodoEmisor.enviar(mensajeEnviado);
+
+		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensajeEnviado, mensajeRecibido);
 	}
 
 	/**

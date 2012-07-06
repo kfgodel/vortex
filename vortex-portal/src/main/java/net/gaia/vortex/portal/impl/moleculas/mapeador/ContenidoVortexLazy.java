@@ -108,6 +108,9 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 			// Ya lo cargamos antes
 			return;
 		}
+		if (Object.class.equals(objetoOriginal.getClass())) {
+			// Como el mapeador no soporta
+		}
 		final Map<String, Object> estado = mapeadorDeObjetos.convertirAEstado(objetoOriginal);
 		putAll(estado);
 		cargadoEnCache = true;

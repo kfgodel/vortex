@@ -48,8 +48,10 @@ public class TestVortexTextualizer {
 	public void deberiaConvertirEnMapaDePrimitivaUnMensajeConPrimitiva() {
 		final MensajeMapa mensaje = MensajeMapa.create(ContenidoPrimitiva.create("unTexto"));
 		final String texto = textualizer.convertToString(mensaje);
-		Assert.assertEquals("Debería ser el objeto vacio de json",
-				"{\"PRIMITIVA_VORTEX_KEY\":\"unTexto\",\"traza_identificadores\":[]}", texto);
+		Assert.assertEquals(
+				"Debería ser el objeto vacio de json",
+				"{\"CLASSNAME_KEY\":\"java.lang.String\",\"PRIMITIVA_VORTEX_KEY\":\"unTexto\",\"traza_identificadores\":[]}",
+				texto);
 	}
 
 	@Test
@@ -59,7 +61,16 @@ public class TestVortexTextualizer {
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertEquals(
 				"Debería ser el objeto vacio de json",
-				"{\"estadoAdicionalAlMensaje\":{\"valorExtra\":\"Super extra\",\"numeroConComa\":120.0,\"booleano\":true},\"numeroDeSecuencia\":0,\"variosStrings\":[\"s1\",\"s2\",\"s3\",\"s4\",\"s5\",\"s6\",\"s7\",\"s8\",\"s9\",\"s10\"],\"posibleDominio\":\"net.gaia.vortex.tests\",\"posibleEmisor\":\"kfgodel-saraza\",\"traza_identificadores\":[]}",
+				"{\"estadoAdicionalAlMensaje\":{\"valorExtra\":\"Super extra\",\"numeroConComa\":120.0,\"booleano\":true},\"CLASSNAME_KEY\":\"net.gaia.vortex.core.tests.MensajeModeloParaTests\",\"numeroDeSecuencia\":0,\"variosStrings\":[\"s1\",\"s2\",\"s3\",\"s4\",\"s5\",\"s6\",\"s7\",\"s8\",\"s9\",\"s10\"],\"posibleDominio\":\"net.gaia.vortex.tests\",\"posibleEmisor\":\"kfgodel-saraza\",\"traza_identificadores\":[]}",
 				texto);
+	}
+
+	@Test
+	public void deberiaConvertirUnaInstanciaDeObjectEnMensajeVacio() {
+		final MensajeMapa mensaje = MensajeMapa.create(ContenidoVortexLazy.create(new Object(),
+				MapeadorJackson.create()));
+		final String texto = textualizer.convertToString(mensaje);
+		Assert.assertEquals("Debería ser el objeto vacio de json",
+				"{\"CLASSNAME_KEY\":\"java.lang.Object\",\"traza_identificadores\":[]}", texto);
 	}
 }

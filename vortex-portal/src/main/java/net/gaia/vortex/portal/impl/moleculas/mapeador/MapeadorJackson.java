@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.portal.impl.moleculas.mapeador;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
@@ -36,6 +37,13 @@ public class MapeadorJackson implements MapeadorDeObjetos {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> convertirAEstado(final Object objetoOriginal) throws ErrorDeMapeoVortexException {
+		if (objetoOriginal == null) {
+			throw new ErrorDeMapeoVortexException("El mapeador jackson no puede pasar null a mapa");
+		}
+		if (objetoOriginal.getClass().equals(Object.class)) {
+			// El conversor jackson rompe si se le pasa object, para nosotros es un mapa vacío
+			return new HashMap<String, Object>();
+		}
 		Map<String, Object> mapaDeEstado;
 		try {
 			mapaDeEstado = jacksonMapper.convertValue(objetoOriginal, Map.class);
