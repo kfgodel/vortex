@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos;
+package net.gaia.vortex.core.impl.atomos.receptores;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -24,7 +24,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class ReceptorVariable<R extends Receptor> implements Receptor {
+public class ReceptorVariable<R extends Receptor> extends ReceptorSupport {
 
 	private AtomicReference<R> referenciaAlReceptorActual;
 

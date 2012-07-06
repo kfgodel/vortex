@@ -10,10 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos;
+package net.gaia.vortex.core.impl.atomos.receptores;
 
 import net.gaia.vortex.core.api.annon.Atomo;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 
 import org.slf4j.Logger;
@@ -30,7 +29,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class ReceptorNulo implements Receptor {
+public class ReceptorNulo extends ReceptorSupport {
 	private static final Logger LOG = LoggerFactory.getLogger(ReceptorNulo.class);
 
 	private static final WeakSingleton<ReceptorNulo> ultimaReferencia = new WeakSingleton<ReceptorNulo>(

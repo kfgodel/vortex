@@ -15,7 +15,7 @@ package net.gaia.vortex.core.api.atomos;
  * 
  * @author D. García
  */
-public interface Emisor {
+public interface Emisor extends ComponenteVortex {
 
 	/**
 	 * Realiza una conexion desde este componente al componente destino de manera de que el destino

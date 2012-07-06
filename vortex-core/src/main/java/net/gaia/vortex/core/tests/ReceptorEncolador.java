@@ -6,8 +6,8 @@ package net.gaia.vortex.core.tests;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
@@ -19,7 +19,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class ReceptorEncolador implements Receptor {
+public class ReceptorEncolador extends ReceptorSupport {
 
 	private BlockingQueue<MensajeVortex> mensajes;
 	public static final String mensajes_FIELD = "mensajes";

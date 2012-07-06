@@ -18,7 +18,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
-import net.gaia.vortex.core.impl.atomos.ReceptorNulo;
+import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

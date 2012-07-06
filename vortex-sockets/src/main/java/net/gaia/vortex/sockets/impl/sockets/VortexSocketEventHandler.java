@@ -4,7 +4,7 @@
 package net.gaia.vortex.sockets.impl.sockets;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.impl.atomos.ReceptorNulo;
+import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 

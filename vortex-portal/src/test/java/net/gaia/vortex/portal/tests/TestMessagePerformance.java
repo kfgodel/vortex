@@ -19,6 +19,7 @@ import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
+import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
@@ -148,7 +149,7 @@ public class TestMessagePerformance {
 		// Agregamos los otros receptores nulos al último nodo ruteador
 		for (int i = 1; i < cantidadDeNodosReceptores; i++) {
 			final NodoMultiplexor receptorAdicional = NodoMultiplexor.create(processor);
-			final Receptor incrementarRecibidos = new Receptor() {
+			final Receptor incrementarRecibidos = new ReceptorSupport() {
 				@Override
 				public void recibir(final MensajeVortex mensaje) {
 					contadorTotalDeRecibidos.incrementAndGet();

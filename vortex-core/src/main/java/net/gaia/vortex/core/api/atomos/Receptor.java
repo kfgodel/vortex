@@ -13,7 +13,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
  * 
  * @author D. García
  */
-public interface Receptor {
+public interface Receptor extends ComponenteVortex {
 
 	/**
 	 * Invocado al recibir un mensaje de la red

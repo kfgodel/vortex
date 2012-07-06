@@ -14,6 +14,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
+import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 
 import org.junit.After;
@@ -106,7 +107,7 @@ public class TestRedA01ConMultiplexores {
 		final WaitBarrier bloqueoDelEmisor = WaitBarrier.create();
 		final WaitBarrier bloqueoDelReceptor = WaitBarrier.create();
 		final AtomicBoolean receptorBloqueado = new AtomicBoolean(false);
-		final Receptor handlerReceptor = new Receptor() {
+		final Receptor handlerReceptor = new ReceptorSupport() {
 
 			@Override
 			public void recibir(final MensajeVortex mensaje) {
@@ -140,7 +141,7 @@ public class TestRedA01ConMultiplexores {
 	public void el_Thread_Del_Receptor_Debería_Poder_Ser_Independiente_Del_Usado_Para_La_Entrega_Del_Mensaje() {
 		final WaitBarrier threadDeEntregaDefinido = WaitBarrier.create();
 		final AtomicReference<Thread> threadDeEntrega = new AtomicReference<Thread>();
-		final Receptor handlerReceptor = new Receptor() {
+		final Receptor handlerReceptor = new ReceptorSupport() {
 			@Override
 			public void recibir(final MensajeVortex mensaje) {
 				final Thread threadActual = Thread.currentThread();
@@ -247,7 +248,7 @@ public class TestRedA01ConMultiplexores {
 	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo_Con_Creacion_De_Mensaje_Por_Vez() {
 		final int cantidadDeMensajes = 100000;
 		final WaitBarrier espeerarEntregas = WaitBarrier.create(cantidadDeMensajes);
-		nodoReceptor.conectarCon(new Receptor() {
+		nodoReceptor.conectarCon(new ReceptorSupport() {
 			@Override
 			public void recibir(final MensajeVortex mensaje) {
 				espeerarEntregas.release();
@@ -279,7 +280,7 @@ public class TestRedA01ConMultiplexores {
 	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo_Sin_Creacion_De_mensaje() {
 		final int cantidadDeMensajes = 100000;
 		final WaitBarrier espeerarEntregas = WaitBarrier.create(cantidadDeMensajes);
-		nodoReceptor.conectarCon(new Receptor() {
+		nodoReceptor.conectarCon(new ReceptorSupport() {
 			@Override
 			public void recibir(final MensajeVortex mensaje) {
 				espeerarEntregas.release();

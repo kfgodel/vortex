@@ -5,6 +5,7 @@ package net.gaia.vortex.core.impl.atomos;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.vortex.core.api.atomos.ComponenteVortex;
 
 /**
  * Esta clase define comportamiento base para los componentes que requieran procesar tareas en
@@ -12,8 +13,9 @@ import net.gaia.taskprocessor.api.WorkUnit;
  * 
  * @author D. García
  */
-public abstract class ComponenteConProcesadorSupport {
+public abstract class ComponenteConProcesadorSupport implements ComponenteVortex {
 
+	private final long numeroDeComponente;
 	private TaskProcessor processor;
 
 	public TaskProcessor getProcessor() {
@@ -31,11 +33,31 @@ public abstract class ComponenteConProcesadorSupport {
 		processor.process(tarea);
 	}
 
+	public ComponenteConProcesadorSupport() {
+		this.numeroDeComponente = SecuenciadorDeComponentes.getProximoNumero();
+	}
+
 	protected void initializeWith(final TaskProcessor processor) {
 		if (processor == null) {
 			throw new IllegalArgumentException("El procesador de tareas en el componente[" + this
 					+ "] no puede ser null");
 		}
 		this.processor = processor;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#getNumeroDeComponente()
+	 */
+	@Override
+	public long getNumeroDeComponente() {
+		return numeroDeComponente;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#toShortString()
+	 */
+	@Override
+	public String toShortString() {
+		return ToShortString.from(this);
 	}
 }
