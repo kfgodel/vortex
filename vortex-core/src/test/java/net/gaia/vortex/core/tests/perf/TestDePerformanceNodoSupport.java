@@ -7,9 +7,11 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
+import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
 import net.gaia.vortex.core.tests.TestDePerformancePatron;
 
 import org.junit.After;
@@ -152,6 +154,8 @@ public abstract class TestDePerformanceNodoSupport {
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
+		final IdentificadorVortex idDelMensajeGenerado = GeneradorDeIdsEstaticos.getInstancia().generarId();
+
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
 			@Override
@@ -159,8 +163,9 @@ public abstract class TestDePerformanceNodoSupport {
 				return new Runnable() {
 					@Override
 					public void run() {
-						// Vemos si tenemos que esperar
 						final MensajeConContenido mensaje = MensajeConContenido.create();
+						// Le seteamos un ID para que afecte a las comparaciones
+						mensaje.registrarPasajePor(idDelMensajeGenerado);
 						metricas.registrarInput();
 						nodoVortex.recibir(mensaje);
 					}

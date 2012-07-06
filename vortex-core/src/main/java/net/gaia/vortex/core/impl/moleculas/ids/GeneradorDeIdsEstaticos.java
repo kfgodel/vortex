@@ -85,7 +85,8 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	 */
 	@Override
 	public IdentificadorVortex generarId() {
-		final StringBuilder builder = new StringBuilder(identificadorDeGenerador);
+		final StringBuilder builder = new StringBuilder();
+		builder.append(identificadorDeGenerador);
 		builder.append(getTimestampString());
 		builder.append(getSecuenciaString());
 		final String nuevoValor = builder.toString();
