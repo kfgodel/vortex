@@ -46,8 +46,6 @@ public class MensajeConContenido implements MensajeVortex {
 	private Set<String> idsVisitados;
 	public static final String idsVisitados_FIELD = "idsVisitados";
 
-	private int contador = 0;
-
 	public Set<String> getIdsVisitados() {
 		return idsVisitados;
 	}
@@ -170,11 +168,9 @@ public class MensajeConContenido implements MensajeVortex {
 	 */
 	@Override
 	public boolean pasoPreviamentePor(final IdentificadorVortex identificador) {
-		return contador > 4;
-		// final String valorDelIdentificador = identificador.getValorActual();
-		// final boolean yaTenemosRegistroDelIdentificador =
-		// getIdsVisitados().contains(valorDelIdentificador);
-		// return yaTenemosRegistroDelIdentificador;
+		final String valorDelIdentificador = identificador.getValorActual();
+		final boolean yaTenemosRegistroDelIdentificador = getIdsVisitados().contains(valorDelIdentificador);
+		return yaTenemosRegistroDelIdentificador;
 	}
 
 	/**
@@ -182,8 +178,7 @@ public class MensajeConContenido implements MensajeVortex {
 	 */
 	@Override
 	public void registrarPasajePor(final IdentificadorVortex identificador) {
-		contador++;
-		// final String valorDelIdentificador = identificador.getValorActual();
-		// getIdsVisitados().add(valorDelIdentificador);
+		final String valorDelIdentificador = identificador.getValorActual();
+		getIdsVisitados().add(valorDelIdentificador);
 	}
 }

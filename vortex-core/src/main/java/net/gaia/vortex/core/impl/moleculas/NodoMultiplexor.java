@@ -18,13 +18,9 @@ import net.gaia.vortex.core.api.annon.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
-import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
 import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificadorSupport;
 import net.gaia.vortex.core.impl.atomos.ids.NexoIdentificador;
-import net.gaia.vortex.core.impl.metricas.NodoConMetricas;
 import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
-import ar.com.dgarcia.lang.metrics.MetricasDeCarga;
-import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 
 /**
  * Esta clase representa un nodo que puede identificar los mensajes para descartar los propios y si
@@ -34,22 +30,12 @@ import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
  * @author D. García
  */
 @Molecula
-public class NodoMultiplexor extends MultiplexorIdentificadorSupport implements Nodo, NodoConMetricas {
-
-	private MetricasDeCargaImpl metricas;
+public class NodoMultiplexor extends MultiplexorIdentificadorSupport implements Nodo {
 
 	public static NodoMultiplexor create(final TaskProcessor processor) {
 		final NodoMultiplexor nodo = new NodoMultiplexor();
 		nodo.inicializarCon(processor);
 		return nodo;
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.impl.metricas.NodoConMetricas#getMetricas()
-	 */
-	@Override
-	public MetricasDeCarga getMetricas() {
-		return metricas;
 	}
 
 	/**
@@ -71,17 +57,7 @@ public class NodoMultiplexor extends MultiplexorIdentificadorSupport implements 
 	@Override
 	protected Receptor crearProcesoDeEntrada(final TaskProcessor processor, final IdentificadorVortex identificador,
 			final MultiplexorParalelo multiplexorDeSalida) {
-		// Agregamos métricas para este nodo
-		metricas = MetricasDeCargaImpl.create();
-
-		// Le indicamos al multiplexor que registre las salidas
-		getMultiplexorDeSalida().setListenerMetricas(metricas);
-
-		// Registramos las entradas solo si no son repetidas
-		final Receptor registrarEntrada = RegistrarInputEnMetricas.con(metricas);
-		final NexoEjecutor registradorDeEntradas = NexoEjecutor
-				.create(processor, registrarEntrada, multiplexorDeSalida);
-		return NexoIdentificador.create(processor, identificador, registradorDeEntradas);
+		return NexoIdentificador.create(processor, identificador, multiplexorDeSalida);
 	}
 
 }
