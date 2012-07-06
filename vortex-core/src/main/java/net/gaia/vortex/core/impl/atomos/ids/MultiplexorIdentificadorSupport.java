@@ -63,7 +63,9 @@ public abstract class MultiplexorIdentificadorSupport extends ComponenteConProce
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		Loggers.RUTEO.trace("Recibido mensaje[{}] en nodo[{}]", mensaje, this);
+		Loggers.ATOMOS.trace("Recibido en nodo[{}] el mensaje[{}]", this.toShortString(), mensaje);
+		Loggers.ATOMOS.debug("Delegando a atomo[{}] el mensaje[{}] desde el nodo[{}]",
+				new Object[] { procesoDeEntrada.toShortString(), mensaje, this.toShortString() });
 		procesoDeEntrada.recibir(mensaje);
 	}
 
@@ -104,7 +106,8 @@ public abstract class MultiplexorIdentificadorSupport extends ComponenteConProce
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(identificador_FIELD, identificador).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+				.con(identificador_FIELD, identificador).toString();
 	}
 
 }

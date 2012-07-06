@@ -25,6 +25,7 @@ import net.gaia.vortex.core.impl.atomos.ToShortString;
 public abstract class ReceptorSupport implements Receptor {
 
 	private final long numeroDeComponente;
+	public static final String numeroDeComponente_FIELD = "numeroDeComponente";
 
 	public ReceptorSupport() {
 		numeroDeComponente = SecuenciadorDeComponentes.getProximoNumero();

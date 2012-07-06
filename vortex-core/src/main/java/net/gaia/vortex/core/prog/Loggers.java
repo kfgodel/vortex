@@ -25,4 +25,11 @@ public class Loggers {
 	 * Logger utilizado para registrar las decisiones de ruteo de los mensajes
 	 */
 	public static final Logger RUTEO = LoggerFactory.getLogger("net.gaia.vortex.meta.Loggers.RUTEO");
+
+	/**
+	 * Logger utilizado para registrar las decisiones de ruteo de los mensajes a nivel de átomos.<br>
+	 * Detalle super fino
+	 */
+	public static final Logger ATOMOS = LoggerFactory.getLogger("net.gaia.vortex.meta.Loggers.ATOMOS");
+
 }

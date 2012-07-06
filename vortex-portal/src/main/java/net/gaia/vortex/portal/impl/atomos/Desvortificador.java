@@ -67,7 +67,8 @@ public class Desvortificador<T> extends ComponenteConProcesadorSupport implement
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(tipoEsperado_FIELD, tipoEsperado).add(handlerDeMensajes_FIELD, handlerDeMensajes)
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+				.add(tipoEsperado_FIELD, tipoEsperado).add(handlerDeMensajes_FIELD, handlerDeMensajes)
 				.add(mapeador_FIELD, mapeador).toString();
 	}
 }

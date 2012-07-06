@@ -67,7 +67,8 @@ public class NexoFiltro extends NexoSupport implements Filtro {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(condicion_FIELD, condicion).con(destino_FIELD, getDestino()).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).con(condicion_FIELD, condicion)
+				.con(destino_FIELD, getDestino()).toString();
 	}
 
 	/**

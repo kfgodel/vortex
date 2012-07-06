@@ -16,6 +16,8 @@ import net.gaia.vortex.core.api.atomos.ComponenteVortex;
 public abstract class ComponenteConProcesadorSupport implements ComponenteVortex {
 
 	private final long numeroDeComponente;
+	public static final String numeroDeComponente_FIELD = "numeroDeComponente";
+
 	private TaskProcessor processor;
 
 	public TaskProcessor getProcessor() {

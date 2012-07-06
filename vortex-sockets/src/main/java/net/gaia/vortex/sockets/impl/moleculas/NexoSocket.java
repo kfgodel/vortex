@@ -116,7 +116,8 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(socket_FIELD, socket).add(destino_FIELD, getDestino()).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(socket_FIELD, socket)
+				.add(destino_FIELD, getDestino()).toString();
 	}
 
 	/**

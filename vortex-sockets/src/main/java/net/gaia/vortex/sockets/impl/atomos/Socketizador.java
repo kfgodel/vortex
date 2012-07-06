@@ -51,6 +51,7 @@ public class Socketizador extends ComponenteConProcesadorSupport implements Rece
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(socket_FIELD, socket).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(socket_FIELD, socket)
+				.toString();
 	}
 }

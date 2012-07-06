@@ -15,6 +15,7 @@ package net.gaia.vortex.core.impl.atomos.forward;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Ejecutor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -45,7 +46,8 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(ejecutante_FIELD, ejecutante).add(destino_FIELD, getDestino()).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+				.add(ejecutante_FIELD, ejecutante).add(destino_FIELD, getDestino()).toString();
 	}
 
 	/**

@@ -63,6 +63,7 @@ public class ReceptorEncolador extends ReceptorSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(mensajes_FIELD, mensajes).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(mensajes_FIELD, mensajes)
+				.toString();
 	}
 }

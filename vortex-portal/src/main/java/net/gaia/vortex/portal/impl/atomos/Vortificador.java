@@ -71,7 +71,8 @@ public class Vortificador extends EmisorSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(mapeador_FIELD, mapeador).add(delegado_FIELD, delegado).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(mapeador_FIELD, mapeador)
+				.add(delegado_FIELD, delegado).toString();
 	}
 
 	public static Vortificador create(final MapeadorVortex mapeador, final Receptor delegado) {

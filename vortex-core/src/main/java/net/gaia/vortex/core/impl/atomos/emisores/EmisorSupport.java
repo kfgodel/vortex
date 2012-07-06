@@ -25,6 +25,7 @@ import net.gaia.vortex.core.impl.atomos.ToShortString;
 public abstract class EmisorSupport implements Emisor {
 
 	private final long numeroDeComponente;
+	public static final String numeroDeComponente_FIELD = "numeroDeComponente";
 
 	public EmisorSupport() {
 		numeroDeComponente = SecuenciadorDeComponentes.getProximoNumero();

@@ -96,7 +96,8 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(destinos_FIELD, destinos).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).con(destinos_FIELD, destinos)
+				.toString();
 	}
 
 }

@@ -69,7 +69,8 @@ public class NexoTransformador extends NexoSupport implements Transformador {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(transformacion_FIELD, transformacion).add(destino_FIELD, getDestino()).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+				.add(transformacion_FIELD, transformacion).add(destino_FIELD, getDestino()).toString();
 	}
 
 	/**

@@ -81,7 +81,8 @@ public class Desocketizador extends ComponenteConProcesadorSupport implements Em
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(destino_FIELD, destino).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(destino_FIELD, destino)
+				.toString();
 	}
 
 	public static Desocketizador create(final TaskProcessor processor, final Receptor destino) {

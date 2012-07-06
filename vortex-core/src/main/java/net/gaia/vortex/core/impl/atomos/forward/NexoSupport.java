@@ -55,7 +55,8 @@ public abstract class NexoSupport extends ComponenteConProcesadorSupport impleme
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(destino_FIELD, getDestino()).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+				.con(destino_FIELD, getDestino()).toString();
 	}
 
 	/**

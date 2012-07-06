@@ -133,7 +133,8 @@ public class NexoIdentificador extends ComponenteConProcesadorSupport implements
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(identificador_FIELD, identificador).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+				.con(identificador_FIELD, identificador).toString();
 	}
 
 }
