@@ -41,9 +41,9 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestRedA01ConNodoMultiplexor {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConNodoMultiplexor.class);
 
-	private NodoMultiplexor nodoEmisor;
-	private NodoMultiplexor nodoRuteador;
-	private NodoMultiplexor nodoReceptor;
+	private Nodo nodoEmisor;
+	private Nodo nodoRuteador;
+	private Nodo nodoReceptor;
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
