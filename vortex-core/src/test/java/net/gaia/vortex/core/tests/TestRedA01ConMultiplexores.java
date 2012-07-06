@@ -1,5 +1,4 @@
 /**
- * 
  * 13/06/2012 14:42:44 Copyright (C) 2011 10Pines S.R.L.
  */
 package net.gaia.vortex.core.tests;
@@ -46,7 +45,7 @@ public class TestRedA01ConMultiplexores {
 
 	@Before
 	public void crearNodos() {
-		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
+		processor = VortexProcessorFactory.createProcessor();
 		mensaje1 = MensajeConContenido.create();
 		nodoEmisor = MultiplexorParalelo.create(processor);
 		nodoReceptor = MultiplexorParalelo.create(processor);

@@ -44,7 +44,7 @@ public class TestAtomos {
 	public void crearProcesadorYNodos() {
 		mensaje1 = MensajeConContenido.create();
 		mensaje2 = MensajeConContenido.create();
-		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
+		processor = VortexProcessorFactory.createProcessor();
 	}
 
 	@After

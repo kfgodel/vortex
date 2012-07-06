@@ -41,15 +41,15 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestRedA01ConNodoMultiplexor {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConNodoMultiplexor.class);
 
-	private Nodo nodoEmisor;
-	private Nodo nodoRuteador;
-	private Nodo nodoReceptor;
+	private NodoMultiplexor nodoEmisor;
+	private NodoMultiplexor nodoRuteador;
+	private NodoMultiplexor nodoReceptor;
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
 	@Before
 	public void crearNodos() {
-		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
+		processor = VortexProcessorFactory.createProcessor();
 		mensaje1 = MensajeConContenido.create();
 		nodoEmisor = NodoMultiplexor.create(processor);
 		nodoRuteador = NodoMultiplexor.create(processor);

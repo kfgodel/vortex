@@ -27,22 +27,22 @@ import net.gaia.taskprocessor.knittle.KnittleProcessor;
 public class VortexProcessorFactory {
 
 	/**
-	 * Crea un procesador de tareas para utilizar en una topología de nodos que funciona mayormente
-	 * en memoria y poco o nada con sockets
+	 * Crea un procesador de tareas para utilizar en una topología de nodos default
 	 * 
 	 * @return El procesador de tareas para compartir entre todos los nodos
 	 */
-	public static TaskProcessor createMostlyMemoryProcessor() {
+	public static TaskProcessor createProcessor() {
 		return ExecutorBasedTaskProcesor.createOptimun();
 	}
 
 	/**
-	 * Crea un procesador de tareas para utilizar en una topología de nodos que funciona mayormente
-	 * utilizando sockets más que en memoria
+	 * Crea un procesador de tareas alternativo que puede ser utilizado para ciertos casos como
+	 * optimización.<br>
+	 * En la mayoría de los casos es mejor el default, pero hay algunos en que es mejor este
 	 * 
-	 * @return El procesador de tareas para compartir entre todos los nodos
+	 * @return El procesador de tareas alternativo para compartir entre todos los nodos
 	 */
-	public static TaskProcessor createMostlySocketProcessor() {
+	public static TaskProcessor createAlternativeProcessor() {
 		return KnittleProcessor.createOptimun();
 	}
 
