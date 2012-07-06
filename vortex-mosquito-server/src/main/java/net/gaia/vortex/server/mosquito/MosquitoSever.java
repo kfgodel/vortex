@@ -55,7 +55,7 @@ public class MosquitoSever {
 	 */
 	public void aceptarConexiones() {
 		final SocketAddress listeningAddress = configuration.getListeningAddress();
-		Loggers.RUTEO.debug("Comenzando escucha de sockets en: {}", listeningAddress);
+		Loggers.RUTEO.info("Comenzando escucha de sockets en: {}", listeningAddress);
 		hubCentral = NodoSocket.createAndListenTo(listeningAddress, processor);
 	}
 }

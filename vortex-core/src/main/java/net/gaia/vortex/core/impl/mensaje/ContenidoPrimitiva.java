@@ -54,7 +54,7 @@ public class ContenidoPrimitiva extends HashMap<String, Object> implements Conte
 		}
 		final ContenidoPrimitiva contenido = new ContenidoPrimitiva();
 		contenido.setValorPrimitiva(primitiva);
-		contenido.put(MensajeMapa.CLASSNAME_KEY, primitiva.getClass().getName());
+		contenido.put(MensajeConContenido.CLASSNAME_KEY, primitiva.getClass().getName());
 		return contenido;
 	}
 

@@ -14,7 +14,7 @@ package net.gaia.vortex.sockets.tests;
 
 import junit.framework.Assert;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
-import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.ContenidoVortexLazy;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJackson;
@@ -39,14 +39,14 @@ public class TestVortexTextualizer {
 
 	@Test
 	public void deberiaConvertirJsonDeObjetoVacioUnMensajeVacioSoloConTraza() {
-		final MensajeMapa mensaje = MensajeMapa.create();
+		final MensajeConContenido mensaje = MensajeConContenido.create();
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertEquals("Debería ser el objeto vacio de json", "{\"traza_identificadores\":[]}", texto);
 	}
 
 	@Test
 	public void deberiaConvertirEnMapaDePrimitivaUnMensajeConPrimitiva() {
-		final MensajeMapa mensaje = MensajeMapa.create(ContenidoPrimitiva.create("unTexto"));
+		final MensajeConContenido mensaje = MensajeConContenido.create(ContenidoPrimitiva.create("unTexto"));
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertEquals(
 				"Debería ser el objeto vacio de json",
@@ -56,7 +56,7 @@ public class TestVortexTextualizer {
 
 	@Test
 	public void deberíaConvertirEnMapaDePrimitivaUnMensajeConPrimitivaLazy() {
-		final MensajeMapa mensaje = MensajeMapa.create(ContenidoVortexLazy.create(MensajeModeloParaTests.create(),
+		final MensajeConContenido mensaje = MensajeConContenido.create(ContenidoVortexLazy.create(MensajeModeloParaTests.create(),
 				MapeadorJackson.create()));
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertEquals(
@@ -67,7 +67,7 @@ public class TestVortexTextualizer {
 
 	@Test
 	public void deberiaConvertirUnaInstanciaDeObjectEnMensajeVacio() {
-		final MensajeMapa mensaje = MensajeMapa.create(ContenidoVortexLazy.create(new Object(),
+		final MensajeConContenido mensaje = MensajeConContenido.create(ContenidoVortexLazy.create(new Object(),
 				MapeadorJackson.create()));
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertEquals("Debería ser el objeto vacio de json",

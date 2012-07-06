@@ -14,7 +14,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
-import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 
 import org.junit.After;
 import org.junit.Before;
@@ -45,7 +45,7 @@ public class TestRedA01ConMultiplexores {
 	@Before
 	public void crearNodos() {
 		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
-		mensaje1 = MensajeMapa.create();
+		mensaje1 = MensajeConContenido.create();
 		nodoEmisor = MultiplexorParalelo.create(processor);
 		nodoReceptor = MultiplexorParalelo.create(processor);
 
@@ -257,7 +257,7 @@ public class TestRedA01ConMultiplexores {
 		final long startNanos = System.nanoTime();
 		LOG.debug("Nanos inicio: {}", startNanos);
 		for (int i = 0; i < cantidadDeMensajes; i++) {
-			final MensajeMapa mensaje = MensajeMapa.create();
+			final MensajeConContenido mensaje = MensajeConContenido.create();
 			nodoEmisor.recibir(mensaje);
 		}
 

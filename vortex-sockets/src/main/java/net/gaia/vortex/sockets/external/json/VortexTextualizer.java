@@ -9,7 +9,7 @@ import java.util.Map;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
-import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
@@ -57,7 +57,7 @@ public class VortexTextualizer implements ObjectTextualizer {
 				.convertFromStringAs(Map.class, jsonDelContenido);
 		final ContenidoMapa contenido = ContenidoMapa.create(contenidoRegenerado);
 		final Collection<String> idsVisitados = castearYVerificarContenidoDeVisitados(contenidoRegenerado);
-		final MensajeMapa mensajeReconstruido = MensajeMapa.create(contenido, idsVisitados);
+		final MensajeConContenido mensajeReconstruido = MensajeConContenido.create(contenido, idsVisitados);
 		return mensajeReconstruido;
 	}
 
@@ -74,7 +74,7 @@ public class VortexTextualizer implements ObjectTextualizer {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Collection<String> castearYVerificarContenidoDeVisitados(final Map<String, Object> contenidoRegenerado) {
-		final Object object = contenidoRegenerado.get(MensajeMapa.TRAZA_IDENTIFICADORES_VORTEX_KEY);
+		final Object object = contenidoRegenerado.get(MensajeConContenido.TRAZA_IDENTIFICADORES_VORTEX_KEY);
 		if (object == null) {
 			return Collections.emptySet();
 		}
@@ -83,14 +83,14 @@ public class VortexTextualizer implements ObjectTextualizer {
 			coleccionDeIds = (Collection) object;
 		} catch (final ClassCastException e) {
 			throw new UnhandledConditionException("El mensaje tiene como atributo["
-					+ MensajeMapa.TRAZA_IDENTIFICADORES_VORTEX_KEY + "] un valor que no es una coleccion de ids: "
+					+ MensajeConContenido.TRAZA_IDENTIFICADORES_VORTEX_KEY + "] un valor que no es una coleccion de ids: "
 					+ object);
 		}
 		for (final Object posibleId : coleccionDeIds) {
 			if (posibleId instanceof String) {
 				continue;
 			}
-			throw new UnhandledConditionException("El atributo[" + MensajeMapa.TRAZA_IDENTIFICADORES_VORTEX_KEY
+			throw new UnhandledConditionException("El atributo[" + MensajeConContenido.TRAZA_IDENTIFICADORES_VORTEX_KEY
 					+ "] tiene en la coleccion un ID que no es string: " + posibleId);
 		}
 		return coleccionDeIds;

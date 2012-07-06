@@ -25,6 +25,7 @@ import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.NoPasoPreviamente;
 import net.gaia.vortex.core.impl.transformaciones.RegistrarPaso;
+import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,8 @@ public class NexoIdentificador extends ComponenteConProcesadorSupport implements
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
+		Loggers.RUTEO.trace("Delegando a atomo[{}], mensaje[{}] desde nodo[{}]", new Object[] { filtroDeEntrada,
+				mensaje, this });
 		filtroDeEntrada.recibir(mensaje);
 	}
 

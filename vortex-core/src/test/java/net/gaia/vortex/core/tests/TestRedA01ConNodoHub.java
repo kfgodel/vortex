@@ -14,7 +14,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 
 import org.junit.After;
@@ -48,7 +48,7 @@ public class TestRedA01ConNodoHub {
 	@Before
 	public void crearNodos() {
 		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
-		mensaje1 = MensajeMapa.create();
+		mensaje1 = MensajeConContenido.create();
 		nodoEmisor = NodoMultiplexor.create(processor);
 		nodoRuteador = NodoMultiplexor.create(processor);
 		nodoReceptor = NodoMultiplexor.create(processor);
@@ -313,7 +313,7 @@ public class TestRedA01ConNodoHub {
 		LOG.debug("Nanos inicio: {}", startNanos);
 		for (int i = 0; i < cantidadDeMensajes; i++) {
 			// Necesitamos crear un mensaje por cada envío porque son identificados
-			final MensajeMapa mensaje = MensajeMapa.create();
+			final MensajeConContenido mensaje = MensajeConContenido.create();
 			nodoEmisor.recibir(mensaje);
 		}
 

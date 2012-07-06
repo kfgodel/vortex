@@ -21,7 +21,7 @@ import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
 import net.gaia.vortex.core.impl.atomos.ids.NexoIdentificador;
-import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
 
 import org.junit.After;
@@ -56,7 +56,7 @@ public class TestComponentesIdentificadores {
 		multiplexor = MultiplexorIdentificador.create(processor, identificador);
 		multiplexor.conectarCon(receptorFinal1);
 		multiplexor.conectarCon(receptorFinal2);
-		mensajeEnviado = MensajeMapa.create();
+		mensajeEnviado = MensajeConContenido.create();
 	}
 
 	@After

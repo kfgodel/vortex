@@ -13,7 +13,7 @@
 package net.gaia.vortex.portal.tests;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
@@ -52,7 +52,7 @@ public class TestMapeador {
 
 	@Test
 	public void deberiaConvertirElMensajeVortexEnUnMensajeCronometro() {
-		final MensajeMapa mensajeMapa = MensajeMapa.create();
+		final MensajeConContenido mensajeMapa = MensajeConContenido.create();
 		final long nanosDelMensaje = 20;
 		mensajeMapa.getContenido().put(MensajeCronometro.nanosDeInicio_FIELD, nanosDelMensaje);
 

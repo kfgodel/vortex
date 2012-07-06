@@ -15,7 +15,7 @@ package net.gaia.vortex.portal.impl.moleculas.mapeador;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
-import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
@@ -52,7 +52,7 @@ public class MapeadorDefault implements MapeadorVortex {
 		} else {
 			contenidoDelMensaje = ContenidoVortexLazy.create(objetoOriginal, mapeadorDeObjetos);
 		}
-		final MensajeMapa mensajeVortex = MensajeMapa.create(contenidoDelMensaje);
+		final MensajeConContenido mensajeVortex = MensajeConContenido.create(contenidoDelMensaje);
 		return mensajeVortex;
 	}
 

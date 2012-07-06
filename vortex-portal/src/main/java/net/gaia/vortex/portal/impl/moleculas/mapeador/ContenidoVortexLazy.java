@@ -19,7 +19,7 @@ import java.util.Set;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
-import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -187,7 +187,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 		contenido.cache = new HashMap<String, Object>();
 		contenido.cargadoEnCache = false;
 		contenido.mapeadorDeObjetos = mapeadorDeObjetos;
-		contenido.cache.put(MensajeMapa.CLASSNAME_KEY, objeto.getClass().getName());
+		contenido.cache.put(MensajeConContenido.CLASSNAME_KEY, objeto.getClass().getName());
 		return contenido;
 	}
 

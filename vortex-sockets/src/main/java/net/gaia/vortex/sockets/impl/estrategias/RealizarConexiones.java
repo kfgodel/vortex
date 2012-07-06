@@ -35,7 +35,7 @@ public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 	 */
 	@Override
 	public void onNexoSocketCreado(final NexoSocket nuevoNexo) {
-		Loggers.RUTEO.debug("Conectando nuevo nexo[{}] con el nodo[{}]", nuevoNexo, nodoConocido);
+		Loggers.RUTEO.info("Conectando nuevo nexo[{}] con el nodo[{}]", nuevoNexo, nodoConocido);
 		nuevoNexo.conectarCon(nodoConocido);
 		nodoConocido.conectarCon(nuevoNexo);
 	}
@@ -45,7 +45,7 @@ public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 	 */
 	@Override
 	public void onNexoSocketCerrado(final NexoSocket nexoCerrado) {
-		Loggers.RUTEO.debug("Des-Conectando nexo[{}] del nodo[{}]", nexoCerrado, nodoConocido);
+		Loggers.RUTEO.info("Des-Conectando nexo[{}] del nodo[{}]", nexoCerrado, nodoConocido);
 		nodoConocido.desconectarDe(nexoCerrado);
 		nexoCerrado.desconectarDe(nodoConocido);
 	}

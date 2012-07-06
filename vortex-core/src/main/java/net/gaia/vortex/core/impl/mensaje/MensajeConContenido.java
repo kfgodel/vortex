@@ -28,7 +28,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class MensajeMapa implements MensajeVortex {
+public class MensajeConContenido implements MensajeVortex {
 
 	/**
 	 * Key utilizada para guardar el registro de moleculas visitadas
@@ -45,6 +45,8 @@ public class MensajeMapa implements MensajeVortex {
 
 	private Set<String> idsVisitados;
 	public static final String idsVisitados_FIELD = "idsVisitados";
+
+	private int contador = 0;
 
 	public Set<String> getIdsVisitados() {
 		return idsVisitados;
@@ -78,7 +80,7 @@ public class MensajeMapa implements MensajeVortex {
 	 * @return El mensaje creado
 	 */
 	@SuppressWarnings("unchecked")
-	public static MensajeMapa create() {
+	public static MensajeConContenido create() {
 		final ContenidoVortex contenidoVacio = ContenidoMapa.create();
 		return create(contenidoVacio, Collections.EMPTY_SET);
 	}
@@ -92,7 +94,7 @@ public class MensajeMapa implements MensajeVortex {
 	 * @return El mensaje creado
 	 */
 	@SuppressWarnings("unchecked")
-	public static MensajeMapa create(final ContenidoVortex contenido) {
+	public static MensajeConContenido create(final ContenidoVortex contenido) {
 		return create(contenido, Collections.EMPTY_SET);
 	}
 
@@ -105,8 +107,8 @@ public class MensajeMapa implements MensajeVortex {
 	 *            Los ids tomados como visitados
 	 * @return El mensaje creado
 	 */
-	public static MensajeMapa create(final ContenidoVortex contenido, final Collection<String> idsVisitados) {
-		final MensajeMapa mensaje = new MensajeMapa();
+	public static MensajeConContenido create(final ContenidoVortex contenido, final Collection<String> idsVisitados) {
+		final MensajeConContenido mensaje = new MensajeConContenido();
 		mensaje.contenido = contenido;
 		mensaje.inicializarIdsVisitados(idsVisitados);
 		return mensaje;
@@ -168,9 +170,11 @@ public class MensajeMapa implements MensajeVortex {
 	 */
 	@Override
 	public boolean pasoPreviamentePor(final IdentificadorVortex identificador) {
-		final String valorDelIdentificador = identificador.getValorActual();
-		final boolean yaTenemosRegistroDelIdentificador = getIdsVisitados().contains(valorDelIdentificador);
-		return yaTenemosRegistroDelIdentificador;
+		return contador > 6;
+		// final String valorDelIdentificador = identificador.getValorActual();
+		// final boolean yaTenemosRegistroDelIdentificador =
+		// getIdsVisitados().contains(valorDelIdentificador);
+		// return yaTenemosRegistroDelIdentificador;
 	}
 
 	/**
@@ -178,7 +182,8 @@ public class MensajeMapa implements MensajeVortex {
 	 */
 	@Override
 	public void registrarPasajePor(final IdentificadorVortex identificador) {
-		final String valorDelIdentificador = identificador.getValorActual();
-		getIdsVisitados().add(valorDelIdentificador);
+		contador++;
+		// final String valorDelIdentificador = identificador.getValorActual();
+		// getIdsVisitados().add(valorDelIdentificador);
 	}
 }

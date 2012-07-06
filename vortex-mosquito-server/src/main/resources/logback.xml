@@ -62,7 +62,7 @@
 	
 	
   
-   	<logger name="net.gaia.vortex.meta.Loggers.RUTEO" level="DEBUG">
+   	<logger name="net.gaia.vortex.meta.Loggers.RUTEO" level="INFO">
 		<appender-ref ref="RUTEO_FILE" />
 	</logger>
   

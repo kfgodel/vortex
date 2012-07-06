@@ -20,6 +20,7 @@ import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 import net.gaia.vortex.core.api.moleculas.ids.ReceptorIdentificable;
 import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
+import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -62,6 +63,7 @@ public abstract class MultiplexorIdentificadorSupport extends ComponenteConProce
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
+		Loggers.RUTEO.trace("Recibido mensaje[{}] en nodo[{}]", mensaje, this);
 		procesoDeEntrada.recibir(mensaje);
 	}
 

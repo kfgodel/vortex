@@ -17,7 +17,7 @@ import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.mensaje.MensajeMapa;
+import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -42,8 +42,8 @@ public class TestAtomos {
 
 	@Before
 	public void crearProcesadorYNodos() {
-		mensaje1 = MensajeMapa.create();
-		mensaje2 = MensajeMapa.create();
+		mensaje1 = MensajeConContenido.create();
+		mensaje2 = MensajeConContenido.create();
 		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
 	}
 
