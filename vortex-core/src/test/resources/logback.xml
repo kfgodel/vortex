@@ -19,7 +19,7 @@
 	<logger name="net.gaia.vortex.core" level="DEBUG" />
 	
 	<!-- Detalle del ruteo de los mensajes a nivel atomos -->
-	<logger name="net.gaia.vortex.meta.Loggers.ATOMOS" level="TRACE" />
+	<logger name="net.gaia.vortex.meta.Loggers.ATOMOS" level="INFO" />
 	
 	
   

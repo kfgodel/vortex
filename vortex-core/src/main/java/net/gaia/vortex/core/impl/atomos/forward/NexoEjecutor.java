@@ -20,6 +20,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Ejecutor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.tasks.EjecutarYDelegar;
+import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -55,7 +56,10 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	 */
 	@Override
 	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
-		return EjecutarYDelegar.create(mensaje, ejecutante, getDestino());
+		final Receptor destino = getDestino();
+		Loggers.ATOMOS.debug("Ejecutando [{}] antes de delegar mensaje[{}] a nodo[{}]",
+				new Object[] { ejecutante.toShortString(), mensaje, destino });
+		return EjecutarYDelegar.create(mensaje, ejecutante, destino);
 	}
 
 	/**

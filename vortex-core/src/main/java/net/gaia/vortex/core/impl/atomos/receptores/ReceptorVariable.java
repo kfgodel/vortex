@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -33,7 +34,10 @@ public class ReceptorVariable<R extends Receptor> extends ReceptorSupport {
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
+		Loggers.ATOMOS.trace("Recibido en atomo[{}] el mensaje[{}]", this.toShortString(), mensaje);
 		final Receptor receptorActual = referenciaAlReceptorActual.get();
+		Loggers.ATOMOS.debug("Delegando a nodo variable[{}] el mensaje[{}] desde[{}]",
+				new Object[] { receptorActual.toShortString(), mensaje, this.toShortString() });
 		receptorActual.recibir(mensaje);
 	}
 

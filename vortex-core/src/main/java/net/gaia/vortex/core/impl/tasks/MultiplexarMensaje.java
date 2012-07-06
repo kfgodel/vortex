@@ -18,6 +18,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -46,6 +47,8 @@ public class MultiplexarMensaje implements WorkUnit {
 	 */
 	@Override
 	public WorkUnit doWork() throws InterruptedException {
+		Loggers.ATOMOS.debug("Multiplexando mensaje[{}] a {} destinos{}", new Object[] { mensaje, destinos.size(),
+				destinos });
 		for (final Receptor destino : destinos) {
 			final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, destino);
 			processor.process(entregaEnBackground);
@@ -54,6 +57,7 @@ public class MultiplexarMensaje implements WorkUnit {
 			// Nada más que hacer
 			return null;
 		}
+		Loggers.ATOMOS.debug("Registrando output en metricas del mensaje[{}]", mensaje);
 		// Si tenemos listener registramos que ya ruteamos cuando podamos
 		return RegistrarRuteoRealizado.create(listenerDeMetricas);
 	}

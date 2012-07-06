@@ -170,7 +170,7 @@ public class MensajeConContenido implements MensajeVortex {
 	 */
 	@Override
 	public boolean pasoPreviamentePor(final IdentificadorVortex identificador) {
-		return contador > 6;
+		return contador > 4;
 		// final String valorDelIdentificador = identificador.getValorActual();
 		// final boolean yaTenemosRegistroDelIdentificador =
 		// getIdsVisitados().contains(valorDelIdentificador);

@@ -17,6 +17,7 @@ import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
+import net.gaia.vortex.core.prog.Loggers;
 
 import org.junit.After;
 import org.junit.Before;
@@ -37,8 +38,8 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class TestRedA01ConNodoHub {
-	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConNodoHub.class);
+public class TestRedA01ConNodoMultiplexor {
+	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConNodoMultiplexor.class);
 
 	private NodoMultiplexor nodoEmisor;
 	private NodoMultiplexor nodoRuteador;
@@ -310,6 +311,10 @@ public class TestRedA01ConNodoHub {
 			}
 		});
 
+		Loggers.ATOMOS
+				.debug("Enviando desde emisor[{}] a receptor[{}] pasando por nodo[{}]",
+						new Object[] { nodoEmisor.toShortString(), nodoReceptor.toShortString(),
+								nodoRuteador.toShortString() });
 		final long startNanos = System.nanoTime();
 		LOG.debug("Nanos inicio: {}", startNanos);
 		for (int i = 0; i < cantidadDeMensajes; i++) {

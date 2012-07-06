@@ -7,6 +7,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
+import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ public class TransformarYDelegar implements WorkUnit {
 	 */
 	@Override
 	public WorkUnit doWork() throws InterruptedException {
+		Loggers.ATOMOS.trace("Transformando con [{}] el mensaje[{}]", transformacion, mensajeOriginal);
 		MensajeVortex mensajeTransformado;
 		try {
 			mensajeTransformado = transformacion.transformar(mensajeOriginal);
@@ -46,6 +48,7 @@ public class TransformarYDelegar implements WorkUnit {
 			// Nada más para hacer
 			return null;
 		}
+		Loggers.ATOMOS.debug("Transformado mensaje original[{}] en [{}]", mensajeOriginal, mensajeTransformado);
 		// La delegacion es una tarea posterior
 		return DelegarMensaje.create(mensajeTransformado, delegado);
 	}

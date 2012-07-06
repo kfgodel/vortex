@@ -7,6 +7,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,7 @@ public class CondicionalSupport implements WorkUnit {
 	 */
 	@Override
 	public WorkUnit doWork() throws InterruptedException {
+		Loggers.ATOMOS.trace("Evaluando condicion[{}] en mensaje[{}] para decidir delegado", condicion, mensaje);
 		boolean delegarPorTrue;
 		try {
 			delegarPorTrue = condicion.esCumplidaPor(mensaje);
@@ -84,6 +86,8 @@ public class CondicionalSupport implements WorkUnit {
 		} else {
 			delegadoElegido = delegadoPorFalse;
 		}
+		Loggers.ATOMOS.debug("Evaluo[{}] la condición[{}] delegando mensaje[{}] a nodo[{}]", new Object[] {
+				delegarPorTrue, condicion, mensaje, delegadoElegido.toShortString() });
 		return DelegarMensaje.create(mensaje, delegadoElegido);
 	}
 

@@ -242,7 +242,7 @@ public class TestRedA01ConMultiplexores {
 	 * T008. En memoria, el tiempo de entrega normal debería ser inferior a 1ms (final o 1000
 	 * mensajes por segundo).<br>
 	 * Este test crea un mensaje cada vez, haciendolo comparable con el de
-	 * {@link TestRedA01ConNodoHub#en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo()}
+	 * {@link TestRedA01ConNodoMultiplexor#en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo()}
 	 */
 	@Test
 	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo_Con_Creacion_De_Mensaje_Por_Vez() {

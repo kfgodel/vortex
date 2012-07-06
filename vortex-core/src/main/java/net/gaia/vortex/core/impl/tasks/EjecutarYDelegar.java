@@ -15,6 +15,7 @@ package net.gaia.vortex.core.impl.tasks;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,7 @@ public class EjecutarYDelegar implements WorkUnit {
 	 */
 	@Override
 	public WorkUnit doWork() throws InterruptedException {
+		Loggers.ATOMOS.trace("Ejecutando atomo[{}] con el mensaje[{}]", ejecutante.toShortString(), mensaje);
 		try {
 			ejecutante.recibir(mensaje);
 		} catch (final Exception e) {

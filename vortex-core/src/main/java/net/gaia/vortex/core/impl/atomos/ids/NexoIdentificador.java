@@ -55,8 +55,9 @@ public class NexoIdentificador extends ComponenteConProcesadorSupport implements
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		Loggers.RUTEO.trace("Delegando a atomo[{}], mensaje[{}] desde nodo[{}]", new Object[] { filtroDeEntrada,
-				mensaje, this });
+		Loggers.ATOMOS.trace("Recibido en atomo[{}] el mensaje[{}]", this.toShortString(), mensaje);
+		Loggers.ATOMOS.debug("Delegando a atomo[{}] el mensaje[{}] desde atomo[{}]",
+				new Object[] { filtroDeEntrada.toShortString(), mensaje, this.toShortString() });
 		filtroDeEntrada.recibir(mensaje);
 	}
 
