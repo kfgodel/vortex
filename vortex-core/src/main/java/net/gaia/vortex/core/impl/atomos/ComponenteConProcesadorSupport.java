@@ -13,10 +13,7 @@ import net.gaia.vortex.core.api.atomos.ComponenteVortex;
  * 
  * @author D. García
  */
-public abstract class ComponenteConProcesadorSupport implements ComponenteVortex {
-
-	private final long numeroDeComponente;
-	public static final String numeroDeComponente_FIELD = "numeroDeComponente";
+public abstract class ComponenteConProcesadorSupport extends ComponenteSupport implements ComponenteVortex {
 
 	private TaskProcessor processor;
 
@@ -35,31 +32,11 @@ public abstract class ComponenteConProcesadorSupport implements ComponenteVortex
 		processor.process(tarea);
 	}
 
-	public ComponenteConProcesadorSupport() {
-		this.numeroDeComponente = SecuenciadorDeComponentes.getProximoNumero();
-	}
-
 	protected void initializeWith(final TaskProcessor processor) {
 		if (processor == null) {
 			throw new IllegalArgumentException("El procesador de tareas en el componente[" + this
 					+ "] no puede ser null");
 		}
 		this.processor = processor;
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#getNumeroDeComponente()
-	 */
-	@Override
-	public long getNumeroDeComponente() {
-		return numeroDeComponente;
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#toShortString()
-	 */
-	@Override
-	public String toShortString() {
-		return ToShortString.from(this);
 	}
 }

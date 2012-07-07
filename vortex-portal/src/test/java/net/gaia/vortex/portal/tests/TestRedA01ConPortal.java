@@ -55,7 +55,7 @@ public class TestRedA01ConPortal {
 
 	@Before
 	public void crearNodos() {
-		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
+		processor = VortexProcessorFactory.createProcessor();
 		// Creamos un nodo central
 		nodoRuteador = NodoMultiplexor.create(processor);
 		// Le agregamos las interconexiones en los extremos
@@ -74,7 +74,7 @@ public class TestRedA01ConPortal {
 		};
 		nodoReceptor.recibirCon(handlerReceptor);
 
-		Object mensajeEnviado = new Object();
+		final Object mensajeEnviado = new Object();
 		nodoEmisor.enviar(mensajeEnviado);
 
 		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));

@@ -60,7 +60,7 @@ public class TestRedDeSocketsConHubs {
 
 	@Before
 	public void crearNodos() {
-		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
+		processor = VortexProcessorFactory.createProcessor();
 
 		// Creamos el hub al que se conectan los nexos del servidor
 		hubServidor = NodoMultiplexor.create(processor);

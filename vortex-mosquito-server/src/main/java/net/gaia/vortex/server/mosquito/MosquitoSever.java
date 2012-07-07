@@ -38,7 +38,7 @@ public class MosquitoSever {
 	public static MosquitoSever create(final ContextConfiguration configuration) {
 		final MosquitoSever server = new MosquitoSever();
 		server.configuration = configuration;
-		server.processor = VortexProcessorFactory.createMostlySocketProcessor();
+		server.processor = VortexProcessorFactory.createProcessor();
 		return server;
 	}
 

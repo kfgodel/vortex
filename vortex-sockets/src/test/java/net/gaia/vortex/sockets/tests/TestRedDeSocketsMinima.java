@@ -49,7 +49,7 @@ public class TestRedDeSocketsMinima {
 
 	@Before
 	public void crearDependencias() {
-		processor = VortexProcessorFactory.createMostlyMemoryProcessor();
+		processor = VortexProcessorFactory.createProcessor();
 	}
 
 	@After
