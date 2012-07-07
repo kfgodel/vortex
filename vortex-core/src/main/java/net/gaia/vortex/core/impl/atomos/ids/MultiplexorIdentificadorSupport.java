@@ -76,22 +76,8 @@ public abstract class MultiplexorIdentificadorSupport extends ComponenteConProce
 		this.initializeWith(processor);
 		this.identificador = identificador;
 		multiplexorDeSalida = MultiplexorParalelo.create(processor);
-		procesoDeEntrada = crearProcesoDeEntrada(processor, identificador, multiplexorDeSalida);
+		procesoDeEntrada = NexoIdentificador.create(processor, identificador, multiplexorDeSalida);
 	}
-
-	/**
-	 * Crea el atomo que servirá como proceso de entrada al recibir los mensajes
-	 * 
-	 * @param processor
-	 *            El procesador para las tareas internas
-	 * @param identificador
-	 *            El identificador asociado a este multiplexor
-	 * @param multiplexorDeSalida
-	 *            El multiplexor de las salidas
-	 * @return El receptor creado para procesar las entradas
-	 */
-	protected abstract Receptor crearProcesoDeEntrada(final TaskProcessor processor,
-			final IdentificadorVortex identificador, final MultiplexorParalelo multiplexorDeSalida);
 
 	/**
 	 * @see net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable#getIdentificador()

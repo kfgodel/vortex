@@ -15,17 +15,17 @@ package net.gaia.vortex.core.impl.moleculas;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.annon.Molecula;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
+import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
 import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificadorSupport;
-import net.gaia.vortex.core.impl.atomos.ids.NexoIdentificador;
 import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
 
 /**
- * Esta clase representa un nodo que puede identificar los mensajes para descartar los propios y si
- * recibe un mensaje que no es propio se lo reenvía a todos los receptores conocidos.<br>
- * Esta clase sirve como la forma más básica de interconexión de moléculas
+ * Esta clase representa un nodo que puede identificar los mensajes que recibe para descartar los
+ * propios. Si recibe un mensaje que no reconoce como propio, le agrega el ID para registrarlo y se
+ * lo reenvía a todos los receptores conectados.<br>
+ * <br>
+ * A diferencia del {@link MultiplexorIdentificador} esta clase sí tiene un ID propio de molécula
  * 
  * @author D. García
  */
@@ -47,17 +47,6 @@ public class NodoMultiplexor extends MultiplexorIdentificadorSupport implements 
 	protected void inicializarCon(final TaskProcessor processor) {
 		final IdentificadorVortex idPropio = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		initializeWith(processor, idPropio);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificadorSupport#crearProcesoDeEntrada(net.gaia.taskprocessor.api.TaskProcessor,
-	 *      net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex,
-	 *      net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo)
-	 */
-	@Override
-	protected Receptor crearProcesoDeEntrada(final TaskProcessor processor, final IdentificadorVortex identificador,
-			final MultiplexorParalelo multiplexorDeSalida) {
-		return NexoIdentificador.create(processor, identificador, multiplexorDeSalida);
 	}
 
 }

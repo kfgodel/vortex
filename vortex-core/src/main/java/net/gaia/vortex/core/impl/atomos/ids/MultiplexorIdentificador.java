@@ -14,35 +14,21 @@ package net.gaia.vortex.core.impl.atomos.ids;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.annon.Atomo;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
+import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 
 /**
- * Esta clase representa un hub que identifica los mensajes registrándose como nodo visitado, y
- * descartando los mensajes que ya lo visitaron
+ * Esta clase representa un átomo que identifica los mensajes que recibe, descartando los
+ * duplicados.<br>
+ * Los mensajes que tengan el ID indicado serán descartados, los que no lo tengan se le agrega y se
+ * forwardea a todos los receptores conectados.<br>
+ * <br>
+ * A diferencia de un {@link NodoMultiplexor} este átomo no tiene ID propio de molécula
  * 
  * @author D. García
  */
 @Atomo
 public class MultiplexorIdentificador extends MultiplexorIdentificadorSupport {
-
-	/**
-	 * Crea el atomo que servirá como proceso de entrada al recibir los mensajes
-	 * 
-	 * @param processor
-	 *            El procesador para las tareas internas
-	 * @param identificador
-	 *            El identificador asociado a este multiplexor
-	 * @param multiplexorDeSalida
-	 *            El multiplexor de las salidas
-	 * @return El receptor creado para procesar las entradas
-	 */
-	@Override
-	protected Receptor crearProcesoDeEntrada(final TaskProcessor processor, final IdentificadorVortex identificador,
-			final MultiplexorParalelo multiplexorDeSalida) {
-		return NexoIdentificador.create(processor, identificador, multiplexorDeSalida);
-	}
 
 	public static MultiplexorIdentificador create(final TaskProcessor processor, final IdentificadorVortex identificador) {
 		final MultiplexorIdentificador multiplexor = new MultiplexorIdentificador();

@@ -13,23 +13,13 @@
 package net.gaia.vortex.core.impl.atomos.ids;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.annon.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
-import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
-import net.gaia.vortex.core.impl.condiciones.NoPasoPreviamente;
-import net.gaia.vortex.core.impl.transformaciones.RegistrarPaso;
-import net.gaia.vortex.core.prog.Loggers;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
+import net.gaia.vortex.core.impl.tasks.IdentificarODescartarMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -41,66 +31,10 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class NexoIdentificador extends ComponenteConProcesadorSupport implements Nexo {
-	private static final Logger LOG = LoggerFactory.getLogger(NexoIdentificador.class);
-
-	private ReceptorVariable<Receptor> destinoVariable;
-	private NexoFiltro filtroDeEntrada;
+public class NexoIdentificador extends NexoSupport {
 
 	private IdentificadorVortex identificador;
 	public static final String identificador_FIELD = "identificador";
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
-	 */
-	@Override
-	public void recibir(final MensajeVortex mensaje) {
-		Loggers.ATOMOS.trace("Recibido en atomo[{}] el mensaje[{}]", this.toShortString(), mensaje);
-		Loggers.ATOMOS.debug("Delegando a atomo[{}] el mensaje[{}] desde atomo[{}]",
-				new Object[] { filtroDeEntrada.toShortString(), mensaje, this.toShortString() });
-		filtroDeEntrada.recibir(mensaje);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
-	 */
-	@Override
-	public void conectarCon(final Receptor destino) {
-		setDestino(destino);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
-	 */
-	@Override
-	public void desconectarDe(final Receptor destino) {
-		if (!getDestino().equals(destino)) {
-			LOG.debug("Se intentó desconectar un nexo[{}] de un destino[{}] al que no estaba conectado. Ignorando",
-					this, destino);
-			return;
-		}
-		setDestino(ReceptorNulo.getInstancia());
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
-	 */
-	@Override
-	public void setDestino(final Receptor destino) {
-		if (destino == null) {
-			throw new IllegalArgumentException("El destino no puede ser null en el nexo identificador");
-		}
-		destinoVariable.setReceptorActual(destino);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#getDestino()
-	 */
-	@Override
-	public Receptor getDestino() {
-		final Receptor destinoActual = destinoVariable.getReceptorActual();
-		return destinoActual;
-	}
 
 	public static NexoIdentificador create(final TaskProcessor processor, final IdentificadorVortex identificador,
 			final Receptor delegado) {
@@ -120,13 +54,8 @@ public class NexoIdentificador extends ComponenteConProcesadorSupport implements
 	 */
 	protected void initializeWith(final TaskProcessor processor, final IdentificadorVortex identificador,
 			final Receptor delegado) {
-		super.initializeWith(processor);
+		super.initializeWith(processor, delegado);
 		this.identificador = identificador;
-		destinoVariable = ReceptorVariable.create(delegado);
-		final NexoTransformador registrarPasoIdentificador = NexoTransformador.create(processor,
-				RegistrarPaso.por(identificador), destinoVariable);
-		filtroDeEntrada = NexoFiltro
-				.create(processor, NoPasoPreviamente.por(identificador), registrarPasoIdentificador);
 	}
 
 	/**
@@ -136,6 +65,14 @@ public class NexoIdentificador extends ComponenteConProcesadorSupport implements
 	public String toString() {
 		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
 				.con(identificador_FIELD, identificador).toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 */
+	@Override
+	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
+		return IdentificarODescartarMensaje.create(mensaje, identificador, getDestino());
 	}
 
 }
