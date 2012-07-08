@@ -17,8 +17,9 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
+import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.core.tests.TestDePerformancePatron;
+import net.gaia.vortex.core.tests.perf.TestDePerformancePatron;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 
@@ -213,7 +214,7 @@ public class TestDePerformanceConPortales {
 		stress.start();
 
 		// Medimos durante un tiempo
-		Thread.sleep(TestDePerformancePatron.TIEMPO_DE_TEST.getMillis());
+		Thread.sleep(MedicionesDePerformance.TIEMPO_DE_TEST.getMillis());
 		// Freezamos la medición
 		final SnapshotDeMetricaPorTiempo medicion = SnapshotDeMetricaPorTiempo.createFrom(metricas);
 		// Detenemos el stress

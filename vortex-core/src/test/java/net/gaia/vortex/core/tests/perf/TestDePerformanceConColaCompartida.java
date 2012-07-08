@@ -17,8 +17,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.core.tests.TestDePerformancePatron;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -199,7 +199,7 @@ public class TestDePerformanceConColaCompartida {
 		stress.start();
 
 		// Medimos durante un tiempo
-		Thread.sleep(TestDePerformancePatron.TIEMPO_DE_TEST.getMillis());
+		Thread.sleep(MedicionesDePerformance.TIEMPO_DE_TEST.getMillis());
 		// Freezamos la medición
 		final SnapshotDeMetricaPorTiempo medicion = SnapshotDeMetricaPorTiempo.createFrom(metricas);
 		// Detenemos el stress

@@ -10,9 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.tests;
+package net.gaia.vortex.core.tests.perf;
 
-import java.util.concurrent.TimeUnit;
+
+import net.gaia.vortex.core.tests.HandlerDelMensajeDeTest;
+import net.gaia.vortex.core.tests.MedicionesDePerformance;
+import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.metrics.impl.MetricasPorTiempoImpl;
 import ar.com.dgarcia.lang.metrics.impl.SnapshotDeMetricaPorTiempo;
-import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
 /**
@@ -35,8 +37,6 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
 @Ignore("Sólo para correr en la máquina individual")
 public class TestDePerformancePatron {
 	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformancePatron.class);
-
-	public static final TimeMagnitude TIEMPO_DE_TEST = TimeMagnitude.of(10, TimeUnit.SECONDS);
 
 	@Test
 	public void medirPerformanceCon1ThreadDedicadoATodoElProceso() throws InterruptedException {
@@ -141,7 +141,7 @@ public class TestDePerformancePatron {
 		stress.start();
 
 		// Medimos durante un tiempo
-		Thread.sleep(TIEMPO_DE_TEST.getMillis());
+		Thread.sleep(MedicionesDePerformance.TIEMPO_DE_TEST.getMillis());
 		// Freezamos la medición
 		final SnapshotDeMetricaPorTiempo medicion = SnapshotDeMetricaPorTiempo.createFrom(metricas);
 		// Detenemos el stress

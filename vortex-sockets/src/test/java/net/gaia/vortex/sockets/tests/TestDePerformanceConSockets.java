@@ -17,8 +17,9 @@ import java.net.SocketAddress;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.core.tests.TestDePerformancePatron;
+import net.gaia.vortex.core.tests.perf.TestDePerformancePatron;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -236,7 +237,7 @@ public class TestDePerformanceConSockets {
 		stress.start();
 
 		// Medimos durante un tiempo
-		Thread.sleep(TestDePerformancePatron.TIEMPO_DE_TEST.getMillis());
+		Thread.sleep(MedicionesDePerformance.TIEMPO_DE_TEST.getMillis());
 		// Freezamos la medición
 		final SnapshotDeMetricaPorTiempo medicion = SnapshotDeMetricaPorTiempo.createFrom(metricas);
 		// Detenemos el stress
