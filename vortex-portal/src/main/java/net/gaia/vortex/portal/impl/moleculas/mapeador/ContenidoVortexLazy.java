@@ -71,7 +71,12 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	@Override
 	public int size() {
 		cargarDatosEnCache();
-		return cache.size();
+		return coordinator.doReadOperation(new Callable<Integer>() {
+			@Override
+			public Integer call() throws Exception {
+				return cache.size();
+			}
+		});
 	}
 
 	/**
@@ -84,7 +89,12 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 			return false;
 		}
 		cargarDatosEnCache();
-		return cache.isEmpty();
+		return coordinator.doReadOperation(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return cache.isEmpty();
+			}
+		});
 	}
 
 	/**
@@ -97,7 +107,12 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 			return true;
 		}
 		cargarDatosEnCache();
-		return cache.containsKey(key);
+		return coordinator.doReadOperation(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return cache.containsKey(key);
+			}
+		});
 	}
 
 	/**
@@ -110,7 +125,12 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 			return true;
 		}
 		cargarDatosEnCache();
-		return cache.containsValue(value);
+		return coordinator.doReadOperation(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return cache.containsValue(value);
+			}
+		});
 	}
 
 	/**
@@ -122,7 +142,12 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 			// Si no está en cache puede que no esté o que tengamos que revisar el objeto
 			cargarDatosEnCache();
 		}
-		return cache.get(key);
+		return coordinator.doReadOperation(new Callable<Object>() {
+			@Override
+			public Object call() throws Exception {
+				return cache.get(key);
+			}
+		});
 	}
 
 	/**
@@ -132,7 +157,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 		coordinator.doWriteOperation(new Callable<Void>() {
 			@Override
 			public Void call() {
-				if (yaEstaCargadoEnCache()) {
+				if (unSyncYaEstaCargadoEnCache()) {
 					// Ya lo cargamos antes
 					return null;
 				}
@@ -150,7 +175,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 					}
 					cache.put(key, value);
 				}
-				marcarComoCargado();
+				unSyncMarcarComoCargado();
 				return null;
 			}
 		});
@@ -160,16 +185,18 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * Registra que el objeto ya fue completamente cargado en la cache
 	 */
-	private void marcarComoCargado() {
+	private void unSyncMarcarComoCargado() {
 		cache.remove(MAPA_DEL_OBJETO_INCOMPLETO_KEY);
 	}
 
 	/**
-	 * Indica si el estado del objeto ya está cargado en el mapa interno
+	 * Indica si el estado del objeto ya está cargado en el mapa interno, sin utilizar un lock para
+	 * sincronizar con otros threads. Esta llamada debe ser realizada desde otro método que sí esté
+	 * sincronizado
 	 * 
 	 * @return true si el objeto ya está cargado en la caché
 	 */
-	private boolean yaEstaCargadoEnCache() {
+	private boolean unSyncYaEstaCargadoEnCache() {
 		final boolean noContieneKeyPendiente = !cache.containsKey(MAPA_DEL_OBJETO_INCOMPLETO_KEY);
 		return noContieneKeyPendiente;
 	}
@@ -231,7 +258,12 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	@Override
 	public Set<String> keySet() {
 		cargarDatosEnCache();
-		return cache.keySet();
+		return coordinator.doReadOperation(new Callable<Set<String>>() {
+			@Override
+			public Set<String> call() throws Exception {
+				return cache.keySet();
+			}
+		});
 	}
 
 	/**
@@ -240,7 +272,12 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	@Override
 	public Collection<Object> values() {
 		cargarDatosEnCache();
-		return cache.values();
+		return coordinator.doReadOperation(new Callable<Collection<Object>>() {
+			@Override
+			public Collection<Object> call() throws Exception {
+				return cache.values();
+			}
+		});
 	}
 
 	/**
@@ -249,7 +286,12 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	@Override
 	public Set<java.util.Map.Entry<String, Object>> entrySet() {
 		cargarDatosEnCache();
-		return cache.entrySet();
+		return coordinator.doReadOperation(new Callable<Set<java.util.Map.Entry<String, Object>>>() {
+			@Override
+			public Set<java.util.Map.Entry<String, Object>> call() throws Exception {
+				return cache.entrySet();
+			}
+		});
 	}
 
 	public static ContenidoVortexLazy create(final Object objeto, final MapeadorDeObjetos mapeadorDeObjetos) {
@@ -271,7 +313,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con("cargado", yaEstaCargadoEnCache()).con(objetoOriginal_FIELD, objetoOriginal)
+		return ToString.de(this).con("cargado", unSyncYaEstaCargadoEnCache()).con(objetoOriginal_FIELD, objetoOriginal)
 				.con(cache_FIELD, cache).toString();
 	}
 
