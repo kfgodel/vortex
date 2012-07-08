@@ -19,8 +19,7 @@ import java.util.concurrent.Callable;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
-import net.gaia.vortex.core.impl.mensaje.MapaDeContenidoVortex;
-import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
+import net.gaia.vortex.core.impl.mensaje.ContenidoVortexSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +48,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	private Object objetoOriginal;
 	public static final String objetoOriginal_FIELD = "objetoOriginal";
 
-	private MapaDeContenidoVortex cache;
+	private ContenidoVortexSupport cache;
 	public static final String cache_FIELD = "cache";
 
 	private MapeadorDeObjetos mapeadorDeObjetos;
@@ -239,10 +238,10 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 		}
 		final ContenidoVortexLazy contenido = new ContenidoVortexLazy();
 		contenido.objetoOriginal = objeto;
-		contenido.cache = new MapaDeContenidoVortex();
-		contenido.cache.put(MAPA_DEL_OBJETO_INCOMPLETO_KEY, MAPA_DEL_OBJETO_INCOMPLETO_KEY);
 		contenido.mapeadorDeObjetos = mapeadorDeObjetos;
-		contenido.cache.put(MensajeConContenido.CLASSNAME_KEY, objeto.getClass().getName());
+		contenido.cache = new ContenidoVortexSupport();
+		contenido.cache.put(MAPA_DEL_OBJETO_INCOMPLETO_KEY, MAPA_DEL_OBJETO_INCOMPLETO_KEY);
+		contenido.cache.setNombreDelTipoOriginalDesde(objeto);
 		return contenido;
 	}
 
@@ -259,5 +258,45 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 			builder.con(objetoOriginal_FIELD, objetoOriginal).con(cache_FIELD, cache);
 		}
 		return builder.toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setNombreDelTipoOriginal(java.lang.String)
+	 */
+	@Override
+	public void setNombreDelTipoOriginal(final String nombreDeClaseCompleto) {
+		cache.setNombreDelTipoOriginal(nombreDeClaseCompleto);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getNombreDelTipoOriginal()
+	 */
+	@Override
+	public String getNombreDelTipoOriginal() {
+		return cache.getNombreDelTipoOriginal();
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getValorComoPrimitiva()
+	 */
+	@Override
+	public Object getValorComoPrimitiva() {
+		return cache.getValorComoPrimitiva();
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setValorComoPrimitiva(java.lang.Object)
+	 */
+	@Override
+	public void setValorComoPrimitiva(final Object valor) {
+		cache.setValorComoPrimitiva(valor);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#tieneValorComoPrimitiva()
+	 */
+	@Override
+	public boolean tieneValorComoPrimitiva() {
+		return cache.tieneValorComoPrimitiva();
 	}
 }

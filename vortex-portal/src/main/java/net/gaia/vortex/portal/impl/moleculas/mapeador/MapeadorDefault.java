@@ -82,8 +82,8 @@ public class MapeadorDefault implements MapeadorVortex {
 		}
 
 		// Verificamos si no es un mensaje con primitiva
-		if (mensajeVortex.tieneValorComoPrimitiva()) {
-			final Object valorPrimitivo = mensajeVortex.getValorComoPrimitiva();
+		if (contenidoVortex.tieneValorComoPrimitiva()) {
+			final Object valorPrimitivo = contenidoVortex.getValorComoPrimitiva();
 			if (!tipoEsperado.isInstance(valorPrimitivo)) {
 				throw new UnhandledConditionException("Me piden un tipo[" + tipoEsperado
 						+ "] distinto de la primitiva[" + valorPrimitivo + "] que tengo. Conversión no implementada");

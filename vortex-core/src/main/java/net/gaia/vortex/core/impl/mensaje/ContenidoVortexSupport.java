@@ -22,7 +22,7 @@ import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
  * 
  * @author D. García
  */
-public class MapaDeContenidoVortex extends CaseInsensitiveHashMap<Object> implements ContenidoVortex {
+public class ContenidoVortexSupport extends CaseInsensitiveHashMap<Object> implements ContenidoVortex {
 
 	/**
 	 * @see ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap#put(java.lang.String,
@@ -55,4 +55,65 @@ public class MapaDeContenidoVortex extends CaseInsensitiveHashMap<Object> implem
 		final Object adaptedValue = adaptValueToVortex(value);
 		return super.putIfAbsent(key, adaptedValue);
 	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getValorComoPrimitiva()
+	 */
+	@Override
+	public Object getValorComoPrimitiva() {
+		return get(ContenidoVortex.PRIMITIVA_VORTEX_KEY);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#setValorComoPrimitiva(java.lang.Object)
+	 */
+	@Override
+	public void setValorComoPrimitiva(final Object valor) {
+		if (!ContenidoPrimitiva.esPrimitivaVortex(valor)) {
+			throw new IllegalArgumentException("El valor[" + valor + "] no puede ser aceptado como primitiva vortex");
+		}
+		put(ContenidoVortex.PRIMITIVA_VORTEX_KEY, valor);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#tieneValorComoPrimitiva()
+	 */
+	@Override
+	public boolean tieneValorComoPrimitiva() {
+		return containsKey(ContenidoVortex.PRIMITIVA_VORTEX_KEY);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#setNombreDelTipoOriginal(java.lang.String)
+	 */
+	@Override
+	public void setNombreDelTipoOriginal(final String nombreDeClaseCompleto) {
+		put(CLASSNAME_KEY, nombreDeClaseCompleto);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getNombreDelTipoOriginal()
+	 */
+	@Override
+	public String getNombreDelTipoOriginal() {
+		return (String) get(CLASSNAME_KEY);
+	}
+
+	/**
+	 * Establece el nombre del tipo original a partir del objeto pasado. Tomando el nombre de clase
+	 * como el nombre de tipo
+	 * 
+	 * @param name
+	 *            El objeto de referencia
+	 */
+	public void setNombreDelTipoOriginalDesde(final Object valor) {
+		String nombreDelTipo;
+		if (valor == null) {
+			nombreDelTipo = "null";
+		} else {
+			nombreDelTipo = valor.getClass().getName();
+		}
+		setNombreDelTipoOriginal(nombreDelTipo);
+	}
+
 }

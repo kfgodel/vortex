@@ -31,14 +31,9 @@ import ar.com.dgarcia.lang.strings.ToString;
 public class MensajeConContenido implements MensajeVortex {
 
 	/**
-	 * Key utilizada para guardar el registro de moleculas visitadas
+	 * Key utilizada para guardar el registro de moléculas visitadas
 	 */
 	public static final String TRAZA_IDENTIFICADORES_VORTEX_KEY = "traza_identificadores";
-	/**
-	 * Clave usada para agregar como dato el nombre completo de la clase a partir de la cual se
-	 * origina este mensaje
-	 */
-	public static final String CLASSNAME_KEY = "CLASSNAME_KEY";
 
 	private ContenidoVortex contenido;
 	public static final String contenido_FIELD = "contenido";
@@ -118,49 +113,6 @@ public class MensajeConContenido implements MensajeVortex {
 	@Override
 	public String toString() {
 		return ToString.de(this).add(contenido_FIELD, contenido).add(idsVisitados_FIELD, idsVisitados).toString();
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getValorComoPrimitiva()
-	 */
-	@Override
-	public Object getValorComoPrimitiva() {
-		return getContenido().get(ContenidoVortex.PRIMITIVA_VORTEX_KEY);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#setValorComoPrimitiva(java.lang.Object)
-	 */
-	@Override
-	public void setValorComoPrimitiva(final Object valor) {
-		if (!ContenidoPrimitiva.esPrimitivaVortex(valor)) {
-			throw new IllegalArgumentException("El valor[" + valor + "] no puede ser aceptado como primitiva vortex");
-		}
-		getContenido().put(ContenidoVortex.PRIMITIVA_VORTEX_KEY, valor);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#tieneValorComoPrimitiva()
-	 */
-	@Override
-	public boolean tieneValorComoPrimitiva() {
-		return getContenido().containsKey(ContenidoVortex.PRIMITIVA_VORTEX_KEY);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#setNombreDelTipoOriginal(java.lang.String)
-	 */
-	@Override
-	public void setNombreDelTipoOriginal(final String nombreDeClaseCompleto) {
-		getContenido().put(CLASSNAME_KEY, nombreDeClaseCompleto);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getNombreDelTipoOriginal()
-	 */
-	@Override
-	public String getNombreDelTipoOriginal() {
-		return (String) getContenido().get(CLASSNAME_KEY);
 	}
 
 	/**

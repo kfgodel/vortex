@@ -98,7 +98,7 @@ public class TestMapeador {
 		final MensajeVortex convertido = mapeador.convertirAVortex(mensajeOriginal);
 		Assert.assertNotNull("Deberíamos haber obtenido una instancia de mensaje vortex", convertido);
 		Assert.assertEquals("El valor del mensaje como primitiva debería ser igual al otro", mensajeOriginal,
-				convertido.getValorComoPrimitiva());
+				convertido.getContenido().getValorComoPrimitiva());
 	}
 
 	@Test
@@ -107,7 +107,7 @@ public class TestMapeador {
 		final MensajeVortex convertido = mapeador.convertirAVortex(mensajeOriginal);
 		Assert.assertNotNull("Deberíamos haber obtenido una instancia de mensaje vortex", convertido);
 		Assert.assertEquals("El valor del mensaje como primitiva debería ser igual al otro", mensajeOriginal,
-				convertido.getValorComoPrimitiva());
+				convertido.getContenido().getValorComoPrimitiva());
 	}
 
 	@Test
@@ -116,7 +116,7 @@ public class TestMapeador {
 		final MensajeVortex convertido = mapeador.convertirAVortex(mensajeOriginal);
 		Assert.assertNotNull("Deberíamos haber obtenido una instancia de mensaje vortex", convertido);
 		Assert.assertEquals("El valor del mensaje como primitiva debería ser igual al otro", mensajeOriginal,
-				convertido.getValorComoPrimitiva());
+				convertido.getContenido().getValorComoPrimitiva());
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public class TestMapeador {
 		final MensajeVortex convertido = mapeador.convertirAVortex(mensajeOriginal);
 		Assert.assertNotNull("Deberíamos haber obtenido una instancia de mensaje vortex", convertido);
 		Assert.assertEquals("El valor del mensaje como primitiva debería ser igual al otro", mensajeOriginal,
-				convertido.getValorComoPrimitiva());
+				convertido.getContenido().getValorComoPrimitiva());
 	}
 
 	@Test

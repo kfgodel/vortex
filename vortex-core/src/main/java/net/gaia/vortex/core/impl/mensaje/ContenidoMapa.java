@@ -23,7 +23,7 @@ import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
  * 
  * @author D. García
  */
-public class ContenidoMapa extends MapaDeContenidoVortex implements ContenidoVortex {
+public class ContenidoMapa extends ContenidoVortexSupport implements ContenidoVortex {
 
 	/**
 	 * Crea un contenido vortex tomando el estado pasado como inicial

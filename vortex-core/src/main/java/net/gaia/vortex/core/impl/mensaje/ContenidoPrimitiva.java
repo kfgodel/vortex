@@ -21,28 +21,25 @@ import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
  * 
  * @author D. García
  */
-public class ContenidoPrimitiva extends MapaDeContenidoVortex implements ContenidoVortex {
+public class ContenidoPrimitiva extends ContenidoVortexSupport implements ContenidoVortex {
 
 	private Object valorPrimitiva;
 
 	/**
-	 * Devuelve el valor de este contenido como primitiva
-	 * 
-	 * @return El valor representado por este contenido
+	 * @see net.gaia.vortex.core.impl.mensaje.ContenidoVortexSupport#getValorComoPrimitiva()
 	 */
-	public Object getValorPrimitiva() {
+	@Override
+	public Object getValorComoPrimitiva() {
 		return valorPrimitiva;
 	}
 
 	/**
-	 * Establece el valor de este contenido como primitiva
-	 * 
-	 * @param valorPrimitiva
-	 *            El valor a representar
+	 * @see net.gaia.vortex.core.impl.mensaje.ContenidoVortexSupport#setValorComoPrimitiva(java.lang.Object)
 	 */
-	public void setValorPrimitiva(final Object valorPrimitiva) {
-		this.valorPrimitiva = valorPrimitiva;
-		put(PRIMITIVA_VORTEX_KEY, valorPrimitiva);
+	@Override
+	public void setValorComoPrimitiva(final Object valor) {
+		super.setValorComoPrimitiva(valor);
+		this.valorPrimitiva = valor;
 	}
 
 	public static ContenidoPrimitiva create(final Object primitiva) {
@@ -51,8 +48,8 @@ public class ContenidoPrimitiva extends MapaDeContenidoVortex implements Conteni
 					+ "] sólo puede ser primitiva para este tipo de contenido");
 		}
 		final ContenidoPrimitiva contenido = new ContenidoPrimitiva();
-		contenido.setValorPrimitiva(primitiva);
-		contenido.put(MensajeConContenido.CLASSNAME_KEY, primitiva.getClass().getName());
+		contenido.setValorComoPrimitiva(primitiva);
+		contenido.setNombreDelTipoOriginalDesde(primitiva);
 		return contenido;
 	}
 

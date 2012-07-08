@@ -54,13 +54,13 @@ public class SoloInstancias implements Condicion {
 			}
 		}
 
-		if (mensaje.tieneValorComoPrimitiva()) {
-			final Object valorPrimitivo = mensaje.getValorComoPrimitiva();
+		if (contenido.tieneValorComoPrimitiva()) {
+			final Object valorPrimitivo = contenido.getValorComoPrimitiva();
 			final boolean esInstanciaDelTipoEsperado = tipoEsperado.isInstance(valorPrimitivo);
 			return esInstanciaDelTipoEsperado;
 		}
 		// Como optimización verificamos si justo es del tipo esperado
-		final String nombreDelTipoOriginal = mensaje.getNombreDelTipoOriginal();
+		final String nombreDelTipoOriginal = contenido.getNombreDelTipoOriginal();
 		if (tipoEsperado.getName().equals(nombreDelTipoOriginal)) {
 			// Es del mismo tipo que esperabamos
 			return true;

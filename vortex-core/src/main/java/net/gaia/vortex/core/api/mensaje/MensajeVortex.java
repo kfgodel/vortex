@@ -36,23 +36,6 @@ public interface MensajeVortex {
 	public ContenidoVortex getContenido();
 
 	/**
-	 * Establece el nombre que identifica el tipo de mensaje original como parte de los datos del
-	 * contenido de este mensaje
-	 * 
-	 * @param nombreDeClaseCompleto
-	 *            El nombre completo de la clase concreta para ser utilizado en las condiciones
-	 */
-	public void setNombreDelTipoOriginal(String nombreDeClaseCompleto);
-
-	/**
-	 * Devuelve el nombre completo de la clase a partir de la cual se generó este mensaje si está
-	 * disponible como parte del contenido
-	 * 
-	 * @return El nombre completo de la clase original, o null si no existe ese dato en este mensaje
-	 */
-	public String getNombreDelTipoOriginal();
-
-	/**
 	 * Indica si este mensaje ya tiene en su estado el registro del identificador pasado
 	 * 
 	 * @param identificador
@@ -68,31 +51,5 @@ public interface MensajeVortex {
 	 *            El identificador del nodo
 	 */
 	public void registrarPasajePor(IdentificadorVortex identificador);
-
-	/**
-	 * Devuelve el valor que este contenido tiene definido como primitiva.<br>
-	 * El valor como primitiva está registrado bajo la key {@link #PRIMITIVA_VORTEX_KEY}.<br>
-	 * Si este contenido no representa una primitiva se devuelve null
-	 */
-	public Object getValorComoPrimitiva();
-
-	/**
-	 * Establece en este contenido el valor que representa como primitiva. Para lo cual se utiliza
-	 * una clave especial reservada {@link #PRIMITIVA_VORTEX_KEY}
-	 * 
-	 * @param valor
-	 *            Un objeto que representa una primitiva a la JSON (números, String, o array de
-	 *            primitiva)
-	 * @throws IllegalArgumentException
-	 *             Si el objeto pasado no es un primitiva
-	 */
-	public void setValorComoPrimitiva(Object valor);
-
-	/**
-	 * Indica si este mensaje tiene definida la key para valor de primitiva
-	 * 
-	 * @return true si debe considerarse el contenido de este mensaje como una primitiva
-	 */
-	public boolean tieneValorComoPrimitiva();
 
 }
