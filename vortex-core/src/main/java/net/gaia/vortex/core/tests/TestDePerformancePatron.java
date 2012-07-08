@@ -14,6 +14,7 @@ package net.gaia.vortex.core.tests;
 
 import java.util.concurrent.TimeUnit;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
  * 
  * @author D. García
  */
+@Ignore("Sólo para correr en la máquina individual")
 public class TestDePerformancePatron {
 	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformancePatron.class);
 
