@@ -61,6 +61,10 @@ public class TestMapeador {
 				MensajeCronometro.nanosDeInicio_FIELD.toUpperCase());
 		Assert.assertEquals("El valor de nanos debería ser igual en el mensaje vortex",
 				cronoMensaje.getNanosDeInicio(), nanosEnElMensaje);
+
+		final Object nanosDelMensajeConOtroKey = mensajeVortex.getContenido().get("naNosDeinIcio");
+		Assert.assertEquals("El valor de nanos debería ser igual en el mensaje vortex",
+				cronoMensaje.getNanosDeInicio(), nanosDelMensajeConOtroKey);
 	}
 
 	@Test
