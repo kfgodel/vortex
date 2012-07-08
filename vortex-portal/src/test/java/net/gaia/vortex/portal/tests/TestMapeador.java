@@ -51,6 +51,31 @@ public class TestMapeador {
 	}
 
 	@Test
+	public void deberiaPermitirObtenerElValorDeUnAtributoEnElMensajeComoCaseInsensitive() {
+		// Creamos un mensaje con un valor en un atributo
+		final MensajeCronometro cronoMensaje = MensajeCronometro.create();
+		cronoMensaje.marcarInicio();
+
+		final MensajeVortex mensajeVortex = mapeador.convertirAVortex(cronoMensaje);
+		final Object nanosEnElMensaje = mensajeVortex.getContenido().get(
+				MensajeCronometro.nanosDeInicio_FIELD.toUpperCase());
+		Assert.assertEquals("El valor de nanos debería ser igual en el mensaje vortex",
+				cronoMensaje.getNanosDeInicio(), nanosEnElMensaje);
+	}
+
+	@Test
+	public void deberiaPermitirConvertirDesdeMensajeAObjetoConCaseInsensitive() {
+		final MensajeConContenido mensajeMapa = MensajeConContenido.create();
+		final long nanosDelMensaje = 20;
+		mensajeMapa.getContenido().put(MensajeCronometro.nanosDeInicio_FIELD.toUpperCase(), nanosDelMensaje);
+
+		final MensajeCronometro cronoMensaje = mapeador.convertirDesdeVortex(mensajeMapa, MensajeCronometro.class);
+		Assert.assertNotNull("Deberíamos haber obtenido una instancia del mensaje crono", cronoMensaje);
+		Assert.assertEquals("El valor de nanos debería ser igual en el mensaje vortex", nanosDelMensaje,
+				cronoMensaje.getNanosDeInicio());
+	}
+
+	@Test
 	public void deberiaConvertirElMensajeVortexEnUnMensajeCronometro() {
 		final MensajeConContenido mensajeMapa = MensajeConContenido.create();
 		final long nanosDelMensaje = 20;

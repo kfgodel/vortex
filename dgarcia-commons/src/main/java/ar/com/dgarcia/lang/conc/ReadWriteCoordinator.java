@@ -28,7 +28,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class ReadWriteCoordinator {
+public class ReadWriteCoordinator implements ReadWriteOperable {
 
 	/**
 	 * Tiempo máximo que se espera antes de considerar que no fue posible lockear alguno de los
@@ -47,28 +47,17 @@ public class ReadWriteCoordinator {
 	}
 
 	/**
-	 * Realiza la operación pasada como de sólo lectura, permitiendo a otros thread de sólo lectura
-	 * realizar sus operaciones concurrentemente.<br>
-	 * Las operaciones de escritura serán bloqueadas hasta que termine esta
-	 * 
-	 * @param readOperation
-	 *            La acción a realizar sobre la estructura protegida
-	 * @throws UnsuccessfulWaitException
-	 *             Si no fue posible obtener el lock para realizar la operacion
+	 * @see ar.com.dgarcia.lang.conc.ReadWriteOperable#doReadOperation(java.util.concurrent.Callable)
 	 */
+	@Override
 	public <T> T doReadOperation(final Callable<T> readOperation) throws UnsuccessfulWaitException {
 		return doOperationWith(concurrencyLock.readLock(), readOperation);
 	}
 
 	/**
-	 * Realiza la operación pasada como de escritura asegurando al thread el acceso exclusivo.<br>
-	 * Las otras operaciones serán bloqueadas hasta que esta termine
-	 * 
-	 * @param writeOperation
-	 *            La operación de modificación a realizar sobre la estructura protegida
-	 * @throws UnsuccessfulWaitException
-	 *             Si no fue posible obtener el lock para realizar la operacion
+	 * @see ar.com.dgarcia.lang.conc.ReadWriteOperable#doWriteOperation(java.util.concurrent.Callable)
 	 */
+	@Override
 	public <T> T doWriteOperation(final Callable<T> writeOperation) throws UnsuccessfulWaitException {
 		return doOperationWith(concurrencyLock.writeLock(), writeOperation);
 	}

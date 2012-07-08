@@ -13,7 +13,6 @@
 package net.gaia.vortex.core.impl.mensaje;
 
 import java.util.Collection;
-import java.util.HashMap;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 
@@ -22,8 +21,7 @@ import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
  * 
  * @author D. García
  */
-public class ContenidoPrimitiva extends HashMap<String, Object> implements ContenidoVortex {
-	private static final long serialVersionUID = -3385522971864496561L;
+public class ContenidoPrimitiva extends MapaDeContenidoVortex implements ContenidoVortex {
 
 	private Object valorPrimitiva;
 

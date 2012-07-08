@@ -13,7 +13,6 @@
 package net.gaia.vortex.core.impl.mensaje;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
@@ -24,8 +23,7 @@ import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
  * 
  * @author D. García
  */
-public class ContenidoMapa extends HashMap<String, Object> implements ContenidoVortex {
-	private static final long serialVersionUID = 4074358834830337656L;
+public class ContenidoMapa extends MapaDeContenidoVortex implements ContenidoVortex {
 
 	/**
 	 * Crea un contenido vortex tomando el estado pasado como inicial
