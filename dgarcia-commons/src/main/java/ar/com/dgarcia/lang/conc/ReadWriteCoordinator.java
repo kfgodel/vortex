@@ -12,10 +12,12 @@
  */
 package ar.com.dgarcia.lang.conc;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
@@ -54,8 +56,8 @@ public class ReadWriteCoordinator {
 	 * @throws UnsuccessfulWaitException
 	 *             Si no fue posible obtener el lock para realizar la operacion
 	 */
-	public void doReadOperation(final Runnable readOperation) throws UnsuccessfulWaitException {
-		doOperationWith(concurrencyLock.readLock(), readOperation);
+	public <T> T doReadOperation(final Callable<T> readOperation) throws UnsuccessfulWaitException {
+		return doOperationWith(concurrencyLock.readLock(), readOperation);
 	}
 
 	/**
@@ -67,24 +69,26 @@ public class ReadWriteCoordinator {
 	 * @throws UnsuccessfulWaitException
 	 *             Si no fue posible obtener el lock para realizar la operacion
 	 */
-	public void doWriteOperation(final Runnable writeOperation) throws UnsuccessfulWaitException {
-		doOperationWith(concurrencyLock.writeLock(), writeOperation);
+	public <T> T doWriteOperation(final Callable<T> writeOperation) throws UnsuccessfulWaitException {
+		return doOperationWith(concurrencyLock.writeLock(), writeOperation);
 	}
 
 	/**
 	 * Realiza la operación pasada intentando lockear el lock indicado
 	 * 
 	 * @param usedLock
-	 *            El lcok que corresponde a la operación
+	 *            El lock que corresponde a la operación
 	 * @param operation
 	 *            La operación a realizar
 	 * @throws UnsuccessfulWaitException
 	 *             Si el lockeo no es exitoso
 	 */
-	private void doOperationWith(final Lock usedLock, final Runnable operation) throws UnsuccessfulWaitException {
+	private <T> T doOperationWith(final Lock usedLock, final Callable<T> operation) throws UnsuccessfulWaitException {
 		tryLocking(usedLock);
 		try {
-			operation.run();
+			return operation.call();
+		} catch (final Exception e) {
+			throw new FaultyCodeException("Se produjo un error en el codigo pasado", e);
 		} finally {
 			usedLock.unlock();
 		}

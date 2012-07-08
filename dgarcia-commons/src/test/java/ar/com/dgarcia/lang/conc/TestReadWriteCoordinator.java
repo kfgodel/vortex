@@ -12,6 +12,7 @@
  */
 package ar.com.dgarcia.lang.conc;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -47,12 +48,13 @@ public class TestReadWriteCoordinator {
 			this.cantidadDeOperaciones = new AtomicInteger();
 		}
 
-		private final Runnable operation = new Runnable() {
+		private final Callable<Object> operation = new Callable<Object>() {
 			@Override
-			public void run() {
+			public Object call() throws Exception {
 				notificarComienzo.release();
 				cantidadDeOperaciones.incrementAndGet();
 				barreraDeFin.waitForReleaseUpTo(TimeMagnitude.of(20, TimeUnit.SECONDS));
+				return null;
 			}
 		};
 

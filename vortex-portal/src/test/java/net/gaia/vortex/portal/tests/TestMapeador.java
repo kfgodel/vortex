@@ -14,10 +14,10 @@ package net.gaia.vortex.portal.tests;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
+import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
-import net.gaia.vortex.portal.tests.MensajeCronometro;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -111,6 +111,15 @@ public class TestMapeador {
 		} catch (final ErrorDeMapeoVortexException e) {
 			// Es el error que esperábamos
 		}
+	}
+
+	@Test
+	public void deberiaPermitirObtenerNullComoValorDeUnaPropiedadNulaDelObjeto() {
+		final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
+		mensaje.setEstadoAdicionalAlMensaje(null);
+		final MensajeVortex convertido = mapeador.convertirAVortex(mensaje);
+		final Object valorDeAtrinuto = convertido.getContenido().get("estadoAdicionalAlMensaje");
+		Assert.assertNull("El valor del atributo debería ser null", valorDeAtrinuto);
 	}
 
 }
