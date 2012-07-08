@@ -80,10 +80,13 @@
 		<version>0.1</version>
   	</dependency>
   	
-    <!-- Permite la conversion entre strings y objetos con el core de json -->
+    <!-- 
+    	Permite la conversion entre strings y objetos con el core de json
+    	Esta versión custom tiene la clase que definimos y que permite deserialización con case-insensitive 
+    -->
     <dependency>
 		<groupId>com.fasterxml.jackson.core</groupId>
-		<artifactId>jackson-databind</artifactId>
+		<artifactId>jackson-databind-custom</artifactId>
 		<version>2.0.4</version>
     </dependency>
     
