@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia.vortex</groupId>
   <artifactId>vortex-core</artifactId>
-  <version>0.1</version>
+  <version>0.4</version>
   <name>Vortex[Core]</name>
   <description>Proyecto que implementa vortex en su versión mínima y más performante</description>
   
