@@ -88,7 +88,8 @@ public class SoloInstancias implements Condicion {
 							+ nombreDelTipoOriginal
 							+ "] del mensaje["
 							+ mensaje
-							+ "] no existe en el classpath. Por favor reemplace esta condición sobre el tipo del mensaje por condiciones sobre el estado del mensaje");
+							+ "] no existe en el classpath. Por favor reemplace esta condición sobre el tipo del mensaje por condiciones sobre el estado del mensaje",
+					e);
 		}
 		final boolean esInstanciaDelTipoEsperado = tipoEsperado.isAssignableFrom(tipoDelMensajeOriginal);
 		return esInstanciaDelTipoEsperado;

@@ -70,7 +70,7 @@ public class HandlerCronometro extends HandlerTipado<MensajeCronometro> {
 				throw new TimeoutExceededException("Se acabo el tiempo de espera y no recibimos todos los mensajes");
 			}
 		} catch (final InterruptedException e) {
-			throw new InterruptedWaitException("La espera de todos los mensajes fue interrumpida");
+			throw new InterruptedWaitException("La espera de todos los mensajes fue interrumpida", e);
 		}
 	}
 

@@ -35,7 +35,10 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	 *            La condición que deben cumplir los mensajes de este handler
 	 */
 	public HandlerTipado(final Condicion condicionNecesaria) {
-		setCondicionNecesaria(condicionNecesaria);
+		if (condicionNecesaria == null) {
+			throw new IllegalArgumentException("La condición no puede ser null para construir el handler tipado");
+		}
+		this.condicionNecesaria = condicionNecesaria;
 	}
 
 	/**
