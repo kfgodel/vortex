@@ -42,7 +42,7 @@ import com.tenpines.commons.profile.sensors.HostnameSensor;
 public class MosquitoMain {
 	private static final Logger LOG = LoggerFactory.getLogger(MosquitoMain.class);
 
-	public static MosquitoSever currentServer;
+	private static MosquitoSever currentServer;
 
 	public static void main(final String[] args) {
 		final ContextConfiguration configuration = detectCurrentConfiguration();
@@ -105,12 +105,12 @@ public class MosquitoMain {
 	 * Devuelve el conjunto de los perfiles conocidos
 	 */
 	private static Set<AmbientProfile> getKnownProfiles() {
-		final AmbientProfile dario_pc = ServerProfile.create("Desktop Dario (desarrollo)", "Ikari01",
+		final AmbientProfile darioPc = ServerProfile.create("Desktop Dario (desarrollo)", "Ikari01",
 				ServerConfiguration.create(new InetSocketAddress(61616)));
-		final AmbientProfile dario_notebook = ServerProfile.create("Notebook Dario (desarrollo)", "ExpeUEW7",
+		final AmbientProfile darioNotebook = ServerProfile.create("Notebook Dario (desarrollo)", "ExpeUEW7",
 				ServerConfiguration.create(new InetSocketAddress(61616)));
 		final AmbientProfile mosquito = ServerProfile.create("Server Mosquito (produccion)", "mosquito",
 				ServerConfiguration.create(new InetSocketAddress(61616)));
-		return Sets.newLinkedHashSet(dario_pc, dario_notebook, mosquito);
+		return Sets.newLinkedHashSet(darioPc, darioNotebook, mosquito);
 	}
 }
