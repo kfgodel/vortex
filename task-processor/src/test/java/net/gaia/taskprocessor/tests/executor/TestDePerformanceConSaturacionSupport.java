@@ -31,7 +31,7 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
  * 
  * @author D. García
  */
-public class TestDePerformanceConSaturacionSupport {
+public abstract class TestDePerformanceConSaturacionSupport {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceEnOptimunConSaturacion.class);
 	public static final TimeMagnitude TIEMPO_DE_TEST = TimeMagnitude.of(10, TimeUnit.SECONDS);

@@ -40,7 +40,9 @@ public class TestTaskMetricsApi {
 
 	@Before
 	public void crearProcesador() {
-		taskProcessor = ExecutorBasedTaskProcesor.create(TaskProcessorConfiguration.create());
+		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
+		config.setRegisterTaskMetrics(true);
+		taskProcessor = ExecutorBasedTaskProcesor.create(config);
 	}
 
 	@Test

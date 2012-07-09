@@ -28,6 +28,8 @@ public class TestKnittleMetricsApi extends TestTaskMetricsApi {
 	@Override
 	@Before
 	public void crearProcesador() {
-		taskProcessor = KnittleProcessor.create(TaskProcessorConfiguration.create());
+		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
+		config.setRegisterTaskMetrics(true);
+		taskProcessor = KnittleProcessor.create(config);
 	}
 }
