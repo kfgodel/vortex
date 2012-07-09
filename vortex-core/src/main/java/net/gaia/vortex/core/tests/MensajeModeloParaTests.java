@@ -25,7 +25,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class MensajeModeloParaTests {
 
-	public static long instanciasCreadas = 0;
+	private static long instanciasCreadas = 0;
 
 	private String posibleDominio;
 	public static final String posibleDominio_FIELD = "posibleDominio";

@@ -22,7 +22,7 @@ import net.gaia.vortex.core.api.atomos.ComponenteVortex;
  */
 public class ComponenteSupport implements ComponenteVortex {
 
-	protected final long numeroDeComponente;
+	private final long numeroDeComponente;
 	public static final String numeroDeComponente_FIELD = "numeroDeComponente";
 
 	public ComponenteSupport() {
