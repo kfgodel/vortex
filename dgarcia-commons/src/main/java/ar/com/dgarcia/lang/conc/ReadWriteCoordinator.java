@@ -36,7 +36,7 @@ public class ReadWriteCoordinator implements ReadWriteOperable {
 	 * Esta magnitud debiera ser suficientemente grande para emular una espera infinita, pero no
 	 * tanto como para que un programa se bloquee infinitamente
 	 */
-	public static final TimeMagnitude MAX_WAIT_FOR_LOCKS = TimeMagnitude.of(10, TimeUnit.MINUTES);
+	public static final TimeMagnitude MAX_WAIT_FOR_LOCKS = TimeMagnitude.of(10 * 60, TimeUnit.SECONDS);
 
 	private ReentrantReadWriteLock concurrencyLock;
 
