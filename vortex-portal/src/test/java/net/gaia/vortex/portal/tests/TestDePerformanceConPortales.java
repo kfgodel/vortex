@@ -19,7 +19,6 @@ import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.core.tests.perf.TestDePerformancePatron;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 
@@ -36,8 +35,8 @@ import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
 /**
- * Esta clase mide la performance comparando con el {@link TestDePerformancePatron} utilizando
- * portales para la comunicación entre emisor y receptor
+ * Esta clase mide la performance comparando con el utilizando portales para la comunicación entre
+ * emisor y receptor
  * 
  * @author D. García
  */

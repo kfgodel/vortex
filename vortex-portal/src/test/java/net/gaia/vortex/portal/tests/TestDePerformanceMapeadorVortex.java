@@ -17,7 +17,6 @@ import java.util.Arrays;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.core.tests.perf.TestDePerformancePatron;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
 
@@ -32,7 +31,7 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
 
 /**
  * Esta clase prueba la perfomance del mapeador de objetos a vortex, utilizando los lineamientos de
- * la clase {@link TestDePerformancePatron} como modelo
+ * la clase como modelo
  * 
  * @author D. García
  */

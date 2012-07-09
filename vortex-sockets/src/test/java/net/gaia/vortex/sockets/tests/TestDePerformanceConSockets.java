@@ -19,7 +19,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.core.tests.perf.TestDePerformancePatron;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -39,8 +38,8 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
 import ar.dgarcia.textualizer.json.JsonTextualizer;
 
 /**
- * Esta clase mide la performance comparando con el {@link TestDePerformancePatron} utilizando
- * sockets para la comunicación entre emisor y receptor
+ * Esta clase mide la performance comparando con el utilizando sockets para la comunicación entre
+ * emisor y receptor
  * 
  * @author D. García
  */

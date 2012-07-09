@@ -83,8 +83,8 @@ public class VortexTextualizer implements ObjectTextualizer {
 			coleccionDeIds = (Collection) object;
 		} catch (final ClassCastException e) {
 			throw new UnhandledConditionException("El mensaje tiene como atributo["
-					+ MensajeConContenido.TRAZA_IDENTIFICADORES_VORTEX_KEY + "] un valor que no es una coleccion de ids: "
-					+ object);
+					+ MensajeConContenido.TRAZA_IDENTIFICADORES_VORTEX_KEY
+					+ "] un valor que no es una coleccion de ids: " + object, e);
 		}
 		for (final Object posibleId : coleccionDeIds) {
 			if (posibleId instanceof String) {
