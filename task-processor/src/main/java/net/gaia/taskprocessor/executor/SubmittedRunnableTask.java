@@ -256,10 +256,6 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 		return failingError.get();
 	}
 
-	private FutureTask<?> getOwnFuture() {
-		return ownFuture;
-	}
-
 	/**
 	 * Ejecuta esta tarea pendiente a través de su {@link Future} de manera de notificar a los
 	 * threads que puedan estar esperando el resultado

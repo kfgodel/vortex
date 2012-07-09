@@ -37,6 +37,8 @@ public class TaskProcessorConfiguration {
 	@HasDependencyOn(Decision.SE_USA_UN_SOLO_THREAD_POR_DEFAULT)
 	public static final int DEFAULT_THREAD_POOL_SIZE = 1;
 
+	public static final TimeMagnitude DEFAULT_IDLE_TIME_PER_THREAD = TimeMagnitude.of(5, TimeUnit.SECONDS);
+
 	private int minimunThreadPoolSize;
 	private int maximunThreadPoolSize;
 
@@ -82,7 +84,7 @@ public class TaskProcessorConfiguration {
 		final TaskProcessorConfiguration config = new TaskProcessorConfiguration();
 		config.minimunThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
 		config.maximunThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
-		config.maxIdleTimePerThread = TimeMagnitude.of(5, TimeUnit.SECONDS);
+		config.maxIdleTimePerThread = DEFAULT_IDLE_TIME_PER_THREAD;
 		config.registerTaskMetrics = false;
 		return config;
 	}

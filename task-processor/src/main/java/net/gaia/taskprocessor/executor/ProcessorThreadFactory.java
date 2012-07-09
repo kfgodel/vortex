@@ -25,8 +25,8 @@ import net.gaia.taskprocessor.api.ThreadOwner;
  */
 public class ProcessorThreadFactory implements ThreadFactory {
 
-	static final AtomicInteger factorySecuencer = new AtomicInteger(1);
-	final AtomicInteger threadNumber = new AtomicInteger(1);
+	private static final AtomicInteger factorySecuencer = new AtomicInteger(1);
+	private final AtomicInteger threadSecuencer = new AtomicInteger(1);
 	private int factoryNumber;
 	private ThreadGroup group;
 	private String threadPreffix;
@@ -34,7 +34,7 @@ public class ProcessorThreadFactory implements ThreadFactory {
 
 	@Override
 	public Thread newThread(final Runnable r) {
-		final String threadName = threadPreffix + threadNumber.getAndIncrement();
+		final String threadName = threadPreffix + threadSecuencer.getAndIncrement();
 		final Thread t = new ProcessorThread(ownerProcessor, group, r, threadName, 0);
 		if (t.isDaemon()) {
 			t.setDaemon(false);
