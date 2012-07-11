@@ -15,6 +15,7 @@ package net.gaia.vortex.server.mosquito.config;
 import ar.com.dgarcia.lang.strings.ToString;
 
 import com.tenpines.commons.profile.api.AmbientSensor;
+import com.tenpines.commons.profile.sensors.HostnameSensor;
 
 /**
  * @author D. García Esta clase representa
@@ -30,12 +31,19 @@ public class ServerProfile implements ProfileConConfiguracion {
 	private ContextConfiguration configuration;
 	public static final String configuration_FIELD = "configuration";
 
+	private String workingDir;
+	public static final String workingDir_FIELD = "workingDir";
+
 	/**
 	 * @see com.tenpines.commons.profile.api.AmbientProfile#getValueFor(com.tenpines.commons.profile.api.AmbientSensor)
 	 */
 	@Override
 	public String getValueFor(final AmbientSensor sensor) {
-		return hostname;
+		if (sensor instanceof HostnameSensor) {
+			return hostname;
+		} else {
+			return workingDir;
+		}
 	}
 
 	/**
@@ -63,12 +71,13 @@ public class ServerProfile implements ProfileConConfiguracion {
 	 *            El host asociado a este ambiente
 	 * @return El perfil creado
 	 */
-	public static ServerProfile create(final String humanName, final String hostname,
+	public static ServerProfile create(final String humanName, final String hostname, final String classesDir,
 			final ContextConfiguration configuration) {
 		final ServerProfile profile = new ServerProfile();
 		profile.hostname = hostname;
 		profile.humanName = humanName;
 		profile.configuration = configuration;
+		profile.workingDir = classesDir;
 		return profile;
 	}
 
@@ -77,8 +86,8 @@ public class ServerProfile implements ProfileConConfiguracion {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(hostname_FIELD, hostname).con(humanName_FIELD, humanName)
-				.add(configuration_FIELD, configuration).toString();
+		return ToString.de(this).con(humanName_FIELD, humanName).con(hostname_FIELD, hostname)
+				.con(workingDir_FIELD, workingDir).add(configuration_FIELD, configuration).toString();
 	}
 
 }

@@ -4,10 +4,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia.vortex</groupId>
   <artifactId>vortex-mosquito-server</artifactId>
-  <version>0.2</version>
+  <version>0.2.1</version>
   <name>Vortex[Mosquito]</name>
   <description>Aplicación servidor en mosquito que actúa como hub de sockets</description>
+  
+  
   <build>
+  	<finalName>vortex-mosquito-server</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -81,6 +84,7 @@
       </plugin>
     </plugins>
   </build>
+  
   <repositories>
     <repository>
       <id>kfgodel_mosquito</id>
@@ -108,7 +112,7 @@
 	<dependency>
 		 <groupId>com.tenpines.commons</groupId>
 		 <artifactId>profile-detector</artifactId>
-		 <version>1.0.2</version>
+		 <version>1.0.3</version>
 	</dependency>
   	
     <dependency>

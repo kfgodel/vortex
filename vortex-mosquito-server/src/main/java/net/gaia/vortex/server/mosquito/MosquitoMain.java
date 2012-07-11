@@ -33,6 +33,7 @@ import com.tenpines.commons.profile.api.DetectorConfiguration;
 import com.tenpines.commons.profile.api.ProfileDetection;
 import com.tenpines.commons.profile.impl.ProfileDetectorImpl;
 import com.tenpines.commons.profile.sensors.HostnameSensor;
+import com.tenpines.commons.profile.sensors.WorkingDirectorySensor;
 
 /**
  * Esta clase representa el punto de ejecución del servidor mosquito
@@ -48,6 +49,16 @@ public class MosquitoMain {
 		final ContextConfiguration configuration = detectCurrentConfiguration();
 		currentServer = MosquitoSever.create(configuration);
 		currentServer.aceptarConexiones();
+
+		// Registramos el handler para cuando se detenga la VM
+		LOG.debug("Registrando hook para detener los sockets al detener la Vm");
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				LOG.debug("VM apagandose, cerrando sockets");
+				currentServer.detenerConexiones();
+			}
+		});
 	}
 
 	/**
@@ -77,6 +88,8 @@ public class MosquitoMain {
 		// Agregamos los sensores
 		final HostnameSensor hostNameSensor = HostnameSensor.create();
 		detectorConfiguration.addSensor(hostNameSensor);
+		final WorkingDirectorySensor classesDirSensor = WorkingDirectorySensor.create();
+		detectorConfiguration.addSensor(classesDirSensor);
 
 		// Agregamos los perfiles
 		final Set<AmbientProfile> knownProfiles = getKnownProfiles();
@@ -94,8 +107,9 @@ public class MosquitoMain {
 			LOG.info("Detectado en sensor \"{}\": [{}]", sensor, sensedValue);
 		}
 		if (!detection.getResult().isSuccessful()) {
-			throw new UnhandledConditionException("No es posible determinar el ambiente de ejecución actual: "
-					+ detection);
+			LOG.warn("No fue posible determinar ambiente conocido. Usando configuración default");
+			return ServerProfile.create("Default en 61616", "--", "--",
+					ServerConfiguration.create(new InetSocketAddress(61616)));
 		}
 		final AmbientProfile currentProfile = detection.getElectedProfile();
 		return currentProfile;
@@ -105,12 +119,14 @@ public class MosquitoMain {
 	 * Devuelve el conjunto de los perfiles conocidos
 	 */
 	private static Set<AmbientProfile> getKnownProfiles() {
-		final AmbientProfile darioPc = ServerProfile.create("Desktop Dario (desarrollo)", "Ikari01",
+		final AmbientProfile darioPc = ServerProfile.create("Desktop Dario (desarrollo)", "Ikari01", "",
 				ServerConfiguration.create(new InetSocketAddress(61616)));
-		final AmbientProfile darioNotebook = ServerProfile.create("Notebook Dario (desarrollo)", "ExpeUEW7",
+		final AmbientProfile darioNotebook = ServerProfile.create("Notebook Dario (desarrollo)", "ExpeUEW7", "",
 				ServerConfiguration.create(new InetSocketAddress(61616)));
-		final AmbientProfile mosquito = ServerProfile.create("Server Mosquito (produccion)", "mosquito",
+		final AmbientProfile mosquito = ServerProfile.create("Server Mosquito (produccion)", "mosquito", "",
 				ServerConfiguration.create(new InetSocketAddress(61616)));
-		return Sets.newLinkedHashSet(darioPc, darioNotebook, mosquito);
+		final AmbientProfile ikari01 = ServerProfile.create("Server Ikari01 (produccion)", "Ikari01",
+				"P:\\Propios\\Vortex\\bin\\.", ServerConfiguration.create(new InetSocketAddress(61616)));
+		return Sets.newLinkedHashSet(darioPc, darioNotebook, mosquito, ikari01);
 	}
 }

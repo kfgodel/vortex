@@ -58,4 +58,13 @@ public class MosquitoSever {
 		Loggers.RUTEO.info("Comenzando escucha de sockets en: {}", listeningAddress);
 		hubCentral = NodoSocket.createAndListenTo(listeningAddress, processor);
 	}
+
+	/**
+	 * Detiene las conexiones actuales forzadamente
+	 */
+	public void detenerConexiones() {
+		final SocketAddress listeningAddress = configuration.getListeningAddress();
+		Loggers.RUTEO.info("Deteniendo escucha de sockets en: {}", listeningAddress);
+		hubCentral.closeAndDispose();
+	}
 }
