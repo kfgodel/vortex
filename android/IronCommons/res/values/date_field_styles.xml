@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+	<!-- Textos -->
+    <style name="DateFieldText">
+        <item name="android:textSize">@dimen/date_field_text_size</item>
+    </style>
+    
+    <!-- Botones -->
+    <style name="DateFieldButton">
+    </style>
+    <style name="DateFieldButton.Plus">
+        <item name="android:src">@android:drawable/arrow_up_float</item>
+    </style>
+    <style name="DateFieldButton.Minus">
+        <item name="android:src">@android:drawable/arrow_down_float</item>
+    </style>
+    
+</resources>

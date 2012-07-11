@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        	android:text="Nombre de usuario:"
+        	android:layout_width="wrap_content" 
+        	android:layout_height="wrap_content"
+        />
+    <EditText
+        android:hint="Ej: Pepe"
+        android:id="@+id/userIdTxt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+        <requestFocus />    </EditText>
+    <TextView
+        	android:text="Host del servidor:"
+        	android:layout_width="wrap_content" 
+        	android:layout_height="wrap_content"
+        />
+    <EditText
+        android:hint="Ej: kfgodel.info"
+        android:inputType="textUri"
+        android:id="@+id/hostUrlTxt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        	android:text="Puerto del servidor:"
+        	android:layout_width="wrap_content" 
+        	android:layout_height="wrap_content"
+        />
+    <EditText
+        android:hint="Ej: 61616"
+        android:inputType="number"
+        android:id="@+id/portNumberTxt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"  />
+    
+    <Button
+        android:id="@+id/guardarBtn"
+        android:text="Guardar"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        />
+    
+</LinearLayout>

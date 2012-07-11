@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+	>
+
+	<!-- Campos editables -->
+    <LinearLayout
+    	android:id="@+id/commons_datefields_container"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	
+    	android:layout_alignParentTop="true"
+    	android:gravity="center"
+    	>
+    	<!-- Parte del año -->
+    	<ImageButton
+    		android:id="@+id/datefields_btn_year_minus"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	style="@style/DateFieldButton.Minus"
+	    	android:visibility="gone"
+    	/>
+    	<TextView
+    		android:id="@+id/datefields_txt_year"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	android:text="YYYY"
+	    	style="@style/DateFieldText"
+    		/>
+    	<ImageButton
+    		android:id="@+id/datefields_btn_year_plus"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	style="@style/DateFieldButton.Plus"
+	    	android:visibility="gone"
+    	/>
+    		
+    	<TextView
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:text="/"
+	    	style="@style/DateFieldText"
+    		/>
+    		
+    	<!-- Parte del mes -->
+    	<ImageButton
+    		android:id="@+id/datefields_btn_month_minus"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	style="@style/DateFieldButton.Minus"
+	    	android:visibility="gone"
+    	/>
+    	<TextView
+    		android:id="@+id/datefields_txt_month"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	android:text="MM"
+	    	style="@style/DateFieldText"
+    		/>
+    	<ImageButton
+    		android:id="@+id/datefields_btn_month_plus"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	style="@style/DateFieldButton.Plus"
+	    	android:visibility="gone"
+    	/>
+    		
+    	<TextView
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:text="/"
+	    	style="@style/DateFieldText"
+    		/>
+    		
+		<!-- Parte del dia -->
+    	<ImageButton
+    		android:id="@+id/datefields_btn_day_minus"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	style="@style/DateFieldButton.Minus"
+	    	android:visibility="gone"
+    	/>
+    	<TextView
+    		android:id="@+id/datefields_txt_day"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	android:text="DD"
+	    	style="@style/DateFieldText"
+    		/>
+    	<ImageButton
+    		android:id="@+id/datefields_btn_day_plus"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	style="@style/DateFieldButton.Plus"
+	    	android:visibility="gone"
+    	/>
+    		
+    	<TextView
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:text=" "
+	    	style="@style/DateFieldText"
+    		/>
+    		
+		<!-- Parte hora -->    		
+    	<ImageButton
+    		android:id="@+id/datefields_btn_hour_minus"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	style="@style/DateFieldButton.Minus"
+	    	android:visibility="gone"
+    	/>
+    	<TextView
+    		android:id="@+id/datefields_txt_hour"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	android:text="HH"
+	    	style="@style/DateFieldText"
+    		/>
+    	<ImageButton
+    		android:id="@+id/datefields_btn_hour_plus"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	style="@style/DateFieldButton.Plus"
+	    	android:visibility="gone"
+    	/>
+    		
+    	<TextView
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:text=":"
+	    	style="@style/DateFieldText"
+    		/>
+    		
+    	<!-- Parte del minuto -->
+    	<ImageButton
+    		android:id="@+id/datefields_btn_minute_minus"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	style="@style/DateFieldButton.Minus"
+	    	android:visibility="gone"
+    	/>
+    	<TextView
+    		android:id="@+id/datefields_txt_minute"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	android:text="mm"
+	    	style="@style/DateFieldText"
+    		/>
+    	<ImageButton
+    		android:id="@+id/datefields_btn_minute_plus"
+    		
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	
+	    	style="@style/DateFieldButton.Plus"
+	    	android:visibility="gone"
+    	/>
+    </LinearLayout>
+
+	
+    <Button 
+    	android:id="@+id/datefields_btn_cancel"
+    	
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content"
+    	
+    	android:layout_alignParentLeft="true"
+    	android:layout_below="@id/commons_datefields_container"
+    	
+    	android:text="Cancelar"
+	/>
+    <Button 
+    	android:id="@+id/datefields_btn_accept"
+    	
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content"
+
+    	android:layout_alignParentRight="true"
+    	android:layout_below="@id/commons_datefields_container"
+    	
+    	android:text="Aceptar"
+	/>
+	
+		    
+</RelativeLayout>
