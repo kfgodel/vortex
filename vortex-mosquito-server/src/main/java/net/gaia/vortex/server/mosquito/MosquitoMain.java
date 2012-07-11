@@ -70,6 +70,8 @@ public class MosquitoMain {
 		final AmbientProfile currentProfile = detectCurrentProfile();
 		final ProfileConConfiguracion profileConConfig = (ProfileConConfiguracion) currentProfile;
 		final ContextConfiguration currentConfig = profileConConfig.getConfig();
+		LOG.info("Detectado el ambiente: {}. Con la configuración de sockets: {}", currentProfile.getHumanName(),
+				currentConfig.getListeningAddress());
 		return currentConfig;
 	}
 
@@ -126,7 +128,7 @@ public class MosquitoMain {
 		final AmbientProfile mosquito = ServerProfile.create("Server Mosquito (produccion)", "mosquito",
 				"/archivos/vortex/vortex-mosquito-server/.", ServerConfiguration.create(new InetSocketAddress(61616)));
 		final AmbientProfile ikari01 = ServerProfile.create("Server Ikari01 (produccion)", "Ikari01",
-				"P:\\Propios\\Vortex\\bin\\.", ServerConfiguration.create(new InetSocketAddress(61616)));
+				"P:\\Propios\\Vortex\\Ikari01\\bin\\.", ServerConfiguration.create(new InetSocketAddress(61616)));
 		return Sets.newLinkedHashSet(darioPc, darioNotebook, mosquito, ikari01);
 	}
 }
