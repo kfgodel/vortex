@@ -128,7 +128,7 @@ public class MosquitoMain {
 		final AmbientProfile mosquito = ServerProfile.create("Server Mosquito (produccion)", "mosquito",
 				"/archivos/vortex/vortex-mosquito-server/.", ServerConfiguration.create(new InetSocketAddress(61616)));
 		final AmbientProfile ikari01 = ServerProfile.create("Server Ikari01 (produccion)", "Ikari01",
-				"P:\\Propios\\Vortex\\Ikari01\\bin\\.", ServerConfiguration.create(new InetSocketAddress(61616)));
+				"P:\\Propios\\Vortex\\Ikari01\\.", ServerConfiguration.create(new InetSocketAddress(61616)));
 		return Sets.newLinkedHashSet(darioPc, darioNotebook, mosquito, ikari01);
 	}
 }
