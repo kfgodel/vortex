@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.android.service;
 
+import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
 
@@ -34,4 +35,11 @@ public interface VortexAndroidAccess {
 	 * @return El nodo central de vortex
 	 */
 	public Nodo getNodoCentral();
+
+	/**
+	 * El procesador compartido por los componentes vortex interconectados a este punto de acceso
+	 * 
+	 * @return El procesador a utilizar para los componentes
+	 */
+	public TaskProcessor getProcesadorCentral();
 }

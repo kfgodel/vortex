@@ -15,9 +15,17 @@ package net.gaia.vortex.comm;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.android.service.VortexAndroidAccess;
 import net.gaia.vortex.android.service.VortexProviderService;
-import net.gaia.vortex.comm.model.MensajeDeChat;
+import net.gaia.vortex.comm.api.MensajeDeChat;
+import net.gaia.vortex.comm.config.ConfiguracionVortexComm;
+import net.gaia.vortex.comm.config.RepositorioDeConfiguracion;
+import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
+import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +43,7 @@ import ar.com.iron.android.extensions.adapters.RenderBlock;
 import ar.com.iron.android.extensions.services.local.LocalServiceConnectionListener;
 import ar.com.iron.android.extensions.services.local.LocalServiceConnector;
 import ar.com.iron.android.helpers.WidgetHelper;
+import ar.com.iron.helpers.ToastHelper;
 import ar.com.iron.helpers.ViewHelper;
 import ar.com.iron.menues.ContextMenuItem;
 
@@ -49,6 +58,10 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	private final List<MensajeDeChat> mensajes = new ArrayList<MensajeDeChat>();
 	private EditText textoTxt;
 	private LocalServiceConnector<VortexAndroidAccess> vortexConnector;
+	private Portal portalEmisor;
+	private Portal portalReceptor;
+	private String nombreDeUsuario;
+	private String canalActual;
 
 	private ImageView conectadoImg;
 
@@ -57,6 +70,7 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	 */
 	@Override
 	public void setUpComponents() {
+		canalActual = ConfiguracionVortexComm.CANAL_VORTEX_GLOBAL;
 		textoTxt = ViewHelper.findEditText(R.id.textoTxt, getContentView());
 		Button agregarBtn = ViewHelper.findButton(R.id.enviarBtn, getContentView());
 		agregarBtn.setOnClickListener(new OnClickListener() {
@@ -73,6 +87,7 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 		vortexConnector = LocalServiceConnector.create(VortexProviderService.class);
 		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexAndroidAccess>() {
 			public void onServiceDisconnection(final VortexAndroidAccess disconnectedIntercomm) {
+				onVortexNoDisponible(disconnectedIntercomm);
 			}
 
 			public void onServiceConnection(final VortexAndroidAccess intercommObject) {
@@ -80,6 +95,17 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 			}
 		});
 		vortexConnector.bindToService(this);
+
+		cargarNombreDeUsuarioDesdeLaConfig();
+	}
+
+	/**
+	 * Carga el nombre de usuario definido en la configuración
+	 */
+	private void cargarNombreDeUsuarioDesdeLaConfig() {
+		RepositorioDeConfiguracion repo = new RepositorioDeConfiguracion(getContext());
+		ConfiguracionVortexComm configuracion = repo.getConfiguracion();
+		this.nombreDeUsuario = configuracion.getNombreDeUsuario();
 	}
 
 	/**
@@ -102,6 +128,43 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	 * @param vortexForAndroid
 	 */
 	protected void onVortexDisponible(VortexAndroidAccess vortexForAndroid) {
+		// Creamos un portal para comunicarnos con el nodo central
+		TaskProcessor procesador = vortexForAndroid.getProcesadorCentral();
+		Nodo nodoCentral = vortexForAndroid.getNodoCentral();
+		this.portalReceptor = PortalMapeador.createForIOWith(procesador, nodoCentral);
+		this.portalReceptor.recibirCon(new HandlerTipado<MensajeDeChat>(SiempreTrue.getInstancia()) {
+			public void onMensajeRecibido(MensajeDeChat mensaje) {
+				onMensajeRecibidoDesdeVortex(mensaje);
+			}
+		});
+
+		this.portalEmisor = PortalMapeador.createForIOWith(procesador, nodoCentral);
+	}
+
+	/**
+	 * Invocado en un thread de vortex al recibir un mensaje
+	 * 
+	 * @param mensaje
+	 *            El mensaje recibido en vortex
+	 */
+	protected void onMensajeRecibidoDesdeVortex(final MensajeDeChat mensaje) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				onMensajeRecibido(mensaje);
+			}
+		});
+	}
+
+	/**
+	 * Invocado al desconectarse del servicio vortex
+	 * 
+	 * @param disconnectedIntercomm
+	 */
+	protected void onVortexNoDisponible(VortexAndroidAccess vortexForAndroid) {
+		// Desconectamos el portal del nodo central
+		Nodo nodoCentral = vortexForAndroid.getNodoCentral();
+		this.portalEmisor.desconectarDe(nodoCentral);
+		this.portalReceptor.desconectarDe(nodoCentral);
 	}
 
 	/**
@@ -128,8 +191,12 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	 *            El texto que se enviará en el canal
 	 */
 	private void enviarMensaje(String textoAEnviar) {
-		MensajeDeChat mensaje = MensajeDeChat.create(textoAEnviar, "usuario");
-		onMensajeRecibido(mensaje);
+		if (portalEmisor == null) {
+			ToastHelper.create(getContext()).showLong("Aún no conectado a vortex");
+			return;
+		}
+		MensajeDeChat mensaje = MensajeDeChat.create(nombreDeUsuario, textoAEnviar, canalActual);
+		portalEmisor.enviar(mensaje);
 	}
 
 	/**

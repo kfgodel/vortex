@@ -31,6 +31,17 @@ public class VortexAndroidAccessImpl implements VortexAndroidAccess, Disposable 
 	private TaskProcessor processor;
 	private MultiplexorIdentificador nodoCentral;
 
+	public TaskProcessor getProcessor() {
+		return processor;
+	}
+
+	/**
+	 * @see net.gaia.vortex.android.service.VortexAndroidAccess#getProcesadorCentral()
+	 */
+	public TaskProcessor getProcesadorCentral() {
+		return getProcessor();
+	}
+
 	/**
 	 * @see net.gaia.vortex.android.service.VortexAndroidAccess#getNodoCentral()
 	 */

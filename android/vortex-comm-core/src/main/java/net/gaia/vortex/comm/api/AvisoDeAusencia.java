@@ -1,5 +1,5 @@
 /**
- * 09/07/2012 22:50:05 Copyright (C) 2011 Darío L. García
+ * 14/07/2012 19:18:41 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,38 +10,18 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.comm.model;
+package net.gaia.vortex.comm.api;
+
+import net.gaia.vortex.comm.impl.AvisoDePresentismoSupport;
 
 /**
- * Esta clase representa un mensaje de chat
+ * Esta clase representa un mensaje de notificación de que nos desconectamos
  * 
  * @author D. García
  */
-public class MensajeDeChat {
+public class AvisoDeAusencia extends AvisoDePresentismoSupport {
 
-	private String texto;
-	private String usuario;
-
-	public String getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
-
-	public String getTexto() {
-		return texto;
-	}
-
-	public void setTexto(String texto) {
-		this.texto = texto;
-	}
-
-	public static MensajeDeChat create(String texto, String usuario) {
-		MensajeDeChat mensaje = new MensajeDeChat();
-		mensaje.texto = texto;
-		mensaje.usuario = usuario;
-		return mensaje;
+	public AvisoDeAusencia() {
+		super(AVISO_DE_AUSENCIA);
 	}
 }

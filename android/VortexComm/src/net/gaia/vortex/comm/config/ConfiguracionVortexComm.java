@@ -25,7 +25,7 @@ public class ConfiguracionVortexComm {
 	/**
 	 * Canal inicial compartido
 	 */
-	private static final String CANAL_VORTEX_GLOBAL = "Global";
+	public static final String CANAL_VORTEX_GLOBAL = "Global";
 
 	private String nombreDeUsuario;
 	private String hostDelServidor;
