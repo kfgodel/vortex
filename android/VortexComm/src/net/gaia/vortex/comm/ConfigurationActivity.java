@@ -116,6 +116,7 @@ public class ConfigurationActivity extends CustomActivity {
 		String nombreDeUsuario = userTxt.getText().toString();
 		ConfiguracionVortexComm configuracion = repositorio.getConfiguracion();
 		configuracion.setNombreDeUsuario(nombreDeUsuario);
+		configuracion.agregarCanal(nombreDeUsuario);
 		configuracion.setHostDelServidor(hostDelServer);
 		configuracion.setNumeroDePuerto(numeroDePuerto);
 		repositorio.setConfiguracion(configuracion);

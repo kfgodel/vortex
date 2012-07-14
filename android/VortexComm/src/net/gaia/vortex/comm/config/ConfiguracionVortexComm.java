@@ -92,7 +92,21 @@ public class ConfiguracionVortexComm {
 		this.canalesDelUsuario = canalesDelUsuario;
 	}
 
+	/**
+	 * Agrega el texto como canal de esta configuración sólo si no estaba antes
+	 * 
+	 * @param nombreDelCanal
+	 *            El nombre a agregar
+	 */
 	public void agregarCanal(String nombreDelCanal) {
+		if (nombreDelCanal == null || nombreDelCanal.trim().length() == 0) {
+			// No agregamos cadenas vacias
+			return;
+		}
+		if (getCanalesDelUsuario().contains(nombreDelCanal)) {
+			// Ya está
+			return;
+		}
 		getCanalesDelUsuario().add(nombreDelCanal);
 	}
 

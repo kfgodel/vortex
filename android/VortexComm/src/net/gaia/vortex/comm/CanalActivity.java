@@ -73,7 +73,6 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 		vortexConnector = LocalServiceConnector.create(VortexProviderService.class);
 		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexAndroidAccess>() {
 			public void onServiceDisconnection(final VortexAndroidAccess disconnectedIntercomm) {
-				mostrarEstadoDeConexion(false);
 			}
 
 			public void onServiceConnection(final VortexAndroidAccess intercommObject) {
@@ -103,7 +102,6 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	 * @param vortexForAndroid
 	 */
 	protected void onVortexDisponible(VortexAndroidAccess vortexForAndroid) {
-		mostrarEstadoDeConexion(true);
 	}
 
 	/**
