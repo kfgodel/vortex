@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.android.service;
 
-import net.gaia.vortex.comm.api.VortexAndroid;
 import android.content.Intent;
 import ar.com.iron.android.extensions.services.BackgroundProcess;
 import ar.com.iron.android.extensions.services.BackgroundService;

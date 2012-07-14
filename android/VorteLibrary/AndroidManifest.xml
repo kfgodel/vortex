@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="ar.com.iron">
-      
-    <uses-sdk android:minSdkVersion="3"/>
-    
+    package="net.gaia.vortex.android.library"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="15" />
+
     <application>
         <!-- The activity tag here is currently not used. The main project 
              must currently redefine the activities to be used from the libraries.
@@ -12,5 +13,5 @@
              regular Android project.
         -->
     </application>
-    
+
 </manifest>
