@@ -16,6 +16,7 @@ import java.net.InetSocketAddress;
 
 import net.gaia.vortex.comm.config.ConfiguracionVortexComm;
 import net.gaia.vortex.comm.config.RepositorioDeConfiguracion;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,14 +63,21 @@ public class ConfigurationActivity extends CustomActivity {
 		});
 		WidgetHelper.habilitarBotonEnPresenciaDeTexto(guardarbutton, userTxt, hostTxt, portTxt);
 		repositorio = new RepositorioDeConfiguracion(getContext());
-		cargarValoresDesdeLaConfiguracion();
+		ConfiguracionVortexComm configuracion = repositorio.getConfiguracion();
+		cargarValoresDesdeLaConfiguracion(configuracion);
+		if (configuracion.estaCompleta()) {
+			// No es necesario pasar por esta pantalla
+			startActivity(new Intent(getContext(), CanalesActivity.class));
+			finish();
+		}
 	}
 
 	/**
 	 * Intenta cargar los valores actuales para cada uno de los campos desde la configuración
+	 * 
+	 * @param configuracion2
 	 */
-	private void cargarValoresDesdeLaConfiguracion() {
-		ConfiguracionVortexComm configuracion = repositorio.getConfiguracion();
+	private void cargarValoresDesdeLaConfiguracion(ConfiguracionVortexComm configuracion) {
 		String hostDelServidor = configuracion.getHostDelServidor();
 		this.hostTxt.setText(hostDelServidor);
 

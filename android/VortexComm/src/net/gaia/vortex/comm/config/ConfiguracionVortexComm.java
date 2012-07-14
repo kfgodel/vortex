@@ -58,4 +58,16 @@ public class ConfiguracionVortexComm {
 		config.numeroDePuerto = 61616;
 		return config;
 	}
+
+	/**
+	 * Indica si esta configuración puede ser usada
+	 * 
+	 * @return false si hay algun campo por definir
+	 */
+	public boolean estaCompleta() {
+		boolean tieneNombre = getNombreDeUsuario() != null && getNombreDeUsuario().trim().length() > 0;
+		boolean tieneHost = getHostDelServidor() != null && getHostDelServidor().trim().length() > 0;
+		boolean tienePuerto = getNumeroDePuerto() != null;
+		return tieneNombre && tieneHost && tienePuerto;
+	}
 }
