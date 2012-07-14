@@ -65,11 +65,22 @@ public class ConfigurationActivity extends CustomActivity {
 		repositorio = new RepositorioDeConfiguracion(getContext());
 		ConfiguracionVortexComm configuracion = repositorio.getConfiguracion();
 		cargarValoresDesdeLaConfiguracion(configuracion);
-		if (configuracion.estaCompleta()) {
-			// No es necesario pasar por esta pantalla
-			startActivity(new Intent(getContext(), CanalesActivity.class));
-			finish();
+		pasarACanalesSiConfigCompleta(configuracion);
+	}
+
+	/**
+	 * Si la configuración está completa, cierra esta pantalla y pasa a la de canales
+	 * 
+	 * @param configuracion
+	 *            La configuración a evaluar
+	 */
+	private void pasarACanalesSiConfigCompleta(ConfiguracionVortexComm configuracion) {
+		if (!configuracion.estaCompleta()) {
+			// Todavía quedan cosas por definir
+			return;
 		}
+		// Ya podemos ir a la vista de canales
+		startActivity(new Intent(getContext(), CanalesActivity.class));
 	}
 
 	/**
@@ -110,6 +121,7 @@ public class ConfigurationActivity extends CustomActivity {
 		repositorio.setConfiguracion(configuracion);
 		repositorio.saveChanges();
 		ToastHelper.create(getContext()).showShort("Configuración guardada!");
+		pasarACanalesSiConfigCompleta(configuracion);
 	}
 
 	/**
