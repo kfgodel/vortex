@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.comm.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Esta clase representa la configuración de vortex comm
  * 
@@ -19,9 +22,15 @@ package net.gaia.vortex.comm.config;
  */
 public class ConfiguracionVortexComm {
 
+	/**
+	 * Canal inicial compartido
+	 */
+	private static final String CANAL_VORTEX_GLOBAL = "Global";
+
 	private String nombreDeUsuario;
 	private String hostDelServidor;
 	private Integer numeroDePuerto;
+	private List<String> canalesDelUsuario;
 
 	public String getNombreDeUsuario() {
 		return nombreDeUsuario;
@@ -56,6 +65,7 @@ public class ConfiguracionVortexComm {
 		ConfiguracionVortexComm config = new ConfiguracionVortexComm();
 		config.hostDelServidor = "kfgodel.info";
 		config.numeroDePuerto = 61616;
+		config.agregarCanal(CANAL_VORTEX_GLOBAL);
 		return config;
 	}
 
@@ -69,5 +79,24 @@ public class ConfiguracionVortexComm {
 		boolean tieneHost = getHostDelServidor() != null && getHostDelServidor().trim().length() > 0;
 		boolean tienePuerto = getNumeroDePuerto() != null;
 		return tieneNombre && tieneHost && tienePuerto;
+	}
+
+	public List<String> getCanalesDelUsuario() {
+		if (canalesDelUsuario == null) {
+			canalesDelUsuario = new ArrayList<String>();
+		}
+		return canalesDelUsuario;
+	}
+
+	public void setCanalesDelUsuario(List<String> canalesDelUsuario) {
+		this.canalesDelUsuario = canalesDelUsuario;
+	}
+
+	public void agregarCanal(String nombreDelCanal) {
+		getCanalesDelUsuario().add(nombreDelCanal);
+	}
+
+	public void quitarCanal(String nombreDelCanal) {
+		getCanalesDelUsuario().remove(nombreDelCanal);
 	}
 }

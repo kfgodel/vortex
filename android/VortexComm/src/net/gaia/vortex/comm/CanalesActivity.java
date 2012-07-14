@@ -17,6 +17,8 @@ import java.util.List;
 
 import net.gaia.vortex.android.service.VortexAndroidAccess;
 import net.gaia.vortex.android.service.VortexProviderService;
+import net.gaia.vortex.comm.config.ConfiguracionVortexComm;
+import net.gaia.vortex.comm.config.RepositorioDeConfiguracion;
 import net.gaia.vortex.comm.model.Canal;
 
 import org.slf4j.Logger;
@@ -83,6 +85,20 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 		});
 		vortexConnector.bindToService(this);
 
+		cargarCanalesDesdeConfig();
+	}
+
+	/**
+	 * Carga los canales definidos en la configuración
+	 */
+	private void cargarCanalesDesdeConfig() {
+		RepositorioDeConfiguracion repo = new RepositorioDeConfiguracion(getContext());
+		ConfiguracionVortexComm configuracionActual = repo.getConfiguracion();
+		List<String> canalesDelUsuario = configuracionActual.getCanalesDelUsuario();
+		for (String nombreDelCanal : canalesDelUsuario) {
+			Canal canal = Canal.create(nombreDelCanal);
+			canales.add(canal);
+		}
 	}
 
 	/**
