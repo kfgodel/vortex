@@ -157,6 +157,21 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 		Canal nuevoCanal = Canal.create(nombreDelCanal);
 		canales.add(nuevoCanal);
 		notificarCambioEnLosDatos();
+		agregarCanalEnConfig(nombreDelCanal);
+	}
+
+	/**
+	 * Agrega el canal en al configuración de la app
+	 * 
+	 * @param nombreDelCanal
+	 *            El nombre del canal a agregar
+	 */
+	private void agregarCanalEnConfig(String nombreDelCanal) {
+		RepositorioDeConfiguracion repo = new RepositorioDeConfiguracion(getContext());
+		ConfiguracionVortexComm configuracionActual = repo.getConfiguracion();
+		configuracionActual.agregarCanal(nombreDelCanal);
+		repo.setConfiguracion(configuracionActual);
+		repo.saveChanges();
 	}
 
 	/**
@@ -243,7 +258,23 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	private void quitarCanal(Canal canalRemovido) {
 		canales.remove(canalRemovido);
 		notificarCambioEnLosDatos();
-		ToastHelper.create(getContext()).showShort("Quitado canal: " + canalRemovido.getNombreDelCanal());
+		String nombreDelCanal = canalRemovido.getNombreDelCanal();
+		quitarCanalDeLaConfig(nombreDelCanal);
+		ToastHelper.create(getContext()).showShort("Quitado canal: " + nombreDelCanal);
+	}
+
+	/**
+	 * Quita el canal de la configuración de la app
+	 * 
+	 * @param nombreDelCanal
+	 *            El canal a quitar
+	 */
+	private void quitarCanalDeLaConfig(String nombreDelCanal) {
+		RepositorioDeConfiguracion repo = new RepositorioDeConfiguracion(getContext());
+		ConfiguracionVortexComm configuracionActual = repo.getConfiguracion();
+		configuracionActual.quitarCanal(nombreDelCanal);
+		repo.setConfiguracion(configuracionActual);
+		repo.saveChanges();
 	}
 
 	/**
