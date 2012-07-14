@@ -15,8 +15,8 @@ package net.gaia.vortex.comm;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.gaia.vortex.android.service.VortexAndroid;
-import net.gaia.vortex.android.service.VortexService;
+import net.gaia.vortex.android.service.VortexAndroidAccess;
+import net.gaia.vortex.android.service.VortexProviderService;
 import net.gaia.vortex.comm.model.Canal;
 
 import org.slf4j.Logger;
@@ -51,7 +51,7 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	private final List<Canal> canales = new ArrayList<Canal>();
 	private EditText canalTxt;
 	private ImageView conectadoImg;
-	private LocalServiceConnector<VortexAndroid> vortexConnector;
+	private LocalServiceConnector<VortexAndroidAccess> vortexConnector;
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.CustomListActivity#setUpComponents()
@@ -71,14 +71,13 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 		mostrarEstadoDeConexion(false);
 
 		// Intentamos conectarnos con el servicio vortex
-		vortexConnector = LocalServiceConnector.create(VortexService.class);
-		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexAndroid>() {
-			public void onServiceDisconnection(final VortexAndroid disconnectedIntercomm) {
-				LOG.info("El canal se desconecto del servicio vortex");
+		vortexConnector = LocalServiceConnector.create(VortexProviderService.class);
+		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexAndroidAccess>() {
+			public void onServiceDisconnection(final VortexAndroidAccess disconnectedIntercomm) {
 				mostrarEstadoDeConexion(false);
 			}
 
-			public void onServiceConnection(final VortexAndroid intercommObject) {
+			public void onServiceConnection(final VortexAndroidAccess intercommObject) {
 				onVortexDisponible(intercommObject);
 			}
 		});
@@ -91,7 +90,7 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	 * 
 	 * @param vortexForAndroid
 	 */
-	protected void onVortexDisponible(VortexAndroid vortexForAndroid) {
+	protected void onVortexDisponible(VortexAndroidAccess vortexForAndroid) {
 		mostrarEstadoDeConexion(true);
 	}
 

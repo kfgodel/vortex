@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.android.service;
 
-import net.gaia.vortex.android.service.impl.VortexAndroidImpl;
+import net.gaia.vortex.android.service.impl.VortexAndroidAccessImpl;
 import android.content.Intent;
 import ar.com.iron.android.extensions.services.BackgroundProcess;
 import ar.com.iron.android.extensions.services.BackgroundService;
@@ -20,26 +20,26 @@ import ar.com.iron.android.extensions.services.local.LocalServiceBinder;
 import ar.com.iron.android.extensions.services.local.LocallyBindableService;
 
 /**
- * Esta clase implementa un servicio android que permite acceder a vortex como recurso que opera en
- * background
+ * Esta clase implementa el servicio de android que permite acceder a vortex como un pedazo de la
+ * red, y extenderla con nuevos nodos
  * 
  * @author D. García
  */
-public class VortexService extends BackgroundService implements LocallyBindableService<VortexAndroid> {
+public class VortexProviderService extends BackgroundService implements LocallyBindableService<VortexAndroidAccess> {
 
 	/**
 	 * Permite el enlace con los otros componentes de android
 	 */
-	private LocalServiceBinder<VortexAndroid> serviceBinder;
+	private LocalServiceBinder<VortexAndroidAccess> serviceBinder;
 
-	private VortexAndroidImpl vortex;
+	private VortexAndroidAccessImpl vortex;
 
 	/**
 	 * @see ar.com.iron.android.extensions.services.BackgroundService#beforeProcessStart()
 	 */
 	@Override
 	protected void beforeProcessStart() {
-		vortex = VortexAndroidImpl.create();
+		vortex = VortexAndroidAccessImpl.create();
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class VortexService extends BackgroundService implements LocallyBindableS
 	 */
 	@Override
 	protected void afterProcessStart() {
-		serviceBinder = LocalServiceBinder.<VortexAndroid> create(vortex);
+		serviceBinder = LocalServiceBinder.<VortexAndroidAccess> create(vortex);
 	}
 
 	/**
@@ -55,14 +55,14 @@ public class VortexService extends BackgroundService implements LocallyBindableS
 	 */
 	@Override
 	protected BackgroundProcess createBackgroundThread() {
-		return new BackgroundProcess(this, "VortexService");
+		return new BackgroundProcess(this, "VortexProviderService");
 	}
 
 	/**
 	 * @see ar.com.iron.android.extensions.services.BackgroundService#onBind(android.content.Intent)
 	 */
 	@Override
-	public LocalServiceBinder<VortexAndroid> onBind(Intent intent) {
+	public LocalServiceBinder<VortexAndroidAccess> onBind(Intent intent) {
 		return serviceBinder;
 	}
 

@@ -33,7 +33,7 @@
         </activity>
         
     	<!-- El servicio que permite la conectividad con Vortex -->
-    	<service android:name="net.gaia.vortex.android.service.VortexService" android:exported="false" />
+    	<service android:name="net.gaia.vortex.android.service.VortexProviderService" android:exported="false" />
         
     </application>
 

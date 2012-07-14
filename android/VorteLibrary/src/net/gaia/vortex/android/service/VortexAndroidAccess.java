@@ -12,14 +12,26 @@
  */
 package net.gaia.vortex.android.service;
 
+import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
+
 /**
  * Esta interfaz define los puntos de entrada y de uso principales de vortex desde una aplicación
  * android.<br>
  * La implementación de esta interfaz ofrecerá métodos para que la aplicación android acceda a los
- * conectores de vortex que funcionan en el servicio
+ * conectores de vortex que funcionan en background
  * 
  * @author D. García
  */
-public interface VortexAndroid {
+public interface VortexAndroidAccess {
 
+	/**
+	 * Devuelve el nodo central administrado por el servicio en background, al cual se le pueden
+	 * conectar más nodos para agregar funcionalidad.<br>
+	 * El nodo es una instancia de {@link MultiplexorIdentificador} que identifica los mensajes
+	 * recibidos evitando duplicados
+	 * 
+	 * @return El nodo central de vortex
+	 */
+	public Nodo getNodoCentral();
 }
