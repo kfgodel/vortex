@@ -4,7 +4,7 @@
     android:versionCode="4"
     android:versionName="2.0" >
 
-    <uses-sdk android:minSdkVersion="7" />
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="15" />
 
     <!-- Permiso para acceder a vortex -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -31,6 +31,9 @@
             android:name=".CanalActivity"
             android:label="Canal" >
         </activity>
+        
+    	<!-- El servicio que permite la conectividad con Vortex -->
+    	<service android:name="net.gaia.vortex.android.service.VortexService" android:exported="false" />
         
     </application>
 

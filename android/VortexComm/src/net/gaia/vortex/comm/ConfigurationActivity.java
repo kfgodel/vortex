@@ -16,6 +16,7 @@ import java.net.InetSocketAddress;
 
 import net.gaia.vortex.comm.config.ConfiguracionVortexComm;
 import net.gaia.vortex.comm.config.RepositorioDeConfiguracion;
+import android.os.AsyncTask;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -112,14 +113,27 @@ public class ConfigurationActivity extends CustomActivity {
 	 * @param numeroDePuerto
 	 *            El numero de puerto a probar
 	 */
-	private void validarHost(String hostDelServer, Integer numeroDePuerto) {
-		InetSocketAddress hostAddress = new InetSocketAddress(hostDelServer, numeroDePuerto);
-		boolean unresolved = hostAddress.isUnresolved();
-		if (unresolved) {
-			ToastHelper.create(getContext()).showLong(
-					"No fue posible conectar con el host[" + hostDelServer + ":" + numeroDePuerto
-							+ "] al validar los datos");
-		}
+	private void validarHost(final String hostDelServer, final Integer numeroDePuerto) {
+		// A partir de la 3.0 no está permitido invocar red en el thread principal y no podemos
+		// validar en el main
+		AsyncTask<Void, Void, Boolean> validationTask = new AsyncTask<Void, Void, Boolean>() {
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				InetSocketAddress hostAddress = new InetSocketAddress(hostDelServer, numeroDePuerto);
+				boolean unresolved = hostAddress.isUnresolved();
+				return unresolved;
+			}
+
+			@Override
+			protected void onPostExecute(Boolean unresolved) {
+				if (unresolved) {
+					ToastHelper.create(getContext()).showLong(
+							"No fue posible conectar con el host[" + hostDelServer + ":" + numeroDePuerto
+									+ "] al validar los datos");
+				}
+			}
+		};
+		validationTask.execute();
 	}
 
 	/**

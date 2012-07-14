@@ -15,7 +15,13 @@ package net.gaia.vortex.comm;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.gaia.vortex.android.service.VortexAndroid;
+import net.gaia.vortex.android.service.VortexService;
 import net.gaia.vortex.comm.model.Canal;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +33,8 @@ import android.widget.TextView;
 import ar.com.iron.android.extensions.activities.CustomListActivity;
 import ar.com.iron.android.extensions.activities.model.CustomableListActivity;
 import ar.com.iron.android.extensions.adapters.RenderBlock;
+import ar.com.iron.android.extensions.services.local.LocalServiceConnectionListener;
+import ar.com.iron.android.extensions.services.local.LocalServiceConnector;
 import ar.com.iron.android.helpers.WidgetHelper;
 import ar.com.iron.helpers.ToastHelper;
 import ar.com.iron.helpers.ViewHelper;
@@ -38,9 +46,12 @@ import ar.com.iron.menues.ContextMenuItem;
  * @author D. García
  */
 public class CanalesActivity extends CustomListActivity<Canal> {
+	private static final Logger LOG = LoggerFactory.getLogger(CanalesActivity.class);
 
 	private final List<Canal> canales = new ArrayList<Canal>();
 	private EditText canalTxt;
+	private ImageView conectadoImg;
+	private LocalServiceConnector<VortexAndroid> vortexConnector;
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.CustomListActivity#setUpComponents()
@@ -55,6 +66,56 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 			}
 		});
 		WidgetHelper.habilitarBotonEnPresenciaDeTexto(agregarBtn, canalTxt);
+
+		conectadoImg = ViewHelper.findImageView(R.id.conectadoImg, getContentView());
+		mostrarEstadoDeConexion(false);
+
+		// Intentamos conectarnos con el servicio vortex
+		vortexConnector = LocalServiceConnector.create(VortexService.class);
+		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexAndroid>() {
+			public void onServiceDisconnection(final VortexAndroid disconnectedIntercomm) {
+				LOG.info("El canal se desconecto del servicio vortex");
+				mostrarEstadoDeConexion(false);
+			}
+
+			public void onServiceConnection(final VortexAndroid intercommObject) {
+				onVortexDisponible(intercommObject);
+			}
+		});
+		vortexConnector.bindToService(this);
+
+	}
+
+	/**
+	 * Invocado al disponer de la conexión con vortex
+	 * 
+	 * @param vortexForAndroid
+	 */
+	protected void onVortexDisponible(VortexAndroid vortexForAndroid) {
+		mostrarEstadoDeConexion(true);
+	}
+
+	/**
+	 * @see ar.com.iron.android.extensions.activities.CustomListActivity#onDestroy()
+	 */
+	@Override
+	protected void onDestroy() {
+		vortexConnector.unbindFromService(this);
+		super.onDestroy();
+	}
+
+	/**
+	 * Cambia el estado del icono de conexión
+	 * 
+	 * @param conectado
+	 *            true si se debe mostrar conectado, false si desconectado
+	 */
+	private void mostrarEstadoDeConexion(boolean conectado) {
+		int resourceId = R.drawable.ic_status_disconnected;
+		if (conectado) {
+			resourceId = R.drawable.ic_status_connected;
+		}
+		conectadoImg.setImageResource(resourceId);
 	}
 
 	/**

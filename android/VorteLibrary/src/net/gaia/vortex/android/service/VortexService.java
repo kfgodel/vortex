@@ -12,13 +12,12 @@
  */
 package net.gaia.vortex.android.service;
 
+import net.gaia.vortex.android.service.impl.VortexAndroidImpl;
 import android.content.Intent;
 import ar.com.iron.android.extensions.services.BackgroundProcess;
 import ar.com.iron.android.extensions.services.BackgroundService;
 import ar.com.iron.android.extensions.services.local.LocalServiceBinder;
 import ar.com.iron.android.extensions.services.local.LocallyBindableService;
-import ar.com.iron.persistence.PersistenceDao;
-import ar.com.iron.persistence.PersistenceEngineVariable;
 
 /**
  * Esta clase implementa un servicio android que permite acceder a vortex como recurso que opera en
@@ -33,14 +32,14 @@ public class VortexService extends BackgroundService implements LocallyBindableS
 	 */
 	private LocalServiceBinder<VortexAndroid> serviceBinder;
 
+	private VortexAndroidImpl vortex;
+
 	/**
 	 * @see ar.com.iron.android.extensions.services.BackgroundService#beforeProcessStart()
 	 */
 	@Override
 	protected void beforeProcessStart() {
-		// deberia conectar a vortex?
-		// Si no hay conectividad?
-		persistenceEngine = PersistenceEngineVariable.getInstance();
+		vortex = VortexAndroidImpl.create();
 	}
 
 	/**
@@ -48,9 +47,7 @@ public class VortexService extends BackgroundService implements LocallyBindableS
 	 */
 	@Override
 	protected void afterProcessStart() {
-		PersistenceDao dao = persistenceEngine.getDao();
-		dao.setBackgroundProcess(getBackgroundProcess());
-		serviceBinder = LocalServiceBinder.create(dao);
+		serviceBinder = LocalServiceBinder.<VortexAndroid> create(vortex);
 	}
 
 	/**
@@ -65,7 +62,7 @@ public class VortexService extends BackgroundService implements LocallyBindableS
 	 * @see ar.com.iron.android.extensions.services.BackgroundService#onBind(android.content.Intent)
 	 */
 	@Override
-	public LocalServiceBinder<VortexService> onBind(Intent intent) {
+	public LocalServiceBinder<VortexAndroid> onBind(Intent intent) {
 		return serviceBinder;
 	}
 
@@ -74,7 +71,7 @@ public class VortexService extends BackgroundService implements LocallyBindableS
 	 */
 	@Override
 	public boolean onUnbind(Intent intent) {
-		persistenceEngine.releaseResources();
+		vortex.closeAndDispose();
 
 		// Queremos que vuelvan a invocar onBind
 		return false;
