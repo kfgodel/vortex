@@ -19,12 +19,8 @@ import net.gaia.vortex.android.service.VortexAndroidAccess;
 import net.gaia.vortex.android.service.VortexProviderService;
 import net.gaia.vortex.comm.config.ConfiguracionVortexComm;
 import net.gaia.vortex.comm.config.RepositorioDeConfiguracion;
+import net.gaia.vortex.comm.intents.AbrirCanalIntent;
 import net.gaia.vortex.comm.model.Canal;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,8 +44,6 @@ import ar.com.iron.menues.ContextMenuItem;
  * @author D. García
  */
 public class CanalesActivity extends CustomListActivity<Canal> {
-	private static final Logger LOG = LoggerFactory.getLogger(CanalesActivity.class);
-
 	private final List<Canal> canales = new ArrayList<Canal>();
 	private EditText canalTxt;
 	private ImageView conectadoImg;
@@ -234,7 +228,8 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	 *            El canal a abrir
 	 */
 	private void abrirCanal(Canal canalAbierto) {
-		startActivity(new Intent(getContext(), CanalActivity.class));
+		String nombreDelCanal = canalAbierto.getNombreDelCanal();
+		startActivity(new AbrirCanalIntent(getContext(), nombreDelCanal));
 	}
 
 	/**

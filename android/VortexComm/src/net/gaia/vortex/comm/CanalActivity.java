@@ -21,15 +21,12 @@ import net.gaia.vortex.android.service.VortexProviderService;
 import net.gaia.vortex.comm.api.MensajeDeChat;
 import net.gaia.vortex.comm.config.ConfiguracionVortexComm;
 import net.gaia.vortex.comm.config.RepositorioDeConfiguracion;
+import net.gaia.vortex.comm.intents.AbrirCanalIntent;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,8 +50,6 @@ import ar.com.iron.menues.ContextMenuItem;
  * @author D. García
  */
 public class CanalActivity extends CustomListActivity<MensajeDeChat> {
-	private static final Logger LOG = LoggerFactory.getLogger(CanalActivity.class);
-
 	private final List<MensajeDeChat> mensajes = new ArrayList<MensajeDeChat>();
 	private EditText textoTxt;
 	private LocalServiceConnector<VortexAndroidAccess> vortexConnector;
@@ -70,7 +65,12 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	 */
 	@Override
 	public void setUpComponents() {
-		canalActual = ConfiguracionVortexComm.CANAL_VORTEX_GLOBAL;
+		AbrirCanalIntent intentRecibido = new AbrirCanalIntent(getIntent());
+		canalActual = intentRecibido.getNombreDelCanal();
+
+		TextView nombreCanalTxt = ViewHelper.findTextView(R.id.nombreCanalTxt, getContentView());
+		nombreCanalTxt.setText(canalActual);
+
 		textoTxt = ViewHelper.findEditText(R.id.textoTxt, getContentView());
 		Button agregarBtn = ViewHelper.findButton(R.id.enviarBtn, getContentView());
 		agregarBtn.setOnClickListener(new OnClickListener() {
