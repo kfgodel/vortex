@@ -12,11 +12,19 @@
  */
 package net.gaia.vortex.portal.impl.moleculas;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
+import java.util.Arrays;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.portal.api.moleculas.HandlerDePortal;
+import ar.com.dgarcia.coding.anno.MayBeNull;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
-import ar.com.dgarcia.lang.reflection.ReflectionUtils;
 
 /**
  * Esta clase es la implementación abstracta del handler de portal que deduce su tipo a partir del
@@ -47,8 +55,7 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Class<T> getTipoEsperado() {
-		final Class<?> tipoEsperado = ReflectionUtils.getConcreteTypeForFirstParameterOf(HandlerTipado.class,
-				getClass());
+		final Class<?> tipoEsperado = getConcreteTypeForFirstParameterOf(HandlerTipado.class, getClass());
 		if (tipoEsperado == null) {
 			throw new UnhandledConditionException(
 					"No fue posible determinar el tipo esperado de mensaje para el handler[" + this
@@ -76,4 +83,102 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 		this.condicionNecesaria = condicionNecesaria;
 	}
 
+	/**
+	 * Busca de la clase pasada como parametrizable, el primer valor concreto con el cual está
+	 * parametrizada una subclase pasada como segundo parámetro.<br>
+	 * Si la segunda clase no es subclase de la primera, o la primera no es parametrizable no se
+	 * encontrará el valor del parámetro y por lo tanto se devuelve null
+	 */
+	@MayBeNull
+	public static Class<?> getConcreteTypeForFirstParameterOf(final Class<?> parametrizableType, final Class<?> subclass) {
+		final String parametrizableClassname = parametrizableType.getName();
+
+		final Queue<Type> possibleTypes = new LinkedBlockingQueue<Type>();
+		possibleTypes.add(subclass);
+
+		while (!possibleTypes.isEmpty()) {
+			final Type currentType = possibleTypes.poll();
+			final Class<?> currentClass = degenerify(currentType);
+			final String currentClassname = currentClass.getName();
+			if (currentClassname.equals(parametrizableClassname)) {
+				// Es la clase que estabamos buscando
+				final Class<?> firstParameterClass = getFirstTypeParameterAsClass(currentType);
+				return firstParameterClass;
+			}
+
+			// Seguimos buscando en la jerarquía
+			final Type genericSuperclass = currentClass.getGenericSuperclass();
+			if (genericSuperclass != null) {
+				possibleTypes.add(genericSuperclass);
+			}
+			final Type[] genericInterfaces = currentClass.getGenericInterfaces();
+			possibleTypes.addAll(Arrays.asList(genericInterfaces));
+		}
+
+		return null;
+	}
+
+	/**
+	 * Devuelve el primer parámetro de tipo del {@link Type} pasado e interpretado como
+	 * {@link ParameterizedType}.<br>
+	 * Devuelve <b>null</b> en caso de que el tipo sea parametrizable pero no tenga ningún parámetro
+	 * asociado<br>
+	 * En caso de que el tipo no sea parametrizable se lanza una excepción.
+	 * 
+	 * @param type
+	 *            Tipo del cual se desea extraer el parámetro
+	 * @return Primer parámetro del tipo. null en caso de que sea parametrizable pero no tenga
+	 *         ningún parámetro asociado
+	 * @throws IllegalArgumentException
+	 *             En caso de que el tipo no sea parametrizable
+	 */
+	@MayBeNull
+	private static Class<?> getFirstTypeParameterAsClass(final Type type) throws IllegalArgumentException {
+		if (!(type instanceof ParameterizedType)) {
+			throw new IllegalArgumentException("El tipo [" + type
+					+ "] no es parametrizado por lo tanto no es posible devolver el primer parámetro");
+		}
+		final Type[] parameters = ((ParameterizedType) type).getActualTypeArguments();
+		if (parameters.length < 1) {
+			// El tipo es parametrizable, pero no tiene ningún parámetro
+			return null;
+		}
+		final Type parameterType = parameters[0];
+		final Class<?> returnClass = degenerify(parameterType);
+		return returnClass;
+	}
+
+	/**
+	 * Devuelve la clase que representa el tipo basico del tipo pasado sin los parametros genericos
+	 * 
+	 * @param genericType
+	 *            Tipo generificado
+	 * @return La instancia de clase que representa el tipo pasado o null si no se pudo obtener un
+	 *         tipo concreto del tipo pasado
+	 */
+	public static Class<?> degenerify(final Type genericType) {
+		if (genericType instanceof Class) {
+			return (Class<?>) genericType;
+		}
+		if (genericType instanceof ParameterizedType) {
+			final ParameterizedType parameterized = (ParameterizedType) genericType;
+			return (Class<?>) parameterized.getRawType();
+		}
+		if (genericType instanceof TypeVariable) {
+			final TypeVariable<?> typeVariable = (TypeVariable<?>) genericType;
+			return (Class<?>) typeVariable.getBounds()[0];
+		}
+		if (genericType instanceof WildcardType) {
+			final WildcardType wildcard = (WildcardType) genericType;
+			final Type[] upperBounds = wildcard.getUpperBounds();
+			if (upperBounds.length > 0) {
+				return degenerify(upperBounds[0]);
+			}
+			final Type[] lowerBounds = wildcard.getLowerBounds();
+			if (lowerBounds.length > 0) {
+				return degenerify(lowerBounds[0]);
+			}
+		}
+		return null;
+	}
 }
