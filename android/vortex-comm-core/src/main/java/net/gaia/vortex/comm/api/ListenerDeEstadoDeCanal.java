@@ -1,5 +1,5 @@
 /**
- * 14/07/2012 19:19:12 Copyright (C) 2011 Darío L. García
+ * 15/07/2012 00:15:34 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,33 +12,22 @@
  */
 package net.gaia.vortex.comm.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.gaia.vortex.comm.impl.VortexCommMessageSupport;
-
 /**
- * Esta clase representa un pedido a otros de que informen su estado de conexión
+ * Esta interfaz representa un listener que permite recibir notificaciones al cambiar el estado del
+ * canal
  * 
  * @author D. García
  */
-public class PedidoDePresencia extends VortexCommMessageSupport {
+public interface ListenerDeEstadoDeCanal {
 
-	public PedidoDePresencia() {
-		super(PEDIDO_DE_PRESENCIA);
-	}
+	/**
+	 * Invocado cuando no quedan otros clientes en el canal
+	 */
+	void onCanalVacio();
 
-	private List<String> canales;
-
-	public List<String> getCanales() {
-		if (canales == null) {
-			canales = new ArrayList<String>();
-		}
-		return canales;
-	}
-
-	public void setCanales(List<String> canales) {
-		this.canales = canales;
-	}
+	/**
+	 * Invocado cuando aparecen otros clientes en el canal
+	 */
+	void onCanalHabitado();
 
 }

@@ -10,9 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.comm.api;
+package net.gaia.vortex.comm.api.messages;
 
-import net.gaia.vortex.comm.impl.VortexCommMessageSupport;
+import net.gaia.vortex.comm.impl.messages.VortexCommMessageSupport;
 
 /**
  * Esta clase representa el mensaje de chat enviado desde un cliente para ser recibido por otros

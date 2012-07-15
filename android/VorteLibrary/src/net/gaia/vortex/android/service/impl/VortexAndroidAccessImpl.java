@@ -15,9 +15,8 @@ package net.gaia.vortex.android.service.impl;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.android.service.VortexAndroidAccess;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
-import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
+import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import ar.dgarcia.objectsockets.api.Disposable;
 
 /**
@@ -29,7 +28,7 @@ import ar.dgarcia.objectsockets.api.Disposable;
 public class VortexAndroidAccessImpl implements VortexAndroidAccess, Disposable {
 
 	private TaskProcessor processor;
-	private MultiplexorIdentificador nodoCentral;
+	private NodoMultiplexor nodoCentral;
 
 	public TaskProcessor getProcessor() {
 		return processor;
@@ -42,22 +41,18 @@ public class VortexAndroidAccessImpl implements VortexAndroidAccess, Disposable 
 		return getProcessor();
 	}
 
-	/**
-	 * @see net.gaia.vortex.android.service.VortexAndroidAccess#getNodoCentral()
-	 */
-	public MultiplexorIdentificador getNodoCentral() {
+	public NodoMultiplexor getNodoCentral() {
 		return nodoCentral;
 	}
 
-	public void setNodoCentral(MultiplexorIdentificador nodoCentral) {
+	public void setNodoCentral(NodoMultiplexor nodoCentral) {
 		this.nodoCentral = nodoCentral;
 	}
 
 	public static VortexAndroidAccessImpl create() {
 		VortexAndroidAccessImpl impl = new VortexAndroidAccessImpl();
 		impl.processor = ExecutorBasedTaskProcesor.createOptimun();
-		IdentificadorVortex identificador = GeneradorDeIdsEstaticos.getInstancia().generarId();
-		impl.nodoCentral = MultiplexorIdentificador.create(impl.processor, identificador);
+		impl.nodoCentral = NodoMultiplexor.create(impl.processor);
 		return impl;
 	}
 

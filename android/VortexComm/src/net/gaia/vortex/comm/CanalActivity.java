@@ -18,7 +18,7 @@ import java.util.List;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.android.service.VortexAndroidAccess;
 import net.gaia.vortex.android.service.VortexProviderService;
-import net.gaia.vortex.comm.api.MensajeDeChat;
+import net.gaia.vortex.comm.api.messages.MensajeDeChat;
 import net.gaia.vortex.comm.config.ConfiguracionVortexComm;
 import net.gaia.vortex.comm.config.RepositorioDeConfiguracion;
 import net.gaia.vortex.comm.intents.AbrirCanalIntent;

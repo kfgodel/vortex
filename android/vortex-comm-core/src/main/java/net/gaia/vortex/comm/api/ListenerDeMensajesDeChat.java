@@ -1,5 +1,5 @@
 /**
- * 14/07/2012 19:17:58 Copyright (C) 2011 Darío L. García
+ * 14/07/2012 23:48:23 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,16 +12,22 @@
  */
 package net.gaia.vortex.comm.api;
 
-import net.gaia.vortex.comm.impl.AvisoDePresentismoSupport;
+import net.gaia.vortex.comm.api.messages.MensajeDeChat;
 
 /**
- * Esta clase representa un mensaje de aviso a otros clientes conectados de que nos conectamos
+ * Esta interfaz define los metodos que debe implementar el listener para enterarse de las novedades
+ * de un canal
  * 
  * @author D. García
  */
-public class AvisoDePresencia extends AvisoDePresentismoSupport {
+public interface ListenerDeMensajesDeChat {
 
-	public AvisoDePresencia() {
-		super(AVISO_DE_PRESENCIA);
-	}
+	/**
+	 * Invocado al recibir un nuevo mensaje de chat
+	 * 
+	 * @param mensaje
+	 *            El mensaje recibido
+	 */
+	void onMensajeNuevo(MensajeDeChat mensaje);
+
 }
