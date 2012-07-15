@@ -15,6 +15,7 @@ package net.gaia.vortex.android.service;
 import java.net.InetSocketAddress;
 
 import net.gaia.vortex.android.service.impl.VortexConnectionImpl;
+import net.gaia.vortex.android.service.intents.CambioDeConectividadVortex;
 import net.gaia.vortex.android.service.intents.ConectarConServidorVortex;
 import net.gaia.vortex.core.api.Nodo;
 import android.content.Intent;
@@ -82,6 +83,7 @@ public class VortexConectorService extends BackgroundService {
 					// Es la primera vez o cambio la red, nos reconectamos
 					connection.reconectarAlServidor();
 				}
+				sendBroadcast(new CambioDeConectividadVortex(connected));
 			}
 		}, intentReceptor);
 	}

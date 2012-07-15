@@ -18,11 +18,14 @@ import java.util.List;
 import net.gaia.vortex.android.service.VortexAndroidAccess;
 import net.gaia.vortex.android.service.VortexConectorService;
 import net.gaia.vortex.android.service.VortexProviderService;
+import net.gaia.vortex.android.service.intents.CambioDeConectividadVortex;
 import net.gaia.vortex.android.service.intents.ConectarConServidorVortex;
 import net.gaia.vortex.comm.config.ConfiguracionVortexComm;
 import net.gaia.vortex.comm.config.RepositorioDeConfiguracion;
 import net.gaia.vortex.comm.intents.AbrirCanalIntent;
 import net.gaia.vortex.comm.model.Canal;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -317,4 +320,26 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 		return null;
 	}
 
+	/**
+	 * @see ar.com.iron.android.extensions.activities.CustomListActivity#initMessageReceivers()
+	 */
+	@Override
+	public void initMessageReceivers() {
+		registerMessageReceiver(CambioDeConectividadVortex.ACTION, new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				CambioDeConectividadVortex mensaje = new CambioDeConectividadVortex(intent);
+				onCambioDeConectividadVortex(mensaje.estaConectado());
+			}
+		});
+	}
+
+	/**
+	 * Invocado cuando se produce un cambio de conectividad con el servidor
+	 * 
+	 * @param estaConectado
+	 */
+	protected void onCambioDeConectividadVortex(boolean estaConectado) {
+		mostrarEstadoDeConexion(estaConectado);
+	}
 }
