@@ -13,6 +13,7 @@
 package net.gaia.vortex.android.service.impl;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
@@ -30,9 +31,12 @@ public class VortexConnectionImpl implements VortexConnection {
 	private TaskProcessor processor;
 	private Nodo nodoCentral;
 	private NodoSocket nodoConector;
+	private InetSocketAddress serverAddress;
+	private AtomicBoolean debeConectar;
 
 	public static VortexConnectionImpl create() {
 		VortexConnectionImpl connection = new VortexConnectionImpl();
+		connection.debeConectar = new AtomicBoolean(false);
 		connection.processor = ExecutorBasedTaskProcesor.createOptimun();
 		return connection;
 	}
@@ -50,12 +54,25 @@ public class VortexConnectionImpl implements VortexConnection {
 	}
 
 	/**
-	 * @see net.gaia.vortex.android.service.VortexConnection#conectarCon(java.net.InetSocketAddress)
+	 * @see net.gaia.vortex.android.service.VortexConnection#usarLaDireccion(java.net.InetSocketAddress)
 	 */
-	public void conectarCon(InetSocketAddress serverAddress) {
-		desconectarNodos();
-		if (nodoConector != null) {
-			nodoConector.closeAndDispose();
+	public void usarLaDireccion(InetSocketAddress nuevaServerAddress) {
+		if (nuevaServerAddress.equals(this.serverAddress)) {
+			// Es la misma que usabamos antes
+			return;
+		}
+		this.serverAddress = nuevaServerAddress;
+		if (debeConectar.get()) {
+			reconectarAlServidor();
+		}
+	}
+
+	/**
+	 * Reconecta el nodo central con el servidor a través de un nodo socket, en al dirección actual
+	 */
+	private void conectarUsandoLaDireccionActual() {
+		if (serverAddress == null) {
+			return;
 		}
 		nodoConector = NodoSocket.createAndConnectTo(serverAddress, processor);
 		conectarNodos();
@@ -94,6 +111,36 @@ public class VortexConnectionImpl implements VortexConnection {
 	 */
 	public void desconectarDeNodoCentral() {
 		desconectarNodos();
+	}
+
+	/**
+	 * @see net.gaia.vortex.android.service.VortexConnection#desconectarDelServidor()
+	 */
+	public void desconectarDelServidor() {
+		debeConectar.set(false);
+		desconectarNodoConector();
+	}
+
+	/**
+	 * Quita el nodo conector y libera sus recursos
+	 */
+	private void desconectarNodoConector() {
+		if (nodoConector == null) {
+			// No estamos conectados, no hace falta hacer nada
+			return;
+		}
+		desconectarNodos();
+		nodoConector.closeAndDispose();
+		nodoConector = null;
+	}
+
+	/**
+	 * @see net.gaia.vortex.android.service.VortexConnection#reconectarAlServidor()
+	 */
+	public void reconectarAlServidor() {
+		debeConectar.set(true);
+		desconectarNodoConector();
+		conectarUsandoLaDireccionActual();
 	}
 
 }

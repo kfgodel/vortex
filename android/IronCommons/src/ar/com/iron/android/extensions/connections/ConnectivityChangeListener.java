@@ -28,6 +28,8 @@ public interface ConnectivityChangeListener {
 	 *            true si se conectó, false si se desconectó
 	 * @param network
 	 *            red que se conectó o desconectó
+	 * @param networkChanged
+	 *            Indica si cambió la red que provee la conectividad
 	 */
-	public void onConnectivityChanged(boolean connected, NetworkInfo network);
+	public void onConnectivityChanged(boolean connected, NetworkInfo network, boolean networkChanged);
 }

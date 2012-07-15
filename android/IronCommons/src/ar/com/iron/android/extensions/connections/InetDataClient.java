@@ -129,7 +129,7 @@ public class InetDataClient {
 		if (connectivityListener != null && hadConnectivity == connectivityLoosed) {
 			// Es un cambio de estado, tenemos que notificarlo
 			NetworkInfo network = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-			connectivityListener.onConnectivityChanged(!connectivityLoosed, network);
+			connectivityListener.onConnectivityChanged(!connectivityLoosed, network, true);
 		}
 	}
 

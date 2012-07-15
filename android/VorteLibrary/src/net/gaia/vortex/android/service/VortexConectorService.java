@@ -18,6 +18,10 @@ import net.gaia.vortex.android.service.impl.VortexConnectionImpl;
 import net.gaia.vortex.android.service.intents.ConectarConServidorVortex;
 import net.gaia.vortex.core.api.Nodo;
 import android.content.Intent;
+import android.net.NetworkInfo;
+import ar.com.iron.android.extensions.connections.ConnectivityChangeListener;
+import ar.com.iron.android.extensions.connections.ConnectivityObserver;
+import ar.com.iron.android.extensions.messages.IntentReceptor;
 import ar.com.iron.android.extensions.services.BackgroundService;
 import ar.com.iron.android.extensions.services.local.LocalServiceConnectionListener;
 import ar.com.iron.android.extensions.services.local.LocalServiceConnector;
@@ -31,14 +35,17 @@ import ar.com.iron.android.extensions.services.local.LocalServiceConnector;
  */
 public class VortexConectorService extends BackgroundService {
 
+	private IntentReceptor intentReceptor;
 	private VortexConnection connection;
 	private LocalServiceConnector<VortexAndroidAccess> vortexConnector;
+	private ConnectivityObserver connectivityObserver;
 
 	/**
 	 * @see ar.com.iron.android.extensions.services.BackgroundService#beforeProcessStart()
 	 */
 	@Override
 	protected void beforeProcessStart() {
+		intentReceptor = new IntentReceptor(this);
 		connection = VortexConnectionImpl.create();
 	}
 
@@ -59,6 +66,24 @@ public class VortexConectorService extends BackgroundService {
 			}
 		});
 		vortexConnector.bindToService(this);
+		registrarListenerDeEventosEnLaConectividad();
+	}
+
+	/**
+	 * Registra un receiver para ser notificado de cambios en al conectividad
+	 */
+	private void registrarListenerDeEventosEnLaConectividad() {
+		connectivityObserver = ConnectivityObserver.createObserving(this, new ConnectivityChangeListener() {
+			public void onConnectivityChanged(boolean connected, NetworkInfo network, boolean networkChanged) {
+				if (!connected) {
+					// Perdimos conectividad
+					connection.desconectarDelServidor();
+				} else {
+					// Es la primera vez o cambio la red, nos reconectamos
+					connection.reconectarAlServidor();
+				}
+			}
+		}, intentReceptor);
 	}
 
 	/**
@@ -95,6 +120,7 @@ public class VortexConectorService extends BackgroundService {
 	@Override
 	protected void afterProcessStop() {
 		connection.closeAndDispose();
+		intentReceptor.unregisterMessageReceivers();
 	}
 
 	/**
@@ -104,7 +130,7 @@ public class VortexConectorService extends BackgroundService {
 	public void onStart(Intent intent, int startId) {
 		ConectarConServidorVortex pedidoDeConexion = new ConectarConServidorVortex(intent);
 		InetSocketAddress serverAddress = pedidoDeConexion.getServerAddress();
-		connection.conectarCon(serverAddress);
+		connection.usarLaDireccion(serverAddress);
 		super.onStart(intent, startId);
 	}
 

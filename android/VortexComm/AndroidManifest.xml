@@ -8,6 +8,8 @@
 
     <!-- Permiso para acceder a vortex -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Permiso para detectar cambios en la conectividad  -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     
     <application
         android:name=".app.VortexCommApplication"

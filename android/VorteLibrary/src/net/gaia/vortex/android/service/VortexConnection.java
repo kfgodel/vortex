@@ -25,13 +25,14 @@ import ar.dgarcia.objectsockets.api.Disposable;
 public interface VortexConnection extends Disposable {
 
 	/**
-	 * Realiza la conexión con la dirección indicada. Si ya existía una conexión previa, se
-	 * desconecta y vuelve a conectar
+	 * Define la dirección en la que se encuentra el servidor, conectando si está permitido. Realiza
+	 * la conexión con la dirección indicada. Si ya existía una conexión previa, se desconecta y
+	 * vuelve a conectar
 	 * 
 	 * @param serverAddress
 	 *            La nueva dirección de conexión
 	 */
-	void conectarCon(InetSocketAddress serverAddress);
+	void usarLaDireccion(InetSocketAddress serverAddress);
 
 	/**
 	 * Esteblece a qué nodo se le agregará el nodo socket
@@ -45,5 +46,15 @@ public interface VortexConnection extends Disposable {
 	 * Deconecta el nodo socket del nodo central
 	 */
 	void desconectarDeNodoCentral();
+
+	/**
+	 * Cierra la conexión actual con el servidor (en caso de que exista una)
+	 */
+	void desconectarDelServidor();
+
+	/**
+	 * Reconecta el nodo conector al servidor
+	 */
+	void reconectarAlServidor();
 
 }

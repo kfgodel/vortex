@@ -24,9 +24,9 @@ public abstract class ConnectivityChangedListenerSupport implements Connectivity
 
 	/**
 	 * @see ar.com.iron.android.extensions.connections.ConnectivityChangeListener#onConnectivityChanged(boolean,
-	 *      android.net.NetworkInfo)
+	 *      android.net.NetworkInfo, boolean)
 	 */
-	public void onConnectivityChanged(boolean connected, NetworkInfo networkInfo) {
+	public void onConnectivityChanged(boolean connected, NetworkInfo networkInfo, boolean networkChanged) {
 		if (connected) {
 			onConnectivityGained(networkInfo);
 		} else {
