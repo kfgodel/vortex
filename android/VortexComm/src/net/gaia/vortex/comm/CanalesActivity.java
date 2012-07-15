@@ -16,11 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.gaia.vortex.android.service.VortexAndroidAccess;
+import net.gaia.vortex.android.service.VortexConectorService;
 import net.gaia.vortex.android.service.VortexProviderService;
+import net.gaia.vortex.android.service.intents.ConectarConServidorVortex;
 import net.gaia.vortex.comm.config.ConfiguracionVortexComm;
 import net.gaia.vortex.comm.config.RepositorioDeConfiguracion;
 import net.gaia.vortex.comm.intents.AbrirCanalIntent;
 import net.gaia.vortex.comm.model.Canal;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -78,13 +81,13 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 		});
 		vortexConnector.bindToService(this);
 
-		cargarCanalesDesdeConfig();
+		cargarDatosDesdeConfig();
 	}
 
 	/**
-	 * Carga los canales definidos en la configuración
+	 * Carga los canales definidos en la configuración e inicia el servicio de conexion
 	 */
-	private void cargarCanalesDesdeConfig() {
+	private void cargarDatosDesdeConfig() {
 		RepositorioDeConfiguracion repo = new RepositorioDeConfiguracion(getContext());
 		ConfiguracionVortexComm configuracionActual = repo.getConfiguracion();
 		List<String> canalesDelUsuario = configuracionActual.getCanalesDelUsuario();
@@ -92,6 +95,20 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 			Canal canal = Canal.create(nombreDelCanal);
 			canales.add(canal);
 		}
+
+		iniciarServicioDeConexion(configuracionActual);
+	}
+
+	/**
+	 * Inicia el servisio de conexión al servidor
+	 * 
+	 * @param configuracionActual
+	 *            La configuración desde la cual tomar los datos
+	 */
+	private void iniciarServicioDeConexion(ConfiguracionVortexComm configuracionActual) {
+		String hostDelServidor = configuracionActual.getHostDelServidor();
+		Integer numeroDePuerto = configuracionActual.getNumeroDePuerto();
+		startService(new ConectarConServidorVortex(getContext(), hostDelServidor, numeroDePuerto));
 	}
 
 	/**
@@ -107,8 +124,16 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	 */
 	@Override
 	protected void onDestroy() {
+		detenerServicioDeConexion();
 		vortexConnector.unbindFromService(this);
 		super.onDestroy();
+	}
+
+	/**
+	 * Detiene el servicio de conexion a vortex
+	 */
+	private void detenerServicioDeConexion() {
+		stopService(new Intent(getContext(), VortexConectorService.class));
 	}
 
 	/**

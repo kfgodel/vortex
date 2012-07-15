@@ -63,22 +63,43 @@ public abstract class BackgroundService extends Service {
 
 	/**
 	 * Crea y devuelve el proceso que será utilizado para ejecutar este servicio.<br>
-	 * Normalmente el proceso es una subclase que agrega comportamiento especial
+	 * Normalmente el proceso es una subclase que agrega comportamiento especial.<br>
+	 * Si no se indica una por defecto se crea un proceso con el nombre de la clase del servicio
 	 * 
 	 * @return El proceso que se ejecutará en hilo a parte
 	 */
-	protected abstract BackgroundProcess createBackgroundThread();
+	protected BackgroundProcess createBackgroundThread() {
+		String serviceClassName = getClass().getSimpleName();
+		return new BackgroundProcess(this, serviceClassName);
+	}
 
 	/**
 	 * @see android.app.Service#onDestroy()
 	 */
 	@Override
 	public void onDestroy() {
+		beforeProcessStop();
 		if (backgroundProcess != null) {
 			backgroundProcess.detener();
 		}
-
+		afterProcessStop();
 		super.onDestroy();
+	}
+
+	/**
+	 * Invocado después de que el proceso fue detenido y ya no pueden ejecutarse tareas en
+	 * background
+	 */
+	protected void afterProcessStop() {
+		// Implementado para no forzar su implementación en subclases
+	}
+
+	/**
+	 * Invocado antes de detener el proceso para detener cualquier acción que cargue tareas en el
+	 * proceso
+	 */
+	protected void beforeProcessStop() {
+		// Implementado para no forzar su implementación en subclases
 	}
 
 	/**
