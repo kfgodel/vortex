@@ -23,7 +23,7 @@ import java.util.List;
 public class ConfiguracionVortexComm {
 
 	/**
-	 * Canal inicial compartido
+	 * CanalRepresentado inicial compartido
 	 */
 	public static final String CANAL_VORTEX_GLOBAL = "Global";
 

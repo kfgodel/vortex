@@ -50,18 +50,22 @@ public class TestClienteDeChatVortex {
 	private TaskProcessor procesador;
 	private Nodo nodoCentral;
 	private ClienteDeChatVortex clienteTesteado;
+	private ClienteDeChatVortex otroCliente;
 
 	@Before
 	public void crearNodo() {
 		procesador = ExecutorBasedTaskProcesor.createOptimun();
 		nodoCentral = NodoMultiplexor.create(procesador);
-		clienteTesteado = ClienteDeChatVortexImpl.create(procesador, "Testeado");
+		clienteTesteado = ClienteDeChatVortexImpl.create("Testeado");
 		clienteTesteado.conectarA(nodoCentral);
+		otroCliente = ClienteDeChatVortexImpl.create("Otro");
 	}
 
 	@After
 	public void liberarRecursos() {
 		procesador.detener();
+		clienteTesteado.closeAndDispose();
+		otroCliente.closeAndDispose();
 	}
 
 	@Test
@@ -163,7 +167,6 @@ public class TestClienteDeChatVortex {
 			}
 		});
 
-		ClienteDeChatVortex otroCliente = ClienteDeChatVortexImpl.create(procesador, "Otro");
 		otroCliente.conectarA(nodoCentral);
 		otroCliente.agregarCanal(CANAL1);
 
@@ -201,7 +204,6 @@ public class TestClienteDeChatVortex {
 		verificarCantidadDeOtrosEn(CANAL1, 0);
 		verificarCantidadDeOtrosEn(CANAL2, 0);
 
-		ClienteDeChatVortex otroCliente = ClienteDeChatVortexImpl.create(procesador, "Otro");
 		otroCliente.conectarA(nodoCentral);
 		otroCliente.agregarCanal(CANAL1);
 

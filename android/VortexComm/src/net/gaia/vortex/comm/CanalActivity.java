@@ -12,21 +12,16 @@
  */
 package net.gaia.vortex.comm;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.android.service.VortexAndroidAccess;
-import net.gaia.vortex.android.service.VortexProviderService;
+import net.gaia.vortex.comm.api.CanalDeChat;
+import net.gaia.vortex.comm.api.ClienteDeChatVortex;
+import net.gaia.vortex.comm.api.ListenerDeEstadoDeCanal;
+import net.gaia.vortex.comm.api.ListenerDeMensajesDeChat;
 import net.gaia.vortex.comm.api.messages.MensajeDeChat;
-import net.gaia.vortex.comm.config.ConfiguracionVortexComm;
-import net.gaia.vortex.comm.config.RepositorioDeConfiguracion;
+import net.gaia.vortex.comm.app.VortexCommApplication;
+import net.gaia.vortex.comm.impl.ListenerNuloDeCanal;
 import net.gaia.vortex.comm.intents.AbrirCanalIntent;
-import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.portal.api.moleculas.Portal;
-import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,8 +32,6 @@ import android.widget.TextView;
 import ar.com.iron.android.extensions.activities.CustomListActivity;
 import ar.com.iron.android.extensions.activities.model.CustomableListActivity;
 import ar.com.iron.android.extensions.adapters.RenderBlock;
-import ar.com.iron.android.extensions.services.local.LocalServiceConnectionListener;
-import ar.com.iron.android.extensions.services.local.LocalServiceConnector;
 import ar.com.iron.android.helpers.WidgetHelper;
 import ar.com.iron.helpers.ToastHelper;
 import ar.com.iron.helpers.ViewHelper;
@@ -50,15 +43,10 @@ import ar.com.iron.menues.ContextMenuItem;
  * @author D. García
  */
 public class CanalActivity extends CustomListActivity<MensajeDeChat> {
-	private final List<MensajeDeChat> mensajes = new ArrayList<MensajeDeChat>();
-	private EditText textoTxt;
-	private LocalServiceConnector<VortexAndroidAccess> vortexConnector;
-	private Portal portalEmisor;
-	private Portal portalReceptor;
-	private String nombreDeUsuario;
-	private String canalActual;
 
+	private EditText textoTxt;
 	private ImageView conectadoImg;
+	private CanalDeChat canalActual;
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.CustomListActivity#setUpComponents()
@@ -66,10 +54,21 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	@Override
 	public void setUpComponents() {
 		AbrirCanalIntent intentRecibido = new AbrirCanalIntent(getIntent());
-		canalActual = intentRecibido.getNombreDelCanal();
+		String nombreDelCanalAbierto = intentRecibido.getNombreDelCanal();
+		ClienteDeChatVortex clienteActual = VortexCommApplication.I.getClienteActual();
+		if (clienteActual != null) {
+			canalActual = clienteActual.getCanal(nombreDelCanalAbierto);
+		}
+		if (canalActual == null) {
+			// Tamos en problema
+			ToastHelper.create(getContext()).showLong(
+					"Se produjo un error interno, no fue posible acceder al canal: " + nombreDelCanalAbierto);
+			finish();
+			return;
+		}
 
 		TextView nombreCanalTxt = ViewHelper.findTextView(R.id.nombreCanalTxt, getContentView());
-		nombreCanalTxt.setText(canalActual);
+		nombreCanalTxt.setText(nombreDelCanalAbierto);
 
 		textoTxt = ViewHelper.findEditText(R.id.textoTxt, getContentView());
 		Button agregarBtn = ViewHelper.findButton(R.id.enviarBtn, getContentView());
@@ -81,64 +80,45 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 		WidgetHelper.habilitarBotonEnPresenciaDeTexto(agregarBtn, textoTxt);
 
 		conectadoImg = ViewHelper.findImageView(R.id.conectadoImg, getContentView());
-		mostrarEstadoDeConexion(false);
+		mostrarEstadoDeConexion();
 
-		// Intentamos conectarnos con el servicio vortex
-		vortexConnector = LocalServiceConnector.create(VortexProviderService.class);
-		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexAndroidAccess>() {
-			public void onServiceDisconnection(final VortexAndroidAccess disconnectedIntercomm) {
-				onVortexNoDisponible(disconnectedIntercomm);
+		canalActual.setListenerDeEstado(new ListenerDeEstadoDeCanal() {
+			public void onCanalVacio(CanalDeChat canal) {
+				onCambioDeEstadoDelCanal();
 			}
 
-			public void onServiceConnection(final VortexAndroidAccess intercommObject) {
-				onVortexDisponible(intercommObject);
+			public void onCanalHabitado(CanalDeChat canal) {
+				onCambioDeEstadoDelCanal();
 			}
 		});
-		vortexConnector.bindToService(this);
-
-		cargarNombreDeUsuarioDesdeLaConfig();
+		canalActual.setListenerDeMensajes(new ListenerDeMensajesDeChat() {
+			public void onMensajeNuevo(MensajeDeChat mensaje) {
+				onMensajeRecibidoDesdeVortex(mensaje);
+			}
+		});
 	}
 
 	/**
-	 * Carga el nombre de usuario definido en la configuración
+	 * Invocado cuando se produce un cambio en la cantidad de presentes en el canal
 	 */
-	private void cargarNombreDeUsuarioDesdeLaConfig() {
-		RepositorioDeConfiguracion repo = new RepositorioDeConfiguracion(getContext());
-		ConfiguracionVortexComm configuracion = repo.getConfiguracion();
-		this.nombreDeUsuario = configuracion.getNombreDeUsuario();
+	protected void onCambioDeEstadoDelCanal() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				mostrarEstadoDeConexion();
+			}
+		});
 	}
 
 	/**
 	 * Cambia el estado del icono de conexión
-	 * 
-	 * @param conectado
-	 *            true si se debe mostrar conectado, false si desconectado
 	 */
-	private void mostrarEstadoDeConexion(boolean conectado) {
-		int resourceId = R.drawable.ic_status_disconnected;
-		if (conectado) {
-			resourceId = R.drawable.ic_status_connected;
+	private void mostrarEstadoDeConexion() {
+		boolean noHayNadieMas = canalActual.getOtrosPresentes().isEmpty();
+		int resourceId = R.drawable.ic_status_connected;
+		if (noHayNadieMas) {
+			resourceId = R.drawable.ic_status_disconnected;
 		}
 		conectadoImg.setImageResource(resourceId);
-	}
-
-	/**
-	 * Invocado al disponer de la conexión con vortex
-	 * 
-	 * @param vortexForAndroid
-	 */
-	protected void onVortexDisponible(VortexAndroidAccess vortexForAndroid) {
-		// Creamos un portal para comunicarnos con el nodo central
-		TaskProcessor procesador = vortexForAndroid.getProcesadorCentral();
-		Nodo nodoCentral = vortexForAndroid.getNodoCentral();
-		this.portalReceptor = PortalMapeador.createForIOWith(procesador, nodoCentral);
-		this.portalReceptor.recibirCon(new HandlerTipado<MensajeDeChat>(SiempreTrue.getInstancia()) {
-			public void onMensajeRecibido(MensajeDeChat mensaje) {
-				onMensajeRecibidoDesdeVortex(mensaje);
-			}
-		});
-
-		this.portalEmisor = PortalMapeador.createForIOWith(procesador, nodoCentral);
 	}
 
 	/**
@@ -156,23 +136,12 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	}
 
 	/**
-	 * Invocado al desconectarse del servicio vortex
-	 * 
-	 * @param disconnectedIntercomm
-	 */
-	protected void onVortexNoDisponible(VortexAndroidAccess vortexForAndroid) {
-		// Desconectamos el portal del nodo central
-		Nodo nodoCentral = vortexForAndroid.getNodoCentral();
-		this.portalEmisor.desconectarDe(nodoCentral);
-		this.portalReceptor.desconectarDe(nodoCentral);
-	}
-
-	/**
 	 * @see ar.com.iron.android.extensions.activities.CustomListActivity#onDestroy()
 	 */
 	@Override
 	protected void onDestroy() {
-		vortexConnector.unbindFromService(this);
+		canalActual.setListenerDeEstado(ListenerNuloDeCanal.getInstancia());
+		canalActual.setListenerDeMensajes(ListenerNuloDeCanal.getInstancia());
 		super.onDestroy();
 	}
 
@@ -181,6 +150,7 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	 */
 	protected void onEnviarClickeado() {
 		String textoAEnviar = textoTxt.getText().toString();
+		textoTxt.setText("");
 		enviarMensaje(textoAEnviar);
 	}
 
@@ -191,12 +161,7 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	 *            El texto que se enviará en el canal
 	 */
 	private void enviarMensaje(String textoAEnviar) {
-		if (portalEmisor == null) {
-			ToastHelper.create(getContext()).showLong("Aún no conectado a vortex");
-			return;
-		}
-		MensajeDeChat mensaje = MensajeDeChat.create(nombreDeUsuario, textoAEnviar, canalActual);
-		portalEmisor.enviar(mensaje);
+		canalActual.enviar(textoAEnviar);
 	}
 
 	/**
@@ -206,7 +171,6 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	 *            El mensaje recibido
 	 */
 	public void onMensajeRecibido(MensajeDeChat mensaje) {
-		mensajes.add(0, mensaje);
 		notificarCambioEnLosDatos();
 	}
 
@@ -221,7 +185,7 @@ public class CanalActivity extends CustomListActivity<MensajeDeChat> {
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableListActivity#getElementList()
 	 */
 	public List<MensajeDeChat> getElementList() {
-		return mensajes;
+		return canalActual.getMensajes();
 	}
 
 	/**

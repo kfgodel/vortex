@@ -15,13 +15,14 @@ package net.gaia.vortex.comm.api;
 import java.util.List;
 
 import net.gaia.vortex.core.api.Nodo;
+import ar.dgarcia.objectsockets.api.Disposable;
 
 /**
  * Esta interfaz representa el cliente de mensajes de chat usando vortex
  * 
  * @author D. García
  */
-public interface ClienteDeChatVortex {
+public interface ClienteDeChatVortex extends Disposable {
 
 	/**
 	 * Devuelve la lista actual de canales

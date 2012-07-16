@@ -14,6 +14,7 @@ package net.gaia.vortex.comm.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.comm.api.CanalDeChat;
@@ -61,7 +62,7 @@ public class CanalDeChatImpl implements CanalDeChat {
 	private void initialize(TaskProcessor processor) {
 		listenerDeEstado = ListenerNuloDeCanal.getInstancia();
 		listenerDeMensajes = ListenerNuloDeCanal.getInstancia();
-		mensajesDelCanal = new ArrayList<MensajeDeChat>();
+		mensajesDelCanal = new CopyOnWriteArrayList<MensajeDeChat>();
 		otrosPresentes = new ArrayList<String>();
 
 		NodoMultiplexor nodoDelCliente = this.cliente.getNodoCoreDelCliente();

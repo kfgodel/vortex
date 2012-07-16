@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.comm;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.gaia.vortex.android.service.VortexAndroidAccess;
@@ -20,10 +19,15 @@ import net.gaia.vortex.android.service.VortexConectorService;
 import net.gaia.vortex.android.service.VortexProviderService;
 import net.gaia.vortex.android.service.intents.CambioDeConectividadVortex;
 import net.gaia.vortex.android.service.intents.ConectarConServidorVortex;
+import net.gaia.vortex.comm.api.CanalDeChat;
+import net.gaia.vortex.comm.api.ClienteDeChatVortex;
+import net.gaia.vortex.comm.api.ListenerDeEstadoDeCanal;
+import net.gaia.vortex.comm.app.VortexCommApplication;
 import net.gaia.vortex.comm.config.ConfiguracionVortexComm;
 import net.gaia.vortex.comm.config.RepositorioDeConfiguracion;
+import net.gaia.vortex.comm.impl.ClienteDeChatVortexImpl;
 import net.gaia.vortex.comm.intents.AbrirCanalIntent;
-import net.gaia.vortex.comm.model.Canal;
+import net.gaia.vortex.core.api.Nodo;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -49,11 +53,11 @@ import ar.com.iron.menues.ContextMenuItem;
  * 
  * @author D. García
  */
-public class CanalesActivity extends CustomListActivity<Canal> {
-	private final List<Canal> canales = new ArrayList<Canal>();
+public class CanalesActivity extends CustomListActivity<CanalDeChat> {
 	private EditText canalTxt;
 	private ImageView conectadoImg;
 	private LocalServiceConnector<VortexAndroidAccess> vortexConnector;
+	private ClienteDeChatVortex clienteVortex;
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.CustomListActivity#setUpComponents()
@@ -76,6 +80,7 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 		vortexConnector = LocalServiceConnector.create(VortexProviderService.class);
 		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexAndroidAccess>() {
 			public void onServiceDisconnection(final VortexAndroidAccess disconnectedIntercomm) {
+				onVortexNoDisponible(disconnectedIntercomm);
 			}
 
 			public void onServiceConnection(final VortexAndroidAccess intercommObject) {
@@ -93,13 +98,37 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	private void cargarDatosDesdeConfig() {
 		RepositorioDeConfiguracion repo = new RepositorioDeConfiguracion(getContext());
 		ConfiguracionVortexComm configuracionActual = repo.getConfiguracion();
+
+		String nombreDeUsuario = configuracionActual.getNombreDeUsuario();
 		List<String> canalesDelUsuario = configuracionActual.getCanalesDelUsuario();
+
+		clienteVortex = ClienteDeChatVortexImpl.create(nombreDeUsuario);
 		for (String nombreDelCanal : canalesDelUsuario) {
-			Canal canal = Canal.create(nombreDelCanal);
-			canales.add(canal);
+			clienteVortex.agregarCanal(nombreDelCanal);
 		}
+		clienteVortex.setListenerDeEstado(new ListenerDeEstadoDeCanal() {
+			public void onCanalVacio(CanalDeChat canal) {
+				onCambioDeEstadoEnCanales();
+			}
+
+			public void onCanalHabitado(CanalDeChat canal) {
+				onCambioDeEstadoEnCanales();
+			}
+		});
+		VortexCommApplication.I.reemplazarClienteActual(clienteVortex);
 
 		iniciarServicioDeConexion(configuracionActual);
+	}
+
+	/**
+	 * Invocado al cambiar el estado de los canales
+	 */
+	protected void onCambioDeEstadoEnCanales() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				notificarCambioEnLosDatos();
+			}
+		});
 	}
 
 	/**
@@ -120,6 +149,17 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	 * @param vortexForAndroid
 	 */
 	protected void onVortexDisponible(VortexAndroidAccess vortexForAndroid) {
+		Nodo nodoCentral = vortexForAndroid.getNodoCentral();
+		clienteVortex.conectarA(nodoCentral);
+	}
+
+	/**
+	 * Invocado al desconectarse de android
+	 * 
+	 * @param disconnectedIntercomm
+	 */
+	protected void onVortexNoDisponible(VortexAndroidAccess disconnectedIntercomm) {
+		clienteVortex.desconectar();
 	}
 
 	/**
@@ -128,6 +168,7 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	@Override
 	protected void onDestroy() {
 		detenerServicioDeConexion();
+		clienteVortex.closeAndDispose();
 		vortexConnector.unbindFromService(this);
 		super.onDestroy();
 	}
@@ -158,6 +199,7 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	 */
 	protected void onAgregarClickeado() {
 		String nombreDelCanal = canalTxt.getText().toString();
+		canalTxt.setText("");
 		agregarCanal(nombreDelCanal);
 	}
 
@@ -168,14 +210,14 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	 *            El nombre del canal a agregar
 	 */
 	private void agregarCanal(String nombreDelCanal) {
-		for (Canal canalExistente : canales) {
-			if (canalExistente.getNombreDelCanal().equals(nombreDelCanal)) {
+		List<CanalDeChat> allCanales = clienteVortex.getCanales();
+		for (CanalDeChat canalExistente : allCanales) {
+			if (canalExistente.getNombre().equals(nombreDelCanal)) {
 				ToastHelper.create(getContext()).showLong("Ya existe un canal con el nombre: " + nombreDelCanal);
 				return;
 			}
 		}
-		Canal nuevoCanal = Canal.create(nombreDelCanal);
-		canales.add(nuevoCanal);
+		clienteVortex.agregarCanal(nombreDelCanal);
 		notificarCambioEnLosDatos();
 		agregarCanalEnConfig(nombreDelCanal);
 	}
@@ -197,31 +239,31 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	/**
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableListActivity#getContextMenuItems()
 	 */
-	public ContextMenuItem<? extends CustomableListActivity<Canal>, Canal>[] getContextMenuItems() {
+	public ContextMenuItem<? extends CustomableListActivity<CanalDeChat>, CanalDeChat>[] getContextMenuItems() {
 		return null;
 	}
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableListActivity#getElementList()
 	 */
-	public List<Canal> getElementList() {
-		return canales;
+	public List<CanalDeChat> getElementList() {
+		return clienteVortex.getCanales();
 	}
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableListActivity#getElementRenderBlock()
 	 */
-	public RenderBlock<Canal> getElementRenderBlock() {
-		return new RenderBlock<Canal>() {
-			public void render(View itemView, final Canal item, LayoutInflater inflater) {
+	public RenderBlock<CanalDeChat> getElementRenderBlock() {
+		return new RenderBlock<CanalDeChat>() {
+			public void render(View itemView, final CanalDeChat item, LayoutInflater inflater) {
 				ImageView statusImg = ViewHelper.findImageView(R.id.statusImg, itemView);
-				if (item.getConectado()) {
-					statusImg.setImageResource(R.drawable.ic_status_connected);
-				} else {
+				if (item.getOtrosPresentes().isEmpty()) {
 					statusImg.setImageResource(R.drawable.ic_status_disconnected);
+				} else {
+					statusImg.setImageResource(R.drawable.ic_status_connected);
 				}
 				TextView canalTxt = ViewHelper.findTextView(R.id.canalTxt, itemView);
-				canalTxt.setText(item.getNombreDelCanal());
+				canalTxt.setText(item.getNombre());
 				canalTxt.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						onCanalClickeado(item);
@@ -242,11 +284,11 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	/**
 	 * Invocado al clickear el usuario sobre un canal
 	 * 
-	 * @param canal
+	 * @param CanalDeChat
 	 *            El canal clickeado
 	 */
-	protected void onCanalClickeado(Canal canal) {
-		abrirCanal(canal);
+	protected void onCanalClickeado(CanalDeChat CanalDeChat) {
+		abrirCanal(CanalDeChat);
 	}
 
 	/**
@@ -255,19 +297,19 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	 * @param canalAbierto
 	 *            El canal a abrir
 	 */
-	private void abrirCanal(Canal canalAbierto) {
-		String nombreDelCanal = canalAbierto.getNombreDelCanal();
+	private void abrirCanal(CanalDeChat canalAbierto) {
+		String nombreDelCanal = canalAbierto.getNombre();
 		startActivity(new AbrirCanalIntent(getContext(), nombreDelCanal));
 	}
 
 	/**
 	 * Invocado al apretar remove en un item
 	 * 
-	 * @param canal
+	 * @param CanalDeChat
 	 *            El canal a quitar
 	 */
-	protected void onRemoveClickeado(Canal canal) {
-		quitarCanal(canal);
+	protected void onRemoveClickeado(CanalDeChat CanalDeChat) {
+		quitarCanal(CanalDeChat);
 	}
 
 	/**
@@ -276,10 +318,10 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	 * @param canalRemovido
 	 *            El canal a quitar
 	 */
-	private void quitarCanal(Canal canalRemovido) {
-		canales.remove(canalRemovido);
+	private void quitarCanal(CanalDeChat canalRemovido) {
+		String nombreDelCanal = canalRemovido.getNombre();
+		clienteVortex.quitarCanal(nombreDelCanal);
 		notificarCambioEnLosDatos();
-		String nombreDelCanal = canalRemovido.getNombreDelCanal();
 		quitarCanalDeLaConfig(nombreDelCanal);
 		ToastHelper.create(getContext()).showShort("Quitado canal: " + nombreDelCanal);
 	}
@@ -341,5 +383,8 @@ public class CanalesActivity extends CustomListActivity<Canal> {
 	 */
 	protected void onCambioDeConectividadVortex(boolean estaConectado) {
 		mostrarEstadoDeConexion(estaConectado);
+		if (estaConectado) {
+			clienteVortex.actualizarPresentismo();
+		}
 	}
 }
