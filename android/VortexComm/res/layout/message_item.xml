@@ -9,12 +9,15 @@
         	android:layout_width="fill_parent" 
         	android:layout_height="wrap_content"
         	android:text="Autor"
+        	android:textStyle="bold"
         />
     <TextView
         	android:id="@+id/contenidoTxt"
         	android:layout_width="fill_parent" 
         	android:layout_height="wrap_content"
         	android:text="mensaje"
+        	android:textStyle="italic"
+        	android:textSize="18sp"
         />
     
 </LinearLayout>

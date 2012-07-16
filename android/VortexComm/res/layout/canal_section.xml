@@ -13,7 +13,7 @@
         android:gravity="center_vertical"
         >
         <TextView
-            android:text="Conectado?"
+            android:text="Otros en el canal?"
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             />
@@ -29,8 +29,17 @@
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             />
-	    </LinearLayout>
-    <LinearLayout
+    </LinearLayout>
+	    
+    <ListView
+        android:id="@+android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1.0"
+        android:transcriptMode="normal" 
+        />
+
+	<LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" 
@@ -48,11 +57,5 @@
             android:layout_height="wrap_content"
             android:text="Enviar" />
     </LinearLayout>
-
-    <ListView
-        android:id="@+android:id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1.0" />
-
+    
 </LinearLayout>

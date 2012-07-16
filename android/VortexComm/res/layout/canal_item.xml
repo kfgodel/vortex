@@ -19,6 +19,7 @@
         	android:layout_height="wrap_content"
         	android:text="Canal 1"
         	android:layout_weight="1.0"
+        	android:textSize="18sp"
         />
     <ImageView
         	android:id="@+id/removeImg"
