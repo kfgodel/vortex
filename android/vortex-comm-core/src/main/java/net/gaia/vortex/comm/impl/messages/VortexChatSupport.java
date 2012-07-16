@@ -17,22 +17,21 @@ package net.gaia.vortex.comm.impl.messages;
  * 
  * @author D. García
  */
-public abstract class VortexCommMessageSupport {
+public abstract class VortexChatSupport {
 
-	public static final String AVISO_DE_PRESENCIA = "AvisoDePresencia";
-	public static final String AVISO_DE_AUSENCIA = "AvisoDeAusencia";
-	public static final String PEDIDO_DE_PRESENCIA = "PedidoDePresencia";
-	public static final String MENSAJE_DE_CHAT = "MensajeDeChat";
-	public static final String APLICACION_VORTEX_COMM = "net.gaia.vortex.chat";
+	public static final String NOMBRE_APLICACION_CHAT = "net.gaia.vortex.chat";
 
 	private String aplicacion;
+	public static final String aplicacion_FIELD = "aplicacion";
+
 	private String tipoDeMensaje;
+	public static final String tipoDeMensaje_FIELD = "tipoDeMensaje";
 
 	/**
 	 * Constructor para las subclases
 	 */
-	public VortexCommMessageSupport(String tipoDeMensaje) {
-		aplicacion = APLICACION_VORTEX_COMM;
+	public VortexChatSupport(String tipoDeMensaje) {
+		aplicacion = NOMBRE_APLICACION_CHAT;
 		this.tipoDeMensaje = tipoDeMensaje;
 	}
 

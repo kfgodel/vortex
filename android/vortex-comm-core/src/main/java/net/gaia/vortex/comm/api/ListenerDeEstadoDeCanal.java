@@ -23,11 +23,11 @@ public interface ListenerDeEstadoDeCanal {
 	/**
 	 * Invocado cuando no quedan otros clientes en el canal
 	 */
-	void onCanalVacio();
+	void onCanalVacio(CanalDeChat canal);
 
 	/**
 	 * Invocado cuando aparecen otros clientes en el canal
 	 */
-	void onCanalHabitado();
+	void onCanalHabitado(CanalDeChat canal);
 
 }

@@ -20,6 +20,7 @@ import net.gaia.vortex.comm.impl.messages.AvisoDePresentismoSupport;
  * @author D. García
  */
 public class AvisoDeAusencia extends AvisoDePresentismoSupport {
+	public static final String AVISO_DE_AUSENCIA = "AvisoDeAusencia";
 
 	public AvisoDeAusencia() {
 		super(AVISO_DE_AUSENCIA);

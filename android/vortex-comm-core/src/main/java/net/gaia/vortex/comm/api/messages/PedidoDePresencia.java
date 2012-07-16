@@ -15,14 +15,15 @@ package net.gaia.vortex.comm.api.messages;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.gaia.vortex.comm.impl.messages.VortexCommMessageSupport;
+import net.gaia.vortex.comm.impl.messages.VortexChatSupport;
 
 /**
  * Esta clase representa un pedido a otros de que informen su estado de conexión
  * 
  * @author D. García
  */
-public class PedidoDePresencia extends VortexCommMessageSupport {
+public class PedidoDePresencia extends VortexChatSupport {
+	public static final String PEDIDO_DE_PRESENCIA = "PedidoDePresencia";
 
 	public PedidoDePresencia() {
 		super(PEDIDO_DE_PRESENCIA);

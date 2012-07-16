@@ -14,6 +14,8 @@ package net.gaia.vortex.comm.api;
 
 import java.util.List;
 
+import net.gaia.vortex.core.api.Nodo;
+
 /**
  * Esta interfaz representa el cliente de mensajes de chat usando vortex
  * 
@@ -56,8 +58,31 @@ public interface ClienteDeChatVortex {
 
 	/**
 	 * Actualiza el estado actual de presentismo de clientes en cada canal, avisando los canales en
-	 * lo que está presente este cliente y solicitando al resto que avise su presencia
+	 * lo que está presente este cliente y solicitando al resto que avise su presencia.<br>
+	 * Después de invocar este método todos los canales estarán vacíos y dejarán de estarlo a medida
+	 * que reciban respuestas
 	 */
 	void actualizarPresentismo();
+
+	/**
+	 * Establece el listener global de los canales de este cliente
+	 * 
+	 * @param listenerDeEstadoDeCanal
+	 *            El listener a utilizar
+	 */
+	void setListenerDeEstado(ListenerDeEstadoDeCanal listenerDeEstadoDeCanal);
+
+	/**
+	 * Desconecta este cliente del nodo central de vortex
+	 */
+	void desconectar();
+
+	/**
+	 * Conecta este cliente al nodo vortex indicado como nodo central de las comunicaciones
+	 * 
+	 * @param nodoCentral
+	 *            El nodo para las comunicaciones
+	 */
+	void conectarA(Nodo nodoCentral);
 
 }

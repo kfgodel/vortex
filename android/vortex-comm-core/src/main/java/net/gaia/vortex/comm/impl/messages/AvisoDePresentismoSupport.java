@@ -20,14 +20,17 @@ import java.util.List;
  * 
  * @author D. García
  */
-public abstract class AvisoDePresentismoSupport extends VortexCommMessageSupport {
+public abstract class AvisoDePresentismoSupport extends VortexChatSupport {
 
 	public AvisoDePresentismoSupport(String tipoDeMensaje) {
 		super(tipoDeMensaje);
 	}
 
 	private String usuario;
+	public static final String usuario_FIELD = "usuario";
+
 	private List<String> canales;
+	public static final String canales_FIELD = "canales";
 
 	public String getUsuario() {
 		return usuario;

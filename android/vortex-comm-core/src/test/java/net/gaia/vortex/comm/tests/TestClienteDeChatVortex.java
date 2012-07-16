@@ -44,14 +44,9 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  */
 public class TestClienteDeChatVortex {
 
-	/**
-	 * 
-	 */
 	private static final String CANAL2 = "canal2";
-	/**
-	 * 
-	 */
 	private static final String CANAL1 = "canal1";
+
 	private TaskProcessor procesador;
 	private Nodo nodoCentral;
 	private ClienteDeChatVortex clienteTesteado;
@@ -60,7 +55,8 @@ public class TestClienteDeChatVortex {
 	public void crearNodo() {
 		procesador = ExecutorBasedTaskProcesor.createOptimun();
 		nodoCentral = NodoMultiplexor.create(procesador);
-		clienteTesteado = ClienteDeChatVortexImpl.create(nodoCentral);
+		clienteTesteado = ClienteDeChatVortexImpl.create(procesador, "Testeado");
+		clienteTesteado.conectarA(nodoCentral);
 	}
 
 	@After
@@ -86,7 +82,8 @@ public class TestClienteDeChatVortex {
 
 	private void verificarCanalesEsperados(Set<String> nombresIniciales) {
 		List<CanalDeChat> canales = clienteTesteado.getCanales();
-		Assert.assertEquals("Deberían existir 2 canales", 2, canales.size());
+		int cantidadEsperada = nombresIniciales.size();
+		Assert.assertEquals("Deberían existir " + cantidadEsperada + " canales", cantidadEsperada, canales.size());
 		Set<String> nombresCreados = new HashSet<String>();
 		for (CanalDeChat canalDeChat : canales) {
 			String nombreDelCanalCreado = canalDeChat.getNombre();
@@ -128,6 +125,7 @@ public class TestClienteDeChatVortex {
 
 		final WaitBarrier esperarRecepcion = WaitBarrier.create();
 		canalCreado.setListenerDeMensajes(new ListenerDeMensajesDeChat() {
+			@Override
 			public void onMensajeNuevo(MensajeDeChat mensaje) {
 				esperarRecepcion.release();
 			}
@@ -158,19 +156,87 @@ public class TestClienteDeChatVortex {
 
 		final WaitBarrier esperarConexionDelOtro = WaitBarrier.create();
 		canalTesteado.setListenerDeEstado(new ListenerDeEstadoDeCanal() {
-			public void onCanalVacio() {
+			@Override
+			public void onCanalVacio(CanalDeChat canal) {
 			}
 
-			public void onCanalHabitado() {
+			@Override
+			public void onCanalHabitado(CanalDeChat canal) {
 				esperarConexionDelOtro.release();
 			}
 		});
 
-		ClienteDeChatVortex otroCliente = ClienteDeChatVortexImpl.create(nodoCentral);
+		ClienteDeChatVortex otroCliente = ClienteDeChatVortexImpl.create(procesador, "Otro");
+		otroCliente.conectarA(nodoCentral);
 		otroCliente.agregarCanal(CANAL1);
 
 		esperarConexionDelOtro.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		List<String> presentesActuales = canalTesteado.getOtrosPresentes();
-		Assert.assertEquals("No deberían haber otros presentes", 1, presentesActuales.size());
+		Assert.assertEquals("Debería existir otro cliente presente", 1, presentesActuales.size());
+	}
+
+	@Test
+	public void deberiaPermitiSaberQueCanalesEstanHabitadosEnUnMomentoArbitrario() throws InterruptedException {
+		CanalDeChat canalTesteado = clienteTesteado.agregarCanal(CANAL1);
+		clienteTesteado.agregarCanal(CANAL2);
+
+		final WaitBarrier esperarOtroClienteConectado = WaitBarrier.create();
+
+		clienteTesteado.setListenerDeEstado(new ListenerDeEstadoDeCanal() {
+			@Override
+			public void onCanalVacio(CanalDeChat canal) {
+			}
+
+			@Override
+			public void onCanalHabitado(CanalDeChat canal) {
+				esperarOtroClienteConectado.release();
+			}
+		});
+
+		final WaitBarrier esperarNotificacionAlCanal = WaitBarrier.create();
+		canalTesteado.setListenerDeEstado(new ListenerDeEstadoDeCanal() {
+			@Override
+			public void onCanalVacio(CanalDeChat canal) {
+			}
+
+			@Override
+			public void onCanalHabitado(CanalDeChat canal) {
+				esperarNotificacionAlCanal.release();
+			}
+		});
+
+		verificarCantidadDeOtrosEn(CANAL1, 0);
+		verificarCantidadDeOtrosEn(CANAL2, 0);
+
+		ClienteDeChatVortex otroCliente = ClienteDeChatVortexImpl.create(procesador, "Otro");
+		otroCliente.conectarA(nodoCentral);
+		otroCliente.agregarCanal(CANAL1);
+
+		// Esperamos que se notifique al cliente
+		esperarOtroClienteConectado.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		// Esperamos que se notifique al canal
+		esperarNotificacionAlCanal.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		verificarCantidadDeOtrosEn(CANAL1, 1);
+		verificarCantidadDeOtrosEn(CANAL2, 0);
+
+		// Al desconectar el otro, la notificación seguro no llega es necesario actualizar el
+		// presentismo
+		otroCliente.desconectar();
+		clienteTesteado.actualizarPresentismo();
+
+		Thread.sleep(2000);
+
+		verificarCantidadDeOtrosEn(CANAL1, 0);
+		verificarCantidadDeOtrosEn(CANAL2, 0);
+	}
+
+	/**
+	 * @param nombreDelCanal
+	 * @param expectedOtros
+	 */
+	private void verificarCantidadDeOtrosEn(String nombreDelCanal, int expectedOtros) {
+		CanalDeChat canal1 = clienteTesteado.getCanal(nombreDelCanal);
+		Assert.assertEquals("Debería indicar que está vacio", expectedOtros, canal1.getOtrosPresentes().size());
 	}
 }

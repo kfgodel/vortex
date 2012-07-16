@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.comm.impl;
 
+import net.gaia.vortex.comm.api.CanalDeChat;
+import net.gaia.vortex.comm.api.ListenerDeEstadoDeCanal;
 import net.gaia.vortex.comm.api.ListenerDeMensajesDeChat;
 import net.gaia.vortex.comm.api.messages.MensajeDeChat;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
@@ -22,7 +24,7 @@ import ar.com.dgarcia.coding.caching.WeakSingleton;
  * 
  * @author D. García
  */
-public class ListenerNuloDeCanal implements ListenerDeMensajesDeChat {
+public class ListenerNuloDeCanal implements ListenerDeMensajesDeChat, ListenerDeEstadoDeCanal {
 	private static final WeakSingleton<ListenerNuloDeCanal> ultimaReferencia = new WeakSingleton<ListenerNuloDeCanal>(
 			DefaultInstantiator.create(ListenerNuloDeCanal.class));
 
@@ -34,6 +36,18 @@ public class ListenerNuloDeCanal implements ListenerDeMensajesDeChat {
 	 * @see net.gaia.vortex.comm.api.ListenerDeMensajesDeChat#onMensajeNuevo(net.gaia.vortex.comm.api.messages.MensajeDeChat)
 	 */
 	public void onMensajeNuevo(MensajeDeChat mensaje) {
+	}
+
+	/**
+	 * @see net.gaia.vortex.comm.api.ListenerDeEstadoDeCanal#onCanalVacio(net.gaia.vortex.comm.api.CanalDeChat)
+	 */
+	public void onCanalVacio(CanalDeChat canal) {
+	}
+
+	/**
+	 * @see net.gaia.vortex.comm.api.ListenerDeEstadoDeCanal#onCanalHabitado(net.gaia.vortex.comm.api.CanalDeChat)
+	 */
+	public void onCanalHabitado(CanalDeChat canal) {
 	}
 
 }

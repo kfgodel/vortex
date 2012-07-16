@@ -12,22 +12,26 @@
  */
 package net.gaia.vortex.comm.api.messages;
 
-import net.gaia.vortex.comm.impl.messages.VortexCommMessageSupport;
+import net.gaia.vortex.comm.impl.messages.VortexChatSupport;
 
 /**
  * Esta clase representa el mensaje de chat enviado desde un cliente para ser recibido por otros
  * 
  * @author D. García
  */
-public class MensajeDeChat extends VortexCommMessageSupport {
+public class MensajeDeChat extends VortexChatSupport {
+	public static final String MENSAJE_DE_CHAT = "MensajeDeChat";
 
 	public MensajeDeChat() {
 		super(MENSAJE_DE_CHAT);
 	}
 
 	private String usuario;
+	public static final String usuario_FIELD = "usuario";
 	private String texto;
+	public static final String texto_FIELD = "texto";
 	private String canal;
+	public static final String canal_FIELD = "canal";
 
 	public String getUsuario() {
 		return usuario;

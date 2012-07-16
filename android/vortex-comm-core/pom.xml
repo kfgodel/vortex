@@ -146,7 +146,7 @@
   </dependencies>
   
   <properties>
-    <project.jdk>1.5</project.jdk>
+    <project.jdk>1.6</project.jdk>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   

@@ -67,4 +67,9 @@ public interface CanalDeChat {
 	 * @return La lista de los otros clientes en este canal
 	 */
 	List<String> getOtrosPresentes();
+
+	/**
+	 * Vacía la lista de presentes avisando que el canal quedo sin presentes
+	 */
+	void vaciarPresentes();
 }
