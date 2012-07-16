@@ -33,7 +33,6 @@ public class AsignarAtributo implements Transformacion {
 	/**
 	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
 	public MensajeVortex transformar(MensajeVortex mensaje) {
 		mensaje.getContenido().put(nombreDelAtributo, nuevoValor);
 		return mensaje;

@@ -33,7 +33,6 @@ public class AtributoIgual implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
 	public boolean esCumplidaPor(MensajeVortex mensaje) {
 		ContenidoVortex contenidoDelMensaje = mensaje.getContenido();
 		boolean contieneAtributo = contenidoDelMensaje.containsKey(nombreDelAtributo);

@@ -125,7 +125,6 @@ public class TestClienteDeChatVortex {
 
 		final WaitBarrier esperarRecepcion = WaitBarrier.create();
 		canalCreado.setListenerDeMensajes(new ListenerDeMensajesDeChat() {
-			@Override
 			public void onMensajeNuevo(MensajeDeChat mensaje) {
 				esperarRecepcion.release();
 			}
@@ -156,11 +155,9 @@ public class TestClienteDeChatVortex {
 
 		final WaitBarrier esperarConexionDelOtro = WaitBarrier.create();
 		canalTesteado.setListenerDeEstado(new ListenerDeEstadoDeCanal() {
-			@Override
 			public void onCanalVacio(CanalDeChat canal) {
 			}
 
-			@Override
 			public void onCanalHabitado(CanalDeChat canal) {
 				esperarConexionDelOtro.release();
 			}
@@ -183,11 +180,9 @@ public class TestClienteDeChatVortex {
 		final WaitBarrier esperarOtroClienteConectado = WaitBarrier.create();
 
 		clienteTesteado.setListenerDeEstado(new ListenerDeEstadoDeCanal() {
-			@Override
 			public void onCanalVacio(CanalDeChat canal) {
 			}
 
-			@Override
 			public void onCanalHabitado(CanalDeChat canal) {
 				esperarOtroClienteConectado.release();
 			}
@@ -195,11 +190,9 @@ public class TestClienteDeChatVortex {
 
 		final WaitBarrier esperarNotificacionAlCanal = WaitBarrier.create();
 		canalTesteado.setListenerDeEstado(new ListenerDeEstadoDeCanal() {
-			@Override
 			public void onCanalVacio(CanalDeChat canal) {
 			}
 
-			@Override
 			public void onCanalHabitado(CanalDeChat canal) {
 				esperarNotificacionAlCanal.release();
 			}

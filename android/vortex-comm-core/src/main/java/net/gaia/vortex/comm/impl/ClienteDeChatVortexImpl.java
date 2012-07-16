@@ -102,21 +102,18 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 		nodoCoreDelCliente.conectarCon(portalDelCliente);
 		this.portalDelCliente.recibirCon(new HandlerTipado<PedidoDePresencia>(AtributoIgual.create(
 				PedidoDePresencia.tipoDeMensaje_FIELD, PedidoDePresencia.PEDIDO_DE_PRESENCIA)) {
-			@Override
 			public void onMensajeRecibido(PedidoDePresencia mensaje) {
 				onPedidoDePresenciaRecibido(mensaje);
 			}
 		});
 		this.portalDelCliente.recibirCon(new HandlerTipado<AvisoDePresencia>(AtributoIgual.create(
 				AvisoDePresencia.tipoDeMensaje_FIELD, AvisoDePresencia.AVISO_DE_PRESENCIA)) {
-			@Override
 			public void onMensajeRecibido(AvisoDePresencia mensaje) {
 				onAvisoDePresenciaRecibido(mensaje);
 			}
 		});
 		this.portalDelCliente.recibirCon(new HandlerTipado<AvisoDeAusencia>(AtributoIgual.create(
 				AvisoDeAusencia.tipoDeMensaje_FIELD, AvisoDeAusencia.AVISO_DE_AUSENCIA)) {
-			@Override
 			public void onMensajeRecibido(AvisoDeAusencia mensaje) {
 				onAvisoDeAusenciaRecibido(mensaje);
 			}
@@ -198,7 +195,6 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	/**
 	 * @see net.gaia.vortex.comm.api.ClienteDeChatVortex#getCanales()
 	 */
-	@Override
 	public List<CanalDeChat> getCanales() {
 		if (canales == null) {
 			canales = new CopyOnWriteArrayList<CanalDeChat>();
@@ -209,7 +205,6 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	/**
 	 * @see net.gaia.vortex.comm.api.ClienteDeChatVortex#agregarCanal(java.lang.String)
 	 */
-	@Override
 	public CanalDeChat agregarCanal(String nombreDeCanal) {
 		CanalDeChatImpl canalCreado = CanalDeChatImpl.create(processor, nombreDeCanal, this);
 		getCanales().add(canalCreado);
@@ -220,7 +215,6 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	/**
 	 * @see net.gaia.vortex.comm.api.ClienteDeChatVortex#quitarCanal(java.lang.String)
 	 */
-	@Override
 	public void quitarCanal(String nombreDeCanal) {
 		CanalDeChat canalQuitado = getCanal(nombreDeCanal);
 		if (canalQuitado == null) {
@@ -245,7 +239,6 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	/**
 	 * @see net.gaia.vortex.comm.api.ClienteDeChatVortex#getCanal(java.lang.String)
 	 */
-	@Override
 	public CanalDeChat getCanal(String nombreDeCanal) {
 		List<CanalDeChat> allCanales = getCanales();
 		for (CanalDeChat canal : allCanales) {
@@ -259,7 +252,6 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	/**
 	 * @see net.gaia.vortex.comm.api.ClienteDeChatVortex#actualizarPresentismo()
 	 */
-	@Override
 	public void actualizarPresentismo() {
 		// Primero vaciamos el estado
 		List<CanalDeChat> allCanales = getCanales();
@@ -284,7 +276,6 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	/**
 	 * @see net.gaia.vortex.comm.api.ClienteDeChatVortex#setListenerDeEstado(net.gaia.vortex.comm.api.ListenerDeEstadoDeCanal)
 	 */
-	@Override
 	public void setListenerDeEstado(ListenerDeEstadoDeCanal listenerDeEstadoDeCanal) {
 		this.listener = listenerDeEstadoDeCanal;
 	}
@@ -292,7 +283,6 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	/**
 	 * @see net.gaia.vortex.comm.api.ClienteDeChatVortex#desconectar()
 	 */
-	@Override
 	public void desconectar() {
 		nodoCentral.desconectarDe(entradaConectadaDesdeElCentral);
 		this.nodoCoreDelCliente.desconectarDe(nodoCentral);
@@ -302,7 +292,6 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	/**
 	 * @see net.gaia.vortex.comm.api.ClienteDeChatVortex#conectarA(net.gaia.vortex.core.api.Nodo)
 	 */
-	@Override
 	public void conectarA(Nodo nodoCentral) {
 		this.nodoCentral = nodoCentral;
 		this.portalDelCliente.conectarCon(nodoCentral);

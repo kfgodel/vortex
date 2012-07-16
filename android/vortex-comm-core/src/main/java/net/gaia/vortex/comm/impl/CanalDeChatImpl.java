@@ -71,14 +71,12 @@ public class CanalDeChatImpl implements CanalDeChat {
 		nodoDelCliente.conectarCon(this.portalDeEntrada);
 		this.portalDeEntrada.recibirCon(new HandlerTipado<MensajeDeChat>(AtributoIgual.create(
 				MensajeDeChat.tipoDeMensaje_FIELD, MensajeDeChat.MENSAJE_DE_CHAT)) {
-			@Override
 			public void onMensajeRecibido(MensajeDeChat mensaje) {
 				onMensajeDeChatRecibido(mensaje);
 			}
 		});
 		this.portalDeEntrada.recibirCon(new HandlerTipado<AvisoDePresencia>(AtributoIgual.create(
 				AvisoDePresencia.tipoDeMensaje_FIELD, AvisoDePresencia.AVISO_DE_PRESENCIA)) {
-			@Override
 			public void onMensajeRecibido(AvisoDePresencia mensaje) {
 				onAvisoDePresenciaRecibido(mensaje);
 			}
@@ -121,7 +119,6 @@ public class CanalDeChatImpl implements CanalDeChat {
 	/**
 	 * @see net.gaia.vortex.comm.api.CanalDeChat#getNombre()
 	 */
-	@Override
 	public String getNombre() {
 		return nombreDeCanal;
 	}
@@ -129,7 +126,6 @@ public class CanalDeChatImpl implements CanalDeChat {
 	/**
 	 * @see net.gaia.vortex.comm.api.CanalDeChat#enviar(java.lang.String)
 	 */
-	@Override
 	public void enviar(String texto) {
 		MensajeDeChat mensajeDeChat = new MensajeDeChat();
 		mensajeDeChat.setTexto(texto);
@@ -141,7 +137,6 @@ public class CanalDeChatImpl implements CanalDeChat {
 	/**
 	 * @see net.gaia.vortex.comm.api.CanalDeChat#setListenerDeMensajes(net.gaia.vortex.comm.api.ListenerDeMensajesDeChat)
 	 */
-	@Override
 	public void setListenerDeMensajes(ListenerDeMensajesDeChat listener) {
 		this.listenerDeMensajes = listener;
 	}
@@ -149,7 +144,6 @@ public class CanalDeChatImpl implements CanalDeChat {
 	/**
 	 * @see net.gaia.vortex.comm.api.CanalDeChat#setListenerDeEstado(net.gaia.vortex.comm.api.ListenerDeEstadoDeCanal)
 	 */
-	@Override
 	public void setListenerDeEstado(ListenerDeEstadoDeCanal listener) {
 		this.listenerDeEstado = listener;
 	}
@@ -157,7 +151,6 @@ public class CanalDeChatImpl implements CanalDeChat {
 	/**
 	 * @see net.gaia.vortex.comm.api.CanalDeChat#getMensajes()
 	 */
-	@Override
 	public List<MensajeDeChat> getMensajes() {
 		return mensajesDelCanal;
 	}
@@ -165,7 +158,6 @@ public class CanalDeChatImpl implements CanalDeChat {
 	/**
 	 * @see net.gaia.vortex.comm.api.CanalDeChat#getOtrosPresentes()
 	 */
-	@Override
 	public List<String> getOtrosPresentes() {
 		return otrosPresentes;
 	}
@@ -173,7 +165,6 @@ public class CanalDeChatImpl implements CanalDeChat {
 	/**
 	 * @see net.gaia.vortex.comm.api.CanalDeChat#vaciarPresentes()
 	 */
-	@Override
 	public void vaciarPresentes() {
 		otrosPresentes.clear();
 		listenerDeEstado.onCanalVacio(this);
