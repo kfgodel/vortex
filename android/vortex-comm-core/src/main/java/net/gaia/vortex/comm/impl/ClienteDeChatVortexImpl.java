@@ -260,6 +260,8 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 			canal.vaciarPresentes();
 			listener.onCanalVacio(canal);
 		}
+		// Avisamos que estamos presente en los canales
+		enviarAvisoDePresencia();
 		// Solicitamos que nos avisen si hay alguien
 		enviarPedidoDePresencia();
 	}
