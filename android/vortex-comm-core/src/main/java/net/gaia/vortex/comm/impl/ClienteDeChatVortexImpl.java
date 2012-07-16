@@ -209,7 +209,7 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	public CanalDeChat agregarCanal(String nombreDeCanal) {
 		CanalDeChatImpl canalCreado = CanalDeChatImpl.create(processor, nombreDeCanal, this);
 		getCanales().add(canalCreado);
-		enviarAvisoDePresencia();
+		actualizarPresentismo();
 		return canalCreado;
 	}
 
