@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.comm.api.CanalDeChat;
 import net.gaia.vortex.comm.api.ClienteDeChatVortex;
 import net.gaia.vortex.comm.api.ListenerDeEstadoDeCanal;
@@ -65,10 +64,10 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	 * 
 	 * @return El cliente creado
 	 */
-	public static ClienteDeChatVortexImpl create(String nombreDeUsuario) {
+	public static ClienteDeChatVortexImpl create(TaskProcessor processor, String nombreDeUsuario) {
 		ClienteDeChatVortexImpl cliente = new ClienteDeChatVortexImpl();
 		cliente.usuarioActual = nombreDeUsuario;
-		cliente.initialize();
+		cliente.initialize(processor);
 		return cliente;
 	}
 
@@ -86,10 +85,10 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	 * @param processor
 	 *            El procesador para los componetnes vortex
 	 */
-	private void initialize() {
+	private void initialize(TaskProcessor processor) {
 		// Usamos el listener nulo como inicial
 		listener = ListenerNuloDeCanal.getInstancia();
-		processor = ExecutorBasedTaskProcesor.createOptimun();
+		this.processor = processor;
 
 		// Toda salida del cliente se conecta a este multiplexor (canales y central)
 		nodoCoreDelCliente = NodoMultiplexor.create(processor);
@@ -307,6 +306,5 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
 	public void closeAndDispose() {
-		processor.detener();
 	}
 }

@@ -13,8 +13,8 @@
 package net.gaia.vortex.android.service.impl;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.android.service.VortexAndroidAccess;
+import net.gaia.vortex.android.service.VortexSharedProcessor;
 import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import ar.dgarcia.objectsockets.api.Disposable;
@@ -51,7 +51,7 @@ public class VortexAndroidAccessImpl implements VortexAndroidAccess, Disposable 
 
 	public static VortexAndroidAccessImpl create() {
 		VortexAndroidAccessImpl impl = new VortexAndroidAccessImpl();
-		impl.processor = ExecutorBasedTaskProcesor.createOptimun();
+		impl.processor = VortexSharedProcessor.getProcessor();
 		impl.nodoCentral = NodoMultiplexor.create(impl.processor);
 		return impl;
 	}
@@ -60,7 +60,6 @@ public class VortexAndroidAccessImpl implements VortexAndroidAccess, Disposable 
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
 	public void closeAndDispose() {
-		processor.detener();
 	}
 
 }

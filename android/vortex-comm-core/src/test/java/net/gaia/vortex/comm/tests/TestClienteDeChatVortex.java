@@ -56,9 +56,9 @@ public class TestClienteDeChatVortex {
 	public void crearNodo() {
 		procesador = ExecutorBasedTaskProcesor.createOptimun();
 		nodoCentral = NodoMultiplexor.create(procesador);
-		clienteTesteado = ClienteDeChatVortexImpl.create("Testeado");
+		clienteTesteado = ClienteDeChatVortexImpl.create(procesador, "Testeado");
 		clienteTesteado.conectarA(nodoCentral);
-		otroCliente = ClienteDeChatVortexImpl.create("Otro");
+		otroCliente = ClienteDeChatVortexImpl.create(procesador, "Otro");
 	}
 
 	@After

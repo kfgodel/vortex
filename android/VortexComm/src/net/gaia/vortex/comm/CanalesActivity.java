@@ -17,6 +17,7 @@ import java.util.List;
 import net.gaia.vortex.android.service.VortexAndroidAccess;
 import net.gaia.vortex.android.service.VortexConectorService;
 import net.gaia.vortex.android.service.VortexProviderService;
+import net.gaia.vortex.android.service.VortexSharedProcessor;
 import net.gaia.vortex.android.service.intents.CambioDeConectividadVortex;
 import net.gaia.vortex.android.service.intents.ConectarConServidorVortex;
 import net.gaia.vortex.comm.api.CanalDeChat;
@@ -102,7 +103,7 @@ public class CanalesActivity extends CustomListActivity<CanalDeChat> {
 		String nombreDeUsuario = configuracionActual.getNombreDeUsuario();
 		List<String> canalesDelUsuario = configuracionActual.getCanalesDelUsuario();
 
-		clienteVortex = ClienteDeChatVortexImpl.create(nombreDeUsuario);
+		clienteVortex = ClienteDeChatVortexImpl.create(VortexSharedProcessor.getProcessor(), nombreDeUsuario);
 		for (String nombreDelCanal : canalesDelUsuario) {
 			clienteVortex.agregarCanal(nombreDelCanal);
 		}

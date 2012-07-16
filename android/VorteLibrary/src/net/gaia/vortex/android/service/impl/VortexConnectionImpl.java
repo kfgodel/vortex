@@ -16,8 +16,8 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.android.service.VortexConnection;
+import net.gaia.vortex.android.service.VortexSharedProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
@@ -37,7 +37,7 @@ public class VortexConnectionImpl implements VortexConnection {
 	public static VortexConnectionImpl create() {
 		VortexConnectionImpl connection = new VortexConnectionImpl();
 		connection.debeConectar = new AtomicBoolean(false);
-		connection.processor = ExecutorBasedTaskProcesor.createOptimun();
+		connection.processor = VortexSharedProcessor.getProcessor();
 		return connection;
 	}
 
@@ -50,7 +50,6 @@ public class VortexConnectionImpl implements VortexConnection {
 		if (nodoConector != null) {
 			nodoConector.closeAndDispose();
 		}
-		processor.detener();
 	}
 
 	/**
