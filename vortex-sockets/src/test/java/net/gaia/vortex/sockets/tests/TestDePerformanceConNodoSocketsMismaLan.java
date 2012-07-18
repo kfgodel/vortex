@@ -26,7 +26,6 @@ import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +40,9 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
  * 
  * @author D. García
  */
-@Ignore("Solo correr este test manualmente con conectividad asegurada")
-public class TestDePerformanceConNodoSocketsYServidor {
-	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConNodoSocketsYServidor.class);
+// @Ignore("Solo correr este test manualmente con conectividad asegurada")
+public class TestDePerformanceConNodoSocketsMismaLan {
+	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConNodoSocketsMismaLan.class);
 
 	private TaskProcessor processorEnvios;
 	private TaskProcessor processorRecepcion;
@@ -119,7 +118,7 @@ public class TestDePerformanceConNodoSocketsYServidor {
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
-		final InetSocketAddress sharedAddress = new InetSocketAddress("kfgodel.info", 61616);
+		final InetSocketAddress sharedAddress = new InetSocketAddress("192.168.1.130", 61616);
 		final NodoSocket nodoClienteReceptor = NodoSocket.createAndConnectTo(sharedAddress, processorRecepcion);
 		final NodoSocket nodoClienteEmisor = NodoSocket.createAndConnectTo(sharedAddress, processorEnvios);
 		try {
