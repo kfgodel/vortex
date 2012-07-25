@@ -106,6 +106,13 @@
     	<artifactId>jetty-server</artifactId>
     	<version>8.1.4.v20120524</version>
     </dependency>
+    
+    <!-- Clases comunes -->
+	<dependency>
+	  <groupId>ar.com.dgarcia</groupId>
+	  <artifactId>dgarcia-commons</artifactId>
+	  <version>1.0.3</version>
+	</dependency>    
   
     <dependency>
       <groupId>com.google.guava</groupId>
