@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.impl.estrategias;
+package net.gaia.vortex.server.impl;
 
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;

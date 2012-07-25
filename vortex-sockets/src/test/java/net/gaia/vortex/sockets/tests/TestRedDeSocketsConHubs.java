@@ -22,12 +22,12 @@ import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
+import net.gaia.vortex.server.impl.RealizarConexiones;
+import net.gaia.vortex.server.impl.RealizarConexionesPorFuera;
 import net.gaia.vortex.sockets.api.ClienteDeSocketVortex;
 import net.gaia.vortex.sockets.api.ServidorDeSocketVortex;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
-import net.gaia.vortex.sockets.impl.estrategias.RealizarConexiones;
-import net.gaia.vortex.sockets.impl.estrategias.RealizarConexionesPorFuera;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 
 import org.junit.After;

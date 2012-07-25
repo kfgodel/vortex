@@ -10,19 +10,17 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.impl.estrategias;
+package net.gaia.vortex.server.impl;
 
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa una estrategia de conexión de {@link NexoSocket} a la red vortex.
- * Utilizando un nodo conocido, esta clase conecta los nuevos nexos al nodo, y los desconecta al
- * cerrarse
+ * Esta clase representa una estrategia de conexión de {@link Nexo} a la red vortex utilizando un
+ * nodo conocido. Esta clase conecta los nuevos nexos al nodo, y los desconecta al cerrarse
  * 
  * @author D. García
  */

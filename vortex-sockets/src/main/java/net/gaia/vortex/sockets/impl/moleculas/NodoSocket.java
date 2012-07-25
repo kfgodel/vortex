@@ -16,9 +16,9 @@ import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
+import net.gaia.vortex.server.impl.RealizarConexiones;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
-import net.gaia.vortex.sockets.impl.estrategias.RealizarConexiones;
 import ar.dgarcia.objectsockets.api.Disposable;
 
 /**
