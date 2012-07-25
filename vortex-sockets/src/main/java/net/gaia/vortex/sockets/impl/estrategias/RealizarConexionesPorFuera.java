@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.sockets.impl.estrategias;
 
-import net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos;
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
+import net.gaia.vortex.core.api.atomos.forward.Nexo;
+import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,18 +40,18 @@ public class RealizarConexionesPorFuera implements EstrategiaDeConexionDeNexos {
 	}
 
 	/**
-	 * @see net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos#onNexoSocketCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
+	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 	@Override
-	public void onNexoSocketCreado(final NexoSocket nuevoNexo) {
+	public void onNexoCreado(final Nexo nuevoNexo) {
 		LOG.debug("No se realizara accion interna de conexion del nexo creado[{}]", nuevoNexo);
 	}
 
 	/**
-	 * @see net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos#onNexoSocketCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
+	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 	@Override
-	public void onNexoSocketCerrado(final NexoSocket nexoCerrado) {
+	public void onNexoCerrado(final Nexo nexoCerrado) {
 		LOG.debug("No se realizara accion interna de desconexion del nexo cerrado[{}]", nexoCerrado);
 	}
 

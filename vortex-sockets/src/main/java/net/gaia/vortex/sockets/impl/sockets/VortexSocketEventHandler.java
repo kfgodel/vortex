@@ -5,7 +5,8 @@ package net.gaia.vortex.sockets.impl.sockets;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
-import net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos;
+import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
+import net.gaia.vortex.server.api.GeneradorDeNexos;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ import ar.dgarcia.objectsockets.api.SocketEventHandler;
  * 
  * @author D. García
  */
-public class VortexSocketEventHandler implements SocketEventHandler {
+public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDeNexos {
 	private static final Logger LOG = LoggerFactory.getLogger(VortexSocketEventHandler.class);
 
 	/**
@@ -39,7 +40,7 @@ public class VortexSocketEventHandler implements SocketEventHandler {
 	private TaskProcessor processor;
 	public static final String processor_FIELD = "processor";
 
-	private EstrategiaDeConexionDeNexos handler;
+	private EstrategiaDeConexionDeNexos estrategiaDeConexion;
 	public static final String handler_FIELD = "handler";
 
 	/**
@@ -47,7 +48,7 @@ public class VortexSocketEventHandler implements SocketEventHandler {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(handler_FIELD, handler).toString();
+		return ToString.de(this).add(handler_FIELD, estrategiaDeConexion).toString();
 	}
 
 	/**
@@ -62,10 +63,10 @@ public class VortexSocketEventHandler implements SocketEventHandler {
 		// El nexo se encargará de los mensajes recibidos por el socket
 		nuevoSocket.setHandler(nuevoNexo);
 		try {
-			handler.onNexoSocketCreado(nuevoNexo);
+			estrategiaDeConexion.onNexoCreado(nuevoNexo);
 		} catch (final Exception e) {
-			LOG.error("Se produjo un error en el listener de socket abierto[" + handler + "] al pasarle el nexo["
-					+ nuevoNexo + "]. Ignorando error", e);
+			LOG.error("Se produjo un error en el listener de socket abierto[" + estrategiaDeConexion
+					+ "] al pasarle el nexo[" + nuevoNexo + "]. Ignorando error", e);
 		}
 	}
 
@@ -82,10 +83,10 @@ public class VortexSocketEventHandler implements SocketEventHandler {
 			return;
 		}
 		try {
-			handler.onNexoSocketCerrado(nexoCerrado);
+			estrategiaDeConexion.onNexoCerrado(nexoCerrado);
 		} catch (final Exception e) {
-			LOG.error("Se produjo un error en el listener de socket cerrado[" + handler + "] al pasarle el nexo["
-					+ nexoCerrado + "]. Ignorando error", e);
+			LOG.error("Se produjo un error en el listener de socket cerrado[" + estrategiaDeConexion
+					+ "] al pasarle el nexo[" + nexoCerrado + "]. Ignorando error", e);
 		}
 		socketCerrado.getEstadoAsociado().remove(NEXO_ASOCIADO_AL_SOCKET);
 	}
@@ -114,14 +115,31 @@ public class VortexSocketEventHandler implements SocketEventHandler {
 	}
 
 	/**
-	 * Crea este handler de sockets que utilizará el procesor para los nexos creados y el handler de
-	 * nexos para asociarlos a una red
+	 * Crea este handler de sockets que utilizará el procesor para los nexos creados y la estrategia
+	 * para asociarlos a una red
 	 */
 	public static VortexSocketEventHandler create(final TaskProcessor processor,
-			final EstrategiaDeConexionDeNexos listener) {
+			final EstrategiaDeConexionDeNexos estrategia) {
 		final VortexSocketEventHandler handler = new VortexSocketEventHandler();
 		handler.processor = processor;
-		handler.handler = listener;
+		handler.estrategiaDeConexion = estrategia;
 		return handler;
 	}
+
+	/**
+	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
+	 */
+	@Override
+	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
+		return estrategiaDeConexion;
+	}
+
+	/**
+	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
+	 */
+	@Override
+	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
+		this.estrategiaDeConexion = estrategia;
+	}
+
 }

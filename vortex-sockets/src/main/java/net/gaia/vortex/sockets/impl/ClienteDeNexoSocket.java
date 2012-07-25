@@ -15,8 +15,8 @@ package net.gaia.vortex.sockets.impl;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 import net.gaia.vortex.sockets.api.ClienteDeSocketVortex;
-import net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos;
 import net.gaia.vortex.sockets.external.json.VortexTextualizer;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 import net.gaia.vortex.sockets.impl.sockets.ReceptionHandlerNulo;
@@ -91,6 +91,22 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 		conector.remoteAddress = remoteAddress;
 		conector.socketHandler = VortexSocketEventHandler.create(processor, estrategiaDeConexion);
 		return conector;
+	}
+
+	/**
+	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
+	 */
+	@Override
+	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
+		return socketHandler.getEstrategiaDeConexion();
+	}
+
+	/**
+	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
+	 */
+	@Override
+	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
+		socketHandler.setEstrategiaDeConexion(estrategia);
 	}
 
 }

@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.sockets.api;
 
+import net.gaia.vortex.server.api.GeneradorDeNexos;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.impl.ObjectSocketException;
@@ -24,7 +25,7 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketException;
  * 
  * @author D. García
  */
-public interface ClienteDeSocketVortex extends Disposable {
+public interface ClienteDeSocketVortex extends Disposable, GeneradorDeNexos {
 	/**
 	 * Conecta como cliente este nodo a la dirección indicada en la creación
 	 * 

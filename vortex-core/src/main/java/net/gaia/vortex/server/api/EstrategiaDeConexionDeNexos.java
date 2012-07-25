@@ -1,14 +1,17 @@
 /**
  * 19/06/2012 19:46:45 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.sockets.api;
+package net.gaia.vortex.server.api;
 
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
+import net.gaia.vortex.core.api.atomos.forward.Nexo;
 
 /**
- * Esta interfaz representa el contrato requerido por un handler de eventos de creación y
- * destrucción de {@link NexoSocket} que suceden en las conexiones de los sockets entrantes y
- * salientes
+ * Esta interfaz representa una estrategia brindada externamente a una entidad creadora/destructora
+ * de {@link Nexo}s.<br>
+ * A través de instancias de esta interfaz un tercero puede indicar a la entidad creadora (sockets,
+ * http) como conectar los nexos nuevos creados a una parte de la red existente.<br>
+ * <br>
+ * Esta estrategia indica también como hacer la desconexión antes de eliminar el nexo
  * 
  * @author D. García
  */
@@ -25,7 +28,7 @@ public interface EstrategiaDeConexionDeNexos {
 	 *            El nexo que se está abriendo y que debería ser conectado a la red para compartir
 	 *            los mensajes recibidos
 	 */
-	public void onNexoSocketCreado(NexoSocket nuevoNexo);
+	public void onNexoCreado(Nexo nuevoNexo);
 
 	/**
 	 * Invocado por el administrador de sockets durante el cierre del socket asociado al nexo
@@ -36,5 +39,5 @@ public interface EstrategiaDeConexionDeNexos {
 	 * @param nexoCerrado
 	 *            El nexo que se está cerrando
 	 */
-	public void onNexoSocketCerrado(NexoSocket nexoCerrado);
+	public void onNexoCerrado(Nexo nexoCerrado);
 }

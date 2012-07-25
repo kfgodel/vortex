@@ -13,8 +13,9 @@
 package net.gaia.vortex.sockets.impl.estrategias;
 
 import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.prog.Loggers;
-import net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos;
+import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -31,20 +32,20 @@ public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 	public static final String hubConocido_FIELD = "nodoConocido";
 
 	/**
-	 * @see net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos#onNexoSocketCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
+	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 	@Override
-	public void onNexoSocketCreado(final NexoSocket nuevoNexo) {
+	public void onNexoCreado(final Nexo nuevoNexo) {
 		Loggers.RUTEO.info("Conectando nuevo nexo[{}] con el nodo[{}]", nuevoNexo, nodoConocido);
 		nuevoNexo.conectarCon(nodoConocido);
 		nodoConocido.conectarCon(nuevoNexo);
 	}
 
 	/**
-	 * @see net.gaia.vortex.sockets.api.EstrategiaDeConexionDeNexos#onNexoSocketCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
+	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 	@Override
-	public void onNexoSocketCerrado(final NexoSocket nexoCerrado) {
+	public void onNexoCerrado(final Nexo nexoCerrado) {
 		Loggers.RUTEO.info("Des-Conectando nexo[{}] del nodo[{}]", nexoCerrado, nodoConocido);
 		nodoConocido.desconectarDe(nexoCerrado);
 		nexoCerrado.desconectarDe(nodoConocido);
