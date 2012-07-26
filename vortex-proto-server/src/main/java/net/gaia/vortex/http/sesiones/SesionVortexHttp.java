@@ -16,8 +16,8 @@ import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 
 /**
  * Esta interfaz representa una sesión http para la comunicación con vortex.<br>
- * Cada sesión tiene asociada un {@link NexoHttp} con el cual traduce los requests en mensajes y
- * viceversa.<br>
+ * Cada sesión tiene un {@link NexoHttp} asociado con el cual interactúa con la red vortex desde los
+ * requests del cliente http
  * 
  * @author D. García
  */

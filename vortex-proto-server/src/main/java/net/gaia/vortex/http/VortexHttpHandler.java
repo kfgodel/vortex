@@ -18,6 +18,7 @@ import net.gaia.vortex.http.comandos.IntercambiarMensajes;
 import net.gaia.vortex.http.comandos.SinComando;
 import net.gaia.vortex.http.external.jetty.ComandoHttp;
 import net.gaia.vortex.http.external.jetty.HandlerHttpPorComandos;
+import net.gaia.vortex.http.sesiones.AdministradorEnMemoria;
 
 import org.eclipse.jetty.server.Request;
 
@@ -34,6 +35,8 @@ public class VortexHttpHandler extends HandlerHttpPorComandos {
 	private static final String URL_PREFFIX_INTERCAMBIAR = "/vortex/session/";
 	private static final String MENSAJES_PARAMETER_NAME = "mensajes_vortex";
 
+	private AdministradorEnMemoria administradorDeSesiones;
+
 	/**
 	 * @see net.gaia.vortex.http.external.jetty.HandlerHttpPorComandos#interpretarComandoDesde(java.lang.String,
 	 *      org.eclipse.jetty.server.Request)
@@ -41,16 +44,16 @@ public class VortexHttpHandler extends HandlerHttpPorComandos {
 	@Override
 	protected ComandoHttp interpretarComandoDesde(final String target, final Request baseRequest) {
 		if (URL_CREAR.equals(target)) {
-			return CrearSesionVortexHttp.create();
+			return CrearSesionVortexHttp.create(administradorDeSesiones);
 		}
 		String sessionId = getSessionIdWithPreffix(URL_PREFFIX_ELIMINAR, target);
 		if (sessionId != null) {
-			return EliminarSesionVortexHttp.create(sessionId);
+			return EliminarSesionVortexHttp.create(sessionId, administradorDeSesiones);
 		}
 		sessionId = getSessionIdWithPreffix(URL_PREFFIX_INTERCAMBIAR, target);
 		if (sessionId != null) {
 			final String mensajesComoJson = baseRequest.getParameter(MENSAJES_PARAMETER_NAME);
-			return IntercambiarMensajes.create(sessionId, mensajesComoJson);
+			return IntercambiarMensajes.create(sessionId, mensajesComoJson, administradorDeSesiones);
 		}
 		return SinComando.create(target);
 	}
@@ -76,6 +79,7 @@ public class VortexHttpHandler extends HandlerHttpPorComandos {
 
 	public static VortexHttpHandler create() {
 		final VortexHttpHandler handler = new VortexHttpHandler();
+		handler.administradorDeSesiones = AdministradorEnMemoria.create();
 		return handler;
 	}
 }
