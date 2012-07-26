@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.http.comandos;
 
-import net.gaia.vortex.http.handler.ComandoHttp;
-import net.gaia.vortex.http.handler.RespuestaHttp;
+import net.gaia.vortex.http.external.jetty.ComandoHttp;
+import net.gaia.vortex.http.external.jetty.RespuestaHttp;
 import net.gaia.vortex.http.respuestas.RespuestaDeErrorDeCliente;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -28,7 +28,7 @@ public class SinComando implements ComandoHttp {
 	public static final String urlUsada_FIELD = "urlUsada";
 
 	/**
-	 * @see net.gaia.vortex.http.handler.ComandoHttp#ejecutar()
+	 * @see net.gaia.vortex.http.external.jetty.ComandoHttp#ejecutar()
 	 */
 	@Override
 	public RespuestaHttp ejecutar() {

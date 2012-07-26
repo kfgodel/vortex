@@ -36,7 +36,9 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
 /**
  * Esta clase representa un componente vortex que une la red vortex con un socket de manera que los
  * mensajes circulen por el socket representado como parte de la misma red.<br>
- * Este nexo tiene la capacidad de identificar los mensajes que recibe pudiendo descartar duplicados
+ * Este tipo de nexos une el mundo http con el mundo vortex<br>
+ * <br>
+ * Este nexo tiene la capacidad de identificar los mensajes que recibe pudiendo descartar duplicados<br>
  * 
  * @author D. García
  */

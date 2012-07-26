@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletResponse;
 
-import net.gaia.vortex.http.handler.RespuestaHttp;
+import net.gaia.vortex.http.external.jetty.RespuestaHttp;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -31,7 +31,7 @@ public class RespuestaDeErrorDelServidor implements RespuestaHttp {
 	public static final String excepcion_FIELD = "excepcion";
 
 	/**
-	 * @see net.gaia.vortex.http.handler.RespuestaHttp#reflejarEn(javax.servlet.http.HttpServletResponse)
+	 * @see net.gaia.vortex.http.external.jetty.RespuestaHttp#reflejarEn(javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	public void reflejarEn(final HttpServletResponse response) throws IOException {

@@ -12,9 +12,11 @@
  */
 package net.gaia.vortex.http.comandos;
 
-import net.gaia.vortex.http.handler.ComandoHttp;
-import net.gaia.vortex.http.handler.RespuestaHttp;
+import net.gaia.vortex.http.external.jetty.ComandoHttp;
+import net.gaia.vortex.http.external.jetty.RespuestaHttp;
 import net.gaia.vortex.http.respuestas.RespuestaDeTexto;
+import net.gaia.vortex.http.sesiones.AdministradorDeSesiones;
+import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -24,16 +26,21 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class CrearSesionVortexHttp implements ComandoHttp {
 
+	private AdministradorDeSesiones administradorDeSesiones;
+
 	/**
-	 * @see net.gaia.vortex.http.handler.ComandoHttp#ejecutar()
+	 * @see net.gaia.vortex.http.external.jetty.ComandoHttp#ejecutar()
 	 */
 	@Override
 	public RespuestaHttp ejecutar() {
-		return RespuestaDeTexto.create("sesion 1 creada");
+		final SesionVortexHttp sesion = administradorDeSesiones.crearNuevaSesion();
+		final String idDeSesion = sesion.getId();
+		return RespuestaDeTexto.create(idDeSesion);
 	}
 
-	public static CrearSesionVortexHttp create() {
+	public static CrearSesionVortexHttp create(final AdministradorDeSesiones administrador) {
 		final CrearSesionVortexHttp comando = new CrearSesionVortexHttp();
+		comando.administradorDeSesiones = administrador;
 		return comando;
 	}
 

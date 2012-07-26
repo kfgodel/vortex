@@ -12,9 +12,16 @@
  */
 package net.gaia.vortex.http.comandos;
 
-import net.gaia.vortex.http.handler.ComandoHttp;
-import net.gaia.vortex.http.handler.RespuestaHttp;
+import net.gaia.vortex.http.external.jetty.ComandoHttp;
+import net.gaia.vortex.http.external.jetty.RespuestaHttp;
+import net.gaia.vortex.http.respuestas.RespuestaDeErrorDeCliente;
 import net.gaia.vortex.http.respuestas.RespuestaDeTexto;
+import net.gaia.vortex.http.sesiones.AdministradorDeSesiones;
+import net.gaia.vortex.http.sesiones.SesionVortexHttp;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -24,25 +31,37 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class IntercambiarMensajes implements ComandoHttp {
+	private static final Logger LOG = LoggerFactory.getLogger(IntercambiarMensajes.class);
+
+	private AdministradorDeSesiones administradorDeSesiones;
 
 	private String sessionId;
 	public static final String sessionId_FIELD = "sessionId";
 
-	private String mensajesComoJson;
+	private String mensajesDelClienteEnJson;
 	public static final String mensajesComoJson_FIELD = "mensajesComoJson";
 
 	/**
-	 * @see net.gaia.vortex.http.handler.ComandoHttp#ejecutar()
+	 * @see net.gaia.vortex.http.external.jetty.ComandoHttp#ejecutar()
 	 */
 	@Override
 	public RespuestaHttp ejecutar() {
-		return RespuestaDeTexto.create("mensajes para la sesion " + sessionId);
+		final SesionVortexHttp sesion = administradorDeSesiones.getSesion(sessionId);
+		if (sesion == null) {
+			LOG.warn("Se pidieron mensajes para la sesion[{}] y no existe en este servidor", sessionId);
+			return RespuestaDeErrorDeCliente.create("Sesión no existente en este server: " + sessionId);
+		}
+		sesion.recibirDelCliente(mensajesDelClienteEnJson);
+		final String mensajesParaElClienteEnJson = sesion.obtenerParaElCliente();
+		return RespuestaDeTexto.create(mensajesParaElClienteEnJson);
 	}
 
-	public static IntercambiarMensajes create(final String sessionId, final String mensajesComoJson) {
+	public static IntercambiarMensajes create(final String sessionId, final String mensajesComoJson,
+			final AdministradorDeSesiones administrador) {
 		final IntercambiarMensajes comando = new IntercambiarMensajes();
+		comando.administradorDeSesiones = administrador;
 		comando.sessionId = sessionId;
-		comando.mensajesComoJson = mensajesComoJson;
+		comando.mensajesDelClienteEnJson = mensajesComoJson;
 		return comando;
 	}
 
@@ -51,7 +70,7 @@ public class IntercambiarMensajes implements ComandoHttp {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(sessionId_FIELD, sessionId).con(mensajesComoJson_FIELD, mensajesComoJson)
+		return ToString.de(this).con(sessionId_FIELD, sessionId).con(mensajesComoJson_FIELD, mensajesDelClienteEnJson)
 				.toString();
 	}
 

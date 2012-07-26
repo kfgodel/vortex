@@ -12,9 +12,16 @@
  */
 package net.gaia.vortex.http.comandos;
 
-import net.gaia.vortex.http.handler.ComandoHttp;
-import net.gaia.vortex.http.handler.RespuestaHttp;
+import net.gaia.vortex.http.external.jetty.ComandoHttp;
+import net.gaia.vortex.http.external.jetty.RespuestaHttp;
+import net.gaia.vortex.http.respuestas.RespuestaDeErrorDeCliente;
 import net.gaia.vortex.http.respuestas.RespuestaDeTexto;
+import net.gaia.vortex.http.sesiones.AdministradorDeSesiones;
+import net.gaia.vortex.http.sesiones.SesionVortexHttp;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -24,21 +31,31 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class EliminarSesionVortexHttp implements ComandoHttp {
+	private static final Logger LOG = LoggerFactory.getLogger(EliminarSesionVortexHttp.class);
+
+	private AdministradorDeSesiones administradorDeSesiones;
 
 	private String sessionId;
 	public static final String sessionId_FIELD = "sessionId";
 
 	/**
-	 * @see net.gaia.vortex.http.handler.ComandoHttp#ejecutar()
+	 * @see net.gaia.vortex.http.external.jetty.ComandoHttp#ejecutar()
 	 */
 	@Override
 	public RespuestaHttp ejecutar() {
-		return RespuestaDeTexto.create("session " + sessionId + " eliminada");
+		final SesionVortexHttp sesion = administradorDeSesiones.getSesion(sessionId);
+		if (sesion == null) {
+			LOG.warn("Se intentó eliminar la sesion[{}] y no existe en este servidor", sessionId);
+			return RespuestaDeErrorDeCliente.create("Sesión no existente en este server: " + sessionId);
+		}
+		administradorDeSesiones.eliminarSesion(sesion);
+		return RespuestaDeTexto.create("OK");
 	}
 
-	public static EliminarSesionVortexHttp create(final String sessionId) {
+	public static EliminarSesionVortexHttp create(final String sessionId, final AdministradorDeSesiones administrador) {
 		final EliminarSesionVortexHttp comando = new EliminarSesionVortexHttp();
 		comando.sessionId = sessionId;
+		comando.administradorDeSesiones = administrador;
 		return comando;
 	}
 

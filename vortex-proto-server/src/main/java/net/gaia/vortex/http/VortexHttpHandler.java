@@ -16,8 +16,8 @@ import net.gaia.vortex.http.comandos.CrearSesionVortexHttp;
 import net.gaia.vortex.http.comandos.EliminarSesionVortexHttp;
 import net.gaia.vortex.http.comandos.IntercambiarMensajes;
 import net.gaia.vortex.http.comandos.SinComando;
-import net.gaia.vortex.http.handler.ComandoHttp;
-import net.gaia.vortex.http.handler.HandlerHttpPorComandos;
+import net.gaia.vortex.http.external.jetty.ComandoHttp;
+import net.gaia.vortex.http.external.jetty.HandlerHttpPorComandos;
 
 import org.eclipse.jetty.server.Request;
 
@@ -35,7 +35,7 @@ public class VortexHttpHandler extends HandlerHttpPorComandos {
 	private static final String MENSAJES_PARAMETER_NAME = "mensajes_vortex";
 
 	/**
-	 * @see net.gaia.vortex.http.handler.HandlerHttpPorComandos#interpretarComandoDesde(java.lang.String,
+	 * @see net.gaia.vortex.http.external.jetty.HandlerHttpPorComandos#interpretarComandoDesde(java.lang.String,
 	 *      org.eclipse.jetty.server.Request)
 	 */
 	@Override
