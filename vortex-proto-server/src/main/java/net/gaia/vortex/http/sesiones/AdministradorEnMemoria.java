@@ -51,7 +51,7 @@ public class AdministradorEnMemoria implements AdministradorDeSesiones {
 	 */
 	@Override
 	public void eliminarSesion(final SesionVortexHttp sesion) {
-		final String idDeSesion = sesion.getId();
+		final String idDeSesion = sesion.getIdDeSesion();
 		sesionesPorId.remove(idDeSesion);
 	}
 

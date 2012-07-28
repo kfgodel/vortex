@@ -34,7 +34,7 @@ public class CrearSesionVortexHttp implements ComandoHttp {
 	@Override
 	public RespuestaHttp ejecutar() {
 		final SesionVortexHttp sesion = administradorDeSesiones.crearNuevaSesion();
-		final String idDeSesion = sesion.getId();
+		final String idDeSesion = sesion.getIdDeSesion();
 		return RespuestaDeTexto.create(idDeSesion);
 	}
 

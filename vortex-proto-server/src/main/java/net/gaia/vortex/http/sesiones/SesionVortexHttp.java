@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.http.sesiones;
 
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 
 /**
@@ -46,6 +47,14 @@ public interface SesionVortexHttp {
 	 * 
 	 * @return El id de esta sesión
 	 */
-	String getId();
+	String getIdDeSesion();
+
+	/**
+	 * Guarda el mensaje indicado para ser enviado al cliente cuando lo pida
+	 * 
+	 * @param mensaje
+	 *            El mensaje a enviar
+	 */
+	void acumularParaCliente(MensajeVortex mensaje);
 
 }

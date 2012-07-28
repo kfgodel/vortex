@@ -12,6 +12,11 @@
  */
 package net.gaia.vortex.http.sesiones;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import ar.com.dgarcia.lang.strings.ToString;
+
 /**
  * Esta clase representa una sesión vortex http mantenida en memoria
  * 
@@ -19,7 +24,10 @@ package net.gaia.vortex.http.sesiones;
  */
 public class SesionEnMemoria implements SesionVortexHttp {
 
-	private String id;
+	private String idDeSesion;
+	public static final String idDeSesion_FIELD = "idDeSesion";
+
+	private ConcurrentLinkedQueue<MensajeVortex> mensajesAcumulados;
 
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#recibirDelCliente(java.lang.String)
@@ -40,16 +48,25 @@ public class SesionEnMemoria implements SesionVortexHttp {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#getId()
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#getIdDeSesion()
 	 */
 	@Override
-	public String getId() {
-		return id;
+	public String getIdDeSesion() {
+		return idDeSesion;
 	}
 
 	public static SesionEnMemoria create(final String idDeSesion) {
 		final SesionEnMemoria sesion = new SesionEnMemoria();
-		sesion.id = idDeSesion;
+		sesion.idDeSesion = idDeSesion;
 		return sesion;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(idDeSesion_FIELD, idDeSesion).toString();
+	}
+
 }
