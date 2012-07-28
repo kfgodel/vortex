@@ -50,6 +50,7 @@ public abstract class HandlerHttpPorComandos extends AbstractHandler {
 			LOG.debug("Respuesta generada: {}", respuesta);
 			respuesta.reflejarEn(response);
 		} catch (final Throwable e) {
+			LOG.error("Se produjo un error interno no esperado: " + e.getMessage(), e);
 			final RespuestaDeErrorDelServidor respuestaDeError = RespuestaDeErrorDelServidor.create(e);
 			respuestaDeError.reflejarEn(response);
 		}

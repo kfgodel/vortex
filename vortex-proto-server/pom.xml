@@ -114,6 +114,13 @@
     	<version>8.1.4.v20120524</version>
     </dependency>
     
+    <!-- Conversion a json -->
+	<dependency>
+	  <groupId>ar.dgarcia.textualizer</groupId>
+	  <artifactId>json-textualizer</artifactId>
+	  <version>0.1</version>
+	</dependency>    
+    
     <!-- Clases comunes -->
 	<dependency>
 	  <groupId>ar.com.dgarcia</groupId>

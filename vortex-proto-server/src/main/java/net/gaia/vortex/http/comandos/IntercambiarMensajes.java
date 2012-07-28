@@ -51,7 +51,10 @@ public class IntercambiarMensajes implements ComandoHttp {
 			LOG.warn("Se pidieron mensajes para la sesion[{}] y no existe en este servidor", sessionId);
 			return RespuestaDeErrorDeCliente.create("Sesión no existente en este server: " + sessionId);
 		}
-		sesion.recibirDelCliente(mensajesDelClienteEnJson);
+		if (mensajesDelClienteEnJson != null) {
+			// Solo enviamos si hay mensajes para la red
+			sesion.recibirDelCliente(mensajesDelClienteEnJson);
+		}
 		final String mensajesParaElClienteEnJson = sesion.obtenerParaElCliente();
 		return RespuestaDeTexto.create(mensajesParaElClienteEnJson);
 	}

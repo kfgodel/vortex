@@ -12,7 +12,9 @@
  */
 package net.gaia.vortex.http.external.json;
 
+import net.gaia.vortex.http.sesiones.PaqueteHttpVortex;
 import net.gaia.vortex.http.sesiones.VortexHttpTextualizer;
+import ar.dgarcia.textualizer.json.JsonTextualizer;
 
 /**
  * Esta clase es la implementación del textualizador de mensajes por http usando jackson
@@ -21,8 +23,30 @@ import net.gaia.vortex.http.sesiones.VortexHttpTextualizer;
  */
 public class JacksonHttpTextualizer implements VortexHttpTextualizer {
 
+	private JsonTextualizer internalTextualizer;
+
 	public static JacksonHttpTextualizer create() {
 		final JacksonHttpTextualizer textualizer = new JacksonHttpTextualizer();
+		textualizer.internalTextualizer = JsonTextualizer.createWithoutTypeMetadata();
 		return textualizer;
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sesiones.VortexHttpTextualizer#convertFromString(java.lang.String)
+	 */
+	@Override
+	public PaqueteHttpVortex convertFromString(final String mensajesComoJson) {
+		final PaqueteHttpVortex paquete = internalTextualizer.convertFromStringAs(PaqueteHttpVortex.class,
+				mensajesComoJson);
+		return paquete;
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sesiones.VortexHttpTextualizer#convertToString(net.gaia.vortex.http.sesiones.PaqueteHttpVortex)
+	 */
+	@Override
+	public String convertToString(final PaqueteHttpVortex paqueteDeSalida) {
+		final String convertToString = internalTextualizer.convertToString(paqueteDeSalida);
+		return convertToString;
 	}
 }

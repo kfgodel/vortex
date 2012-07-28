@@ -14,6 +14,7 @@ package net.gaia.vortex.http.sesiones;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -108,9 +109,12 @@ public class SesionEnMemoria implements SesionVortexHttp {
 	@Override
 	public String obtenerParaElCliente() {
 		final PaqueteHttpVortex paqueteDeSalida = PaqueteHttpVortex.create();
-		for (final MensajeVortex mensaje : this.mensajesAcumulados) {
+		final Iterator<MensajeVortex> iteradorDeMensajes = this.mensajesAcumulados.iterator();
+		while (iteradorDeMensajes.hasNext()) {
+			final MensajeVortex mensaje = iteradorDeMensajes.next();
 			final Map<String, Object> contenidoTextualizable = mensaje.getContenido();
 			paqueteDeSalida.agregarContenido(contenidoTextualizable);
+			iteradorDeMensajes.remove();
 		}
 		final String jsonDelPaquete = textualizer.convertToString(paqueteDeSalida);
 		return jsonDelPaquete;
