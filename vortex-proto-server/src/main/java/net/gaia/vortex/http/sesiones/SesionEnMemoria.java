@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
@@ -25,6 +26,7 @@ import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa una sesión vortex http mantenida en memoria
@@ -33,26 +35,56 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class SesionEnMemoria implements SesionVortexHttp {
 
+	/**
+	 * Espera inicial para dar como vieja la sesion
+	 */
+	private static final long ESPERA_MAXIMA_INICIAL = TimeMagnitude.of(5, TimeUnit.MINUTES).getMillis();
+
 	private String idDeSesion;
 	public static final String idDeSesion_FIELD = "idDeSesion";
 
 	private NexoHttp nexoAsociado;
 	public static final String nexoAsociado_FIELD = "nexoAsociado";
 
+	private static final long MAXIMA_ESPERA_OTORGABLE = TimeMagnitude.of(7, TimeUnit.DAYS).getMillis();
+
 	private ConcurrentLinkedQueue<MensajeVortex> mensajesAcumulados;
 
 	private VortexHttpTextualizer textualizer;
+
+	private long momentoDeUltimaActidad;
+	private long esperaMaxima;
 
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#recibirDelCliente(java.lang.String)
 	 */
 	@Override
 	public void recibirDelCliente(final String mensajesComoJson) {
+		registrarActividad();
 		final PaqueteHttpVortex paquete = textualizer.convertFromString(mensajesComoJson);
+		negociarEsperaConCliente(paquete);
 		final List<Map<String, Object>> contenidosDeMensajes = paquete.getContenidos();
 		for (final Map<String, Object> contenido : contenidosDeMensajes) {
 			enviarAVortex(contenido);
 		}
+	}
+
+	/**
+	 * Actualiza la espera máxima que se le brinda al cliente en esta sesión
+	 * 
+	 * @param paquete
+	 *            El paquete que define la espera máxima
+	 */
+	private void negociarEsperaConCliente(final PaqueteHttpVortex paquete) {
+		Long proximaEspera = paquete.getProximaEsperaMaxima();
+		if (proximaEspera == null) {
+			// No modificamos la espera máxima
+			return;
+		}
+		if (proximaEspera > MAXIMA_ESPERA_OTORGABLE) {
+			proximaEspera = MAXIMA_ESPERA_OTORGABLE;
+		}
+		esperaMaxima = proximaEspera;
 	}
 
 	/**
@@ -108,7 +140,8 @@ public class SesionEnMemoria implements SesionVortexHttp {
 	 */
 	@Override
 	public String obtenerParaElCliente() {
-		final PaqueteHttpVortex paqueteDeSalida = PaqueteHttpVortex.create();
+		registrarActividad();
+		final PaqueteHttpVortex paqueteDeSalida = PaqueteHttpVortex.create(0, esperaMaxima);
 		final Iterator<MensajeVortex> iteradorDeMensajes = this.mensajesAcumulados.iterator();
 		while (iteradorDeMensajes.hasNext()) {
 			final MensajeVortex mensaje = iteradorDeMensajes.next();
@@ -133,7 +166,25 @@ public class SesionEnMemoria implements SesionVortexHttp {
 		sesion.idDeSesion = idDeSesion;
 		sesion.mensajesAcumulados = new ConcurrentLinkedQueue<MensajeVortex>();
 		sesion.textualizer = textualizer;
+		sesion.registrarActividad();
+		sesion.esperaMaxima = ESPERA_MAXIMA_INICIAL;
 		return sesion;
+	}
+
+	/**
+	 * Registra que esta sesioón tiene actividad, evitando que se considere vieja
+	 */
+	private void registrarActividad() {
+		this.momentoDeUltimaActidad = getCurrentTime();
+	}
+
+	/**
+	 * Devuelve el momento considerado actual para comparar sesiones viejas
+	 * 
+	 * @return
+	 */
+	private long getCurrentTime() {
+		return System.currentTimeMillis();
 	}
 
 	/**
@@ -162,4 +213,14 @@ public class SesionEnMemoria implements SesionVortexHttp {
 		this.mensajesAcumulados.add(mensaje);
 	}
 
+	/**
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#esVieja()
+	 */
+	@Override
+	public boolean esVieja() {
+		final long now = getCurrentTime();
+		final long transcurridos = now - momentoDeUltimaActidad;
+		final boolean esVieja = transcurridos > esperaMaxima;
+		return esVieja;
+	}
 }

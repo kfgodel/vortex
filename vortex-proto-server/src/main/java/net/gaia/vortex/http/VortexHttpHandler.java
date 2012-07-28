@@ -90,7 +90,7 @@ public class VortexHttpHandler extends HandlerHttpPorComandos implements Listene
 
 	public static VortexHttpHandler create(final TaskProcessor processor, final EstrategiaDeConexionDeNexos estrategia) {
 		final VortexHttpHandler handler = new VortexHttpHandler();
-		handler.administradorDeSesiones = AdministradorEnMemoria.create(handler);
+		handler.administradorDeSesiones = AdministradorEnMemoria.create(handler, processor);
 		handler.processor = processor;
 		handler.estrategia = estrategia;
 		return handler;

@@ -12,13 +12,19 @@
  */
 package net.gaia.vortex.http.sesiones;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase implementa el administrador de sesiones manteniendo el estado en memoria
@@ -26,12 +32,26 @@ import org.slf4j.LoggerFactory;
  * @author D. García
  */
 public class AdministradorEnMemoria implements AdministradorDeSesiones {
+	/**
+	 * El proceso de limpieza corre cada un minuto
+	 */
+	public static final TimeMagnitude ESPERA_ENTRE_LIMPIEZAS = TimeMagnitude.of(1, TimeUnit.MINUTES);
+
 	private static final Logger LOG = LoggerFactory.getLogger(AdministradorEnMemoria.class);
 
 	private ConcurrentHashMap<String, SesionVortexHttp> sesionesPorId;
 	private AtomicLong proximoId;
 	private ListenerDeSesionesHttp listener;
 	private VortexHttpTextualizer textualizer;
+
+	private TaskProcessor processor;
+	private final WorkUnit tareaDeLimpiezaDeSesiones = new WorkUnit() {
+		@Override
+		public WorkUnit doWork() throws InterruptedException {
+			onLimpiezaDeSesiones();
+			return null;
+		}
+	};
 
 	/**
 	 * @see net.gaia.vortex.http.sesiones.AdministradorDeSesiones#getSesion(java.lang.String)
@@ -69,12 +89,43 @@ public class AdministradorEnMemoria implements AdministradorDeSesiones {
 		}
 	}
 
-	public static AdministradorEnMemoria create(final ListenerDeSesionesHttp listener) {
+	public static AdministradorEnMemoria create(final ListenerDeSesionesHttp listener, final TaskProcessor processor) {
 		final AdministradorEnMemoria administrador = new AdministradorEnMemoria();
 		administrador.sesionesPorId = new ConcurrentHashMap<String, SesionVortexHttp>();
 		administrador.proximoId = new AtomicLong(1);
 		administrador.listener = listener;
 		administrador.textualizer = JacksonHttpTextualizer.create();
+		administrador.processor = processor;
+		administrador.planificarProximaLimpieza();
 		return administrador;
+	}
+
+	/**
+	 * Planifica a futuro la limpieza de sesiones viejas
+	 */
+	private void planificarProximaLimpieza() {
+		this.processor.processDelayed(ESPERA_ENTRE_LIMPIEZAS, tareaDeLimpiezaDeSesiones);
+	}
+
+	/**
+	 * Invocado periódicamente para limpiar las sesiones viejas en este administrador
+	 */
+	protected void onLimpiezaDeSesiones() {
+		limpiarSesionesViejas();
+		planificarProximaLimpieza();
+	}
+
+	/**
+	 * Elimina de este administrador las sesiones que superaron el tiempo de espera máximo y no han
+	 * tenido actividad
+	 */
+	private void limpiarSesionesViejas() {
+		final Collection<SesionVortexHttp> allSesiones = sesionesPorId.values();
+		for (final SesionVortexHttp sesionVortexHttp : allSesiones) {
+			if (sesionVortexHttp.esVieja()) {
+				// Es seguro eliminar mientras se itera porque la colección es concurrente
+				this.eliminarSesion(sesionVortexHttp);
+			}
+		}
 	}
 }

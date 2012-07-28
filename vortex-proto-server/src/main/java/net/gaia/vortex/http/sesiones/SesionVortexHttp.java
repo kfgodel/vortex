@@ -72,4 +72,12 @@ public interface SesionVortexHttp {
 	 */
 	public void setNexoAsociado(final NexoHttp nexoAsociado);
 
+	/**
+	 * Indica si esta sesión no tiene desde hace demasiado tiempo. (más que la espera máxima
+	 * indicada)
+	 * 
+	 * @return true si la sesión se considera inactiva y debe desecharse
+	 */
+	boolean esVieja();
+
 }

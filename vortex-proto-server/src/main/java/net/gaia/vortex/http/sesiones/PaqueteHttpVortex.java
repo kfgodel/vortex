@@ -57,8 +57,10 @@ public class PaqueteHttpVortex {
 		this.proximaEsperaMaxima = proximaEsperaMaxima;
 	}
 
-	public static PaqueteHttpVortex create() {
+	public static PaqueteHttpVortex create(final long esperaMinima, final long esperaMaxima) {
 		final PaqueteHttpVortex paquete = new PaqueteHttpVortex();
+		paquete.proximaEsperaMinima = esperaMinima;
+		paquete.proximaEsperaMaxima = esperaMaxima;
 		return paquete;
 	}
 
