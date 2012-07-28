@@ -57,4 +57,19 @@ public interface SesionVortexHttp {
 	 */
 	void acumularParaCliente(MensajeVortex mensaje);
 
+	/**
+	 * Devuelve el nexo asociado a esta sesión
+	 * 
+	 * @return El nexo que esta sesión utiliza para meter mensajes en la red vortex
+	 */
+	public NexoHttp getNexoAsociado();
+
+	/**
+	 * Establece el nexo que tendrá asociada esta sesión
+	 * 
+	 * @param nexoAsociado
+	 *            El nexo que utilizará esta sesión
+	 */
+	public void setNexoAsociado(final NexoHttp nexoAsociado);
+
 }

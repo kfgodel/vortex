@@ -15,15 +15,23 @@ package net.gaia.vortex.http.sesiones;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase implementa el administrador de sesiones manteniendo el estado en memoria
  * 
  * @author D. García
  */
 public class AdministradorEnMemoria implements AdministradorDeSesiones {
+	private static final Logger LOG = LoggerFactory.getLogger(AdministradorEnMemoria.class);
 
 	private ConcurrentHashMap<String, SesionVortexHttp> sesionesPorId;
 	private AtomicLong proximoId;
+	private ListenerDeSesionesHttp listener;
+	private VortexHttpTextualizer textualizer;
 
 	/**
 	 * @see net.gaia.vortex.http.sesiones.AdministradorDeSesiones#getSesion(java.lang.String)
@@ -41,8 +49,9 @@ public class AdministradorEnMemoria implements AdministradorDeSesiones {
 	public SesionVortexHttp crearNuevaSesion() {
 		final long nuevoId = proximoId.getAndIncrement();
 		final String nuevoIdDeSesion = String.format("%1$04d", nuevoId);
-		final SesionEnMemoria sesion = SesionEnMemoria.create(nuevoIdDeSesion);
+		final SesionEnMemoria sesion = SesionEnMemoria.create(nuevoIdDeSesion, textualizer);
 		sesionesPorId.put(nuevoIdDeSesion, sesion);
+		listener.onSesionCreada(sesion);
 		return sesion;
 	}
 
@@ -51,14 +60,21 @@ public class AdministradorEnMemoria implements AdministradorDeSesiones {
 	 */
 	@Override
 	public void eliminarSesion(final SesionVortexHttp sesion) {
+		listener.onSesionDestruida(sesion);
 		final String idDeSesion = sesion.getIdDeSesion();
-		sesionesPorId.remove(idDeSesion);
+		final SesionVortexHttp eliminada = sesionesPorId.remove(idDeSesion);
+		if (eliminada == null) {
+			LOG.error("Se eliminó una sesion[{}] que no esta registrada por ID", sesion);
+			return;
+		}
 	}
 
-	public static AdministradorEnMemoria create() {
+	public static AdministradorEnMemoria create(final ListenerDeSesionesHttp listener) {
 		final AdministradorEnMemoria administrador = new AdministradorEnMemoria();
 		administrador.sesionesPorId = new ConcurrentHashMap<String, SesionVortexHttp>();
 		administrador.proximoId = new AtomicLong(1);
+		administrador.listener = listener;
+		administrador.textualizer = JacksonHttpTextualizer.create();
 		return administrador;
 	}
 }

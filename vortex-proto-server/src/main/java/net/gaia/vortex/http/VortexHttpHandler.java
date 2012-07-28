@@ -12,15 +12,23 @@
  */
 package net.gaia.vortex.http;
 
+import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.http.comandos.CrearSesionVortexHttp;
 import net.gaia.vortex.http.comandos.EliminarSesionVortexHttp;
 import net.gaia.vortex.http.comandos.IntercambiarMensajes;
 import net.gaia.vortex.http.comandos.SinComando;
 import net.gaia.vortex.http.external.jetty.ComandoHttp;
 import net.gaia.vortex.http.external.jetty.HandlerHttpPorComandos;
+import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 import net.gaia.vortex.http.sesiones.AdministradorEnMemoria;
+import net.gaia.vortex.http.sesiones.ListenerDeSesionesHttp;
+import net.gaia.vortex.http.sesiones.SesionVortexHttp;
+import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 
 import org.eclipse.jetty.server.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase implementa el handler de requests http interpretando los requests como comandos para
@@ -28,7 +36,8 @@ import org.eclipse.jetty.server.Request;
  * 
  * @author D. García
  */
-public class VortexHttpHandler extends HandlerHttpPorComandos {
+public class VortexHttpHandler extends HandlerHttpPorComandos implements ListenerDeSesionesHttp {
+	private static final Logger LOG = LoggerFactory.getLogger(VortexHttpHandler.class);
 
 	private static final String URL_CREAR = "/vortex/create";
 	private static final String URL_PREFFIX_ELIMINAR = "/vortex/destroy/";
@@ -36,6 +45,8 @@ public class VortexHttpHandler extends HandlerHttpPorComandos {
 	private static final String MENSAJES_PARAMETER_NAME = "mensajes_vortex";
 
 	private AdministradorEnMemoria administradorDeSesiones;
+	private TaskProcessor processor;
+	private EstrategiaDeConexionDeNexos estrategia;
 
 	/**
 	 * @see net.gaia.vortex.http.external.jetty.HandlerHttpPorComandos#interpretarComandoDesde(java.lang.String,
@@ -77,9 +88,46 @@ public class VortexHttpHandler extends HandlerHttpPorComandos {
 		return sessionId;
 	}
 
-	public static VortexHttpHandler create() {
+	public static VortexHttpHandler create(final TaskProcessor processor, final EstrategiaDeConexionDeNexos estrategia) {
 		final VortexHttpHandler handler = new VortexHttpHandler();
-		handler.administradorDeSesiones = AdministradorEnMemoria.create();
+		handler.administradorDeSesiones = AdministradorEnMemoria.create(handler);
+		handler.processor = processor;
+		handler.estrategia = estrategia;
 		return handler;
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sesiones.ListenerDeSesionesHttp#onSesionCreada(net.gaia.vortex.http.sesiones.SesionVortexHttp)
+	 */
+	@Override
+	public void onSesionCreada(final SesionVortexHttp sesionCreada) {
+		LOG.debug("Creando nexo para la sesion http[{}]", sesionCreada);
+		final NexoHttp nuevoNexo = NexoHttp.create(processor, sesionCreada, ReceptorNulo.getInstancia());
+		sesionCreada.setNexoAsociado(nuevoNexo);
+		try {
+			estrategia.onNexoCreado(nuevoNexo);
+		} catch (final Exception e) {
+			LOG.error("Se produjo un error en la estrategia de conexion[" + estrategia + "] al pasarle el nexo["
+					+ nuevoNexo + "]. Ignorando error", e);
+		}
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sesiones.ListenerDeSesionesHttp#onSesionDestruida(net.gaia.vortex.http.sesiones.SesionVortexHttp)
+	 */
+	@Override
+	public void onSesionDestruida(final SesionVortexHttp sesionDestruida) {
+		LOG.debug("Cerrando nexo para la sesion http[{}]", sesionDestruida);
+		final NexoHttp nexoCerrado = sesionDestruida.getNexoAsociado();
+		if (nexoCerrado == null) {
+			LOG.error("Se cerró una sesion[{}] que no tiene nexo asociado?", sesionDestruida);
+			return;
+		}
+		try {
+			estrategia.onNexoCerrado(nexoCerrado);
+		} catch (final Exception e) {
+			LOG.error("Se produjo un error en la estrategia de desconexion[" + estrategia + "] al pasarle el nexo["
+					+ nexoCerrado + "]. Ignorando error", e);
+		}
 	}
 }

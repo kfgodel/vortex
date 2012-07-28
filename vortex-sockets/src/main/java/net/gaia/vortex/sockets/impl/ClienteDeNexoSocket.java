@@ -17,7 +17,7 @@ import java.net.SocketAddress;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 import net.gaia.vortex.sockets.api.ClienteDeSocketVortex;
-import net.gaia.vortex.sockets.external.json.VortexTextualizer;
+import net.gaia.vortex.sockets.external.json.VortexSocketTextualizer;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 import net.gaia.vortex.sockets.impl.sockets.ReceptionHandlerNulo;
 import net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler;
@@ -76,7 +76,7 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 	@Override
 	public NexoSocket conectarASocketRomoto() throws ObjectSocketException {
 		final ObjectSocketConfiguration socketConfig = ObjectSocketConfiguration.create(remoteAddress,
-				VortexTextualizer.create());
+				VortexSocketTextualizer.create());
 		socketConfig.setEventHandler(socketHandler);
 		socketConfig.setReceptionHandler(ReceptionHandlerNulo.getInstancia());
 		internalConnector = ObjectSocketConnector.create(socketConfig);

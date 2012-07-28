@@ -28,7 +28,7 @@ import ar.dgarcia.textualizer.json.JsonTextualizer;
  * 
  * @author D. García
  */
-public class VortexTextualizer implements ObjectTextualizer {
+public class VortexSocketTextualizer implements ObjectTextualizer {
 
 	private JsonTextualizer jsonTextualizer;
 
@@ -104,8 +104,8 @@ public class VortexTextualizer implements ObjectTextualizer {
 		return ToString.de(this).toString();
 	}
 
-	public static VortexTextualizer create() {
-		final VortexTextualizer textualizer = new VortexTextualizer();
+	public static VortexSocketTextualizer create() {
+		final VortexSocketTextualizer textualizer = new VortexSocketTextualizer();
 		textualizer.jsonTextualizer = JsonTextualizer.createWithoutTypeMetadata();
 		return textualizer;
 	}

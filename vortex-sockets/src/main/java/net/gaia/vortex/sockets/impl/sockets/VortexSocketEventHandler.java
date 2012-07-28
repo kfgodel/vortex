@@ -65,7 +65,7 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 		try {
 			estrategiaDeConexion.onNexoCreado(nuevoNexo);
 		} catch (final Exception e) {
-			LOG.error("Se produjo un error en el listener de socket abierto[" + estrategiaDeConexion
+			LOG.error("Se produjo un error en la estrategia de conexion[" + estrategiaDeConexion
 					+ "] al pasarle el nexo[" + nuevoNexo + "]. Ignorando error", e);
 		}
 	}
@@ -79,13 +79,13 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 				socketCerrado.getRemoteAddress());
 		final NexoSocket nexoCerrado = getNexoDelSocket(socketCerrado);
 		if (nexoCerrado == null) {
-			LOG.error("Se cerró un socket[" + socketCerrado + "] que no tiene nexo asociado?");
+			LOG.error("Se cerró un socket[{}] que no tiene nexo asociado?", socketCerrado);
 			return;
 		}
 		try {
 			estrategiaDeConexion.onNexoCerrado(nexoCerrado);
 		} catch (final Exception e) {
-			LOG.error("Se produjo un error en el listener de socket cerrado[" + estrategiaDeConexion
+			LOG.error("Se produjo un error en la estrategia de desconexion[" + estrategiaDeConexion
 					+ "] al pasarle el nexo[" + nexoCerrado + "]. Ignorando error", e);
 		}
 		socketCerrado.getEstadoAsociado().remove(NEXO_ASOCIADO_AL_SOCKET);
