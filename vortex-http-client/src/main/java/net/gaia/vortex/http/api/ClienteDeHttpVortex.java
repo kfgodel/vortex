@@ -25,7 +25,7 @@ public interface ClienteDeHttpVortex extends GeneradorDeNexos {
 	/**
 	 * Comienza la conexión de este cliente al servidor indicado en la creación de este cliente
 	 */
-	public abstract void conectarAlServidorhttp() throws VortexHttpException;
+	public abstract void conectarAlServidorHttp() throws VortexHttpException;
 
 	/**
 	 * Desconecta este cliente, liberando los recuros propios y en el servidor

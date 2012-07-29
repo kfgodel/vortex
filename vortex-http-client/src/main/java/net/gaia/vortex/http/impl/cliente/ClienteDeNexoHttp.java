@@ -16,7 +16,14 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.http.api.ClienteDeHttpVortex;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
+import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.strings.ToString;
+import ar.dgarcia.http.client.api.HttpResponseProvider;
 
 /**
  * Esta clase representa un cliente http de un red vortex que produce un {@link NexoHttp} al
@@ -25,10 +32,20 @@ import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
  * @author D. García
  */
 public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
+	private static final Logger LOG = LoggerFactory.getLogger(ClienteDeNexoHttp.class);
+
+	private String urlDelServidor;
+	public static final String urlDelServidor_FIELD = "urlDelServidor";
+
+	private VortexHttpConnector conector;
+
+	private SesionVortexHttp sesionAbierta;
 
 	public static ClienteDeNexoHttp create(final TaskProcessor processor, final String serverUrl,
-			final EstrategiaDeConexionDeNexos estrategia) {
+			final EstrategiaDeConexionDeNexos estrategia, final HttpResponseProvider provider) {
 		final ClienteDeNexoHttp cliente = new ClienteDeNexoHttp();
+		cliente.urlDelServidor = serverUrl;
+		cliente.conector = VortexHttpConnector.create(processor, estrategia, provider);
 		return cliente;
 	}
 
@@ -37,8 +54,7 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	 */
 	@Override
 	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
-		// TODO Auto-generated method stub
-		return null;
+		return conector.getEstrategiaDeConexion();
 	}
 
 	/**
@@ -46,17 +62,20 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	 */
 	@Override
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
-		// TODO Auto-generated method stub
-
+		this.conector.setEstrategiaDeConexion(estrategia);
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.api.ClienteDeHttpVortex#conectarAlServidorhttp()
+	 * @see net.gaia.vortex.http.api.ClienteDeHttpVortex#conectarAlServidorHttp()
 	 */
 	@Override
-	public void conectarAlServidorhttp() throws VortexHttpException {
-		// TODO Auto-generated method stub
-
+	public void conectarAlServidorHttp() throws VortexHttpException {
+		if (sesionAbierta != null) {
+			LOG.error("Ya existe una sesion[{}] abierta para el cliente[{}]. Ignorando pedido de apertura",
+					sesionAbierta, this);
+			return;
+		}
+		sesionAbierta = conector.abrirNuevaSesion(urlDelServidor);
 	}
 
 	/**
@@ -64,7 +83,18 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	 */
 	@Override
 	public void desconectarDelServidor() throws VortexHttpException {
-		// TODO Auto-generated method stub
-
+		if (sesionAbierta == null) {
+			LOG.error("No existe sesión para cerrar en el cliente[{}]", this);
+		}
+		conector.cerrarSesion(urlDelServidor, sesionAbierta);
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).add(urlDelServidor_FIELD, urlDelServidor).toString();
+	}
+
 }

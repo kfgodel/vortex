@@ -89,6 +89,15 @@
 	  <artifactId>dgarcia-http-client</artifactId>
 	  <version>0.1</version>
   	</dependency>
+  	
+  	
+  	<!-- Cliente http para tests -->
+  	<dependency>
+	  <groupId>ar.dgarcia</groupId>
+	  <artifactId>dgarcia-http-client-apache</artifactId>
+	  <version>1.0</version>
+	  <scope>test</scope>
+  	</dependency>
   
     <dependency>
       <groupId>org.slf4j</groupId>

@@ -22,7 +22,8 @@ import net.gaia.vortex.http.impl.server.comandos.CrearSesionVortexHttp;
 import net.gaia.vortex.http.impl.server.comandos.EliminarSesionVortexHttp;
 import net.gaia.vortex.http.impl.server.comandos.IntercambiarMensajes;
 import net.gaia.vortex.http.impl.server.comandos.SinComando;
-import net.gaia.vortex.http.sesiones.AdministradorServerEnMemoria;
+import net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer;
+import net.gaia.vortex.http.impl.server.sesiones.AdministradorServerEnMemoria;
 import net.gaia.vortex.http.sesiones.ListenerDeSesionesHttp;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
@@ -41,7 +42,7 @@ import org.slf4j.LoggerFactory;
 public class VortexHttpHandler extends HandlerHttpPorComandos implements ListenerDeSesionesHttp, GeneradorDeNexos {
 	private static final Logger LOG = LoggerFactory.getLogger(VortexHttpHandler.class);
 
-	private AdministradorServerEnMemoria administradorDeSesiones;
+	private AdministradorDeSesionesServer administradorDeSesiones;
 	private TaskProcessor processor;
 	private EstrategiaDeConexionDeNexos estrategia;
 

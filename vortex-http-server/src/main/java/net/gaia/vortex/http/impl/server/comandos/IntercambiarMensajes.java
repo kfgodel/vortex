@@ -16,7 +16,7 @@ import net.gaia.vortex.http.external.jetty.ComandoHttp;
 import net.gaia.vortex.http.external.jetty.RespuestaHttp;
 import net.gaia.vortex.http.impl.server.respuestas.RespuestaDeErrorDeCliente;
 import net.gaia.vortex.http.impl.server.respuestas.RespuestaDeTexto;
-import net.gaia.vortex.http.sesiones.AdministradorDeSesiones;
+import net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ import ar.com.dgarcia.lang.strings.ToString;
 public class IntercambiarMensajes implements ComandoHttp {
 	private static final Logger LOG = LoggerFactory.getLogger(IntercambiarMensajes.class);
 
-	private AdministradorDeSesiones administradorDeSesiones;
+	private AdministradorDeSesionesServer administradorDeSesiones;
 
 	private String sessionId;
 	public static final String sessionId_FIELD = "sessionId";
@@ -60,7 +60,7 @@ public class IntercambiarMensajes implements ComandoHttp {
 	}
 
 	public static IntercambiarMensajes create(final String sessionId, final String mensajesComoJson,
-			final AdministradorDeSesiones administrador) {
+			final AdministradorDeSesionesServer administrador) {
 		final IntercambiarMensajes comando = new IntercambiarMensajes();
 		comando.administradorDeSesiones = administrador;
 		comando.sessionId = sessionId;

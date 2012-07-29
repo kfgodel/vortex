@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http.sesiones;
+package net.gaia.vortex.http.impl.server.sesiones;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -26,6 +26,7 @@ import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 import net.gaia.vortex.http.messages.PaqueteHttpVortex;
+import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;

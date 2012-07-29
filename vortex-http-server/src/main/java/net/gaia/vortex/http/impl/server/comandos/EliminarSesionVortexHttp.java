@@ -16,7 +16,7 @@ import net.gaia.vortex.http.external.jetty.ComandoHttp;
 import net.gaia.vortex.http.external.jetty.RespuestaHttp;
 import net.gaia.vortex.http.impl.server.respuestas.RespuestaDeErrorDeCliente;
 import net.gaia.vortex.http.impl.server.respuestas.RespuestaDeTexto;
-import net.gaia.vortex.http.sesiones.AdministradorDeSesiones;
+import net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ import ar.com.dgarcia.lang.strings.ToString;
 public class EliminarSesionVortexHttp implements ComandoHttp {
 	private static final Logger LOG = LoggerFactory.getLogger(EliminarSesionVortexHttp.class);
 
-	private AdministradorDeSesiones administradorDeSesiones;
+	private AdministradorDeSesionesServer administradorDeSesiones;
 
 	private String sessionId;
 	public static final String sessionId_FIELD = "sessionId";
@@ -52,7 +52,7 @@ public class EliminarSesionVortexHttp implements ComandoHttp {
 		return RespuestaDeTexto.create("OK");
 	}
 
-	public static EliminarSesionVortexHttp create(final String sessionId, final AdministradorDeSesiones administrador) {
+	public static EliminarSesionVortexHttp create(final String sessionId, final AdministradorDeSesionesServer administrador) {
 		final EliminarSesionVortexHttp comando = new EliminarSesionVortexHttp();
 		comando.sessionId = sessionId;
 		comando.administradorDeSesiones = administrador;

@@ -18,6 +18,7 @@ import net.gaia.vortex.http.api.ClienteDeHttpVortex;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.cliente.ClienteDeNexoHttp;
 import net.gaia.vortex.server.impl.RealizarConexiones;
+import ar.dgarcia.http.client.api.HttpResponseProvider;
 
 /**
  * Esta clase representa un nodo {@link NodoMultiplexor} que hace de cliente http de un server
@@ -41,12 +42,13 @@ public class NodoClienteHttp extends NodoMultiplexor {
 	 * @throws VortexHttpException
 	 *             Si no se puede iniciar el servidor
 	 */
-	public static NodoClienteHttp createAndConnectTo(final String serverUrl, final TaskProcessor processor)
-			throws VortexHttpException {
+	public static NodoClienteHttp createAndConnectTo(final String serverUrl, final TaskProcessor processor,
+			final HttpResponseProvider provider) throws VortexHttpException {
 		final NodoClienteHttp nodoHttp = new NodoClienteHttp();
 		nodoHttp.inicializarCon(processor);
-		nodoHttp.clienteInterno = ClienteDeNexoHttp.create(processor, serverUrl, RealizarConexiones.con(nodoHttp));
-		nodoHttp.clienteInterno.conectarAlServidorhttp();
+		nodoHttp.clienteInterno = ClienteDeNexoHttp.create(processor, serverUrl, RealizarConexiones.con(nodoHttp),
+				provider);
+		nodoHttp.clienteInterno.conectarAlServidorHttp();
 		return nodoHttp;
 	}
 

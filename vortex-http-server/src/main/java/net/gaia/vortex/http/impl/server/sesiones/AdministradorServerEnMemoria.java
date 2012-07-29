@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http.sesiones;
+package net.gaia.vortex.http.impl.server.sesiones;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,6 +22,8 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
+import net.gaia.vortex.http.sesiones.ListenerDeSesionesHttp;
+import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +35,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class AdministradorServerEnMemoria implements AdministradorDeSesiones {
+public class AdministradorServerEnMemoria implements AdministradorDeSesionesServer {
 	/**
 	 * El proceso de limpieza corre cada un minuto
 	 */
@@ -61,7 +63,7 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesiones {
 	};
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.AdministradorDeSesiones#getSesion(java.lang.String)
+	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#getSesion(java.lang.String)
 	 */
 	@Override
 	public SesionVortexHttp getSesion(final String sessionId) {
@@ -70,7 +72,7 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesiones {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.AdministradorDeSesiones#crearNuevaSesion()
+	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#crearNuevaSesion()
 	 */
 	@Override
 	public SesionVortexHttp crearNuevaSesion() {
@@ -83,7 +85,7 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesiones {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.AdministradorDeSesiones#eliminarSesion(net.gaia.vortex.http.sesiones.SesionVortexHttp)
+	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#eliminarSesion(net.gaia.vortex.http.sesiones.SesionVortexHttp)
 	 */
 	@Override
 	public void eliminarSesion(final SesionVortexHttp sesion) {
@@ -138,7 +140,7 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesiones {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.AdministradorDeSesiones#cerrarYLiberarRecursos()
+	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#cerrarYLiberarRecursos()
 	 */
 	@Override
 	public void cerrarYLiberarRecursos() {
