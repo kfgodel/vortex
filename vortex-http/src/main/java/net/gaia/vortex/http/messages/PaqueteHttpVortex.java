@@ -25,7 +25,6 @@ import java.util.Map;
 public class PaqueteHttpVortex {
 
 	private List<Map<String, Object>> contenidos;
-
 	private Long proximaEsperaMinima;
 	private Long proximaEsperaMaxima;
 
