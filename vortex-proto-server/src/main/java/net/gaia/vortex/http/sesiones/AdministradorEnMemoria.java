@@ -36,7 +36,7 @@ public class AdministradorEnMemoria implements AdministradorDeSesiones {
 	/**
 	 * El proceso de limpieza corre cada un minuto
 	 */
-	public static final TimeMagnitude ESPERA_ENTRE_LIMPIEZAS = TimeMagnitude.of(10, TimeUnit.SECONDS);
+	public static final TimeMagnitude ESPERA_ENTRE_LIMPIEZAS = TimeMagnitude.of(15, TimeUnit.SECONDS);
 
 	private static final Logger LOG = LoggerFactory.getLogger(AdministradorEnMemoria.class);
 
