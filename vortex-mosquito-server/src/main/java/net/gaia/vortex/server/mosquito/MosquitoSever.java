@@ -17,6 +17,7 @@ import java.net.SocketAddress;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.http.impl.moleculas.NodoServerHttp;
 import net.gaia.vortex.server.mosquito.config.ContextConfiguration;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -30,8 +31,11 @@ public class MosquitoSever {
 	private ContextConfiguration configuration;
 	public static final String configuration_FIELD = "configuration";
 
-	private NodoSocket hubCentral;
-	public static final String hubCentral_FIELD = "hubCentral";
+	private NodoServerHttp hubDeHttp;
+	public static final String hubDeHttp_FIELD = "hubDeHttp";
+
+	private NodoSocket hubDeSockets;
+	public static final String hubDeSockets_FIELD = "hubDeSockets";
 
 	private TaskProcessor processor;
 
@@ -47,7 +51,8 @@ public class MosquitoSever {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(configuration_FIELD, configuration).con(hubCentral_FIELD, hubCentral).toString();
+		return ToString.de(this).con(configuration_FIELD, configuration).con(hubDeSockets_FIELD, hubDeSockets)
+				.con(hubDeHttp_FIELD, hubDeHttp).toString();
 	}
 
 	/**
@@ -56,15 +61,33 @@ public class MosquitoSever {
 	public void aceptarConexiones() {
 		final SocketAddress listeningAddress = configuration.getListeningAddress();
 		Loggers.RUTEO.info("Comenzando escucha de sockets en: {}", listeningAddress);
-		hubCentral = NodoSocket.createAndListenTo(listeningAddress, processor);
+		hubDeSockets = NodoSocket.createAndListenTo(listeningAddress, processor);
+		final Integer httpPort = configuration.getHttpListeningPort();
+		if (httpPort == null) {
+			// No se debe levantar el http
+			return;
+		}
+		Loggers.RUTEO.info("Aceptando requests HTTP en: {}", httpPort);
+		hubDeHttp = NodoServerHttp.createAndAcceptRequestsOnPort(httpPort, processor);
+		// Interconectamos los nodos
+		hubDeHttp.conectarCon(hubDeSockets);
+		hubDeSockets.conectarCon(hubDeHttp);
 	}
 
 	/**
 	 * Detiene las conexiones actuales forzadamente
 	 */
 	public void detenerConexiones() {
+		if (hubDeHttp != null) {
+			final Integer httpListeningPort = configuration.getHttpListeningPort();
+			Loggers.RUTEO.info("Deteniendo server HTTP en: {}", httpListeningPort);
+			hubDeSockets.desconectarDe(hubDeHttp);
+			hubDeHttp.desconectarDe(hubDeSockets);
+			hubDeHttp.cerrarYLiberar();
+		}
+
 		final SocketAddress listeningAddress = configuration.getListeningAddress();
 		Loggers.RUTEO.info("Deteniendo escucha de sockets en: {}", listeningAddress);
-		hubCentral.closeAndDispose();
+		hubDeSockets.closeAndDispose();
 	}
 }

@@ -30,4 +30,11 @@ public interface ContextConfiguration {
 	 */
 	SocketAddress getListeningAddress();
 
+	/**
+	 * Devuelve el puerto en el que este server escuchará conexiones http
+	 * 
+	 * @return La dirección del puerto o null si no debe aceptar http
+	 */
+	Integer getHttpListeningPort();
+
 }

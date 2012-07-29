@@ -23,6 +23,9 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class ServerConfiguration implements ContextConfiguration {
 
+	private Integer httpListeningPort;
+	public static final String httpListeningPort_FIELD = "httpListeningPort";
+
 	private SocketAddress listeningAddress;
 	public static final String listeningAddress_FIELD = "listeningAddress";
 
@@ -34,9 +37,10 @@ public class ServerConfiguration implements ContextConfiguration {
 		return listeningAddress;
 	}
 
-	public static ServerConfiguration create(final SocketAddress address) {
+	public static ServerConfiguration create(final SocketAddress address, final Integer httpPort) {
 		final ServerConfiguration config = new ServerConfiguration();
 		config.listeningAddress = address;
+		config.httpListeningPort = httpPort;
 		return config;
 	}
 
@@ -45,7 +49,16 @@ public class ServerConfiguration implements ContextConfiguration {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(listeningAddress_FIELD, listeningAddress).toString();
+		return ToString.de(this).con(listeningAddress_FIELD, listeningAddress)
+				.con(httpListeningPort_FIELD, httpListeningPort).toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.server.mosquito.config.ContextConfiguration#getHttpListeningPort()
+	 */
+	@Override
+	public Integer getHttpListeningPort() {
+		return httpListeningPort;
 	}
 
 }

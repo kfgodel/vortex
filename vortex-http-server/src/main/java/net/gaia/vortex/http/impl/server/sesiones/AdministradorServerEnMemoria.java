@@ -98,7 +98,8 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 		}
 	}
 
-	public static AdministradorServerEnMemoria create(final ListenerDeSesionesHttp listener, final TaskProcessor processor) {
+	public static AdministradorServerEnMemoria create(final ListenerDeSesionesHttp listener,
+			final TaskProcessor processor) {
 		final AdministradorServerEnMemoria administrador = new AdministradorServerEnMemoria();
 		administrador.sesionesPorId = new ConcurrentHashMap<String, SesionVortexHttp>();
 		administrador.proximoId = new AtomicLong(1);
@@ -132,7 +133,7 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 		final Collection<SesionVortexHttp> allSesiones = sesionesPorId.values();
 		for (final SesionVortexHttp sesionVortexHttp : allSesiones) {
 			if (sesionVortexHttp.esVieja()) {
-				LOG.info("Eliminando sesión[{}] por antiguedad", sesionVortexHttp);
+				LOG.info("Eliminando por antiguedad la sesión[{}]", sesionVortexHttp);
 				// Es seguro eliminar mientras se itera porque la colección es concurrente
 				this.eliminarSesion(sesionVortexHttp);
 			}
