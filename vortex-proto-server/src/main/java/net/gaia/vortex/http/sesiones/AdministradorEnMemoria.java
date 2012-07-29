@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
@@ -35,7 +36,7 @@ public class AdministradorEnMemoria implements AdministradorDeSesiones {
 	/**
 	 * El proceso de limpieza corre cada un minuto
 	 */
-	public static final TimeMagnitude ESPERA_ENTRE_LIMPIEZAS = TimeMagnitude.of(1, TimeUnit.MINUTES);
+	public static final TimeMagnitude ESPERA_ENTRE_LIMPIEZAS = TimeMagnitude.of(10, TimeUnit.SECONDS);
 
 	private static final Logger LOG = LoggerFactory.getLogger(AdministradorEnMemoria.class);
 
@@ -43,11 +44,16 @@ public class AdministradorEnMemoria implements AdministradorDeSesiones {
 	private AtomicLong proximoId;
 	private ListenerDeSesionesHttp listener;
 	private VortexHttpTextualizer textualizer;
+	private boolean detenido = false;
 
 	private TaskProcessor processor;
 	private final WorkUnit tareaDeLimpiezaDeSesiones = new WorkUnit() {
 		@Override
 		public WorkUnit doWork() throws InterruptedException {
+			if (detenido) {
+				// No hacemos nada si está detenido el administrador
+				return null;
+			}
 			onLimpiezaDeSesiones();
 			return null;
 		}
@@ -127,5 +133,20 @@ public class AdministradorEnMemoria implements AdministradorDeSesiones {
 				this.eliminarSesion(sesionVortexHttp);
 			}
 		}
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sesiones.AdministradorDeSesiones#cerrarYLiberarRecursos()
+	 */
+	@Override
+	public void cerrarYLiberarRecursos() {
+		detenido = true;
+		// Detiene la tarea de limpieza de sesiones
+		this.processor.removeTasksMatching(new TaskCriteria() {
+			@Override
+			public boolean matches(final WorkUnit workUnit) {
+				return workUnit == tareaDeLimpiezaDeSesiones;
+			}
+		});
 	}
 }

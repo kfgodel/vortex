@@ -25,6 +25,7 @@ import net.gaia.vortex.http.sesiones.AdministradorEnMemoria;
 import net.gaia.vortex.http.sesiones.ListenerDeSesionesHttp;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
+import net.gaia.vortex.server.api.GeneradorDeNexos;
 
 import org.eclipse.jetty.server.Request;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class VortexHttpHandler extends HandlerHttpPorComandos implements ListenerDeSesionesHttp {
+public class VortexHttpHandler extends HandlerHttpPorComandos implements ListenerDeSesionesHttp, GeneradorDeNexos {
 	private static final Logger LOG = LoggerFactory.getLogger(VortexHttpHandler.class);
 
 	private static final String URL_CREAR = "/vortex/create";
@@ -129,5 +130,31 @@ public class VortexHttpHandler extends HandlerHttpPorComandos implements Listene
 			LOG.error("Se produjo un error en la estrategia de desconexion[" + estrategia + "] al pasarle el nexo["
 					+ nexoCerrado + "]. Ignorando error", e);
 		}
+	}
+
+	/**
+	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
+	 */
+	@Override
+	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
+		return this.estrategia;
+	}
+
+	/**
+	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
+	 */
+	@Override
+	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
+		if (estrategia == null) {
+			throw new IllegalArgumentException("La estrategia no puede ser null para el handler http");
+		}
+		this.estrategia = estrategia;
+	}
+
+	/**
+	 * Detiene las tareas que procesa en background este handler
+	 */
+	public void detenerYLiberarRecursos() {
+		this.administradorDeSesiones.cerrarYLiberarRecursos();
 	}
 }

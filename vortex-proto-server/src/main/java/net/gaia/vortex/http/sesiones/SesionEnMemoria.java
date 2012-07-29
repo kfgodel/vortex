@@ -38,7 +38,7 @@ public class SesionEnMemoria implements SesionVortexHttp {
 	/**
 	 * Espera inicial para dar como vieja la sesion
 	 */
-	private static final long ESPERA_MAXIMA_INICIAL = TimeMagnitude.of(5, TimeUnit.MINUTES).getMillis();
+	private static final long ESPERA_MAXIMA_INICIAL = TimeMagnitude.of(30, TimeUnit.SECONDS).getMillis();
 
 	private String idDeSesion;
 	public static final String idDeSesion_FIELD = "idDeSesion";

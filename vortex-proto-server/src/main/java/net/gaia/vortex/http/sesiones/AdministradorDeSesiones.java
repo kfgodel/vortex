@@ -44,4 +44,8 @@ public interface AdministradorDeSesiones {
 	 */
 	void eliminarSesion(SesionVortexHttp sesion);
 
+	/**
+	 * Detiene las tareas de este administrador y libera sus recursos
+	 */
+	void cerrarYLiberarRecursos();
 }
