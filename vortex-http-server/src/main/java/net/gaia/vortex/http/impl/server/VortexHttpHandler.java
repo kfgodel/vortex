@@ -14,6 +14,7 @@ package net.gaia.vortex.http.impl.server;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
+import net.gaia.vortex.http.api.HttpMetadata;
 import net.gaia.vortex.http.external.jetty.ComandoHttp;
 import net.gaia.vortex.http.external.jetty.HandlerHttpPorComandos;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
@@ -40,11 +41,6 @@ import org.slf4j.LoggerFactory;
 public class VortexHttpHandler extends HandlerHttpPorComandos implements ListenerDeSesionesHttp, GeneradorDeNexos {
 	private static final Logger LOG = LoggerFactory.getLogger(VortexHttpHandler.class);
 
-	private static final String URL_CREAR = "/vortex/create";
-	private static final String URL_PREFFIX_ELIMINAR = "/vortex/destroy/";
-	private static final String URL_PREFFIX_INTERCAMBIAR = "/vortex/session/";
-	private static final String MENSAJES_PARAMETER_NAME = "mensajes_vortex";
-
 	private AdministradorServerEnMemoria administradorDeSesiones;
 	private TaskProcessor processor;
 	private EstrategiaDeConexionDeNexos estrategia;
@@ -55,16 +51,16 @@ public class VortexHttpHandler extends HandlerHttpPorComandos implements Listene
 	 */
 	@Override
 	protected ComandoHttp interpretarComandoDesde(final String target, final Request baseRequest) {
-		if (URL_CREAR.equals(target)) {
+		if (HttpMetadata.URL_CREAR.equals(target)) {
 			return CrearSesionVortexHttp.create(administradorDeSesiones);
 		}
-		String sessionId = getSessionIdWithPreffix(URL_PREFFIX_ELIMINAR, target);
+		String sessionId = getSessionIdWithPreffix(HttpMetadata.URL_PREFFIX_ELIMINAR, target);
 		if (sessionId != null) {
 			return EliminarSesionVortexHttp.create(sessionId, administradorDeSesiones);
 		}
-		sessionId = getSessionIdWithPreffix(URL_PREFFIX_INTERCAMBIAR, target);
+		sessionId = getSessionIdWithPreffix(HttpMetadata.URL_PREFFIX_INTERCAMBIAR, target);
 		if (sessionId != null) {
-			final String mensajesComoJson = baseRequest.getParameter(MENSAJES_PARAMETER_NAME);
+			final String mensajesComoJson = baseRequest.getParameter(HttpMetadata.MENSAJES_PARAMETER_NAME);
 			return IntercambiarMensajes.create(sessionId, mensajesComoJson, administradorDeSesiones);
 		}
 		return SinComando.create(target);
