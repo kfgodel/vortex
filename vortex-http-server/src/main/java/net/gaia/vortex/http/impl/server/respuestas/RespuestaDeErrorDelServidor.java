@@ -1,5 +1,5 @@
 /**
- * 25/07/2012 14:32:45 Copyright (C) 2011 Darío L. García
+ * 25/07/2012 14:50:51 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http.respuestas;
+package net.gaia.vortex.http.impl.server.respuestas;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,15 +21,14 @@ import net.gaia.vortex.http.external.jetty.RespuestaHttp;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa una respuesta http ante un error del cliente detectado en alguno de los
- * comandos
+ * Esta clase representa una respuesta al cliente cuando se produce un error en el servidor
  * 
  * @author D. García
  */
-public class RespuestaDeErrorDeCliente implements RespuestaHttp {
+public class RespuestaDeErrorDelServidor implements RespuestaHttp {
 
-	private String descripcionDelError;
-	public static final String descripcionDelError_FIELD = "descripcionDelError";
+	private Throwable excepcion;
+	public static final String excepcion_FIELD = "excepcion";
 
 	/**
 	 * @see net.gaia.vortex.http.external.jetty.RespuestaHttp#reflejarEn(javax.servlet.http.HttpServletResponse)
@@ -37,28 +36,16 @@ public class RespuestaDeErrorDeCliente implements RespuestaHttp {
 	@Override
 	public void reflejarEn(final HttpServletResponse response) throws IOException {
 		response.setContentType(RESPONSE_TEXT_CONTENT_TYPE);
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		final PrintWriter responseWriter = response.getWriter();
-		final String textoDeRespuesta = generarTextoDeRespuesta();
-		responseWriter.println(textoDeRespuesta);
+		responseWriter.println("Error del servidor:<br>");
+		excepcion.printStackTrace(responseWriter);
 	}
 
-	/**
-	 * Genera el texto que se usará como respuesta
-	 * 
-	 * @return El texto para devolver al cliente
-	 */
-	private String generarTextoDeRespuesta() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("Error del request:<br>");
-		builder.append(descripcionDelError);
-		return builder.toString();
-	}
-
-	public static RespuestaDeErrorDeCliente create(final String descripcion) {
-		final RespuestaDeErrorDeCliente name = new RespuestaDeErrorDeCliente();
-		name.descripcionDelError = descripcion;
-		return name;
+	public static RespuestaDeErrorDelServidor create(final Throwable error) {
+		final RespuestaDeErrorDelServidor respuesta = new RespuestaDeErrorDelServidor();
+		respuesta.excepcion = error;
+		return respuesta;
 	}
 
 	/**
@@ -66,7 +53,7 @@ public class RespuestaDeErrorDeCliente implements RespuestaHttp {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(descripcionDelError_FIELD, descripcionDelError).toString();
+		return ToString.de(this).con(excepcion_FIELD, excepcion).toString();
 	}
 
 }

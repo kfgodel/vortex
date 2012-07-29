@@ -12,8 +12,7 @@
  */
 package net.gaia.vortex.http.external.json;
 
-import net.gaia.vortex.http.sesiones.PaqueteHttpVortex;
-import net.gaia.vortex.http.sesiones.VortexHttpTextualizer;
+import net.gaia.vortex.http.messages.PaqueteHttpVortex;
 import ar.dgarcia.textualizer.json.JsonTextualizer;
 
 /**
@@ -32,7 +31,7 @@ public class JacksonHttpTextualizer implements VortexHttpTextualizer {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.VortexHttpTextualizer#convertFromString(java.lang.String)
+	 * @see net.gaia.vortex.http.external.json.VortexHttpTextualizer#convertFromString(java.lang.String)
 	 */
 	@Override
 	public PaqueteHttpVortex convertFromString(final String mensajesComoJson) {
@@ -42,7 +41,7 @@ public class JacksonHttpTextualizer implements VortexHttpTextualizer {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.VortexHttpTextualizer#convertToString(net.gaia.vortex.http.sesiones.PaqueteHttpVortex)
+	 * @see net.gaia.vortex.http.external.json.VortexHttpTextualizer#convertToString(net.gaia.vortex.http.sesiones.PaqueteHttpVortex)
 	 */
 	@Override
 	public String convertToString(final PaqueteHttpVortex paqueteDeSalida) {

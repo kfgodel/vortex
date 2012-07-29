@@ -21,6 +21,7 @@ import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
+import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,13 +33,13 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class AdministradorEnMemoria implements AdministradorDeSesiones {
+public class AdministradorServerEnMemoria implements AdministradorDeSesiones {
 	/**
 	 * El proceso de limpieza corre cada un minuto
 	 */
 	public static final TimeMagnitude ESPERA_ENTRE_LIMPIEZAS = TimeMagnitude.of(15, TimeUnit.SECONDS);
 
-	private static final Logger LOG = LoggerFactory.getLogger(AdministradorEnMemoria.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AdministradorServerEnMemoria.class);
 
 	private ConcurrentHashMap<String, SesionVortexHttp> sesionesPorId;
 	private AtomicLong proximoId;
@@ -75,7 +76,7 @@ public class AdministradorEnMemoria implements AdministradorDeSesiones {
 	public SesionVortexHttp crearNuevaSesion() {
 		final long nuevoId = proximoId.getAndIncrement();
 		final String nuevoIdDeSesion = String.format("%1$04d", nuevoId);
-		final SesionEnMemoria sesion = SesionEnMemoria.create(nuevoIdDeSesion, textualizer);
+		final SesionServerEnMemoria sesion = SesionServerEnMemoria.create(nuevoIdDeSesion, textualizer);
 		sesionesPorId.put(nuevoIdDeSesion, sesion);
 		listener.onSesionCreada(sesion);
 		return sesion;
@@ -95,8 +96,8 @@ public class AdministradorEnMemoria implements AdministradorDeSesiones {
 		}
 	}
 
-	public static AdministradorEnMemoria create(final ListenerDeSesionesHttp listener, final TaskProcessor processor) {
-		final AdministradorEnMemoria administrador = new AdministradorEnMemoria();
+	public static AdministradorServerEnMemoria create(final ListenerDeSesionesHttp listener, final TaskProcessor processor) {
+		final AdministradorServerEnMemoria administrador = new AdministradorServerEnMemoria();
 		administrador.sesionesPorId = new ConcurrentHashMap<String, SesionVortexHttp>();
 		administrador.proximoId = new AtomicLong(1);
 		administrador.listener = listener;

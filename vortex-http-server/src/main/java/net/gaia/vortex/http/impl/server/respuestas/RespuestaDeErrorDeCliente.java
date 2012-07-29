@@ -1,5 +1,5 @@
 /**
- * 25/07/2012 15:41:15 Copyright (C) 2011 Darío L. García
+ * 25/07/2012 14:32:45 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http.respuestas;
+package net.gaia.vortex.http.impl.server.respuestas;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,14 +21,15 @@ import net.gaia.vortex.http.external.jetty.RespuestaHttp;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa una respuesta exitosa donde se incluye texto como resultado
+ * Esta clase representa una respuesta http ante un error del cliente detectado en alguno de los
+ * comandos
  * 
  * @author D. García
  */
-public class RespuestaDeTexto implements RespuestaHttp {
+public class RespuestaDeErrorDeCliente implements RespuestaHttp {
 
-	private String textoDeRespuesta;
-	public static final String textoDeRespuesta_FIELD = "textoDeRespuesta";
+	private String descripcionDelError;
+	public static final String descripcionDelError_FIELD = "descripcionDelError";
 
 	/**
 	 * @see net.gaia.vortex.http.external.jetty.RespuestaHttp#reflejarEn(javax.servlet.http.HttpServletResponse)
@@ -36,9 +37,28 @@ public class RespuestaDeTexto implements RespuestaHttp {
 	@Override
 	public void reflejarEn(final HttpServletResponse response) throws IOException {
 		response.setContentType(RESPONSE_TEXT_CONTENT_TYPE);
-		response.setStatus(HttpServletResponse.SC_OK);
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		final PrintWriter responseWriter = response.getWriter();
+		final String textoDeRespuesta = generarTextoDeRespuesta();
 		responseWriter.println(textoDeRespuesta);
+	}
+
+	/**
+	 * Genera el texto que se usará como respuesta
+	 * 
+	 * @return El texto para devolver al cliente
+	 */
+	private String generarTextoDeRespuesta() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("Error del request:<br>");
+		builder.append(descripcionDelError);
+		return builder.toString();
+	}
+
+	public static RespuestaDeErrorDeCliente create(final String descripcion) {
+		final RespuestaDeErrorDeCliente name = new RespuestaDeErrorDeCliente();
+		name.descripcionDelError = descripcion;
+		return name;
 	}
 
 	/**
@@ -46,12 +66,7 @@ public class RespuestaDeTexto implements RespuestaHttp {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(textoDeRespuesta_FIELD, textoDeRespuesta).toString();
+		return ToString.de(this).con(descripcionDelError_FIELD, descripcionDelError).toString();
 	}
 
-	public static RespuestaDeTexto create(final String textoRespondido) {
-		final RespuestaDeTexto name = new RespuestaDeTexto();
-		name.textoDeRespuesta = textoRespondido;
-		return name;
-	}
 }

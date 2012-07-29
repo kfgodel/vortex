@@ -14,8 +14,8 @@ package net.gaia.vortex.http.impl.moleculas;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
-import net.gaia.vortex.http.impl.ServidorDeNexoHttp;
 import net.gaia.vortex.http.impl.VortexHttpException;
+import net.gaia.vortex.http.impl.server.ServidorDeNexoHttp;
 import net.gaia.vortex.server.impl.RealizarConexiones;
 
 /**

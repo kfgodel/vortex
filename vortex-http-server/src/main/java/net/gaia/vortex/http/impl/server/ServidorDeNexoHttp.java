@@ -10,11 +10,11 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http.impl;
+package net.gaia.vortex.http.impl.server;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.http.VortexHttpHandler;
 import net.gaia.vortex.http.api.ServidorDeHttpVortex;
+import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 

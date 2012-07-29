@@ -1,5 +1,5 @@
 /**
- * 25/07/2012 14:50:51 Copyright (C) 2011 Darío L. García
+ * 25/07/2012 15:41:15 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http.respuestas;
+package net.gaia.vortex.http.impl.server.respuestas;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,14 +21,14 @@ import net.gaia.vortex.http.external.jetty.RespuestaHttp;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa una respuesta al cliente cuando se produce un error en el servidor
+ * Esta clase representa una respuesta exitosa donde se incluye texto como resultado
  * 
  * @author D. García
  */
-public class RespuestaDeErrorDelServidor implements RespuestaHttp {
+public class RespuestaDeTexto implements RespuestaHttp {
 
-	private Throwable excepcion;
-	public static final String excepcion_FIELD = "excepcion";
+	private String textoDeRespuesta;
+	public static final String textoDeRespuesta_FIELD = "textoDeRespuesta";
 
 	/**
 	 * @see net.gaia.vortex.http.external.jetty.RespuestaHttp#reflejarEn(javax.servlet.http.HttpServletResponse)
@@ -36,16 +36,9 @@ public class RespuestaDeErrorDelServidor implements RespuestaHttp {
 	@Override
 	public void reflejarEn(final HttpServletResponse response) throws IOException {
 		response.setContentType(RESPONSE_TEXT_CONTENT_TYPE);
-		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		response.setStatus(HttpServletResponse.SC_OK);
 		final PrintWriter responseWriter = response.getWriter();
-		responseWriter.println("Error del servidor:<br>");
-		excepcion.printStackTrace(responseWriter);
-	}
-
-	public static RespuestaDeErrorDelServidor create(final Throwable error) {
-		final RespuestaDeErrorDelServidor respuesta = new RespuestaDeErrorDelServidor();
-		respuesta.excepcion = error;
-		return respuesta;
+		responseWriter.println(textoDeRespuesta);
 	}
 
 	/**
@@ -53,7 +46,12 @@ public class RespuestaDeErrorDelServidor implements RespuestaHttp {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(excepcion_FIELD, excepcion).toString();
+		return ToString.de(this).con(textoDeRespuesta_FIELD, textoDeRespuesta).toString();
 	}
 
+	public static RespuestaDeTexto create(final String textoRespondido) {
+		final RespuestaDeTexto name = new RespuestaDeTexto();
+		name.textoDeRespuesta = textoRespondido;
+		return name;
+	}
 }

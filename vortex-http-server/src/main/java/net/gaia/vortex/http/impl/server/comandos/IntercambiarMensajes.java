@@ -10,12 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http.comandos;
+package net.gaia.vortex.http.impl.server.comandos;
 
 import net.gaia.vortex.http.external.jetty.ComandoHttp;
 import net.gaia.vortex.http.external.jetty.RespuestaHttp;
-import net.gaia.vortex.http.respuestas.RespuestaDeErrorDeCliente;
-import net.gaia.vortex.http.respuestas.RespuestaDeTexto;
+import net.gaia.vortex.http.impl.server.respuestas.RespuestaDeErrorDeCliente;
+import net.gaia.vortex.http.impl.server.respuestas.RespuestaDeTexto;
 import net.gaia.vortex.http.sesiones.AdministradorDeSesiones;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 

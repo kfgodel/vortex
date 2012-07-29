@@ -23,7 +23,9 @@ import java.util.concurrent.TimeUnit;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
+import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
+import net.gaia.vortex.http.messages.PaqueteHttpVortex;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
@@ -33,7 +35,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class SesionEnMemoria implements SesionVortexHttp {
+public class SesionServerEnMemoria implements SesionVortexHttp {
 
 	/**
 	 * Espera inicial para dar como vieja la sesion
@@ -161,8 +163,8 @@ public class SesionEnMemoria implements SesionVortexHttp {
 		return idDeSesion;
 	}
 
-	public static SesionEnMemoria create(final String idDeSesion, final VortexHttpTextualizer textualizer) {
-		final SesionEnMemoria sesion = new SesionEnMemoria();
+	public static SesionServerEnMemoria create(final String idDeSesion, final VortexHttpTextualizer textualizer) {
+		final SesionServerEnMemoria sesion = new SesionServerEnMemoria();
 		sesion.idDeSesion = idDeSesion;
 		sesion.mensajesAcumulados = new ConcurrentLinkedQueue<MensajeVortex>();
 		sesion.textualizer = textualizer;

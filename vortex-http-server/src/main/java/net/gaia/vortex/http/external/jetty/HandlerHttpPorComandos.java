@@ -18,7 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.gaia.vortex.http.respuestas.RespuestaDeErrorDelServidor;
+import net.gaia.vortex.http.impl.server.respuestas.RespuestaDeErrorDelServidor;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;

@@ -1,5 +1,5 @@
 /**
- * 25/07/2012 13:42:28 Copyright (C) 2011 Darío L. García
+ * 25/07/2012 12:52:03 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,34 +10,37 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http.comandos;
+package net.gaia.vortex.http.impl.server.comandos;
 
 import net.gaia.vortex.http.external.jetty.ComandoHttp;
 import net.gaia.vortex.http.external.jetty.RespuestaHttp;
-import net.gaia.vortex.http.respuestas.RespuestaDeErrorDeCliente;
+import net.gaia.vortex.http.impl.server.respuestas.RespuestaDeTexto;
+import net.gaia.vortex.http.sesiones.AdministradorDeSesiones;
+import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa el comando http tomado cuando no se puede interpretar el comando solicitado
+ * Esta clase representa el comando http que intenta crear una nueva sesión http con el servidor
  * 
  * @author D. García
  */
-public class SinComando implements ComandoHttp {
+public class CrearSesionVortexHttp implements ComandoHttp {
 
-	private String urlUsada;
-	public static final String urlUsada_FIELD = "urlUsada";
+	private AdministradorDeSesiones administradorDeSesiones;
 
 	/**
 	 * @see net.gaia.vortex.http.external.jetty.ComandoHttp#ejecutar()
 	 */
 	@Override
 	public RespuestaHttp ejecutar() {
-		return RespuestaDeErrorDeCliente.create("No existe comando para la URL: " + urlUsada);
+		final SesionVortexHttp sesion = administradorDeSesiones.crearNuevaSesion();
+		final String idDeSesion = sesion.getIdDeSesion();
+		return RespuestaDeTexto.create(idDeSesion);
 	}
 
-	public static SinComando create(final String urlUsada) {
-		final SinComando comando = new SinComando();
-		comando.urlUsada = urlUsada;
+	public static CrearSesionVortexHttp create(final AdministradorDeSesiones administrador) {
+		final CrearSesionVortexHttp comando = new CrearSesionVortexHttp();
+		comando.administradorDeSesiones = administrador;
 		return comando;
 	}
 
@@ -46,7 +49,7 @@ public class SinComando implements ComandoHttp {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(urlUsada_FIELD, urlUsada).toString();
+		return ToString.de(this).toString();
 	}
 
 }

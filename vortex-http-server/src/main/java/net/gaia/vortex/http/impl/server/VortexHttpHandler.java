@@ -10,18 +10,18 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http;
+package net.gaia.vortex.http.impl.server;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
-import net.gaia.vortex.http.comandos.CrearSesionVortexHttp;
-import net.gaia.vortex.http.comandos.EliminarSesionVortexHttp;
-import net.gaia.vortex.http.comandos.IntercambiarMensajes;
-import net.gaia.vortex.http.comandos.SinComando;
 import net.gaia.vortex.http.external.jetty.ComandoHttp;
 import net.gaia.vortex.http.external.jetty.HandlerHttpPorComandos;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
-import net.gaia.vortex.http.sesiones.AdministradorEnMemoria;
+import net.gaia.vortex.http.impl.server.comandos.CrearSesionVortexHttp;
+import net.gaia.vortex.http.impl.server.comandos.EliminarSesionVortexHttp;
+import net.gaia.vortex.http.impl.server.comandos.IntercambiarMensajes;
+import net.gaia.vortex.http.impl.server.comandos.SinComando;
+import net.gaia.vortex.http.sesiones.AdministradorServerEnMemoria;
 import net.gaia.vortex.http.sesiones.ListenerDeSesionesHttp;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
@@ -45,7 +45,7 @@ public class VortexHttpHandler extends HandlerHttpPorComandos implements Listene
 	private static final String URL_PREFFIX_INTERCAMBIAR = "/vortex/session/";
 	private static final String MENSAJES_PARAMETER_NAME = "mensajes_vortex";
 
-	private AdministradorEnMemoria administradorDeSesiones;
+	private AdministradorServerEnMemoria administradorDeSesiones;
 	private TaskProcessor processor;
 	private EstrategiaDeConexionDeNexos estrategia;
 
@@ -91,7 +91,7 @@ public class VortexHttpHandler extends HandlerHttpPorComandos implements Listene
 
 	public static VortexHttpHandler create(final TaskProcessor processor, final EstrategiaDeConexionDeNexos estrategia) {
 		final VortexHttpHandler handler = new VortexHttpHandler();
-		handler.administradorDeSesiones = AdministradorEnMemoria.create(handler, processor);
+		handler.administradorDeSesiones = AdministradorServerEnMemoria.create(handler, processor);
 		handler.processor = processor;
 		handler.estrategia = estrategia;
 		return handler;
