@@ -129,6 +129,7 @@ public class AdministradorEnMemoria implements AdministradorDeSesiones {
 		final Collection<SesionVortexHttp> allSesiones = sesionesPorId.values();
 		for (final SesionVortexHttp sesionVortexHttp : allSesiones) {
 			if (sesionVortexHttp.esVieja()) {
+				LOG.info("Eliminando sesión[{}] por antiguedad", sesionVortexHttp);
 				// Es seguro eliminar mientras se itera porque la colección es concurrente
 				this.eliminarSesion(sesionVortexHttp);
 			}

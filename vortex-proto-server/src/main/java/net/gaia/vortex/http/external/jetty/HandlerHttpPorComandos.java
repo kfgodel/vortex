@@ -42,7 +42,7 @@ public abstract class HandlerHttpPorComandos extends AbstractHandler {
 	@Override
 	public void handle(final String target, final Request baseRequest, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException, ServletException {
-		LOG.debug("Nuevo request recibido: {} ", baseRequest);
+		LOG.debug("Nuevo request recibido: {} \"{}\" ", baseRequest.getMethod(), baseRequest.getUri());
 		try {
 			final ComandoHttp comandoRecibido = interpretarComandoDesde(target, baseRequest);
 			LOG.debug("Comando elegido: {}", comandoRecibido);
