@@ -21,7 +21,7 @@ package ar.dgarcia.textualizer.xml;
 
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
-import ar.dgarcia.textualizer.api.CannotTextUnserialize;
+import ar.dgarcia.textualizer.api.CannotTextUnserializeException;
 import ar.dgarcia.textualizer.api.ObjectTextualizer;
 
 import com.thoughtworks.xstream.XStream;
@@ -61,18 +61,18 @@ public class XmlTextualizer implements ObjectTextualizer {
 	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertFromString(java.lang.String)
 	 */
 	@Override
-	public Object convertFromString(final String value) throws CannotTextUnserialize {
+	public Object convertFromString(final String value) throws CannotTextUnserializeException {
 		Object object;
 		try {
 			object = internalConverter.fromXML(value);
 		} catch (final ConversionException e) {
-			throw new CannotTextUnserialize(
+			throw new CannotTextUnserializeException(
 					"Cannot deserialize: "
 							+ value
 							+ ".\nIf caused by CannotResolveClassException ensure you have all classes used for the message on both planets",
 					e);
 		} catch (final XStreamException e) {
-			throw new CannotTextUnserialize("Se produjo un error al intentar deserealizar un objeto desde: " + value, e);
+			throw new CannotTextUnserializeException("Se produjo un error al intentar deserealizar un objeto desde: " + value, e);
 		}
 		return object;
 	}

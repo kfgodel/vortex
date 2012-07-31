@@ -53,9 +53,9 @@ public class IntercambiarMensajes implements ComandoHttp {
 		}
 		if (mensajesDelClienteEnJson != null) {
 			// Solo enviamos si hay mensajes para la red
-			sesion.recibirDelCliente(mensajesDelClienteEnJson);
+			sesion.recibirDesdeHttp(mensajesDelClienteEnJson);
 		}
-		final String mensajesParaElClienteEnJson = sesion.obtenerParaElCliente();
+		final String mensajesParaElClienteEnJson = sesion.obtenerParaHttp();
 		return RespuestaDeTexto.create(mensajesParaElClienteEnJson);
 	}
 

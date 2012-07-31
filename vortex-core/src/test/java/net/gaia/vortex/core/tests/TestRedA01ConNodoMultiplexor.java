@@ -50,7 +50,7 @@ public class TestRedA01ConNodoMultiplexor {
 	@Before
 	public void crearNodos() {
 		processor = VortexProcessorFactory.createProcessor();
-		mensaje1 = MensajeConContenido.create();
+		mensaje1 = MensajeConContenido.crearVacio();
 		nodoEmisor = NodoMultiplexor.create(processor);
 		nodoRuteador = NodoMultiplexor.create(processor);
 		nodoReceptor = NodoMultiplexor.create(processor);
@@ -319,7 +319,7 @@ public class TestRedA01ConNodoMultiplexor {
 		LOG.debug("Nanos inicio: {}", startNanos);
 		for (int i = 0; i < cantidadDeMensajes; i++) {
 			// Necesitamos crear un mensaje por cada envío porque son identificados
-			final MensajeConContenido mensaje = MensajeConContenido.create();
+			final MensajeConContenido mensaje = MensajeConContenido.crearVacio();
 			nodoEmisor.recibir(mensaje);
 		}
 

@@ -31,7 +31,7 @@ public interface SesionVortexHttp {
 	 * @param mensajesComoJson
 	 *            Los mensajes que envía el cliente como texto JSON
 	 */
-	void recibirDelCliente(String mensajesComoJson);
+	void recibirDesdeHttp(String mensajesComoJson);
 
 	/**
 	 * Devuelve los mensajes acumulados actualmente en esta sesión para ser entregados al cliente en
@@ -40,7 +40,7 @@ public interface SesionVortexHttp {
 	 * 
 	 * @return El texto que representa los mensajes para ser enviados al cliente http
 	 */
-	String obtenerParaElCliente();
+	String obtenerParaHttp();
 
 	/**
 	 * Devuelve el identificador de esta sesión

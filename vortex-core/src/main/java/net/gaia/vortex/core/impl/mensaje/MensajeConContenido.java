@@ -14,11 +14,13 @@ package net.gaia.vortex.core.impl.mensaje;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.colecciones.sets.ConcurrentHashSet;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -73,7 +75,7 @@ public class MensajeConContenido implements MensajeVortex {
 	 * @return El mensaje creado
 	 */
 	@SuppressWarnings("unchecked")
-	public static MensajeConContenido create() {
+	public static MensajeConContenido crearVacio() {
 		final ContenidoVortex contenidoVacio = ContenidoMapa.create();
 		return create(contenidoVacio, Collections.EMPTY_SET);
 	}
@@ -87,7 +89,7 @@ public class MensajeConContenido implements MensajeVortex {
 	 * @return El mensaje creado
 	 */
 	@SuppressWarnings("unchecked")
-	public static MensajeConContenido create(final ContenidoVortex contenido) {
+	public static MensajeConContenido crearSinIds(final ContenidoVortex contenido) {
 		return create(contenido, Collections.EMPTY_SET);
 	}
 
@@ -105,6 +107,21 @@ public class MensajeConContenido implements MensajeVortex {
 		mensaje.contenido = contenido;
 		mensaje.inicializarIdsVisitados(idsVisitados);
 		return mensaje;
+	}
+
+	/**
+	 * Regenera un mensaje vortex desde el mapa de valores pasado. Tomando los Ids de nodos
+	 * visitados
+	 * 
+	 * @param valoresExternos
+	 *            El mapa de valores para regenerar el mensaje
+	 * @return El mensaje recreado
+	 */
+	public static MensajeConContenido regenerarDesde(final Map<String, Object> valoresExternos) {
+		final ContenidoMapa contenido = ContenidoMapa.create(valoresExternos);
+		final Collection<String> idsVisitados = MensajeConContenido.obtenerIdsVisitadosDesde(valoresExternos);
+		final MensajeConContenido mensajeReconstruido = MensajeConContenido.create(contenido, idsVisitados);
+		return mensajeReconstruido;
 	}
 
 	/**
@@ -132,5 +149,40 @@ public class MensajeConContenido implements MensajeVortex {
 	public void registrarPasajePor(final IdentificadorVortex identificador) {
 		final String valorDelIdentificador = identificador.getValorActual();
 		getIdsVisitados().add(valorDelIdentificador);
+	}
+
+	/**
+	 * Verifica que el mapa pasado sea tenga una colección de strings como datos de los nodos por
+	 * los que pasó.<br>
+	 * En caso contrario devuelve una colección vacía o produce una excepción si el atributo existe
+	 * pero no es de los tipos esperados
+	 * 
+	 * @param contenidoRegenerado
+	 *            El mapa a revisar por la lista de IDs
+	 * 
+	 * @return La colección de IDs recuperada del mensaje
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static Collection<String> obtenerIdsVisitadosDesde(final Map<String, Object> contenidoRegenerado) {
+		final Object object = contenidoRegenerado.get(MensajeConContenido.TRAZA_IDENTIFICADORES_VORTEX_KEY);
+		if (object == null) {
+			return Collections.emptySet();
+		}
+		Collection coleccionDeIds;
+		try {
+			coleccionDeIds = (Collection) object;
+		} catch (final ClassCastException e) {
+			throw new UnhandledConditionException("El mensaje tiene como atributo["
+					+ MensajeConContenido.TRAZA_IDENTIFICADORES_VORTEX_KEY
+					+ "] un valor que no es una coleccion de ids: " + object, e);
+		}
+		for (final Object posibleId : coleccionDeIds) {
+			if (posibleId instanceof String) {
+				continue;
+			}
+			throw new UnhandledConditionException("El atributo[" + MensajeConContenido.TRAZA_IDENTIFICADORES_VORTEX_KEY
+					+ "] tiene en la coleccion un ID que no es string: " + posibleId);
+		}
+		return coleccionDeIds;
 	}
 }

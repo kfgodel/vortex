@@ -13,6 +13,7 @@
 package net.gaia.vortex.http.impl.cliente.server.comandos;
 
 import net.gaia.vortex.http.api.HttpMetadata;
+import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.cliente.server.ComandoClienteHttp;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.http.client.api.StringRequest;
@@ -44,7 +45,13 @@ public class CrearSesionCliente implements ComandoClienteHttp {
 	@Override
 	public void procesarRespuesta(final StringResponse respuestaDelServidor) {
 		final String idDeSesion = respuestaDelServidor.getContent();
+		if (idDeSesion == null) {
+			throw new VortexHttpException("El servidor respondió OK, pero no envío ID de sesión");
+		}
 		this.idDeSesionCreada = idDeSesion.trim();
+		if (idDeSesionCreada.length() == 0) {
+			throw new VortexHttpException("El servidor respondió OK, pero el ID de sesión es vacío");
+		}
 	}
 
 	/**

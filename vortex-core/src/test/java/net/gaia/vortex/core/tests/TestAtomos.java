@@ -42,8 +42,8 @@ public class TestAtomos {
 
 	@Before
 	public void crearProcesadorYNodos() {
-		mensaje1 = MensajeConContenido.create();
-		mensaje2 = MensajeConContenido.create();
+		mensaje1 = MensajeConContenido.crearVacio();
+		mensaje2 = MensajeConContenido.crearVacio();
 		processor = VortexProcessorFactory.createProcessor();
 	}
 

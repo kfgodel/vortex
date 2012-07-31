@@ -163,7 +163,7 @@ public abstract class TestDePerformanceNodoSupport {
 				return new Runnable() {
 					@Override
 					public void run() {
-						final MensajeConContenido mensaje = MensajeConContenido.create();
+						final MensajeConContenido mensaje = MensajeConContenido.crearVacio();
 						// Le seteamos un ID para que afecte a las comparaciones
 						mensaje.registrarPasajePor(idDelMensajeGenerado);
 						metricas.registrarInput();

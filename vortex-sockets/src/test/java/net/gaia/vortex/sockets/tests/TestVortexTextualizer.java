@@ -39,14 +39,14 @@ public class TestVortexTextualizer {
 
 	@Test
 	public void deberiaConvertirJsonDeObjetoVacioUnMensajeVacioSoloConTraza() {
-		final MensajeConContenido mensaje = MensajeConContenido.create();
+		final MensajeConContenido mensaje = MensajeConContenido.crearVacio();
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertEquals("Debería ser el objeto vacio de json", "{\"traza_identificadores\":[]}", texto);
 	}
 
 	@Test
 	public void deberiaConvertirEnMapaDePrimitivaUnMensajeConPrimitiva() {
-		final MensajeConContenido mensaje = MensajeConContenido.create(ContenidoPrimitiva.create("unTexto"));
+		final MensajeConContenido mensaje = MensajeConContenido.crearSinIds(ContenidoPrimitiva.create("unTexto"));
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertNotNull("Debería existir un texto", texto);
 		Assert.assertNotNull("Debería tener la clave esperada",
@@ -57,7 +57,7 @@ public class TestVortexTextualizer {
 
 	@Test
 	public void deberíaConvertirEnMapaDePrimitivaUnMensajeConPrimitivaLazy() {
-		final MensajeConContenido mensaje = MensajeConContenido.create(ContenidoVortexLazy.create(
+		final MensajeConContenido mensaje = MensajeConContenido.crearSinIds(ContenidoVortexLazy.create(
 				MensajeModeloParaTests.create(), MapeadorJackson.create()));
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertNotNull("Debería existir un texto", texto);
@@ -75,7 +75,7 @@ public class TestVortexTextualizer {
 
 	@Test
 	public void deberiaConvertirUnaInstanciaDeObjectEnMensajeVacio() {
-		final MensajeConContenido mensaje = MensajeConContenido.create(ContenidoVortexLazy.create(new Object(),
+		final MensajeConContenido mensaje = MensajeConContenido.crearSinIds(ContenidoVortexLazy.create(new Object(),
 				MapeadorJackson.create()));
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertNotNull("Debería existir un texto", texto);

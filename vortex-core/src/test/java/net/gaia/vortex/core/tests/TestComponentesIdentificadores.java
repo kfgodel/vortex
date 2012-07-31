@@ -56,7 +56,7 @@ public class TestComponentesIdentificadores {
 		multiplexor = MultiplexorIdentificador.create(processor, identificador);
 		multiplexor.conectarCon(receptorFinal1);
 		multiplexor.conectarCon(receptorFinal2);
-		mensajeEnviado = MensajeConContenido.create();
+		mensajeEnviado = MensajeConContenido.crearVacio();
 	}
 
 	@After

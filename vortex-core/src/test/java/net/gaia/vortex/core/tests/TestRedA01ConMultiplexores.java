@@ -46,7 +46,7 @@ public class TestRedA01ConMultiplexores {
 	@Before
 	public void crearNodos() {
 		processor = VortexProcessorFactory.createProcessor();
-		mensaje1 = MensajeConContenido.create();
+		mensaje1 = MensajeConContenido.crearVacio();
 		nodoEmisor = MultiplexorParalelo.create(processor);
 		nodoReceptor = MultiplexorParalelo.create(processor);
 
@@ -258,7 +258,7 @@ public class TestRedA01ConMultiplexores {
 		final long startNanos = System.nanoTime();
 		LOG.debug("Nanos inicio: {}", startNanos);
 		for (int i = 0; i < cantidadDeMensajes; i++) {
-			final MensajeConContenido mensaje = MensajeConContenido.create();
+			final MensajeConContenido mensaje = MensajeConContenido.crearVacio();
 			nodoEmisor.recibir(mensaje);
 		}
 

@@ -12,10 +12,9 @@
  */
 package net.gaia.vortex.http.sesiones;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
+import net.gaia.vortex.http.impl.cliente.server.ServerVortexHttpRemoto;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 
 /**
@@ -25,36 +24,23 @@ import net.gaia.vortex.http.impl.moleculas.NexoHttp;
  */
 public class SesionClienteEnMemoria implements SesionVortexHttp {
 
-	private ConcurrentLinkedQueue<MensajeVortex> mensajesAcumulados;
-	private long esperaMinima;
-	private long momentoDeComienzoDeEspera;
-	private NexoHttp nexoAsociado;
+	private ServerVortexHttpRemoto serverRemoto;
 	private VortexHttpTextualizer textualizer;
-	private String idDeSesion;
 
 	/**
-	 * Devuelve el tiempo considerado actual en milis para las mediciones de espera
-	 * 
-	 * @return El tiempo en milis
-	 */
-	public long getCurrentTime() {
-		return System.currentTimeMillis();
-	}
-
-	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#recibirDelCliente(java.lang.String)
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#recibirDesdeHttp(java.lang.String)
 	 */
 	@Override
-	public void recibirDelCliente(final String mensajesComoJson) {
+	public void recibirDesdeHttp(final String mensajesComoJson) {
 		// TODO Auto-generated method stub
 
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#obtenerParaElCliente()
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#obtenerParaHttp()
 	 */
 	@Override
-	public String obtenerParaElCliente() {
+	public String obtenerParaHttp() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -64,7 +50,8 @@ public class SesionClienteEnMemoria implements SesionVortexHttp {
 	 */
 	@Override
 	public String getIdDeSesion() {
-		return idDeSesion;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
@@ -72,30 +59,8 @@ public class SesionClienteEnMemoria implements SesionVortexHttp {
 	 */
 	@Override
 	public void acumularParaCliente(final MensajeVortex mensaje) {
-		this.mensajesAcumulados.add(mensaje);
-		enviarMensajesAlServer();
-	}
+		// TODO Auto-generated method stub
 
-	/**
-	 * Intenta enviar los mensajes acumulados al server si es que se superó la espera mínima
-	 */
-	private void enviarMensajesAlServer() {
-		if (esperaMinimaSuperada()) {
-			return;
-		}
-	}
-
-	/**
-	 * Indica si esta sesión ya esperó lo suficiente para enviar otro request desde el momento que
-	 * el server indico la espera mínima
-	 * 
-	 * @return true si ya se esperó lo sufuciente como para enviar otro request
-	 */
-	private boolean esperaMinimaSuperada() {
-		final long now = getCurrentTime();
-		final long esperado = now - momentoDeComienzoDeEspera;
-		final boolean esperaMinimaSuperada = esperado >= esperaMinima;
-		return esperaMinimaSuperada;
 	}
 
 	/**
@@ -103,7 +68,8 @@ public class SesionClienteEnMemoria implements SesionVortexHttp {
 	 */
 	@Override
 	public NexoHttp getNexoAsociado() {
-		return nexoAsociado;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
@@ -111,7 +77,8 @@ public class SesionClienteEnMemoria implements SesionVortexHttp {
 	 */
 	@Override
 	public void setNexoAsociado(final NexoHttp nexoAsociado) {
-		this.nexoAsociado = nexoAsociado;
+		// TODO Auto-generated method stub
+
 	}
 
 	/**
@@ -119,15 +86,8 @@ public class SesionClienteEnMemoria implements SesionVortexHttp {
 	 */
 	@Override
 	public boolean esVieja() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public static SesionClienteEnMemoria create(final String idDeSesion) {
-		final SesionClienteEnMemoria sesion = new SesionClienteEnMemoria();
-		sesion.idDeSesion = idDeSesion;
-		sesion.esperaMinima = 0;
-		sesion.mensajesAcumulados = new ConcurrentLinkedQueue<MensajeVortex>();
-		sesion.momentoDeComienzoDeEspera = sesion.getCurrentTime();
-		return sesion;
-	}
 }

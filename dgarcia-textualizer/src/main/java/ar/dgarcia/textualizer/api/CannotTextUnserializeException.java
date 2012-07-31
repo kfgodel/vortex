@@ -24,10 +24,10 @@ package ar.dgarcia.textualizer.api;
  * 
  * @author D. García
  */
-public class CannotTextUnserialize extends RuntimeException {
+public class CannotTextUnserializeException extends RuntimeException {
 	private static final long serialVersionUID = -1364804434807963990L;
 
-	public CannotTextUnserialize(final String message, final Exception exception) {
+	public CannotTextUnserializeException(final String message, final Exception exception) {
 		super(message, exception);
 	}
 

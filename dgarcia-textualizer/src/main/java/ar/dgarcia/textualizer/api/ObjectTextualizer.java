@@ -36,5 +36,5 @@ public interface ObjectTextualizer {
 	 *            El objeto representado como cadena
 	 * @return El objeto real
 	 */
-	public Object convertFromString(final String value) throws CannotTextUnserialize;
+	public Object convertFromString(final String value) throws CannotTextUnserializeException;
 }

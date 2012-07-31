@@ -13,6 +13,8 @@
 package net.gaia.vortex.http.external.json;
 
 import net.gaia.vortex.http.messages.PaqueteHttpVortex;
+import ar.dgarcia.textualizer.api.CannotTextSerializeException;
+import ar.dgarcia.textualizer.api.CannotTextUnserializeException;
 
 /**
  * Esta interfaz define el contrato esperado del textualizador utilizado por las sesiones para
@@ -29,7 +31,7 @@ public interface VortexHttpTextualizer {
 	 *            El paquete con los mensajes recibido
 	 * @return El paquete reconstruido
 	 */
-	PaqueteHttpVortex convertFromString(String mensajesComoJson);
+	PaqueteHttpVortex convertFromString(String mensajesComoJson) throws CannotTextUnserializeException;
 
 	/**
 	 * Devuelve una representación en JSON del paquete pasado
@@ -38,6 +40,6 @@ public interface VortexHttpTextualizer {
 	 *            El paquete de mensajes a devolver al cliente
 	 * @return La representación textual del paquete
 	 */
-	String convertToString(PaqueteHttpVortex paqueteDeSalida);
+	String convertToString(PaqueteHttpVortex paqueteDeSalida) throws CannotTextSerializeException;
 
 }
