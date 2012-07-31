@@ -38,7 +38,7 @@ import ar.dgarcia.textualizer.api.CannotTextUnserializeException;
  * 
  * @author D. García
  */
-public class SesionHttpCliente {
+public class ConexionHttpCliente {
 
 	private String idDeSesion;
 	public static final String idDeSesion_FIELD = "idDeSesion";
@@ -51,9 +51,9 @@ public class SesionHttpCliente {
 	private long esperaMinima;
 	private long esperaMaxima;
 
-	public static SesionHttpCliente create(final ServerVortexHttpRemoto serverRemoto,
+	public static ConexionHttpCliente create(final ServerVortexHttpRemoto serverRemoto,
 			final VortexHttpTextualizer textualizer) throws VortexHttpException {
-		final SesionHttpCliente sesion = new SesionHttpCliente();
+		final ConexionHttpCliente sesion = new ConexionHttpCliente();
 		sesion.serverRemoto = serverRemoto;
 		sesion.textualizer = textualizer;
 		sesion.esperaMinima = 0;
