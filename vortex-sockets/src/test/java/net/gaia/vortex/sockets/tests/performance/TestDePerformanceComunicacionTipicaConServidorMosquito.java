@@ -16,6 +16,7 @@ import java.net.InetSocketAddress;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 
 /**
  * Esta clase prueba una comunicación tipica 1 a 1, utilizando un servidor vortex con nodosockets y
@@ -24,7 +25,7 @@ import org.junit.Before;
  * 
  * @author D. García
  */
-// @Ignore("Este test sólo debe correrse si existe un servidor en la misma máquina levantado")
+@Ignore("Este test sólo debe correrse si existe un servidor en mosquito")
 public class TestDePerformanceComunicacionTipicaConServidorMosquito extends TestDeComunicacionTipicaSupport {
 
 	@Before
