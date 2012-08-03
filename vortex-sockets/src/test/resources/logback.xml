@@ -19,6 +19,11 @@
 	
 	<logger name="net.gaia.vortex.sockets" level="DEBUG" />
 	
+	<!-- No queremos el detalle de nexos abiertos por conexión  -->
+	<logger name="net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler" level="INFO" />
+	<logger name="net.gaia.vortex.server.impl.RealizarConexiones" level="WARN" />
+	
+	
   
 	<root level="info">
 	  <appender-ref ref="STDOUT" />

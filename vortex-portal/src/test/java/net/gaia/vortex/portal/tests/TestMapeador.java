@@ -69,7 +69,7 @@ public class TestMapeador {
 
 	@Test
 	public void deberiaPermitirConvertirDesdeMensajeAObjetoConCaseInsensitive() {
-		final MensajeConContenido mensajeMapa = MensajeConContenido.create();
+		final MensajeConContenido mensajeMapa = MensajeConContenido.crearVacio();
 		final long nanosDelMensaje = 20;
 		mensajeMapa.getContenido().put(MensajeCronometro.nanosDeInicio_FIELD.toUpperCase(), nanosDelMensaje);
 
@@ -81,7 +81,7 @@ public class TestMapeador {
 
 	@Test
 	public void deberiaConvertirElMensajeVortexEnUnMensajeCronometro() {
-		final MensajeConContenido mensajeMapa = MensajeConContenido.create();
+		final MensajeConContenido mensajeMapa = MensajeConContenido.crearVacio();
 		final long nanosDelMensaje = 20;
 		mensajeMapa.getContenido().put(MensajeCronometro.nanosDeInicio_FIELD, nanosDelMensaje);
 

@@ -5,6 +5,7 @@ package ar.dgarcia.objectsockets.external.mina;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
+import org.apache.mina.core.write.WriteToClosedSessionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,7 +144,14 @@ public class ObjectSocketIoHandler extends IoHandlerAdapter {
 	@Override
 	public void exceptionCaught(final IoSession session, final Throwable cause) throws Exception {
 		if (errorHandler == null) {
-			LOG.error("No existe handler de errores para [" + this + "]. Cerrando conexion", cause);
+			if (cause instanceof WriteToClosedSessionException) {
+				LOG.error(
+						"La sesión mina[{}] se cerró antes de terminar el envio. Probablemente se hayan perdido los últimos datos enviados por el socket",
+						session);
+			} else {
+				LOG.error("Se produjo un error y no existe handler de errores para [" + this + "]. Cerrando conexion",
+						cause);
+			}
 			session.close(true);
 			return;
 		}
