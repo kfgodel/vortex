@@ -27,6 +27,12 @@ import ar.com.dgarcia.coding.caching.WeakSingleton;
  */
 public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 
+	public static final String PART_SEPARATOR = "-";
+	public static final int LONGITUD_INCIAL_SECUENCIA = 1;
+	public static final int LONGITUD_INICIAL_GENERADOR_TIMESTAMP = 1;
+	public static final int LONGITUD_INICIAL_RANDOM_PART = 4;
+	public static final int LONGITUD_INICIAL_VORTEX_TIMESTAMP = 4;
+
 	private static final WeakSingleton<GeneradorDeIdsEstaticos> ultimaReferencia = new WeakSingleton<GeneradorDeIdsEstaticos>(
 			DefaultInstantiator.create(GeneradorDeIdsEstaticos.class));
 
@@ -34,17 +40,36 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 		return ultimaReferencia.get();
 	}
 
-	private final String identificadorDeGenerador;
+	/**
+	 * Timestamp tomado como momento 0 en la cronología de vortex para la asignación de IDs
+	 */
+	public static final long MOMENTO_CERO_VORTEX = 1344121609204L;
+
+	private final String identificadorDelGenerador;
+	private final long momentoCeroGenerador;
 	private final AtomicLong idsGenerados = new AtomicLong(0);
 
 	/**
 	 * Constructor que define la primera
 	 */
 	public GeneradorDeIdsEstaticos() {
+		this.momentoCeroGenerador = getCurrentTimestamp();
 		final StringBuilder builder = new StringBuilder();
-		builder.append(getTimestampString());
 		builder.append(getRandomString());
-		identificadorDeGenerador = builder.toString();
+		builder.append(PART_SEPARATOR);
+		builder.append(getVortexTimestampString());
+		identificadorDelGenerador = builder.toString();
+	}
+
+	/**
+	 * Devuelve el String que representa el Timestamp de la creación del generador
+	 * 
+	 * @return La cadena que representa el timestamp de este generador
+	 */
+	private String getVortexTimestampString() {
+		final long currentStamp = momentoCeroGenerador - MOMENTO_CERO_VORTEX;
+		final String asString = asString(currentStamp, LONGITUD_INICIAL_VORTEX_TIMESTAMP);
+		return asString;
 	}
 
 	/**
@@ -54,7 +79,8 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	 */
 	private String getRandomString() {
 		final Random randomPart = new Random(hashCode());
-		final String randomString = asString(randomPart.nextLong());
+		final int randomInt = randomPart.nextInt(0xFFFF);
+		final String randomString = asString(randomInt, LONGITUD_INICIAL_RANDOM_PART);
 		return randomString;
 	}
 
@@ -63,8 +89,10 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	 * 
 	 * @return El timestamp representado como una cadena hexa
 	 */
-	private String getTimestampString() {
-		final String hexaTimestamp = asString(getCurrentTimestamp());
+	private String getGeneradorTimestampString() {
+		final long now = getCurrentTimestamp();
+		final long timestampDelGenerador = now - momentoCeroGenerador;
+		final String hexaTimestamp = asString(timestampDelGenerador, LONGITUD_INICIAL_GENERADOR_TIMESTAMP);
 		return hexaTimestamp;
 	}
 
@@ -75,8 +103,8 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	 *            El valor a representar
 	 * @return La representación de ancho fijo, con 0 adicionales
 	 */
-	public String asString(final long valor) {
-		final String hexString = String.format("%1$016X", valor);
+	public String asString(final long valor, final int padding) {
+		final String hexString = String.format("%1$0" + padding + "X", valor);
 		return hexString;
 	}
 
@@ -86,8 +114,10 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	@Override
 	public IdentificadorVortex generarId() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append(identificadorDeGenerador);
-		builder.append(getTimestampString());
+		builder.append(identificadorDelGenerador);
+		builder.append(PART_SEPARATOR);
+		builder.append(getGeneradorTimestampString());
+		builder.append(PART_SEPARATOR);
 		builder.append(getSecuenciaString());
 		final String nuevoValor = builder.toString();
 		final IdentificadorVortex identificadorCreado = IdentificadorEstatico.create(nuevoValor);
@@ -100,7 +130,8 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	 * @return La cadena con la representación hexa del número de secuencia
 	 */
 	private String getSecuenciaString() {
-		final String secuencia = asString(idsGenerados.getAndIncrement());
+		final long valorDeSecuencia = idsGenerados.getAndIncrement();
+		final String secuencia = asString(valorDeSecuencia, LONGITUD_INCIAL_SECUENCIA);
 		return secuencia;
 	}
 

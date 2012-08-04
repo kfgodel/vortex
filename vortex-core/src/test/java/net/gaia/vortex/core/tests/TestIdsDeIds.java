@@ -32,18 +32,25 @@ public class TestIdsDeIds {
 	private static final Logger LOG = LoggerFactory.getLogger(TestIdsDeIds.class);
 
 	@Test
-	public void elIdDeVortexDeberíaTener64Caracteres() {
+	public void elIdDeVortexDeberíaTener24CaracteresEnElMomento0() {
 		final IdentificadorVortex nuevoId = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		final String idComoString = nuevoId.getValorActual();
 		LOG.debug("ID generado: {}", idComoString);
-		Assert.assertEquals("El largo debería ser de 64 caracteres", 64, idComoString.length());
+		Assert.assertTrue("El largo debería ser mayor al minimo", GeneradorDeIdsEstaticos.LONGITUD_INCIAL_SECUENCIA
+				+ GeneradorDeIdsEstaticos.LONGITUD_INICIAL_GENERADOR_TIMESTAMP
+				+ GeneradorDeIdsEstaticos.LONGITUD_INICIAL_RANDOM_PART
+				+ GeneradorDeIdsEstaticos.LONGITUD_INICIAL_VORTEX_TIMESTAMP < idComoString.length());
 	}
 
 	@Test
 	public void elIdDeberiaRepresentarUnNumeroHexaGrande() {
 		final IdentificadorVortex nuevoId = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		final String idComoString = nuevoId.getValorActual();
-		final Matcher matcher = Pattern.compile("[A-F0-9]{64}").matcher(idComoString);
+		final Matcher matcher = Pattern.compile(
+				"[A-F0-9]{" + GeneradorDeIdsEstaticos.LONGITUD_INICIAL_RANDOM_PART + "}-[A-F0-9]{"
+						+ GeneradorDeIdsEstaticos.LONGITUD_INICIAL_VORTEX_TIMESTAMP + ",}-[A-F0-9]{"
+						+ GeneradorDeIdsEstaticos.LONGITUD_INICIAL_GENERADOR_TIMESTAMP + ",}-[A-F0-9]{"
+						+ GeneradorDeIdsEstaticos.LONGITUD_INCIAL_SECUENCIA + ",}").matcher(idComoString);
 		LOG.debug("ID generado: {}", idComoString);
 		Assert.assertTrue("El id debería matchear la expresion regular", matcher.matches());
 	}
