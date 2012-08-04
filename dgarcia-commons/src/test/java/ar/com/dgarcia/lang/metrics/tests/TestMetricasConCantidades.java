@@ -60,9 +60,7 @@ public class TestMetricasConCantidades {
 		verificarCantidades(3, 2, metricasPorSegundo);
 		verificarVelocidades(metricasPorSegundo, 3 / 1000d, 2 / 1000d, 0.0001);
 
-		System.out.println(System.currentTimeMillis());
 		final MetricasPorTiempo metricasCada5s = metricas.getMetricasEnBloqueDe5Segundos();
-		System.out.println(metricasCada5s.getMomentoDeFinDeLaMedicion());
 		verificarCantidades(15, 10, metricasCada5s);
 		verificarVelocidades(metricasCada5s, 3 / 1000d, 2 / 1000d, 0.0001);
 

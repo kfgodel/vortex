@@ -17,10 +17,11 @@ import java.net.SocketAddress;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 import net.gaia.vortex.sockets.api.ServidorDeSocketVortex;
-import net.gaia.vortex.sockets.external.json.VortexSocketTextualizer;
+import net.gaia.vortex.sockets.external.mina.VortexSocketConfiguration;
 import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 import net.gaia.vortex.sockets.impl.sockets.ReceptionHandlerNulo;
 import net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler;
+import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
@@ -66,8 +67,8 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	 */
 	@Override
 	public void aceptarConexionesRemotas() throws ObjectSocketException {
-		final ObjectSocketConfiguration socketConfig = ObjectSocketConfiguration.create(listeningAddress,
-				VortexSocketTextualizer.create());
+		final ObjectSocketConfiguration socketConfig = VortexSocketConfiguration.crear(listeningAddress,
+				MetricasDeCargaImpl.create());
 		socketConfig.setEventHandler(socketHandler);
 		socketConfig.setReceptionHandler(ReceptionHandlerNulo.getInstancia());
 		internalAcceptor = ObjectSocketAcceptor.create(socketConfig);

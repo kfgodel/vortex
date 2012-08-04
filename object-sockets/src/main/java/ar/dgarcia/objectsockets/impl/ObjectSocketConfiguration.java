@@ -87,11 +87,24 @@ public class ObjectSocketConfiguration {
 	public static ObjectSocketConfiguration create(final SocketAddress socketAddress,
 			final ObjectReceptionHandler handlerReceptor, final ObjectTextualizer textualizer) {
 		final ObjectSocketConfiguration config = new ObjectSocketConfiguration();
-		config.address = socketAddress;
-		config.receptionHandler = handlerReceptor;
-		config.componentsFactory = SocketMinaFactory.INSTANCE;
-		config.serializer = textualizer;
+		config.initialize(socketAddress, handlerReceptor, textualizer);
 		return config;
+	}
+
+	/**
+	 * Inicializa el estado de esta instancia con los parámetros indicados
+	 * 
+	 * @param socketAddress
+	 * @param handlerReceptor
+	 *            Puede ser null
+	 * @param textualizer
+	 */
+	protected void initialize(final SocketAddress socketAddress, final ObjectReceptionHandler handlerReceptor,
+			final ObjectTextualizer textualizer) {
+		this.address = socketAddress;
+		this.receptionHandler = handlerReceptor;
+		this.componentsFactory = SocketMinaFactory.INSTANCE;
+		this.serializer = textualizer;
 	}
 
 	/**
@@ -102,8 +115,19 @@ public class ObjectSocketConfiguration {
 	protected IoAcceptor newIoAcceptor() {
 		final IoAcceptor ioAcceptor = componentsFactory.createIoAcceptor();
 		final DefaultIoFilterChainBuilder filterChain = ioAcceptor.getFilterChain();
-		componentsFactory.configureChainFilters(filterChain, serializer);
+		configureFilterChain(filterChain);
 		return ioAcceptor;
+	}
+
+	/**
+	 * Configura la cadena de filtros para aplicar en inputs y outputs agregando un interprete
+	 * binario a trins, y de string a objeto
+	 * 
+	 * @param filterChain
+	 *            La cadena de filtros que se debe configurar
+	 */
+	protected void configureFilterChain(final DefaultIoFilterChainBuilder filterChain) {
+		componentsFactory.configureChainFilters(filterChain, serializer);
 	}
 
 	/**
@@ -114,7 +138,7 @@ public class ObjectSocketConfiguration {
 	protected IoConnector newIoConnector() {
 		final IoConnector ioConnector = componentsFactory.createIoConnector();
 		final DefaultIoFilterChainBuilder filterChain = ioConnector.getFilterChain();
-		componentsFactory.configureChainFilters(filterChain, serializer);
+		configureFilterChain(filterChain);
 		return ioConnector;
 	}
 }
