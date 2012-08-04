@@ -104,7 +104,7 @@ public class MosquitoSever {
 		final double totalesVelKiloInput = (totales.getVelocidadDeInput() * 1000) / 1024d;
 		final double totalesVelKiloOutput = (totales.getVelocidadDeOutput() * 1000) / 1024d;
 		TRANSFER.info(String
-				.format("I/O 1s:[%1$08.3fkB/s %2$08.3fkB/s] 5s:[%3$08.3fkB/s %4$08.3fkB/s] Ts:[%5$08.3fkB/s %6$08.3fkB/s, %7$08.3fMB %8$08.3fMB]",
+				.format("I/O 1s:[%1$08.3fkB/s %2$08.3fkB/s] 5s:[%3$08.3fkB/s %4$08.3fkB/s] Ts:[%5$08.3fkB/s %6$08.3fkB/s, %7$8.3fMB %8$8.3fMB]",
 						_1VelKiloInput, _1VelKiloOutput, _5VelKiloInput, _5VelKiloOutput, totalesVelKiloInput,
 						totalesVelKiloOutput, totalesCantMegaInput, totalesCantMegaOutput));
 	}
