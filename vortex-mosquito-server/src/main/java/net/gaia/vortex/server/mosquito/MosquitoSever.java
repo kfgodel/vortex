@@ -13,14 +13,24 @@
 package net.gaia.vortex.server.mosquito;
 
 import java.net.SocketAddress;
+import java.util.concurrent.TimeUnit;
 
+import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.http.impl.moleculas.NodoServerHttp;
 import net.gaia.vortex.server.mosquito.config.ContextConfiguration;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
+import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 import ar.com.dgarcia.lang.strings.ToString;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase representa el servidor funcionando en mosquito para los sockets vortex
@@ -28,6 +38,10 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class MosquitoSever {
+	private static final TimeMagnitude PERIODO_ENTRE_LOGS_DE_TRANSFER = TimeMagnitude.of(5, TimeUnit.SECONDS);
+
+	private static final Logger TRANSFER = LoggerFactory.getLogger("net.gaia.vortex.meta.Loggers.TRANSFER");
+
 	private ContextConfiguration configuration;
 	public static final String configuration_FIELD = "configuration";
 
@@ -46,6 +60,14 @@ public class MosquitoSever {
 		return server;
 	}
 
+	private final WorkUnit tareaDeLogDeTransfer = new WorkUnit() {
+		@Override
+		public WorkUnit doWork() throws InterruptedException {
+			registrarTransferEnLog();
+			return null;
+		}
+	};
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
@@ -53,6 +75,44 @@ public class MosquitoSever {
 	public String toString() {
 		return ToString.de(this).con(configuration_FIELD, configuration).con(hubDeSockets_FIELD, hubDeSockets)
 				.con(hubDeHttp_FIELD, hubDeHttp).toString();
+	}
+
+	/**
+	 * Registra en el log los datos de transferencia actuales y acumulados
+	 */
+	protected void registrarTransferEnLog() {
+		escribirTransfersEnLog();
+		planificarProximoLogDeTransfer();
+	}
+
+	/**
+	 * Registra los valores de transferencias en el log
+	 */
+	private void escribirTransfersEnLog() {
+		final MetricasDeCargaImpl metricas = hubDeSockets.getServidor().getMetricas();
+		final MetricasPorTiempo ultimoSegundo = metricas.getMetricasEnBloqueDeUnSegundo();
+		final long _1sCantBytesInput = ultimoSegundo.getCantidadDeInputs();
+		final long _1sCantBytesOutput = ultimoSegundo.getCantidadDeOutputs();
+		final double _1VelKiloInput = (ultimoSegundo.getVelocidadDeInput() * 1000) / 1024d;
+		final double _1VelKiloOutput = (ultimoSegundo.getVelocidadDeOutput() * 1000) / 1024d;
+
+		final MetricasPorTiempo ultimos5 = metricas.getMetricasEnBloqueDe5Segundos();
+		final double _5sCantKiloInput = ultimos5.getCantidadDeInputs() / 1024d;
+		final double _5sCantKiloOutput = ultimos5.getCantidadDeOutputs() / 1024d;
+		final double _5VelKiloInput = (ultimos5.getVelocidadDeInput() * 1000) / 1024d;
+		final double _5VelKiloOutput = (ultimos5.getVelocidadDeOutput() * 1000) / 1024d;
+
+		final MetricasPorTiempo totales = metricas.getMetricasTotales();
+		final double totalesCantMegaInput = totales.getCantidadDeInputs() / (1024d * 1024d);
+		final double totalesCantMegaOutput = totales.getCantidadDeOutputs() / (1024d * 1024d);
+		final double totalesVelKiloInput = (totales.getVelocidadDeInput() * 1000) / 1024d;
+		final double totalesVelKiloOutput = (totales.getVelocidadDeOutput() * 1000) / 1024d;
+
+		TRANSFER.info(
+				"1s:[I/O(B)={}/{},VI/VO(kB/s)={}/{}] 5s:[I/O(KB)={}/{},VI/VO(kB/s)={}/{}] Totales:[I/O(MB)={}/{},VI/VO(kB/s)={}/{}]",
+				new Object[] { _1sCantBytesInput, _1sCantBytesOutput, _1VelKiloInput, _1VelKiloOutput,
+						_5sCantKiloInput, _5sCantKiloOutput, _5VelKiloInput, _5VelKiloOutput, totalesCantMegaInput,
+						totalesCantMegaOutput, totalesVelKiloInput, totalesVelKiloOutput });
 	}
 
 	/**
@@ -72,12 +132,21 @@ public class MosquitoSever {
 		// Interconectamos los nodos
 		hubDeHttp.conectarCon(hubDeSockets);
 		hubDeSockets.conectarCon(hubDeHttp);
+		registrarTransferEnLog();
+	}
+
+	/**
+	 * Comienza el registro por log separado de las tazas de transferencia
+	 */
+	private void planificarProximoLogDeTransfer() {
+		processor.processDelayed(PERIODO_ENTRE_LOGS_DE_TRANSFER, tareaDeLogDeTransfer);
 	}
 
 	/**
 	 * Detiene las conexiones actuales forzadamente
 	 */
 	public void detenerConexiones() {
+		detenerLogDeTransfer();
 		if (hubDeHttp != null) {
 			final Integer httpListeningPort = configuration.getHttpListeningPort();
 			Loggers.RUTEO.info("Deteniendo server HTTP en: {}", httpListeningPort);
@@ -89,5 +158,17 @@ public class MosquitoSever {
 		final SocketAddress listeningAddress = configuration.getListeningAddress();
 		Loggers.RUTEO.info("Deteniendo escucha de sockets en: {}", listeningAddress);
 		hubDeSockets.closeAndDispose();
+	}
+
+	/**
+	 * Detiene la ejecución de la tarea para loguear la transferencia
+	 */
+	private void detenerLogDeTransfer() {
+		processor.removeTasksMatching(new TaskCriteria() {
+			@Override
+			public boolean matches(final WorkUnit workUnit) {
+				return tareaDeLogDeTransfer == workUnit;
+			}
+		});
 	}
 }
