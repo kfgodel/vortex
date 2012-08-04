@@ -28,10 +28,26 @@ public interface ListenerDeMetricas {
 	void registrarInput();
 
 	/**
+	 * Registra en esta métrica la cantidad de unidades ingresadas en el sistema como conjunto.
+	 * 
+	 * @param cantidad
+	 *            La cantidad a contabilizad como entrantes del sistema medido
+	 */
+	void registrarInput(long cantidadIngresada);
+
+	/**
 	 * Registra en esta métrica generación de un output en el sistema.<br>
 	 * Normalmente debería haber un output por cada input, para que los datos de delivery sean
 	 * consistentes
 	 */
 	void registrarOutput();
+
+	/**
+	 * Registra en esta métrica la cantidad de unidades egresadas como conjunto.<br>
+	 * 
+	 * @param cantidadEgresada
+	 *            La cantidad a contabilizar como saliente del sistema medido
+	 */
+	void registrarOutput(long cantidadEgresada);
 
 }

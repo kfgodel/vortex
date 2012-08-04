@@ -134,7 +134,7 @@ public class TestDePerformanceMapeadorVortex {
 				nombreDelTest, millisTranscurridos, cantidadDeInputs, cantidadDeOutputs });
 
 		LOG.info("[{}]: Obj->Vortex:{} obj/ms Vortex->Obj():{} obj/ms",
-				new Object[] { nombreDelTest, medicion.getVelocidadDeRecepcion(), medicion.getVelocidadDeEnvio() });
+				new Object[] { nombreDelTest, medicion.getVelocidadDeInput(), medicion.getVelocidadDeOutput() });
 		LOG.info("[{}] Fin", nombreDelTest);
 	}
 

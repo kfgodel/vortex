@@ -245,8 +245,8 @@ public class TestDePerformanceConColaIndividual {
 				millisTranscurridos, cantidadDeInputs, cantidadDeOutputs });
 
 		LOG.info("[{}]: Delivery:{}% Input:{} msg/ms Output():{} msg/ms",
-				new Object[] { nombreDelTest, medicion.getTasaDeDelivery() * 100, medicion.getVelocidadDeRecepcion(),
-						medicion.getVelocidadDeEnvio() });
+				new Object[] { nombreDelTest, medicion.getTasaDeDelivery() * 100, medicion.getVelocidadDeInput(),
+						medicion.getVelocidadDeOutput() });
 		LOG.info("[{}] Fin", nombreDelTest);
 	}
 

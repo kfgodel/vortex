@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa una métrica por tiempo en la que se segmenta el tiempo en bloques de
@@ -28,10 +29,16 @@ import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
 public class MetricasEnBloque extends MetricasPorTiempoSupport implements MetricasPorTiempo, ListenerDeMetricas {
 
 	private long duracionDelBloqueEnMillis;
+	public static final String duracionDelBloqueEnMillis_FIELD = "duracionDelBloqueEnMillis";
+
 	private MetricasPorTiempoImpl metricasContinuas;
+	public static final String metricasContinuas_FIELD = "metricasContinuas";
+
 	private AtomicReference<SnapshotDeMetricaPorTiempo> ultimoSnapshot;
+	public static final String ultimoSnapshot_FIELD = "ultimoSnapshot";
 
 	public MetricasPorTiempo getUltimoBloque() {
+		cortarBloqueDe(duracionDelBloqueEnMillis, metricasContinuas, ultimoSnapshot);
 		final MetricasPorTiempo devuelto = devolverBloqueSiNoEsMasViejoQue(duracionDelBloqueEnMillis, ultimoSnapshot);
 		return devuelto;
 	}
@@ -65,7 +72,7 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	 */
 	@Override
 	public long getMomentoDeInicioDeLaMedicionEnMilis() {
-		return getUltimoBloque().getDuracionDeMedicionEnMilis();
+		return getUltimoBloque().getMomentoDeInicioDeLaMedicionEnMilis();
 	}
 
 	/**
@@ -78,12 +85,30 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	}
 
 	/**
+	 * @see ar.com.dgarcia.lang.metrics.ListenerDeMetricas#registrarInput(long)
+	 */
+	@Override
+	public void registrarInput(final long cantidadIngresada) {
+		cortarBloqueDe(duracionDelBloqueEnMillis, metricasContinuas, ultimoSnapshot);
+		metricasContinuas.registrarInput(cantidadIngresada);
+	}
+
+	/**
 	 * @see net.gaia.vortex.core.impl.metricas.ListenerDeMetricas#registrarOutput()
 	 */
 	@Override
 	public void registrarOutput() {
 		cortarBloqueDe(duracionDelBloqueEnMillis, metricasContinuas, ultimoSnapshot);
 		metricasContinuas.registrarOutput();
+	}
+
+	/**
+	 * @see ar.com.dgarcia.lang.metrics.ListenerDeMetricas#registrarOutput(long)
+	 */
+	@Override
+	public void registrarOutput(final long cantidadEgresada) {
+		cortarBloqueDe(duracionDelBloqueEnMillis, metricasContinuas, ultimoSnapshot);
+		metricasContinuas.registrarOutput(cantidadEgresada);
 	}
 
 	/**
@@ -150,4 +175,14 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 				SnapshotDeMetricaPorTiempo.createZero());
 		return metricas;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(duracionDelBloqueEnMillis_FIELD, duracionDelBloqueEnMillis)
+				.con(ultimoSnapshot_FIELD, ultimoSnapshot).con(metricasContinuas_FIELD, metricasContinuas).toString();
+	}
+
 }

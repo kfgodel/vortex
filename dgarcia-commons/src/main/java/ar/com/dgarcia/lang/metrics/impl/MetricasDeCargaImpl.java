@@ -15,6 +15,7 @@ package ar.com.dgarcia.lang.metrics.impl;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.metrics.MetricasDeCarga;
 import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase permite implementar las mediciones de desempeño del sistema
@@ -27,9 +28,12 @@ public class MetricasDeCargaImpl implements MetricasDeCarga, ListenerDeMetricas 
 	private static final int CINCO_SEGUNDOS = 5 * UN_SEGUNDO;
 
 	private MetricasPorTiempoImpl metricasTotales;
+	public static final String metricasTotales_FIELD = "metricasTotales";
 
 	private MetricasEnBloque metricasPorCadaSegundo;
+	public static final String metricasPorCadaSegundo_FIELD = "metricasPorCadaSegundo";
 	private MetricasEnBloque metricasPorCada5Segundos;
+	public static final String metricasPorCada5Segundos_FIELD = "metricasPorCada5Segundos";
 
 	/**
 	 * @see ar.com.dgarcia.lang.metrics.MetricasDeCarga#getMetricasTotales()
@@ -74,6 +78,16 @@ public class MetricasDeCargaImpl implements MetricasDeCarga, ListenerDeMetricas 
 	}
 
 	/**
+	 * @see ar.com.dgarcia.lang.metrics.ListenerDeMetricas#registrarInput(long)
+	 */
+	@Override
+	public void registrarInput(final long cantidadIngresada) {
+		metricasTotales.registrarInput(cantidadIngresada);
+		metricasPorCadaSegundo.registrarInput(cantidadIngresada);
+		metricasPorCada5Segundos.registrarInput(cantidadIngresada);
+	}
+
+	/**
 	 * Registra en esta métrica un ruteo realizado por el nodo
 	 */
 	@Override
@@ -82,4 +96,25 @@ public class MetricasDeCargaImpl implements MetricasDeCarga, ListenerDeMetricas 
 		metricasPorCadaSegundo.registrarOutput();
 		metricasPorCada5Segundos.registrarOutput();
 	}
+
+	/**
+	 * @see ar.com.dgarcia.lang.metrics.ListenerDeMetricas#registrarOutput(long)
+	 */
+	@Override
+	public void registrarOutput(final long cantidadEgresada) {
+		metricasTotales.registrarOutput(cantidadEgresada);
+		metricasPorCadaSegundo.registrarOutput(cantidadEgresada);
+		metricasPorCada5Segundos.registrarOutput(cantidadEgresada);
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(metricasTotales_FIELD, metricasTotales)
+				.con(metricasPorCadaSegundo_FIELD, metricasPorCadaSegundo)
+				.con(metricasPorCada5Segundos_FIELD, metricasPorCada5Segundos).toString();
+	}
+
 }

@@ -69,7 +69,7 @@ public interface MetricasPorTiempo {
 	 * @return La velocidad con la que los mensajes fueron aceptados por este nodo en el período
 	 *         medido
 	 */
-	public double getVelocidadDeRecepcion();
+	public double getVelocidadDeInput();
 
 	/**
 	 * Devuelve la cantidad de mensajes enviados a nodos vecinos por milisegundo en el período
@@ -78,7 +78,7 @@ public interface MetricasPorTiempo {
 	 * @return La velocidad con la que los mensajes fueron enviados a los nodos vecinos
 	 *         correspondientes durante el período medido
 	 */
-	public double getVelocidadDeEnvio();
+	public double getVelocidadDeOutput();
 
 	/**
 	 * Devuelve el momento de fin de la medición de esta métrica

@@ -38,10 +38,10 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getVelocidadDeRecepcion()
+	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getVelocidadDeInput()
 	 */
 	@Override
-	public double getVelocidadDeRecepcion() {
+	public double getVelocidadDeInput() {
 		final double cantidadDeMensajesRecibidos = getCantidadDeInputs();
 		final long milisTranscurridos = getDuracionDeMedicionEnMilis();
 		if (milisTranscurridos == 0) {
@@ -53,10 +53,10 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getVelocidadDeEnvio()
+	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getVelocidadDeOutput()
 	 */
 	@Override
-	public double getVelocidadDeEnvio() {
+	public double getVelocidadDeOutput() {
 		final double cantidadDeMensajesEnviados = getCantidadDeOutputs();
 		final double milisTranscurridos = getDuracionDeMedicionEnMilis();
 		if (milisTranscurridos == 0) {

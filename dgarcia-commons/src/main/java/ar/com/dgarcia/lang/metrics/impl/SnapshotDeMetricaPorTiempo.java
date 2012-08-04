@@ -13,6 +13,7 @@
 package ar.com.dgarcia.lang.metrics.impl;
 
 import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa una instantánea tomada en un momento de una métrica por tiempo
@@ -21,17 +22,24 @@ import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
  */
 public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 
-	private long cantidadDeMensajesRecibidos;
-	private long cantidadDeMensajesEnviados;
+	private long cantidadDeInputs;
+	public static final String cantidadDeInputs_FIELD = "cantidadDeInputs";
+
+	private long cantidadDeOutputs;
+	public static final String cantidadDeOutputs_FIELD = "cantidadDeOutputs";
+
 	private long duracionDeLaMedicion;
+	public static final String duracionDeLaMedicion_FIELD = "duracionDeLaMedicion";
+
 	private long momentoDeInicioDeLaMedicion;
+	public static final String momentoDeInicioDeLaMedicion_FIELD = "momentoDeInicioDeLaMedicion";
 
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeInputs()
 	 */
 	@Override
 	public long getCantidadDeInputs() {
-		return cantidadDeMensajesRecibidos;
+		return cantidadDeInputs;
 	}
 
 	/**
@@ -39,7 +47,7 @@ public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 	 */
 	@Override
 	public long getCantidadDeOutputs() {
-		return cantidadDeMensajesEnviados;
+		return cantidadDeOutputs;
 	}
 
 	/**
@@ -70,8 +78,8 @@ public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 			final long cantidadDeMensajesRuteados, final long duracionDeLaMedicion,
 			final long momentoDeInicioDeLaMedicion) {
 		final SnapshotDeMetricaPorTiempo snapshot = new SnapshotDeMetricaPorTiempo();
-		snapshot.cantidadDeMensajesRecibidos = cantidadDeMensajesRecibidos;
-		snapshot.cantidadDeMensajesEnviados = cantidadDeMensajesRuteados;
+		snapshot.cantidadDeInputs = cantidadDeMensajesRecibidos;
+		snapshot.cantidadDeOutputs = cantidadDeMensajesRuteados;
 		snapshot.duracionDeLaMedicion = duracionDeLaMedicion;
 		snapshot.momentoDeInicioDeLaMedicion = momentoDeInicioDeLaMedicion;
 		return snapshot;
@@ -102,12 +110,22 @@ public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 		this.momentoDeInicioDeLaMedicion = momentoDeInicioDeLaMedicion;
 	}
 
-	public void setCantidadDeMensajesRecibidos(final long cantidadDeMensajesRecibidos) {
-		this.cantidadDeMensajesRecibidos = cantidadDeMensajesRecibidos;
+	public void setCantidadDeInputs(final long cantidadDeMensajesRecibidos) {
+		this.cantidadDeInputs = cantidadDeMensajesRecibidos;
 	}
 
 	public void setCantidadDeMensajesRuteados(final long cantidadDeMensajesRuteados) {
-		this.cantidadDeMensajesEnviados = cantidadDeMensajesRuteados;
+		this.cantidadDeOutputs = cantidadDeMensajesRuteados;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(cantidadDeInputs_FIELD, cantidadDeInputs)
+				.con(cantidadDeOutputs_FIELD, cantidadDeOutputs).con(duracionDeLaMedicion_FIELD, duracionDeLaMedicion)
+				.con(momentoDeInicioDeLaMedicion_FIELD, momentoDeInicioDeLaMedicion).toString();
 	}
 
 }

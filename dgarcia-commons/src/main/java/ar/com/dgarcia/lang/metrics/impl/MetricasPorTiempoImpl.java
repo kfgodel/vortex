@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.SystemChronometer;
 
 /**
@@ -27,8 +28,11 @@ import ar.com.dgarcia.lang.time.SystemChronometer;
 public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements MetricasPorTiempo, ListenerDeMetricas {
 
 	private AtomicLong contadorDeInputs;
+	public static final String contadorDeInputs_FIELD = "contadorDeInputs";
 	private AtomicLong contadorDeOutputs;
+	public static final String contadorDeOutputs_FIELD = "contadorDeOutputs";
 	private SystemChronometer cronometro;
+	public static final String cronometro_FIELD = "cronometro";
 
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeInputs()
@@ -91,6 +95,31 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 		this.cronometro = SystemChronometer.create();
 		this.contadorDeInputs = new AtomicLong();
 		this.contadorDeOutputs = new AtomicLong();
+	}
+
+	/**
+	 * @see ar.com.dgarcia.lang.metrics.ListenerDeMetricas#registrarInput(long)
+	 */
+	@Override
+	public void registrarInput(final long cantidadIngresada) {
+		this.contadorDeInputs.addAndGet(cantidadIngresada);
+	}
+
+	/**
+	 * @see ar.com.dgarcia.lang.metrics.ListenerDeMetricas#registrarOutput(long)
+	 */
+	@Override
+	public void registrarOutput(final long cantidadEgresada) {
+		this.contadorDeOutputs.addAndGet(cantidadEgresada);
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(contadorDeInputs_FIELD, contadorDeInputs)
+				.con(contadorDeOutputs_FIELD, contadorDeOutputs).con(cronometro_FIELD, cronometro).toString();
 	}
 
 }

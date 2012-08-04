@@ -12,6 +12,8 @@
  */
 package ar.com.dgarcia.lang.time;
 
+import ar.com.dgarcia.lang.strings.ToString;
+
 /**
  * Esta clase representa un cronómetro que utiliza el tiempo medido por el sistema para para
  * determinar lapsos.<br>
@@ -37,10 +39,12 @@ public class SystemChronometer {
 	 * Nanos tomados de referencia como inicio
 	 */
 	private long startNanos;
+	public static final String startNanos_FIELD = "startNanos";
 	/**
 	 * Millis tomados de referencia como inicio
 	 */
 	private long startMillis;
+	public static final String startMillis_FIELD = "startMillis";
 
 	/**
 	 * Inicia la del tiempo transcurrido tomando el estado actual de referencia como momento 0
@@ -94,4 +98,13 @@ public class SystemChronometer {
 	public long getStartMillis() {
 		return this.startMillis;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(startMillis_FIELD, startMillis).con(startNanos_FIELD, startNanos).toString();
+	}
+
 }
