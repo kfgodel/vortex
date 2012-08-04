@@ -103,10 +103,19 @@ public class MosquitoSever {
 		final double totalesCantMegaOutput = totales.getCantidadDeOutputs() / (1024d * 1024d);
 		final double totalesVelKiloInput = (totales.getVelocidadDeInput() * 1000) / 1024d;
 		final double totalesVelKiloOutput = (totales.getVelocidadDeOutput() * 1000) / 1024d;
-		TRANSFER.info(String
-				.format("I/O 1s:[%1$08.3fkB/s %2$08.3fkB/s] 5s:[%3$08.3fkB/s %4$08.3fkB/s] Ts:[%5$08.3fkB/s %6$08.3fkB/s, %7$8.3fMB %8$8.3fMB]",
-						_1VelKiloInput, _1VelKiloOutput, _5VelKiloInput, _5VelKiloOutput, totalesVelKiloInput,
-						totalesVelKiloOutput, totalesCantMegaInput, totalesCantMegaOutput));
+
+		TRANSFER.info(String.format(
+				"I/O 1s:[%1$skB/s %2$skB/s] 5s:[%3$skB/s %4$skB/s] Ts:[%5$skB/s %6$skB/s, %7$sMB %8$sMB]",
+				formatAsStringDecimal(_1VelKiloInput), formatAsStringDecimal(_1VelKiloOutput),
+				formatAsStringDecimal(_5VelKiloInput), formatAsStringDecimal(_5VelKiloOutput),
+				formatAsStringDecimal(totalesVelKiloInput), formatAsStringDecimal(totalesVelKiloOutput),
+				formatAsStringDecimal(totalesCantMegaInput), formatAsStringDecimal(totalesCantMegaOutput)));
+	}
+
+	public String formatAsStringDecimal(final double numero) {
+		final String numeroFormateado = String.format("%1$.3f", numero);
+		final String paddeado = String.format("%1$8s", numeroFormateado);
+		return paddeado;
 	}
 
 	/**
