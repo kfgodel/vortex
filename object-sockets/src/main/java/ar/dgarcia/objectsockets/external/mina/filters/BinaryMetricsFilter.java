@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.external.mina;
+package ar.dgarcia.objectsockets.external.mina.filters;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.filterchain.IoFilterAdapter;
@@ -20,7 +20,8 @@ import org.apache.mina.core.write.WriteRequest;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 
 /**
- * Esta clase ofrece la posibilidad de registrar métricas de entrada y salida de bytes del socket
+ * Esta clase implementa el filtro que permite realizar métricas sobre los bytes transferidos.<br>
+ * Las métricas miden los bytes recibidos y los bytes enviados
  * 
  * @author D. García
  */

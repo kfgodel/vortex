@@ -89,4 +89,13 @@ public class NodoSocket extends NodoMultiplexor implements Disposable {
 		hubSocket.cliente.conectarASocketRomoto();
 		return hubSocket;
 	}
+
+	public ServidorDeNexoSocket getServidor() {
+		return servidor;
+	}
+
+	public ClienteDeNexoSocket getCliente() {
+		return cliente;
+	}
+
 }

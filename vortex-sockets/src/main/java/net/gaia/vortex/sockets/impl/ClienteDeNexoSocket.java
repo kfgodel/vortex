@@ -35,6 +35,8 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketException;
  */
 public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 
+	private MetricasDeCargaImpl metricas;
+
 	/**
 	 * Dirección en la que escucha este acceptor
 	 */
@@ -75,8 +77,8 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 	 */
 	@Override
 	public NexoSocket conectarASocketRomoto() throws ObjectSocketException {
-		final VortexSocketConfiguration socketConfig = VortexSocketConfiguration.crear(remoteAddress,
-				MetricasDeCargaImpl.create());
+		this.metricas = MetricasDeCargaImpl.create();
+		final VortexSocketConfiguration socketConfig = VortexSocketConfiguration.crear(remoteAddress, this.metricas);
 		socketConfig.setEventHandler(socketHandler);
 		socketConfig.setReceptionHandler(ReceptionHandlerNulo.getInstancia());
 		internalConnector = ObjectSocketConnector.create(socketConfig);
@@ -107,6 +109,10 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 	@Override
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
 		socketHandler.setEstrategiaDeConexion(estrategia);
+	}
+
+	public MetricasDeCargaImpl getMetricas() {
+		return metricas;
 	}
 
 }

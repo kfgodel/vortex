@@ -21,6 +21,7 @@ import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
 import org.junit.After;
@@ -28,6 +29,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
+import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 import ar.com.dgarcia.lang.metrics.impl.MetricasPorTiempoImpl;
 import ar.com.dgarcia.lang.metrics.impl.SnapshotDeMetricaPorTiempo;
 import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
@@ -40,6 +43,11 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
  * @author D. García
  */
 public abstract class TestDeComunicacionTipicaSupport {
+	/**
+	 * Unidad de medida de las metricas de bytes
+	 */
+	private static final double MEGABYTES = 1024d * 1024;
+
 	private static final Logger LOG = LoggerFactory
 			.getLogger(TestDePerformanceComunicacionTipicaConServidorEmbebido.class);
 
@@ -209,7 +217,51 @@ public abstract class TestDeComunicacionTipicaSupport {
 		LOG.info("[{}]: Delivery:{}% Input:{} msg/ms Output():{} msg/ms",
 				new Object[] { nombreDelTest, medicion.getTasaDeDelivery() * 100, medicion.getVelocidadDeInput(),
 						medicion.getVelocidadDeOutput() });
+		mostrarMetricasDeBytes(nombreDelTest);
 		LOG.info("[{}] Fin", nombreDelTest);
+	}
+
+	/**
+	 * Muestra los valores de métricas a nivel de bytes enviados y recibidos
+	 * 
+	 * @param nombreDelTest
+	 */
+	private void mostrarMetricasDeBytes(final String nombreDelTest) {
+		mostrarMetricasDe(nodoEmisor, nombreDelTest);
+		mostrarMetricasDe(nodoReceptor, nombreDelTest);
+	}
+
+	/**
+	 * Muestra los valores de métricas de un nodo
+	 * 
+	 * @param nodo
+	 *            El nodo a mostrar
+	 * @param nombreDelTest
+	 *            El nombre de test para output en el log
+	 */
+	private void mostrarMetricasDe(final NodoSocket nodo, final String nombreDelTest) {
+		final ClienteDeNexoSocket clienteSockets = nodo.getCliente();
+		final MetricasDeCargaImpl metricasDelCliente = clienteSockets.getMetricas();
+
+		final MetricasPorTiempo metricasSegundo = metricasDelCliente.getMetricasEnBloqueDeUnSegundo();
+		mostrarMeticaDe(metricasSegundo, "del ultimo segundo", nombreDelTest);
+
+		final MetricasPorTiempo totales = metricasDelCliente.getMetricasTotales();
+		mostrarMeticaDe(totales, "totales", nombreDelTest);
+	}
+
+	/**
+	 * @param totales
+	 * @param metrica
+	 * @param nombreDelTest
+	 */
+	private void mostrarMeticaDe(final MetricasPorTiempo totales, final String metrica, final String nombreDelTest) {
+		final double megabytesEnviados = totales.getCantidadDeOutputs() / MEGABYTES;
+		final double megabytesRecibidos = totales.getCantidadDeInputs() / MEGABYTES;
+		final double velocidadDeEntrada = (totales.getVelocidadDeInput() * 1000d) / MEGABYTES;
+		final double velocidadDeSalida = (totales.getVelocidadDeOutput() * 1000d) / MEGABYTES;
+		LOG.info("[{}]: Bytes {} enviados[{}MB]/recibidos[{}MB] con velocidad out[{}MB/s]/in[{}MB/s]", new Object[] {
+				nombreDelTest, metrica, megabytesEnviados, megabytesRecibidos, velocidadDeSalida, velocidadDeEntrada });
 	}
 
 }

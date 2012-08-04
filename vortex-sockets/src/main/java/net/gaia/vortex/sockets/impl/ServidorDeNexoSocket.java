@@ -52,6 +52,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	 * El administrador real de los sockets
 	 */
 	private ObjectSocketAcceptor internalAcceptor;
+	private MetricasDeCargaImpl metricas;
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -67,8 +68,8 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	 */
 	@Override
 	public void aceptarConexionesRemotas() throws ObjectSocketException {
-		final ObjectSocketConfiguration socketConfig = VortexSocketConfiguration.crear(listeningAddress,
-				MetricasDeCargaImpl.create());
+		this.metricas = MetricasDeCargaImpl.create();
+		final ObjectSocketConfiguration socketConfig = VortexSocketConfiguration.crear(listeningAddress, this.metricas);
 		socketConfig.setEventHandler(socketHandler);
 		socketConfig.setReceptionHandler(ReceptionHandlerNulo.getInstancia());
 		internalAcceptor = ObjectSocketAcceptor.create(socketConfig);
@@ -117,6 +118,10 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	@Override
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
 		socketHandler.setEstrategiaDeConexion(estrategia);
+	}
+
+	public MetricasDeCargaImpl getMetricas() {
+		return metricas;
 	}
 
 }

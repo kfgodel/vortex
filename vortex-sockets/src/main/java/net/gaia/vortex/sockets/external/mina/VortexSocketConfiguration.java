@@ -18,7 +18,8 @@ import net.gaia.vortex.sockets.external.json.VortexSocketTextualizer;
 
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 
-import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
+import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
+import ar.dgarcia.objectsockets.external.mina.filters.BinaryMetricsFilter;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
 
 /**
@@ -28,9 +29,9 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
  */
 public class VortexSocketConfiguration extends ObjectSocketConfiguration {
 
-	private MetricasDeCargaImpl metricas;
+	private ListenerDeMetricas metricas;
 
-	public static VortexSocketConfiguration crear(final SocketAddress address, final MetricasDeCargaImpl metricas) {
+	public static VortexSocketConfiguration crear(final SocketAddress address, final ListenerDeMetricas metricas) {
 		final VortexSocketConfiguration config = new VortexSocketConfiguration();
 		config.initialize(address, null, VortexSocketTextualizer.create());
 		config.metricas = metricas;
