@@ -91,14 +91,14 @@ public class MosquitoSever {
 	private void escribirTransfersEnLog() {
 		final MetricasDeCargaImpl metricas = hubDeSockets.getServidor().getMetricas();
 		final MetricasPorTiempo ultimoSegundo = metricas.getMetricasEnBloqueDeUnSegundo();
-		final long _1sCantBytesInput = ultimoSegundo.getCantidadDeInputs();
-		final long _1sCantBytesOutput = ultimoSegundo.getCantidadDeOutputs();
+		final double _1sCantBytesInput = ultimoSegundo.getCantidadDeInputs() / (1024d * 1024d);
+		final double _1sCantBytesOutput = ultimoSegundo.getCantidadDeOutputs() / (1024d * 1024d);
 		final double _1VelKiloInput = (ultimoSegundo.getVelocidadDeInput() * 1000) / 1024d;
 		final double _1VelKiloOutput = (ultimoSegundo.getVelocidadDeOutput() * 1000) / 1024d;
 
 		final MetricasPorTiempo ultimos5 = metricas.getMetricasEnBloqueDe5Segundos();
-		final double _5sCantKiloInput = ultimos5.getCantidadDeInputs() / 1024d;
-		final double _5sCantKiloOutput = ultimos5.getCantidadDeOutputs() / 1024d;
+		final double _5sCantKiloInput = ultimos5.getCantidadDeInputs() / (1024d * 1024d);
+		final double _5sCantKiloOutput = ultimos5.getCantidadDeOutputs() / (1024d * 1024d);
 		final double _5VelKiloInput = (ultimos5.getVelocidadDeInput() * 1000) / 1024d;
 		final double _5VelKiloOutput = (ultimos5.getVelocidadDeOutput() * 1000) / 1024d;
 
@@ -107,12 +107,11 @@ public class MosquitoSever {
 		final double totalesCantMegaOutput = totales.getCantidadDeOutputs() / (1024d * 1024d);
 		final double totalesVelKiloInput = (totales.getVelocidadDeInput() * 1000) / 1024d;
 		final double totalesVelKiloOutput = (totales.getVelocidadDeOutput() * 1000) / 1024d;
-
-		TRANSFER.info(
-				"1s:[I/O(B)={}/{},VI/VO(kB/s)={}/{}] 5s:[I/O(KB)={}/{},VI/VO(kB/s)={}/{}] Totales:[I/O(MB)={}/{},VI/VO(kB/s)={}/{}]",
-				new Object[] { _1sCantBytesInput, _1sCantBytesOutput, _1VelKiloInput, _1VelKiloOutput,
-						_5sCantKiloInput, _5sCantKiloOutput, _5VelKiloInput, _5VelKiloOutput, totalesCantMegaInput,
-						totalesCantMegaOutput, totalesVelKiloInput, totalesVelKiloOutput });
+		TRANSFER.info(String
+				.format("I/O 1s:[%1$ 7.3fkB/s %2$ 7.3fkB/s, %3$ 7.3fMB %4$ 7.3fMB] 5s:[%5$ 7.3fkB/s %6$ 7.3fkB/s, %7$ 7.3fMB %8$ 7.3fMB] Ts:[%9$ 7.3fkB/s %10$ 7.3fkB/s, %11$ 7.3fMB %12$ 7.3fMB]",
+						_1VelKiloInput, _1VelKiloOutput, _1sCantBytesInput, _1sCantBytesOutput, _5VelKiloInput,
+						_5VelKiloOutput, _5sCantKiloInput, _5sCantKiloOutput, totalesVelKiloInput,
+						totalesVelKiloOutput, totalesCantMegaInput, totalesCantMegaOutput));
 	}
 
 	/**

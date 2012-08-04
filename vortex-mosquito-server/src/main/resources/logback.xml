@@ -65,7 +65,7 @@
 	     		<maxFileSize>10MB</maxFileSize>
 	   	</triggeringPolicy>
 	    <encoder>
-	      <pattern>[%-23d{ISO8601}] %-5p %-120m  | %-40c | [%t] at %C\(%F:%L\) Running:\(%12r\)%n</pattern>
+	      <pattern>%-120m  | [%-23d{ISO8601}]%n</pattern>
 	    </encoder>
 	</appender>
 	
