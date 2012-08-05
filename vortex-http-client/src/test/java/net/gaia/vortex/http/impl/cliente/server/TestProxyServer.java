@@ -1,4 +1,5 @@
-import net.gaia.vortex.http.impl.cliente.server.ServerVortexHttpRemoto;
+package net.gaia.vortex.http.impl.cliente.server;
+
 import net.gaia.vortex.http.impl.cliente.server.comandos.CerrarSesionCliente;
 import net.gaia.vortex.http.impl.cliente.server.comandos.CrearSesionCliente;
 import net.gaia.vortex.http.impl.cliente.server.comandos.IntercambiarMensajesCliente;
@@ -36,7 +37,7 @@ public class TestProxyServer {
 		final ServerVortexHttpRemoto servidor = ServerVortexHttpRemoto.create("http://kfgodel.info:62626",
 				ApacheResponseProvider.create());
 		// Creamos una sesion
-		final CrearSesionCliente comandoCrearSesion = CrearSesionCliente.create();
+		final CrearSesionCliente comandoCrearSesion = CrearSesionCliente.create(null);
 		servidor.enviarComando(comandoCrearSesion);
 
 		final String idDeSesion = comandoCrearSesion.getIdDeSesionCreada();

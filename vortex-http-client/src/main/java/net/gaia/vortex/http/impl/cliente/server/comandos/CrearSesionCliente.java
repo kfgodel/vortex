@@ -26,6 +26,9 @@ import ar.dgarcia.http.client.api.StringResponse;
  */
 public class CrearSesionCliente implements ComandoClienteHttp {
 
+	private String parametrosDeSesion;
+	public static final String parametrosDeSesion_FIELD = "parametrosDeSesion";
+
 	private String idDeSesionCreada;
 	public static final String idDeSesionCreada_FIELD = "idDeSesionCreada";
 
@@ -36,6 +39,7 @@ public class CrearSesionCliente implements ComandoClienteHttp {
 	public StringRequest crearRequest(final String urlDelSevidor) {
 		final String urlParaCrearSesion = urlDelSevidor + HttpMetadata.URL_CREAR;
 		final StringRequest requestDeCreacion = StringRequest.create(urlParaCrearSesion);
+		requestDeCreacion.addPostParameter(HttpMetadata.MENSAJES_PARAMETER_NAME, parametrosDeSesion);
 		return requestDeCreacion;
 	}
 
@@ -59,7 +63,8 @@ public class CrearSesionCliente implements ComandoClienteHttp {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idDeSesionCreada_FIELD, idDeSesionCreada).toString();
+		return ToString.de(this).con(idDeSesionCreada_FIELD, idDeSesionCreada)
+				.con(parametrosDeSesion_FIELD, parametrosDeSesion).toString();
 	}
 
 	public String getIdDeSesionCreada() {
@@ -70,8 +75,9 @@ public class CrearSesionCliente implements ComandoClienteHttp {
 		this.idDeSesionCreada = idDeSesionCreada;
 	}
 
-	public static CrearSesionCliente create() {
+	public static CrearSesionCliente create(final String parametrosDeLaSesion) {
 		final CrearSesionCliente crear = new CrearSesionCliente();
+		crear.parametrosDeSesion = parametrosDeLaSesion;
 		return crear;
 	}
 }

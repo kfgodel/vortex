@@ -51,22 +51,33 @@ public class ConexionHttpCliente {
 	private long esperaMinima;
 	private long esperaMaxima;
 
+	/**
+	 * Crea una conexión http para ser utilizada con un valor default de un día para el tiempo
+	 * máximo de vida de la sesión
+	 * 
+	 * @param serverRemoto
+	 *            El server al que se conectará
+	 * @param textualizer
+	 *            El textualizer para usar en la comunicación
+	 * @return La conexión creada
+	 */
 	public static ConexionHttpCliente create(final ServerVortexHttpRemoto serverRemoto,
-			final VortexHttpTextualizer textualizer) throws VortexHttpException {
+			final VortexHttpTextualizer textualizer) {
 		final ConexionHttpCliente sesion = new ConexionHttpCliente();
 		sesion.serverRemoto = serverRemoto;
 		sesion.textualizer = textualizer;
 		sesion.esperaMinima = 0;
-		sesion.esperaMaxima = TimeMagnitude.of(7, TimeUnit.DAYS).getMillis();
-		sesion.conectarAlServer();
+		sesion.esperaMaxima = TimeMagnitude.of(1, TimeUnit.DAYS).getMillis();
 		return sesion;
 	}
 
 	/**
 	 * Inicializa el estado de esta sesión solicitando una en el servidor
 	 */
-	private void conectarAlServer() throws VortexHttpException {
-		final CrearSesionCliente comando = CrearSesionCliente.create();
+	public void conectarAlServer() throws VortexHttpException {
+		final PaqueteHttpVortex paquete = PaqueteHttpVortex.create(esperaMinima, esperaMaxima);
+		final String parametrosDeSesion = textualizer.convertToString(paquete);
+		final CrearSesionCliente comando = CrearSesionCliente.create(parametrosDeSesion);
 		serverRemoto.enviarComando(comando);
 		this.idDeSesion = comando.getIdDeSesionCreada();
 	}
@@ -185,6 +196,22 @@ public class ConexionHttpCliente {
 	@Override
 	public String toString() {
 		return ToString.de(this).con(idDeSesion_FIELD, idDeSesion).con(serverRemoto_FIELD, serverRemoto).toString();
+	}
+
+	public long getEsperaMinima() {
+		return esperaMinima;
+	}
+
+	public void setEsperaMinima(final long esperaMinima) {
+		this.esperaMinima = esperaMinima;
+	}
+
+	public long getEsperaMaxima() {
+		return esperaMaxima;
+	}
+
+	public void setEsperaMaxima(final long esperaMaxima) {
+		this.esperaMaxima = esperaMaxima;
 	}
 
 }
