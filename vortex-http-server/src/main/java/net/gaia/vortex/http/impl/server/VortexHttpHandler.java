@@ -53,7 +53,8 @@ public class VortexHttpHandler extends HandlerHttpPorComandos implements Listene
 	@Override
 	protected ComandoHttp interpretarComandoDesde(final String target, final Request baseRequest) {
 		if (HttpMetadata.URL_CREAR.equals(target)) {
-			return CrearSesionVortexHttp.create(administradorDeSesiones);
+			final String mensajesComoJson = baseRequest.getParameter(HttpMetadata.MENSAJES_PARAMETER_NAME);
+			return CrearSesionVortexHttp.create(administradorDeSesiones, mensajesComoJson);
 		}
 		String sessionId = getSessionIdWithPreffix(HttpMetadata.URL_PREFFIX_ELIMINAR, target);
 		if (sessionId != null) {

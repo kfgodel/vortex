@@ -26,6 +26,8 @@ import net.gaia.vortex.http.messages.PaqueteHttpVortex;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
+import ar.dgarcia.textualizer.api.CannotTextSerializeException;
+import ar.dgarcia.textualizer.api.CannotTextUnserializeException;
 
 /**
  * Esta clase representa una sesión vortex http mantenida en memoria
@@ -38,6 +40,7 @@ public class SesionServerEnMemoria implements SesionVortexHttp {
 	 * Espera inicial para dar como vieja la sesion
 	 */
 	private static final long ESPERA_MAXIMA_INICIAL = TimeMagnitude.of(30, TimeUnit.SECONDS).getMillis();
+	private static final long ESPERA_MINIMA_INICIAL = 0;
 
 	private String idDeSesion;
 	public static final String idDeSesion_FIELD = "idDeSesion";
@@ -58,7 +61,7 @@ public class SesionServerEnMemoria implements SesionVortexHttp {
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#recibirDesdeHttp(java.lang.String)
 	 */
 	@Override
-	public void recibirDesdeHttp(final String mensajesComoJson) {
+	public void recibirDesdeHttp(final String mensajesComoJson) throws CannotTextUnserializeException {
 		registrarActividad();
 		final PaqueteHttpVortex paquete = textualizer.convertFromString(mensajesComoJson);
 		final List<Map<String, Object>> contenidosDeMensajes = paquete.getContenidos();
@@ -101,7 +104,7 @@ public class SesionServerEnMemoria implements SesionVortexHttp {
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#obtenerParaHttp()
 	 */
 	@Override
-	public String obtenerParaHttp() {
+	public String obtenerParaHttp() throws CannotTextSerializeException {
 		registrarActividad();
 		final PaqueteHttpVortex paqueteDeSalida = PaqueteHttpVortex.create(0, esperaMaxima);
 		final Iterator<MensajeVortex> iteradorDeMensajes = this.mensajesAcumulados.iterator();
@@ -184,5 +187,20 @@ public class SesionServerEnMemoria implements SesionVortexHttp {
 		final long transcurridos = now - momentoDeUltimaActividad;
 		final boolean esVieja = transcurridos > esperaMaxima;
 		return esVieja;
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#tomarParametrosInicialesDe(java.lang.String)
+	 */
+	@Override
+	public void tomarParametrosInicialesDe(final String parametrosJson) throws CannotTextUnserializeException {
+		PaqueteHttpVortex parametros = null;
+		if (parametrosJson != null) {
+			parametros = textualizer.convertFromString(parametrosJson);
+		}
+		if (parametros == null) {
+			parametros = PaqueteHttpVortex.create(ESPERA_MINIMA_INICIAL, ESPERA_MAXIMA_INICIAL);
+		}
+		negociarEsperaConCliente(parametros);
 	}
 }

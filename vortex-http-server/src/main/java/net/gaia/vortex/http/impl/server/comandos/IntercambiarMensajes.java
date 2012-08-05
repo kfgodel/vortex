@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.strings.ToString;
+import ar.dgarcia.textualizer.api.CannotTextUnserializeException;
 
 /**
  * Esta clase representa el comando http enviado por un cliente con sesión activa para intercambiar
@@ -52,8 +53,15 @@ public class IntercambiarMensajes implements ComandoHttp {
 			return RespuestaDeErrorDeCliente.create("Sesión no existente en este server: " + sessionId);
 		}
 		if (mensajesDelClienteEnJson != null) {
-			// Solo enviamos si hay mensajes para la red
-			sesion.recibirDesdeHttp(mensajesDelClienteEnJson);
+			try {
+				// Solo enviamos si hay mensajes para la red
+				sesion.recibirDesdeHttp(mensajesDelClienteEnJson);
+			} catch (final CannotTextUnserializeException e) {
+				LOG.error("Se produjo un error interpretando el json recibido de la sesion[" + sesion + "]: "
+						+ mensajesDelClienteEnJson, e);
+				return RespuestaDeErrorDeCliente.create("No es posible interpretar el JSON del mensaje: "
+						+ e.getMessage());
+			}
 		}
 		final String mensajesParaElClienteEnJson = sesion.obtenerParaHttp();
 		return RespuestaDeTexto.create(mensajesParaElClienteEnJson);

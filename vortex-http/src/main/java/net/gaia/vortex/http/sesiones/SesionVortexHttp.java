@@ -14,6 +14,8 @@ package net.gaia.vortex.http.sesiones;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
+import ar.dgarcia.textualizer.api.CannotTextSerializeException;
+import ar.dgarcia.textualizer.api.CannotTextUnserializeException;
 
 /**
  * Esta interfaz representa una sesión http para la comunicación con vortex.<br>
@@ -31,7 +33,7 @@ public interface SesionVortexHttp {
 	 * @param mensajesComoJson
 	 *            Los mensajes que envía el cliente como texto JSON
 	 */
-	void recibirDesdeHttp(String mensajesComoJson);
+	void recibirDesdeHttp(String mensajesComoJson) throws CannotTextUnserializeException;
 
 	/**
 	 * Devuelve los mensajes acumulados actualmente en esta sesión para ser entregados al cliente en
@@ -40,7 +42,7 @@ public interface SesionVortexHttp {
 	 * 
 	 * @return El texto que representa los mensajes para ser enviados al cliente http
 	 */
-	String obtenerParaHttp();
+	String obtenerParaHttp() throws CannotTextSerializeException;
 
 	/**
 	 * Devuelve el identificador de esta sesión
@@ -79,5 +81,13 @@ public interface SesionVortexHttp {
 	 * @return true si la sesión se considera inactiva y debe desecharse
 	 */
 	boolean esVieja();
+
+	/**
+	 * Define los parámetros iniciales de esta sesión interpretando el Json pasado
+	 * 
+	 * @param parametrosJson
+	 *            Los parámetros o null si no se definió ninguno
+	 */
+	void tomarParametrosInicialesDe(String parametrosJson) throws CannotTextUnserializeException;
 
 }
