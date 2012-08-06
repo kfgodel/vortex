@@ -49,7 +49,9 @@ public class ConexionHttpCliente {
 	private VortexHttpTextualizer textualizer;
 
 	private long esperaMinima;
+	public static final String esperaMinima_FIELD = "esperaMinima";
 	private long esperaMaxima;
+	public static final String esperaMaxima_FIELD = "esperaMaxima";
 
 	/**
 	 * Crea una conexión http para ser utilizada con un valor default de un día para el tiempo
@@ -85,7 +87,7 @@ public class ConexionHttpCliente {
 	/**
 	 * Desconecta esta sesión del servidor dejándola inutilizable
 	 */
-	public void desconectarDelServer() {
+	public void desconectarDelServer() throws VortexHttpException {
 		final CerrarSesionCliente comando = CerrarSesionCliente.create(idDeSesion);
 		serverRemoto.enviarComando(comando);
 	}
@@ -195,7 +197,8 @@ public class ConexionHttpCliente {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idDeSesion_FIELD, idDeSesion).con(serverRemoto_FIELD, serverRemoto).toString();
+		return ToString.de(this).con(idDeSesion_FIELD, idDeSesion).con(esperaMinima_FIELD, esperaMinima)
+				.con(esperaMaxima_FIELD, esperaMaxima).con(serverRemoto_FIELD, serverRemoto).toString();
 	}
 
 	public long getEsperaMinima() {
@@ -212,6 +215,30 @@ public class ConexionHttpCliente {
 
 	public void setEsperaMaxima(final long esperaMaxima) {
 		this.esperaMaxima = esperaMaxima;
+	}
+
+	public String getIdDeSesion() {
+		return idDeSesion;
+	}
+
+	public void setIdDeSesion(final String idDeSesion) {
+		this.idDeSesion = idDeSesion;
+	}
+
+	public ServerVortexHttpRemoto getServerRemoto() {
+		return serverRemoto;
+	}
+
+	public void setServerRemoto(final ServerVortexHttpRemoto serverRemoto) {
+		this.serverRemoto = serverRemoto;
+	}
+
+	public VortexHttpTextualizer getTextualizer() {
+		return textualizer;
+	}
+
+	public void setTextualizer(final VortexHttpTextualizer textualizer) {
+		this.textualizer = textualizer;
 	}
 
 }

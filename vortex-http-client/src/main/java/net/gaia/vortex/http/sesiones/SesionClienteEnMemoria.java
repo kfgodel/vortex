@@ -12,55 +12,50 @@
  */
 package net.gaia.vortex.http.sesiones;
 
+import java.util.List;
+
+import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
+import net.gaia.vortex.http.impl.VortexHttpException;
+import net.gaia.vortex.http.impl.cliente.server.ConexionConPollingHttpCliente;
+import net.gaia.vortex.http.impl.cliente.server.HandlerHttpDeMensajesRecibidos;
 import net.gaia.vortex.http.impl.cliente.server.ServerVortexHttpRemoto;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa un sesión http del lado del cliente
  * 
  * @author D. García
  */
-public class SesionClienteEnMemoria implements SesionVortexHttp {
+public class SesionClienteEnMemoria implements SesionVortexHttpEnCliente, HandlerHttpDeMensajesRecibidos {
+	private static final Logger LOG = LoggerFactory.getLogger(SesionClienteEnMemoria.class);
 
-	private ServerVortexHttpRemoto serverRemoto;
-	private VortexHttpTextualizer textualizer;
+	private ConexionConPollingHttpCliente conexionHttpCliente;
+	public static final String conexionHttpCliente_FIELD = "conexionHttpCliente";
 
-	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#recibirDesdeHttp(java.lang.String)
-	 */
-	@Override
-	public void recibirDesdeHttp(final String mensajesComoJson) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#obtenerParaHttp()
-	 */
-	@Override
-	public String obtenerParaHttp() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private NexoHttp nexoAsociado;
+	public static final String nexoAsociado_FIELD = "nexoAsociado";
 
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#getIdDeSesion()
 	 */
 	@Override
 	public String getIdDeSesion() {
-		// TODO Auto-generated method stub
-		return null;
+		return conexionHttpCliente.getIdDeSesion();
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#acumularParaCliente(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#onMensajeDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public void acumularParaCliente(final MensajeVortex mensaje) {
-		// TODO Auto-generated method stub
-
+	public void onMensajeDesdeVortex(final MensajeVortex mensaje) {
+		conexionHttpCliente.enviar(mensaje);
 	}
 
 	/**
@@ -68,8 +63,7 @@ public class SesionClienteEnMemoria implements SesionVortexHttp {
 	 */
 	@Override
 	public NexoHttp getNexoAsociado() {
-		// TODO Auto-generated method stub
-		return null;
+		return nexoAsociado;
 	}
 
 	/**
@@ -77,17 +71,54 @@ public class SesionClienteEnMemoria implements SesionVortexHttp {
 	 */
 	@Override
 	public void setNexoAsociado(final NexoHttp nexoAsociado) {
-		// TODO Auto-generated method stub
+		this.nexoAsociado = nexoAsociado;
+	}
 
+	public static SesionClienteEnMemoria create(final TaskProcessor processor, final ServerVortexHttpRemoto server,
+			final VortexHttpTextualizer textualizer) {
+		final SesionClienteEnMemoria sesion = new SesionClienteEnMemoria();
+		sesion.conexionHttpCliente = ConexionConPollingHttpCliente.create(processor, server, textualizer, sesion);
+		return sesion;
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#esVieja()
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnCliente#iniciarComunicacion()
 	 */
 	@Override
-	public boolean esVieja() {
-		// TODO Auto-generated method stub
-		return false;
+	public void iniciarComunicacion() throws VortexHttpException {
+		this.conexionHttpCliente.iniciarConexion();
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnCliente#detenerComunicacion()
+	 */
+	@Override
+	public void detenerComunicacion() throws VortexHttpException {
+		this.conexionHttpCliente.terminarConexion();
+	}
+
+	/**
+	 * @see net.gaia.vortex.http.impl.cliente.server.HandlerHttpDeMensajesRecibidos#onMensajesRecibidos(java.util.List)
+	 */
+	@Override
+	public void onMensajesRecibidos(final List<MensajeVortex> mensajesRecibidos) {
+		if (nexoAsociado == null) {
+			LOG.error("Se recibieron mensajes en la sesion[{}] sin nexo asociado. Ignorando mensajes: {}", this,
+					mensajesRecibidos);
+			return;
+		}
+		for (final MensajeVortex mensajeVortex : mensajesRecibidos) {
+			nexoAsociado.onMensajeDesdeHttp(mensajeVortex);
+		}
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(nexoAsociado_FIELD, nexoAsociado)
+				.con(conexionHttpCliente_FIELD, conexionHttpCliente).toString();
 	}
 
 }

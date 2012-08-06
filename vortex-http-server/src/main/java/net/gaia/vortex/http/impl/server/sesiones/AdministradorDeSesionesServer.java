@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.http.impl.server.sesiones;
 
-import net.gaia.vortex.http.sesiones.SesionVortexHttp;
+import net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer;
 
 /**
  * Esta interfaz representa el objeto que mantiene la relación entre ID de sesión y el objeto sesión
@@ -29,14 +29,14 @@ public interface AdministradorDeSesionesServer {
 	 *            El identificador de la sesión previamente otorgado
 	 * @return La sesión con el ID indicado, o null si no existe ninguna sesión con ese ID
 	 */
-	SesionVortexHttp getSesion(String sessionId);
+	SesionVortexHttpEnServer getSesion(String sessionId);
 
 	/**
 	 * Crea una nueva sesión administrada por esta instancia
 	 * 
 	 * @return La nueva sesión http creada
 	 */
-	SesionVortexHttp crearNuevaSesion();
+	SesionVortexHttpEnServer crearNuevaSesion();
 
 	/**
 	 * Elimina la sesión indicada en este administrador
@@ -44,7 +44,7 @@ public interface AdministradorDeSesionesServer {
 	 * @param sesion
 	 *            La sesión a borrar
 	 */
-	void eliminarSesion(SesionVortexHttp sesion);
+	void eliminarSesion(SesionVortexHttpEnServer sesion);
 
 	/**
 	 * Detiene las tareas de este administrador y libera sus recursos

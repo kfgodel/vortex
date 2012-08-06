@@ -1,5 +1,5 @@
 /**
- * 05/08/2012 18:18:59 Copyright (C) 2011 Darío L. García
+ * 06/08/2012 20:10:38 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,12 +12,11 @@
  */
 package net.gaia.vortex.http.impl.cliente.server;
 
-import java.util.List;
-
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
+import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
+import net.gaia.vortex.http.impl.moleculas.NodoClienteHttp;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,13 +28,13 @@ import org.slf4j.LoggerFactory;
 import ar.dgarcia.http.simple.impl.ApacheResponseProvider;
 
 /**
- * Esta clase prueba la conexión http con polling
+ * Esta clase prueba la conexión con el
  * 
  * @author D. García
  */
-@Ignore("para ejecutar este test se requiere el servidor mosquito")
-public class TestConexionConPolling {
-	private static final Logger LOG = LoggerFactory.getLogger(TestConexionConPolling.class);
+@Ignore("Este test requiere el server mosquito para correr")
+public class TestNodoClienteHttp {
+	private static final Logger LOG = LoggerFactory.getLogger(TestNodoClienteHttp.class);
 
 	private TaskProcessor procesador;
 
@@ -50,19 +49,17 @@ public class TestConexionConPolling {
 	}
 
 	@Test
-	public void deberiaRecibirLosMensajesDelServer() throws InterruptedException {
-		final ServerVortexHttpRemoto servidor = ServerVortexHttpRemoto.create("http://kfgodel.info:62626",
+	public void deberiaPoderMandarYRecibirEntreDosClientesNexo() throws InterruptedException {
+		final NodoClienteHttp nodoCliente = NodoClienteHttp.createAndConnectTo("http://kfgodel.info:62626", procesador,
 				ApacheResponseProvider.create());
-		final ConexionConPollingHttpCliente conexion = ConexionConPollingHttpCliente.create(procesador, servidor,
-				JacksonHttpTextualizer.create(), new HandlerHttpDeMensajesRecibidos() {
-					@Override
-					public void onMensajesRecibidos(final List<MensajeVortex> mensajesRecibidos) {
-						LOG.info("Recibidos del server: {}", mensajesRecibidos);
-					}
-				});
-		conexion.iniciarConexion();
+		nodoCliente.conectarCon(new ReceptorSupport() {
+			@Override
+			public void recibir(final MensajeVortex mensaje) {
+				LOG.info("Recibido en nexo http: {}", mensaje);
+			}
+		});
 		Thread.sleep(2 * 60 * 1000);
-		conexion.terminarConexion();
-	}
 
+		nodoCliente.cerrarYLiberar();
+	}
 }

@@ -1,5 +1,5 @@
 /**
- * 29/07/2012 13:25:14 Copyright (C) 2011 Darío L. García
+ * 06/08/2012 19:30:20 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,27 +10,25 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.http.api;
+package net.gaia.vortex.http.sesiones;
 
 import net.gaia.vortex.http.impl.VortexHttpException;
-import net.gaia.vortex.http.impl.moleculas.NexoHttp;
-import net.gaia.vortex.server.api.GeneradorDeNexos;
 
 /**
- * Esta interfaz representa el contrato esperado de un cliente http de la red vortex
+ * Esta interfaz define el contrato esperado por el cliente http de vortex
  * 
  * @author D. García
  */
-public interface ClienteDeHttpVortex extends GeneradorDeNexos {
+public interface SesionVortexHttpEnCliente extends SesionVortexHttp {
 
 	/**
-	 * Comienza la conexión de este cliente al servidor indicado en la creación de este cliente
+	 * Comienza la interacción de la sesión con el servidor intercambiando mensajes
 	 */
-	public abstract NexoHttp conectarAlServidorHttp() throws VortexHttpException;
+	void iniciarComunicacion() throws VortexHttpException;
 
 	/**
-	 * Desconecta este cliente, liberando los recuros propios y en el servidor
+	 * Detiene la comunicación con el servidor comunicandole el cierre de sesion
 	 */
-	public abstract void desconectarDelServidor() throws VortexHttpException;
+	void detenerComunicacion() throws VortexHttpException;
 
 }

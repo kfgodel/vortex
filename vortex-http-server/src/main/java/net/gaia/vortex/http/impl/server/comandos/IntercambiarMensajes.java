@@ -17,7 +17,7 @@ import net.gaia.vortex.http.external.jetty.RespuestaHttp;
 import net.gaia.vortex.http.impl.server.respuestas.RespuestaDeErrorDeCliente;
 import net.gaia.vortex.http.impl.server.respuestas.RespuestaDeTexto;
 import net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer;
-import net.gaia.vortex.http.sesiones.SesionVortexHttp;
+import net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class IntercambiarMensajes implements ComandoHttp {
 	 */
 	@Override
 	public RespuestaHttp ejecutar() {
-		final SesionVortexHttp sesion = administradorDeSesiones.getSesion(sessionId);
+		final SesionVortexHttpEnServer sesion = administradorDeSesiones.getSesion(sessionId);
 		if (sesion == null) {
 			LOG.warn("Se pidieron mensajes para la sesion[{}] y no existe en este servidor", sessionId);
 			return RespuestaDeErrorDeCliente.create("Sesión no existente en este server: " + sessionId);

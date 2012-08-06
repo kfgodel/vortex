@@ -16,7 +16,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.http.api.ClienteDeHttpVortex;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
-import net.gaia.vortex.http.sesiones.SesionVortexHttp;
+import net.gaia.vortex.http.sesiones.SesionVortexHttpEnCliente;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 
 	private VortexHttpConnector conector;
 
-	private SesionVortexHttp sesionAbierta;
+	private SesionVortexHttpEnCliente sesionAbierta;
 
 	public static ClienteDeNexoHttp create(final TaskProcessor processor, final String serverUrl,
 			final EstrategiaDeConexionDeNexos estrategia, final HttpResponseProvider provider) {
@@ -69,13 +69,15 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	 * @see net.gaia.vortex.http.api.ClienteDeHttpVortex#conectarAlServidorHttp()
 	 */
 	@Override
-	public void conectarAlServidorHttp() throws VortexHttpException {
-		if (sesionAbierta != null) {
+	public NexoHttp conectarAlServidorHttp() throws VortexHttpException {
+		if (sesionAbierta == null) {
+			sesionAbierta = conector.abrirNuevaSesion(urlDelServidor);
+		} else {
 			LOG.error("Ya existe una sesion[{}] abierta para el cliente[{}]. Ignorando pedido de apertura",
 					sesionAbierta, this);
-			return;
 		}
-		sesionAbierta = conector.abrirNuevaSesion(urlDelServidor);
+		final NexoHttp nexoHttp = sesionAbierta.getNexoAsociado();
+		return nexoHttp;
 	}
 
 	/**
@@ -95,6 +97,10 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	@Override
 	public String toString() {
 		return ToString.de(this).add(urlDelServidor_FIELD, urlDelServidor).toString();
+	}
+
+	public SesionVortexHttpEnCliente getSesionAbierta() {
+		return sesionAbierta;
 	}
 
 }

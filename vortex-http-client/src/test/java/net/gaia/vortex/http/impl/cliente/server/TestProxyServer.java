@@ -5,6 +5,7 @@ import net.gaia.vortex.http.impl.cliente.server.comandos.CrearSesionCliente;
 import net.gaia.vortex.http.impl.cliente.server.comandos.IntercambiarMensajesCliente;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import ar.dgarcia.http.simple.impl.ApacheResponseProvider;
  * 
  * @author D. García
  */
+@Ignore("Para ejecutar este test se requiere el servidor mosquito")
 public class TestProxyServer {
 	private static final Logger LOG = LoggerFactory.getLogger(TestProxyServer.class);
 

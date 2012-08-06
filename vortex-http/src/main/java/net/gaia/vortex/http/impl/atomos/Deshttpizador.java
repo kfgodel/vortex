@@ -18,7 +18,6 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
-import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +57,7 @@ public class Deshttpizador extends ComponenteConProcesadorSupport implements Emi
 		LOG.info("Se intentó desconectar un destino[" + destino + "] del desocketizador. Ignorando");
 	}
 
-	public void onMensajeDesdeHttp(final MensajeVortex recibido, final SesionVortexHttp sesion) {
+	public void onMensajeDesdeHttp(final MensajeVortex recibido) {
 		// Le pasamos el mensaje que vino desde el request al receptor destino de la red
 		final DelegarMensaje delegacion = DelegarMensaje.create(recibido, destino);
 		procesarEnThreadPropio(delegacion);

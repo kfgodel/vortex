@@ -23,7 +23,7 @@ import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 import net.gaia.vortex.http.messages.PaqueteHttpVortex;
-import net.gaia.vortex.http.sesiones.SesionVortexHttp;
+import net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
@@ -34,7 +34,7 @@ import ar.dgarcia.textualizer.api.CannotTextUnserializeException;
  * 
  * @author D. García
  */
-public class SesionServerEnMemoria implements SesionVortexHttp {
+public class SesionServerEnMemoria implements SesionVortexHttpEnServer {
 
 	/**
 	 * Espera inicial para dar como vieja la sesion
@@ -58,7 +58,7 @@ public class SesionServerEnMemoria implements SesionVortexHttp {
 	private long esperaMaxima;
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#recibirDesdeHttp(java.lang.String)
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#recibirDesdeHttp(java.lang.String)
 	 */
 	@Override
 	public void recibirDesdeHttp(final String mensajesComoJson) throws CannotTextUnserializeException {
@@ -97,11 +97,11 @@ public class SesionServerEnMemoria implements SesionVortexHttp {
 	 */
 	private void enviarAVortex(final Map<String, Object> contenidoRegenerado) {
 		final MensajeConContenido mensajeReconstruido = MensajeConContenido.regenerarDesde(contenidoRegenerado);
-		getNexoAsociado().onObjectReceived(mensajeReconstruido, this);
+		getNexoAsociado().onMensajeDesdeHttp(mensajeReconstruido);
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#obtenerParaHttp()
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#obtenerParaHttp()
 	 */
 	@Override
 	public String obtenerParaHttp() throws CannotTextSerializeException {
@@ -119,7 +119,7 @@ public class SesionServerEnMemoria implements SesionVortexHttp {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#getIdDeSesion()
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#getIdDeSesion()
 	 */
 	@Override
 	public String getIdDeSesion() {
@@ -171,15 +171,15 @@ public class SesionServerEnMemoria implements SesionVortexHttp {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#acumularParaCliente(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#onMensajeDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public void acumularParaCliente(final MensajeVortex mensaje) {
+	public void onMensajeDesdeVortex(final MensajeVortex mensaje) {
 		this.mensajesAcumulados.add(mensaje);
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#esVieja()
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#esVieja()
 	 */
 	@Override
 	public boolean esVieja() {
@@ -190,7 +190,7 @@ public class SesionServerEnMemoria implements SesionVortexHttp {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#tomarParametrosInicialesDe(java.lang.String)
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#tomarParametrosInicialesDe(java.lang.String)
 	 */
 	@Override
 	public void tomarParametrosInicialesDe(final String parametrosJson) throws CannotTextUnserializeException {

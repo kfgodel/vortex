@@ -72,13 +72,16 @@
 	
 	<logger name="net.gaia.vortex.server.mosquito" level="DEBUG" />
 	
+	<!-- Queremos los strings que llegan por http -->
+	<logger name="net.gaia.vortex.http.impl.server.VortexHttpHandler" level="DEBUG" />
+	<!-- Queremos ver el detalle de los strings que llegan por socket --> 
+	<logger name="ar.dgarcia.objectsockets.external.mina.filters.String2ObjectCodecFilter" level="DEBUG" />
+	
 	<!-- Queremos el detalle del manejo de sockets 
 	<logger name="ar.dgarcia.objectsockets.external.mina.ObjectSocketIoHandler" level="DEBUG" />
 	-->
 	<!-- NO Queremos el detalle de creación de nexos -->
 	<logger name="net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler" level="INFO" />
-	<!-- Queremos ver el detalle de los strings que llegan --> 
-	<logger name="ar.dgarcia.objectsockets.external.mina.filters.String2ObjectCodecFilter" level="DEBUG" />
 	
 	
 	

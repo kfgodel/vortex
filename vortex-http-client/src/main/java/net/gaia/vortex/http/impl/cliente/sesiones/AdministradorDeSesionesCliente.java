@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.http.impl.cliente.sesiones;
 
-import net.gaia.vortex.http.sesiones.SesionVortexHttp;
+import net.gaia.vortex.http.sesiones.SesionVortexHttpEnCliente;
 
 /**
  * Esta interfaz define el contrato esperado del administrador de sesiones del lado del cliente
@@ -22,20 +22,21 @@ import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 public interface AdministradorDeSesionesCliente {
 
 	/**
-	 * Crea la sesión cliente con el identificador indicado
+	 * Agrega la sesión pasada como parte de las sesiones administradas por esta instancia.<br>
+	 * Al agregar la sesión se creará un nexoHttp asociado y comenzará la comunicación con el
+	 * servidor
 	 * 
-	 * @param idDeSesionCreada
-	 *            El identificador de la sesión para la comunicación con el servidor
-	 * @return La sesión creada en este administrador
+	 * @param sesionCliente
+	 *            La sesión creada y lista para iniciar comunicaciones con el servidor
 	 */
-	SesionVortexHttp crearSesion(String idDeSesionCreada);
+	void abrirSesion(SesionVortexHttpEnCliente sesionCliente);
 
 	/**
-	 * Cierra la sesión indicada
+	 * Cierra la sesión pasada y desconecta el nexo http asociado
 	 * 
-	 * @param sesionCerrada
-	 *            La sesión a cerrar
+	 * @param sesionAbierta
+	 *            La sesión a cerrar con el servidor
 	 */
-	void cerrarSesion(SesionVortexHttp sesionCerrada);
+	void cerrarSesion(SesionVortexHttpEnCliente sesionAbierta);
 
 }

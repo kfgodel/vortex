@@ -23,6 +23,8 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.tasks.MinMaxWorkUnit;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
+import net.gaia.vortex.http.impl.VortexHttpException;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa una conexión con un servidor http vortex que utiliza polling internamente
@@ -35,8 +37,10 @@ public class ConexionConPollingHttpCliente {
 	private static final int POLLING_INICIAL_EN_MILLIS = 5 * 1000;
 
 	private ConexionHttpCliente conexionInterna;
+	public static final String conexionInterna_FIELD = "conexionInterna";
 
 	private ConcurrentLinkedQueue<MensajeVortex> mensajesSalientes;
+	public static final String mensajesSalientes_FIELD = "mensajesSalientes";
 
 	private HandlerHttpDeMensajesRecibidos handlerDeMensajes;
 
@@ -109,13 +113,13 @@ public class ConexionConPollingHttpCliente {
 		tareaDeIntercambioDeMensajes.setEsperaMaxima(millisEntrePolling);
 	}
 
-	public void iniciarConexion() {
+	public void iniciarConexion() throws VortexHttpException {
 		conexionInterna.setEsperaMaxima(POLLING_INICIAL_EN_MILLIS * 2);
 		conexionInterna.conectarAlServer();
 		processor.process(tareaDeIntercambioDeMensajes);
 	}
 
-	public void terminarConexion() {
+	public void terminarConexion() throws VortexHttpException {
 		processor.removeTasksMatching(new TaskCriteria() {
 			@Override
 			public boolean matches(final WorkUnit workUnit) {
@@ -139,6 +143,27 @@ public class ConexionConPollingHttpCliente {
 
 	public ConexionHttpCliente getConexionInterna() {
 		return conexionInterna;
+	}
+
+	/**
+	 * Devuelve el ID de la sesión utilizada por esta conexión
+	 * 
+	 * @return El id que identifica la sesión http
+	 */
+	public String getIdDeSesion() {
+		return this.conexionInterna.getIdDeSesion();
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con("sesion", conexionInterna.getIdDeSesion())
+				.con("minimo", this.conexionInterna.getEsperaMinima())
+				.con("maximo", this.conexionInterna.getEsperaMaxima())
+				.con("polling", tareaDeIntercambioDeMensajes.getEsperaMaxima())
+				.con(mensajesSalientes_FIELD, mensajesSalientes).toString();
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * 25/07/2012 18:50:51 Copyright (C) 2011 Darío L. García
+ * 06/08/2012 08:10:07 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -14,11 +14,10 @@ package net.gaia.vortex.http.sesiones;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
-import ar.dgarcia.textualizer.api.CannotTextSerializeException;
-import ar.dgarcia.textualizer.api.CannotTextUnserializeException;
 
 /**
- * Esta interfaz representa una sesión http para la comunicación con vortex.<br>
+ * Esta interfaz representa el contrato de una sesión http que es compartido tanto por clientes como
+ * por servidores de http.<br>
  * Cada sesión tiene un {@link NexoHttp} asociado con el cual interactúa con la red vortex desde los
  * requests del cliente http
  * 
@@ -27,29 +26,11 @@ import ar.dgarcia.textualizer.api.CannotTextUnserializeException;
 public interface SesionVortexHttp {
 
 	/**
-	 * Procesa los mensajes recibidos en un request http, como json, para ser enviados a la red
-	 * vortex de parte del cliente http.<br>
-	 * 
-	 * @param mensajesComoJson
-	 *            Los mensajes que envía el cliente como texto JSON
-	 */
-	void recibirDesdeHttp(String mensajesComoJson) throws CannotTextUnserializeException;
-
-	/**
-	 * Devuelve los mensajes acumulados actualmente en esta sesión para ser entregados al cliente en
-	 * formato json.<br>
-	 * Los mensajes recibidos a posteriori se acumularán hasta nueva llamada a este método
-	 * 
-	 * @return El texto que representa los mensajes para ser enviados al cliente http
-	 */
-	String obtenerParaHttp() throws CannotTextSerializeException;
-
-	/**
 	 * Devuelve el identificador de esta sesión
 	 * 
 	 * @return El id de esta sesión
 	 */
-	String getIdDeSesion();
+	public abstract String getIdDeSesion();
 
 	/**
 	 * Guarda el mensaje indicado para ser enviado al cliente cuando lo pida
@@ -57,14 +38,14 @@ public interface SesionVortexHttp {
 	 * @param mensaje
 	 *            El mensaje a enviar
 	 */
-	void acumularParaCliente(MensajeVortex mensaje);
+	public abstract void onMensajeDesdeVortex(MensajeVortex mensaje);
 
 	/**
 	 * Devuelve el nexo asociado a esta sesión
 	 * 
 	 * @return El nexo que esta sesión utiliza para meter mensajes en la red vortex
 	 */
-	public NexoHttp getNexoAsociado();
+	public abstract NexoHttp getNexoAsociado();
 
 	/**
 	 * Establece el nexo que tendrá asociada esta sesión
@@ -72,22 +53,6 @@ public interface SesionVortexHttp {
 	 * @param nexoAsociado
 	 *            El nexo que utilizará esta sesión
 	 */
-	public void setNexoAsociado(final NexoHttp nexoAsociado);
-
-	/**
-	 * Indica si esta sesión no tiene desde hace demasiado tiempo. (más que la espera máxima
-	 * indicada)
-	 * 
-	 * @return true si la sesión se considera inactiva y debe desecharse
-	 */
-	boolean esVieja();
-
-	/**
-	 * Define los parámetros iniciales de esta sesión interpretando el Json pasado
-	 * 
-	 * @param parametrosJson
-	 *            Los parámetros o null si no se definió ninguno
-	 */
-	void tomarParametrosInicialesDe(String parametrosJson) throws CannotTextUnserializeException;
+	public abstract void setNexoAsociado(NexoHttp nexoAsociado);
 
 }

@@ -23,7 +23,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 import net.gaia.vortex.http.sesiones.ListenerDeSesionesHttp;
-import net.gaia.vortex.http.sesiones.SesionVortexHttp;
+import net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,7 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 
 	private static final Logger LOG = LoggerFactory.getLogger(AdministradorServerEnMemoria.class);
 
-	private ConcurrentHashMap<String, SesionVortexHttp> sesionesPorId;
+	private ConcurrentHashMap<String, SesionVortexHttpEnServer> sesionesPorId;
 	private AtomicLong proximoId;
 	private ListenerDeSesionesHttp listener;
 	private VortexHttpTextualizer textualizer;
@@ -66,8 +66,8 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#getSesion(java.lang.String)
 	 */
 	@Override
-	public SesionVortexHttp getSesion(final String sessionId) {
-		final SesionVortexHttp sesion = sesionesPorId.get(sessionId);
+	public SesionVortexHttpEnServer getSesion(final String sessionId) {
+		final SesionVortexHttpEnServer sesion = sesionesPorId.get(sessionId);
 		return sesion;
 	}
 
@@ -75,7 +75,7 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#crearNuevaSesion()
 	 */
 	@Override
-	public SesionVortexHttp crearNuevaSesion() {
+	public SesionVortexHttpEnServer crearNuevaSesion() {
 		final long nuevoId = proximoId.getAndIncrement();
 		final String nuevoIdDeSesion = String.format("%1$04d", nuevoId);
 		final SesionServerEnMemoria sesion = SesionServerEnMemoria.create(nuevoIdDeSesion, textualizer);
@@ -85,13 +85,13 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#eliminarSesion(net.gaia.vortex.http.sesiones.SesionVortexHttp)
+	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#eliminarSesion(net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer)
 	 */
 	@Override
-	public void eliminarSesion(final SesionVortexHttp sesion) {
+	public void eliminarSesion(final SesionVortexHttpEnServer sesion) {
 		listener.onSesionDestruida(sesion);
 		final String idDeSesion = sesion.getIdDeSesion();
-		final SesionVortexHttp eliminada = sesionesPorId.remove(idDeSesion);
+		final SesionVortexHttpEnServer eliminada = sesionesPorId.remove(idDeSesion);
 		if (eliminada == null) {
 			LOG.error("Se eliminó una sesion[{}] que no esta registrada por ID", sesion);
 			return;
@@ -101,7 +101,7 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	public static AdministradorServerEnMemoria create(final ListenerDeSesionesHttp listener,
 			final TaskProcessor processor) {
 		final AdministradorServerEnMemoria administrador = new AdministradorServerEnMemoria();
-		administrador.sesionesPorId = new ConcurrentHashMap<String, SesionVortexHttp>();
+		administrador.sesionesPorId = new ConcurrentHashMap<String, SesionVortexHttpEnServer>();
 		administrador.proximoId = new AtomicLong(1);
 		administrador.listener = listener;
 		administrador.textualizer = JacksonHttpTextualizer.create();
@@ -130,8 +130,8 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	 * tenido actividad
 	 */
 	private void limpiarSesionesViejas() {
-		final Collection<SesionVortexHttp> allSesiones = sesionesPorId.values();
-		for (final SesionVortexHttp sesionVortexHttp : allSesiones) {
+		final Collection<SesionVortexHttpEnServer> allSesiones = sesionesPorId.values();
+		for (final SesionVortexHttpEnServer sesionVortexHttp : allSesiones) {
 			if (sesionVortexHttp.esVieja()) {
 				LOG.info("Eliminando por antiguedad la sesión[{}]", sesionVortexHttp);
 				// Es seguro eliminar mientras se itera porque la colección es concurrente

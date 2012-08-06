@@ -33,7 +33,7 @@ public class AcumularEnSesion implements WorkUnit {
 	 */
 	@Override
 	public WorkUnit doWork() throws InterruptedException {
-		sesion.acumularParaCliente(mensaje);
+		sesion.onMensajeDesdeVortex(mensaje);
 		return null;
 	}
 

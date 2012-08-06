@@ -119,8 +119,8 @@ public class NexoHttp extends NexoSupport implements ReceptorIdentificable {
 				.add(destino_FIELD, getDestino()).toString();
 	}
 
-	public void onObjectReceived(final MensajeVortex received, final SesionVortexHttp sesion) {
-		procesoDesdeHttp.onMensajeDesdeHttp(received, sesion);
+	public void onMensajeDesdeHttp(final MensajeVortex received) {
+		procesoDesdeHttp.onMensajeDesdeHttp(received);
 	}
 
 }
