@@ -77,8 +77,8 @@
 	-->
 	<!-- NO Queremos el detalle de creación de nexos -->
 	<logger name="net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler" level="INFO" />
-	<!-- NO Queremos ver el detalle de los strings que llegan --> 
-	<logger name="ar.dgarcia.objectsockets.external.mina.filters.String2ObjectCodecFilter" level="INFO" />
+	<!-- Queremos ver el detalle de los strings que llegan --> 
+	<logger name="ar.dgarcia.objectsockets.external.mina.filters.String2ObjectCodecFilter" level="DEBUG" />
 	
 	
 	
