@@ -133,7 +133,8 @@ public class ThreadBouncer {
 		try {
 			Thread.sleep(esperaForzadaEnMilis);
 		} catch (final InterruptedException e) {
-			LOG.error("Se interrumpió la espera forzada de un thread antes de aceptar nueva tarea");
+			LOG.error("Se interrumpió la espera forzada de [{}ms] en un thread antes de enviar la tarea a procesar",
+					esperaForzadaEnMilis);
 		}
 	}
 }
