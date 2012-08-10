@@ -10,51 +10,47 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.tests.performance;
-
-import java.net.SocketAddress;
+package net.gaia.vortex.portal.tests.performance;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
-import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
-import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.com.dgarcia.lang.metrics.MetricasPorTiempo;
-import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 import ar.com.dgarcia.lang.metrics.impl.MetricasPorTiempoImpl;
 import ar.com.dgarcia.lang.metrics.impl.SnapshotDeMetricaPorTiempo;
 import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
 /**
- * Esta clase define la base del test para medir la performance de comunicación utilizando
- * nodosockets y portales con un servidor en el medio
+ * Esta clase define el test base de una comunicación típica entre dos puntos de la red que utilizan
+ * un tercero server. Todo en memoria. Este es el caso óptimo de las comunicaciones que se dan a
+ * nivel red con sockets o http
  * 
  * @author D. García
  */
-public abstract class TestDeComunicacionTipicaSupport {
-	/**
-	 * Unidad de medida de las metricas de bytes
-	 */
-	private static final double MEGABYTES = 1024d * 1024;
-
-	private static final Logger LOG = LoggerFactory.getLogger(TestDeComunicacionTipicaSupport.class);
+public class TestDeComunicacionTipicaEnMemoria {
+	private static final Logger LOG = LoggerFactory.getLogger(TestDeComunicacionTipicaEnMemoria.class);
 
 	private TaskProcessor procesadorDelNodoEmisor;
 	private TaskProcessor procesadorDelNodoReceptor;
 
-	private NodoSocket nodoEmisor;
-	private NodoSocket nodoReceptor;
+	private NodoMultiplexor nodoEmisor;
+	private NodoMultiplexor nodoReceptor;
+
+	private NodoMultiplexor nodoSever;
+
+	private TaskProcessor procesadorDelNodoServer;
 
 	/**
 	 * Crea los nodos clientes que se utilizan para la mensajería
@@ -62,20 +58,28 @@ public abstract class TestDeComunicacionTipicaSupport {
 	 * @param sharedAddress
 	 *            La dirección a la que se deben conectar
 	 */
-	protected void crearNodosClientes(final SocketAddress sharedAddress) {
+	@Before
+	public void crearNodosClientes() {
+		procesadorDelNodoServer = VortexProcessorFactory.createProcessor();
+		nodoSever = NodoMultiplexor.create(procesadorDelNodoServer);
+
 		procesadorDelNodoReceptor = VortexProcessorFactory.createProcessor();
-		nodoReceptor = NodoSocket.createAndConnectTo(sharedAddress, procesadorDelNodoReceptor);
+		nodoReceptor = NodoMultiplexor.create(procesadorDelNodoReceptor);
+		nodoReceptor.conectarCon(nodoSever);
+		nodoSever.conectarCon(nodoReceptor);
 
 		procesadorDelNodoEmisor = VortexProcessorFactory.createProcessor();
-		nodoEmisor = NodoSocket.createAndConnectTo(sharedAddress, procesadorDelNodoEmisor);
+		nodoEmisor = NodoMultiplexor.create(procesadorDelNodoEmisor);
+		nodoEmisor.conectarCon(nodoSever);
+		nodoSever.conectarCon(nodoEmisor);
+
 	}
 
 	@After
 	public void liberarRecursos() {
-		nodoEmisor.closeAndDispose();
-		nodoReceptor.closeAndDispose();
 		procesadorDelNodoEmisor.detener();
 		procesadorDelNodoReceptor.detener();
+		procesadorDelNodoServer.detener();
 	}
 
 	@Test
@@ -125,7 +129,7 @@ public abstract class TestDeComunicacionTipicaSupport {
 	 *             Si vuela todo
 	 */
 	private void testearEsquemaConNodos(final int cantidadDeThreadsDeEnvio) throws InterruptedException {
-		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->NS->1R";
+		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->NM->1R";
 
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
@@ -216,51 +220,7 @@ public abstract class TestDeComunicacionTipicaSupport {
 		LOG.info("[{}]: Delivery:{}% Input:{} msg/ms Output():{} msg/ms",
 				new Object[] { nombreDelTest, medicion.getTasaDeDelivery() * 100, medicion.getVelocidadDeInput(),
 						medicion.getVelocidadDeOutput() });
-		mostrarMetricasDeBytes(nombreDelTest);
 		LOG.info("[{}] Fin", nombreDelTest);
-	}
-
-	/**
-	 * Muestra los valores de métricas a nivel de bytes enviados y recibidos
-	 * 
-	 * @param nombreDelTest
-	 */
-	private void mostrarMetricasDeBytes(final String nombreDelTest) {
-		mostrarMetricasDe(nodoEmisor, nombreDelTest);
-		mostrarMetricasDe(nodoReceptor, nombreDelTest);
-	}
-
-	/**
-	 * Muestra los valores de métricas de un nodo
-	 * 
-	 * @param nodo
-	 *            El nodo a mostrar
-	 * @param nombreDelTest
-	 *            El nombre de test para output en el log
-	 */
-	private void mostrarMetricasDe(final NodoSocket nodo, final String nombreDelTest) {
-		final ClienteDeNexoSocket clienteSockets = nodo.getCliente();
-		final MetricasDeCargaImpl metricasDelCliente = clienteSockets.getMetricas();
-
-		final MetricasPorTiempo metricasSegundo = metricasDelCliente.getMetricasEnBloqueDeUnSegundo();
-		mostrarMeticaDe(metricasSegundo, "del ultimo segundo", nombreDelTest);
-
-		final MetricasPorTiempo totales = metricasDelCliente.getMetricasTotales();
-		mostrarMeticaDe(totales, "totales", nombreDelTest);
-	}
-
-	/**
-	 * @param totales
-	 * @param metrica
-	 * @param nombreDelTest
-	 */
-	private void mostrarMeticaDe(final MetricasPorTiempo totales, final String metrica, final String nombreDelTest) {
-		final double megabytesEnviados = totales.getCantidadDeOutputs() / MEGABYTES;
-		final double megabytesRecibidos = totales.getCantidadDeInputs() / MEGABYTES;
-		final double velocidadDeEntrada = (totales.getVelocidadDeInput() * 1000d) / MEGABYTES;
-		final double velocidadDeSalida = (totales.getVelocidadDeOutput() * 1000d) / MEGABYTES;
-		LOG.info("[{}]: Bytes {} enviados[{}MB]/recibidos[{}MB] con velocidad out[{}MB/s]/in[{}MB/s]", new Object[] {
-				nombreDelTest, metrica, megabytesEnviados, megabytesRecibidos, velocidadDeSalida, velocidadDeEntrada });
 	}
 
 }

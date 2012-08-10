@@ -20,7 +20,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class IdentificadorEstatico implements IdentificadorVortex {
+public class IdentificadorEstatico implements IdentificadorVortex, Comparable<IdentificadorVortex> {
 
 	private String valor;
 	public static final String valor_FIELD = "valor";
@@ -45,5 +45,35 @@ public class IdentificadorEstatico implements IdentificadorVortex {
 		final IdentificadorEstatico identificador = new IdentificadorEstatico();
 		identificador.valor = valor;
 		return identificador;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof IdentificadorVortex)) {
+			return false;
+		}
+		final IdentificadorVortex that = (IdentificadorVortex) obj;
+		final boolean mismoValor = this.getValorActual().equals(that.getValorActual());
+		return mismoValor;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return getValorActual().hashCode();
+	}
+
+	/**
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(final IdentificadorVortex o) {
+		final int orden = this.getValorActual().compareTo(o.getValorActual());
+		return orden;
 	}
 }

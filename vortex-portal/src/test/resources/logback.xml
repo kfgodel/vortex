@@ -19,6 +19,9 @@
 	
 	<logger name="net.gaia.vortex.portal" level="DEBUG" />
 	
+	<!-- No queremos Detalle del ruteo de los mensajes a nivel atomos -->
+	<logger name="net.gaia.vortex.meta.Loggers.ATOMOS" level="INFO" />
+	
   
 	<root level="info">
 	  <appender-ref ref="STDOUT" />
