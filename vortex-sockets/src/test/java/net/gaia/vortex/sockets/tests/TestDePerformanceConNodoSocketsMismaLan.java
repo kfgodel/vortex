@@ -41,7 +41,7 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
  * 
  * @author D. García
  */
-@Ignore("Solo correr este test manualmente con conectividad asegurada")
+ @Ignore("Solo correr este test manualmente con conectividad asegurada")
 public class TestDePerformanceConNodoSocketsMismaLan {
 	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConNodoSocketsMismaLan.class);
 
