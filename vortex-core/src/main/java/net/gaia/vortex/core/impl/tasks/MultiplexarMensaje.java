@@ -18,8 +18,6 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -52,15 +50,6 @@ public class MultiplexarMensaje implements WorkUnit {
 		Loggers.ATOMOS.debug("Multiplexando mensaje[{}] a {} destinos{}", new Object[] { mensaje, destinos.size(),
 				destinos });
 		for (final Receptor destino : destinos) {
-			if (destino instanceof VortexIdentificable) {
-				// Chequeo para evitar mensajes a destinos por los que ya pasó
-				final VortexIdentificable receptorConIdentificador = (VortexIdentificable) destino;
-				final IdentificadorVortex identificadorDelReceptor = receptorConIdentificador.getIdentificador();
-				if (mensaje.pasoPreviamentePor(identificadorDelReceptor)) {
-					// Evitamos mandarlo a un componente que ya pasó para optimizar
-					continue;
-				}
-			}
 			final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, destino);
 			processor.process(entregaEnBackground);
 		}

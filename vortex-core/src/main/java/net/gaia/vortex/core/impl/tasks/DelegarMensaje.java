@@ -6,6 +6,8 @@ package net.gaia.vortex.core.impl.tasks;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable;
 import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;
@@ -34,6 +36,18 @@ public class DelegarMensaje implements WorkUnit {
 	@Override
 	public WorkUnit doWork() throws InterruptedException {
 		Loggers.ATOMOS.debug("Delegando a nodo[{}] el mensaje[{}]", delegado.toShortString(), mensaje);
+		// Intentamos optimizar la entrega de mensaje no mandando a uno que ya lo recibió
+		if (delegado instanceof VortexIdentificable) {
+			final VortexIdentificable receptorConIdentificador = (VortexIdentificable) delegado;
+			final IdentificadorVortex identificadorDelReceptor = receptorConIdentificador.getIdentificador();
+			if (mensaje.pasoPreviamentePor(identificadorDelReceptor)) {
+				Loggers.ATOMOS.debug("Evitando delegación duplicada a nodo[{}] del mensaje[{}]",
+						delegado.toShortString(), mensaje);
+				// Evitamos mandarlo a un componente que ya pasó para optimizar
+				return null;
+			}
+		}
+		// No paso por el delegado, o no podemos saberlo, en cualquier caso lo entregamos
 		try {
 			delegado.recibir(mensaje);
 		} catch (final Exception e) {
