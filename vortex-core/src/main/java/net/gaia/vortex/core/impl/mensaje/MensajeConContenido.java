@@ -16,12 +16,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
-import ar.com.dgarcia.colecciones.sets.ConcurrentHashSet;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -56,7 +56,7 @@ public class MensajeConContenido implements MensajeVortex {
 	 * @return El conjunto de nodos visitados inicialmente
 	 */
 	private void inicializarIdsVisitados(final Collection<String> moleculasVisitadasSegunMapa) {
-		this.idsVisitados = new ConcurrentHashSet<String>();
+		this.idsVisitados = new ConcurrentSkipListSet<String>();
 		idsVisitados.addAll(moleculasVisitadasSegunMapa);
 		getContenido().put(TRAZA_IDENTIFICADORES_VORTEX_KEY, idsVisitados);
 	}
