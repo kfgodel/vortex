@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia.vortex.http</groupId>
   <artifactId>vortex-http-server</artifactId>
-  <version>0.4.2-SNAPSHOT</version>
+  <version>0.4.2</version>
   <name>Vortex[Http-server]</name>
   <description>Proyecto servidor de vortex http</description>
   
@@ -80,7 +80,7 @@
   	<dependency>
 	  <groupId>net.gaia.vortex.http</groupId>
 	  <artifactId>vortex-http</artifactId>
-	  <version>0.4.2-SNAPSHOT</version>
+	  <version>0.4.2</version>
   	</dependency>
   	
    	<!-- Servidor http embebido -->
