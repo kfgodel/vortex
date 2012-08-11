@@ -17,8 +17,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.vortex.core.api.moleculas.ids.GeneradorDeIds;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import ar.com.dgarcia.coding.caching.DefaultInstantiator;
-import ar.com.dgarcia.coding.caching.WeakSingleton;
 
 /**
  * Esta clase es la implementación default del generador de ids que asigna ids fijos a cada molecula
@@ -33,11 +31,10 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	public static final int LONGITUD_INICIAL_RANDOM_PART = 4;
 	public static final int LONGITUD_INICIAL_VORTEX_TIMESTAMP = 4;
 
-	private static final WeakSingleton<GeneradorDeIdsEstaticos> ultimaReferencia = new WeakSingleton<GeneradorDeIdsEstaticos>(
-			DefaultInstantiator.create(GeneradorDeIdsEstaticos.class));
+	private static final GeneradorDeIdsEstaticos instancia = new GeneradorDeIdsEstaticos();
 
 	public static GeneradorDeIdsEstaticos getInstancia() {
-		return ultimaReferencia.get();
+		return instancia;
 	}
 
 	/**
