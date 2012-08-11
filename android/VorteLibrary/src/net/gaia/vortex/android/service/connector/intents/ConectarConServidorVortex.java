@@ -10,11 +10,11 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.android.service.intents;
+package net.gaia.vortex.android.service.connector.intents;
 
 import java.net.InetSocketAddress;
 
-import net.gaia.vortex.android.service.VortexConectorService;
+import net.gaia.vortex.android.service.connector.VortexSocketConectorService;
 import android.content.Context;
 import android.content.Intent;
 import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
@@ -41,7 +41,7 @@ public class ConectarConServidorVortex extends Intent {
 	 * Constructor para codigo cliente que inicia el servicio
 	 */
 	public ConectarConServidorVortex(Context contextoAndroid, String host, Integer puerto) {
-		super(contextoAndroid, VortexConectorService.class);
+		super(contextoAndroid, VortexSocketConectorService.class);
 		putExtra(HOST_DEL_SERVIDOR_KEY, host);
 		putExtra(PUERTO_DEL_SERVIDOR_KEY, puerto);
 	}

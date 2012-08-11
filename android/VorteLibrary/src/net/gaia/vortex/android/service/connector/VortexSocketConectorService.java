@@ -10,13 +10,15 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.android.service;
+package net.gaia.vortex.android.service.connector;
 
 import java.net.InetSocketAddress;
 
-import net.gaia.vortex.android.service.impl.VortexConnectionImpl;
-import net.gaia.vortex.android.service.intents.CambioDeConectividadVortex;
-import net.gaia.vortex.android.service.intents.ConectarConServidorVortex;
+import net.gaia.vortex.android.service.connector.impl.VortexConnectionImpl;
+import net.gaia.vortex.android.service.connector.intents.CambioDeConectividadVortex;
+import net.gaia.vortex.android.service.connector.intents.ConectarConServidorVortex;
+import net.gaia.vortex.android.service.provider.VortexProviderAccess;
+import net.gaia.vortex.android.service.provider.VortexProviderService;
 import net.gaia.vortex.core.api.Nodo;
 import android.content.Intent;
 import android.net.NetworkInfo;
@@ -34,11 +36,11 @@ import ar.com.iron.android.extensions.services.local.LocalServiceConnector;
  * 
  * @author D. García
  */
-public class VortexConectorService extends BackgroundService {
+public class VortexSocketConectorService extends BackgroundService {
 
 	private IntentReceptor intentReceptor;
 	private VortexConnection connection;
-	private LocalServiceConnector<VortexAndroidAccess> vortexConnector;
+	private LocalServiceConnector<VortexProviderAccess> vortexConnector;
 	private ConnectivityObserver connectivityObserver;
 
 	/**
@@ -57,13 +59,13 @@ public class VortexConectorService extends BackgroundService {
 	protected void afterProcessStart() {
 		// Intentamos conectarnos con el servicio vortex
 		vortexConnector = LocalServiceConnector.create(VortexProviderService.class);
-		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexAndroidAccess>() {
-			public void onServiceDisconnection(final VortexAndroidAccess disconnectedIntercomm) {
-				onVortexNoDisponible(disconnectedIntercomm);
+		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexProviderAccess>() {
+			public void onServiceDisconnection(final VortexProviderAccess vortexAccess) {
+				onVortexNoDisponible(vortexAccess);
 			}
 
-			public void onServiceConnection(final VortexAndroidAccess intercommObject) {
-				onVortexDisponible(intercommObject);
+			public void onServiceConnection(final VortexProviderAccess vortexAccess) {
+				onVortexDisponible(vortexAccess);
 			}
 		});
 		vortexConnector.bindToService(this);
@@ -93,7 +95,7 @@ public class VortexConectorService extends BackgroundService {
 	 * 
 	 * @param vortexForAndroid
 	 */
-	protected void onVortexNoDisponible(VortexAndroidAccess vortexForAndroid) {
+	protected void onVortexNoDisponible(VortexProviderAccess vortexForAndroid) {
 		connection.desconectarDeNodoCentral();
 	}
 
@@ -101,10 +103,10 @@ public class VortexConectorService extends BackgroundService {
 	 * Invocado cuando este servicio logra conectarse con el proveedor central de vortex para la
 	 * aplicación
 	 * 
-	 * @param vortexForAndroid
+	 * @param vortexAccess
 	 */
-	protected void onVortexDisponible(VortexAndroidAccess vortexForAndroid) {
-		Nodo nodoCentral = vortexForAndroid.getNodoCentral();
+	protected void onVortexDisponible(VortexProviderAccess vortexAccess) {
+		Nodo nodoCentral = vortexAccess.getNodoCentral();
 		connection.utilizarComoNodoCentralA(nodoCentral);
 	}
 

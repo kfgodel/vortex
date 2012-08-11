@@ -14,12 +14,13 @@ package net.gaia.vortex.comm;
 
 import java.util.List;
 
-import net.gaia.vortex.android.service.VortexAndroidAccess;
-import net.gaia.vortex.android.service.VortexConectorService;
-import net.gaia.vortex.android.service.VortexProviderService;
+import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.android.service.VortexSharedProcessor;
-import net.gaia.vortex.android.service.intents.CambioDeConectividadVortex;
-import net.gaia.vortex.android.service.intents.ConectarConServidorVortex;
+import net.gaia.vortex.android.service.connector.VortexSocketConectorService;
+import net.gaia.vortex.android.service.connector.intents.CambioDeConectividadVortex;
+import net.gaia.vortex.android.service.connector.intents.ConectarConServidorVortex;
+import net.gaia.vortex.android.service.provider.VortexProviderAccess;
+import net.gaia.vortex.android.service.provider.VortexProviderService;
 import net.gaia.vortex.comm.api.CanalDeChat;
 import net.gaia.vortex.comm.api.ClienteDeChatVortex;
 import net.gaia.vortex.comm.api.ListenerDeEstadoDeCanal;
@@ -57,7 +58,7 @@ import ar.com.iron.menues.ContextMenuItem;
 public class CanalesActivity extends CustomListActivity<CanalDeChat> {
 	private EditText canalTxt;
 	private ImageView conectadoImg;
-	private LocalServiceConnector<VortexAndroidAccess> vortexConnector;
+	private LocalServiceConnector<VortexProviderAccess> vortexConnector;
 	private ClienteDeChatVortex clienteVortex;
 
 	/**
@@ -79,12 +80,12 @@ public class CanalesActivity extends CustomListActivity<CanalDeChat> {
 
 		// Intentamos conectarnos con el servicio vortex
 		vortexConnector = LocalServiceConnector.create(VortexProviderService.class);
-		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexAndroidAccess>() {
-			public void onServiceDisconnection(final VortexAndroidAccess disconnectedIntercomm) {
+		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexProviderAccess>() {
+			public void onServiceDisconnection(final VortexProviderAccess disconnectedIntercomm) {
 				onVortexNoDisponible(disconnectedIntercomm);
 			}
 
-			public void onServiceConnection(final VortexAndroidAccess intercommObject) {
+			public void onServiceConnection(final VortexProviderAccess intercommObject) {
 				onVortexDisponible(intercommObject);
 			}
 		});
@@ -103,7 +104,8 @@ public class CanalesActivity extends CustomListActivity<CanalDeChat> {
 		String nombreDeUsuario = configuracionActual.getNombreDeUsuario();
 		List<String> canalesDelUsuario = configuracionActual.getCanalesDelUsuario();
 
-		clienteVortex = ClienteDeChatVortexImpl.create(VortexSharedProcessor.getProcessor(), nombreDeUsuario);
+		TaskProcessor procesador = VortexSharedProcessor.getProcessor();
+		clienteVortex = ClienteDeChatVortexImpl.create(procesador, nombreDeUsuario);
 		for (String nombreDelCanal : canalesDelUsuario) {
 			clienteVortex.agregarCanal(nombreDelCanal);
 		}
@@ -149,7 +151,7 @@ public class CanalesActivity extends CustomListActivity<CanalDeChat> {
 	 * 
 	 * @param vortexForAndroid
 	 */
-	protected void onVortexDisponible(VortexAndroidAccess vortexForAndroid) {
+	protected void onVortexDisponible(VortexProviderAccess vortexForAndroid) {
 		Nodo nodoCentral = vortexForAndroid.getNodoCentral();
 		clienteVortex.conectarA(nodoCentral);
 	}
@@ -159,7 +161,7 @@ public class CanalesActivity extends CustomListActivity<CanalDeChat> {
 	 * 
 	 * @param disconnectedIntercomm
 	 */
-	protected void onVortexNoDisponible(VortexAndroidAccess disconnectedIntercomm) {
+	protected void onVortexNoDisponible(VortexProviderAccess disconnectedIntercomm) {
 		clienteVortex.desconectar();
 	}
 
@@ -178,7 +180,7 @@ public class CanalesActivity extends CustomListActivity<CanalDeChat> {
 	 * Detiene el servicio de conexion a vortex
 	 */
 	private void detenerServicioDeConexion() {
-		stopService(new Intent(getContext(), VortexConectorService.class));
+		stopService(new Intent(getContext(), VortexSocketConectorService.class));
 	}
 
 	/**

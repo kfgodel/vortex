@@ -10,11 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.android.service.impl;
+package net.gaia.vortex.android.service.provider.impl;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.android.service.VortexAndroidAccess;
 import net.gaia.vortex.android.service.VortexSharedProcessor;
+import net.gaia.vortex.android.service.provider.VortexProviderAccess;
+import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import ar.dgarcia.objectsockets.api.Disposable;
@@ -25,27 +26,27 @@ import ar.dgarcia.objectsockets.api.Disposable;
  * 
  * @author D. García
  */
-public class VortexAndroidAccessImpl implements VortexAndroidAccess, Disposable {
+public class VortexAndroidAccessImpl implements VortexProviderAccess, Disposable {
 
 	private TaskProcessor processor;
-	private NodoMultiplexor nodoCentral;
+	private Nodo nodoCentral;
 
 	public TaskProcessor getProcessor() {
 		return processor;
 	}
 
 	/**
-	 * @see net.gaia.vortex.android.service.VortexAndroidAccess#getProcesadorCentral()
+	 * @see net.gaia.vortex.android.service.provider.VortexProviderAccess#getProcesadorCentral()
 	 */
 	public TaskProcessor getProcesadorCentral() {
 		return getProcessor();
 	}
 
-	public NodoMultiplexor getNodoCentral() {
+	public Nodo getNodoCentral() {
 		return nodoCentral;
 	}
 
-	public void setNodoCentral(NodoMultiplexor nodoCentral) {
+	public void setNodoCentral(Nodo nodoCentral) {
 		this.nodoCentral = nodoCentral;
 	}
 

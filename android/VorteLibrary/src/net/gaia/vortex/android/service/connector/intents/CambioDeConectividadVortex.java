@@ -10,13 +10,14 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.android.service.intents;
+package net.gaia.vortex.android.service.connector.intents;
 
 import android.content.Intent;
 import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 
 /**
- * Esta clase representa un intent enviado para notificar el cambio de conectividad de vortex
+ * Esta clase representa un intent enviado para notificar el cambio de conectividad de vortex.<br>
+ * Normalmente es lanzado cuando el conector se desconecta de la dirección indicada
  * 
  * @author D. García
  */

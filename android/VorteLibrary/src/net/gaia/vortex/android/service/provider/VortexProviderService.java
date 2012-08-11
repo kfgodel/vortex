@@ -10,9 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.android.service;
+package net.gaia.vortex.android.service.provider;
 
-import net.gaia.vortex.android.service.impl.VortexAndroidAccessImpl;
+import net.gaia.vortex.android.service.provider.impl.VortexAndroidAccessImpl;
 import android.content.Intent;
 import ar.com.iron.android.extensions.services.BackgroundProcess;
 import ar.com.iron.android.extensions.services.BackgroundService;
@@ -20,17 +20,19 @@ import ar.com.iron.android.extensions.services.local.LocalServiceBinder;
 import ar.com.iron.android.extensions.services.local.LocallyBindableService;
 
 /**
- * Esta clase implementa el servicio de android que permite acceder a vortex como un pedazo de la
- * red, y extenderla con nuevos nodos
+ * Esta clase representa el servicio de android que utilizar vortex como red interna de
+ * comunicaciones de la aplicación.<br>
+ * A través de este servicio cualquier activity puede acceder al nodo principal de la aplicación que
+ * sirve de hube de comunicaciones
  * 
  * @author D. García
  */
-public class VortexProviderService extends BackgroundService implements LocallyBindableService<VortexAndroidAccess> {
+public class VortexProviderService extends BackgroundService implements LocallyBindableService<VortexProviderAccess> {
 
 	/**
 	 * Permite el enlace con los otros componentes de android
 	 */
-	private LocalServiceBinder<VortexAndroidAccess> serviceBinder;
+	private LocalServiceBinder<VortexProviderAccess> serviceBinder;
 
 	private VortexAndroidAccessImpl vortex;
 
@@ -47,7 +49,7 @@ public class VortexProviderService extends BackgroundService implements LocallyB
 	 */
 	@Override
 	protected void afterProcessStart() {
-		serviceBinder = LocalServiceBinder.<VortexAndroidAccess> create(vortex);
+		serviceBinder = LocalServiceBinder.<VortexProviderAccess> create(vortex);
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class VortexProviderService extends BackgroundService implements LocallyB
 	 * @see ar.com.iron.android.extensions.services.BackgroundService#onBind(android.content.Intent)
 	 */
 	@Override
-	public LocalServiceBinder<VortexAndroidAccess> onBind(Intent intent) {
+	public LocalServiceBinder<VortexProviderAccess> onBind(Intent intent) {
 		return serviceBinder;
 	}
 

@@ -10,14 +10,14 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.android.service.impl;
+package net.gaia.vortex.android.service.connector.impl;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.android.service.VortexConnection;
 import net.gaia.vortex.android.service.VortexSharedProcessor;
+import net.gaia.vortex.android.service.connector.VortexConnection;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
@@ -53,7 +53,7 @@ public class VortexConnectionImpl implements VortexConnection {
 	}
 
 	/**
-	 * @see net.gaia.vortex.android.service.VortexConnection#usarLaDireccion(java.net.InetSocketAddress)
+	 * @see net.gaia.vortex.android.service.connector.VortexConnection#usarLaDireccion(java.net.InetSocketAddress)
 	 */
 	public void usarLaDireccion(InetSocketAddress nuevaServerAddress) {
 		if (nuevaServerAddress.equals(this.serverAddress)) {
@@ -97,7 +97,7 @@ public class VortexConnectionImpl implements VortexConnection {
 	}
 
 	/**
-	 * @see net.gaia.vortex.android.service.VortexConnection#utilizarComoNodoCentralA(net.gaia.vortex.core.api.Nodo)
+	 * @see net.gaia.vortex.android.service.connector.VortexConnection#utilizarComoNodoCentralA(net.gaia.vortex.core.api.Nodo)
 	 */
 	public void utilizarComoNodoCentralA(Nodo nuevoNodoCentral) {
 		desconectarNodos();
@@ -106,14 +106,14 @@ public class VortexConnectionImpl implements VortexConnection {
 	}
 
 	/**
-	 * @see net.gaia.vortex.android.service.VortexConnection#desconectarDeNodoCentral()
+	 * @see net.gaia.vortex.android.service.connector.VortexConnection#desconectarDeNodoCentral()
 	 */
 	public void desconectarDeNodoCentral() {
 		desconectarNodos();
 	}
 
 	/**
-	 * @see net.gaia.vortex.android.service.VortexConnection#desconectarDelServidor()
+	 * @see net.gaia.vortex.android.service.connector.VortexConnection#desconectarDelServidor()
 	 */
 	public void desconectarDelServidor() {
 		debeConectar.set(false);
@@ -134,7 +134,7 @@ public class VortexConnectionImpl implements VortexConnection {
 	}
 
 	/**
-	 * @see net.gaia.vortex.android.service.VortexConnection#reconectarAlServidor()
+	 * @see net.gaia.vortex.android.service.connector.VortexConnection#reconectarAlServidor()
 	 */
 	public void reconectarAlServidor() {
 		debeConectar.set(true);

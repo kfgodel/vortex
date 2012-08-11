@@ -12,6 +12,15 @@
              automatically, so it's best to define your activities here like for any
              regular Android project.
         -->
+        
+        <!-- El servicio que ofrece un nodo como punto de acceso a vortex 
+    	<service android:name="net.gaia.vortex.android.service.provider.VortexProviderService" android:exported="false" />
+    	-->
+
+    	<!-- El servicio que mantiene la conexion al servidor 
+    	<service android:name="net.gaia.vortex.android.service.connector.VortexSocketConectorService" android:exported="false" />
+    	-->
+        
     </application>
 
 </manifest>
