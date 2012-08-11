@@ -37,6 +37,7 @@ import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.atomos.Desvortificador;
 import net.gaia.vortex.portal.impl.atomos.Vortificador;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa un portal con la red vortex que utiliza un mapeador interno para convertir
@@ -46,12 +47,14 @@ import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
  */
 @Molecula
 public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdentificable {
+
 	private MapeadorVortex mapeadorVortex;
 	private ReceptorVariable<Receptor> receptorDeSalida;
-	private IdentificadorVortex identificador;
 	private Receptor procesoDeEntrada;
 	private Vortificador procesoDeSalida;
 	private Multiplexor multiplexorDeCondiciones;
+	private IdentificadorVortex identificador;
+	public static final String identificador_FIELD = "identificador";
 
 	/**
 	 * @see net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable#getIdentificador()
@@ -164,6 +167,15 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 		portal.mapeadorVortex = MapeadorDefault.create();
 		portal.initializeWith(processor, destino);
 		return portal;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+				.con(identificador_FIELD, identificador).con(destino_FIELD, getDestino()).toString();
 	}
 
 }
