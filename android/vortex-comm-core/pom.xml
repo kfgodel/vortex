@@ -82,33 +82,34 @@
       <dependency>
 		  <groupId>net.gaia.vortex</groupId>
 		  <artifactId>vortex-sockets</artifactId>
-		  <version>0.4</version>
+		  <version>0.4.2</version>
       </dependency>
       
       <!-- Portales de vortex-->
       <dependency>
 		  <groupId>net.gaia.vortex</groupId>
 		  <artifactId>vortex-portal</artifactId>
-		  <version>0.4</version>
+		  <version>0.4.2</version>
       </dependency>
       
       
- 	<!--  Abstrae la herramienta de logueo concreta -->
+ 	<!--  Abstrae la herramienta de logueo concreta
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.6.4</version>
       <scope>test</scope>
     </dependency>
+    -->
     
-    <!-- Descomentar para generar el war 
+    <!-- Descomentar para generar el war -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-android</artifactId>
       <version>1.6.1-RC1</version>
       <scope>provided</scope>
     </dependency>
-     -->
+     
       
    <!-- Implementación del logueo, necesario para los tests-->
     <dependency>
