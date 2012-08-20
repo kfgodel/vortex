@@ -1,5 +1,5 @@
 /**
- * 08/06/2012 00:00:00 Copyright (C) 2011 Darío L. García
+ * 20/08/2012 01:42:57 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,27 +10,26 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sets.impl.filters;
-
-import net.gaia.vortex.sets.api.FiltroDeMensajes;
+package net.gaia.vortex.sets.reflection;
 
 /**
- * Esta clase representa el filtro que rechaza todos los mensajes
+ * Esta clase representa un error realizando operaciones de reflection sobre un mensaje
  * 
  * @author D. García
  */
-public class FiltroRechazaTodo implements FiltroDeMensajes {
+public class MessageReflectionException extends RuntimeException {
+	private static final long serialVersionUID = -5630839148350543537L;
 
-	/**
-	 * @see net.gaia.vortex.sets.api.FiltroDeMensajes#aceptaA(java.lang.Object)
-	 */
-	@Override
-	public boolean aceptaA(final Object mensajeRecibido) {
-		return false;
+	public MessageReflectionException(final String message, final Throwable cause) {
+		super(message, cause);
 	}
 
-	public static FiltroRechazaTodo create() {
-		final FiltroRechazaTodo filtro = new FiltroRechazaTodo();
-		return filtro;
+	public MessageReflectionException(final String message) {
+		super(message);
 	}
+
+	public MessageReflectionException(final Throwable cause) {
+		super(cause);
+	}
+
 }

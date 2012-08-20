@@ -1,5 +1,5 @@
 /**
- * 07/06/2012 23:58:47 Copyright (C) 2011 Darío L. García
+ * 20/08/2012 01:41:47 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,27 +10,25 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sets.impl.filters;
-
-import net.gaia.vortex.sets.api.FiltroDeMensajes;
+package net.gaia.vortex.sets.reflection;
 
 /**
- * Esta clase es la implementación del filtro de mensajes que acepta todos los mensajes
+ * Esta clase representa el error de propiedad anidada faltante al navegar una cadena de propiedades
  * 
  * @author D. García
  */
-public class FiltroAceptaTodo implements FiltroDeMensajes {
+public class MissingPropertyException extends MessageReflectionException {
 
-	/**
-	 * @see net.gaia.vortex.sets.api.FiltroDeMensajes#aceptaA(java.lang.Object)
-	 */
-	@Override
-	public boolean aceptaA(final Object mensajeRecibido) {
-		return true;
+	public MissingPropertyException(final String message, final Throwable cause) {
+		super(message, cause);
 	}
 
-	public static FiltroAceptaTodo create() {
-		final FiltroAceptaTodo filtro = new FiltroAceptaTodo();
-		return filtro;
+	public MissingPropertyException(final String message) {
+		super(message);
 	}
+
+	public MissingPropertyException(final Throwable cause) {
+		super(cause);
+	}
+
 }
