@@ -153,6 +153,21 @@ public class PropertyChainAccessor implements ValueAccessor {
 	}
 
 	/**
+	 * Crea el accessor menor que se requiere para la cadena de propiedades pasadas.<br>
+	 * Si la cadena no involucra varias propiedades se utiliza el {@link PropertyAccessor}
+	 * 
+	 * @param propertyChain
+	 *            La cadena de propiedades
+	 * @return El accesor de la cadena o propiedad pasada
+	 */
+	public static ValueAccessor createAccessor(final String propertyChain) {
+		if (propertyChain.contains(PropertyChainAccessor.PROPERTY_DELIMITER)) {
+			return PropertyChainAccessor.create(propertyChain);
+		}
+		return PropertyAccessor.create(propertyChain);
+	}
+
+	/**
 	 * Indica si la expresión pasada como cadena representa una cadena de propiedades separadas por
 	 * puntos
 	 * 

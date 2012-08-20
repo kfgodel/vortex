@@ -18,6 +18,7 @@ package net.gaia.vortex.sets.reflection;
  * @author D. García
  */
 public class MissingPropertyException extends MessageReflectionException {
+	private static final long serialVersionUID = 2294430808600459182L;
 
 	public MissingPropertyException(final String message, final Throwable cause) {
 		super(message, cause);

@@ -1,5 +1,5 @@
 /**
- * 20/08/2012 01:19:33 Copyright (C) 2011 Darío L. García
+ * 20/08/2012 19:39:24 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.sets.impl;
 
+import java.util.Collection;
+
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -20,12 +22,12 @@ import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la condición que compara el valor de un atributo del mensaje con el valor
- * esperado
+ * Esta clase representa la condición que evalua si una propiedad en el mapa de tipo colección o
+ * iterable contiene al valor indicado
  * 
  * @author D. García
  */
-public class ValorEsperadoIgual implements Condicion {
+public class ContieneAValor implements Condicion {
 
 	private ValueAccessor valueAccessor;
 	public static final String valueAccessor_FIELD = "valueAccessor";
@@ -44,30 +46,31 @@ public class ValorEsperadoIgual implements Condicion {
 			return false;
 		}
 		final Object valorEnElMensaje = valueAccessor.getValueFrom(contenidoDelMensaje);
-		return compararPorEquals(valorEsperado, valorEnElMensaje);
-	}
-
-	/**
-	 * Compara los valores pasados por equals, dandolos por verdaderos si ambos son null, o si el
-	 * esperado considera equals al otro
-	 * 
-	 * @param valorEsperado
-	 *            El valor esperado
-	 * @param valorEnElMensaje
-	 *            El valor del mensaje
-	 * @return true si ambos son iguales
-	 */
-	public static boolean compararPorEquals(final Object valorEsperado, final Object valorEnElMensaje) {
-		if (valorEsperado == null) {
-			final boolean ambosSonNull = valorEnElMensaje == null;
-			return ambosSonNull;
+		if (valorEnElMensaje == null) {
+			return false;
 		}
-		final boolean sonIguales = valorEsperado.equals(valorEnElMensaje);
-		return sonIguales;
+		// Probamos con la api de collection primero
+		if (valorEnElMensaje instanceof Collection) {
+			final Collection<?> coleccion = (Collection<?>) valorEnElMensaje;
+			final boolean contieneElValor = coleccion.contains(valorEsperado);
+			return contieneElValor;
+		}
+		if (!(valorEnElMensaje instanceof Iterable)) {
+			// Es un objeto que no podemos iterar
+			return false;
+		}
+		final Iterable<?> iterable = (Iterable<?>) valorEnElMensaje;
+		for (final Object elementoEnMensaje : iterable) {
+			final boolean sonIguales = ValorEsperadoIgual.compararPorEquals(valorEsperado, elementoEnMensaje);
+			if (sonIguales) {
+				return true;
+			}
+		}
+		return false;
 	}
 
-	public static ValorEsperadoIgual a(final Object valorEsperado, final String propertyPath) {
-		final ValorEsperadoIgual condicion = new ValorEsperadoIgual();
+	public static ContieneAValor create(final Object valorEsperado, final String propertyPath) {
+		final ContieneAValor condicion = new ContieneAValor();
 		condicion.valorEsperado = valorEsperado;
 		condicion.valueAccessor = PropertyChainAccessor.createAccessor(propertyPath);
 		return condicion;
