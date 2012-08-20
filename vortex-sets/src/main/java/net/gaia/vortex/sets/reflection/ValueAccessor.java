@@ -31,8 +31,10 @@ public interface ValueAccessor {
 	 *            de sus propiedades
 	 * @param value
 	 *            El valor que se definirá en el mapa
+	 * @throws MessageReflectionException
+	 *             Si se produce un error accediendo el valor
 	 */
-	public void setValueInto(Map<String, Object> contenido, Object value) throws MissingPropertyException;
+	public void setValueInto(Map<String, Object> contenido, Object value) throws MessageReflectionException;
 
 	/**
 	 * Devuelve el valor de la propiedad representada por este accessor dentro del mapa pasado
@@ -40,7 +42,28 @@ public interface ValueAccessor {
 	 * @param contenido
 	 *            El mapa del cual se tomará el valor
 	 * @return El valor obtenido
+	 * @throws MessageReflectionException
+	 *             Si se produce un error accediendo el valor
 	 */
-	public Object getValueFrom(Map<String, Object> contenido);
+	public Object getValueFrom(Map<String, Object> contenido) throws MessageReflectionException;
 
+	/**
+	 * Quita el valor representado por este accessor del contenido
+	 * 
+	 * @param contenido
+	 *            El contenido a modificar
+	 * @throws MessageReflectionException
+	 *             Si se produce un error accediendo el valor
+	 */
+	public void removeValueFrom(Map<String, Object> contenido) throws MessageReflectionException;
+
+	/**
+	 * Indica si el contenido pasado tiene el valor representado por este accessor
+	 * 
+	 * @param contenidoDelMensaje
+	 *            El contenido a evaluar si contiene la propiedad de este accessor
+	 * @throws MessageReflectionException
+	 *             Si se produce un error accediendo el valor
+	 */
+	public boolean hasValueIn(Map<String, Object> contenido) throws MessageReflectionException;
 }

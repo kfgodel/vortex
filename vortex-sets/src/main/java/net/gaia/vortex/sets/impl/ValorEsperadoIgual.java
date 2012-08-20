@@ -13,7 +13,12 @@
 package net.gaia.vortex.sets.impl;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.sets.reflection.ValueAccessor;
+import net.gaia.vortex.sets.reflection.accessors.PropertyAccessor;
+import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la condición que compara el valor de un atributo del mensaje con el valor
@@ -23,20 +28,51 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
  */
 public class ValorEsperadoIgual implements Condicion {
 
+	private ValueAccessor valueAccessor;
+	public static final String valueAccessor_FIELD = "valueAccessor";
+
 	private Object valorEsperado;
 	public static final String valorEsperado_FIELD = "valorEsperado";
 
-	private/**
-			 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
-			 */
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 */
 	@Override
 	public boolean esCumplidaPor(final MensajeVortex mensaje) {
-		// TODO Auto-generated method stub
-		return false;
+		final ContenidoVortex contenidoDelMensaje = mensaje.getContenido();
+		if (!valueAccessor.hasValueIn(contenidoDelMensaje)) {
+			// Consideramos que si no tiene la propiedad no es igual al esperado
+			return false;
+		}
+		final Object valorEnElMensaje = valueAccessor.getValueFrom(contenidoDelMensaje);
+		if (valorEsperado == null) {
+			final boolean ambosSonNull = valorEnElMensaje == null;
+			return ambosSonNull;
+		}
+		final boolean sonIguales = valorEsperado.equals(valorEnElMensaje);
+		return sonIguales;
 	}
 
 	public static ValorEsperadoIgual a(final Object valorEsperado, final String propertyPath) {
 		final ValorEsperadoIgual condicion = new ValorEsperadoIgual();
+		condicion.valorEsperado = valorEsperado;
+		ValueAccessor createdValueAccessor;
+		if (propertyPath.contains(PropertyChainAccessor.PROPERTY_DELIMITER)) {
+			createdValueAccessor = PropertyChainAccessor.create(propertyPath);
+		} else {
+			createdValueAccessor = PropertyAccessor.create(propertyPath);
+		}
+		condicion.valueAccessor = createdValueAccessor;
 		return condicion;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(valorEsperado_FIELD, valorEsperado).con(valueAccessor_FIELD, valueAccessor)
+				.toString();
+	}
+
 }
