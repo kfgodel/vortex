@@ -78,6 +78,13 @@
   
   <dependencies>
       
+      <!-- Filtros para los mensajes-->
+      <dependency>
+		  <groupId>net.gaia.vortex</groupId>
+		  <artifactId>vortex-sets</artifactId>
+		  <version>0.4.3-SNAPSHOT</version>
+      </dependency>
+      
       <!-- Sockets con vortex -->
       <dependency>
 		  <groupId>net.gaia.vortex</groupId>

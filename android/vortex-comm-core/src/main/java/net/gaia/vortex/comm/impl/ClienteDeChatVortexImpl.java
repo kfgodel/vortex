@@ -31,6 +31,7 @@ import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.sets.impl.ValorEsperadoIgual;
 
 /**
  * Esta clase representa el conjunto de los canales utilizables por un cliente de chat
@@ -94,26 +95,26 @@ public class ClienteDeChatVortexImpl implements ClienteDeChatVortex {
 		nodoCoreDelCliente = NodoMultiplexor.create(processor);
 
 		// De afuera solo aceptamos mensajes que sean de chat
-		AtributoIgual esAceptableParaElCliente = AtributoIgual.create(VortexChatSupport.aplicacion_FIELD,
-				VortexChatSupport.NOMBRE_APLICACION_CHAT);
+		ValorEsperadoIgual esAceptableParaElCliente = ValorEsperadoIgual.a(VortexChatSupport.NOMBRE_APLICACION_CHAT,
+				VortexChatSupport.aplicacion_FIELD);
 		entradaConectadaDesdeElCentral = NexoFiltro.create(processor, esAceptableParaElCliente, nodoCoreDelCliente);
 
 		this.portalDelCliente = PortalMapeador.createForOutputWith(processor, ReceptorNulo.getInstancia());
 		nodoCoreDelCliente.conectarCon(portalDelCliente);
-		this.portalDelCliente.recibirCon(new HandlerTipado<PedidoDePresencia>(AtributoIgual.create(
-				PedidoDePresencia.tipoDeMensaje_FIELD, PedidoDePresencia.PEDIDO_DE_PRESENCIA)) {
+		this.portalDelCliente.recibirCon(new HandlerTipado<PedidoDePresencia>(ValorEsperadoIgual.a(
+				PedidoDePresencia.PEDIDO_DE_PRESENCIA, PedidoDePresencia.tipoDeMensaje_FIELD)) {
 			public void onMensajeRecibido(PedidoDePresencia mensaje) {
 				onPedidoDePresenciaRecibido(mensaje);
 			}
 		});
-		this.portalDelCliente.recibirCon(new HandlerTipado<AvisoDePresencia>(AtributoIgual.create(
-				AvisoDePresencia.tipoDeMensaje_FIELD, AvisoDePresencia.AVISO_DE_PRESENCIA)) {
+		this.portalDelCliente.recibirCon(new HandlerTipado<AvisoDePresencia>(ValorEsperadoIgual.a(
+				AvisoDePresencia.AVISO_DE_PRESENCIA, AvisoDePresencia.tipoDeMensaje_FIELD)) {
 			public void onMensajeRecibido(AvisoDePresencia mensaje) {
 				onAvisoDePresenciaRecibido(mensaje);
 			}
 		});
-		this.portalDelCliente.recibirCon(new HandlerTipado<AvisoDeAusencia>(AtributoIgual.create(
-				AvisoDeAusencia.tipoDeMensaje_FIELD, AvisoDeAusencia.AVISO_DE_AUSENCIA)) {
+		this.portalDelCliente.recibirCon(new HandlerTipado<AvisoDeAusencia>(ValorEsperadoIgual.a(
+				AvisoDeAusencia.AVISO_DE_AUSENCIA, AvisoDeAusencia.tipoDeMensaje_FIELD)) {
 			public void onMensajeRecibido(AvisoDeAusencia mensaje) {
 				onAvisoDeAusenciaRecibido(mensaje);
 			}

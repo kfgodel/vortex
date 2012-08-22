@@ -27,6 +27,7 @@ import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.sets.impl.ValorEsperadoIgual;
 
 /**
  * Esta clase representa un canal de chat
@@ -70,14 +71,14 @@ public class CanalDeChatImpl implements CanalDeChat {
 
 		this.portalDeEntrada = PortalMapeador.createForOutputWith(processor, ReceptorNulo.getInstancia());
 		nodoDelCliente.conectarCon(this.portalDeEntrada);
-		this.portalDeEntrada.recibirCon(new HandlerTipado<MensajeDeChat>(AtributoIgual.create(
-				MensajeDeChat.tipoDeMensaje_FIELD, MensajeDeChat.MENSAJE_DE_CHAT)) {
+		this.portalDeEntrada.recibirCon(new HandlerTipado<MensajeDeChat>(ValorEsperadoIgual.a(
+				MensajeDeChat.MENSAJE_DE_CHAT, MensajeDeChat.tipoDeMensaje_FIELD)) {
 			public void onMensajeRecibido(MensajeDeChat mensaje) {
 				onMensajeDeChatRecibido(mensaje);
 			}
 		});
-		this.portalDeEntrada.recibirCon(new HandlerTipado<AvisoDePresencia>(AtributoIgual.create(
-				AvisoDePresencia.tipoDeMensaje_FIELD, AvisoDePresencia.AVISO_DE_PRESENCIA)) {
+		this.portalDeEntrada.recibirCon(new HandlerTipado<AvisoDePresencia>(ValorEsperadoIgual.a(
+				AvisoDePresencia.AVISO_DE_PRESENCIA, AvisoDePresencia.tipoDeMensaje_FIELD)) {
 			public void onMensajeRecibido(AvisoDePresencia mensaje) {
 				onAvisoDePresenciaRecibido(mensaje);
 			}
