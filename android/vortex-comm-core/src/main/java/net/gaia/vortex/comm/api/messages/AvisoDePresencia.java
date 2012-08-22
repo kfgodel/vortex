@@ -12,14 +12,14 @@
  */
 package net.gaia.vortex.comm.api.messages;
 
-import net.gaia.vortex.comm.impl.messages.AvisoDePresentismoSupport;
+import net.gaia.vortex.comm.impl.messages.VortexChatSupport;
 
 /**
  * Esta clase representa un mensaje de aviso a otros clientes conectados de que nos conectamos
  * 
  * @author D. García
  */
-public class AvisoDePresencia extends AvisoDePresentismoSupport {
+public class AvisoDePresencia extends VortexChatSupport {
 	public static final String AVISO_DE_PRESENCIA = "AvisoDePresencia";
 
 	public AvisoDePresencia() {

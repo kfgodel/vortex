@@ -12,6 +12,11 @@
  */
 package net.gaia.vortex.comm.impl.messages;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ar.com.dgarcia.lang.strings.ToString;
+
 /**
  * Esta superclase define algunos atributos comunes a todos los mensajes de la aplicación de chat
  * 
@@ -26,6 +31,31 @@ public abstract class VortexChatSupport {
 
 	private String tipoDeMensaje;
 	public static final String tipoDeMensaje_FIELD = "tipoDeMensaje";
+
+	private String usuario;
+	public static final String usuario_FIELD = "usuario";
+
+	private List<String> canales;
+	public static final String canales_FIELD = "canales";
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+
+	public List<String> getCanales() {
+		if (canales == null) {
+			canales = new ArrayList<String>();
+		}
+		return canales;
+	}
+
+	public void setCanales(List<String> canales) {
+		this.canales = canales;
+	}
 
 	/**
 	 * Constructor para las subclases
@@ -51,4 +81,11 @@ public abstract class VortexChatSupport {
 		this.tipoDeMensaje = tipoDeMensaje;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(usuario_FIELD, usuario).con(canales_FIELD, canales).toString();
+	}
 }

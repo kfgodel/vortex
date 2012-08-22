@@ -13,6 +13,7 @@
 package net.gaia.vortex.comm.api.messages;
 
 import net.gaia.vortex.comm.impl.messages.VortexChatSupport;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa el mensaje de chat enviado desde un cliente para ser recibido por otros
@@ -26,20 +27,8 @@ public class MensajeDeChat extends VortexChatSupport {
 		super(MENSAJE_DE_CHAT);
 	}
 
-	private String usuario;
-	public static final String usuario_FIELD = "usuario";
 	private String texto;
 	public static final String texto_FIELD = "texto";
-	private String canal;
-	public static final String canal_FIELD = "canal";
-
-	public String getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
 
 	public String getTexto() {
 		return texto;
@@ -49,19 +38,30 @@ public class MensajeDeChat extends VortexChatSupport {
 		this.texto = texto;
 	}
 
-	public String getCanal() {
-		return canal;
-	}
-
-	public void setCanal(String canal) {
-		this.canal = canal;
-	}
-
 	public static MensajeDeChat create(String usuario, String texto, String canal) {
 		MensajeDeChat mensaje = new MensajeDeChat();
-		mensaje.canal = canal;
 		mensaje.texto = texto;
-		mensaje.usuario = usuario;
+		mensaje.setUsuario(usuario);
+		mensaje.agregarCanal(canal);
 		return mensaje;
+	}
+
+	/**
+	 * @see net.gaia.vortex.comm.impl.messages.VortexChatSupport#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(usuario_FIELD, getUsuario()).con(canales_FIELD, getCanales())
+				.con(texto_FIELD, texto_FIELD).toString();
+	}
+
+	/**
+	 * Agrega el canal indicado en a la lista de este mensaje
+	 * 
+	 * @param nombreDeCanal
+	 *            El nombre del canal
+	 */
+	public void agregarCanal(String nombreDeCanal) {
+		getCanales().add(nombreDeCanal);
 	}
 }

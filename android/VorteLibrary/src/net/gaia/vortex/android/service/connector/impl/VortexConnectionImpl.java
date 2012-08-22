@@ -21,12 +21,16 @@ import net.gaia.vortex.android.service.connector.VortexConnection;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase immplementa la conexión en background con vortex
  * 
  * @author D. García
  */
 public class VortexConnectionImpl implements VortexConnection {
+	private static final Logger LOG = LoggerFactory.getLogger(VortexConnectionImpl.class);
 
 	private TaskProcessor processor;
 	private Nodo nodoCentral;
@@ -73,7 +77,12 @@ public class VortexConnectionImpl implements VortexConnection {
 		if (serverAddress == null) {
 			return;
 		}
-		nodoConector = NodoSocket.createAndConnectTo(serverAddress, processor);
+		try {
+			nodoConector = NodoSocket.createAndConnectTo(serverAddress, processor);
+		} catch (Exception e) {
+			LOG.error("No fue posible conectar al servidor. Ignorando error", e);
+			return;
+		}
 		conectarNodos();
 	}
 

@@ -12,9 +12,6 @@
  */
 package net.gaia.vortex.comm.api.messages;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.gaia.vortex.comm.impl.messages.VortexChatSupport;
 
 /**
@@ -27,19 +24,6 @@ public class PedidoDePresencia extends VortexChatSupport {
 
 	public PedidoDePresencia() {
 		super(PEDIDO_DE_PRESENCIA);
-	}
-
-	private List<String> canales;
-
-	public List<String> getCanales() {
-		if (canales == null) {
-			canales = new ArrayList<String>();
-		}
-		return canales;
-	}
-
-	public void setCanales(List<String> canales) {
-		this.canales = canales;
 	}
 
 }

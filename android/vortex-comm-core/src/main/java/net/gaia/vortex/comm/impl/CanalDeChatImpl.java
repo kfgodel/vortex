@@ -109,8 +109,8 @@ public class CanalDeChatImpl implements CanalDeChat {
 	 * Invocado al recibir un mensaje de chat
 	 */
 	protected void onMensajeDeChatRecibido(MensajeDeChat mensaje) {
-		String canalDelMensaje = mensaje.getCanal();
-		if (!nombreDeCanal.equals(canalDelMensaje)) {
+		List<String> canalesEnMensaje = mensaje.getCanales();
+		if (!canalesEnMensaje.contains(nombreDeCanal)) {
 			// No es un mensaje para este canal
 			return;
 		}
@@ -129,10 +129,8 @@ public class CanalDeChatImpl implements CanalDeChat {
 	 * @see net.gaia.vortex.comm.api.CanalDeChat#enviar(java.lang.String)
 	 */
 	public void enviar(String texto) {
-		MensajeDeChat mensajeDeChat = new MensajeDeChat();
-		mensajeDeChat.setTexto(texto);
-		mensajeDeChat.setCanal(nombreDeCanal);
-		mensajeDeChat.setUsuario(cliente.getUsuarioActual());
+		String usuarioActual = cliente.getUsuarioActual();
+		MensajeDeChat mensajeDeChat = MensajeDeChat.create(usuarioActual, texto, nombreDeCanal);
 		this.portalDeSalida.enviar(mensajeDeChat);
 	}
 
