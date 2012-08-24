@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -56,7 +56,7 @@ public class MensajeConContenido implements MensajeVortex {
 	 * @return El conjunto de nodos visitados inicialmente
 	 */
 	private void inicializarIdsVisitados(final Collection<String> moleculasVisitadasSegunMapa) {
-		this.idsVisitados = new ConcurrentSkipListSet<String>();
+		this.idsVisitados = new CopyOnWriteArraySet<String>();
 		idsVisitados.addAll(moleculasVisitadasSegunMapa);
 		getContenido().put(TRAZA_IDENTIFICADORES_VORTEX_KEY, idsVisitados);
 	}

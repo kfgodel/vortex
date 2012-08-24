@@ -1,0 +1,49 @@
+/**
+ * 24/08/2012 15:41:59 Copyright (C) 2011 Darío L. García
+ * 
+ * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
+ * alt="Creative Commons License" style="border-width:0"
+ * src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a><br />
+ * <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
+ * property="dct:title" rel="dct:type">Software</span> by <span
+ * xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Darío García</span> is
+ * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
+ * Commons Attribution 3.0 Unported License</a>.
+ */
+package net.gaia.vortex.sets.tests;
+
+import junit.framework.Assert;
+import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.sets.impl.And;
+
+import org.junit.Test;
+
+/**
+ * Esta clase testea el uso del filtro AND para combinar condiciones
+ * 
+ * @author D. García
+ */
+public class TestFiltroPorAnd {
+
+	@Test
+	public void deberiaDarTrueParaDosCondicionesTrue() {
+		Assert.assertTrue(And.create(SiempreTrue.getInstancia(), SiempreTrue.getInstancia()).esCumplidaPor(null));
+	}
+
+	@Test
+	public void deberiaDarFalseSiAlgunaEsFalse() {
+		Assert.assertFalse(And.create(SiempreTrue.getInstancia(), SiempreFalse.getInstancia(),
+				SiempreTrue.getInstancia()).esCumplidaPor(null));
+	}
+
+	@Test
+	public void noDeberiaEvaluarElRestoSiLaPrimeraEsFalse() {
+		final CondicionTestWrapper condicionEvaluada = CondicionTestWrapper.create(SiempreFalse.getInstancia());
+		final CondicionTestWrapper condicionNoEvaluada = CondicionTestWrapper.create(SiempreTrue.getInstancia());
+		Assert.assertFalse(And.create(condicionEvaluada, condicionNoEvaluada).esCumplidaPor(null));
+		Assert.assertTrue(condicionEvaluada.isEvaluada());
+		Assert.assertFalse(condicionNoEvaluada.isEvaluada());
+	}
+
+}
