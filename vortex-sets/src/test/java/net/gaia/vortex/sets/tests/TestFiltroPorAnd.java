@@ -12,7 +12,10 @@
  */
 package net.gaia.vortex.sets.tests;
 
+import java.util.ArrayList;
+
 import junit.framework.Assert;
+import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.sets.impl.And;
@@ -44,6 +47,15 @@ public class TestFiltroPorAnd {
 		Assert.assertFalse(And.create(condicionEvaluada, condicionNoEvaluada).esCumplidaPor(null));
 		Assert.assertTrue(condicionEvaluada.isEvaluada());
 		Assert.assertFalse(condicionNoEvaluada.isEvaluada());
+	}
+
+	/**
+	 * Por la implementación actual esto es más una consecuencia que algo buscado. Este test es sólo
+	 * para documentarlo
+	 */
+	@Test
+	public void deberiaDarTrueSiNoTieneCondiciones() {
+		Assert.assertTrue(And.create(new ArrayList<Condicion>()).esCumplidaPor(null));
 	}
 
 }
