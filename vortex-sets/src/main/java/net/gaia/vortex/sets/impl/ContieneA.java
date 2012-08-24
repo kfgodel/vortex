@@ -27,7 +27,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class ContieneAValor implements Condicion {
+public class ContieneA implements Condicion {
 
 	private ValueAccessor valueAccessor;
 	public static final String valueAccessor_FIELD = "valueAccessor";
@@ -69,10 +69,25 @@ public class ContieneAValor implements Condicion {
 		return false;
 	}
 
-	public static ContieneAValor create(final Object valorEsperado, final String propertyPath) {
-		final ContieneAValor condicion = new ContieneAValor();
+	/**
+	 * Crea una nueva condición que evalua si el valor esperado se encuentra en la colección de la
+	 * propiedad de cada mensaje evaluadao
+	 * 
+	 * @param valorEsperado
+	 *            El valor que se espera
+	 * @param propertyPath
+	 *            La cadena de propiedades que representa una colección o iterable
+	 * @return La condición creada
+	 */
+	public static ContieneA valor(final Object valorEsperado, final String propertyPath) {
+		final ValueAccessor valueAccessor = PropertyChainAccessor.createAccessor(propertyPath);
+		return create(valorEsperado, valueAccessor);
+	}
+
+	public static ContieneA create(final Object valorEsperado, final ValueAccessor valueAccessor) {
+		final ContieneA condicion = new ContieneA();
 		condicion.valorEsperado = valorEsperado;
-		condicion.valueAccessor = PropertyChainAccessor.createAccessor(propertyPath);
+		condicion.valueAccessor = valueAccessor;
 		return condicion;
 	}
 

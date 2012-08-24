@@ -1,5 +1,5 @@
 /**
- * 20/08/2012 19:31:23 Copyright (C) 2011 Darío L. García
+ * 24/08/2012 16:55:13 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -17,18 +17,18 @@ import java.util.HashMap;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.sets.impl.ContieneA;
+import net.gaia.vortex.sets.impl.RegexMatchea;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Esta clase realiza varias pruebas con el filtro de contains
+ * Esta clase testea el uso de la condición por expresión regular
  * 
  * @author D. García
  */
-public class TestFiltroPorContains {
+public class TestFiltroPorRegex {
 
 	private static final String SEGUNDO_TEXTO = "Chau";
 	private static final double SEGUNDO_NUMERO = 2.0;
@@ -57,53 +57,54 @@ public class TestFiltroPorContains {
 		mensaje.getContenido().put(COLECCION_FIELD, Arrays.asList(PRIMER_TEXTO, PRIMER_NUMERO, null));
 		mensaje.getContenido().put(OBJETO_FIELD, objeto);
 		mensaje.getContenido().put(NULL_FIELD, null);
-
 	}
 
 	@Test
-	public void deberiaIndicarTrueSiLaPropiedadContieneElValorBuscado() {
-		Assert.assertTrue(ContieneA.valor(PRIMER_TEXTO, COLECCION_FIELD).esCumplidaPor(mensaje));
-		Assert.assertTrue(ContieneA.valor(PRIMER_NUMERO, COLECCION_FIELD).esCumplidaPor(mensaje));
+	public void deberiaIndicarTrueSiLaPropiedadMatcheaLaExpresionRegular() {
+		Assert.assertTrue(RegexMatchea.laExpresion(".*", TEXTO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertTrue(RegexMatchea.laExpresion("^Hola", TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
-	public void deberiaIndicarTrueSiElValorEsperadoEsnullYLaColeccionLoTiene() {
-		Assert.assertTrue(ContieneA.valor(null, COLECCION_FIELD).esCumplidaPor(mensaje));
-	}
-
-	@Test
-	public void deberiaIndicarFalseSiLaPropiedadNoContieneElValorBuscado() {
-		Assert.assertFalse(ContieneA.valor("Lolololololoooo", COLECCION_FIELD).esCumplidaPor(mensaje));
+	public void deberiaIndicarFalseSiLaProiedadNoMactcheaLaExpresion() {
+		Assert.assertFalse(RegexMatchea.laExpresion("Chau$", TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadNoExiste() {
-		Assert.assertFalse(ContieneA.valor(PRIMER_NUMERO, INEXISTENTE_FIELD).esCumplidaPor(mensaje));
+		Assert.assertFalse(RegexMatchea.laExpresion(".*", INEXISTENTE_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
-	public void deberiaIndicarTrueSiLaPropiedadAnidadaContieneElValor() {
-		Assert.assertTrue(ContieneA.valor(PRIMER_NUMERO, OBJETO_FIELD + "." + COLECCION_FIELD).esCumplidaPor(
-				mensaje));
-		Assert.assertTrue(ContieneA.valor(PRIMER_TEXTO, OBJETO_FIELD + "." + COLECCION_FIELD).esCumplidaPor(
-				mensaje));
+	public void deberiaIndicarFalseSiLaPropiedadEsNull() {
+		Assert.assertFalse(RegexMatchea.laExpresion(".*", NULL_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
-	public void deberiaIndicarTrueSiLaPropiedadAnidadaContieneAlNullBuscado() {
-		Assert.assertTrue(ContieneA.valor(null, OBJETO_FIELD + "." + COLECCION_FIELD).esCumplidaPor(mensaje));
+	public void deberiaIndicarTrueSiLaExpresionEsIgualALaPropiedad() {
+		Assert.assertTrue(RegexMatchea.laExpresion(PRIMER_TEXTO, TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
-	public void deberiaIndicarFalseSiLaPropiedadIntermediaEsNull() {
-		Assert.assertFalse(ContieneA.valor(PRIMER_NUMERO, NULL_FIELD + "." + COLECCION_FIELD).esCumplidaPor(
+	public void deberiaIndicarFalseSiLaPropiedadNoEsDeTipoCharSequence() {
+		Assert.assertFalse(RegexMatchea.laExpresion(PRIMER_TEXTO, NUMERO_FIELD).esCumplidaPor(mensaje));
+	}
+
+	@Test
+	public void deberiaIndicarFalseSiLaPropiedadItermediaEsNull() {
+		Assert.assertFalse(RegexMatchea.laExpresion(PRIMER_TEXTO, NULL_FIELD + "." + TEXTO_FIELD)
+				.esCumplidaPor(mensaje));
+	}
+
+	@Test
+	public void deberiaIndicarTrueSiLaPropiedadAnidadaMatchea() {
+		Assert.assertTrue(RegexMatchea.laExpresion(SEGUNDO_TEXTO, OBJETO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(
 				mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadIntermediaNoEsUnMapa() {
-		Assert.assertFalse(ContieneA.valor(PRIMER_NUMERO, COLECCION_FIELD + "." + COLECCION_FIELD).esCumplidaPor(
+		Assert.assertFalse(RegexMatchea.laExpresion(SEGUNDO_TEXTO, COLECCION_FIELD + "." + TEXTO_FIELD).esCumplidaPor(
 				mensaje));
 	}
-
 }

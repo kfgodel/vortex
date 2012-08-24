@@ -17,7 +17,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.sets.impl.ContieneAValor;
+import net.gaia.vortex.sets.impl.ContieneA;
 import net.gaia.vortex.sets.impl.Not;
 import net.gaia.vortex.sets.impl.ValorEsperadoIgual;
 
@@ -55,7 +55,7 @@ public class TestFiltroPorNot {
 	@Test
 	public void deberiaDevolverTrueSiSeNievaLaCondicionContainsYElAtributoNoExiste() {
 		final MensajeVortex mensajeVacio = MensajeConContenido.crearVacio();
-		Assert.assertTrue(Not.de(ContieneAValor.create(null, "inexistente")).esCumplidaPor(mensajeVacio));
+		Assert.assertTrue(Not.de(ContieneA.valor(null, "inexistente")).esCumplidaPor(mensajeVacio));
 	}
 
 }

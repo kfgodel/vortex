@@ -66,10 +66,25 @@ public class ValorEsperadoIgual implements Condicion {
 		return sonIguales;
 	}
 
+	/**
+	 * Crea una nueva condición que evalua si el valor esperado se encuentra en la cadena de
+	 * propiedades de cada mensaje que recibe
+	 * 
+	 * @param valorEsperado
+	 *            El valor que debe tener el mensaje
+	 * @param propertyPath
+	 *            La cadena de propiedades a evaluar en el mensaje
+	 * @return La condición creada
+	 */
 	public static ValorEsperadoIgual a(final Object valorEsperado, final String propertyPath) {
+		final ValueAccessor valueAccessor = PropertyChainAccessor.createAccessor(propertyPath);
+		return create(valorEsperado, valueAccessor);
+	}
+
+	public static ValorEsperadoIgual create(final Object valorEsperado, final ValueAccessor valueAccessor) {
 		final ValorEsperadoIgual condicion = new ValorEsperadoIgual();
 		condicion.valorEsperado = valorEsperado;
-		condicion.valueAccessor = PropertyChainAccessor.createAccessor(propertyPath);
+		condicion.valueAccessor = valueAccessor;
 		return condicion;
 	}
 
