@@ -31,7 +31,7 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	public static final int LONGITUD_INICIAL_RANDOM_PART = 4;
 	public static final int LONGITUD_INICIAL_VORTEX_TIMESTAMP = 4;
 
-	private static final GeneradorDeIdsEstaticos instancia = new GeneradorDeIdsEstaticos();
+	private static final GeneradorDeIdsEstaticos instancia = GeneradorDeIdsEstaticos.create();
 
 	public static GeneradorDeIdsEstaticos getInstancia() {
 		return instancia;
@@ -42,14 +42,20 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	 */
 	public static final long MOMENTO_CERO_VORTEX = 1344121609204L;
 
-	private final String identificadorDelGenerador;
-	private final long momentoCeroGenerador;
+	private String identificadorDelGenerador;
+	private long momentoCeroGenerador;
 	private final AtomicLong idsGenerados = new AtomicLong(0);
 
+	public static GeneradorDeIdsEstaticos create() {
+		final GeneradorDeIdsEstaticos generador = new GeneradorDeIdsEstaticos();
+		generador.inicializar();
+		return generador;
+	}
+
 	/**
-	 * Constructor que define la primera
+	 * Inicializa el estado de esta instancia
 	 */
-	public GeneradorDeIdsEstaticos() {
+	private void inicializar() {
 		this.momentoCeroGenerador = getCurrentTimestamp();
 		final StringBuilder builder = new StringBuilder();
 		builder.append(getRandomString());
@@ -100,7 +106,7 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	 *            El valor a representar
 	 * @return La representación de ancho fijo, con 0 adicionales
 	 */
-	public String asString(final long valor, final int padding) {
+	public static String asString(final long valor, final int padding) {
 		final String hexString = String.format("%1$0" + padding + "X", valor);
 		return hexString;
 	}
@@ -137,7 +143,7 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	 * 
 	 * @return El timestamp como referencia de tiempo absoluta
 	 */
-	private long getCurrentTimestamp() {
+	private static long getCurrentTimestamp() {
 		return System.currentTimeMillis();
 	}
 }

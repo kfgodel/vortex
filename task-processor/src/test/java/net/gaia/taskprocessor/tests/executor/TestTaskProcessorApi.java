@@ -247,8 +247,8 @@ public class TestTaskProcessorApi {
 
 		// Deberíamos estar cerca del segundo del momento en que se encargó
 		final long elapsed = System.currentTimeMillis() - momentoDeEncargo;
-		Assert.assertTrue("La tarea debería ser ejecutada con un error de decima de segundo",
-				Math.abs(elapsed - 1000) < 100);
+		Assert.assertTrue("La tarea debería ser ejecutada con un error de dos decimas de segundo",
+				Math.abs(elapsed - 1000) < 200);
 	}
 
 	@Test

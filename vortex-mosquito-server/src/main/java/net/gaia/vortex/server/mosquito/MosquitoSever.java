@@ -38,6 +38,10 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * @author D. García
  */
 public class MosquitoSever {
+	private static final double KILOS_PER_MEGA = 1024d;
+	private static final double BYTES_PER_KILO = 1024d;
+	private static final int MILLIS_PER_SECOND = 1000;
+
 	private static final TimeMagnitude PERIODO_ENTRE_LOGS_DE_TRANSFER = TimeMagnitude.of(5, TimeUnit.SECONDS);
 
 	private static final Logger TRANSFER = LoggerFactory.getLogger("net.gaia.vortex.meta.Loggers.TRANSFER");
@@ -91,23 +95,24 @@ public class MosquitoSever {
 	private void escribirTransfersEnLog() {
 		final MetricasDeCargaImpl metricas = hubDeSockets.getServidor().getMetricas();
 		final MetricasPorTiempo ultimoSegundo = metricas.getMetricasEnBloqueDeUnSegundo();
-		final double _1VelKiloInput = (ultimoSegundo.getVelocidadDeInput() * 1000) / 1024d;
-		final double _1VelKiloOutput = (ultimoSegundo.getVelocidadDeOutput() * 1000) / 1024d;
+		final double ultimoSegVelKiloInput = (ultimoSegundo.getVelocidadDeInput() * MILLIS_PER_SECOND) / BYTES_PER_KILO;
+		final double ultimoSegVelKiloOutput = (ultimoSegundo.getVelocidadDeOutput() * MILLIS_PER_SECOND)
+				/ BYTES_PER_KILO;
 
 		final MetricasPorTiempo ultimos5 = metricas.getMetricasEnBloqueDe5Segundos();
-		final double _5VelKiloInput = (ultimos5.getVelocidadDeInput() * 1000) / 1024d;
-		final double _5VelKiloOutput = (ultimos5.getVelocidadDeOutput() * 1000) / 1024d;
+		final double ultimos5SegsVelKiloInput = (ultimos5.getVelocidadDeInput() * MILLIS_PER_SECOND) / BYTES_PER_KILO;
+		final double ultimos5SegsVelKiloOutput = (ultimos5.getVelocidadDeOutput() * MILLIS_PER_SECOND) / BYTES_PER_KILO;
 
 		final MetricasPorTiempo totales = metricas.getMetricasTotales();
-		final double totalesCantMegaInput = totales.getCantidadDeInputs() / (1024d * 1024d);
-		final double totalesCantMegaOutput = totales.getCantidadDeOutputs() / (1024d * 1024d);
-		final double totalesVelKiloInput = (totales.getVelocidadDeInput() * 1000) / 1024d;
-		final double totalesVelKiloOutput = (totales.getVelocidadDeOutput() * 1000) / 1024d;
+		final double totalesCantMegaInput = totales.getCantidadDeInputs() / (BYTES_PER_KILO * KILOS_PER_MEGA);
+		final double totalesCantMegaOutput = totales.getCantidadDeOutputs() / (BYTES_PER_KILO * KILOS_PER_MEGA);
+		final double totalesVelKiloInput = (totales.getVelocidadDeInput() * MILLIS_PER_SECOND) / BYTES_PER_KILO;
+		final double totalesVelKiloOutput = (totales.getVelocidadDeOutput() * MILLIS_PER_SECOND) / BYTES_PER_KILO;
 
 		TRANSFER.info(String.format(
 				"I/O 1s:[%1$skB/s %2$skB/s] 5s:[%3$skB/s %4$skB/s] Ts:[%5$skB/s %6$skB/s, %7$sMB %8$sMB]",
-				formatAsStringDecimal(_1VelKiloInput), formatAsStringDecimal(_1VelKiloOutput),
-				formatAsStringDecimal(_5VelKiloInput), formatAsStringDecimal(_5VelKiloOutput),
+				formatAsStringDecimal(ultimoSegVelKiloInput), formatAsStringDecimal(ultimoSegVelKiloOutput),
+				formatAsStringDecimal(ultimos5SegsVelKiloInput), formatAsStringDecimal(ultimos5SegsVelKiloOutput),
 				formatAsStringDecimal(totalesVelKiloInput), formatAsStringDecimal(totalesVelKiloOutput),
 				formatAsStringDecimal(totalesCantMegaInput), formatAsStringDecimal(totalesCantMegaOutput)));
 	}
@@ -170,7 +175,7 @@ public class MosquitoSever {
 		processor.removeTasksMatching(new TaskCriteria() {
 			@Override
 			public boolean matches(final WorkUnit workUnit) {
-				return tareaDeLogDeTransfer == workUnit;
+				return tareaDeLogDeTransfer.equals(workUnit);
 			}
 		});
 	}

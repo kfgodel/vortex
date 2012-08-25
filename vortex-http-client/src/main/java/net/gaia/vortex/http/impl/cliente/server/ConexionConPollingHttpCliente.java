@@ -123,7 +123,7 @@ public class ConexionConPollingHttpCliente {
 		processor.removeTasksMatching(new TaskCriteria() {
 			@Override
 			public boolean matches(final WorkUnit workUnit) {
-				return workUnit == tareaDeIntercambioDeMensajes;
+				return tareaDeIntercambioDeMensajes.equals(workUnit);
 			}
 		});
 		conexionInterna.desconectarDelServer();

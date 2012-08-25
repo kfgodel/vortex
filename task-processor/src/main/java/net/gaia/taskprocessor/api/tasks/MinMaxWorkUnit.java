@@ -37,10 +37,15 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * @author D. García
  */
 public class MinMaxWorkUnit implements WorkUnit {
+	/**
+	 * Necesaria para codigo android
+	 */
+	private static final int SECONDS_PER_MINUTE = 60;
+
 	private static final Logger LOG = LoggerFactory.getLogger(MinMaxWorkUnit.class);
 
-	private static final long MAXIMO_PERMITIDO_PARA_ADQUIRIR_LOCK = TimeMagnitude.of(10 * 60, TimeUnit.SECONDS)
-			.getMillis();
+	private static final long MAXIMO_PERMITIDO_PARA_ADQUIRIR_LOCK = TimeMagnitude.of(10 * SECONDS_PER_MINUTE,
+			TimeUnit.SECONDS).getMillis();
 
 	private long esperaMinima;
 	public static final String esperaMinima_FIELD = "esperaMinima";
@@ -134,7 +139,7 @@ public class MinMaxWorkUnit implements WorkUnit {
 		procesor.removeTasksMatching(new TaskCriteria() {
 			@Override
 			public boolean matches(final WorkUnit workUnit) {
-				return workUnit == MinMaxWorkUnit.this;
+				return equals(workUnit);
 			}
 		});
 	}

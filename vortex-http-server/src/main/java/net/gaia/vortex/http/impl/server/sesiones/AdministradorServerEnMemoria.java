@@ -150,7 +150,7 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 		this.processor.removeTasksMatching(new TaskCriteria() {
 			@Override
 			public boolean matches(final WorkUnit workUnit) {
-				return workUnit == tareaDeLimpiezaDeSesiones;
+				return tareaDeLimpiezaDeSesiones.equals(workUnit);
 			}
 		});
 	}

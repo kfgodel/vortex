@@ -41,6 +41,9 @@ import com.tenpines.commons.profile.sensors.WorkingDirectorySensor;
  * @author D. García
  */
 public class MosquitoMain {
+	private static final int MOSQUITO_HTTP_PORT = 62626;
+	private static final int MOSQUITO_SOCKET_PORT = 61616;
+
 	private static final Logger LOG = LoggerFactory.getLogger(MosquitoMain.class);
 
 	private static MosquitoSever currentServer;
@@ -113,7 +116,7 @@ public class MosquitoMain {
 		if (!detection.getResult().isSuccessful()) {
 			LOG.warn("No fue posible determinar ambiente conocido. Usando configuración default");
 			return ServerProfile.create("Default en 61616", "--", "--",
-					ServerConfiguration.create(new InetSocketAddress(61616), 62626));
+					ServerConfiguration.create(new InetSocketAddress(MOSQUITO_SOCKET_PORT), MOSQUITO_HTTP_PORT));
 		}
 		final AmbientProfile currentProfile = detection.getElectedProfile();
 		return currentProfile;
@@ -125,14 +128,15 @@ public class MosquitoMain {
 	private static Set<AmbientProfile> getKnownProfiles() {
 		final AmbientProfile darioPc = ServerProfile.create("Desktop Dario (desarrollo)", "Ikari01",
 				"G:\\Git\\vortex\\vortex-mosquito-server\\.",
-				ServerConfiguration.create(new InetSocketAddress(61616), 62626));
+				ServerConfiguration.create(new InetSocketAddress(MOSQUITO_SOCKET_PORT), MOSQUITO_HTTP_PORT));
 		final AmbientProfile darioNotebook = ServerProfile.create("Notebook Dario (desarrollo)", "ExpeUEW7", "",
-				ServerConfiguration.create(new InetSocketAddress(61616), 62626));
+				ServerConfiguration.create(new InetSocketAddress(MOSQUITO_SOCKET_PORT), MOSQUITO_HTTP_PORT));
 		final AmbientProfile mosquito = ServerProfile.create("Server Mosquito (produccion)", "mosquito",
 				"/archivos/vortex/vortex-mosquito-server/.",
-				ServerConfiguration.create(new InetSocketAddress(61616), 62626));
+				ServerConfiguration.create(new InetSocketAddress(MOSQUITO_SOCKET_PORT), MOSQUITO_HTTP_PORT));
 		final AmbientProfile ikari01 = ServerProfile.create("Server Ikari01 (produccion)", "Ikari01",
-				"P:\\Propios\\Vortex\\Ikari01\\.", ServerConfiguration.create(new InetSocketAddress(61616), 62626));
+				"P:\\Propios\\Vortex\\Ikari01\\.",
+				ServerConfiguration.create(new InetSocketAddress(MOSQUITO_SOCKET_PORT), MOSQUITO_HTTP_PORT));
 		return Sets.newLinkedHashSet(darioPc, darioNotebook, mosquito, ikari01);
 	}
 }
