@@ -27,6 +27,8 @@ import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.sets.impl.And;
+import net.gaia.vortex.sets.impl.ContieneA;
 import net.gaia.vortex.sets.impl.ValorEsperadoIgual;
 
 /**
@@ -71,14 +73,16 @@ public class CanalDeChatImpl implements CanalDeChat {
 
 		this.portalDeEntrada = PortalMapeador.createForOutputWith(processor, ReceptorNulo.getInstancia());
 		nodoDelCliente.conectarCon(this.portalDeEntrada);
-		this.portalDeEntrada.recibirCon(new HandlerTipado<MensajeDeChat>(ValorEsperadoIgual.a(
-				MensajeDeChat.MENSAJE_DE_CHAT, MensajeDeChat.tipoDeMensaje_FIELD)) {
+		this.portalDeEntrada.recibirCon(new HandlerTipado<MensajeDeChat>(And.create(
+				ValorEsperadoIgual.a(MensajeDeChat.MENSAJE_DE_CHAT, MensajeDeChat.tipoDeMensaje_FIELD),
+				ContieneA.valor(nombreDeCanal, MensajeDeChat.canales_FIELD))) {
 			public void onMensajeRecibido(MensajeDeChat mensaje) {
 				onMensajeDeChatRecibido(mensaje);
 			}
 		});
-		this.portalDeEntrada.recibirCon(new HandlerTipado<AvisoDePresencia>(ValorEsperadoIgual.a(
-				AvisoDePresencia.AVISO_DE_PRESENCIA, AvisoDePresencia.tipoDeMensaje_FIELD)) {
+		this.portalDeEntrada.recibirCon(new HandlerTipado<AvisoDePresencia>(And.create(
+				ValorEsperadoIgual.a(AvisoDePresencia.AVISO_DE_PRESENCIA, AvisoDePresencia.tipoDeMensaje_FIELD),
+				ContieneA.valor(nombreDeCanal, AvisoDePresencia.canales_FIELD))) {
 			public void onMensajeRecibido(AvisoDePresencia mensaje) {
 				onAvisoDePresenciaRecibido(mensaje);
 			}
@@ -89,13 +93,6 @@ public class CanalDeChatImpl implements CanalDeChat {
 	 * Invocado al recibir un nuevo aviso de presencia
 	 */
 	protected void onAvisoDePresenciaRecibido(AvisoDePresencia mensaje) {
-		// Veriicamos si corresponde a este canal
-		List<String> canalesPresentes = mensaje.getCanales();
-		if (!canalesPresentes.contains(nombreDeCanal)) {
-			// La presencia no es en este canal
-			return;
-		}
-		// Está presente en este canal
 		String nombreDeOtroPresente = mensaje.getUsuario();
 		if (cliente.getUsuarioActual() == nombreDeOtroPresente) {
 			// Es un aviso propio porque es la misma instancia!
@@ -109,11 +106,6 @@ public class CanalDeChatImpl implements CanalDeChat {
 	 * Invocado al recibir un mensaje de chat
 	 */
 	protected void onMensajeDeChatRecibido(MensajeDeChat mensaje) {
-		List<String> canalesEnMensaje = mensaje.getCanales();
-		if (!canalesEnMensaje.contains(nombreDeCanal)) {
-			// No es un mensaje para este canal
-			return;
-		}
 		mensajesDelCanal.add(mensaje);
 		listenerDeMensajes.onMensajeNuevo(mensaje);
 	}
