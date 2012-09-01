@@ -1,5 +1,5 @@
 /**
- * 27/06/2012 13:51:03 Copyright (C) 2011 Darío L. García
+ * 01/09/2012 12:10:19 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,22 +10,23 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.moleculas.ids;
+package net.gaia.vortex.core.impl.ids;
+
+import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 
 /**
- * Esta interfaz representa un identificador dentro de la red vortex para una molécula
+ * Esta interfaz representa el generador de IDs de mensajes que sirve para asignar nuevos IDs a los
+ * mensajes salientes de un portal
  * 
  * @author D. García
  */
-public interface IdentificadorVortex extends Comparable<IdentificadorVortex> {
+public interface GeneradorDeIdsDeMensajes {
 
 	/**
-	 * Devuelve el valor actual del identificador para ser usado en la identificación de la ruta de
-	 * los mensajes.<br>
-	 * El identificador podría cambiar en el tiempo pero el algoritmo que haga el cambio debe tomar
-	 * en cuenta los mensajes que ya tienen un valor asignado para un nodo
+	 * Genera un nuevo ID unico para un mensaje
 	 * 
-	 * @return El identificador actual
+	 * @return El Identificador del mensaje generado
 	 */
-	public String getValorActual();
+	IdDeMensaje generarId();
+
 }

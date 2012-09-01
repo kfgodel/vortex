@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.api.mensaje;
 
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 
 /**
  * Esta interfaz representa un mensaje vortex que es información que circula dentro de la red y
@@ -36,20 +36,18 @@ public interface MensajeVortex {
 	public ContenidoVortex getContenido();
 
 	/**
-	 * Indica si este mensaje ya tiene en su estado el registro del identificador pasado
+	 * Devuelve el identificador de este mensaje que permite detectar duplicados
 	 * 
-	 * @param identificador
-	 *            El identificador a evaluar en este mensaje
-	 * @return true si este mensaje tiene el identificador pasado en la lista de moleculas visitadas
+	 * @return El identificador para este mensaje
 	 */
-	public boolean pasoPreviamentePor(IdentificadorVortex identificador);
+	public IdDeMensaje getIdDeMensaje();
 
 	/**
-	 * Registra en este mensaje el pasaje por un nodo con el ID indicado
+	 * Asigna el ID pasado como nuevo identificador de este mensaje
 	 * 
-	 * @param identificador
-	 *            El identificador del nodo
+	 * @param idNuevo
+	 *            El identificador que será utilizado para este mensaje
 	 */
-	public void registrarPasajePor(IdentificadorVortex identificador);
+	public void asignarId(IdDeMensaje idNuevo);
 
 }

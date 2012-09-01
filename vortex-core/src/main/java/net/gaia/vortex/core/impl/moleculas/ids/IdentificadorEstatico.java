@@ -20,7 +20,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class IdentificadorEstatico implements IdentificadorVortex, Comparable<IdentificadorVortex> {
+public class IdentificadorEstatico implements IdentificadorVortex {
 
 	private String valor;
 	public static final String valor_FIELD = "valor";

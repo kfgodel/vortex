@@ -4,9 +4,7 @@
 package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
-import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
+import net.gaia.vortex.core.impl.atomos.memoria.MultiplexorSinDuplicados;
 
 /**
  * Esta clase prueba las velocidades de procesamiento de cada uno de los componentes bajo estrés de
@@ -22,8 +20,7 @@ public class TestDePerformanceMultiplexorIdentificador extends TestDePerformance
 	 */
 	@Override
 	protected Nodo crearNodoATestear() {
-		final IdentificadorVortex identificador = GeneradorDeIdsEstaticos.getInstancia().generarId();
-		return MultiplexorIdentificador.create(getProcessor(), identificador);
+		return MultiplexorSinDuplicados.create(getProcessor());
 	}
 
 }

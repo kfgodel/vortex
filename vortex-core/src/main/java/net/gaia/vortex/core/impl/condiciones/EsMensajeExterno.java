@@ -1,5 +1,5 @@
 /**
- * 27/06/2012 16:51:07 Copyright (C) 2011 Darío L. García
+ * 01/09/2012 11:55:32 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -13,34 +13,35 @@
 package net.gaia.vortex.core.impl.condiciones;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
+import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la condición utilizada para determinar si es la primera vez que el mensaje
- * pasa por el nodo, o ya pasó otras veces.<br>
- * Se utiliza un atributo extra del mensaje para el chequeo
+ * Esta clase representa la condicion que indica si un mensaje se considera externo respecto del
+ * identificador de un nodo
  * 
  * @author D. García
  */
-public class NoPasoPreviamente implements Condicion {
+public class EsMensajeExterno implements Condicion {
 
-	private ComponenteConMemoria componente;
-	public static final String componente_FIELD = "componente";
+	private IdentificadorVortex idDelNodo;
+	public static final String idDelNodo_FIELD = "idDelNodo";
 
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public boolean esCumplidaPor(final MensajeVortex mensaje) {
-		final boolean elComponenteNoTieneRegistradoElId = !componente.yaRecibio(mensaje);
-		return elComponenteNoTieneRegistradoElId;
+		final IdDeMensaje idDelMensaje = mensaje.getIdDeMensaje();
+		final boolean esMensajeDelNodo = idDelMensaje.esOriginadoEn(idDelNodo);
+		return !esMensajeDelNodo;
 	}
 
-	public static NoPasoPreviamente por(final ComponenteConMemoria componente) {
-		final NoPasoPreviamente condicion = new NoPasoPreviamente();
-		condicion.componente = componente;
+	public static EsMensajeExterno create(final IdentificadorVortex idDelNodo) {
+		final EsMensajeExterno condicion = new EsMensajeExterno();
+		condicion.idDelNodo = idDelNodo;
 		return condicion;
 	}
 
@@ -49,7 +50,7 @@ public class NoPasoPreviamente implements Condicion {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(componente_FIELD, componente).toString();
+		return ToString.de(this).con(idDelNodo_FIELD, idDelNodo).toString();
 	}
 
 }

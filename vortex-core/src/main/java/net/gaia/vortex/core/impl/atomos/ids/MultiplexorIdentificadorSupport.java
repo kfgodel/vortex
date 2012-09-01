@@ -15,11 +15,11 @@ package net.gaia.vortex.core.impl.atomos.ids;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
+import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.api.moleculas.ids.ReceptorIdentificable;
 import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -30,13 +30,10 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public abstract class MultiplexorIdentificadorSupport extends ComponenteConProcesadorSupport implements Multiplexor,
-		ReceptorIdentificable {
-
-	private IdentificadorVortex identificador;
-	public static final String identificador_FIELD = "identificador";
+		ComponenteConMemoria {
 
 	private MultiplexorParalelo multiplexorDeSalida;
-	private Receptor procesoDeEntrada;
+	private NexoFiltroDuplicados procesoDeEntrada;
 
 	protected MultiplexorParalelo getMultiplexorDeSalida() {
 		return multiplexorDeSalida;
@@ -72,19 +69,11 @@ public abstract class MultiplexorIdentificadorSupport extends ComponenteConProce
 	/**
 	 * Inicializa el estado de esta instancia
 	 */
-	protected void initializeWith(final TaskProcessor processor, final IdentificadorVortex identificador) {
-		this.initializeWith(processor);
-		this.identificador = identificador;
-		multiplexorDeSalida = MultiplexorParalelo.create(processor);
-		procesoDeEntrada = NexoIdentificador.create(processor, identificador, multiplexorDeSalida);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable#getIdentificador()
-	 */
 	@Override
-	public IdentificadorVortex getIdentificador() {
-		return identificador;
+	protected void initializeWith(final TaskProcessor processor) {
+		super.initializeWith(processor);
+		multiplexorDeSalida = MultiplexorParalelo.create(processor);
+		procesoDeEntrada = NexoFiltroDuplicados.create(processor, multiplexorDeSalida);
 	}
 
 	/**
@@ -92,8 +81,15 @@ public abstract class MultiplexorIdentificadorSupport extends ComponenteConProce
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
-				.con(identificador_FIELD, identificador).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).toString();
 	}
 
+	/**
+	 * @see net.gaia.vortex.core.api.memoria.ComponenteConMemoria#yaRecibio(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 */
+	@Override
+	public boolean yaRecibio(final MensajeVortex mensaje) {
+		final boolean yaRecibido = procesoDeEntrada.yaRecibio(mensaje);
+		return yaRecibido;
+	}
 }

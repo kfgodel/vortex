@@ -10,29 +10,27 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos.ids;
+package net.gaia.vortex.core.impl.atomos.memoria;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.annon.Atomo;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
+import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificadorSupport;
 
 /**
  * Esta clase representa un átomo que identifica los mensajes que recibe, descartando los
  * duplicados.<br>
- * Los mensajes que tengan el ID indicado serán descartados, los que no lo tengan se le agrega y se
- * forwardea a todos los receptores conectados.<br>
+ * Los mensajes que tengan el ID indicado serán descartados, los que no se forwardean a todos los
+ * receptores conectados.<br>
  * <br>
- * A diferencia de un {@link NodoMultiplexor} este átomo no tiene ID propio de molécula
  * 
  * @author D. García
  */
 @Atomo
-public class MultiplexorIdentificador extends MultiplexorIdentificadorSupport {
+public class MultiplexorSinDuplicados extends MultiplexorIdentificadorSupport {
 
-	public static MultiplexorIdentificador create(final TaskProcessor processor, final IdentificadorVortex identificador) {
-		final MultiplexorIdentificador multiplexor = new MultiplexorIdentificador();
-		multiplexor.initializeWith(processor, identificador);
+	public static MultiplexorSinDuplicados create(final TaskProcessor processor) {
+		final MultiplexorSinDuplicados multiplexor = new MultiplexorSinDuplicados();
+		multiplexor.initializeWith(processor);
 		return multiplexor;
 	}
 

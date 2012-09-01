@@ -1,5 +1,5 @@
 /**
- * 27/06/2012 16:51:07 Copyright (C) 2011 Darío L. García
+ * 31/08/2012 23:07:30 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -13,35 +13,29 @@
 package net.gaia.vortex.core.impl.condiciones;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la condición utilizada para determinar si es la primera vez que el mensaje
- * pasa por el nodo, o ya pasó otras veces.<br>
- * Se utiliza un atributo extra del mensaje para el chequeo
+ * Esta clase representa la condición que evalúa si un mensaje es previamente conocido. Para lo cual
+ * registra los IDS de los nuevos mensajes no conocidos hasta cierto límite.<br>
+ * Si se supera el límite se van descartando los IDs viejos;
  * 
  * @author D. García
  */
-public class NoPasoPreviamente implements Condicion {
+public class EsMensajeNuevo implements Condicion {
 
-	private ComponenteConMemoria componente;
-	public static final String componente_FIELD = "componente";
+	private MemoriaDeMensajes mensajesConocidos;
+	public static final String mensajesConocidos_FIELD = "mensajesConocidos";
 
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public boolean esCumplidaPor(final MensajeVortex mensaje) {
-		final boolean elComponenteNoTieneRegistradoElId = !componente.yaRecibio(mensaje);
-		return elComponenteNoTieneRegistradoElId;
-	}
-
-	public static NoPasoPreviamente por(final ComponenteConMemoria componente) {
-		final NoPasoPreviamente condicion = new NoPasoPreviamente();
-		condicion.componente = componente;
-		return condicion;
+		final boolean agregadoComoNuevo = mensajesConocidos.registrarNuevo(mensaje);
+		return agregadoComoNuevo;
 	}
 
 	/**
@@ -49,7 +43,12 @@ public class NoPasoPreviamente implements Condicion {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(componente_FIELD, componente).toString();
+		return ToString.de(this).con(mensajesConocidos_FIELD, mensajesConocidos).toString();
 	}
 
+	public static EsMensajeNuevo create(final MemoriaDeMensajes memoria) {
+		final EsMensajeNuevo condicion = new EsMensajeNuevo();
+		condicion.mensajesConocidos = memoria;
+		return condicion;
+	}
 }

@@ -1,5 +1,5 @@
 /**
- * 27/06/2012 17:06:54 Copyright (C) 2011 Darío L. García
+ * 01/09/2012 12:07:29 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -13,34 +13,35 @@
 package net.gaia.vortex.core.impl.transformaciones;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
+import net.gaia.vortex.core.impl.ids.GeneradorDeIdsDeMensajes;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la transformación realizada en un nodo para registrar en el mensaje el
- * pasaje.<br>
- * Esta marca evita recibir mensajes ya vistos
+ * Esta clase representa la transformación que a un mensaje le asigna el identificador de mensaje.
+ * El identificador se basa en un nodo de referencia
  * 
  * @author D. García
  */
-public class RegistrarPaso implements Transformacion {
+public class GenerarIdDeMensaje implements Transformacion {
 
-	private IdentificadorVortex identificador;
-	public static final String identificador_FIELD = "identificador";
+	private GeneradorDeIdsDeMensajes generadorDeIds;
+	public static final String generadorDeIds_FIELD = "generadorDeIds";
 
 	/**
 	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public MensajeVortex transformar(final MensajeVortex mensaje) {
-		mensaje.registrarPasajePor(identificador);
+		final IdDeMensaje idNuevo = generadorDeIds.generarId();
+		mensaje.asignarId(idNuevo);
 		return mensaje;
 	}
 
-	public static RegistrarPaso por(final IdentificadorVortex identificador) {
-		final RegistrarPaso transformacion = new RegistrarPaso();
-		transformacion.identificador = identificador;
+	public static GenerarIdDeMensaje create(final GeneradorDeIdsDeMensajes generador) {
+		final GenerarIdDeMensaje transformacion = new GenerarIdDeMensaje();
+		transformacion.generadorDeIds = generador;
 		return transformacion;
 	}
 
@@ -49,7 +50,7 @@ public class RegistrarPaso implements Transformacion {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(identificador_FIELD, identificador).toString();
+		return ToString.de(this).con(generadorDeIds_FIELD, generadorDeIds).toString();
 	}
 
 }

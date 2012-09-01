@@ -15,17 +15,15 @@ package net.gaia.vortex.core.impl.moleculas;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.annon.Molecula;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
 import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificadorSupport;
-import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
+import net.gaia.vortex.core.impl.atomos.memoria.MultiplexorSinDuplicados;
 
 /**
  * Esta clase representa un nodo que puede identificar los mensajes que recibe para descartar los
  * propios. Si recibe un mensaje que no reconoce como propio, le agrega el ID para registrarlo y se
  * lo reenvía a todos los receptores conectados.<br>
  * <br>
- * A diferencia del {@link MultiplexorIdentificador} esta clase sí tiene un ID propio de molécula
+ * A diferencia del {@link MultiplexorSinDuplicados} representa una molécula y es un nodo
  * 
  * @author D. García
  */
@@ -34,19 +32,8 @@ public class NodoMultiplexor extends MultiplexorIdentificadorSupport implements 
 
 	public static NodoMultiplexor create(final TaskProcessor processor) {
 		final NodoMultiplexor nodo = new NodoMultiplexor();
-		nodo.inicializarCon(processor);
+		nodo.initializeWith(processor);
 		return nodo;
-	}
-
-	/**
-	 * Inicializa el estado de esta instancia
-	 * 
-	 * @param processor
-	 *            El procesador para las tareas internas
-	 */
-	protected void inicializarCon(final TaskProcessor processor) {
-		final IdentificadorVortex idPropio = GeneradorDeIdsEstaticos.getInstancia().generarId();
-		initializeWith(processor, idPropio);
 	}
 
 }

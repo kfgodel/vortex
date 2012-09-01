@@ -8,16 +8,21 @@ import java.util.concurrent.TimeUnit;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
+import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcador;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.core.impl.ids.GeneradorDeIdsDelNodo;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
+import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -116,6 +121,34 @@ public class TestAtomos {
 				receptorPorFalse);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorFalse);
 		verificarMensajeNoRecibido(0, receptorPorTrue);
+	}
+
+	@Test
+	public void elFiltroDeMensajesConocidosDeberiaDescartarElMensajeLaSegundaVezSITieneId() {
+		final IdentificadorVortex idDeNodo = GeneradorDeIdsEstaticos.getInstancia().generarId();
+		final GeneradorDeIdsDelNodo generadorDeIdsMensajes = GeneradorDeIdsDelNodo.create(idDeNodo);
+		final IdDeMensaje idDelMensaje = generadorDeIdsMensajes.generarId();
+		final MensajeVortex mensaje = MensajeConContenido.crearVacio();
+		mensaje.asignarId(idDelMensaje);
+
+		final ReceptorEncolador receptor = ReceptorEncolador.create();
+		final NexoFiltroDuplicados filtro = NexoFiltroDuplicados.create(processor, receptor);
+		// La primera vez debería llegar
+		checkMensajeEnviadoYRecibido(mensaje, mensaje, filtro, receptor);
+
+		// La segundas vez NO debería llegar
+		checkMensajeEnviadoYNoRecibido(mensaje, mensaje, filtro, receptor);
+	}
+
+	@Test
+	public void elFiltroDeMensajesConocidosDeberiaDejarPasarElMensajeSiNoTieneId() {
+		final ReceptorEncolador receptor = ReceptorEncolador.create();
+		final NexoFiltroDuplicados filtro = NexoFiltroDuplicados.create(processor, receptor);
+		// La primera vez debería llegar
+		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, filtro, receptor);
+
+		// La segundas vez debería llegar por no ser identificable
+		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, filtro, receptor);
 	}
 
 	/**

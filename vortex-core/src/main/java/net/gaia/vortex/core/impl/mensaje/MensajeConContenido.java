@@ -12,15 +12,15 @@
  */
 package net.gaia.vortex.core.impl.mensaje;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.impl.ids.IdBasadoEnNodoYSecuencia;
+import net.gaia.vortex.core.impl.moleculas.ids.IdentificadorEstatico;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -32,34 +32,15 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class MensajeConContenido implements MensajeVortex {
 
-	/**
-	 * Key utilizada para guardar el registro de moléculas visitadas
-	 */
-	public static final String TRAZA_IDENTIFICADORES_VORTEX_KEY = "traza_identificadores";
+	public static final String ID_DE_MENSAJE_KEY = "id_mensaje_vortex";
+	public static final String SECUENCIA_DEL_ID_KEY = "numero_secuencia";
+	public static final String EMISOR_DEL_ID_KEY = "id_del_emisor";
+
+	private IdDeMensaje idDeMensaje;
+	public static final String idDeMensaje_FIELD = "idDeMensaje";
 
 	private ContenidoVortex contenido;
 	public static final String contenido_FIELD = "contenido";
-
-	private Set<String> idsVisitados;
-	public static final String idsVisitados_FIELD = "idsVisitados";
-
-	public Set<String> getIdsVisitados() {
-		return idsVisitados;
-	}
-
-	/**
-	 * Creamos el set de los nodos visitados a partir de los datos pasados como ids visitados.
-	 * Reemplazamos la entrada previa en el mapa con el set creado por esta instancia
-	 * 
-	 * @param moleculasVisitadasSegunMapa
-	 *            El conjunto de IDs visitados según estado previo
-	 * @return El conjunto de nodos visitados inicialmente
-	 */
-	private void inicializarIdsVisitados(final Collection<String> moleculasVisitadasSegunMapa) {
-		this.idsVisitados = new CopyOnWriteArraySet<String>();
-		idsVisitados.addAll(moleculasVisitadasSegunMapa);
-		getContenido().put(TRAZA_IDENTIFICADORES_VORTEX_KEY, idsVisitados);
-	}
 
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getContenido()
@@ -77,20 +58,7 @@ public class MensajeConContenido implements MensajeVortex {
 	@SuppressWarnings("unchecked")
 	public static MensajeConContenido crearVacio() {
 		final ContenidoVortex contenidoVacio = ContenidoMapa.create();
-		return create(contenidoVacio, Collections.EMPTY_SET);
-	}
-
-	/**
-	 * Crea un nuevo mensaje vortex con el estado pasado, pero sin registro de nodos visitados
-	 * previamente
-	 * 
-	 * @param contenido
-	 *            El contenido del mensaje
-	 * @return El mensaje creado
-	 */
-	@SuppressWarnings("unchecked")
-	public static MensajeConContenido crearSinIds(final ContenidoVortex contenido) {
-		return create(contenido, Collections.EMPTY_SET);
+		return create(contenidoVacio);
 	}
 
 	/**
@@ -102,10 +70,9 @@ public class MensajeConContenido implements MensajeVortex {
 	 *            Los ids tomados como visitados
 	 * @return El mensaje creado
 	 */
-	public static MensajeConContenido create(final ContenidoVortex contenido, final Collection<String> idsVisitados) {
+	public static MensajeConContenido create(final ContenidoVortex contenido) {
 		final MensajeConContenido mensaje = new MensajeConContenido();
 		mensaje.contenido = contenido;
-		mensaje.inicializarIdsVisitados(idsVisitados);
 		return mensaje;
 	}
 
@@ -119,8 +86,9 @@ public class MensajeConContenido implements MensajeVortex {
 	 */
 	public static MensajeConContenido regenerarDesde(final Map<String, Object> valoresExternos) {
 		final ContenidoMapa contenido = ContenidoMapa.create(valoresExternos);
-		final Collection<String> idsVisitados = MensajeConContenido.obtenerIdsVisitadosDesde(valoresExternos);
-		final MensajeConContenido mensajeReconstruido = MensajeConContenido.create(contenido, idsVisitados);
+		final MensajeConContenido mensajeReconstruido = MensajeConContenido.create(contenido);
+		final IdDeMensaje idDelMensaje = MensajeConContenido.obtenerIdDesde(valoresExternos);
+		mensajeReconstruido.asignarId(idDelMensaje);
 		return mensajeReconstruido;
 	}
 
@@ -129,26 +97,7 @@ public class MensajeConContenido implements MensajeVortex {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(contenido_FIELD, contenido).add(idsVisitados_FIELD, idsVisitados).toString();
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#pasoPreviamentePor(net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex)
-	 */
-	@Override
-	public boolean pasoPreviamentePor(final IdentificadorVortex identificador) {
-		final String valorDelIdentificador = identificador.getValorActual();
-		final boolean yaTenemosRegistroDelIdentificador = getIdsVisitados().contains(valorDelIdentificador);
-		return yaTenemosRegistroDelIdentificador;
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#registrarPasajePor(net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex)
-	 */
-	@Override
-	public void registrarPasajePor(final IdentificadorVortex identificador) {
-		final String valorDelIdentificador = identificador.getValorActual();
-		getIdsVisitados().add(valorDelIdentificador);
+		return ToString.de(this).add(idDeMensaje_FIELD, idDeMensaje).add(contenido_FIELD, contenido).toString();
 	}
 
 	/**
@@ -163,26 +112,79 @@ public class MensajeConContenido implements MensajeVortex {
 	 * @return La colección de IDs recuperada del mensaje
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static Collection<String> obtenerIdsVisitadosDesde(final Map<String, Object> contenidoRegenerado) {
-		final Object object = contenidoRegenerado.get(MensajeConContenido.TRAZA_IDENTIFICADORES_VORTEX_KEY);
+	private static IdDeMensaje obtenerIdDesde(final Map<String, Object> contenidoRegenerado) {
+		final Object object = contenidoRegenerado.get(MensajeConContenido.ID_DE_MENSAJE_KEY);
 		if (object == null) {
-			return Collections.emptySet();
+			throw new UnhandledConditionException("No econtramos el ID de mensaje en un mensaje recibido?: "
+					+ contenidoRegenerado);
 		}
-		Collection coleccionDeIds;
+		final Map<String, Object> idComoMapa;
 		try {
-			coleccionDeIds = (Collection) object;
+			idComoMapa = (Map<String, Object>) object;
 		} catch (final ClassCastException e) {
 			throw new UnhandledConditionException("El mensaje tiene como atributo["
-					+ MensajeConContenido.TRAZA_IDENTIFICADORES_VORTEX_KEY
-					+ "] un valor que no es una coleccion de ids: " + object, e);
+					+ MensajeConContenido.ID_DE_MENSAJE_KEY + "] un valor que no es un mapa de valores: " + object
+					+ " mensaje[" + contenidoRegenerado + "]", e);
 		}
-		for (final Object posibleId : coleccionDeIds) {
-			if (posibleId instanceof String) {
-				continue;
-			}
-			throw new UnhandledConditionException("El atributo[" + MensajeConContenido.TRAZA_IDENTIFICADORES_VORTEX_KEY
-					+ "] tiene en la coleccion un ID que no es string: " + posibleId);
+		final Object emisorEnMensaje = idComoMapa.get(EMISOR_DEL_ID_KEY);
+		if (emisorEnMensaje == null) {
+			throw new UnhandledConditionException("El mensaje no tiene emisor en su parte ID: " + contenidoRegenerado);
 		}
-		return coleccionDeIds;
+		String valorDelIdDelEmisor;
+		try {
+			valorDelIdDelEmisor = (String) emisorEnMensaje;
+		} catch (final ClassCastException e) {
+			throw new UnhandledConditionException("El mensaje tiene como parte del ID un emisor que no es String: "
+					+ emisorEnMensaje + " mensaje[" + contenidoRegenerado + "]", e);
+		}
+
+		final Object secuenciaDeMensaje = idComoMapa.get(SECUENCIA_DEL_ID_KEY);
+		if (secuenciaDeMensaje == null) {
+			throw new UnhandledConditionException("El mensaje no tiene secuencia en su parte del ID"
+					+ contenidoRegenerado);
+		}
+		Number numeroDeSecuencia;
+		try {
+			numeroDeSecuencia = (Number) secuenciaDeMensaje;
+		} catch (final ClassCastException e) {
+			throw new UnhandledConditionException("El mensaje tiene como parte del ID una secuencia que no es Number: "
+					+ emisorEnMensaje + " mensaje[" + contenidoRegenerado + "]", e);
+		}
+
+		final IdentificadorVortex idDelEmisor = IdentificadorEstatico.create(valorDelIdDelEmisor);
+		final IdDeMensaje idGenerado = IdBasadoEnNodoYSecuencia.create(idDelEmisor, numeroDeSecuencia.longValue());
+		return idGenerado;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getIdDeMensaje()
+	 */
+	@Override
+	public IdDeMensaje getIdDeMensaje() {
+		return this.idDeMensaje;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#asignarId(net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje)
+	 */
+	@Override
+	public void asignarId(final IdDeMensaje idNuevo) {
+		this.idDeMensaje = idNuevo;
+		final Map<String, Object> mapaDelId = crearMapaDelId();
+		getContenido().put(ID_DE_MENSAJE_KEY, mapaDelId);
+	}
+
+	/**
+	 * Devuelve una versión mapa del ID
+	 * 
+	 * @return El mapa de valores que conforma el ID
+	 */
+	private Map<String, Object> crearMapaDelId() {
+		final String idDelEmisor = this.idDeMensaje.getIdDelEmisor().getValorActual();
+		final Long numeroDeSecuencia = this.idDeMensaje.getNumeroDeSecuencia();
+		final Map<String, Object> mapa = new HashMap<String, Object>(4);
+		mapa.put(EMISOR_DEL_ID_KEY, idDelEmisor);
+		mapa.put(SECUENCIA_DEL_ID_KEY, numeroDeSecuencia);
+		return mapa;
 	}
 }
