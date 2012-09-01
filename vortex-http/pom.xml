@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia.vortex.http</groupId>
   <artifactId>vortex-http</artifactId>
-  <version>0.4.2</version>
+  <version>0.4.3-SNAPSHOT</version>
   <name>Vortex[Http-common]</name>
   <description>Proyecto comun para el cliente y servidor http</description>
   
@@ -80,7 +80,7 @@
   	<dependency>
 	  <groupId>net.gaia.vortex</groupId>
 	  <artifactId>vortex-core</artifactId>
-	  <version>0.4.2</version>
+	  <version>0.4.3-SNAPSHOT</version>
   	</dependency>
   	
     

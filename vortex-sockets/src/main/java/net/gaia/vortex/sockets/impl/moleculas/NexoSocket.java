@@ -18,13 +18,13 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.annon.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.api.moleculas.ids.ReceptorIdentificable;
 import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
-import net.gaia.vortex.core.impl.atomos.ids.NexoIdentificador;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
-import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
+import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
+import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
 import net.gaia.vortex.sockets.impl.atomos.Desocketizador;
 import net.gaia.vortex.sockets.impl.atomos.Socketizador;
@@ -43,7 +43,7 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * @author D. García
  */
 @Molecula
-public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, Disposable, ReceptorIdentificable {
+public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, Disposable, ComponenteConMemoria {
 
 	private ObjectSocket socket;
 	public static final String socket_FIELD = "socket";
@@ -54,18 +54,9 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	private Desocketizador procesoDesdeSocket;
 	public static final String procesoDesdeSocket_FIELD = "procesoDesdeSocket";
 
-	private IdentificadorVortex identificador;
-	public static final String identificador_FIELD = "identificador";
-
 	private ReceptorVariable<Receptor> destinoDesdeSocket;
 
-	/**
-	 * @see net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable#getIdentificador()
-	 */
-	@Override
-	public IdentificadorVortex getIdentificador() {
-		return identificador;
-	}
+	private MemoriaDeMensajes memoriaDeMensajes;
 
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core.api.mensaje.MensajeVortex)
@@ -76,18 +67,22 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	}
 
 	private void initializeWith(final TaskProcessor processor, final Receptor delegado, final ObjectSocket socket) {
-		identificador = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		// Creamos el receptor variable antes que nada
 		destinoDesdeSocket = ReceptorVariable.create(delegado);
 		super.initializeWith(processor, delegado);
 		// Guardamos la referencia para saber cual es nuestro socket
 		this.socket = socket;
 
-		// No envíamos por el socket los mensajes propios
-		procesoDesdeVortex = NexoIdentificador.create(processor, identificador, Socketizador.create(processor, socket));
-		// Indicamos que los mensajes recibidos desde el socket son nuestros
+		// Creamos una memoria compartida entre el filtro de entrada y de salida de duplicados
+		this.memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoFiltroDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
+
+		// No envíamos al socket los mensajes recibidos desde el socket (por la memoria
+		// compartida)
+		procesoDesdeVortex = NexoFiltroDuplicados.create(processor, memoriaDeMensajes,
+				Socketizador.create(processor, socket));
+		// No enviamos a la red los mensajes recibidos desde la red (por la memoria compartida)
 		procesoDesdeSocket = Desocketizador.create(processor,
-				NexoIdentificador.create(processor, identificador, destinoDesdeSocket));
+				NexoFiltroDuplicados.create(processor, memoriaDeMensajes, destinoDesdeSocket));
 	}
 
 	/**
@@ -155,6 +150,15 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	 */
 	public SocketAddress getRemoteAddress() {
 		return socket.getRemoteAddress();
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.memoria.ComponenteConMemoria#yaRecibio(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 */
+	@Override
+	public boolean yaRecibio(final MensajeVortex mensaje) {
+		final boolean yaRecibido = this.memoriaDeMensajes.tieneRegistroDe(mensaje);
+		return yaRecibido;
 	}
 
 }

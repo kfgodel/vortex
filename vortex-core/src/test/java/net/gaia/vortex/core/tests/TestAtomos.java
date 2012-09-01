@@ -9,7 +9,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcador;
@@ -125,7 +125,7 @@ public class TestAtomos {
 
 	@Test
 	public void elFiltroDeMensajesConocidosDeberiaDescartarElMensajeLaSegundaVezSITieneId() {
-		final IdentificadorVortex idDeNodo = GeneradorDeIdsEstaticos.getInstancia().generarId();
+		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		final GeneradorDeIdsDelNodo generadorDeIdsMensajes = GeneradorDeIdsDelNodo.create(idDeNodo);
 		final IdDeMensaje idDelMensaje = generadorDeIdsMensajes.generarId();
 		final MensajeVortex mensaje = MensajeConContenido.crearVacio();
@@ -141,14 +141,11 @@ public class TestAtomos {
 	}
 
 	@Test
-	public void elFiltroDeMensajesConocidosDeberiaDejarPasarElMensajeSiNoTieneId() {
+	public void elFiltroDeMensajesConocidosDeberiaGenerarUnErrorSiElMensajeNoTieneId() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
 		final NexoFiltroDuplicados filtro = NexoFiltroDuplicados.create(processor, receptor);
 		// La primera vez debería llegar
-		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, filtro, receptor);
-
-		// La segundas vez debería llegar por no ser identificable
-		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, filtro, receptor);
+		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, filtro, receptor);
 	}
 
 	/**

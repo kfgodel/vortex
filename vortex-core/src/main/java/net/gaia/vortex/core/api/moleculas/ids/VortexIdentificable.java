@@ -26,5 +26,5 @@ public interface VortexIdentificable {
 	 * 
 	 * @return La instancia que identifica a la molécula
 	 */
-	public IdentificadorVortex getIdentificador();
+	public IdDeComponenteVortex getIdentificador();
 }

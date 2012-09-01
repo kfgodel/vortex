@@ -15,7 +15,7 @@ package net.gaia.vortex.core.impl.condiciones;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -26,7 +26,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class EsMensajeExterno implements Condicion {
 
-	private IdentificadorVortex idDelNodo;
+	private IdDeComponenteVortex idDelNodo;
 	public static final String idDelNodo_FIELD = "idDelNodo";
 
 	/**
@@ -39,7 +39,7 @@ public class EsMensajeExterno implements Condicion {
 		return !esMensajeDelNodo;
 	}
 
-	public static EsMensajeExterno create(final IdentificadorVortex idDelNodo) {
+	public static EsMensajeExterno create(final IdDeComponenteVortex idDelNodo) {
 		final EsMensajeExterno condicion = new EsMensajeExterno();
 		condicion.idDelNodo = idDelNodo;
 		return condicion;

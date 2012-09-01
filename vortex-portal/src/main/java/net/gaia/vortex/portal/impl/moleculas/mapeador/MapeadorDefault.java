@@ -52,7 +52,7 @@ public class MapeadorDefault implements MapeadorVortex {
 		} else {
 			contenidoDelMensaje = ContenidoVortexLazy.create(objetoOriginal, mapeadorDeObjetos);
 		}
-		final MensajeConContenido mensajeVortex = MensajeConContenido.crearSinIds(contenidoDelMensaje);
+		final MensajeConContenido mensajeVortex = MensajeConContenido.create(contenidoDelMensaje);
 		return mensajeVortex;
 	}
 

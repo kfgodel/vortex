@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.impl.moleculas.ids;
 
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -20,13 +20,13 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class IdentificadorEstatico implements IdentificadorVortex {
+public class IdEstaticoDeComponente implements IdDeComponenteVortex {
 
 	private String valor;
 	public static final String valor_FIELD = "valor";
 
 	/**
-	 * @see net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex#getValorActual()
+	 * @see net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex#getValorActual()
 	 */
 	@Override
 	public String getValorActual() {
@@ -41,8 +41,8 @@ public class IdentificadorEstatico implements IdentificadorVortex {
 		return ToString.de(this).con(valor_FIELD, valor).toString();
 	}
 
-	public static IdentificadorEstatico create(final String valor) {
-		final IdentificadorEstatico identificador = new IdentificadorEstatico();
+	public static IdEstaticoDeComponente create(final String valor) {
+		final IdEstaticoDeComponente identificador = new IdEstaticoDeComponente();
 		identificador.valor = valor;
 		return identificador;
 	}
@@ -52,10 +52,10 @@ public class IdentificadorEstatico implements IdentificadorVortex {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (!(obj instanceof IdentificadorVortex)) {
+		if (!(obj instanceof IdDeComponenteVortex)) {
 			return false;
 		}
-		final IdentificadorVortex that = (IdentificadorVortex) obj;
+		final IdDeComponenteVortex that = (IdDeComponenteVortex) obj;
 		final boolean mismoValor = this.getValorActual().equals(that.getValorActual());
 		return mismoValor;
 	}
@@ -72,7 +72,7 @@ public class IdentificadorEstatico implements IdentificadorVortex {
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	@Override
-	public int compareTo(final IdentificadorVortex o) {
+	public int compareTo(final IdDeComponenteVortex o) {
 		final int orden = this.getValorActual().compareTo(o.getValorActual());
 		return orden;
 	}

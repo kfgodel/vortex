@@ -18,7 +18,7 @@ import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.memoria.MultiplexorSinDuplicados;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
@@ -43,7 +43,7 @@ public class TestComponentesIdentificadores {
 	private NexoFiltroDuplicados nexo;
 	private MensajeVortex mensajeEnviado;
 	private ReceptorEncolador receptorFinal1;
-	private IdentificadorVortex identificador;
+	private IdDeComponenteVortex identificador;
 	private TaskProcessor processor;
 	private MultiplexorSinDuplicados multiplexor;
 	private ReceptorEncolador receptorFinal2;
@@ -60,7 +60,7 @@ public class TestComponentesIdentificadores {
 		multiplexor.conectarCon(receptorFinal2);
 
 		mensajeEnviado = MensajeConContenido.crearVacio();
-		final IdentificadorVortex idDeNodo = GeneradorDeIdsEstaticos.getInstancia().generarId();
+		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		final GeneradorDeIdsDelNodo generador = GeneradorDeIdsDelNodo.create(idDeNodo);
 		final IdDeMensaje idDelMensaje = generador.generarId();
 		mensajeEnviado.asignarId(idDelMensaje);

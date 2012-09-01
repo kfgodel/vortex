@@ -12,11 +12,15 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
+import net.gaia.vortex.core.impl.ids.GeneradorDeIdsDelNodo;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
+import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
 import net.gaia.vortex.core.prog.Loggers;
 
 import org.junit.After;
@@ -47,10 +51,17 @@ public class TestRedA01ConNodoMultiplexor {
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
+	private GeneradorDeIdsDelNodo generadorDeIdsDelNodo;
+
 	@Before
 	public void crearNodos() {
 		processor = VortexProcessorFactory.createProcessor();
 		mensaje1 = MensajeConContenido.crearVacio();
+		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsEstaticos.getInstancia().generarId();
+		generadorDeIdsDelNodo = GeneradorDeIdsDelNodo.create(idDeNodo);
+		final IdDeMensaje generarId = generadorDeIdsDelNodo.generarId();
+		mensaje1.asignarId(generarId);
+
 		nodoEmisor = NodoMultiplexor.create(processor);
 		nodoRuteador = NodoMultiplexor.create(processor);
 		nodoReceptor = NodoMultiplexor.create(processor);
@@ -320,6 +331,8 @@ public class TestRedA01ConNodoMultiplexor {
 		for (int i = 0; i < cantidadDeMensajes; i++) {
 			// Necesitamos crear un mensaje por cada envío porque son identificados
 			final MensajeConContenido mensaje = MensajeConContenido.crearVacio();
+			final IdDeMensaje idDeMensaje = generadorDeIdsDelNodo.generarId();
+			mensaje.asignarId(idDeMensaje);
 			nodoEmisor.recibir(mensaje);
 		}
 

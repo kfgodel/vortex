@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import junit.framework.Assert;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
 
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class TestIdsDeIds {
 
 	@Test
 	public void elIdDeVortexDeberíaTener24CaracteresEnElMomento0() {
-		final IdentificadorVortex nuevoId = GeneradorDeIdsEstaticos.getInstancia().generarId();
+		final IdDeComponenteVortex nuevoId = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		final String idComoString = nuevoId.getValorActual();
 		LOG.debug("ID generado: {}", idComoString);
 		Assert.assertTrue("El largo debería ser mayor al minimo", GeneradorDeIdsEstaticos.LONGITUD_INCIAL_SECUENCIA
@@ -44,7 +44,7 @@ public class TestIdsDeIds {
 
 	@Test
 	public void elIdDeberiaRepresentarUnNumeroHexaGrande() {
-		final IdentificadorVortex nuevoId = GeneradorDeIdsEstaticos.getInstancia().generarId();
+		final IdDeComponenteVortex nuevoId = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		final String idComoString = nuevoId.getValorActual();
 		final Matcher matcher = Pattern.compile(
 				"[A-F0-9]{" + GeneradorDeIdsEstaticos.LONGITUD_INICIAL_RANDOM_PART + "}-[A-F0-9]{"

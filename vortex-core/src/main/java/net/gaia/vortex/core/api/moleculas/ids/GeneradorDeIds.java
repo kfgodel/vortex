@@ -24,6 +24,6 @@ public interface GeneradorDeIds {
 	 * 
 	 * @return El identificador generado
 	 */
-	public IdentificadorVortex generarId();
+	public IdDeComponenteVortex generarId();
 
 }

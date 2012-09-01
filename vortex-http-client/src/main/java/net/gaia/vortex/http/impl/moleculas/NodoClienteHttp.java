@@ -45,7 +45,7 @@ public class NodoClienteHttp extends NodoMultiplexor {
 	public static NodoClienteHttp createAndConnectTo(final String serverUrl, final TaskProcessor processor,
 			final HttpResponseProvider provider) throws VortexHttpException {
 		final NodoClienteHttp nodoHttp = new NodoClienteHttp();
-		nodoHttp.inicializarCon(processor);
+		nodoHttp.initializeWith(processor);
 		nodoHttp.clienteInterno = ClienteDeNexoHttp.create(processor, serverUrl, RealizarConexiones.con(nodoHttp),
 				provider);
 		nodoHttp.clienteInterno.conectarAlServidorHttp();

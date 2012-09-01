@@ -8,7 +8,7 @@ import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
 import net.gaia.vortex.core.impl.ids.GeneradorDeIdsDelNodo;
@@ -156,7 +156,7 @@ public abstract class TestDePerformanceNodoSupport {
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
-		final IdentificadorVortex idDeNodo = GeneradorDeIdsEstaticos.getInstancia().generarId();
+		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsEstaticos.getInstancia().generarId();
 		final GeneradorDeIdsDelNodo generadorIds = GeneradorDeIdsDelNodo.create(idDeNodo);
 
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida

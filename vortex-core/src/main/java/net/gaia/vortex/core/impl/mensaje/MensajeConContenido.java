@@ -18,9 +18,9 @@ import java.util.Map;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
-import net.gaia.vortex.core.impl.ids.IdBasadoEnNodoYSecuencia;
-import net.gaia.vortex.core.impl.moleculas.ids.IdentificadorEstatico;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
+import net.gaia.vortex.core.impl.ids.IdDeMensajeConNodoYSecuencia;
+import net.gaia.vortex.core.impl.moleculas.ids.IdEstaticoDeComponente;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -151,8 +151,8 @@ public class MensajeConContenido implements MensajeVortex {
 					+ emisorEnMensaje + " mensaje[" + contenidoRegenerado + "]", e);
 		}
 
-		final IdentificadorVortex idDelEmisor = IdentificadorEstatico.create(valorDelIdDelEmisor);
-		final IdDeMensaje idGenerado = IdBasadoEnNodoYSecuencia.create(idDelEmisor, numeroDeSecuencia.longValue());
+		final IdDeComponenteVortex idDelEmisor = IdEstaticoDeComponente.create(valorDelIdDelEmisor);
+		final IdDeMensaje idGenerado = IdDeMensajeConNodoYSecuencia.create(idDelEmisor, numeroDeSecuencia.longValue());
 		return idGenerado;
 	}
 

@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.api.mensaje.ids;
 
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 
 /**
  * Esta interfaz representa el identificador de un mensaje vortex como un elemento compuesto por el
@@ -30,7 +30,7 @@ public interface IdDeMensaje extends Comparable<IdDeMensaje> {
 	 * 
 	 * @return El objeto que identifica al emisor en la red
 	 */
-	public IdentificadorVortex getIdDelEmisor();
+	public IdDeComponenteVortex getIdDelEmisor();
 
 	/**
 	 * Devuelve el identificador de la secuencia de este mensaje en el emisor
@@ -44,6 +44,6 @@ public interface IdDeMensaje extends Comparable<IdDeMensaje> {
 	 *            El identificador de nodo a comprobar
 	 * @return true si este id tiene como identificador uno igual al pasado
 	 */
-	boolean esOriginadoEn(IdentificadorVortex idDelNodo);
+	boolean esOriginadoEn(IdDeComponenteVortex idDelNodo);
 
 }

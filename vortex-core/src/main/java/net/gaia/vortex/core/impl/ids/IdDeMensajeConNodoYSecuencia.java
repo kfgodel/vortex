@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.impl.ids;
 
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -23,16 +23,16 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class IdBasadoEnNodoYSecuencia implements IdDeMensaje {
+public class IdDeMensajeConNodoYSecuencia implements IdDeMensaje {
 
-	private IdentificadorVortex idDelEmisor;
+	private IdDeComponenteVortex idDelEmisor;
 	public static final String idDelEmisor_FIELD = "idDelEmisor";
 
 	private Long numeroDeSecuencia;
 	public static final String numeroDeSecuencia_FIELD = "numeroDeSecuencia";
 
-	public static IdBasadoEnNodoYSecuencia create(final IdentificadorVortex emisor, final Long secuencia) {
-		final IdBasadoEnNodoYSecuencia identificador = new IdBasadoEnNodoYSecuencia();
+	public static IdDeMensajeConNodoYSecuencia create(final IdDeComponenteVortex emisor, final Long secuencia) {
+		final IdDeMensajeConNodoYSecuencia identificador = new IdDeMensajeConNodoYSecuencia();
 		identificador.idDelEmisor = emisor;
 		identificador.numeroDeSecuencia = secuencia;
 		return identificador;
@@ -43,11 +43,11 @@ public class IdBasadoEnNodoYSecuencia implements IdDeMensaje {
 	 */
 	@Override
 	public int compareTo(final IdDeMensaje o) {
-		if (!(o instanceof IdBasadoEnNodoYSecuencia)) {
+		if (!(o instanceof IdDeMensajeConNodoYSecuencia)) {
 			throw new UnhandledConditionException(
 					"No se como comparar un ID basado en nodo con uno que no es. Falta definir algo!");
 		}
-		final IdBasadoEnNodoYSecuencia that = (IdBasadoEnNodoYSecuencia) o;
+		final IdDeMensajeConNodoYSecuencia that = (IdDeMensajeConNodoYSecuencia) o;
 		// El orden viene dado por el ID de emisor primero y luego la secuencia
 		final int comparacionDeEmisor = this.idDelEmisor.compareTo(that.idDelEmisor);
 		if (comparacionDeEmisor != 0) {
@@ -63,10 +63,10 @@ public class IdBasadoEnNodoYSecuencia implements IdDeMensaje {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (!(obj instanceof IdBasadoEnNodoYSecuencia)) {
+		if (!(obj instanceof IdDeMensajeConNodoYSecuencia)) {
 			return false;
 		}
-		final IdBasadoEnNodoYSecuencia that = (IdBasadoEnNodoYSecuencia) obj;
+		final IdDeMensajeConNodoYSecuencia that = (IdDeMensajeConNodoYSecuencia) obj;
 		// Comparo primero la secuencia porque requiere menos procesamiento
 		if (!this.numeroDeSecuencia.equals(that.numeroDeSecuencia)) {
 			// Las secuencias ya no coinciden
@@ -89,10 +89,10 @@ public class IdBasadoEnNodoYSecuencia implements IdDeMensaje {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje#esOriginadoEn(net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex)
+	 * @see net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje#esOriginadoEn(net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex)
 	 */
 	@Override
-	public boolean esOriginadoEn(final IdentificadorVortex idDelNodo) {
+	public boolean esOriginadoEn(final IdDeComponenteVortex idDelNodo) {
 		final boolean mismoEmisor = this.idDelEmisor.equals(idDelNodo);
 		return mismoEmisor;
 	}
@@ -110,7 +110,7 @@ public class IdBasadoEnNodoYSecuencia implements IdDeMensaje {
 	 * @see net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje#getIdDelEmisor()
 	 */
 	@Override
-	public IdentificadorVortex getIdDelEmisor() {
+	public IdDeComponenteVortex getIdDelEmisor() {
 		return this.idDelEmisor;
 	}
 

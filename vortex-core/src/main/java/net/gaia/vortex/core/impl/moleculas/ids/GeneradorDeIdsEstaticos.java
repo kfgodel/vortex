@@ -16,7 +16,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.vortex.core.api.moleculas.ids.GeneradorDeIds;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 
 /**
  * Esta clase es la implementación default del generador de ids que asigna ids fijos a cada molecula
@@ -115,7 +115,7 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	 * @see net.gaia.vortex.core.api.moleculas.ids.GeneradorDeIds#generarId()
 	 */
 	@Override
-	public IdentificadorVortex generarId() {
+	public IdDeComponenteVortex generarId() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append(identificadorDelGenerador);
 		builder.append(PART_SEPARATOR);
@@ -123,7 +123,7 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 		builder.append(PART_SEPARATOR);
 		builder.append(getSecuenciaString());
 		final String nuevoValor = builder.toString();
-		final IdentificadorVortex identificadorCreado = IdentificadorEstatico.create(nuevoValor);
+		final IdDeComponenteVortex identificadorCreado = IdEstaticoDeComponente.create(nuevoValor);
 		return identificadorCreado;
 	}
 

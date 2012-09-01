@@ -15,7 +15,7 @@ package net.gaia.vortex.core.impl.ids;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdentificadorVortex;
+import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -28,7 +28,7 @@ public class GeneradorDeIdsDelNodo implements GeneradorDeIdsDeMensajes {
 
 	private static final int SECUENCIA_INICIAL = 0;
 
-	private IdentificadorVortex identificadorBase;
+	private IdDeComponenteVortex identificadorBase;
 	public static final String identificadorBase_FIELD = "identificadorBase";
 
 	private AtomicLong proximaSecuencia;
@@ -40,11 +40,11 @@ public class GeneradorDeIdsDelNodo implements GeneradorDeIdsDeMensajes {
 	@Override
 	public IdDeMensaje generarId() {
 		final Long nuevaSecuencia = proximaSecuencia.getAndIncrement();
-		final IdBasadoEnNodoYSecuencia nuevoId = IdBasadoEnNodoYSecuencia.create(identificadorBase, nuevaSecuencia);
+		final IdDeMensajeConNodoYSecuencia nuevoId = IdDeMensajeConNodoYSecuencia.create(identificadorBase, nuevaSecuencia);
 		return nuevoId;
 	}
 
-	public static GeneradorDeIdsDelNodo create(final IdentificadorVortex identificadorBase) {
+	public static GeneradorDeIdsDelNodo create(final IdDeComponenteVortex identificadorBase) {
 		final GeneradorDeIdsDelNodo generador = new GeneradorDeIdsDelNodo();
 		generador.identificadorBase = identificadorBase;
 		generador.proximaSecuencia = new AtomicLong(SECUENCIA_INICIAL);

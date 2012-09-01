@@ -17,7 +17,7 @@ package net.gaia.vortex.core.api.moleculas.ids;
  * 
  * @author D. García
  */
-public interface IdentificadorVortex extends Comparable<IdentificadorVortex> {
+public interface IdDeComponenteVortex extends Comparable<IdDeComponenteVortex> {
 
 	/**
 	 * Devuelve el valor actual del identificador para ser usado en la identificación de la ruta de

@@ -52,7 +52,7 @@ public class NodoSocket extends NodoMultiplexor implements Disposable {
 	 */
 	public static NodoSocket createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor) {
 		final NodoSocket hubSocket = new NodoSocket();
-		hubSocket.inicializarCon(processor);
+		hubSocket.initializeWith(processor);
 		hubSocket.servidor = ServidorDeNexoSocket
 				.create(processor, listeningAddress, RealizarConexiones.con(hubSocket));
 		hubSocket.servidor.aceptarConexionesRemotas();
@@ -84,7 +84,7 @@ public class NodoSocket extends NodoMultiplexor implements Disposable {
 	 */
 	public static NodoSocket createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor) {
 		final NodoSocket hubSocket = new NodoSocket();
-		hubSocket.inicializarCon(processor);
+		hubSocket.initializeWith(processor);
 		hubSocket.cliente = ClienteDeNexoSocket.create(processor, remoteAddress, RealizarConexiones.con(hubSocket));
 		hubSocket.cliente.conectarASocketRomoto();
 		return hubSocket;
