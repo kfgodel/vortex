@@ -17,7 +17,7 @@ import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.impl.ids.GeneradorDeIdsDeMensajes;
-import net.gaia.vortex.core.impl.ids.GeneradorDeIdsDelNodo;
+import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -42,7 +42,7 @@ public class GenerarIdDeMensaje implements Transformacion {
 	}
 
 	public static GenerarIdDeMensaje create(final IdDeComponenteVortex identificadorDeEmisor) {
-		final GeneradorDeIdsDeMensajes generador = GeneradorDeIdsDelNodo.create(identificadorDeEmisor);
+		final GeneradorDeIdsDeMensajes generador = IdsSecuencialesParaMensajes.create(identificadorDeEmisor);
 		return create(generador);
 	}
 

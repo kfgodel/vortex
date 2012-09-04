@@ -17,10 +17,10 @@ import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
-import net.gaia.vortex.core.impl.ids.GeneradorDeIdsDelNodo;
+import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
-import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
+import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
 import net.gaia.vortex.core.prog.Loggers;
 
 import org.junit.After;
@@ -51,14 +51,14 @@ public class TestRedA01ConNodoMultiplexor {
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
-	private GeneradorDeIdsDelNodo generadorDeIdsDelNodo;
+	private IdsSecuencialesParaMensajes generadorDeIdsDelNodo;
 
 	@Before
 	public void crearNodos() {
 		processor = VortexProcessorFactory.createProcessor();
 		mensaje1 = MensajeConContenido.crearVacio();
-		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsEstaticos.getInstancia().generarId();
-		generadorDeIdsDelNodo = GeneradorDeIdsDelNodo.create(idDeNodo);
+		final IdDeComponenteVortex idDeNodo = IdsEstatiscosParaComponentes.getInstancia().generarId();
+		generadorDeIdsDelNodo = IdsSecuencialesParaMensajes.create(idDeNodo);
 		final IdDeMensaje generarId = generadorDeIdsDelNodo.generarId();
 		mensaje1.asignarId(generarId);
 

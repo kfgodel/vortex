@@ -44,7 +44,7 @@ public class NodoServerHttp extends NodoMultiplexor {
 	public static NodoServerHttp createAndAcceptRequestsOnPort(final int listeningPort, final TaskProcessor processor)
 			throws VortexHttpException {
 		final NodoServerHttp nodoHttp = new NodoServerHttp();
-		nodoHttp.inicializarCon(processor);
+		nodoHttp.initializeWith(processor);
 		nodoHttp.servidorInterno = ServidorDeNexoHttp
 				.create(processor, listeningPort, RealizarConexiones.con(nodoHttp));
 		nodoHttp.servidorInterno.iniciarServidorHttp();

@@ -17,7 +17,7 @@ package net.gaia.vortex.core.api.moleculas.ids;
  * 
  * @author D. García
  */
-public interface GeneradorDeIds {
+public interface GeneradorDeIdsComponentes {
 
 	/**
 	 * Genera un nuevo identificador para la molécula

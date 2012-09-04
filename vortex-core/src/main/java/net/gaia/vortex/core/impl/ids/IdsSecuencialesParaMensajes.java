@@ -24,7 +24,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class GeneradorDeIdsDelNodo implements GeneradorDeIdsDeMensajes {
+public class IdsSecuencialesParaMensajes implements GeneradorDeIdsDeMensajes {
 
 	private static final int SECUENCIA_INICIAL = 0;
 
@@ -44,8 +44,8 @@ public class GeneradorDeIdsDelNodo implements GeneradorDeIdsDeMensajes {
 		return nuevoId;
 	}
 
-	public static GeneradorDeIdsDelNodo create(final IdDeComponenteVortex identificadorBase) {
-		final GeneradorDeIdsDelNodo generador = new GeneradorDeIdsDelNodo();
+	public static IdsSecuencialesParaMensajes create(final IdDeComponenteVortex identificadorBase) {
+		final IdsSecuencialesParaMensajes generador = new IdsSecuencialesParaMensajes();
 		generador.identificadorBase = identificadorBase;
 		generador.proximaSecuencia = new AtomicLong(SECUENCIA_INICIAL);
 		return generador;

@@ -15,7 +15,7 @@ package net.gaia.vortex.core.impl.moleculas.ids;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.vortex.core.api.moleculas.ids.GeneradorDeIds;
+import net.gaia.vortex.core.api.moleculas.ids.GeneradorDeIdsComponentes;
 import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 
 /**
@@ -23,7 +23,7 @@ import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
  * 
  * @author D. García
  */
-public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
+public class IdsEstatiscosParaComponentes implements GeneradorDeIdsComponentes {
 
 	public static final String PART_SEPARATOR = "-";
 	public static final int LONGITUD_INCIAL_SECUENCIA = 1;
@@ -31,9 +31,9 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	public static final int LONGITUD_INICIAL_RANDOM_PART = 4;
 	public static final int LONGITUD_INICIAL_VORTEX_TIMESTAMP = 4;
 
-	private static final GeneradorDeIdsEstaticos instancia = GeneradorDeIdsEstaticos.create();
+	private static final IdsEstatiscosParaComponentes instancia = IdsEstatiscosParaComponentes.create();
 
-	public static GeneradorDeIdsEstaticos getInstancia() {
+	public static IdsEstatiscosParaComponentes getInstancia() {
 		return instancia;
 	}
 
@@ -46,8 +46,8 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	private long momentoCeroGenerador;
 	private final AtomicLong idsGenerados = new AtomicLong(0);
 
-	public static GeneradorDeIdsEstaticos create() {
-		final GeneradorDeIdsEstaticos generador = new GeneradorDeIdsEstaticos();
+	public static IdsEstatiscosParaComponentes create() {
+		final IdsEstatiscosParaComponentes generador = new IdsEstatiscosParaComponentes();
 		generador.inicializar();
 		return generador;
 	}
@@ -112,7 +112,7 @@ public class GeneradorDeIdsEstaticos implements GeneradorDeIds {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.moleculas.ids.GeneradorDeIds#generarId()
+	 * @see net.gaia.vortex.core.api.moleculas.ids.GeneradorDeIdsComponentes#generarId()
 	 */
 	@Override
 	public IdDeComponenteVortex generarId() {

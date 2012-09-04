@@ -20,9 +20,9 @@ import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.ids.GeneradorDeIdsDelNodo;
+import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
+import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -125,8 +125,8 @@ public class TestAtomos {
 
 	@Test
 	public void elFiltroDeMensajesConocidosDeberiaDescartarElMensajeLaSegundaVezSITieneId() {
-		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsEstaticos.getInstancia().generarId();
-		final GeneradorDeIdsDelNodo generadorDeIdsMensajes = GeneradorDeIdsDelNodo.create(idDeNodo);
+		final IdDeComponenteVortex idDeNodo = IdsEstatiscosParaComponentes.getInstancia().generarId();
+		final IdsSecuencialesParaMensajes generadorDeIdsMensajes = IdsSecuencialesParaMensajes.create(idDeNodo);
 		final IdDeMensaje idDelMensaje = generadorDeIdsMensajes.generarId();
 		final MensajeVortex mensaje = MensajeConContenido.crearVacio();
 		mensaje.asignarId(idDelMensaje);

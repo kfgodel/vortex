@@ -29,7 +29,7 @@ import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
-import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsEstaticos;
+import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
 import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
 import net.gaia.vortex.core.impl.transformaciones.GenerarIdDeMensaje;
 import net.gaia.vortex.portal.api.moleculas.HandlerDePortal;
@@ -79,7 +79,7 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 	 */
 	@Override
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado) {
-		identificador = GeneradorDeIdsEstaticos.getInstancia().generarId();
+		identificador = IdsEstatiscosParaComponentes.getInstancia().generarId();
 
 		receptorDeSalida = ReceptorVariable.create(delegado);
 		super.initializeWith(processor, delegado);
