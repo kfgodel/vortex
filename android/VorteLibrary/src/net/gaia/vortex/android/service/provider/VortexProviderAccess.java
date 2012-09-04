@@ -14,7 +14,6 @@ package net.gaia.vortex.android.service.provider;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
 
 /**
  * Esta interfaz define los puntos de entrada y de uso principales de vortex desde una aplicación

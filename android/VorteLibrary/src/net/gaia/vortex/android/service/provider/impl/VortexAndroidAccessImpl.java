@@ -16,7 +16,6 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.android.service.VortexSharedProcessor;
 import net.gaia.vortex.android.service.provider.VortexProviderAccess;
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificador;
 import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import ar.dgarcia.objectsockets.api.Disposable;
 

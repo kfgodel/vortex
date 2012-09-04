@@ -89,14 +89,14 @@
       <dependency>
 		  <groupId>net.gaia.vortex</groupId>
 		  <artifactId>vortex-sockets</artifactId>
-		  <version>0.4.2</version>
+		  <version>0.4.3-SNAPSHOT</version>
       </dependency>
       
       <!-- Portales de vortex-->
       <dependency>
 		  <groupId>net.gaia.vortex</groupId>
 		  <artifactId>vortex-portal</artifactId>
-		  <version>0.4.2</version>
+		  <version>0.4.3-SNAPSHOT</version>
       </dependency>
       
       
