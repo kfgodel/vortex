@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia.vortex</groupId>
   <artifactId>vortex-mosquito-server</artifactId>
-  <version>0.4.2</version>
+  <version>0.4.3-SNAPSHOT</version>
   <name>Vortex[Mosquito]</name>
   <description>Aplicación servidor en mosquito que actúa como hub de sockets</description>
   
