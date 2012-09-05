@@ -14,7 +14,10 @@
         android:minSdkVersion="9"
         android:targetSdkVersion="15" />
     
+    <!-- Permiso para acceder a vortex -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Permiso para detectar cambios en la conectividad  -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -29,6 +32,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+    	<!-- El servicio que ofrece un nodo como punto de acceso a vortex -->
+    	<service android:name="net.gaia.vortex.android.service.provider.VortexProviderService" android:exported="false" />
+
+    	<!-- El servicio que mantiene la conexion al servidor -->
+    	<service android:name="net.gaia.vortex.android.service.connector.VortexSocketConectorService" android:exported="false" />
         
     </application>
 
