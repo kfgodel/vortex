@@ -53,10 +53,9 @@ public class VortexProviderService extends BackgroundService implements LocallyB
 	}
 
 	/**
-	 * @see ar.com.iron.android.extensions.services.BackgroundService#createBackgroundThread()
+	 * @see ar.com.iron.android.extensions.services.BackgroundService#createBackgroundProcess()
 	 */
-	@Override
-	protected BackgroundProcess createBackgroundThread() {
+	protected BackgroundProcess createBackgroundProcess() {
 		return new BackgroundProcess(this, "VortexProviderService");
 	}
 

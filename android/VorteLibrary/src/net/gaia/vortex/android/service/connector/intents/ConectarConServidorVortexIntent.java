@@ -25,7 +25,7 @@ import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
  * 
  * @author D. García
  */
-public class ConectarConServidorVortex extends Intent {
+public class ConectarConServidorVortexIntent extends Intent {
 
 	private static final String PUERTO_DEL_SERVIDOR_KEY = "PUERTO_DEL_SERVIDOR_KEY";
 	private static final String HOST_DEL_SERVIDOR_KEY = "HOST_DEL_SERVIDOR_KEY";
@@ -33,14 +33,14 @@ public class ConectarConServidorVortex extends Intent {
 	/**
 	 * Constructor por copia para recibir este intent
 	 */
-	public ConectarConServidorVortex(Intent copia) {
+	public ConectarConServidorVortexIntent(Intent copia) {
 		super(copia);
 	}
 
 	/**
 	 * Constructor para codigo cliente que inicia el servicio
 	 */
-	public ConectarConServidorVortex(Context contextoAndroid, String host, Integer puerto) {
+	public ConectarConServidorVortexIntent(Context contextoAndroid, String host, Integer puerto) {
 		super(contextoAndroid, VortexSocketConectorService.class);
 		putExtra(HOST_DEL_SERVIDOR_KEY, host);
 		putExtra(PUERTO_DEL_SERVIDOR_KEY, puerto);

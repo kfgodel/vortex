@@ -62,10 +62,10 @@ public class PersistenceService extends BackgroundService implements LocallyBind
 	}
 
 	/**
-	 * @see ar.com.iron.android.extensions.services.BackgroundService#createBackgroundThread()
+	 * @see ar.com.iron.android.extensions.services.BackgroundService#createBackgroundProcess()
 	 */
 	@Override
-	protected BackgroundProcess createBackgroundThread() {
+	protected BackgroundProcess createBackgroundProcess() {
 		return new BackgroundProcess(this, "PersistenceService");
 	}
 

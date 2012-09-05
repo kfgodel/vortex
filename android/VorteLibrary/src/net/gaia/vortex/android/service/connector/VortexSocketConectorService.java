@@ -16,16 +16,18 @@ import java.net.InetSocketAddress;
 
 import net.gaia.vortex.android.service.connector.impl.VortexConnectionImpl;
 import net.gaia.vortex.android.service.connector.intents.CambioDeConectividadVortex;
-import net.gaia.vortex.android.service.connector.intents.ConectarConServidorVortex;
+import net.gaia.vortex.android.service.connector.intents.ConectarConServidorVortexIntent;
 import net.gaia.vortex.android.service.provider.VortexProviderAccess;
 import net.gaia.vortex.android.service.provider.VortexProviderService;
 import net.gaia.vortex.core.api.Nodo;
+import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import ar.com.iron.android.extensions.connections.ConnectivityChangeListener;
 import ar.com.iron.android.extensions.connections.ConnectivityObserver;
 import ar.com.iron.android.extensions.messages.IntentReceptor;
 import ar.com.iron.android.extensions.services.BackgroundService;
+import ar.com.iron.android.extensions.services.BackgroundTask;
 import ar.com.iron.android.extensions.services.local.LocalServiceConnectionListener;
 import ar.com.iron.android.extensions.services.local.LocalServiceConnector;
 
@@ -80,10 +82,10 @@ public class VortexSocketConectorService extends BackgroundService {
 			public void onConnectivityChanged(boolean connected, NetworkInfo network, boolean networkChanged) {
 				if (!connected) {
 					// Perdimos conectividad
-					connection.desconectarDelServidor();
+					desconectarDelServidor();
 				} else {
 					// Es la primera vez o cambio la red, nos reconectamos
-					connection.reconectarAlServidor();
+					conectarAlServidor();
 				}
 				sendBroadcast(new CambioDeConectividadVortex(connected));
 			}
@@ -131,11 +133,57 @@ public class VortexSocketConectorService extends BackgroundService {
 	 * @see android.app.Service#onStart(android.content.Intent, int)
 	 */
 	@Override
-	public void onStart(Intent intent, int startId) {
-		ConectarConServidorVortex pedidoDeConexion = new ConectarConServidorVortex(intent);
-		InetSocketAddress serverAddress = pedidoDeConexion.getServerAddress();
-		connection.usarLaDireccion(serverAddress);
+	public void onStart(final Intent intent, int startId) {
+		ConectarConServidorVortexIntent pedidoDeConexion = new ConectarConServidorVortexIntent(intent);
+		cambiarDireccionDeServidor(pedidoDeConexion);
 		super.onStart(intent, startId);
+	}
+
+	/**
+	 * CAmbia la dirección del servidor realizando reconexiones necesarias en un thread propio
+	 * 
+	 * @param pedidoDeConexion
+	 *            El intent con la data de la nueva dir
+	 */
+	private void cambiarDireccionDeServidor(final ConectarConServidorVortexIntent pedidoDeConexion) {
+		// No podemos hacer IO en el thread principal
+		this.getBackgroundProcess().addTask(new BackgroundTask<Void>() {
+			@Override
+			public Void execute(Context backgroundContext) {
+				InetSocketAddress serverAddress = pedidoDeConexion.getServerAddress();
+				connection.usarLaDireccion(serverAddress);
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Desconecta el nodo socket del servidor en un thread propio
+	 */
+	private void desconectarDelServidor() {
+		// No podemos usar el thread principal para las operaciones de IO
+		this.getBackgroundProcess().addTask(new BackgroundTask<Void>() {
+			@Override
+			public Void execute(Context backgroundContext) {
+				connection.desconectarDelServidor();
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Re Conecta al servidor en un thread propio
+	 */
+	private void conectarAlServidor() {
+		// No podemos hacer oepracioens de IO en el thread principal
+		this.getBackgroundProcess().addTask(new BackgroundTask<Void>() {
+			@Override
+			public Void execute(Context backgroundContext) {
+				connection.reconectarAlServidor();
+				return null;
+			}
+		});
+
 	}
 
 }

@@ -18,7 +18,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.android.service.VortexSharedProcessor;
 import net.gaia.vortex.android.service.connector.VortexSocketConectorService;
 import net.gaia.vortex.android.service.connector.intents.CambioDeConectividadVortex;
-import net.gaia.vortex.android.service.connector.intents.ConectarConServidorVortex;
+import net.gaia.vortex.android.service.connector.intents.ConectarConServidorVortexIntent;
 import net.gaia.vortex.android.service.provider.VortexProviderAccess;
 import net.gaia.vortex.android.service.provider.VortexProviderService;
 import net.gaia.vortex.comm.api.CanalDeChat;
@@ -143,7 +143,7 @@ public class CanalesActivity extends CustomListActivity<CanalDeChat> {
 	private void iniciarServicioDeConexion(ConfiguracionVortexComm configuracionActual) {
 		String hostDelServidor = configuracionActual.getHostDelServidor();
 		Integer numeroDePuerto = configuracionActual.getNumeroDePuerto();
-		startService(new ConectarConServidorVortex(getContext(), hostDelServidor, numeroDePuerto));
+		startService(new ConectarConServidorVortexIntent(getContext(), hostDelServidor, numeroDePuerto));
 	}
 
 	/**

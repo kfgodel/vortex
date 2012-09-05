@@ -35,7 +35,7 @@ public abstract class BackgroundService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		backgroundProcess = createBackgroundThread();
+		backgroundProcess = createBackgroundProcess();
 		if (backgroundProcess == null) {
 			throw new RuntimeException("Este servicio requiere un thread para ejecutarse");
 		}
@@ -68,7 +68,7 @@ public abstract class BackgroundService extends Service {
 	 * 
 	 * @return El proceso que se ejecutará en hilo a parte
 	 */
-	protected BackgroundProcess createBackgroundThread() {
+	protected BackgroundProcess createBackgroundProcess() {
 		String serviceClassName = getClass().getSimpleName();
 		return new BackgroundProcess(this, serviceClassName);
 	}
