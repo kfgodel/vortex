@@ -14,7 +14,6 @@ package ar.dgarcia.econamics.android;
 
 import android.webkit.WebView;
 import ar.com.iron.android.extensions.activities.CustomActivity;
-import ar.com.iron.helpers.ToastHelper;
 import ar.com.iron.helpers.ViewHelper;
 import ar.dgarcia.econamics.android.intents.MostrarEscaneadoIntent;
 import ar.dgarcia.econamics.android.portales.PortalAndroid;
@@ -52,11 +51,11 @@ public class MostrarEscaneadoActivity extends CustomActivity {
 	}
 
 	/**
-	 * @param idDelArchivo
+	 * Muestra el contenido del archivo indicado por ID consultandolo via web
 	 */
 	private void mostrarArchivoConId(Long idDelArchivo) {
-		webView.loadUrl("http://www.fanseries.fr/wp-content/gallery/allison-mack/allison-mack-01.jpg");
-		ToastHelper.create(this).showShort("Mostrando archivo con ID: " + idDelArchivo);
+		String urlDelArchivo = EconamicsServer.PREFIJO_URL_ARCHIVOS + idDelArchivo;
+		webView.loadUrl(urlDelArchivo);
 	}
 
 	/**

@@ -144,9 +144,9 @@ public class InicioActivity extends CustomActivity {
 		mostrarBotonesParaConectado();
 
 		// Iniciamos la conexión al server
-		String hostDelServidor = "192.168.1.130";
+		String hostDelServidor = EconamicsServer.IP_DEL_SERVIDOR;
 		// El 60221 es debug
-		Integer numeroDePuerto = 60220;
+		Integer numeroDePuerto = EconamicsServer.PUERTO_SOCKET_VORTEX;
 		startService(new ConectarConServidorVortexIntent(getContext(), hostDelServidor, numeroDePuerto));
 	}
 
