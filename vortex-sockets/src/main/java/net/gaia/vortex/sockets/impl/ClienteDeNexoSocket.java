@@ -24,6 +24,7 @@ import net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler;
 import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
+import ar.dgarcia.objectsockets.api.SocketErrorHandler;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
 import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
@@ -48,6 +49,8 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 	 */
 	private VortexSocketEventHandler socketHandler;
 	public static final String socketHandler_FIELD = "socketHandler";
+
+	private SocketErrorHandler errorHandler;
 
 	/**
 	 * El administrador de los sockets
@@ -80,6 +83,7 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 		this.metricas = MetricasDeCargaImpl.create();
 		final VortexSocketConfiguration socketConfig = VortexSocketConfiguration.crear(remoteAddress, this.metricas);
 		socketConfig.setEventHandler(socketHandler);
+		socketConfig.setErrorHandler(errorHandler);
 		socketConfig.setReceptionHandler(ReceptionHandlerNulo.getInstancia());
 		internalConnector = ObjectSocketConnector.create(socketConfig);
 		final ObjectSocket currentSocket = internalConnector.getObjectSocket();
@@ -89,7 +93,13 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 
 	public static ClienteDeNexoSocket create(final TaskProcessor processor, final SocketAddress remoteAddress,
 			final EstrategiaDeConexionDeNexos estrategiaDeConexion) {
+		return create(processor, remoteAddress, estrategiaDeConexion, null);
+	}
+
+	public static ClienteDeNexoSocket create(final TaskProcessor processor, final SocketAddress remoteAddress,
+			final EstrategiaDeConexionDeNexos estrategiaDeConexion, final SocketErrorHandler errorHandler) {
 		final ClienteDeNexoSocket conector = new ClienteDeNexoSocket();
+		conector.errorHandler = errorHandler;
 		conector.remoteAddress = remoteAddress;
 		conector.socketHandler = VortexSocketEventHandler.create(processor, estrategiaDeConexion);
 		return conector;

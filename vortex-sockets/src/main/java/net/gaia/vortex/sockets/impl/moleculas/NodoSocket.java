@@ -20,6 +20,8 @@ import net.gaia.vortex.server.impl.RealizarConexiones;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
 import ar.dgarcia.objectsockets.api.Disposable;
+import ar.dgarcia.objectsockets.api.SocketErrorHandler;
+import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
 /**
  * Esta clase representa un {@link NodoMultiplexor} conectado a un socket como cliente o como
@@ -51,10 +53,15 @@ public class NodoSocket extends NodoMultiplexor implements Disposable {
 	 * @return El hub creado y escuchando en el socket indicado
 	 */
 	public static NodoSocket createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor) {
+		return createAndListenTo(listeningAddress, processor, null);
+	}
+
+	public static NodoSocket createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor,
+			final SocketErrorHandler errorHandler) {
 		final NodoSocket hubSocket = new NodoSocket();
 		hubSocket.initializeWith(processor);
-		hubSocket.servidor = ServidorDeNexoSocket
-				.create(processor, listeningAddress, RealizarConexiones.con(hubSocket));
+		hubSocket.servidor = ServidorDeNexoSocket.create(processor, listeningAddress,
+				RealizarConexiones.con(hubSocket), errorHandler);
 		hubSocket.servidor.aceptarConexionesRemotas();
 		return hubSocket;
 	}
@@ -80,12 +87,35 @@ public class NodoSocket extends NodoMultiplexor implements Disposable {
 	 *            La dirección a utilizar para conectar como cliente
 	 * @param processor
 	 *            El procesador de las tareas internas
-	 * @return
+	 * @return El socket creado
+	 * @throws ObjectSocketException
+	 *             Si no se pudo realizar la conexion
 	 */
-	public static NodoSocket createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor) {
+	public static NodoSocket createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor)
+			throws ObjectSocketException {
+		return createAndConnectTo(remoteAddress, processor, null);
+	}
+
+	/**
+	 * Crea un nuevo {@link NodoSocket} que se conectará a la dirección remota como cliente
+	 * permitiendo comunicarse remotamente al conectarse a este hub
+	 * 
+	 * @param remoteAddress
+	 *            La dirección a utilizar para conectar como cliente
+	 * @param processor
+	 *            El procesador de las tareas internas
+	 * @param errorHandler
+	 *            Handler que trata los errores producidos en la conexión
+	 * @return El socket creado
+	 * @throws ObjectSocketException
+	 *             Si no se pudo realizar la conexión
+	 */
+	public static NodoSocket createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor,
+			final SocketErrorHandler errorHandler) throws ObjectSocketException {
 		final NodoSocket hubSocket = new NodoSocket();
 		hubSocket.initializeWith(processor);
-		hubSocket.cliente = ClienteDeNexoSocket.create(processor, remoteAddress, RealizarConexiones.con(hubSocket));
+		hubSocket.cliente = ClienteDeNexoSocket.create(processor, remoteAddress, RealizarConexiones.con(hubSocket),
+				errorHandler);
 		hubSocket.cliente.conectarASocketRomoto();
 		return hubSocket;
 	}

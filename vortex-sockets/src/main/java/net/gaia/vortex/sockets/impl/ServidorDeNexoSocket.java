@@ -24,6 +24,7 @@ import net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler;
 import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
+import ar.dgarcia.objectsockets.api.SocketErrorHandler;
 import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
 import ar.dgarcia.objectsockets.impl.ObjectSocketException;
@@ -48,6 +49,8 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	private VortexSocketEventHandler socketHandler;
 	public static final String socketHandler_FIELD = "socketHandler";
 
+	private SocketErrorHandler errorHandler;
+
 	/**
 	 * El administrador real de los sockets
 	 */
@@ -71,6 +74,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 		this.metricas = MetricasDeCargaImpl.create();
 		final ObjectSocketConfiguration socketConfig = VortexSocketConfiguration.crear(listeningAddress, this.metricas);
 		socketConfig.setEventHandler(socketHandler);
+		socketConfig.setErrorHandler(errorHandler);
 		socketConfig.setReceptionHandler(ReceptionHandlerNulo.getInstancia());
 		internalAcceptor = ObjectSocketAcceptor.create(socketConfig);
 	}
@@ -98,8 +102,14 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	 */
 	public static ServidorDeNexoSocket create(final TaskProcessor processor, final SocketAddress listeningAddres,
 			final EstrategiaDeConexionDeNexos estrategiaDeConexion) {
+		return create(processor, listeningAddres, estrategiaDeConexion, null);
+	}
+
+	public static ServidorDeNexoSocket create(final TaskProcessor processor, final SocketAddress listeningAddres,
+			final EstrategiaDeConexionDeNexos estrategiaDeConexion, final SocketErrorHandler errorHandler) {
 		final ServidorDeNexoSocket acceptor = new ServidorDeNexoSocket();
 		acceptor.listeningAddress = listeningAddres;
+		acceptor.errorHandler = errorHandler;
 		acceptor.socketHandler = VortexSocketEventHandler.create(processor, estrategiaDeConexion);
 		return acceptor;
 	}
