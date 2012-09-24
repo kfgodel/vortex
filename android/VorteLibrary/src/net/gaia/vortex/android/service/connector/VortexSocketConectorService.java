@@ -23,6 +23,7 @@ import net.gaia.vortex.core.api.Nodo;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
+import android.util.Log;
 import ar.com.iron.android.extensions.connections.ConnectivityChangeListener;
 import ar.com.iron.android.extensions.connections.ConnectivityObserver;
 import ar.com.iron.android.extensions.messages.IntentReceptor;
@@ -30,6 +31,8 @@ import ar.com.iron.android.extensions.services.BackgroundService;
 import ar.com.iron.android.extensions.services.BackgroundTask;
 import ar.com.iron.android.extensions.services.local.LocalServiceConnectionListener;
 import ar.com.iron.android.extensions.services.local.LocalServiceConnector;
+import ar.dgarcia.objectsockets.api.ObjectSocket;
+import ar.dgarcia.objectsockets.api.SocketErrorHandler;
 
 /**
  * Esta clase representa el servicio android que conecta el nodo central al servidor online de
@@ -38,7 +41,7 @@ import ar.com.iron.android.extensions.services.local.LocalServiceConnector;
  * 
  * @author D. García
  */
-public class VortexSocketConectorService extends BackgroundService {
+public class VortexSocketConectorService extends BackgroundService implements SocketErrorHandler {
 
 	private IntentReceptor intentReceptor;
 	private VortexConnection connection;
@@ -51,7 +54,7 @@ public class VortexSocketConectorService extends BackgroundService {
 	@Override
 	protected void beforeProcessStart() {
 		intentReceptor = new IntentReceptor(this);
-		connection = VortexConnectionImpl.create();
+		connection = VortexConnectionImpl.create(this);
 	}
 
 	/**
@@ -87,9 +90,23 @@ public class VortexSocketConectorService extends BackgroundService {
 					// Es la primera vez o cambio la red, nos reconectamos
 					conectarAlServidor();
 				}
-				sendBroadcast(new CambioDeConectividadVortex(connected));
+				avisarEstadoDeConexion(connected, "Cambio de red en dispositivo");
 			}
+
 		}, intentReceptor);
+	}
+
+	/**
+	 * Envia un intent sobre el estado de la conexión para notificar a los interesados
+	 * 
+	 * @param connected
+	 *            true si se ganó conexión, false si se perdió
+	 * @param exceptionMessage
+	 */
+	protected void avisarEstadoDeConexion(boolean connected, String exceptionMessage) {
+		CambioDeConectividadVortex aviso = new CambioDeConectividadVortex(connected);
+		aviso.setCausa(exceptionMessage);
+		sendBroadcast(aviso);
 	}
 
 	/**
@@ -182,8 +199,29 @@ public class VortexSocketConectorService extends BackgroundService {
 				connection.reconectarAlServidor();
 				return null;
 			}
+
+			/**
+			 * @see ar.com.iron.android.extensions.services.BackgroundTask#onFailure(java.lang.Exception)
+			 */
+			@Override
+			public void onFailure(Exception exceptionThrown) {
+				String exceptionMessage = exceptionThrown.getMessage();
+				Log.w(getClass().getSimpleName(), "Se produjo un error al conectar: " + exceptionMessage);
+				avisarEstadoDeConexion(false, exceptionMessage);
+			}
 		});
 
 	}
 
+	/**
+	 * @see ar.dgarcia.objectsockets.api.SocketErrorHandler#onSocketError(java.lang.Throwable,
+	 *      ar.dgarcia.objectsockets.api.ObjectSocket)
+	 */
+	public void onSocketError(Throwable error, ObjectSocket socket) {
+		// Cerramos el socket una vez que hubo un error
+		socket.closeAndDispose();
+		String errorMessage = error.getMessage();
+		Log.w(getClass().getSimpleName(), "Se produjo un error en la conexion: " + errorMessage);
+		avisarEstadoDeConexion(false, errorMessage);
+	}
 }

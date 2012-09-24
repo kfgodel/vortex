@@ -24,6 +24,7 @@ import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 public class CambioDeConectividadVortex extends Intent {
 
 	private static final String NUEVO_ESTADO_DE_CONECTIVIDAD_KEY = "NUEVO_ESTADO_DE_CONECTIVIDAD_KEY";
+	private static final String DESCRIPCION_CAUSA_KEY = "DESCRIPCION_CAUSA_KEY";
 
 	public static final String ACTION = "net.gaia.vortex.android.service.intents.CambioDeConectividadVortex";
 
@@ -34,6 +35,15 @@ public class CambioDeConectividadVortex extends Intent {
 	public CambioDeConectividadVortex(boolean conectado) {
 		super(ACTION);
 		putExtra(NUEVO_ESTADO_DE_CONECTIVIDAD_KEY, conectado);
+	}
+
+	public void setCausa(String descripcion) {
+		putExtra(DESCRIPCION_CAUSA_KEY, descripcion);
+	}
+
+	public String getCausa() {
+		String descripcion = getStringExtra(DESCRIPCION_CAUSA_KEY);
+		return descripcion;
 	}
 
 	public boolean estaConectado() {

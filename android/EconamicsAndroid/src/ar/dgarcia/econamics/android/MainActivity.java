@@ -77,7 +77,7 @@ public class MainActivity extends CustomListActivity<ArchivoPendienteTo> {
 		// Iniciamos la conexión al server
 		String hostDelServidor = "192.168.1.130";
 		// El 60221 es debug
-		Integer numeroDePuerto = 60221;
+		Integer numeroDePuerto = 60220;
 		startService(new ConectarConServidorVortexIntent(getContext(), hostDelServidor, numeroDePuerto));
 	}
 

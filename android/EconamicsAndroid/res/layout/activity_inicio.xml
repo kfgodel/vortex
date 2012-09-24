@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:orientation="vertical" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        >
+        <Button
+            android:id="@+id/boton_nuevos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nuevos" 
+            />
+        <Button
+            android:id="@+id/boton_comprobantes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cargados" 
+            />
+    </LinearLayout>
+
+    
+    <Button 
+	    android:id="@+id/boton_conectar"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    
+	    android:layout_alignParentRight="true" 
+	    android:layout_alignParentBottom="true"
+	    android:text="Conectar"
+	    />
+    <Button 
+	    android:id="@+id/boton_probar_conexion"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    
+	    android:layout_toLeftOf="@id/boton_conectar"
+	    android:layout_alignWithParentIfMissing="true" 
+	    android:layout_alignParentBottom="true"
+	    android:text="Probar conexion"
+	    />
+    <Button 
+	    android:id="@+id/boton_desconectar"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    
+	    android:layout_toLeftOf="@id/boton_probar_conexion"
+	    android:layout_alignWithParentIfMissing="true" 
+	    android:layout_alignParentBottom="true"
+	    android:text="Desconectar"
+	    />
+    
+</RelativeLayout>

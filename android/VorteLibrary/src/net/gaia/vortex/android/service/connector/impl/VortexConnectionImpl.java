@@ -16,13 +16,16 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.android.service.VortexSharedProcessor;
+import net.gaia.vortex.android.VortexRoot;
 import net.gaia.vortex.android.service.connector.VortexConnection;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.dgarcia.objectsockets.api.SocketErrorHandler;
+import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
 /**
  * Esta clase immplementa la conexión en background con vortex
@@ -37,11 +40,13 @@ public class VortexConnectionImpl implements VortexConnection {
 	private NodoSocket nodoConector;
 	private InetSocketAddress serverAddress;
 	private AtomicBoolean debeConectar;
+	private SocketErrorHandler errorHandler;
 
-	public static VortexConnectionImpl create() {
+	public static VortexConnectionImpl create(SocketErrorHandler errorHandler) {
 		VortexConnectionImpl connection = new VortexConnectionImpl();
 		connection.debeConectar = new AtomicBoolean(false);
-		connection.processor = VortexSharedProcessor.getProcessor();
+		connection.processor = VortexRoot.getProcessor();
+		connection.errorHandler = errorHandler;
 		return connection;
 	}
 
@@ -73,16 +78,11 @@ public class VortexConnectionImpl implements VortexConnection {
 	/**
 	 * Reconecta el nodo central con el servidor a través de un nodo socket, en al dirección actual
 	 */
-	private void conectarUsandoLaDireccionActual() {
+	private void conectarUsandoLaDireccionActual() throws ObjectSocketException {
 		if (serverAddress == null) {
 			return;
 		}
-		try {
-			nodoConector = NodoSocket.createAndConnectTo(serverAddress, processor);
-		} catch (Exception e) {
-			LOG.error("No fue posible conectar al servidor. Ignorando error", e);
-			return;
-		}
+		nodoConector = NodoSocket.createAndConnectTo(serverAddress, processor, errorHandler);
 		conectarNodos();
 	}
 
@@ -145,7 +145,7 @@ public class VortexConnectionImpl implements VortexConnection {
 	/**
 	 * @see net.gaia.vortex.android.service.connector.VortexConnection#reconectarAlServidor()
 	 */
-	public void reconectarAlServidor() {
+	public void reconectarAlServidor() throws ObjectSocketException {
 		debeConectar.set(true);
 		desconectarNodoConector();
 		conectarUsandoLaDireccionActual();
