@@ -5,19 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.android.service.connector.VortexSocketConectorService;
-import net.gaia.vortex.android.service.connector.intents.CambioDeConectividadVortex;
-import net.gaia.vortex.android.service.connector.intents.ConectarConServidorVortexIntent;
-import net.gaia.vortex.android.service.provider.VortexProviderAccess;
-import net.gaia.vortex.android.service.provider.VortexProviderService;
+import net.gaia.vortex.android.VortexRoot;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.sets.impl.And;
 import net.gaia.vortex.sets.impl.ValorEsperadoIgual;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,8 +19,6 @@ import android.widget.TextView;
 import ar.com.iron.android.extensions.activities.CustomListActivity;
 import ar.com.iron.android.extensions.activities.model.CustomableListActivity;
 import ar.com.iron.android.extensions.adapters.RenderBlock;
-import ar.com.iron.android.extensions.services.local.LocalServiceConnectionListener;
-import ar.com.iron.android.extensions.services.local.LocalServiceConnector;
 import ar.com.iron.helpers.ToastHelper;
 import ar.com.iron.helpers.ViewHelper;
 import ar.com.iron.menues.ContextMenuItem;
@@ -40,11 +31,10 @@ import ar.dgarcia.econamics.messages.RespuestaDeArchivosPendientes;
  * 
  * @author D. García
  */
-public class MainActivity extends CustomListActivity<ArchivoPendienteTo> {
+public class ListarPendientesActivity extends CustomListActivity<ArchivoPendienteTo> {
 
 	private final List<ArchivoPendienteTo> archivos = new ArrayList<ArchivoPendienteTo>();
 	private Button botonRefresh;
-	private LocalServiceConnector<VortexProviderAccess> vortexConnector;
 	private PortalMapeador portalPropio;
 
 	/**
@@ -52,33 +42,27 @@ public class MainActivity extends CustomListActivity<ArchivoPendienteTo> {
 	 */
 	@Override
 	public void setUpComponents() {
+		// Creamos el portal para mensajearnos con vortex
+		TaskProcessor procesadorCentral = VortexRoot.getProcessor();
+		Nodo nodoCentral = VortexRoot.getNode();
+		portalPropio = PortalMapeador.createForIOWith(procesadorCentral, nodoCentral);
+		portalPropio.recibirCon(new HandlerTipado<RespuestaDeArchivosPendientes>(And.create( //
+				ValorEsperadoIgual.a(RespuestaDeArchivosPendientes.NOMBRE_APLICACION_ECONAMICS,
+						RespuestaDeArchivosPendientes.aplicacion_FIELD), //
+				ValorEsperadoIgual.a(RespuestaDeArchivosPendientes.DISCRIMINADOR,
+						RespuestaDeArchivosPendientes.discriminador_FIELD))) {
+			public void onMensajeRecibido(RespuestaDeArchivosPendientes respuesta) {
+				onRespuestaDesdeVortex(respuesta);
+			}
+		});
+
+		// El referesh pide los archivos al portal que creamos
 		botonRefresh = ViewHelper.findButton(R.id.boton_refresh, getContentView());
 		botonRefresh.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onRefreshClickeado();
 			}
 		});
-		// Desactivamos hasta tener conexion con vortex
-		botonRefresh.setEnabled(false);
-
-		// Intentamos conectarnos con el servicio vortex
-		vortexConnector = LocalServiceConnector.create(VortexProviderService.class);
-		vortexConnector.setConnectionListener(new LocalServiceConnectionListener<VortexProviderAccess>() {
-			public void onServiceDisconnection(final VortexProviderAccess disconnectedIntercomm) {
-				onVortexNoDisponible(disconnectedIntercomm);
-			}
-
-			public void onServiceConnection(final VortexProviderAccess intercommObject) {
-				onVortexDisponible(intercommObject);
-			}
-		});
-		vortexConnector.bindToService(this);
-
-		// Iniciamos la conexión al server
-		String hostDelServidor = "192.168.1.130";
-		// El 60221 es debug
-		Integer numeroDePuerto = 60220;
-		startService(new ConectarConServidorVortexIntent(getContext(), hostDelServidor, numeroDePuerto));
 	}
 
 	/**
@@ -86,24 +70,11 @@ public class MainActivity extends CustomListActivity<ArchivoPendienteTo> {
 	 */
 	@Override
 	protected void onDestroy() {
-		stopService(new Intent(getContext(), VortexSocketConectorService.class));
-		vortexConnector.unbindFromService(this);
+		// Nos desconectamos de vortex
+		Nodo nodoCentral = VortexRoot.getNode();
+		portalPropio.desconectarDe(nodoCentral);
+		nodoCentral.desconectarDe(portalPropio);
 		super.onDestroy();
-	}
-
-	protected void onVortexDisponible(VortexProviderAccess intercommObject) {
-		TaskProcessor procesadorCentral = intercommObject.getProcesadorCentral();
-		Nodo nodoCentral = intercommObject.getNodoCentral();
-		portalPropio = PortalMapeador.createForIOWith(procesadorCentral, nodoCentral);
-		portalPropio.recibirCon(new HandlerTipado<RespuestaDeArchivosPendientes>(And.create(ValorEsperadoIgual.a(
-				RespuestaDeArchivosPendientes.NOMBRE_APLICACION_ECONAMICS,
-				RespuestaDeArchivosPendientes.aplicacion_FIELD), ValorEsperadoIgual.a(
-				RespuestaDeArchivosPendientes.DISCRIMINADOR, RespuestaDeArchivosPendientes.discriminador_FIELD))) {
-			public void onMensajeRecibido(RespuestaDeArchivosPendientes respuesta) {
-				onRespuestaDesdeVortex(respuesta);
-			}
-		});
-		botonRefresh.setEnabled(true);
 	}
 
 	/**
@@ -118,18 +89,10 @@ public class MainActivity extends CustomListActivity<ArchivoPendienteTo> {
 			public void run() {
 				List<ArchivoPendienteTo> nuevosArchivos = respuesta.getArchivosPendientes();
 				getCustomAdapter().replaceAll(nuevosArchivos);
-				ToastHelper.create(getContext())
-						.showShort(nuevosArchivos.size() + " archivos encontrados en el server");
+				ToastHelper.create(getContext()).showShort(
+						nuevosArchivos.size() + " archivos encontrados en el servidor");
 			}
 		});
-	}
-
-	protected void onVortexNoDisponible(VortexProviderAccess disconnectedIntercomm) {
-		botonRefresh.setEnabled(false);
-		Nodo nodoCentral = disconnectedIntercomm.getNodoCentral();
-		this.portalPropio.desconectarDe(nodoCentral);
-		nodoCentral.desconectarDe(portalPropio);
-		this.portalPropio = null;
 	}
 
 	/**
@@ -186,7 +149,7 @@ public class MainActivity extends CustomListActivity<ArchivoPendienteTo> {
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableActivity#getLayoutIdForActivity()
 	 */
 	public int getLayoutIdForActivity() {
-		return R.layout.activity_main;
+		return R.layout.activity_listar_pendientes;
 	}
 
 	/**
@@ -197,30 +160,4 @@ public class MainActivity extends CustomListActivity<ArchivoPendienteTo> {
 		return null;
 	}
 
-	/**
-	 * @see ar.com.iron.android.extensions.activities.CustomListActivity#initMessageReceivers()
-	 */
-	@Override
-	public void initMessageReceivers() {
-		registerMessageReceiver(CambioDeConectividadVortex.ACTION, new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				CambioDeConectividadVortex mensaje = new CambioDeConectividadVortex(intent);
-				onCambioDeConectividadVortex(mensaje.estaConectado());
-			}
-		});
-	}
-
-	/**
-	 * Invocado cuando se produce un cambio de conectividad con el servidor
-	 * 
-	 * @param estaConectado
-	 */
-	protected void onCambioDeConectividadVortex(boolean estaConectado) {
-		if (estaConectado) {
-			ToastHelper.create(getContext()).showShort("Conectado al servidor");
-		} else {
-			ToastHelper.create(getContext()).showLong("Desconectado del servidor");
-		}
-	}
 }
