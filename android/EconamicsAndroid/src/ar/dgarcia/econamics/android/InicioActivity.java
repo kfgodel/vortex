@@ -35,6 +35,8 @@ public class InicioActivity extends CustomActivity {
 	private Button botonConectar;
 	private Button botonDesconectar;
 	private Button botonProbar;
+	private Button botonNuevos;
+	private Button botonCargados;
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableActivity#getLayoutIdForActivity()
@@ -69,7 +71,37 @@ public class InicioActivity extends CustomActivity {
 				onProbarConexionClickeado();
 			}
 		});
+
+		botonNuevos = ViewHelper.findButton(R.id.boton_nuevos, getContentView());
+		botonNuevos.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onNuevoClickeado();
+			}
+		});
+
+		botonCargados = ViewHelper.findButton(R.id.boton_comprobantes, getContentView());
+		botonCargados.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onCargadosClickeado();
+			}
+		});
+
 		mostrarBotonesParaDesconectado();
+
+	}
+
+	/**
+	 * Invocado cuando el usuario quiere ir a la seccion de facturas ya cargadas
+	 */
+	protected void onCargadosClickeado() {
+		ToastHelper.create(getContext()).showShort("No construido todavia");
+	}
+
+	/**
+	 * Invocado cuando el usuario quiere ir a la seccion de pendientes
+	 */
+	protected void onNuevoClickeado() {
+		ToastHelper.create(getContext()).showShort("No construido todavia");
 	}
 
 	/**
@@ -98,6 +130,8 @@ public class InicioActivity extends CustomActivity {
 	 * Oculta los botones disponibles cuando esta conectado
 	 */
 	private void mostrarBotonesParaDesconectado() {
+		botonNuevos.setEnabled(false);
+		botonCargados.setEnabled(false);
 		botonProbar.setVisibility(View.GONE);
 		botonDesconectar.setVisibility(View.GONE);
 		botonConectar.setVisibility(View.VISIBLE);
@@ -120,6 +154,8 @@ public class InicioActivity extends CustomActivity {
 	 * Oculta el boton conectar y permite realizar las acciones cuando esta conectado
 	 */
 	private void mostrarBotonesParaConectado() {
+		botonNuevos.setEnabled(true);
+		botonCargados.setEnabled(true);
 		botonConectar.setVisibility(View.GONE);
 		botonDesconectar.setVisibility(View.VISIBLE);
 		botonProbar.setVisibility(View.VISIBLE);
