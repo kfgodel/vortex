@@ -101,7 +101,7 @@ public class InicioActivity extends CustomActivity {
 	 * Invocado cuando el usuario quiere ir a la seccion de pendientes
 	 */
 	protected void onNuevoClickeado() {
-		startActivity(new Intent(this, ListarPendientesActivity.class));
+		startActivity(new Intent(this, ListarEscaneadosActivity.class));
 	}
 
 	/**

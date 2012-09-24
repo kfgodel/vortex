@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.android.VortexRoot;
-import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.sets.impl.And;
 import net.gaia.vortex.sets.impl.ValorEsperadoIgual;
 import android.view.LayoutInflater;
@@ -22,6 +18,8 @@ import ar.com.iron.android.extensions.adapters.RenderBlock;
 import ar.com.iron.helpers.ToastHelper;
 import ar.com.iron.helpers.ViewHelper;
 import ar.com.iron.menues.ContextMenuItem;
+import ar.dgarcia.econamics.android.intents.MostrarEscaneadoIntent;
+import ar.dgarcia.econamics.android.portales.PortalAndroid;
 import ar.dgarcia.econamics.messages.ArchivoPendienteTo;
 import ar.dgarcia.econamics.messages.PedidoDeArchivosPendientes;
 import ar.dgarcia.econamics.messages.RespuestaDeArchivosPendientes;
@@ -31,11 +29,11 @@ import ar.dgarcia.econamics.messages.RespuestaDeArchivosPendientes;
  * 
  * @author D. García
  */
-public class ListarPendientesActivity extends CustomListActivity<ArchivoPendienteTo> {
+public class ListarEscaneadosActivity extends CustomListActivity<ArchivoPendienteTo> {
 
 	private final List<ArchivoPendienteTo> archivos = new ArrayList<ArchivoPendienteTo>();
 	private Button botonRefresh;
-	private PortalMapeador portalPropio;
+	private PortalAndroid portal;
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.CustomListActivity#setUpComponents()
@@ -43,18 +41,17 @@ public class ListarPendientesActivity extends CustomListActivity<ArchivoPendient
 	@Override
 	public void setUpComponents() {
 		// Creamos el portal para mensajearnos con vortex
-		TaskProcessor procesadorCentral = VortexRoot.getProcessor();
-		Nodo nodoCentral = VortexRoot.getNode();
-		portalPropio = PortalMapeador.createForIOWith(procesadorCentral, nodoCentral);
-		portalPropio.recibirCon(new HandlerTipado<RespuestaDeArchivosPendientes>(And.create( //
-				ValorEsperadoIgual.a(RespuestaDeArchivosPendientes.NOMBRE_APLICACION_ECONAMICS,
-						RespuestaDeArchivosPendientes.aplicacion_FIELD), //
-				ValorEsperadoIgual.a(RespuestaDeArchivosPendientes.DISCRIMINADOR,
-						RespuestaDeArchivosPendientes.discriminador_FIELD))) {
-			public void onMensajeRecibido(RespuestaDeArchivosPendientes respuesta) {
-				onRespuestaDesdeVortex(respuesta);
-			}
-		});
+		portal = PortalAndroid.create();
+		portal.getPortalVortex().recibirCon(
+				new HandlerTipado<RespuestaDeArchivosPendientes>(And.create( //
+						ValorEsperadoIgual.a(RespuestaDeArchivosPendientes.NOMBRE_APLICACION_ECONAMICS,
+								RespuestaDeArchivosPendientes.aplicacion_FIELD), //
+						ValorEsperadoIgual.a(RespuestaDeArchivosPendientes.DISCRIMINADOR,
+								RespuestaDeArchivosPendientes.discriminador_FIELD))) {
+					public void onMensajeRecibido(RespuestaDeArchivosPendientes respuesta) {
+						onRespuestaDesdeVortex(respuesta);
+					}
+				});
 
 		// El referesh pide los archivos al portal que creamos
 		botonRefresh = ViewHelper.findButton(R.id.boton_refresh, getContentView());
@@ -71,9 +68,7 @@ public class ListarPendientesActivity extends CustomListActivity<ArchivoPendient
 	@Override
 	protected void onDestroy() {
 		// Nos desconectamos de vortex
-		Nodo nodoCentral = VortexRoot.getNode();
-		portalPropio.desconectarDe(nodoCentral);
-		nodoCentral.desconectarDe(portalPropio);
+		portal.closeAndDispose();
 		super.onDestroy();
 	}
 
@@ -100,7 +95,7 @@ public class ListarPendientesActivity extends CustomListActivity<ArchivoPendient
 	 */
 	protected void onRefreshClickeado() {
 		PedidoDeArchivosPendientes pedido = PedidoDeArchivosPendientes.create();
-		portalPropio.enviar(pedido);
+		portal.getPortalVortex().enviar(pedido);
 	}
 
 	/**
@@ -142,7 +137,7 @@ public class ListarPendientesActivity extends CustomListActivity<ArchivoPendient
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableListActivity#getLayoutIdForElements()
 	 */
 	public int getLayoutIdForElements() {
-		return R.layout.archivo_item;
+		return R.layout.item_escaneado;
 	}
 
 	/**
@@ -160,4 +155,12 @@ public class ListarPendientesActivity extends CustomListActivity<ArchivoPendient
 		return null;
 	}
 
+	/**
+	 * @see ar.com.iron.android.extensions.activities.CustomListActivity#onItemSelected(java.lang.Object)
+	 */
+	@Override
+	protected void onItemSelected(ArchivoPendienteTo selectedItem) {
+		Long idDeArchivo = selectedItem.getIdDeArchivo();
+		startActivity(new MostrarEscaneadoIntent(this, idDeArchivo));
+	}
 }

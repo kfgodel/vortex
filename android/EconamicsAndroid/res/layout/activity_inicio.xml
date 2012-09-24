@@ -14,13 +14,13 @@
             android:id="@+id/boton_nuevos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recien escaneados" 
+            android:text="Escaneados" 
             />
         <Button
             android:id="@+id/boton_comprobantes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cargados" 
+            android:text="Comprobantes" 
             />
     </LinearLayout>
 
