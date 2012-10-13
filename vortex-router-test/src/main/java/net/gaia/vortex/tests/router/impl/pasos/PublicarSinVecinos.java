@@ -1,5 +1,5 @@
 /**
- * 13/10/2012 12:28:55 Copyright (C) 2011 Darío L. García
+ * 13/10/2012 12:24:21 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -17,13 +17,13 @@ import java.util.Set;
 import net.gaia.vortex.tests.router.Nodo;
 
 /**
- * Esta clase representa el paso donde un nodo le publica sus filtros al vecino
+ * Esta clase es un paso ficticio para registrar el hecho de que un nodo puede no tener vecinos a
+ * quien publicarles filtros
  * 
  * @author D. García
  */
-public class PublicacionAVecino extends PasoSupport {
+public class PublicarSinVecinos extends PasoSupport {
 
-	private Nodo vecino;
 	private Set<String> filtros;
 
 	/**
@@ -31,16 +31,7 @@ public class PublicacionAVecino extends PasoSupport {
 	 */
 	@Override
 	public void ejecutar() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public static PublicacionAVecino create(final Nodo origen, final Nodo vecino, final Set<String> filtros) {
-		final PublicacionAVecino name = new PublicacionAVecino();
-		name.setNodoLocal(origen);
-		name.setVecino(vecino);
-		name.setFiltros(filtros);
-		return name;
+		// Este paso no tiene efecto
 	}
 
 	public Set<String> getFiltros() {
@@ -51,12 +42,11 @@ public class PublicacionAVecino extends PasoSupport {
 		this.filtros = filtros;
 	}
 
-	public Nodo getVecino() {
-		return vecino;
-	}
-
-	public void setVecino(final Nodo vecino) {
-		this.vecino = vecino;
+	public static PublicarSinVecinos create(final Nodo nodo, final Set<String> filtros) {
+		final PublicarSinVecinos publicacion = new PublicarSinVecinos();
+		publicacion.setNodoLocal(nodo);
+		publicacion.setFiltros(filtros);
+		return publicacion;
 	}
 
 	/**
@@ -69,11 +59,7 @@ public class PublicacionAVecino extends PasoSupport {
 		if (getNodoLocal() != null) {
 			builder.append(getNodoLocal().getNombre());
 		}
-		builder.append("] a [");
-		if (getVecino() != null) {
-			builder.append(getVecino().getNombre());
-		}
-		builder.append("] de filtros: ");
+		builder.append("] sin vecinos para filtros: ");
 		builder.append(getFiltros());
 		return builder.toString();
 	}

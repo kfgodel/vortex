@@ -19,8 +19,10 @@ import java.util.List;
 import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.Portal;
 import net.gaia.vortex.tests.router.Simulador;
-import net.gaia.vortex.tests.router.impl.pasos.PublicacionAVecino;
-import net.gaia.vortex.tests.router.impl.pasos.PublicacionSinVecinos;
+import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion;
+import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
+import net.gaia.vortex.tests.router.impl.pasos.PublicarAVecino;
+import net.gaia.vortex.tests.router.impl.pasos.PublicarSinVecinos;
 
 /**
  * Esta clase implementa el comportamiento para los test
@@ -52,11 +54,14 @@ public class PortalImpl extends NodoSupport implements Portal {
 	public void publicarFiltros() {
 		final List<Nodo> destinos = getDestinos();
 		if (destinos.isEmpty()) {
-			getSimulador().agregar(PublicacionSinVecinos.create(this, getFiltros()));
+			getSimulador().agregar(PublicarSinVecinos.create(this, getFiltros()));
 			return;
 		}
+
+		final PublicacionDeFiltros publicacion = PublicacionDeFiltros.create(filtros);
+		agregarComoEnviado(publicacion);
 		for (final Nodo nodoDestino : destinos) {
-			getSimulador().agregar(PublicacionAVecino.create(this, nodoDestino, getFiltros()));
+			getSimulador().agregar(PublicarAVecino.create(this, nodoDestino, publicacion));
 		}
 	}
 
@@ -77,4 +82,12 @@ public class PortalImpl extends NodoSupport implements Portal {
 		publicarFiltros();
 	}
 
+	/**
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#recibirConfirmacionDePublicacion(net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion)
+	 */
+	@Override
+	public void recibirConfirmacionDePublicacion(final ConfirmacionDePublicacion confirmacion) {
+		super.recibirConfirmacionDePublicacion(confirmacion);
+
+	}
 }

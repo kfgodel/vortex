@@ -12,8 +12,15 @@
  */
 package net.gaia.vortex.tests.router.impl;
 
+import java.util.List;
+
+import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.Router;
 import net.gaia.vortex.tests.router.Simulador;
+import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion;
+import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
+import net.gaia.vortex.tests.router.impl.pasos.ConfirmarAVecino;
+import net.gaia.vortex.tests.router.impl.pasos.ConfirmarSinVecinos;
 
 /**
  * Esta clase implementa el roter para la simulacion
@@ -27,5 +34,33 @@ public class RouterImpl extends NodoSupport implements Router {
 		router.setNombre(nombre);
 		router.setSimulador(simulador);
 		return router;
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#recibirPublicacion(net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros)
+	 */
+	@Override
+	public void recibirPublicacion(final PublicacionDeFiltros publicacion) {
+		super.recibirPublicacion(publicacion);
+		confirmarOrigenDePublicacion(publicacion);
+	}
+
+	/**
+	 * Envia una confiormación a cada nodo vecino para saber de dónde vino una publicación
+	 * 
+	 * @param publicacion
+	 *            La publicacion recibida
+	 */
+	private void confirmarOrigenDePublicacion(final PublicacionDeFiltros publicacion) {
+		final List<Nodo> destinos = getDestinos();
+		if (destinos.isEmpty()) {
+			getSimulador().agregar(ConfirmarSinVecinos.create(this, publicacion));
+			return;
+		}
+
+		for (final Nodo destino : destinos) {
+			final ConfirmacionDePublicacion confirmacion = ConfirmacionDePublicacion.create(publicacion);
+			getSimulador().agregar(ConfirmarAVecino.create(this, destino, confirmacion));
+		}
 	}
 }

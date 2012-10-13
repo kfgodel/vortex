@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import net.gaia.vortex.tests.router.impl.PortalImpl;
 import net.gaia.vortex.tests.router.impl.RouterImpl;
 import net.gaia.vortex.tests.router.impl.SimuladorImpl;
+import net.gaia.vortex.tests.router.impl.mensajes.MensajeSupport;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +35,7 @@ public class TestRuteoDeMensajes {
 
 	@Before
 	public void crearSimulador() {
+		MensajeSupport.resetIds();
 		simulador = SimuladorImpl.create();
 	}
 

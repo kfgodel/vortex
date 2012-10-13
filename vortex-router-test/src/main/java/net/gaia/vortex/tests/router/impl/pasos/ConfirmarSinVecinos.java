@@ -1,5 +1,5 @@
 /**
- * 13/10/2012 12:24:21 Copyright (C) 2011 Darío L. García
+ * 13/10/2012 18:37:00 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,41 +12,38 @@
  */
 package net.gaia.vortex.tests.router.impl.pasos;
 
-import java.util.Set;
-
 import net.gaia.vortex.tests.router.Nodo;
+import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 
 /**
- * Esta clase es un paso ficticio para registrar el hecho de que un nodo puede no tener vecinos a
- * quien publicarles filtros
+ * Esta clase es un paso ficticio cuando se intenta confirmar y no hay vecinos
  * 
  * @author D. García
  */
-public class PublicacionSinVecinos extends PasoSupport {
+public class ConfirmarSinVecinos extends PasoSupport {
 
-	private Set<String> filtros;
+	private PublicacionDeFiltros publicacion;
+
+	public PublicacionDeFiltros getPublicacion() {
+		return publicacion;
+	}
+
+	public void setPublicacion(final PublicacionDeFiltros publicacion) {
+		this.publicacion = publicacion;
+	}
 
 	/**
 	 * @see net.gaia.vortex.tests.router.PasoSimulacion#ejecutar()
 	 */
 	@Override
 	public void ejecutar() {
-		// Este paso no tiene efecto
+		// Sin efecto asociado
 	}
 
-	public Set<String> getFiltros() {
-		return filtros;
-	}
-
-	public void setFiltros(final Set<String> filtros) {
-		this.filtros = filtros;
-	}
-
-	public static PublicacionSinVecinos create(final Nodo nodo, final Set<String> filtros) {
-		final PublicacionSinVecinos publicacion = new PublicacionSinVecinos();
-		publicacion.setNodoLocal(nodo);
-		publicacion.setFiltros(filtros);
-		return publicacion;
+	public static ConfirmarSinVecinos create(final Nodo nodoLocal, final PublicacionDeFiltros publicacion) {
+		final ConfirmarSinVecinos confirmar = new ConfirmarSinVecinos();
+		confirmar.setNodoLocal(nodoLocal);
+		return confirmar;
 	}
 
 	/**
@@ -55,12 +52,12 @@ public class PublicacionSinVecinos extends PasoSupport {
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("Publicación de [");
+		builder.append("Confirmación de [");
 		if (getNodoLocal() != null) {
 			builder.append(getNodoLocal().getNombre());
 		}
-		builder.append("] sin vecinos para filtros: ");
-		builder.append(getFiltros());
+		builder.append("] sin vecinos para publicacion: ");
+		builder.append(publicacion);
 		return builder.toString();
 	}
 

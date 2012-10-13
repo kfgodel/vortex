@@ -18,6 +18,7 @@ import junit.framework.Assert;
 import net.gaia.vortex.tests.router.impl.PortalImpl;
 import net.gaia.vortex.tests.router.impl.RouterImpl;
 import net.gaia.vortex.tests.router.impl.SimuladorImpl;
+import net.gaia.vortex.tests.router.impl.mensajes.MensajeSupport;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class TestPasosDeSimulacion {
 
 	@Before
 	public void crearSimulador() {
+		MensajeSupport.resetIds();
 		simulador = SimuladorImpl.create();
 		r1 = RouterImpl.create("R1", simulador);
 		p1 = PortalImpl.create("P1", simulador);
@@ -88,7 +90,6 @@ public class TestPasosDeSimulacion {
 		p1.setearYPublicarFiltros("filtro1");
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 
-		simulador.ejecutarSiguiente();
-		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 	}
 }

@@ -15,8 +15,11 @@ package net.gaia.vortex.tests.router.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.gaia.vortex.tests.router.Mensaje;
 import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.Simulador;
+import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion;
+import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.pasos.ConectarBidi;
 import net.gaia.vortex.tests.router.impl.pasos.ConectarUni;
 
@@ -32,6 +35,9 @@ public class NodoSupport implements Nodo {
 	private Simulador simulador;
 
 	private List<Nodo> destinos;
+
+	private List<Mensaje> enviados;
+	private List<Mensaje> recibidos;
 
 	/**
 	 * @see net.gaia.vortex.tests.router.Nodo#getNombre()
@@ -93,4 +99,45 @@ public class NodoSupport implements Nodo {
 		simulador.agregar(ConectarBidi.create(this, otro));
 	}
 
+	public List<Mensaje> getEnviados() {
+		if (enviados == null) {
+			enviados = new ArrayList<Mensaje>();
+		}
+		return enviados;
+	}
+
+	public void setEnviados(final List<Mensaje> enviados) {
+		this.enviados = enviados;
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.Nodo#recibirPublicacion(net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros)
+	 */
+	@Override
+	public void recibirPublicacion(final PublicacionDeFiltros publicacion) {
+		getRecibidos().add(publicacion);
+	}
+
+	public List<Mensaje> getRecibidos() {
+		if (recibidos == null) {
+			recibidos = new ArrayList<Mensaje>();
+		}
+		return recibidos;
+	}
+
+	public void setRecibidos(final List<Mensaje> recibidos) {
+		this.recibidos = recibidos;
+	}
+
+	public void agregarComoEnviado(final Mensaje mensaje) {
+		getEnviados().add(mensaje);
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.Nodo#recibirConfirmacionDePublicacion(net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion)
+	 */
+	@Override
+	public void recibirConfirmacionDePublicacion(final ConfirmacionDePublicacion confirmacion) {
+		getRecibidos().add(confirmacion);
+	}
 }

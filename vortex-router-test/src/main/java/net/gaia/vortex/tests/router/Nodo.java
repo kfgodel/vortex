@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.tests.router;
 
+import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion;
+import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
+
 /**
  * Esta interfaz representa los elementos comunes a portales y routers
  * 
@@ -52,5 +55,18 @@ public interface Nodo {
 	 *            El otro nodo al que se conectara
 	 */
 	public void conectarBidi(final Nodo otro);
+
+	/**
+	 * Invocado cuando este nodo recibe una publicación de filtros de otro nodo
+	 * 
+	 * @param publicacion
+	 *            La publicación recibida
+	 */
+	public void recibirPublicacion(PublicacionDeFiltros publicacion);
+
+	/**
+	 * Invocado al recibir una confirmación por una publicación recibida
+	 */
+	public void recibirConfirmacionDePublicacion(ConfirmacionDePublicacion confirmacion);
 
 }
