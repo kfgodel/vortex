@@ -35,13 +35,17 @@ public class TestPasosDeSimulacion {
 	private Simulador simulador;
 	private RouterImpl r1;
 	private PortalImpl p1;
+	private RouterImpl r2;
+	private PortalImpl p2;
 
 	@Before
 	public void crearSimulador() {
 		MensajeSupport.resetIds();
 		simulador = SimuladorImpl.create();
 		r1 = RouterImpl.create("R1", simulador);
+		r2 = RouterImpl.create("R2", simulador);
 		p1 = PortalImpl.create("P1", simulador);
+		p2 = PortalImpl.create("P2", simulador);
 	}
 
 	@Test
@@ -74,11 +78,41 @@ public class TestPasosDeSimulacion {
 	}
 
 	@Test
-	public void deberiaIndicarSiNoTieneAQuienPublicarFiltros() {
+	public void siNoTieneAQuienPublicarNoDeberiaGenerarPasos() {
 		p1.setearYPublicarFiltros("filtro1");
-		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
+		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
+	}
 
+	@Test
+	public void siNoHayComunicacionBidiElRouterNoDeberiaPoderConfirmarLaPublicacion() {
+		p1.conectarCon(r1);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		p1.setearYPublicarFiltros("filtro1");
+		// El paso de publicacion al router
+		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
+
+		// El router nunca contestó
+		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
+	}
+
+	@Test
+	public void siElRouterEstaConectadoAOtroPortalNoDeberiaRecepcionDeConfirmacion() {
+		p1.conectarCon(r1);
+		r1.conectarCon(p2);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		p1.setearYPublicarFiltros("filtro1");
+		// El paso de publicacion
+		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
+		simulador.ejecutarSiguiente();
+
+		// El paso de confirmacion para el portal equivocado
+		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
+		simulador.ejecutarSiguiente();
+
+		// El portal nunca contesto
 		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
 	}
 

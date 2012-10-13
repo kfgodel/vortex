@@ -22,7 +22,9 @@ import net.gaia.vortex.tests.router.Simulador;
 import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.pasos.PublicarAVecino;
-import net.gaia.vortex.tests.router.impl.pasos.PublicarSinVecinos;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase implementa el comportamiento para los test
@@ -30,6 +32,7 @@ import net.gaia.vortex.tests.router.impl.pasos.PublicarSinVecinos;
  * @author D. García
  */
 public class PortalImpl extends NodoSupport implements Portal {
+	private static final Logger LOG = LoggerFactory.getLogger(PortalImpl.class);
 
 	private LinkedHashSet<String> filtros;
 
@@ -54,7 +57,7 @@ public class PortalImpl extends NodoSupport implements Portal {
 	public void publicarFiltros() {
 		final List<Nodo> destinos = getDestinos();
 		if (destinos.isEmpty()) {
-			getSimulador().agregar(PublicarSinVecinos.create(this, getFiltros()));
+			LOG.debug("  Publicación de [{}] sin vecinos para filtros: {}", this.getNombre(), this.getFiltros());
 			return;
 		}
 
@@ -88,6 +91,14 @@ public class PortalImpl extends NodoSupport implements Portal {
 	@Override
 	public void recibirConfirmacionDePublicacion(final ConfirmacionDePublicacion confirmacion) {
 		super.recibirConfirmacionDePublicacion(confirmacion);
+
+		final PublicacionDeFiltros publicacionOriginal = confirmacion.getPublicacion();
+		if (!getEnviados().contains(publicacionOriginal)) {
+			// No lo enviamos nosotros
+			LOG.debug("  Rechazando en [{}] confirmación{} por publicacion{} no enviada",
+					new Object[] { this.getNombre(), confirmacion, confirmacion.getPublicacion() });
+			return;
+		}
 
 	}
 }

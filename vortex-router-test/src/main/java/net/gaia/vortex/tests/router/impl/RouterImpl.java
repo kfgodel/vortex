@@ -20,7 +20,9 @@ import net.gaia.vortex.tests.router.Simulador;
 import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.pasos.ConfirmarAVecino;
-import net.gaia.vortex.tests.router.impl.pasos.ConfirmarSinVecinos;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase implementa el roter para la simulacion
@@ -28,6 +30,7 @@ import net.gaia.vortex.tests.router.impl.pasos.ConfirmarSinVecinos;
  * @author D. García
  */
 public class RouterImpl extends NodoSupport implements Router {
+	private static final Logger LOG = LoggerFactory.getLogger(RouterImpl.class);
 
 	public static RouterImpl create(final String nombre, final Simulador simulador) {
 		final RouterImpl router = new RouterImpl();
@@ -54,7 +57,7 @@ public class RouterImpl extends NodoSupport implements Router {
 	private void confirmarOrigenDePublicacion(final PublicacionDeFiltros publicacion) {
 		final List<Nodo> destinos = getDestinos();
 		if (destinos.isEmpty()) {
-			getSimulador().agregar(ConfirmarSinVecinos.create(this, publicacion));
+			LOG.debug("  Confirmación de [{}] sin vecinos para publicacion: {}", this.getNombre(), publicacion);
 			return;
 		}
 
