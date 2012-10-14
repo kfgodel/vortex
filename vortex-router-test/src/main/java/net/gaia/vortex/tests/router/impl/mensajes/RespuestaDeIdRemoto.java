@@ -1,5 +1,5 @@
 /**
- * 13/10/2012 18:19:04 Copyright (C) 2011 Darío L. García
+ * 13/10/2012 21:33:23 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,42 +12,40 @@
  */
 package net.gaia.vortex.tests.router.impl.mensajes;
 
-import java.util.Set;
-
 import net.gaia.vortex.tests.router.impl.patas.filtros.FiltroPorStrings;
 
 /**
- * Esta clase representa el mensaje para publicar filtros de un nodo a otro
+ * Esta clase representa la respuesta que genera un nodo para indicar el id que le asigno a otro
  * 
  * @author D. García
  */
-public class PublicacionDeFiltros extends MensajeSupport {
+public class RespuestaDeIdRemoto extends MensajeSupport {
 
-	private Long idDePata;
+	private PedidoDeIdRemoto pedido;
 
-	private Set<String> filtros;
+	private Long idAsignado;
 
-	public Set<String> getFiltros() {
-		return filtros;
+	public Long getIdAsignado() {
+		return idAsignado;
 	}
 
-	public void setFiltros(final Set<String> filtros) {
-		this.filtros = filtros;
+	public void setIdAsignado(final Long idAsignado) {
+		this.idAsignado = idAsignado;
 	}
 
-	public static PublicacionDeFiltros create(final Long idDePataRemota, final Set<String> filtros) {
-		final PublicacionDeFiltros name = new PublicacionDeFiltros();
-		name.filtros = filtros;
-		name.idDePata = idDePataRemota;
+	public PedidoDeIdRemoto getPedido() {
+		return pedido;
+	}
+
+	public void setPedido(final PedidoDeIdRemoto pedido) {
+		this.pedido = pedido;
+	}
+
+	public static RespuestaDeIdRemoto create(final PedidoDeIdRemoto pedido, final Long idLocal) {
+		final RespuestaDeIdRemoto name = new RespuestaDeIdRemoto();
+		name.pedido = pedido;
+		name.idAsignado = idLocal;
 		return name;
-	}
-
-	public Long getIdDePata() {
-		return idDePata;
-	}
-
-	public void setIdDePata(final Long idDePata) {
-		this.idDePata = idDePata;
 	}
 
 	/**
@@ -57,5 +55,4 @@ public class PublicacionDeFiltros extends MensajeSupport {
 	public String getTag() {
 		return FiltroPorStrings.META_MENSAJE;
 	}
-
 }

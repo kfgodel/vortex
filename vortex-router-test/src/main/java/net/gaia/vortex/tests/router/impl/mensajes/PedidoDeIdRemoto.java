@@ -1,5 +1,5 @@
 /**
- * 13/10/2012 18:19:04 Copyright (C) 2011 Darío L. García
+ * 13/10/2012 21:19:44 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,35 +12,17 @@
  */
 package net.gaia.vortex.tests.router.impl.mensajes;
 
-import java.util.Set;
-
 import net.gaia.vortex.tests.router.impl.patas.filtros.FiltroPorStrings;
 
 /**
- * Esta clase representa el mensaje para publicar filtros de un nodo a otro
+ * Esta clase representa el mensaje enviado por un nodo para conocer el id con el que otro nodo lo
+ * conoce
  * 
  * @author D. García
  */
-public class PublicacionDeFiltros extends MensajeSupport {
+public class PedidoDeIdRemoto extends MensajeSupport {
 
 	private Long idDePata;
-
-	private Set<String> filtros;
-
-	public Set<String> getFiltros() {
-		return filtros;
-	}
-
-	public void setFiltros(final Set<String> filtros) {
-		this.filtros = filtros;
-	}
-
-	public static PublicacionDeFiltros create(final Long idDePataRemota, final Set<String> filtros) {
-		final PublicacionDeFiltros name = new PublicacionDeFiltros();
-		name.filtros = filtros;
-		name.idDePata = idDePataRemota;
-		return name;
-	}
 
 	public Long getIdDePata() {
 		return idDePata;
@@ -50,6 +32,12 @@ public class PublicacionDeFiltros extends MensajeSupport {
 		this.idDePata = idDePata;
 	}
 
+	public static PedidoDeIdRemoto create(final Long idDePataLocal) {
+		final PedidoDeIdRemoto name = new PedidoDeIdRemoto();
+		name.idDePata = idDePataLocal;
+		return name;
+	}
+
 	/**
 	 * @see net.gaia.vortex.tests.router.Mensaje#getTag()
 	 */
@@ -57,5 +45,4 @@ public class PublicacionDeFiltros extends MensajeSupport {
 	public String getTag() {
 		return FiltroPorStrings.META_MENSAJE;
 	}
-
 }

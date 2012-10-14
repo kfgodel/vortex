@@ -1,5 +1,5 @@
 /**
- * 13/10/2012 12:28:55 Copyright (C) 2011 Darío L. García
+ * 13/10/2012 21:21:55 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -13,43 +13,51 @@
 package net.gaia.vortex.tests.router.impl.pasos;
 
 import net.gaia.vortex.tests.router.Nodo;
-import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
+import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
 
 /**
- * Esta clase representa el paso donde un nodo le publica sus filtros al vecino
+ * Esta clase representa el paso que realzia un nodo para solicitar el id en otro nodo
  * 
  * @author D. García
  */
-public class PublicarAVecino extends PasoSupport {
+public class PedirIdRemoto extends PasoSupport {
 
-	private PataConectora vecino;
-	private PublicacionDeFiltros mensaje;
+	private PataConectora pata;
+	private PedidoDeIdRemoto pedido;
 
 	/**
 	 * @see net.gaia.vortex.tests.router.PasoSimulacion#ejecutar()
 	 */
 	@Override
 	public void ejecutar() {
-		final Nodo nodoVecino = vecino.getNodoRemoto();
-		nodoVecino.recibirPublicacion(mensaje);
+		final Nodo nodoVecino = pata.getNodoRemoto();
+		nodoVecino.recibirPedidoDeId(pedido);
 	}
 
-	public static PublicarAVecino create(final Nodo origen, final PataConectora pataSalida,
-			final PublicacionDeFiltros publicacion) {
-		final PublicarAVecino name = new PublicarAVecino();
-		name.setNodoLocal(origen);
-		name.setVecino(pataSalida);
-		name.mensaje = publicacion;
+	public static PedirIdRemoto create(final Nodo nodoOrigen, final PataConectora pataSalida,
+			final PedidoDeIdRemoto pedido) {
+		final PedirIdRemoto name = new PedirIdRemoto();
+		name.setNodoLocal(nodoOrigen);
+		name.pata = pataSalida;
+		name.pedido = pedido;
 		return name;
 	}
 
-	public PataConectora getVecino() {
-		return vecino;
+	public PataConectora getPata() {
+		return pata;
 	}
 
-	public void setVecino(final PataConectora vecino) {
-		this.vecino = vecino;
+	public void setPata(final PataConectora pata) {
+		this.pata = pata;
+	}
+
+	public PedidoDeIdRemoto getPedido() {
+		return pedido;
+	}
+
+	public void setPedido(final PedidoDeIdRemoto pedido) {
+		this.pedido = pedido;
 	}
 
 	/**
@@ -58,27 +66,23 @@ public class PublicarAVecino extends PasoSupport {
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("Publicación desde [");
+		builder.append("Pedido desde [");
 		if (getNodoLocal() != null) {
 			builder.append(getNodoLocal().getNombre());
 		}
 		builder.append(",");
-		if (getVecino() != null) {
-			builder.append(getVecino().getIdLocal());
+		if (getPata() != null) {
+			builder.append(getPata().getIdLocal());
 		}
 		builder.append("] a [");
-		if (getVecino() != null) {
-			builder.append(getVecino().getNodoRemoto().getNombre());
-			builder.append(",");
-			builder.append(getVecino().getIdRemoto());
+		if (getPata() != null) {
+			builder.append(getPata().getNodoRemoto().getNombre());
 		}
-		builder.append("] de filtros: ");
-		if (this.mensaje != null) {
-			builder.append(this.mensaje.getFiltros());
+		builder.append("] de id remoto");
+		if (this.pedido != null) {
 			builder.append(". ID: ");
-			builder.append(this.mensaje.getId());
+			builder.append(this.pedido.getId());
 		}
 		return builder.toString();
 	}
-
 }

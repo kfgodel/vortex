@@ -24,4 +24,9 @@ public interface Mensaje {
 	 */
 	public Long getId();
 
+	/**
+	 * Devuelve un String que representa contenido de este mensaje
+	 */
+	public String getTag();
+
 }

@@ -12,8 +12,9 @@
  */
 package net.gaia.vortex.tests.router;
 
-import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion;
+import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
+import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
 
 /**
  * Esta interfaz representa los elementos comunes a portales y routers
@@ -65,8 +66,19 @@ public interface Nodo {
 	public void recibirPublicacion(PublicacionDeFiltros publicacion);
 
 	/**
-	 * Invocado al recibir una confirmación por una publicación recibida
+	 * Invocado al recibir un pedido de ID desde un nodo
+	 * 
+	 * @param pedido
+	 *            El pedido recibido
 	 */
-	public void recibirConfirmacionDePublicacion(ConfirmacionDePublicacion confirmacion);
+	public void recibirPedidoDeId(PedidoDeIdRemoto pedido);
+
+	/**
+	 * Invocado al recibir la respuesta con el ID remoto para una conexión local
+	 * 
+	 * @param respuesta
+	 *            La respuesta que recibimos
+	 */
+	public void recibirRespuestaDeIdRemoto(RespuestaDeIdRemoto respuesta);
 
 }

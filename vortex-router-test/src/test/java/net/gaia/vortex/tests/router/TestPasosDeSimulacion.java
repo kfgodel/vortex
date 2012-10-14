@@ -89,7 +89,7 @@ public class TestPasosDeSimulacion {
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		p1.setearYPublicarFiltros("filtro1");
-		// El paso de publicacion al router
+		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
 
@@ -104,11 +104,11 @@ public class TestPasosDeSimulacion {
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		p1.setearYPublicarFiltros("filtro1");
-		// El paso de publicacion
+		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
 
-		// El paso de confirmacion para el portal equivocado
+		// El paso de respuesta de Id al portal equivocado
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
 
@@ -122,8 +122,22 @@ public class TestPasosDeSimulacion {
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		p1.setearYPublicarFiltros("filtro1");
+		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
+		simulador.ejecutarSiguiente();
 
-		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		// El paso de respuesta de Id al portal
+		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
+		simulador.ejecutarSiguiente();
+
+		// El paso de publicacion de filtros desde el portal
+		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
+		simulador.ejecutarSiguiente();
+
+		// No deberían quedar más tareas
+		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
+
+		// El router debería haber adaptado sus filtros para el portal
+		Assert.assertTrue(r1.usaFiltrosCon(p1, "filtro1"));
 	}
 }

@@ -14,14 +14,17 @@ package net.gaia.vortex.tests.router.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.vortex.tests.router.Mensaje;
 import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.Simulador;
-import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion;
+import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
+import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.pasos.ConectarBidi;
 import net.gaia.vortex.tests.router.impl.pasos.ConectarUni;
+import net.gaia.vortex.tests.router.impl.patas.PataConectora;
 
 /**
  * Esta clase implementa comportamiento comun del nodo
@@ -34,7 +37,9 @@ public class NodoSupport implements Nodo {
 
 	private Simulador simulador;
 
-	private List<Nodo> destinos;
+	private final AtomicLong proximoIdPata = new AtomicLong(0);
+
+	private List<PataConectora> destinos;
 
 	private List<Mensaje> enviados;
 	private List<Mensaje> recibidos;
@@ -59,13 +64,6 @@ public class NodoSupport implements Nodo {
 		this.simulador = simulador;
 	}
 
-	public List<Nodo> getDestinos() {
-		if (destinos == null) {
-			destinos = new ArrayList<Nodo>();
-		}
-		return destinos;
-	}
-
 	/**
 	 * @see net.gaia.vortex.tests.router.Nodo#conectarCon(net.gaia.vortex.tests.router.Nodo)
 	 */
@@ -80,7 +78,16 @@ public class NodoSupport implements Nodo {
 	 */
 	@Override
 	public void agregarDestino(final Nodo nodoDestino) {
-		getDestinos().add(nodoDestino);
+		final Long idNuevaPata = this.proximoIdPata.getAndIncrement();
+		final PataConectora nuevaPata = PataConectora.create(idNuevaPata, nodoDestino);
+		getDestinos().add(nuevaPata);
+	}
+
+	public List<PataConectora> getDestinos() {
+		if (destinos == null) {
+			destinos = new ArrayList<PataConectora>();
+		}
+		return destinos;
 	}
 
 	/**
@@ -88,7 +95,13 @@ public class NodoSupport implements Nodo {
 	 */
 	@Override
 	public boolean tieneComoDestinoA(final Nodo otro) {
-		return getDestinos().contains(otro);
+		final List<PataConectora> allDestinos = getDestinos();
+		for (final PataConectora pataConectora : allDestinos) {
+			if (pataConectora.conectaA(otro)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -134,10 +147,46 @@ public class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#recibirConfirmacionDePublicacion(net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion)
+	 * @see net.gaia.vortex.tests.router.Nodo#recibirPedidoDeId(net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto)
 	 */
 	@Override
-	public void recibirConfirmacionDePublicacion(final ConfirmacionDePublicacion confirmacion) {
-		getRecibidos().add(confirmacion);
+	public void recibirPedidoDeId(final PedidoDeIdRemoto pedido) {
+		getRecibidos().add(pedido);
 	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.Nodo#recibirRespuestaDeIdRemoto(net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto)
+	 */
+	@Override
+	public void recibirRespuestaDeIdRemoto(final RespuestaDeIdRemoto respuesta) {
+		getRecibidos().add(respuesta);
+	}
+
+	protected PataConectora getPataPorIdLocal(final Long idLocal) {
+		for (final PataConectora pataSalida : getDestinos()) {
+			final Long idDePata = pataSalida.getIdLocal();
+			if (idDePata.equals(idLocal)) {
+				return pataSalida;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Devuelve la pata de salida identificandola por nodo
+	 * 
+	 * @param nodo
+	 *            El nodo cuya pata quiere obtenerse
+	 * @return La pata del nodo o null si no existe
+	 */
+	protected PataConectora getPataPorNodo(final Nodo nodo) {
+		final List<PataConectora> allDestinos = getDestinos();
+		for (final PataConectora pataConectora : allDestinos) {
+			if (pataConectora.getNodoRemoto().equals(nodo)) {
+				return pataConectora;
+			}
+		}
+		return null;
+	}
+
 }

@@ -12,14 +12,18 @@
  */
 package net.gaia.vortex.tests.router.impl;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.Router;
 import net.gaia.vortex.tests.router.Simulador;
-import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDePublicacion;
+import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
-import net.gaia.vortex.tests.router.impl.pasos.ConfirmarAVecino;
+import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
+import net.gaia.vortex.tests.router.impl.pasos.ResponderIdRemoto;
+import net.gaia.vortex.tests.router.impl.patas.PataConectora;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,30 +44,83 @@ public class RouterImpl extends NodoSupport implements Router {
 	}
 
 	/**
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#recibirPedidoDeId(net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto)
+	 */
+	@Override
+	public void recibirPedidoDeId(final PedidoDeIdRemoto pedido) {
+		super.recibirPedidoDeId(pedido);
+		responderPedido(pedido);
+	}
+
+	/**
+	 * Intenta respo1nder el pedido recibido contestando a cada pata por separado
+	 * 
+	 * @param pedido
+	 *            El pedido recibido
+	 */
+	private void responderPedido(final PedidoDeIdRemoto pedido) {
+		final List<PataConectora> destinos = getDestinos();
+		if (destinos.isEmpty()) {
+			LOG.debug("  Respuesta desde [{}] sin salidas para pedido{}", this.getNombre(), pedido);
+			return;
+		}
+
+		for (final PataConectora pataSalida : destinos) {
+			responderPedidoA(pataSalida, pedido);
+		}
+	}
+
+	/**
+	 * Envía una respuesta del pedido realizado a la pata indicada
+	 * 
+	 * @param pataSalida
+	 *            La pata con la que se intenta responder
+	 * @param pedido
+	 *            El pedido que recibimos
+	 */
+	private void responderPedidoA(final PataConectora pataSalida, final PedidoDeIdRemoto pedido) {
+		final Long idLocal = pataSalida.getIdLocal();
+		final RespuestaDeIdRemoto respuesta = RespuestaDeIdRemoto.create(pedido, idLocal);
+		agregarComoEnviado(respuesta);
+		getSimulador().agregar(ResponderIdRemoto.create(this, pataSalida, respuesta));
+	}
+
+	/**
 	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#recibirPublicacion(net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros)
 	 */
 	@Override
 	public void recibirPublicacion(final PublicacionDeFiltros publicacion) {
 		super.recibirPublicacion(publicacion);
-		confirmarOrigenDePublicacion(publicacion);
+
+		final Long idLocal = publicacion.getIdDePata();
+		final PataConectora pataSalida = getPataPorIdLocal(idLocal);
+		if (pataSalida == null) {
+			LOG.debug("  Rechazando publicacion en [{},{}] por que ya no existe conexion",
+					new Object[] { this.getNombre(), idLocal });
+			return;
+		}
+		final Set<String> nuevosFiltros = publicacion.getFiltros();
+		pataSalida.filtrarCon(nuevosFiltros);
+		LOG.debug("  En [{},{}] solo se enviaran mensajes que cumplan el filtro{}: {}", new Object[] {
+				this.getNombre(), pataSalida.getIdLocal(), publicacion, nuevosFiltros });
 	}
 
 	/**
-	 * Envia una confiormación a cada nodo vecino para saber de dónde vino una publicación
+	 * Indica si este nodo utiliza los filtros indicados con el nodo pasado
 	 * 
-	 * @param publicacion
-	 *            La publicacion recibida
+	 * @param nodo
+	 *            El nodo para el que se quieren verificar los filtros usados
+	 * @param filtros
+	 *            Los filtros que debería usar
+	 * @return false si el nodo no está conectado a este router o el filtro no esta contenido en los
+	 *         usados
 	 */
-	private void confirmarOrigenDePublicacion(final PublicacionDeFiltros publicacion) {
-		final List<Nodo> destinos = getDestinos();
-		if (destinos.isEmpty()) {
-			LOG.debug("  Confirmación de [{}] sin vecinos para publicacion: {}", this.getNombre(), publicacion);
-			return;
+	public boolean usaFiltrosCon(final Nodo nodo, final String... filtros) {
+		final PataConectora pataSalida = getPataPorNodo(nodo);
+		if (pataSalida == null) {
+			return false;
 		}
-
-		for (final Nodo destino : destinos) {
-			final ConfirmacionDePublicacion confirmacion = ConfirmacionDePublicacion.create(publicacion);
-			getSimulador().agregar(ConfirmarAVecino.create(this, destino, confirmacion));
-		}
+		final boolean usaFiltro = pataSalida.getFiltroActual().usaA(Arrays.asList(filtros));
+		return usaFiltro;
 	}
 }
