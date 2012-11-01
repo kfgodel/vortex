@@ -43,6 +43,9 @@ public abstract class HandlerHttpPorComandos extends AbstractHandler {
 	public void handle(final String target, final Request baseRequest, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException, ServletException {
 		LOG.debug("Nuevo request recibido: {} \"{}\" ", baseRequest.getMethod(), baseRequest.getUri());
+		LOG.trace("Habilitando llamadas cross-domain para el request: {} \"{}\" ", baseRequest.getMethod(),
+				baseRequest.getUri());
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		try {
 			final ComandoHttp comandoRecibido = interpretarComandoDesde(target, baseRequest);
 			LOG.debug("Comando elegido: {}", comandoRecibido);
