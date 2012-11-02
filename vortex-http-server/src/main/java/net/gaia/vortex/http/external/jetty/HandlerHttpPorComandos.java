@@ -43,9 +43,7 @@ public abstract class HandlerHttpPorComandos extends AbstractHandler {
 	public void handle(final String target, final Request baseRequest, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException, ServletException {
 		LOG.debug("Nuevo request recibido: {} \"{}\" ", baseRequest.getMethod(), baseRequest.getUri());
-		LOG.trace("Habilitando llamadas cross-domain para el request: {} \"{}\" ", baseRequest.getMethod(),
-				baseRequest.getUri());
-		response.addHeader("Access-Control-Allow-Origin", "*");
+		permitirRequestCrossdomain(baseRequest, response);
 		try {
 			final ComandoHttp comandoRecibido = interpretarComandoDesde(target, baseRequest);
 			LOG.debug("Comando elegido: {}", comandoRecibido);
@@ -58,6 +56,30 @@ public abstract class HandlerHttpPorComandos extends AbstractHandler {
 			respuestaDeError.reflejarEn(response);
 		}
 		baseRequest.setHandled(true);
+	}
+
+	/**
+	 * Agrega en la respuesta las cabeceras necesarias para los requests crossdomain
+	 * 
+	 * @param baseRequest
+	 *            El request original
+	 * @param response
+	 *            La respuesta
+	 */
+	private void permitirRequestCrossdomain(final Request baseRequest, final HttpServletResponse response) {
+		LOG.trace("Habilitando llamadas cross-domain para el request: {} \"{}\" ", baseRequest.getMethod(),
+				baseRequest.getUri());
+		// Hosts que tienen permitido el acceso
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		// Tipo de requests permitidos
+		response.addHeader("Access-Control-Allow-Methods", "GET, POST");
+		// Cabeceras adicionales que quiere mandar
+		final String extraHeaders = baseRequest.getParameter("Access-Control-Allow-Headers");
+		if (extraHeaders != null && extraHeaders.length() > 0) {
+			response.addHeader("Access-Control-Allow-Headers", extraHeaders);
+		}
+		// Tiempo por el cual es valido el permiso en segundos
+		response.addHeader("Access-Control-Max-Age", String.valueOf(24 /* horas */* 60 /* minutos */* 60 /* segundos */));
 	}
 
 	/**
