@@ -74,7 +74,7 @@ public class PublicarAVecino extends PasoSupport {
 		}
 		builder.append("] de filtros: ");
 		if (this.mensaje != null) {
-			builder.append(this.mensaje.getFiltros());
+			builder.append(this.mensaje.getFiltro());
 			builder.append(". ID: ");
 			builder.append(this.mensaje.getId());
 		}

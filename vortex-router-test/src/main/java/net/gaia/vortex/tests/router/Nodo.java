@@ -27,7 +27,9 @@ public interface Nodo {
 	public String getNombre();
 
 	/**
-	 * Crea un enlace unidireccional desde este nodo al otro. Sin la contraparte
+	 * Crea un enlace unidireccional desde este nodo al otro. Sin la contraparte.<br>
+	 * Al conectar con el otro se produce una publicacion de filtros al nodo pasado, de manera que
+	 * conozca los filtros que se requieren
 	 * 
 	 * @param otro
 	 *            El otro nodo
@@ -51,7 +53,8 @@ public interface Nodo {
 	boolean tieneComoDestinoA(Nodo otro);
 
 	/**
-	 * Crea una conexión bidireccional entre este nodo y el pasado en un solo paso
+	 * Crea una conexión bidireccional entre este nodo y el pasado en un solo paso.<br>
+	 * Normalmente el otro nodo iniciará la publicación de filtros
 	 * 
 	 * @param otro
 	 *            El otro nodo al que se conectara
@@ -83,7 +86,9 @@ public interface Nodo {
 	public void recibirRespuestaDeIdRemoto(RespuestaDeIdRemoto respuesta);
 
 	/**
-	 * Publica los filtros utilizados por este portal a los nodos vecinos
+	 * Fuerza la publicación de los filtros utilizados por este nodo a los nodos vecinos.<br>
+	 * Los filtros de este nodo pueden deberse a que son propios (portal) o que son heredados de los
+	 * nodos vecinos
 	 */
 	public void publicarFiltros();
 

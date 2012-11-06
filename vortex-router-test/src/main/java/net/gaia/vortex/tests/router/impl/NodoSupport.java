@@ -14,7 +14,6 @@ package net.gaia.vortex.tests.router.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.vortex.tests.router.Mensaje;
@@ -31,6 +30,7 @@ import net.gaia.vortex.tests.router.impl.pasos.PedirIdRemoto;
 import net.gaia.vortex.tests.router.impl.pasos.PublicarAVecino;
 import net.gaia.vortex.tests.router.impl.pasos.ResponderIdRemoto;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
+import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,6 +139,18 @@ public abstract class NodoSupport implements Nodo {
 	@Override
 	public void recibirPublicacion(final PublicacionDeFiltros publicacion) {
 		getRecibidos().add(publicacion);
+
+		final Long idLocal = publicacion.getIdDePata();
+		final PataConectora pataSalida = getPataPorIdLocal(idLocal);
+		if (pataSalida == null) {
+			LOG.debug("  Rechazando publicacion en [{},{}] por que ya no existe conexion",
+					new Object[] { this.getNombre(), idLocal });
+			return;
+		}
+		final Filtro nuevosFiltros = publicacion.getFiltro();
+		pataSalida.filtrarCon(nuevosFiltros);
+		LOG.debug("  En [{},{}] solo se enviaran mensajes que cumplan el filtro{}: {}", new Object[] {
+				this.getNombre(), pataSalida.getIdLocal(), publicacion, nuevosFiltros });
 	}
 
 	public List<Mensaje> getRecibidos() {
@@ -268,13 +280,18 @@ public abstract class NodoSupport implements Nodo {
 	 * @param pataSalida
 	 *            La pata por la que se intentará comunicar los filtros a otro nodo
 	 */
-	private void publicarFiltrosEn(final PataConectora pataSalida) {
+	protected void publicarFiltrosEn(final PataConectora pataSalida) {
 		if (!pataSalida.tieneIdRemoto()) {
 			// Si no tiene ID tenemos que conseguirlo antes de publicar
 			conseguirIdRemotoDe(pataSalida);
 		} else {
 			final Long idRemoto = pataSalida.getIdRemoto();
-			final Set<String> filtrosParaLaPata = calcularFiltrosPara(pataSalida);
+			final Filtro filtrosParaLaPata = calcularFiltrosPara(pataSalida);
+			if (!pataSalida.seModificaron(filtrosParaLaPata)) {
+				LOG.debug("En [{},{}] no se republica, porque los filtros no cambiaron: {}", new Object[] {
+						getNombre(), pataSalida.getIdLocal(), filtrosParaLaPata });
+				return;
+			}
 			final PublicacionDeFiltros publicacion = PublicacionDeFiltros.create(idRemoto, filtrosParaLaPata);
 			agregarComoEnviado(publicacion);
 			getSimulador().agregar(PublicarAVecino.create(this, pataSalida, publicacion));
@@ -288,7 +305,7 @@ public abstract class NodoSupport implements Nodo {
 	 *            la pata a la que se enviara la publicacion de los filtros calculado
 	 * @return El conjunto de los filtros que define los mensajes que queremos recibir por esa pata
 	 */
-	protected abstract Set<String> calcularFiltrosPara(final PataConectora pataSalida);
+	protected abstract Filtro calcularFiltrosPara(final PataConectora pataSalida);
 
 	/**
 	 * Intenta intercambiar ids de patas para poder publicar filtros

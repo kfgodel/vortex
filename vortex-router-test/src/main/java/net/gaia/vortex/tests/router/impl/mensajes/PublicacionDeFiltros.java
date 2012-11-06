@@ -12,8 +12,7 @@
  */
 package net.gaia.vortex.tests.router.impl.mensajes;
 
-import java.util.Set;
-
+import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
 import net.gaia.vortex.tests.router.impl.patas.filtros.FiltroPorStrings;
 
 /**
@@ -25,19 +24,19 @@ public class PublicacionDeFiltros extends MensajeSupport {
 
 	private Long idDePata;
 
-	private Set<String> filtros;
+	private Filtro filtro;
 
-	public Set<String> getFiltros() {
-		return filtros;
+	public Filtro getFiltro() {
+		return filtro;
 	}
 
-	public void setFiltros(final Set<String> filtros) {
-		this.filtros = filtros;
+	public void setFiltro(final Filtro filtro) {
+		this.filtro = filtro;
 	}
 
-	public static PublicacionDeFiltros create(final Long idDePataRemota, final Set<String> filtros) {
+	public static PublicacionDeFiltros create(final Long idDePataRemota, final Filtro nuevoFiltro) {
 		final PublicacionDeFiltros name = new PublicacionDeFiltros();
-		name.filtros = filtros;
+		name.filtro = nuevoFiltro;
 		name.idDePata = idDePataRemota;
 		return name;
 	}

@@ -14,11 +14,12 @@ package net.gaia.vortex.tests.router.impl;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import net.gaia.vortex.tests.router.Portal;
 import net.gaia.vortex.tests.router.Simulador;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
+import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
+import net.gaia.vortex.tests.router.impl.patas.filtros.FiltroPorStrings;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,8 +71,8 @@ public class PortalImpl extends NodoSupport implements Portal {
 	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#calcularFiltrosPara(net.gaia.vortex.tests.router.impl.patas.PataConectora)
 	 */
 	@Override
-	protected Set<String> calcularFiltrosPara(final PataConectora pataSalida) {
-		return getFiltros();
+	protected Filtro calcularFiltrosPara(final PataConectora pataSalida) {
+		return FiltroPorStrings.create(getFiltros());
 	}
 
 }

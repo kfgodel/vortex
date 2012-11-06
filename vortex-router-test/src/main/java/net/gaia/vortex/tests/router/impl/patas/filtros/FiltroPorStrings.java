@@ -13,6 +13,7 @@
 package net.gaia.vortex.tests.router.impl.patas.filtros;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import net.gaia.vortex.tests.router.Mensaje;
@@ -68,4 +69,42 @@ public class FiltroPorStrings implements Filtro {
 		return true;
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof SinFiltro) {
+			return false;
+		}
+		if (!(obj instanceof FiltroPorStrings)) {
+			return false;
+		}
+		final FiltroPorStrings that = (FiltroPorStrings) obj;
+		final boolean sonIguales = this.getPermitidos().equals(that.getPermitidos());
+		return sonIguales;
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.impl.patas.filtros.Filtro#mergearCon(net.gaia.vortex.tests.router.impl.patas.filtros.Filtro)
+	 */
+	@Override
+	public Filtro mergearCon(final Filtro otroFiltro) {
+		if (otroFiltro instanceof SinFiltro) {
+			return otroFiltro;
+		}
+		final FiltroPorStrings that = (FiltroPorStrings) otroFiltro;
+		final LinkedHashSet<String> mergeados = new LinkedHashSet<String>();
+		mergeados.addAll(this.getPermitidos());
+		mergeados.addAll(that.getPermitidos());
+		return FiltroPorStrings.create(mergeados);
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getPermitidos().toString();
+	}
 }
