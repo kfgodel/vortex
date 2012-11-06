@@ -130,7 +130,11 @@ public class TestPasosDeSimulacion {
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
 
-		// El paso de publicacion de filtros desde el portal
+		// P1 al recibir, confirma la respuesta, y además publica
+		Assert.assertEquals(2, simulador.getCantidadDePasosPendientes());
+		simulador.ejecutarSiguiente();
+
+		// Ahora sí publica los filtros
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
 

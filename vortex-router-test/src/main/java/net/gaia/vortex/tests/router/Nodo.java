@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.tests.router;
 
+import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
@@ -80,5 +81,18 @@ public interface Nodo {
 	 *            La respuesta que recibimos
 	 */
 	public void recibirRespuestaDeIdRemoto(RespuestaDeIdRemoto respuesta);
+
+	/**
+	 * Publica los filtros utilizados por este portal a los nodos vecinos
+	 */
+	public void publicarFiltros();
+
+	/**
+	 * Invocado cuando este nodo recibe el mensaje final del handshake
+	 * 
+	 * @param confirmacion
+	 *            la confirmacion recibida
+	 */
+	public void recibirConfirmacionDeIdRemoto(ConfirmacionDeIdRemoto confirmacion);
 
 }

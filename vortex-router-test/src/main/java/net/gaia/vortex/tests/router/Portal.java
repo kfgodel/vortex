@@ -28,11 +28,6 @@ public interface Portal extends Nodo {
 	public void setFiltros(final String... filtros);
 
 	/**
-	 * Publica los filtros utilizados por este portal a los nodos vecinos
-	 */
-	public void publicarFiltros();
-
-	/**
 	 * Establece los filtros pasados y publica el cambio.<br>
 	 * Este método es una facilidad para no tener que invocar los pasos por separado
 	 * 
