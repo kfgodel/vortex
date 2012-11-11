@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.tests.router;
 
+import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
@@ -26,7 +27,9 @@ public interface Nodo {
 	public String getNombre();
 
 	/**
-	 * Crea un enlace unidireccional desde este nodo al otro. Sin la contraparte
+	 * Crea un enlace unidireccional desde este nodo al otro. Sin la contraparte.<br>
+	 * Al conectar con el otro se produce una publicacion de filtros al nodo pasado, de manera que
+	 * conozca los filtros que se requieren
 	 * 
 	 * @param otro
 	 *            El otro nodo
@@ -50,7 +53,8 @@ public interface Nodo {
 	boolean tieneComoDestinoA(Nodo otro);
 
 	/**
-	 * Crea una conexión bidireccional entre este nodo y el pasado en un solo paso
+	 * Crea una conexión bidireccional entre este nodo y el pasado en un solo paso.<br>
+	 * Normalmente el otro nodo iniciará la publicación de filtros
 	 * 
 	 * @param otro
 	 *            El otro nodo al que se conectara
@@ -80,5 +84,20 @@ public interface Nodo {
 	 *            La respuesta que recibimos
 	 */
 	public void recibirRespuestaDeIdRemoto(RespuestaDeIdRemoto respuesta);
+
+	/**
+	 * Fuerza la publicación de los filtros utilizados por este nodo a los nodos vecinos.<br>
+	 * Los filtros de este nodo pueden deberse a que son propios (portal) o que son heredados de los
+	 * nodos vecinos
+	 */
+	public void publicarFiltros();
+
+	/**
+	 * Invocado cuando este nodo recibe el mensaje final del handshake
+	 * 
+	 * @param confirmacion
+	 *            la confirmacion recibida
+	 */
+	public void recibirConfirmacionDeIdRemoto(ConfirmacionDeIdRemoto confirmacion);
 
 }

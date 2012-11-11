@@ -79,7 +79,7 @@ public class TestPasosDeSimulacion {
 
 	@Test
 	public void siNoTieneAQuienPublicarNoDeberiaGenerarPasos() {
-		p1.setearYPublicarFiltros("filtro1");
+		p1.setearYPublicarFiltros("tag1");
 		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
 	}
 
@@ -88,7 +88,7 @@ public class TestPasosDeSimulacion {
 		p1.conectarCon(r1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		p1.setearYPublicarFiltros("filtro1");
+		p1.setearYPublicarFiltros("tag1");
 		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
@@ -103,7 +103,7 @@ public class TestPasosDeSimulacion {
 		r1.conectarCon(p2);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		p1.setearYPublicarFiltros("filtro1");
+		p1.setearYPublicarFiltros("tag1");
 		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
@@ -121,7 +121,7 @@ public class TestPasosDeSimulacion {
 		p1.conectarBidi(r1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		p1.setearYPublicarFiltros("filtro1");
+		p1.setearYPublicarFiltros("tag1");
 		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
@@ -130,7 +130,11 @@ public class TestPasosDeSimulacion {
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
 
-		// El paso de publicacion de filtros desde el portal
+		// P1 al recibir, confirma la respuesta, y además publica
+		Assert.assertEquals(2, simulador.getCantidadDePasosPendientes());
+		simulador.ejecutarSiguiente();
+
+		// Ahora sí publica los filtros
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
 
@@ -138,7 +142,7 @@ public class TestPasosDeSimulacion {
 		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
 
 		// El router debería haber adaptado sus filtros para el portal
-		Assert.assertTrue(r1.usaFiltrosCon(p1, "filtro1"));
+		Assert.assertTrue(r1.usaFiltrosCon(p1, "tag1"));
 	}
 
 	@Test
@@ -147,7 +151,7 @@ public class TestPasosDeSimulacion {
 		r1.conectarBidi(r2);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		p1.setearYPublicarFiltros("filtro1");
+		p1.setearYPublicarFiltros("tag1");
 		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));

@@ -40,4 +40,13 @@ public interface Filtro {
 	 * @return true si este filtro contiene a todos los valores esperados
 	 */
 	public boolean usaA(Collection<String> filtros);
+
+	/**
+	 * Devuelve un filtro que es la union de las condiciones de este filtro y el pasado
+	 * 
+	 * @param otroFiltro
+	 *            El filtro a unir
+	 * @return Un nuevo filtro con la resultante de los dos
+	 */
+	public Filtro mergearCon(Filtro otroFiltro);
 }

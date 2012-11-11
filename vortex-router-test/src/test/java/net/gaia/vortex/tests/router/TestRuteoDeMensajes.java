@@ -62,11 +62,35 @@ public class TestRuteoDeMensajes {
 		// publicar los filtros de ambos portales
 		pan.setearYPublicarFiltros("pan");
 		torta.setearYPublicarFiltros("torta");
-		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		simulador.ejecutarTodos(TimeMagnitude.of(5, TimeUnit.MINUTES));
 
 		// enviar el mensaje desde el origen
 		// correr la simulacion
 		// verificar que el mensaje llego a donde debía y no a donde no
+	}
+
+	@Test
+	public void ruteoConConexionesEnOrden() {
+		// armar la red conectando las cosas
+		final PortalImpl pan = PortalImpl.create("Pan", simulador);
+		final PortalImpl torta = PortalImpl.create("Torta", simulador);
+		final RouterImpl r1 = RouterImpl.create("R1", simulador);
+		final RouterImpl r2 = RouterImpl.create("r2", simulador);
+		final PortalImpl panificador = PortalImpl.create("Panificador", simulador);
+
+		pan.conectarBidi(r1);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		pan.setearYPublicarFiltros("pan");
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		torta.conectarBidi(r1);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		torta.setearYPublicarFiltros("torta");
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		r1.conectarBidi(r2);
+		r2.conectarBidi(panificador);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 	}
 
 }

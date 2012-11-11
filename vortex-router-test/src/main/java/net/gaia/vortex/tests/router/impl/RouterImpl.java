@@ -14,22 +14,23 @@ package net.gaia.vortex.tests.router.impl;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.Router;
 import net.gaia.vortex.tests.router.Simulador;
-import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
-import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
-import net.gaia.vortex.tests.router.impl.pasos.ResponderIdRemoto;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
+import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
+import net.gaia.vortex.tests.router.impl.patas.filtros.SinFiltro;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Esta clase implementa el roter para la simulacion
+ * Esta clase implementa el router para la simulacion.<br>
+ * El router a diferencia del portal, no tiene filtros propios (porque no recibe mensajes para sí),
+ * y cuando recibe mensajes, los rutea a los interesados según los filtros de otros. También propaga
+ * los filtros de los demas, como si fueran propios
  * 
  * @author D. García
  */
@@ -41,68 +42,6 @@ public class RouterImpl extends NodoSupport implements Router {
 		router.setNombre(nombre);
 		router.setSimulador(simulador);
 		return router;
-	}
-
-	/**
-	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#recibirPedidoDeId(net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto)
-	 */
-	@Override
-	public void recibirPedidoDeId(final PedidoDeIdRemoto pedido) {
-		super.recibirPedidoDeId(pedido);
-		responderPedido(pedido);
-	}
-
-	/**
-	 * Intenta respo1nder el pedido recibido contestando a cada pata por separado
-	 * 
-	 * @param pedido
-	 *            El pedido recibido
-	 */
-	private void responderPedido(final PedidoDeIdRemoto pedido) {
-		final List<PataConectora> destinos = getDestinos();
-		if (destinos.isEmpty()) {
-			LOG.debug("  Respuesta desde [{}] sin salidas para pedido{}", this.getNombre(), pedido);
-			return;
-		}
-
-		for (final PataConectora pataSalida : destinos) {
-			responderPedidoA(pataSalida, pedido);
-		}
-	}
-
-	/**
-	 * Envía una respuesta del pedido realizado a la pata indicada
-	 * 
-	 * @param pataSalida
-	 *            La pata con la que se intenta responder
-	 * @param pedido
-	 *            El pedido que recibimos
-	 */
-	private void responderPedidoA(final PataConectora pataSalida, final PedidoDeIdRemoto pedido) {
-		final Long idLocal = pataSalida.getIdLocal();
-		final RespuestaDeIdRemoto respuesta = RespuestaDeIdRemoto.create(pedido, idLocal);
-		agregarComoEnviado(respuesta);
-		getSimulador().agregar(ResponderIdRemoto.create(this, pataSalida, respuesta));
-	}
-
-	/**
-	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#recibirPublicacion(net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros)
-	 */
-	@Override
-	public void recibirPublicacion(final PublicacionDeFiltros publicacion) {
-		super.recibirPublicacion(publicacion);
-
-		final Long idLocal = publicacion.getIdDePata();
-		final PataConectora pataSalida = getPataPorIdLocal(idLocal);
-		if (pataSalida == null) {
-			LOG.debug("  Rechazando publicacion en [{},{}] por que ya no existe conexion",
-					new Object[] { this.getNombre(), idLocal });
-			return;
-		}
-		final Set<String> nuevosFiltros = publicacion.getFiltros();
-		pataSalida.filtrarCon(nuevosFiltros);
-		LOG.debug("  En [{},{}] solo se enviaran mensajes que cumplan el filtro{}: {}", new Object[] {
-				this.getNombre(), pataSalida.getIdLocal(), publicacion, nuevosFiltros });
 	}
 
 	/**
@@ -120,7 +59,65 @@ public class RouterImpl extends NodoSupport implements Router {
 		if (pataSalida == null) {
 			return false;
 		}
-		final boolean usaFiltro = pataSalida.getFiltroActual().usaA(Arrays.asList(filtros));
+		final boolean usaFiltro = pataSalida.getFiltroDeSalida().usaA(Arrays.asList(filtros));
 		return usaFiltro;
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#calcularFiltrosPara(net.gaia.vortex.tests.router.impl.patas.PataConectora)
+	 */
+	@Override
+	protected Filtro calcularFiltrosPara(final PataConectora pataSalida) {
+		Filtro filtroResultante = null;
+		final List<PataConectora> allPatas = getDestinos();
+		for (final PataConectora pataConectora : allPatas) {
+			if (pataSalida.equals(pataConectora)) {
+				// No queremos republicarle sus propios filtros!
+				continue;
+			}
+			final Filtro filtroDePata = pataConectora.getFiltroDeSalida();
+			if (filtroResultante == null) {
+				// Es la primera iteracion
+				filtroResultante = filtroDePata;
+			} else {
+				filtroResultante = filtroResultante.mergearCon(filtroDePata);
+			}
+		}
+		if (filtroResultante == null) {
+			filtroResultante = SinFiltro.create();
+		}
+		return filtroResultante;
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#recibirPublicacion(net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros)
+	 */
+	@Override
+	public void recibirPublicacion(final PublicacionDeFiltros publicacion) {
+		super.recibirPublicacion(publicacion);
+		propagarFiltros();
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#propagarFiltrosDe(net.gaia.vortex.tests.router.impl.patas.PataConectora)
+	 */
+	protected void propagarFiltros() {
+		final List<PataConectora> allPatas = getDestinos();
+		LOG.debug("Propagando filtros desde [{}] a {} patas", getNombre(), allPatas.size());
+		for (final PataConectora pataConectora : allPatas) {
+			publicarFiltrosEn(pataConectora);
+		}
+	}
+
+	/**
+	 * Genera una versión mergeada de los filtros de las otras patas exceptuando a la pasada
+	 * 
+	 * @param pataConectora
+	 *            La excluida del merge
+	 * @return El filtro resultante del merge
+	 */
+	private Filtro mergearFiltrosPara(final PataConectora pataConectora) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("El método no fue implementado");
 	}
 }

@@ -19,19 +19,29 @@ import java.util.concurrent.atomic.AtomicLong;
 import net.gaia.vortex.tests.router.Mensaje;
 import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.Simulador;
+import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.pasos.ConectarBidi;
 import net.gaia.vortex.tests.router.impl.pasos.ConectarUni;
+import net.gaia.vortex.tests.router.impl.pasos.ConfirmarIdRemoto;
+import net.gaia.vortex.tests.router.impl.pasos.PedirIdRemoto;
+import net.gaia.vortex.tests.router.impl.pasos.PublicarAVecino;
+import net.gaia.vortex.tests.router.impl.pasos.ResponderIdRemoto;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
+import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase implementa comportamiento comun del nodo
  * 
  * @author D. García
  */
-public class NodoSupport implements Nodo {
+public abstract class NodoSupport implements Nodo {
+	private static final Logger LOG = LoggerFactory.getLogger(NodoSupport.class);
 
 	private String nombre;
 
@@ -129,6 +139,18 @@ public class NodoSupport implements Nodo {
 	@Override
 	public void recibirPublicacion(final PublicacionDeFiltros publicacion) {
 		getRecibidos().add(publicacion);
+
+		final Long idLocal = publicacion.getIdDePata();
+		final PataConectora pataSalida = getPataPorIdLocal(idLocal);
+		if (pataSalida == null) {
+			LOG.debug("  Rechazando publicacion en [{},{}] por que ya no existe conexion",
+					new Object[] { this.getNombre(), idLocal });
+			return;
+		}
+		final Filtro nuevosFiltros = publicacion.getFiltro();
+		pataSalida.filtrarCon(nuevosFiltros);
+		LOG.debug("  En [{},{}] solo se enviaran mensajes que cumplan el filtro{}: {}", new Object[] {
+				this.getNombre(), pataSalida.getIdLocal(), publicacion, nuevosFiltros });
 	}
 
 	public List<Mensaje> getRecibidos() {
@@ -152,6 +174,7 @@ public class NodoSupport implements Nodo {
 	@Override
 	public void recibirPedidoDeId(final PedidoDeIdRemoto pedido) {
 		getRecibidos().add(pedido);
+		responderPedido(pedido);
 	}
 
 	/**
@@ -160,6 +183,52 @@ public class NodoSupport implements Nodo {
 	@Override
 	public void recibirRespuestaDeIdRemoto(final RespuestaDeIdRemoto respuesta) {
 		getRecibidos().add(respuesta);
+
+		final PedidoDeIdRemoto pedidoOriginal = respuesta.getPedido();
+		if (!getEnviados().contains(pedidoOriginal)) {
+			// No lo enviamos nosotros
+			LOG.debug("  Rechazando en [{}] respuesta{} por pedido{} no realizado", new Object[] { this.getNombre(),
+					respuesta, pedidoOriginal });
+			return;
+		}
+
+		final Long idLocal = pedidoOriginal.getIdDePata();
+		final Long idRemoto = respuesta.getIdAsignado();
+		final PataConectora pataSalida = asociarIdRemotoAPataLocal(idLocal, idRemoto);
+		if (pataSalida == null) {
+			// Ya no está más conectado
+			LOG.debug("  Publicacion de filtros desde [{},{}] a [?,{}] no posible por que ya no existe conexion",
+					new Object[] { this.getNombre(), idLocal, idRemoto });
+			return;
+		}
+		enviarConfirmacionDeIdEn(pataSalida, respuesta);
+		publicarFiltrosEn(pataSalida);
+	}
+
+	private void enviarConfirmacionDeIdEn(final PataConectora pataSalida, final RespuestaDeIdRemoto respuesta) {
+		final Long idLocal = pataSalida.getIdLocal();
+		final ConfirmacionDeIdRemoto confirmacion = ConfirmacionDeIdRemoto.create(respuesta, idLocal);
+		agregarComoEnviado(confirmacion);
+		getSimulador().agregar(ConfirmarIdRemoto.create(this, pataSalida, confirmacion));
+	}
+
+	/**
+	 * Busca la pata local referida en la respuesta y le asigna el ID remoto que nos indican
+	 * 
+	 * @param respuesta
+	 *            La respuesta que asigna un id remoto
+	 * @param idLocal
+	 * @param idRemoto
+	 * @return La pata local a la que corresponde la respuesta
+	 */
+	private PataConectora asociarIdRemotoAPataLocal(final Long idLocal, final Long idRemoto) {
+		final PataConectora pataSalida = getPataPorIdLocal(idLocal);
+		if (pataSalida == null) {
+			// Ya no existe la paga
+			return null;
+		}
+		pataSalida.setIdRemoto(idRemoto);
+		return pataSalida;
 	}
 
 	protected PataConectora getPataPorIdLocal(final Long idLocal) {
@@ -189,4 +258,124 @@ public class NodoSupport implements Nodo {
 		return null;
 	}
 
+	/**
+	 * @see net.gaia.vortex.tests.router.Portal#publicarFiltros()
+	 */
+	@Override
+	public void publicarFiltros() {
+		final List<PataConectora> destinos = getDestinos();
+		if (destinos.isEmpty()) {
+			LOG.debug("  Publicación desde [{}] sin patas de salida. Abortando", this.getNombre());
+			return;
+		}
+
+		for (final PataConectora pataSalida : destinos) {
+			publicarFiltrosEn(pataSalida);
+		}
+	}
+
+	/**
+	 * Intenta publicar los filtros en la pata indicada
+	 * 
+	 * @param pataSalida
+	 *            La pata por la que se intentará comunicar los filtros a otro nodo
+	 */
+	protected void publicarFiltrosEn(final PataConectora pataSalida) {
+		if (!pataSalida.tieneIdRemoto()) {
+			// Si no tiene ID tenemos que conseguirlo antes de publicar
+			conseguirIdRemotoDe(pataSalida);
+		} else {
+			final Long idRemoto = pataSalida.getIdRemoto();
+			final Filtro filtrosParaLaPata = calcularFiltrosPara(pataSalida);
+			if (!pataSalida.seModificaron(filtrosParaLaPata)) {
+				LOG.debug("En [{},{}] no se republica, porque los filtros no cambiaron: {}", new Object[] {
+						getNombre(), pataSalida.getIdLocal(), filtrosParaLaPata });
+				return;
+			}
+			final PublicacionDeFiltros publicacion = PublicacionDeFiltros.create(idRemoto, filtrosParaLaPata);
+			agregarComoEnviado(publicacion);
+			getSimulador().agregar(PublicarAVecino.create(this, pataSalida, publicacion));
+		}
+	}
+
+	/**
+	 * Define cuáles son los filtros que corresponde publicar a la pata pasada
+	 * 
+	 * @param pataSalida
+	 *            la pata a la que se enviara la publicacion de los filtros calculado
+	 * @return El conjunto de los filtros que define los mensajes que queremos recibir por esa pata
+	 */
+	protected abstract Filtro calcularFiltrosPara(final PataConectora pataSalida);
+
+	/**
+	 * Intenta intercambiar ids de patas para poder publicar filtros
+	 * 
+	 * @param pataSalida
+	 *            La pata sin id
+	 */
+	private void conseguirIdRemotoDe(final PataConectora pataSalida) {
+		final Long idLocal = pataSalida.getIdLocal();
+		final PedidoDeIdRemoto pedidoDeIdRemoto = PedidoDeIdRemoto.create(idLocal);
+		agregarComoEnviado(pedidoDeIdRemoto);
+		getSimulador().agregar(PedirIdRemoto.create(this, pataSalida, pedidoDeIdRemoto));
+	}
+
+	/**
+	 * Intenta respo1nder el pedido recibido contestando a cada pata por separado
+	 * 
+	 * @param pedido
+	 *            El pedido recibido
+	 */
+	private void responderPedido(final PedidoDeIdRemoto pedido) {
+		final List<PataConectora> destinos = getDestinos();
+		if (destinos.isEmpty()) {
+			LOG.debug("  Respuesta desde [{}] sin salidas para pedido{}", this.getNombre(), pedido);
+			return;
+		}
+
+		for (final PataConectora pataSalida : destinos) {
+			responderPedidoA(pataSalida, pedido);
+		}
+	}
+
+	/**
+	 * Envía una respuesta del pedido realizado a la pata indicada
+	 * 
+	 * @param pataSalida
+	 *            La pata con la que se intenta responder
+	 * @param pedido
+	 *            El pedido que recibimos
+	 */
+	private void responderPedidoA(final PataConectora pataSalida, final PedidoDeIdRemoto pedido) {
+		final Long idLocal = pataSalida.getIdLocal();
+		final RespuestaDeIdRemoto respuesta = RespuestaDeIdRemoto.create(pedido, idLocal);
+		agregarComoEnviado(respuesta);
+		getSimulador().agregar(ResponderIdRemoto.create(this, pataSalida, respuesta));
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.Nodo#recibirConfirmacionDeIdRemoto(net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto)
+	 */
+	@Override
+	public void recibirConfirmacionDeIdRemoto(final ConfirmacionDeIdRemoto confirmacion) {
+		getRecibidos().add(confirmacion);
+
+		final RespuestaDeIdRemoto respuestaOriginal = confirmacion.getRespuesta();
+		if (!getEnviados().contains(respuestaOriginal)) {
+			// No lo enviamos nosotros
+			LOG.debug("  Rechazando en [{}] confirmacion{} por respuesta{} no realizada",
+					new Object[] { this.getNombre(), confirmacion, respuestaOriginal });
+			return;
+		}
+
+		final Long idLocal = respuestaOriginal.getIdAsignado();
+		final Long idRemoto = confirmacion.getIdAsignado();
+		final PataConectora pataSalida = asociarIdRemotoAPataLocal(idLocal, idRemoto);
+		if (pataSalida == null) {
+			// Ya no está más conectado
+			LOG.debug("  Respuesta de filtros desde [{},{}] a [?,{}] no posible por que ya no existe conexion",
+					new Object[] { this.getNombre(), idLocal, idRemoto });
+			return;
+		}
+	}
 }

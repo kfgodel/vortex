@@ -12,11 +12,8 @@
  */
 package net.gaia.vortex.tests.router.impl.patas;
 
-import java.util.Set;
-
 import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
-import net.gaia.vortex.tests.router.impl.patas.filtros.FiltroPorStrings;
 import net.gaia.vortex.tests.router.impl.patas.filtros.SinFiltro;
 
 /**
@@ -30,7 +27,8 @@ public class PataConectora {
 	private Long idLocal;
 	private Long idRemoto;
 	private Nodo nodoRemoto;
-	private Filtro filtroActual;
+	private Filtro filtroDeSalida;
+	private Filtro filtroPublicado;
 
 	public Long getIdLocal() {
 		return idLocal;
@@ -57,11 +55,12 @@ public class PataConectora {
 	}
 
 	public static PataConectora create(final Long idLocal, final Nodo nodoRemoto) {
-		final PataConectora name = new PataConectora();
-		name.idLocal = idLocal;
-		name.nodoRemoto = nodoRemoto;
-		name.filtroActual = SinFiltro.create();
-		return name;
+		final PataConectora pata = new PataConectora();
+		pata.idLocal = idLocal;
+		pata.nodoRemoto = nodoRemoto;
+		pata.filtroDeSalida = SinFiltro.create();
+		pata.filtroPublicado = SinFiltro.create();
+		return pata;
 	}
 
 	/**
@@ -90,16 +89,36 @@ public class PataConectora {
 	 * @param nuevosFiltros
 	 *            Los filtros usables en esta pata
 	 */
-	public void filtrarCon(final Set<String> nuevosFiltros) {
-		this.filtroActual = FiltroPorStrings.create(nuevosFiltros);
+	public void filtrarCon(final Filtro nuevosFiltros) {
+		this.filtroDeSalida = nuevosFiltros;
 	}
 
-	public Filtro getFiltroActual() {
-		return filtroActual;
+	public Filtro getFiltroDeSalida() {
+		return filtroDeSalida;
 	}
 
-	public void setFiltroActual(final Filtro filtroActual) {
-		this.filtroActual = filtroActual;
+	public void setFiltroDeSalida(final Filtro filtroActual) {
+		this.filtroDeSalida = filtroActual;
 	}
 
+	public Filtro getFiltroPublicado() {
+		return filtroPublicado;
+	}
+
+	public void setFiltroPublicado(final Filtro filtroPublicado) {
+		this.filtroPublicado = filtroPublicado;
+	}
+
+	/**
+	 * Indica si el filtro pasado es igual logicamente al ultimo filtro publicado
+	 * 
+	 * @param filtroModificado
+	 *            Nuevo filtro para esta pata
+	 * @return false si son iguales
+	 */
+	public boolean seModificaron(final Filtro filtroModificado) {
+		final Filtro ultimaPublicacion = this.getFiltroPublicado();
+		final boolean sonIguales = ultimaPublicacion.equals(filtroModificado);
+		return !sonIguales;
+	}
 }

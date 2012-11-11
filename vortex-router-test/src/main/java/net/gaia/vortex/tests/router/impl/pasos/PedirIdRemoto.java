@@ -66,7 +66,12 @@ public class PedirIdRemoto extends PasoSupport {
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("Pedido desde [");
+		builder.append("Pedido[");
+		if (this.pedido != null) {
+			builder.append(this.pedido.getId());
+		}
+		builder.append("] desde [");
+
 		if (getNodoLocal() != null) {
 			builder.append(getNodoLocal().getNombre());
 		}
@@ -79,10 +84,6 @@ public class PedirIdRemoto extends PasoSupport {
 			builder.append(getPata().getNodoRemoto().getNombre());
 		}
 		builder.append("] de id remoto");
-		if (this.pedido != null) {
-			builder.append(". ID: ");
-			builder.append(this.pedido.getId());
-		}
 		return builder.toString();
 	}
 }

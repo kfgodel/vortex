@@ -44,4 +44,31 @@ public class SinFiltro implements Filtro {
 	public boolean usaA(final Collection<String> filtros) {
 		return false;
 	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof SinFiltro) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.impl.patas.filtros.Filtro#mergearCon(net.gaia.vortex.tests.router.impl.patas.filtros.Filtro)
+	 */
+	@Override
+	public Filtro mergearCon(final Filtro otroFiltro) {
+		return this;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SinFiltro";
+	}
 }
