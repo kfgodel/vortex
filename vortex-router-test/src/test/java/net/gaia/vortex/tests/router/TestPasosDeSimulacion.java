@@ -53,28 +53,12 @@ public class TestPasosDeSimulacion {
 		p1.conectarCon(r1);
 
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
-
-		r1.conectarCon(p1);
-		Assert.assertEquals(2, simulador.getCantidadDePasosPendientes());
-
-		simulador.ejecutarSiguiente();
-		simulador.ejecutarSiguiente();
-		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
-
-		Assert.assertTrue(p1.tieneComoDestinoA(r1));
-		Assert.assertTrue(r1.tieneComoDestinoA(p1));
 	}
 
 	@Test
 	public void deberiaMostrarLaConexionBidiComoUnSoloPaso() {
 		p1.conectarBidi(r1);
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
-
-		simulador.ejecutarSiguiente();
-		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
-
-		Assert.assertTrue(p1.tieneComoDestinoA(r1));
-		Assert.assertTrue(r1.tieneComoDestinoA(p1));
 	}
 
 	@Test
@@ -119,22 +103,11 @@ public class TestPasosDeSimulacion {
 	@Test
 	public void deberiaSeguirLosPasosQueDefinimosConJavierAlPublicarUnoAUno() {
 		p1.conectarBidi(r1);
+		// Se realizan toda la interconexion bidireccional
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		p1.setearYPublicarFiltros("tag1");
 		// El paso de pedido de id al router
-		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
-		simulador.ejecutarSiguiente();
-
-		// El paso de respuesta de Id al portal
-		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
-		simulador.ejecutarSiguiente();
-
-		// P1 al recibir, confirma la respuesta, y además publica
-		Assert.assertEquals(2, simulador.getCantidadDePasosPendientes());
-		simulador.ejecutarSiguiente();
-
-		// Ahora sí publica los filtros
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
 
