@@ -64,7 +64,11 @@ public class PublicarAVecino extends PasoSupport {
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("Publicación desde [");
+		builder.append("Publicación[");
+		if (this.mensaje != null) {
+			builder.append(this.mensaje.getId());
+		}
+		builder.append("] desde [");
 		if (getNodoLocal() != null) {
 			builder.append(getNodoLocal().getNombre());
 		}
@@ -78,12 +82,7 @@ public class PublicarAVecino extends PasoSupport {
 			builder.append(",");
 			builder.append(getVecino().getIdRemoto());
 		}
-		builder.append("] de filtros: ");
-		if (this.mensaje != null) {
-			builder.append(this.mensaje.getFiltro());
-			builder.append(". ID: ");
-			builder.append(this.mensaje.getId());
-		}
+		builder.append("] de filtros");
 		return builder.toString();
 	}
 

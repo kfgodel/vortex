@@ -15,6 +15,7 @@ package net.gaia.vortex.tests.router.impl.patas;
 import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
 import net.gaia.vortex.tests.router.impl.patas.filtros.SinFiltro;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa el punto de conexión que un nodo tiene con otro para identificarlo, e
@@ -25,10 +26,18 @@ import net.gaia.vortex.tests.router.impl.patas.filtros.SinFiltro;
 public class PataConectora {
 
 	private Long idLocal;
+	public static final String idLocal_FIELD = "idLocal";
+
 	private Long idRemoto;
+	public static final String idRemoto_FIELD = "idRemoto";
 	private Nodo nodoRemoto;
+	public static final String nodoRemoto_FIELD = "nodoRemoto";
+
 	private Filtro filtroDeSalida;
+	public static final String filtroDeSalida_FIELD = "filtroDeSalida";
+
 	private Filtro filtroPublicado;
+	public static final String filtroPublicado_FIELD = "filtroPublicado";
 
 	public Long getIdLocal() {
 		return idLocal;
@@ -54,6 +63,15 @@ public class PataConectora {
 		this.nodoRemoto = vecino;
 	}
 
+	/**
+	 * Crea una pata para ser usada en las comunicaciones
+	 * 
+	 * @param idLocal
+	 *            El identificador dentro del nodo
+	 * @param nodoRemoto
+	 *            El nodo destino de las comunicaciones
+	 * @return La pata creada
+	 */
 	public static PataConectora create(final Long idLocal, final Nodo nodoRemoto) {
 		final PataConectora pata = new PataConectora();
 		pata.idLocal = idLocal;
@@ -116,9 +134,20 @@ public class PataConectora {
 	 *            Nuevo filtro para esta pata
 	 * @return false si son iguales
 	 */
-	public boolean seModificaron(final Filtro filtroModificado) {
+	public boolean yaSePublico(final Filtro filtroModificado) {
 		final Filtro ultimaPublicacion = this.getFiltroPublicado();
 		final boolean sonIguales = ultimaPublicacion.equals(filtroModificado);
-		return !sonIguales;
+		return sonIguales;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(idLocal_FIELD, idLocal).con(idRemoto_FIELD, idRemoto)
+				.con(filtroDeSalida_FIELD, filtroDeSalida).con(filtroPublicado_FIELD, filtroPublicado)
+				.con(nodoRemoto_FIELD, nodoRemoto).toString();
+	}
+
 }

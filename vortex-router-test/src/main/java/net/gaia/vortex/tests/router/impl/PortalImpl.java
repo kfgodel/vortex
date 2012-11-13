@@ -20,6 +20,7 @@ import net.gaia.vortex.tests.router.Simulador;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
 import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
 import net.gaia.vortex.tests.router.impl.patas.filtros.FiltroPorStrings;
+import net.gaia.vortex.tests.router.impl.patas.filtros.SinFiltro;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,19 +35,14 @@ import org.slf4j.LoggerFactory;
 public class PortalImpl extends NodoSupport implements Portal {
 	private static final Logger LOG = LoggerFactory.getLogger(PortalImpl.class);
 
-	private LinkedHashSet<String> filtros;
-
-	public LinkedHashSet<String> getFiltros() {
-		if (filtros == null) {
-			filtros = new LinkedHashSet<String>();
-		}
-		return filtros;
-	}
+	private Filtro filtroPedidoPorUsuario;
 
 	public static PortalImpl create(final String nombre, final Simulador simulador) {
 		final PortalImpl portal = new PortalImpl();
 		portal.setNombre(nombre);
 		portal.setSimulador(simulador);
+		// El estado inicial es que se piden todos los mensajes
+		portal.filtroPedidoPorUsuario = SinFiltro.create();
 		return portal;
 	}
 
@@ -55,7 +51,8 @@ public class PortalImpl extends NodoSupport implements Portal {
 	 */
 	@Override
 	public void setFiltros(final String... filtros) {
-		this.filtros = new LinkedHashSet<String>(Arrays.asList(filtros));
+		final LinkedHashSet<String> pedidos = new LinkedHashSet<String>(Arrays.asList(filtros));
+		this.filtroPedidoPorUsuario = FiltroPorStrings.create(pedidos);
 	}
 
 	/**
@@ -72,7 +69,7 @@ public class PortalImpl extends NodoSupport implements Portal {
 	 */
 	@Override
 	protected Filtro calcularFiltrosPara(final PataConectora pataSalida) {
-		return FiltroPorStrings.create(getFiltros());
+		return filtroPedidoPorUsuario;
 	}
 
 }

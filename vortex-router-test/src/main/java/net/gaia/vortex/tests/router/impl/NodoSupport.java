@@ -302,11 +302,13 @@ public abstract class NodoSupport implements Nodo {
 	private void actualizarFiltrosEn(final PataConectora pataSalida) {
 		final Long idRemoto = pataSalida.getIdRemoto();
 		final Filtro filtrosParaLaPata = calcularFiltrosPara(pataSalida);
-		if (!pataSalida.seModificaron(filtrosParaLaPata)) {
-			LOG.debug("En [{},{}] no se republica, porque ya se pidio recibir lo mismo: {}", new Object[] {
+		if (pataSalida.yaSePublico(filtrosParaLaPata)) {
+			LOG.debug("En [{},{}] no se publica porque no hubo cambio de mensajes esperados: {}", new Object[] {
 					getNombre(), pataSalida.getIdLocal(), filtrosParaLaPata });
 			return;
 		}
+		LOG.debug("En [{},{}] se publica porque cambiaron los mensajes esperados de {} a: {}", new Object[] {
+				getNombre(), pataSalida.getIdLocal(), pataSalida.getFiltroPublicado(), filtrosParaLaPata });
 		final PublicacionDeFiltros publicacion = PublicacionDeFiltros.create(idRemoto, filtrosParaLaPata);
 		agregarComoEnviado(publicacion);
 		getSimulador().agregar(PublicarAVecino.create(this, pataSalida, publicacion));
