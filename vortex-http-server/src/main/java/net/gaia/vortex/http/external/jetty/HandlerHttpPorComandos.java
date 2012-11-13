@@ -78,7 +78,7 @@ public abstract class HandlerHttpPorComandos extends AbstractHandler {
 		if (extraHeaders != null && extraHeaders.length() > 0) {
 			response.addHeader("Access-Control-Allow-Headers", extraHeaders);
 		}
-		// Tiempo por el cual es valido el permiso en segundos
+		// Tiempo por el cual es válido el permiso en segundos
 		response.addHeader("Access-Control-Max-Age", String.valueOf(24 /* horas */* 60 /* minutos */* 60 /* segundos */));
 	}
 
