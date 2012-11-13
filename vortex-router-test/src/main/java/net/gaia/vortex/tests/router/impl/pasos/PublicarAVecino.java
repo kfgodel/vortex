@@ -15,6 +15,7 @@ package net.gaia.vortex.tests.router.impl.pasos;
 import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
+import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
 
 /**
  * Esta clase representa el paso donde un nodo le publica sus filtros al vecino
@@ -31,6 +32,11 @@ public class PublicarAVecino extends PasoSupport {
 	 */
 	@Override
 	public void ejecutar() {
+		// Seteamos como ultimo publicado
+		final Filtro filtroAPublicar = mensaje.getFiltro();
+		vecino.setFiltroPublicado(filtroAPublicar);
+
+		// Notificamos al nodo
 		final Nodo nodoVecino = vecino.getNodoRemoto();
 		nodoVecino.recibirPublicacion(mensaje);
 	}

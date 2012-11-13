@@ -52,4 +52,13 @@ public interface Simulador {
 	 */
 	void ejecutarTodos(TimeMagnitude esperaMaxima) throws TimeoutExceededException;
 
+	/**
+	 * Ejecuta una cierta cantidad de pasos, sin importar que queden pendientes.<br>
+	 * Se ejecutaran a lo suma la cantidad indicada, menos si no quedan pasos
+	 * 
+	 * @param cantidadDePasosMaxima
+	 *            La cantidad máxima de pasos a ejecutar
+	 */
+	void ejecutarPasos(int cantidadDePasosMaxima);
+
 }

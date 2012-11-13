@@ -91,6 +91,9 @@ public abstract class NodoSupport implements Nodo {
 		final Long idNuevaPata = this.proximoIdPata.getAndIncrement();
 		final PataConectora nuevaPata = PataConectora.create(idNuevaPata, nodoDestino);
 		getDestinos().add(nuevaPata);
+
+		// Después de agregarlo como salida intentamos ver si es bidireccional
+		conseguirIdRemotoDe(nuevaPata);
 	}
 
 	public List<PataConectora> getDestinos() {
@@ -285,20 +288,32 @@ public abstract class NodoSupport implements Nodo {
 			// Si no tiene ID tenemos que conseguirlo antes de publicar
 			conseguirIdRemotoDe(pataSalida);
 		} else {
-			final Long idRemoto = pataSalida.getIdRemoto();
-			final Filtro filtrosParaLaPata = calcularFiltrosPara(pataSalida);
-			if (!pataSalida.seModificaron(filtrosParaLaPata)) {
-				LOG.debug("En [{},{}] no se republica, porque los filtros no cambiaron: {}", new Object[] {
-						getNombre(), pataSalida.getIdLocal(), filtrosParaLaPata });
-				return;
-			}
-			final PublicacionDeFiltros publicacion = PublicacionDeFiltros.create(idRemoto, filtrosParaLaPata);
-			agregarComoEnviado(publicacion);
-			getSimulador().agregar(PublicarAVecino.create(this, pataSalida, publicacion));
+			actualizarFiltrosEn(pataSalida);
 		}
 	}
 
 	/**
+	 * Calcula los nuevos filtros aplicables a la pata indicada y los publica al nodo destino si hay
+	 * cambios
+	 * 
+	 * @param pataSalida
+	 *            La pata que se actualizará
+	 */
+	private void actualizarFiltrosEn(final PataConectora pataSalida) {
+		final Long idRemoto = pataSalida.getIdRemoto();
+		final Filtro filtrosParaLaPata = calcularFiltrosPara(pataSalida);
+		if (!pataSalida.seModificaron(filtrosParaLaPata)) {
+			LOG.debug("En [{},{}] no se republica, porque ya se pidio recibir lo mismo: {}", new Object[] {
+					getNombre(), pataSalida.getIdLocal(), filtrosParaLaPata });
+			return;
+		}
+		final PublicacionDeFiltros publicacion = PublicacionDeFiltros.create(idRemoto, filtrosParaLaPata);
+		agregarComoEnviado(publicacion);
+		getSimulador().agregar(PublicarAVecino.create(this, pataSalida, publicacion));
+	}
+
+	/**
+	 * 
 	 * Define cuáles son los filtros que corresponde publicar a la pata pasada
 	 * 
 	 * @param pataSalida
