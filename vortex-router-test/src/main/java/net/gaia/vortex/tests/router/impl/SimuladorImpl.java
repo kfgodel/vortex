@@ -14,6 +14,7 @@ package net.gaia.vortex.tests.router.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import net.gaia.vortex.tests.router.PasoSimulacion;
 import net.gaia.vortex.tests.router.Simulador;
@@ -106,14 +107,34 @@ public class SimuladorImpl implements Simulador {
 	 */
 	@Override
 	public void ejecutarTodos(final TimeMagnitude esperaMaxima) throws TimeoutExceededException {
+		ejecutarConLimites(esperaMaxima, Integer.MAX_VALUE);
+	}
+
+	/**
+	 * Ejecuta los pasos pendientes en este simulador con los limites indicados.<br>
+	 * Si se acaba el tiempo se produce una excepción, si se acaban los pasos se termina normalmente
+	 * y quedarán pasos pendientes
+	 * 
+	 * @param esperaMaxima
+	 *            El tiempo máximo que puede usarse para la ejecucion
+	 * @param pasosRestantes
+	 *            La cantidad de pasos máxima a ejecutar
+	 */
+	private void ejecutarConLimites(final TimeMagnitude esperaMaxima, int pasosRestantes) {
 		final SystemChronometer cronometro = SystemChronometer.create();
-		// Mientras no superemos la espera máxima
-		while (cronometro.getElapsedMillis() <= esperaMaxima.getMillis()) {
+
+		// Mientras no superemos la espera máxima, o los pasos maximos
+		while (cronometro.getElapsedMillis() <= esperaMaxima.getMillis() && pasosRestantes > 0) {
 			if (getProximos().isEmpty()) {
 				// Terminamos!
 				return;
 			}
 			ejecutarSiguiente();
+			pasosRestantes--;
+		}
+		if (pasosRestantes == 0) {
+			// Terminamos de ejecutar los pasos que nos pidieron
+			return;
 		}
 		final int pasosPendientes = getProximos().size();
 		if (pasosPendientes > 0) {
@@ -122,4 +143,11 @@ public class SimuladorImpl implements Simulador {
 		}
 	}
 
+	/**
+	 * @see net.gaia.vortex.tests.router.Simulador#ejecutarPasos(int)
+	 */
+	@Override
+	public void ejecutarPasos(final int cantidadDePasosMaxima) {
+		ejecutarConLimites(TimeMagnitude.of(10, TimeUnit.MINUTES), cantidadDePasosMaxima);
+	}
 }
