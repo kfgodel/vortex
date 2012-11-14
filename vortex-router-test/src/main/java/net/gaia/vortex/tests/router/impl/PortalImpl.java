@@ -17,6 +17,7 @@ import java.util.LinkedHashSet;
 
 import net.gaia.vortex.tests.router.Portal;
 import net.gaia.vortex.tests.router.Simulador;
+import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
 import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
 import net.gaia.vortex.tests.router.impl.patas.filtros.FiltroPorStrings;
@@ -72,4 +73,19 @@ public class PortalImpl extends NodoSupport implements Portal {
 		return filtroPedidoPorUsuario;
 	}
 
+	/**
+	 * @see net.gaia.vortex.tests.router.Portal#enviar(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
+	 */
+	@Override
+	public void enviar(final MensajeNormal mensaje) {
+		propagarMensaje(mensaje);
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#realizarAccionEspecificaAlRecibir(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
+	 */
+	@Override
+	protected void realizarAccionEspecificaAlRecibir(final MensajeNormal mensaje) {
+		LOG.info(" En [{}] se recibió el mensaje[{}]", this.getNombre(), mensaje.getId());
+	}
 }

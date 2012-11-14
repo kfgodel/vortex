@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import net.gaia.vortex.tests.router.impl.PortalImpl;
 import net.gaia.vortex.tests.router.impl.RouterImpl;
 import net.gaia.vortex.tests.router.impl.SimuladorImpl;
+import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router.impl.mensajes.MensajeSupport;
 
 import org.junit.Before;
@@ -70,6 +71,10 @@ public class TestRuteoDeMensajes {
 		simulador.ejecutarTodos(TimeMagnitude.of(5, TimeUnit.MINUTES));
 
 		// enviar el mensaje desde el origen
+		final MensajeNormal nuevoPan = MensajeNormal.create("pan", "Nuevo pan desde panificador");
+		panificador.enviar(nuevoPan);
+		simulador.ejecutarTodos(TimeMagnitude.of(5, TimeUnit.MINUTES));
+
 		// correr la simulacion
 		// verificar que el mensaje llego a donde debía y no a donde no
 	}

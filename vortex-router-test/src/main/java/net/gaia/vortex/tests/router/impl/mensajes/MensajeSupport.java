@@ -54,4 +54,22 @@ public abstract class MensajeSupport implements Mensaje {
 		return "[" + getId() + "]";
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof MensajeSupport) {
+			return this.getId().equals(((MensajeSupport) obj).getId());
+		}
+		return false;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return this.getId().hashCode();
+	}
 }

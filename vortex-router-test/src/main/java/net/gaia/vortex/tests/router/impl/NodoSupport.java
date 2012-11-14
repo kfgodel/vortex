@@ -20,12 +20,16 @@ import net.gaia.vortex.tests.router.Mensaje;
 import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.Simulador;
 import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto;
+import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.pasos.ConectarBidi;
 import net.gaia.vortex.tests.router.impl.pasos.ConectarUni;
 import net.gaia.vortex.tests.router.impl.pasos.ConfirmarIdRemoto;
+import net.gaia.vortex.tests.router.impl.pasos.DesconectarBidi;
+import net.gaia.vortex.tests.router.impl.pasos.DesconectarUni;
+import net.gaia.vortex.tests.router.impl.pasos.EnviarMensaje;
 import net.gaia.vortex.tests.router.impl.pasos.PedirIdRemoto;
 import net.gaia.vortex.tests.router.impl.pasos.PublicarAVecino;
 import net.gaia.vortex.tests.router.impl.pasos.ResponderIdRemoto;
@@ -94,6 +98,23 @@ public abstract class NodoSupport implements Nodo {
 
 		// Después de agregarlo como salida intentamos ver si es bidireccional
 		conseguirIdRemotoDe(nuevaPata);
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.Nodo#quitarDestino(net.gaia.vortex.tests.router.Nodo)
+	 */
+	@Override
+	public void quitarDestino(final Nodo nodoDestino) {
+		final PataConectora pataConectora = getPataPorNodo(nodoDestino);
+		if (pataConectora == null) {
+			LOG.debug("En [{}] no se puede quitar la pata correspondiente al nodo[{}] porque no existe",
+					this.getNombre(), nodoDestino);
+			return;
+		}
+		getDestinos().remove(pataConectora);
+
+		// Republicamos los filtros que se hayan mmodificado
+		publicarFiltros();
 	}
 
 	public List<PataConectora> getDestinos() {
@@ -393,6 +414,79 @@ public abstract class NodoSupport implements Nodo {
 			LOG.debug("  Respuesta de filtros desde [{},{}] a [?,{}] no posible por que ya no existe conexion",
 					new Object[] { this.getNombre(), idLocal, idRemoto });
 			return;
+		}
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.Nodo#desconectarBidiDe(net.gaia.vortex.tests.router.Nodo)
+	 */
+	@Override
+	public void desconectarBidiDe(final Nodo otroConectado) {
+		simulador.agregar(DesconectarBidi.create(this, otroConectado));
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.Nodo#desconectarUniDe(net.gaia.vortex.tests.router.Nodo)
+	 */
+	@Override
+	public void desconectarUniDe(final Nodo destino) {
+		simulador.agregar(DesconectarUni.create(this, destino));
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.Nodo#recibirMensaje(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
+	 */
+	@Override
+	public void recibirMensaje(final MensajeNormal mensaje) {
+		if (getRecibidos().contains(mensaje)) {
+			LOG.debug("  Rechazando mensaje[{}] recibido en [{}] por figurar como ya recibido", mensaje.getId(),
+					this.getNombre());
+			return;
+		}
+		if (getEnviados().contains(mensaje)) {
+			LOG.debug("  Rechazando mensaje[{}] recibido en [{}] por figurar como ya enviado", mensaje.getId(),
+					this.getNombre());
+			return;
+		}
+		getRecibidos().add(mensaje);
+		realizarAccionEspecificaAlRecibir(mensaje);
+	}
+
+	/**
+	 * Realiza la acción que depdende del tipo de nodo la consecuencia que tiene
+	 * 
+	 * @param mensaje
+	 *            El mensaje recién recibido
+	 */
+	protected abstract void realizarAccionEspecificaAlRecibir(final MensajeNormal mensaje);
+
+	/**
+	 * Envia el mensaje indicado a las patas de salida de este nodo
+	 * 
+	 * @param mensaje
+	 *            El mensaje a enviar
+	 */
+	protected void propagarMensaje(final MensajeNormal mensaje) {
+		// Lo registramos como que lo enviamos
+		agregarComoEnviado(mensaje);
+
+		final List<PataConectora> patasDeSalida = getDestinos();
+		LOG.debug("Propagando mensaje[{}] desde [{}] a {} patas", new Object[] { mensaje.getId(), this.getNombre(),
+				patasDeSalida.size() });
+		for (final PataConectora pataConectora : patasDeSalida) {
+			if (pataConectora.getIdLocal().equals(mensaje.getIdDePataRemota())) {
+				LOG.debug("  Evitando enviar desde [{},{}] el mensaje[{}] porque provino de esa pata", new Object[] {
+						this.getNombre(), pataConectora.getIdLocal(), mensaje.getId() });
+			}
+
+			if (pataConectora.puedeEnviar(mensaje)) {
+				getSimulador().agregar(EnviarMensaje.create(this, pataConectora, mensaje));
+			} else {
+				LOG.debug(
+						"  Evitando enviar desde [{},{}] el mensaje[{}] porque su filtro no lo admite: {}",
+						new Object[] { this.getNombre(), pataConectora.getIdLocal(), mensaje.getId(),
+								pataConectora.getFiltroDeSalida() });
+			}
 		}
 	}
 }

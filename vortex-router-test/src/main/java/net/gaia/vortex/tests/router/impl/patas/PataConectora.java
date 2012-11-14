@@ -13,6 +13,7 @@
 package net.gaia.vortex.tests.router.impl.patas;
 
 import net.gaia.vortex.tests.router.Nodo;
+import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
 import net.gaia.vortex.tests.router.impl.patas.filtros.SinFiltro;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -148,6 +149,18 @@ public class PataConectora {
 		return ToString.de(this).con(idLocal_FIELD, idLocal).con(idRemoto_FIELD, idRemoto)
 				.con(filtroDeSalida_FIELD, filtroDeSalida).con(filtroPublicado_FIELD, filtroPublicado)
 				.con(nodoRemoto_FIELD, nodoRemoto).toString();
+	}
+
+	/**
+	 * Indica si esta pata tiene un filtro de salida que admita el mensaje pasado
+	 * 
+	 * @param mensaje
+	 *            El mensaje a evaluar
+	 * @return true si el mensaje es enviable
+	 */
+	public boolean puedeEnviar(final MensajeNormal mensaje) {
+		final boolean esAceptable = getFiltroDeSalida().aceptaA(mensaje);
+		return esAceptable;
 	}
 
 }

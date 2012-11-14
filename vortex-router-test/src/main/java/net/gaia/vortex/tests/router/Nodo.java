@@ -13,6 +13,7 @@
 package net.gaia.vortex.tests.router;
 
 import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto;
+import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
@@ -42,6 +43,14 @@ public interface Nodo {
 	 * @param nodoDestino
 	 */
 	public void agregarDestino(Nodo nodoDestino);
+
+	/**
+	 * Quita el nodo pasado de los destinos sin requerir un paso del simulador
+	 * 
+	 * @param nodoDestino
+	 *            El nodo a quitar
+	 */
+	void quitarDestino(Nodo nodoDestino);
 
 	/**
 	 * Indica si este nodo tiene al pasado como destino
@@ -100,4 +109,27 @@ public interface Nodo {
 	 */
 	public void recibirConfirmacionDeIdRemoto(ConfirmacionDeIdRemoto confirmacion);
 
+	/**
+	 * Desconecta ambos nodos entre sí
+	 * 
+	 * @param otroConectado
+	 *            el nodo del cual se desconectará
+	 */
+	void desconectarBidiDe(Nodo otroConectado);
+
+	/**
+	 * Desconecta sólo este nodo del otro, si el otro está conectado a este, esa conexión permanece
+	 * 
+	 * @param destino
+	 *            El nodo del cual nos deconectaremos
+	 */
+	void desconectarUniDe(Nodo destino);
+
+	/**
+	 * Recibe el mensaje en este nodo realizando la acción correspondiente segun el tipo de nodo
+	 * 
+	 * @param mensaje
+	 *            El mensaje a recibir
+	 */
+	public void recibirMensaje(MensajeNormal mensaje);
 }

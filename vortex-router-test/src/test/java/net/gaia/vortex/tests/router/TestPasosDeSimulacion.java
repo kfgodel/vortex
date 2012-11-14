@@ -18,6 +18,7 @@ import junit.framework.Assert;
 import net.gaia.vortex.tests.router.impl.PortalImpl;
 import net.gaia.vortex.tests.router.impl.RouterImpl;
 import net.gaia.vortex.tests.router.impl.SimuladorImpl;
+import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router.impl.mensajes.MensajeSupport;
 
 import org.junit.Before;
@@ -128,5 +129,57 @@ public class TestPasosDeSimulacion {
 		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		Assert.assertTrue("El tercer nodo deberia usar el filtro", r2.usaFiltrosCon(r1, "tag1"));
 	}
+
+	@Test
+	public void deberiaRevertirLosFiltrosAlDesconectar() {
+		p1.conectarBidi(r1);
+		r1.conectarBidi(r2);
+		p1.setearYPublicarFiltros("tag1");
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Verificamos que el estado inicial es que r2 filtra lo que necesita p1
+		Assert.assertTrue("El tercer nodo deberia usar el filtro", r2.usaFiltrosCon(r1, "tag1"));
+
+		p1.desconectarBidiDe(r1);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Verificamos que ahora r2 ya no filtra para p1
+		Assert.assertFalse("El tercer nodo NO deberia usar el filtro", r2.usaFiltrosCon(r1, "tag1"));
+	}
+
+	@Test
+	public void deberiaPermitirLaReconexionSiEsDesconexionParcial() {
+		p1.conectarBidi(r1);
+		r1.conectarBidi(r2);
+		p1.setearYPublicarFiltros("tag1");
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Verificamos que el estado inicial es que r2 filtra lo que necesita p1
+		Assert.assertTrue("El tercer nodo deberia usar el filtro", r2.usaFiltrosCon(r1, "tag1"));
+
+		r1.desconectarUniDe(r2);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Verificamos que R2 no se enteró del corte
+		Assert.assertTrue("El tercer nodo deberia usar el filtro", r2.usaFiltrosCon(r1, "tag1"));
+
+		r1.conectarCon(r2);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+	}
+
+	@Test
+	public void deberiaRecibirElMensajeElRouter() {
+		p1.conectarBidi(r1);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		final MensajeNormal mensaje = MensajeNormal.create("tag1", "texto");
+		p1.enviar(mensaje);
+
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertTrue("R1 debería haber recibido el mensaje", r1.getRecibidos().contains(mensaje));
+	}
+
 }

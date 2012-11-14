@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.tests.router;
 
+import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
+
 /**
  * Esta interfaz representa un nodo que está especializado como portal
  * 
@@ -35,5 +37,13 @@ public interface Portal extends Nodo {
 	 *            Los nuevos filtros
 	 */
 	public void setearYPublicarFiltros(String... filtros);
+
+	/**
+	 * Envía un mensaje a la red, pasándolo a otros nodos conectados
+	 * 
+	 * @param mensaje
+	 *            El mensaje a enviar
+	 */
+	public void enviar(final MensajeNormal mensaje);
 
 }

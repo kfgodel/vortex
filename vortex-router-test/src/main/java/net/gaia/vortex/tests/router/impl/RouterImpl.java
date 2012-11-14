@@ -18,6 +18,7 @@ import java.util.List;
 import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.Router;
 import net.gaia.vortex.tests.router.Simulador;
+import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
 import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
@@ -110,14 +111,11 @@ public class RouterImpl extends NodoSupport implements Router {
 	}
 
 	/**
-	 * Genera una versión mergeada de los filtros de las otras patas exceptuando a la pasada
-	 * 
-	 * @param pataConectora
-	 *            La excluida del merge
-	 * @return El filtro resultante del merge
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#realizarAccionEspecificaAlRecibir(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
 	 */
-	private Filtro mergearFiltrosPara(final PataConectora pataConectora) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("El método no fue implementado");
+	@Override
+	protected void realizarAccionEspecificaAlRecibir(final MensajeNormal mensaje) {
+		// Se lo enviamos al resto si corresponde
+		propagarMensaje(mensaje);
 	}
 }
