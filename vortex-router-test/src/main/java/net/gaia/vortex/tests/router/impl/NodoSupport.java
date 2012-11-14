@@ -477,6 +477,18 @@ public abstract class NodoSupport implements Nodo {
 			if (pataConectora.getIdLocal().equals(mensaje.getIdDePataRemota())) {
 				LOG.debug("  Evitando enviar desde [{},{}] el mensaje[{}] porque provino de esa pata", new Object[] {
 						this.getNombre(), pataConectora.getIdLocal(), mensaje.getId() });
+				continue;
+			}
+
+			// Esto solo se puede hacer con los nodos que registran los mensajes que reciben!!!
+			// En vortex no son todos!!
+			final Nodo nodoDestino = pataConectora.getNodoRemoto();
+			if (nodoDestino.yaProceso(mensaje)) {
+				LOG.debug(
+						"  Evitando enviar desde [{},{}] el mensaje[{}] porque el nodo[{}] ya lo proceso",
+						new Object[] { this.getNombre(), pataConectora.getIdLocal(), mensaje.getId(),
+								nodoDestino.getNombre() });
+				continue;
 			}
 
 			if (pataConectora.puedeEnviar(mensaje)) {
@@ -488,5 +500,14 @@ public abstract class NodoSupport implements Nodo {
 								pataConectora.getFiltroDeSalida() });
 			}
 		}
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router.Nodo#yaProceso(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
+	 */
+	@Override
+	public boolean yaProceso(final MensajeNormal mensaje) {
+		final boolean yaSeProceso = getEnviados().contains(mensaje) || getRecibidos().contains(mensaje);
+		return yaSeProceso;
 	}
 }

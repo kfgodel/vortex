@@ -132,4 +132,14 @@ public interface Nodo {
 	 *            El mensaje a recibir
 	 */
 	public void recibirMensaje(MensajeNormal mensaje);
+
+	/**
+	 * Indica si este nodo ya envio o recibio el mensaje pasado, por lo tanto no se le debe pasar de
+	 * nuevo
+	 * 
+	 * @param mensaje
+	 *            El mensaje a verificar
+	 * @return true si ya se envio o recibio este mensaje
+	 */
+	public boolean yaProceso(MensajeNormal mensaje);
 }
