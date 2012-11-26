@@ -95,6 +95,7 @@ public class MosquitoMain {
 		// Agregamos los sensores
 		final HostnameSensor hostNameSensor = HostnameSensor.create();
 		detectorConfiguration.addSensor(hostNameSensor);
+
 		final WorkingDirectorySensor classesDirSensor = WorkingDirectorySensor.create();
 		detectorConfiguration.addSensor(classesDirSensor);
 
@@ -134,9 +135,12 @@ public class MosquitoMain {
 		final AmbientProfile mosquito = ServerProfile.create("Server Mosquito (produccion)", "mosquito",
 				"/archivos/vortex/vortex-mosquito-server/.",
 				ServerConfiguration.create(new InetSocketAddress(MOSQUITO_SOCKET_PORT), MOSQUITO_HTTP_PORT));
+		final AmbientProfile ikariSrv02 = ServerProfile.create("Server IkariSrv02 (produccion)", "Ikari-Srv02",
+				"/instalados/propios/vortex/server/.",
+				ServerConfiguration.create(new InetSocketAddress(MOSQUITO_SOCKET_PORT), MOSQUITO_HTTP_PORT));
 		final AmbientProfile ikari01 = ServerProfile.create("Server Ikari01 (produccion)", "Ikari01",
 				"P:\\Propios\\Vortex\\Ikari01\\.",
 				ServerConfiguration.create(new InetSocketAddress(MOSQUITO_SOCKET_PORT), MOSQUITO_HTTP_PORT));
-		return Sets.newLinkedHashSet(darioPc, darioNotebook, mosquito, ikari01);
+		return Sets.newLinkedHashSet(darioPc, darioNotebook, mosquito, ikari01, ikariSrv02);
 	}
 }
