@@ -90,6 +90,12 @@
       <id>kfgodel_mosquito</id>
       <name>Repo Mosquito</name>
       <url>http://kfgodel.info:8081/nexus/content/groups/public/</url>
+      <snapshots>
+      	<updatePolicy>always</updatePolicy>
+      </snapshots>
+      <releases>
+      	<updatePolicy>always</updatePolicy>
+      </releases>
     </repository>
   </repositories>
   <pluginRepositories>
