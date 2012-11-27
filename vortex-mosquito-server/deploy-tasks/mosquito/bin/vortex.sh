@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 #
 # Copyright (c) 1999, 2011 Tanuki Software, Ltd.
