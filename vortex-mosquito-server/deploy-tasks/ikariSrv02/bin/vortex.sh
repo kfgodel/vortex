@@ -20,7 +20,7 @@
 
 # Application
 APP_NAME="VortexMosquito"
-APP_LONG_NAME="Servidor vortex en mosquito"
+APP_LONG_NAME="Servidor vortex en IkariSrv02"
 
 # Wrapper
 WRAPPER_CMD="./wrapper"
