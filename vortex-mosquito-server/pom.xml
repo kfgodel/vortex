@@ -94,7 +94,7 @@
       	<updatePolicy>always</updatePolicy>
       </snapshots>
       <releases>
-      	<updatePolicy>interval:30</updatePolicy>
+      	<updatePolicy>always</updatePolicy>
       </releases>
     </repository>
   </repositories>
