@@ -93,9 +93,6 @@
       <snapshots>
       	<updatePolicy>always</updatePolicy>
       </snapshots>
-      <releases>
-      	<updatePolicy>interval:30</updatePolicy>
-      </releases>
     </repository>
   </repositories>
   <pluginRepositories>
@@ -105,6 +102,9 @@
       <url>http://kfgodel.info:8081/nexus/content/groups/public/</url>
     </pluginRepository>
   </pluginRepositories>
+
+  
+  
   <dependencies>
 
 	<!-- Permite la conexión mediante http a la red vortex -->
