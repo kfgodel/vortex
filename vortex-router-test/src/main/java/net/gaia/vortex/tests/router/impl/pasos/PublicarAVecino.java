@@ -12,10 +12,10 @@
  */
 package net.gaia.vortex.tests.router.impl.pasos;
 
-import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
 import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
+import net.gaia.vortex.tests.router2.api.Nodo;
 
 /**
  * Esta clase representa el paso donde un nodo le publica sus filtros al vecino
@@ -28,7 +28,7 @@ public class PublicarAVecino extends PasoSupport {
 	private PublicacionDeFiltros mensaje;
 
 	/**
-	 * @see net.gaia.vortex.tests.router.PasoSimulacion#ejecutar()
+	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
 	@Override
 	public void ejecutar() {

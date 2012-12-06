@@ -15,14 +15,14 @@ package net.gaia.vortex.tests.router.impl;
 import java.util.Arrays;
 import java.util.List;
 
-import net.gaia.vortex.tests.router.Nodo;
-import net.gaia.vortex.tests.router.Router;
 import net.gaia.vortex.tests.router.Simulador;
 import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
 import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
 import net.gaia.vortex.tests.router.impl.patas.filtros.SinFiltro;
+import net.gaia.vortex.tests.router2.api.Nodo;
+import net.gaia.vortex.tests.router2.api.Router;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

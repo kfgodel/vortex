@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.vortex.tests.router.Mensaje;
-import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.Simulador;
 import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
@@ -35,6 +33,8 @@ import net.gaia.vortex.tests.router.impl.pasos.PublicarAVecino;
 import net.gaia.vortex.tests.router.impl.pasos.ResponderIdRemoto;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
 import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
+import net.gaia.vortex.tests.router2.api.Mensaje;
+import net.gaia.vortex.tests.router2.api.Nodo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +59,7 @@ public abstract class NodoSupport implements Nodo {
 	private List<Mensaje> recibidos;
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#getNombre()
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#getNombre()
 	 */
 	@Override
 	public String getNombre() {
@@ -79,7 +79,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#conectarCon(net.gaia.vortex.tests.router.Nodo)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#conectarCon(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
 	@Override
 	public void conectarCon(final Nodo otro) {
@@ -88,7 +88,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#agregarDestino(net.gaia.vortex.tests.router.Nodo)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#agregarDestino(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
 	@Override
 	public void agregarDestino(final Nodo nodoDestino) {
@@ -101,7 +101,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#quitarDestino(net.gaia.vortex.tests.router.Nodo)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#quitarDestino(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
 	@Override
 	public void quitarDestino(final Nodo nodoDestino) {
@@ -125,7 +125,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#tieneComoDestinoA(net.gaia.vortex.tests.router.Nodo)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#tieneComoDestinoA(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
 	@Override
 	public boolean tieneComoDestinoA(final Nodo otro) {
@@ -139,7 +139,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#conectarBidi(net.gaia.vortex.tests.router.Nodo)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#conectarBidi(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
 	@Override
 	public void conectarBidi(final Nodo otro) {
@@ -158,7 +158,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#recibirPublicacion(net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirPublicacion(net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros)
 	 */
 	@Override
 	public void recibirPublicacion(final PublicacionDeFiltros publicacion) {
@@ -193,7 +193,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#recibirPedidoDeId(net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirPedidoDeId(net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto)
 	 */
 	@Override
 	public void recibirPedidoDeId(final PedidoDeIdRemoto pedido) {
@@ -202,7 +202,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#recibirRespuestaDeIdRemoto(net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirRespuestaDeIdRemoto(net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto)
 	 */
 	@Override
 	public void recibirRespuestaDeIdRemoto(final RespuestaDeIdRemoto respuesta) {
@@ -226,7 +226,7 @@ public abstract class NodoSupport implements Nodo {
 			return;
 		}
 		enviarConfirmacionDeIdEn(pataSalida, respuesta);
-		publicarFiltrosEn(pataSalida);
+		// publicarFiltrosEn(pataSalida);
 	}
 
 	private void enviarConfirmacionDeIdEn(final PataConectora pataSalida, final RespuestaDeIdRemoto respuesta) {
@@ -283,9 +283,8 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Portal#publicarFiltros()
+	 * 
 	 */
-	@Override
 	public void publicarFiltros() {
 		final List<PataConectora> destinos = getDestinos();
 		if (destinos.isEmpty()) {
@@ -392,7 +391,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#recibirConfirmacionDeIdRemoto(net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirConfirmacionDeIdRemoto(net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto)
 	 */
 	@Override
 	public void recibirConfirmacionDeIdRemoto(final ConfirmacionDeIdRemoto confirmacion) {
@@ -418,7 +417,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#desconectarBidiDe(net.gaia.vortex.tests.router.Nodo)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#desconectarBidiDe(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
 	@Override
 	public void desconectarBidiDe(final Nodo otroConectado) {
@@ -426,7 +425,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#desconectarUniDe(net.gaia.vortex.tests.router.Nodo)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#desconectarUniDe(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
 	@Override
 	public void desconectarUniDe(final Nodo destino) {
@@ -434,7 +433,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#recibirMensaje(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirMensaje(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
 	 */
 	@Override
 	public void recibirMensaje(final MensajeNormal mensaje) {
@@ -480,17 +479,6 @@ public abstract class NodoSupport implements Nodo {
 				continue;
 			}
 
-			// Esto solo se puede hacer con los nodos que registran los mensajes que reciben!!!
-			// En vortex no son todos!!
-			final Nodo nodoDestino = pataConectora.getNodoRemoto();
-			if (nodoDestino.yaProceso(mensaje)) {
-				LOG.debug(
-						"  Evitando enviar desde [{},{}] el mensaje[{}] porque el nodo[{}] ya lo proceso",
-						new Object[] { this.getNombre(), pataConectora.getIdLocal(), mensaje.getId(),
-								nodoDestino.getNombre() });
-				continue;
-			}
-
 			if (pataConectora.puedeEnviar(mensaje)) {
 				getSimulador().agregar(EnviarMensaje.create(this, pataConectora, mensaje));
 			} else {
@@ -503,9 +491,13 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Nodo#yaProceso(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
+	 * Indica si este nodo ya envio o recibio el mensaje pasado, por lo tanto no se le debe pasar de
+	 * nuevo
+	 * 
+	 * @param mensaje
+	 *            El mensaje a verificar
+	 * @return true si ya se envio o recibio este mensaje
 	 */
-	@Override
 	public boolean yaProceso(final MensajeNormal mensaje) {
 		final boolean yaSeProceso = getEnviados().contains(mensaje) || getRecibidos().contains(mensaje);
 		return yaSeProceso;

@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.tests.router;
 
+import net.gaia.vortex.tests.router2.simulador.PasoSimulacion;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 

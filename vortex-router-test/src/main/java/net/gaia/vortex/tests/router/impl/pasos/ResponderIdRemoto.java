@@ -12,9 +12,9 @@
  */
 package net.gaia.vortex.tests.router.impl.pasos;
 
-import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
+import net.gaia.vortex.tests.router2.api.Nodo;
 
 /**
  * Esta clase representa el paso en el que un nodo le responde a otro el id remoto
@@ -27,7 +27,7 @@ public class ResponderIdRemoto extends PasoSupport {
 	private RespuestaDeIdRemoto respuesta;
 
 	/**
-	 * @see net.gaia.vortex.tests.router.PasoSimulacion#ejecutar()
+	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
 	@Override
 	public void ejecutar() {

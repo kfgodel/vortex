@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import net.gaia.vortex.tests.router.Mensaje;
+import net.gaia.vortex.tests.router2.api.Mensaje;
 
 /**
  * Esta clase representa un filtro que solo deja pasar los mensajes con cadenas predefinidas
@@ -36,7 +36,7 @@ public class FiltroPorStrings implements Filtro {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.impl.patas.filtros.Filtro#aceptaA(net.gaia.vortex.tests.router.Mensaje)
+	 * @see net.gaia.vortex.tests.router.impl.patas.filtros.Filtro#aceptaA(net.gaia.vortex.tests.router2.api.Mensaje)
 	 */
 	@Override
 	public boolean aceptaA(final Mensaje mensaje) {

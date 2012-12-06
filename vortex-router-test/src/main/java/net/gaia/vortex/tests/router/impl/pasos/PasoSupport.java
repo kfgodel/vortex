@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.tests.router.impl.pasos;
 
-import net.gaia.vortex.tests.router.Nodo;
-import net.gaia.vortex.tests.router.PasoSimulacion;
+import net.gaia.vortex.tests.router2.api.Nodo;
+import net.gaia.vortex.tests.router2.simulador.PasoSimulacion;
 
 /**
  * Esta clase reune comportamiento comun a los pasos

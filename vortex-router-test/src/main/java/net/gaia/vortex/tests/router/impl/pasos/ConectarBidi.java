@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.tests.router.impl.pasos;
 
-import net.gaia.vortex.tests.router.Nodo;
+import net.gaia.vortex.tests.router2.api.Nodo;
 
 /**
  * Este paso representa la conexion bidireccional
@@ -32,7 +32,7 @@ public class ConectarBidi extends PasoSupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.PasoSimulacion#ejecutar()
+	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
 	@Override
 	public void ejecutar() {

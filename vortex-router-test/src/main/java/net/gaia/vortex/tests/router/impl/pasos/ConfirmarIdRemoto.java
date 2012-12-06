@@ -3,9 +3,9 @@
  */
 package net.gaia.vortex.tests.router.impl.pasos;
 
-import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
+import net.gaia.vortex.tests.router2.api.Nodo;
 
 /**
  * Esta clase representa la tarea hecha por el nodo para finalizar el handshake
@@ -18,7 +18,7 @@ public class ConfirmarIdRemoto extends PasoSupport {
 	private ConfirmacionDeIdRemoto confirmacion;
 
 	/**
-	 * @see net.gaia.vortex.tests.router.PasoSimulacion#ejecutar()
+	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
 	@Override
 	public void ejecutar() {

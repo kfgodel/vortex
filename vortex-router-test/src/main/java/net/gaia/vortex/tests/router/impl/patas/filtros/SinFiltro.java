@@ -14,7 +14,7 @@ package net.gaia.vortex.tests.router.impl.patas.filtros;
 
 import java.util.Collection;
 
-import net.gaia.vortex.tests.router.Mensaje;
+import net.gaia.vortex.tests.router2.api.Mensaje;
 
 /**
  * Este filtro representa el filtro inicial y más permisivo
@@ -24,7 +24,7 @@ import net.gaia.vortex.tests.router.Mensaje;
 public class SinFiltro implements Filtro {
 
 	/**
-	 * @see net.gaia.vortex.tests.router.impl.patas.filtros.Filtro#aceptaA(net.gaia.vortex.tests.router.Mensaje)
+	 * @see net.gaia.vortex.tests.router.impl.patas.filtros.Filtro#aceptaA(net.gaia.vortex.tests.router2.api.Mensaje)
 	 */
 	@Override
 	public boolean aceptaA(final Mensaje mensaje) {

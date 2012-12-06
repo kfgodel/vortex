@@ -15,13 +15,14 @@ package net.gaia.vortex.tests.router.impl;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 
-import net.gaia.vortex.tests.router.Portal;
 import net.gaia.vortex.tests.router.Simulador;
 import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
 import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
 import net.gaia.vortex.tests.router.impl.patas.filtros.FiltroPorStrings;
 import net.gaia.vortex.tests.router.impl.patas.filtros.SinFiltro;
+import net.gaia.vortex.tests.router2.api.ListenerDeFiltros;
+import net.gaia.vortex.tests.router2.api.Portal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class PortalImpl extends NodoSupport implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Portal#setFiltros(java.lang.String[])
+	 * @see net.gaia.vortex.tests.router2.api.Portal#setFiltros(java.lang.String[])
 	 */
 	@Override
 	public void setFiltros(final String... filtros) {
@@ -57,9 +58,8 @@ public class PortalImpl extends NodoSupport implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Portal#setearYPublicarFiltros(java.lang.String[])
+	 * @param filtros
 	 */
-	@Override
 	public void setearYPublicarFiltros(final String... filtros) {
 		setFiltros(filtros);
 		publicarFiltros();
@@ -74,7 +74,7 @@ public class PortalImpl extends NodoSupport implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Portal#enviar(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
+	 * @see net.gaia.vortex.tests.router2.api.Portal#enviar(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
 	 */
 	@Override
 	public void enviar(final MensajeNormal mensaje) {
@@ -87,5 +87,14 @@ public class PortalImpl extends NodoSupport implements Portal {
 	@Override
 	protected void realizarAccionEspecificaAlRecibir(final MensajeNormal mensaje) {
 		LOG.info(" En [{}] se recibió el mensaje[{}]", this.getNombre(), mensaje.getId());
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router2.api.Portal#setListenerDeFiltrosExternos(net.gaia.vortex.tests.router2.api.ListenerDeFiltros)
+	 */
+	@Override
+	public void setListenerDeFiltrosExternos(final ListenerDeFiltros listenerDeExternos) {
+		// TODO Auto-generated method stub
+
 	}
 }

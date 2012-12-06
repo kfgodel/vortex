@@ -12,9 +12,9 @@
  */
 package net.gaia.vortex.tests.router.impl.pasos;
 
-import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
+import net.gaia.vortex.tests.router2.api.Nodo;
 
 /**
  * Esta clase representa la acción realziada por un nodo par enviar el mensaje a una pata destino
@@ -27,7 +27,7 @@ public class EnviarMensaje extends PasoSupport {
 	private MensajeNormal mensaje;
 
 	/**
-	 * @see net.gaia.vortex.tests.router.PasoSimulacion#ejecutar()
+	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
 	@Override
 	public void ejecutar() {

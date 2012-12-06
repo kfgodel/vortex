@@ -1,5 +1,5 @@
 /**
- * 13/10/2012 18:13:38 Copyright (C) 2011 Darío L. García
+ * 13/10/2012 11:04:26 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,23 +10,17 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.tests.router;
+package net.gaia.vortex.tests.router2.simulador;
 
 /**
- * Esta interfaz representa un mensaje enviable por los nodos entre sí
+ * Esta interfaz representa un paso realizable en la simulación
  * 
  * @author D. García
  */
-public interface Mensaje {
+public interface PasoSimulacion {
 
 	/**
-	 * Devuelve el ID de este mensaje
+	 * Realiza la acción asociada a este paso
 	 */
-	public Long getId();
-
-	/**
-	 * Devuelve un String que representa contenido de este mensaje
-	 */
-	public String getTag();
-
+	void ejecutar();
 }

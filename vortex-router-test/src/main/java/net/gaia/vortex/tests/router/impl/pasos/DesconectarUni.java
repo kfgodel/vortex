@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.tests.router.impl.pasos;
 
-import net.gaia.vortex.tests.router.Nodo;
+import net.gaia.vortex.tests.router2.api.Nodo;
 
 /**
  * Esta clase representa la accion de desconectar un nodo hacia otro en forma unidireccional
@@ -58,7 +58,7 @@ public class DesconectarUni extends PasoSupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.PasoSimulacion#ejecutar()
+	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
 	@Override
 	public void ejecutar() {

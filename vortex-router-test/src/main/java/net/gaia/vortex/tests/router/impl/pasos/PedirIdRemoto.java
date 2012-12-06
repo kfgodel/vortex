@@ -12,9 +12,9 @@
  */
 package net.gaia.vortex.tests.router.impl.pasos;
 
-import net.gaia.vortex.tests.router.Nodo;
 import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router.impl.patas.PataConectora;
+import net.gaia.vortex.tests.router2.api.Nodo;
 
 /**
  * Esta clase representa el paso que realzia un nodo para solicitar el id en otro nodo
@@ -27,7 +27,7 @@ public class PedirIdRemoto extends PasoSupport {
 	private PedidoDeIdRemoto pedido;
 
 	/**
-	 * @see net.gaia.vortex.tests.router.PasoSimulacion#ejecutar()
+	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
 	@Override
 	public void ejecutar() {

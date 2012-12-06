@@ -14,7 +14,7 @@ package net.gaia.vortex.tests.router.impl.mensajes;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.vortex.tests.router.Mensaje;
+import net.gaia.vortex.tests.router2.api.Mensaje;
 
 /**
  * Esta clase es super de todos los mensajes y tiene operaciones comunes

@@ -14,7 +14,7 @@ package net.gaia.vortex.tests.router.impl.patas.filtros;
 
 import java.util.Collection;
 
-import net.gaia.vortex.tests.router.Mensaje;
+import net.gaia.vortex.tests.router2.api.Mensaje;
 
 /**
  * Esta interfaz representa un filtro para los mensajes

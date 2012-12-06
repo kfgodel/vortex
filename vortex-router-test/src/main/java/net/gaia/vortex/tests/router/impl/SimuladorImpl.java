@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.vortex.tests.router.PasoSimulacion;
 import net.gaia.vortex.tests.router.Simulador;
+import net.gaia.vortex.tests.router2.simulador.PasoSimulacion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

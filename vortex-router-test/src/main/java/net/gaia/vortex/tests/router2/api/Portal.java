@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.tests.router;
+package net.gaia.vortex.tests.router2.api;
 
 import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
 
@@ -30,20 +30,20 @@ public interface Portal extends Nodo {
 	public void setFiltros(final String... filtros);
 
 	/**
-	 * Establece los filtros pasados y publica el cambio.<br>
-	 * Este método es una facilidad para no tener que invocar los pasos por separado
-	 * 
-	 * @param filtros
-	 *            Los nuevos filtros
-	 */
-	public void setearYPublicarFiltros(String... filtros);
-
-	/**
 	 * Envía un mensaje a la red, pasándolo a otros nodos conectados
 	 * 
 	 * @param mensaje
 	 *            El mensaje a enviar
 	 */
 	public void enviar(final MensajeNormal mensaje);
+
+	/**
+	 * Establece el listener a utilizar cuando se producen cambios en los filtros externos (el nodo
+	 * externo cambio sus filtros)
+	 * 
+	 * @param listenerDeExternos
+	 *            El listener invocado para notificar el nuevo filtro
+	 */
+	public void setListenerDeFiltrosExternos(ListenerDeFiltros listenerDeExternos);
 
 }

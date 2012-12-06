@@ -39,7 +39,7 @@ public class PedidoDeIdRemoto extends MensajeSupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.Mensaje#getTag()
+	 * @see net.gaia.vortex.tests.router2.api.Mensaje#getTag()
 	 */
 	@Override
 	public String getTag() {
