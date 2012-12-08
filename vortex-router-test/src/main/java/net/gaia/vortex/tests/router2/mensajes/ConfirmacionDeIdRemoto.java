@@ -4,7 +4,6 @@
 package net.gaia.vortex.tests.router2.mensajes;
 
 import net.gaia.vortex.tests.router2.impl.filtros.FiltroPorStrings;
-import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa el ultimo mensaje del handshake para cerrar la comunicacion bidireccional
@@ -49,14 +48,6 @@ public class ConfirmacionDeIdRemoto extends MensajeSupport {
 
 	public void setIdDePataLocalAlEmisor(final Long idDePataLocalAlEmisor) {
 		this.idDePataLocalAlEmisor = idDePataLocalAlEmisor;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToString.de(this).toString();
 	}
 
 }
