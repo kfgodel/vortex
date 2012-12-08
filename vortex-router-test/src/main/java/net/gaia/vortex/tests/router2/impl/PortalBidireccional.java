@@ -26,6 +26,8 @@ import net.gaia.vortex.tests.router2.impl.filtros.SinFiltro;
 import net.gaia.vortex.tests.router2.impl.patas.PataBidireccional;
 import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router2.simulador.Simulador;
+import net.gaia.vortex.tests.router2.simulador.pasos.filtros.SetearFiltros;
+import net.gaia.vortex.tests.router2.simulador.pasos.mensajes.EnviarMensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,5 +119,25 @@ public class PortalBidireccional extends NodoBidireccional implements Portal {
 	@Override
 	public void setListenerDeFiltrosExternos(final ListenerDeFiltros listenerDeExternos) {
 		this.listenerDeFiltros = listenerDeExternos;
+	}
+
+	/**
+	 * Genera un paso en la simulación por un cambio de filtros en este portal
+	 * 
+	 * @param filtros
+	 *            Los filtros a cambiar
+	 */
+	public void simularSeteoDeFiltros(final String... filtros) {
+		procesar(SetearFiltros.create(this, filtros));
+	}
+
+	/**
+	 * Genera un paso en la simulación por el envio del mensaje originado en este portal
+	 * 
+	 * @param mensajeAEnviar
+	 *            El mensaje a enviar
+	 */
+	public void simularEnvioDe(final MensajeNormal mensajeAEnviar) {
+		procesar(EnviarMensaje.create(this, mensajeAEnviar));
 	}
 }

@@ -14,9 +14,8 @@ package net.gaia.vortex.tests.router;
 
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.vortex.tests.router.impl.PortalImpl;
-import net.gaia.vortex.tests.router.impl.RouterImpl;
-import net.gaia.vortex.tests.router2.api.Router;
+import net.gaia.vortex.tests.router2.impl.PortalBidireccional;
+import net.gaia.vortex.tests.router2.impl.RouterBidireccional;
 import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router2.mensajes.MensajeSupport;
 import net.gaia.vortex.tests.router2.simulador.Simulador;
@@ -45,11 +44,11 @@ public class TestEscenariosTipicos {
 
 	@Test
 	public void conUnChatConectadoYUnLuz_AlConectarseOtroChatDeberiaRutearBienEntreChats() {
-		final Router server = RouterImpl.create("Servidor", simulador);
+		final RouterBidireccional server = RouterBidireccional.create("Servidor", simulador);
 
-		final PortalImpl chat1 = PortalImpl.create("Chat1", simulador);
-		final PortalImpl chat2 = PortalImpl.create("Chat2", simulador);
-		final PortalImpl luz1 = PortalImpl.create("Luz1", simulador);
+		final PortalBidireccional chat1 = PortalBidireccional.create("Chat1", simulador);
+		final PortalBidireccional chat2 = PortalBidireccional.create("Chat2", simulador);
+		final PortalBidireccional luz1 = PortalBidireccional.create("Luz1", simulador);
 
 		// Hacemos que el chat1 ya esté conectado
 		chat1.simularConexionBidi(server);

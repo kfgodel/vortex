@@ -22,6 +22,11 @@ import net.gaia.vortex.tests.router2.api.Nodo;
 import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
 import net.gaia.vortex.tests.router2.impl.filtros.SinFiltro;
 import net.gaia.vortex.tests.router2.impl.patas.PataBidireccional;
+import net.gaia.vortex.tests.router2.mensajes.ConfirmacionDeIdRemoto;
+import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
+import net.gaia.vortex.tests.router2.mensajes.PedidoDeIdRemoto;
+import net.gaia.vortex.tests.router2.mensajes.PublicacionDeFiltros;
+import net.gaia.vortex.tests.router2.mensajes.RespuestaDeIdRemoto;
 import net.gaia.vortex.tests.router2.simulador.NodoSimulacion;
 
 import org.slf4j.Logger;
@@ -115,7 +120,10 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	@Override
 	protected void evento_recibirMensajeEnNodo(final Mensaje mensaje) {
 		propagarAPatas(mensaje);
-		procesarConHandlersInternos(mensaje);
+		// Si es un metamensaje no es procesable por los handlers
+		if (mensaje instanceof MensajeNormal) {
+			procesarConHandlersInternos(mensaje);
+		}
 	}
 
 	/**
@@ -127,6 +135,12 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	 */
 	private void propagarAPatas(final Mensaje mensaje) {
 		final List<PataBidireccional> allPatas = getPatas();
+		if (allPatas.isEmpty()) {
+			LOG.debug("  Rechazando mensaje{} en [{}] porque no existen patas de comunicacion para procesar",
+					new Object[] { mensaje, this.getNombre() });
+			return;
+		}
+
 		for (final PataBidireccional pataLocal : allPatas) {
 			pataLocal.derivar(mensaje);
 		}

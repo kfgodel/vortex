@@ -1,5 +1,5 @@
 /**
- * 13/11/2012 21:08:37 Copyright (C) 2011 Darío L. García
+ * 08/12/2012 17:40:11 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,45 +10,40 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.tests.router2.simulador.pasos;
+package net.gaia.vortex.tests.router2.simulador.pasos.mensajes;
 
-import net.gaia.vortex.tests.router2.api.Nodo;
-import net.gaia.vortex.tests.router2.impl.patas.PataBidireccional;
+import net.gaia.vortex.tests.router2.impl.PortalBidireccional;
 import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
+import net.gaia.vortex.tests.router2.simulador.pasos.PasoSupport;
 
 /**
- * Esta clase representa la acción realziada por un nodo par enviar el mensaje a una pata destino
+ * Esta clase representa el paso de simulación en el que el cliente de un portal solicita el envio
+ * de un mensaje
  * 
  * @author D. García
  */
 public class EnviarMensaje extends PasoSupport {
 
-	private PataBidireccional pata;
+	private PortalBidireccional portal;
+	public static final String portal_FIELD = "portal";
+
 	private MensajeNormal mensaje;
+	public static final String mensaje_FIELD = "mensaje";
 
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
 	@Override
 	public void ejecutar() {
-		final Nodo nodoVecino = pata.getNodoRemoto();
-		nodoVecino.recibirMensaje(mensaje);
+		portal.enviar(mensaje);
 	}
 
-	public static EnviarMensaje create(final PataBidireccional pataSalida, final MensajeNormal mensaje) {
-		final EnviarMensaje name = new EnviarMensaje();
-		name.setNodoLocal(pataSalida.getNodoLocal());
-		name.pata = pataSalida;
-		name.mensaje = mensaje;
-		return name;
+	public PortalBidireccional getPortal() {
+		return portal;
 	}
 
-	public PataBidireccional getPata() {
-		return pata;
-	}
-
-	public void setPata(final PataBidireccional pata) {
-		this.pata = pata;
+	public void setPortal(final PortalBidireccional portal) {
+		this.portal = portal;
 	}
 
 	public MensajeNormal getMensaje() {
@@ -57,6 +52,14 @@ public class EnviarMensaje extends PasoSupport {
 
 	public void setMensaje(final MensajeNormal mensaje) {
 		this.mensaje = mensaje;
+	}
+
+	public static EnviarMensaje create(final PortalBidireccional portal, final MensajeNormal mensaje) {
+		final EnviarMensaje envio = new EnviarMensaje();
+		envio.setMensaje(mensaje);
+		envio.setNodoLocal(portal);
+		envio.setPortal(portal);
+		return envio;
 	}
 
 	/**
@@ -69,20 +72,10 @@ public class EnviarMensaje extends PasoSupport {
 		if (this.mensaje != null) {
 			builder.append(this.mensaje.getIdDeMensaje());
 		}
-		builder.append("] desde [");
+		builder.append("] a portal [");
 
 		if (getNodoLocal() != null) {
 			builder.append(getNodoLocal().getNombre());
-		}
-		builder.append(",");
-		if (getPata() != null) {
-			builder.append(getPata().getIdLocal());
-		}
-		builder.append("] por [");
-		if (getPata() != null) {
-			builder.append(getPata().getNodoRemoto().getNombre());
-			builder.append(",");
-			builder.append(getPata().getIdRemoto());
 		}
 		builder.append("] con tag[");
 		if (this.mensaje != null) {
@@ -95,5 +88,4 @@ public class EnviarMensaje extends PasoSupport {
 		builder.append("\"");
 		return builder.toString();
 	}
-
 }

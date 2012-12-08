@@ -30,11 +30,11 @@ import net.gaia.vortex.tests.router2.simulador.ComponenteSimulable;
 import net.gaia.vortex.tests.router2.simulador.NodoSimulacion;
 import net.gaia.vortex.tests.router2.simulador.PasoSimulacion;
 import net.gaia.vortex.tests.router2.simulador.Simulador;
-import net.gaia.vortex.tests.router2.simulador.pasos.EnviarMensaje;
-import net.gaia.vortex.tests.router2.simulador.pasos.PublicarFiltros;
 import net.gaia.vortex.tests.router2.simulador.pasos.bidi.ConfirmarIdRemoto;
 import net.gaia.vortex.tests.router2.simulador.pasos.bidi.PedirIdRemoto;
 import net.gaia.vortex.tests.router2.simulador.pasos.bidi.ResponderIdRemoto;
+import net.gaia.vortex.tests.router2.simulador.pasos.filtros.PublicarFiltros;
+import net.gaia.vortex.tests.router2.simulador.pasos.mensajes.PropagarMensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +105,8 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idLocal_FIELD, getIdLocal()).con(filtroDeEntrada_FIELD, filtroDeEntrada)
+		return ToString.de(this).con(idLocal_FIELD, getIdLocal()).con(nodoLocal_FIELD, nodoLocal)
+				.con(filtroDeEntrada_FIELD, filtroDeEntrada)
 				.con(filtroDeEntradaPublicado_FIELD, filtroDeEntradaPublicado).con(idRemoto_FIELD, idRemoto)
 				.con(nodoRemoto_FIELD, nodoRemoto.getNombre()).con(filtroDeSalida_FIELD, filtroDeSalida).toString();
 	}
@@ -119,17 +120,6 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	}
 
 	/**
-	 * Genera y envía la respuesta al pedido desde esta pata
-	 * 
-	 * @param pedido
-	 *            El pedido al que se hará referencia
-	 */
-	public void enviarRespuestaA(final PedidoDeIdRemoto pedido) {
-		final RespuestaDeIdRemoto respuesta = RespuestaDeIdRemoto.create(pedido, getIdLocal());
-		procesar(ResponderIdRemoto.create(this, respuesta));
-	}
-
-	/**
 	 * Procesa el mensaje recibido mandándolo a destino si corresponde. Para determinarlo aplica
 	 * filtros y evalua metamensajes. Se agrega el id remoto al mensaje antes de enviarlo para
 	 * evitar rebotes si es posible
@@ -138,12 +128,6 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	 *            El mensaje a procesar y posiblemente enviar a destino
 	 */
 	public void derivar(final Mensaje mensaje) {
-		final Long idDePataOrigen = mensaje.getIdDePataLocalAlReceptor();
-		if (this.getIdLocal().equals(idDePataOrigen)) {
-			LOG.debug("  Evitando enviar desde [{},{}] el mensaje[{}] porque provino de esa pata", new Object[] {
-					this.getNodoLocal().getNombre(), getIdLocal(), mensaje.getIdDeMensaje() });
-			return;
-		}
 		final MensajeNormal mensajeNormal = interpretarMetamensaje(mensaje);
 		if (mensajeNormal == null) {
 			// Ya fue procesado como metamensaje
@@ -163,12 +147,16 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	private MensajeNormal interpretarMetamensaje(final Mensaje mensaje) {
 		if (mensaje instanceof PedidoDeIdRemoto) {
 			evento_recibirPedidoDeIdRemoto((PedidoDeIdRemoto) mensaje);
+			return null;
 		} else if (mensaje instanceof RespuestaDeIdRemoto) {
 			evento_recibirRespuestaDeIdRemoto((RespuestaDeIdRemoto) mensaje);
+			return null;
 		} else if (mensaje instanceof ConfirmacionDeIdRemoto) {
 			evento_recibirConfirmacionDeIdRemoto((ConfirmacionDeIdRemoto) mensaje);
+			return null;
 		} else if (mensaje instanceof PublicacionDeFiltros) {
 			evento_recibirPublicacionDeFiltros((PublicacionDeFiltros) mensaje);
+			return null;
 		} else if (mensaje instanceof MensajeNormal) {
 			return (MensajeNormal) mensaje;
 		}
@@ -187,8 +175,8 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 		}
 		final Filtro nuevoFiltro = publicacion.getFiltro();
 		setFiltroDeSalida(nuevoFiltro);
-		LOG.debug("  En [{},{}] solo se enviaran mensajes que cumplan el filtro{}: {}", new Object[] {
-				this.getNodoLocal().getNombre(), getIdLocal(), publicacion, nuevoFiltro });
+		LOG.debug("  En [{},{}] solo se enviaran mensajes a [{}] que cumplan el filtro{}: {}", new Object[] {
+				this.getNodoLocal().getNombre(), getIdLocal(), getNodoRemoto().getNombre(), publicacion, nuevoFiltro });
 		evento_cambioDeFiltroRemoto(nuevoFiltro);
 	}
 
@@ -283,6 +271,12 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	 *            El mensaje a enviar
 	 */
 	public void enviarMensajeNormal(final MensajeNormal mensaje) {
+		final Long idDePataOrigen = mensaje.getIdDePataLocalAlReceptor();
+		if (this.getIdLocal().equals(idDePataOrigen)) {
+			LOG.debug("  Evitando enviar desde [{},{}] el mensaje[{}] porque provino de esa pata", new Object[] {
+					this.getNodoLocal().getNombre(), getIdLocal(), mensaje.getIdDeMensaje() });
+			return;
+		}
 		if (!getFiltroDeSalida().aceptaA(mensaje)) {
 			LOG.debug("  Evitando enviar desde [{},{}] el mensaje[{}] porque su filtro no lo admite: {}", new Object[] {
 					this.getNodoLocal().getNombre(), this.getIdLocal(), mensaje.getIdDeMensaje(), getFiltroDeSalida() });
@@ -331,7 +325,7 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 		} else if (mensaje instanceof PublicacionDeFiltros) {
 			pasoDelSimulador = PublicarFiltros.create(this, (PublicacionDeFiltros) mensaje);
 		} else if (mensaje instanceof MensajeNormal) {
-			pasoDelSimulador = EnviarMensaje.create(this, (MensajeNormal) mensaje);
+			pasoDelSimulador = PropagarMensaje.create(this, (MensajeNormal) mensaje);
 		} else {
 			throw new UnhandledConditionException(
 					"No se puede crear el paso especifico para un tipo de mensaje desconocido");
@@ -389,17 +383,17 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 		final Filtro filtroAPublicar = this.getFiltroDeEntrada();
 		final Long idRemotoDeEstaPata = getIdRemoto();
 		if (idRemotoDeEstaPata == null) {
-			LOG.debug("En [{},{}] no se publica filtro{} porque no tenemos ID remoto", new Object[] {
+			LOG.debug("  En [{},{}] no se publica filtro {} porque no tenemos ID remoto", new Object[] {
 					this.getNodoLocal().getNombre(), this.getIdLocal(), filtroAPublicar });
 			// Aún no tenemos un ID remoto con el cual publicar los filtros
 			return;
 		}
 		if (filtroAPublicar.equals(this.getFiltroDeEntradaPublicado())) {
-			LOG.debug("En [{},{}] no se publica porque no hubo cambio de filtro de entrada: {}", new Object[] {
+			LOG.debug("  En [{},{}] no se publica porque no hubo cambio de filtro de entrada: {}", new Object[] {
 					this.getNodoLocal().getNombre(), this.getIdLocal(), filtroAPublicar });
 			return;
 		}
-		LOG.debug("En [{},{}] se publica el cambio de filtro de entrada de {} a: {}", new Object[] {
+		LOG.debug("  En [{},{}] se publica el cambio de filtro de entrada de {} a: {}", new Object[] {
 				this.getNodoLocal().getNombre(), this.getIdLocal(), getFiltroDeEntradaPublicado(), filtroAPublicar });
 
 		setFiltroDeEntradaPublicado(filtroAPublicar);

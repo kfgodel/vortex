@@ -52,7 +52,7 @@ public class TestPasosDeSimulacion {
 
 	@Test
 	public void deberiaMostrarLaConexionUniDireccionalComoUnSoloPaso() {
-		p1.conectarCon(r1);
+		p1.simularConexionCon(r1);
 
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 	}
@@ -65,36 +65,35 @@ public class TestPasosDeSimulacion {
 
 	@Test
 	public void siNoTieneAQuienPublicarNoDeberiaGenerarPasos() {
-		p1.setFiltros("tag1");
-		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
+		p1.simularSeteoDeFiltros("tag1");
+		Assert.assertEquals("Debería estar el paso del seteo de tags", 1, simulador.getCantidadDePasosPendientes());
+
+		simulador.ejecutarSiguiente();
+		Assert.assertEquals("No debería haber otro porque no esta conectado", 0,
+				simulador.getCantidadDePasosPendientes());
 	}
 
 	@Test
 	public void siNoHayComunicacionBidiElRouterNoDeberiaPoderConfirmarLaPublicacion() {
-		p1.conectarCon(r1);
+		p1.simularConexionCon(r1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		p1.setFiltros("tag1");
-		// El paso de pedido de id al router
-		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
-		simulador.ejecutarSiguiente();
+		p1.simularSeteoDeFiltros("tag1");
+		Assert.assertEquals("Debería estar el paso del seteo de tags", 1, simulador.getCantidadDePasosPendientes());
 
-		// El router nunca contestó
+		simulador.ejecutarSiguiente();
+		// La publicacion no se hace por que no hay ida y vuelta todavía
 		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
 	}
 
 	@Test
-	public void siElRouterEstaConectadoAOtroPortalNoDeberiaRecepcionDeConfirmacion() {
-		p1.conectarCon(r1);
-		r1.conectarCon(p2);
-		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+	public void siElRouterEstaConectadoAOtroPortalNoDeberiaHaberRecepcionDeConfirmacion() {
+		p1.simularConexionCon(r1);
+		r1.simularConexionCon(p2);
+		simulador.ejecutarTodos(TimeMagnitude.of(10000, TimeUnit.SECONDS));
 
-		p1.setFiltros("tag1");
-		// El paso de pedido de id al router
-		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
-		simulador.ejecutarSiguiente();
-
-		// El paso de respuesta de Id al portal equivocado
+		p1.simularSeteoDeFiltros("tag1");
+		// El paso del seteo que queda sin camino para publicar
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
 
@@ -108,7 +107,11 @@ public class TestPasosDeSimulacion {
 		// Se realizan toda la interconexion bidireccional
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		p1.setFiltros("tag1");
+		p1.simularSeteoDeFiltros("tag1");
+		// El paso del seteo en sí
+		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
+		simulador.ejecutarSiguiente();
+
 		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
@@ -126,7 +129,7 @@ public class TestPasosDeSimulacion {
 		r1.simularConexionBidi(r2);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		p1.setFiltros("tag1");
+		p1.simularSeteoDeFiltros("tag1");
 		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -138,7 +141,7 @@ public class TestPasosDeSimulacion {
 	public void deberiaRevertirLosFiltrosAlDesconectar() {
 		p1.simularConexionBidi(r1);
 		r1.simularConexionBidi(r2);
-		p1.setFiltros("tag1");
+		p1.simularSeteoDeFiltros("tag1");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Verificamos que el estado inicial es que r2 filtra lo que necesita p1
@@ -155,20 +158,24 @@ public class TestPasosDeSimulacion {
 	public void deberiaPermitirLaReconexionSiEsDesconexionParcial() {
 		p1.simularConexionBidi(r1);
 		r1.simularConexionBidi(r2);
-		p1.setFiltros("tag1");
+		p1.simularSeteoDeFiltros("tag1");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Verificamos que el estado inicial es que r2 filtra lo que necesita p1
 		Assert.assertTrue("El tercer nodo deberia usar el filtro", r2.usaFiltrosCon(r1, "tag1"));
 
-		r1.desconectarDe(r2);
+		r1.simularDesconexionUniDe(r2);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Verificamos que R2 no se enteró del corte
 		Assert.assertTrue("El tercer nodo deberia usar el filtro", r2.usaFiltrosCon(r1, "tag1"));
 
-		r1.conectarCon(r2);
+		r1.simularConexionCon(r2);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Verificamos que al reconectar los filtros fueron propagados
+		Assert.assertTrue("El tercer nodo deberia usar el filtro", r2.usaFiltrosCon(r1, "tag1"));
+
 	}
 
 	@Test
@@ -177,7 +184,7 @@ public class TestPasosDeSimulacion {
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final MensajeNormal mensaje = MensajeNormal.create("tag1", "texto");
-		p1.enviar(mensaje);
+		p1.simularEnvioDe(mensaje);
 
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.assertTrue("R1 debería haber recibido el mensaje", r1.getRecibidos().contains(mensaje));

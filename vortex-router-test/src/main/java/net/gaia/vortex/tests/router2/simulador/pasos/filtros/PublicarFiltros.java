@@ -10,11 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.tests.router2.simulador.pasos;
+package net.gaia.vortex.tests.router2.simulador.pasos.filtros;
 
 import net.gaia.vortex.tests.router2.api.Nodo;
 import net.gaia.vortex.tests.router2.impl.patas.PataBidireccional;
 import net.gaia.vortex.tests.router2.mensajes.PublicacionDeFiltros;
+import net.gaia.vortex.tests.router2.simulador.pasos.PasoSupport;
 
 /**
  * Esta clase representa el paso donde un nodo le publica sus filtros al vecino
