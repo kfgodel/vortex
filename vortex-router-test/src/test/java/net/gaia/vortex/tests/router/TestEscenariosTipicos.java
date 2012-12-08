@@ -52,24 +52,24 @@ public class TestEscenariosTipicos {
 
 		// Hacemos que el chat1 ya esté conectado
 		chat1.simularConexionBidi(server);
-		chat1.setFiltros("chat");
+		chat1.simularSeteoDeFiltros("chat");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Se conecta el de luz
 		luz1.simularConexionBidi(server);
-		luz1.setFiltros("luz");
+		luz1.simularSeteoDeFiltros("luz");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Si mandamos mensajes desde la luz, no debería llegar al de chat
 		final MensajeNormal mensajeDeLuz = MensajeNormal.create("luz", "Mensaje de luz");
-		luz1.enviar(mensajeDeLuz);
+		luz1.simularEnvioDe(mensajeDeLuz);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		Assert.assertFalse("No debería llegar al de chat", chat1.yaProceso(mensajeDeLuz));
 
 		// Mandamos el de chat y no debería llegar al de luz
 		final MensajeNormal mensajeDeChat1 = MensajeNormal.create("chat", "Mensaje de chat 1");
-		chat1.enviar(mensajeDeChat1);
+		chat1.simularEnvioDe(mensajeDeChat1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		Assert.assertFalse("No debería llegar al de chat", luz1.yaProceso(mensajeDeChat1));
@@ -77,18 +77,18 @@ public class TestEscenariosTipicos {
 		// Al conectar el de chat2 se debería poder comunicar entre ellos
 
 		chat2.simularConexionBidi(server);
-		chat2.setFiltros("chat");
+		chat2.simularSeteoDeFiltros("chat");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final MensajeNormal mensajeDeChat2 = MensajeNormal.create("chat", "Mensaje de chat 2");
-		chat1.enviar(mensajeDeChat2);
+		chat1.simularEnvioDe(mensajeDeChat2);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		Assert.assertTrue("Debería llegar al de chat 2", chat2.yaProceso(mensajeDeChat2));
 		Assert.assertFalse("No debería llegar al de chat", luz1.yaProceso(mensajeDeChat2));
 
 		final MensajeNormal mensajeDeChat3 = MensajeNormal.create("chat", "Mensaje de chat 3");
-		chat2.enviar(mensajeDeChat3);
+		chat2.simularEnvioDe(mensajeDeChat3);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		Assert.assertTrue("Debería llegar al de chat 1", chat1.yaProceso(mensajeDeChat3));
@@ -99,7 +99,7 @@ public class TestEscenariosTipicos {
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final MensajeNormal mensajeDeChat4 = MensajeNormal.create("chat", "Mensaje de chat 4");
-		chat2.enviar(mensajeDeChat4);
+		chat2.simularEnvioDe(mensajeDeChat4);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		Assert.assertFalse("No debería llegar al de chat1", chat1.yaProceso(mensajeDeChat4));

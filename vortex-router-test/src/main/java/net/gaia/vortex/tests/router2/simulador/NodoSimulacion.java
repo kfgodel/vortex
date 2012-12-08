@@ -13,6 +13,7 @@
 package net.gaia.vortex.tests.router2.simulador;
 
 import net.gaia.vortex.tests.router2.api.Nodo;
+import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
 
 /**
  * Interfaz para definir comportamiento común utilizable desde los pasos de la simulación
@@ -77,4 +78,13 @@ public interface NodoSimulacion extends Nodo, Nombrable {
 	 */
 	public abstract boolean usaFiltrosCon(final Nodo nodo, final String... filtros);
 
+	/**
+	 * Indica si este nodo ya envio o recibio el mensaje pasado, por lo tanto no se le debe pasar de
+	 * nuevo
+	 * 
+	 * @param mensaje
+	 *            El mensaje a verificar
+	 * @return true si ya se envio o recibio este mensaje
+	 */
+	public boolean yaProceso(final MensajeNormal mensaje);
 }

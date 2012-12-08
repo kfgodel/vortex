@@ -22,11 +22,7 @@ import net.gaia.vortex.tests.router2.api.Nodo;
 import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
 import net.gaia.vortex.tests.router2.impl.filtros.SinFiltro;
 import net.gaia.vortex.tests.router2.impl.patas.PataBidireccional;
-import net.gaia.vortex.tests.router2.mensajes.ConfirmacionDeIdRemoto;
 import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
-import net.gaia.vortex.tests.router2.mensajes.PedidoDeIdRemoto;
-import net.gaia.vortex.tests.router2.mensajes.PublicacionDeFiltros;
-import net.gaia.vortex.tests.router2.mensajes.RespuestaDeIdRemoto;
 import net.gaia.vortex.tests.router2.simulador.NodoSimulacion;
 
 import org.slf4j.Logger;
@@ -247,4 +243,14 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 		final boolean usaFiltro = pataSalida.getFiltroDeSalida().usaA(Arrays.asList(filtros));
 		return usaFiltro;
 	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router2.simulador.NodoSimulacion#yaProceso(net.gaia.vortex.tests.router2.mensajes.MensajeNormal)
+	 */
+	@Override
+	public boolean yaProceso(final MensajeNormal mensaje) {
+		final boolean yaSeProceso = getRecibidos().contains(mensaje);
+		return yaSeProceso;
+	}
+
 }
