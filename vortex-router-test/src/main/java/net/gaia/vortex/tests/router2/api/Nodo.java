@@ -12,11 +12,6 @@
  */
 package net.gaia.vortex.tests.router2.api;
 
-import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
-import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
-import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
-import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
 
 /**
  * Esta interfaz representa los elementos comunes a portales y routers
@@ -24,8 +19,6 @@ import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
  * @author D. García
  */
 public interface Nodo {
-
-	public String getNombre();
 
 	/**
 	 * Crea un enlace unidireccional desde este nodo al otro. Sin la contraparte.<br>
@@ -38,53 +31,12 @@ public interface Nodo {
 	void conectarCon(Nodo otro);
 
 	/**
-	 * Crea una conexión bidireccional entre este nodo y el pasado en un solo paso.<br>
-	 * Normalmente el otro nodo iniciará la publicación de filtros
-	 * 
-	 * @param otro
-	 *            El otro nodo al que se conectara
-	 */
-	public void conectarBidi(final Nodo otro);
-
-	/**
-	 * Agrega el nodo pasado a los destinos sin requerir un paso de simulador
-	 * 
-	 * @param nodoDestino
-	 */
-	public void agregarDestino(Nodo nodoDestino);
-
-	/**
 	 * Desconecta sólo este nodo del otro, si el otro está conectado a este, esa conexión permanece
 	 * 
 	 * @param destino
 	 *            El nodo del cual nos deconectaremos
 	 */
-	void desconectarUniDe(Nodo destino);
-
-	/**
-	 * Desconecta ambos nodos entre sí
-	 * 
-	 * @param otroConectado
-	 *            el nodo del cual se desconectará
-	 */
-	void desconectarBidiDe(Nodo otroConectado);
-
-	/**
-	 * Quita el nodo pasado de los destinos sin requerir un paso del simulador
-	 * 
-	 * @param nodoDestino
-	 *            El nodo a quitar
-	 */
-	void quitarDestino(Nodo nodoDestino);
-
-	/**
-	 * Indica si este nodo tiene al pasado como destino
-	 * 
-	 * @param otro
-	 *            El nodo a comprobar
-	 * @return true si es parte de los receptores de este nodo
-	 */
-	boolean tieneComoDestinoA(Nodo otro);
+	void desconectarDe(Nodo destino);
 
 	/**
 	 * Recibe el mensaje en este nodo realizando la acción correspondiente segun el tipo de nodo
@@ -92,38 +44,6 @@ public interface Nodo {
 	 * @param mensaje
 	 *            El mensaje a recibir
 	 */
-	public void recibirMensaje(MensajeNormal mensaje);
-
-	/**
-	 * Invocado al recibir un pedido de ID desde un nodo
-	 * 
-	 * @param pedido
-	 *            El pedido recibido
-	 */
-	public void recibirPedidoDeId(PedidoDeIdRemoto pedido);
-
-	/**
-	 * Invocado al recibir la respuesta con el ID remoto para una conexión local
-	 * 
-	 * @param respuesta
-	 *            La respuesta que recibimos
-	 */
-	public void recibirRespuestaDeIdRemoto(RespuestaDeIdRemoto respuesta);
-
-	/**
-	 * Invocado cuando este nodo recibe el mensaje final del handshake
-	 * 
-	 * @param confirmacion
-	 *            la confirmacion recibida
-	 */
-	public void recibirConfirmacionDeIdRemoto(ConfirmacionDeIdRemoto confirmacion);
-
-	/**
-	 * Invocado cuando este nodo recibe una publicación de filtros de otro nodo
-	 * 
-	 * @param publicacion
-	 *            La publicación recibida
-	 */
-	public void recibirPublicacion(PublicacionDeFiltros publicacion);
+	public void recibirMensaje(Mensaje mensaje);
 
 }

@@ -15,14 +15,14 @@ package net.gaia.vortex.tests.router.impl;
 import java.util.Arrays;
 import java.util.List;
 
-import net.gaia.vortex.tests.router.Simulador;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
-import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
-import net.gaia.vortex.tests.router.impl.patas.PataConectora;
-import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
-import net.gaia.vortex.tests.router.impl.patas.filtros.SinFiltro;
+import net.gaia.vortex.tests.router.impl.patas.PataConectoraOld;
 import net.gaia.vortex.tests.router2.api.Nodo;
 import net.gaia.vortex.tests.router2.api.Router;
+import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
+import net.gaia.vortex.tests.router2.impl.filtros.SinFiltro;
+import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
+import net.gaia.vortex.tests.router2.mensajes.PublicacionDeFiltros;
+import net.gaia.vortex.tests.router2.simulador.Simulador;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class RouterImpl extends NodoSupport implements Router {
 	 *         usados
 	 */
 	public boolean usaFiltrosCon(final Nodo nodo, final String... filtros) {
-		final PataConectora pataSalida = getPataPorNodo(nodo);
+		final PataConectoraOld pataSalida = getPataPorNodo(nodo);
 		if (pataSalida == null) {
 			return false;
 		}
@@ -65,13 +65,13 @@ public class RouterImpl extends NodoSupport implements Router {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#calcularFiltrosPara(net.gaia.vortex.tests.router.impl.patas.PataConectora)
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#calcularFiltrosPara(net.gaia.vortex.tests.router.impl.patas.PataConectoraOld)
 	 */
 	@Override
-	protected Filtro calcularFiltrosPara(final PataConectora pataSalida) {
+	protected Filtro calcularFiltrosPara(final PataConectoraOld pataSalida) {
 		Filtro filtroResultante = null;
-		final List<PataConectora> allPatas = getDestinos();
-		for (final PataConectora pataConectora : allPatas) {
+		final List<PataConectoraOld> allPatas = getDestinos();
+		for (final PataConectoraOld pataConectora : allPatas) {
 			if (pataSalida.equals(pataConectora)) {
 				// No queremos republicarle sus propios filtros!
 				continue;
@@ -91,7 +91,7 @@ public class RouterImpl extends NodoSupport implements Router {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#recibirPublicacion(net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros)
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#recibirPublicacion(net.gaia.vortex.tests.router2.mensajes.PublicacionDeFiltros)
 	 */
 	@Override
 	public void recibirPublicacion(final PublicacionDeFiltros publicacion) {
@@ -100,18 +100,18 @@ public class RouterImpl extends NodoSupport implements Router {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#propagarFiltrosDe(net.gaia.vortex.tests.router.impl.patas.PataConectora)
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#propagarFiltrosDe(net.gaia.vortex.tests.router.impl.patas.PataConectoraOld)
 	 */
 	protected void propagarFiltros() {
-		final List<PataConectora> allPatas = getDestinos();
+		final List<PataConectoraOld> allPatas = getDestinos();
 		LOG.debug("Propagando filtros desde [{}] a {} patas", getNombre(), allPatas.size());
-		for (final PataConectora pataConectora : allPatas) {
+		for (final PataConectoraOld pataConectora : allPatas) {
 			publicarFiltrosEn(pataConectora);
 		}
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#realizarAccionEspecificaAlRecibir(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#realizarAccionEspecificaAlRecibir(net.gaia.vortex.tests.router2.mensajes.MensajeNormal)
 	 */
 	@Override
 	protected void realizarAccionEspecificaAlRecibir(final MensajeNormal mensaje) {

@@ -22,11 +22,22 @@ public interface Mensaje {
 	/**
 	 * Devuelve el ID de este mensaje
 	 */
-	public Long getId();
+	public Long getIdDeMensaje();
 
 	/**
 	 * Devuelve un String que representa contenido de este mensaje procesable por los filtros
 	 */
 	public String getTag();
+
+	/**
+	 * Indica opcionalmente el ID de pata local al receptor del mensaje por el cual se envía este
+	 * mensaje.<br>
+	 * Para que este ID esté definido previamente los nodos deben conocer el ID de pata de su
+	 * receptor.
+	 * 
+	 * @return El id que corresponde a la pata que recibe el mensaje en destino, o null si no se
+	 *         conoce
+	 */
+	public Long getIdDePataLocalAlReceptor();
 
 }

@@ -15,14 +15,14 @@ package net.gaia.vortex.tests.router.impl;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 
-import net.gaia.vortex.tests.router.Simulador;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
-import net.gaia.vortex.tests.router.impl.patas.PataConectora;
-import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
-import net.gaia.vortex.tests.router.impl.patas.filtros.FiltroPorStrings;
-import net.gaia.vortex.tests.router.impl.patas.filtros.SinFiltro;
+import net.gaia.vortex.tests.router.impl.patas.PataConectoraOld;
 import net.gaia.vortex.tests.router2.api.ListenerDeFiltros;
 import net.gaia.vortex.tests.router2.api.Portal;
+import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
+import net.gaia.vortex.tests.router2.impl.filtros.FiltroPorStrings;
+import net.gaia.vortex.tests.router2.impl.filtros.SinFiltro;
+import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
+import net.gaia.vortex.tests.router2.simulador.Simulador;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,15 +66,15 @@ public class PortalImpl extends NodoSupport implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#calcularFiltrosPara(net.gaia.vortex.tests.router.impl.patas.PataConectora)
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#calcularFiltrosPara(net.gaia.vortex.tests.router.impl.patas.PataConectoraOld)
 	 */
 	@Override
-	protected Filtro calcularFiltrosPara(final PataConectora pataSalida) {
+	protected Filtro calcularFiltrosPara(final PataConectoraOld pataSalida) {
 		return filtroPedidoPorUsuario;
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router2.api.Portal#enviar(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
+	 * @see net.gaia.vortex.tests.router2.api.Portal#enviar(net.gaia.vortex.tests.router2.mensajes.MensajeNormal)
 	 */
 	@Override
 	public void enviar(final MensajeNormal mensaje) {
@@ -82,11 +82,11 @@ public class PortalImpl extends NodoSupport implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#realizarAccionEspecificaAlRecibir(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
+	 * @see net.gaia.vortex.tests.router.impl.NodoSupport#realizarAccionEspecificaAlRecibir(net.gaia.vortex.tests.router2.mensajes.MensajeNormal)
 	 */
 	@Override
 	protected void realizarAccionEspecificaAlRecibir(final MensajeNormal mensaje) {
-		LOG.info(" En [{}] se recibió el mensaje[{}]", this.getNombre(), mensaje.getId());
+		LOG.info(" En [{}] se recibió el mensaje[{}]", this.getNombre(), mensaje.getIdDeMensaje());
 	}
 
 	/**

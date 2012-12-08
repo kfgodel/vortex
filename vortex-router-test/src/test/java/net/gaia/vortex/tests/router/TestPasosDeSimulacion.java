@@ -15,11 +15,12 @@ package net.gaia.vortex.tests.router;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.vortex.tests.router.impl.PortalImpl;
-import net.gaia.vortex.tests.router.impl.RouterImpl;
-import net.gaia.vortex.tests.router.impl.SimuladorImpl;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeSupport;
+import net.gaia.vortex.tests.router2.impl.PortalBidireccional;
+import net.gaia.vortex.tests.router2.impl.RouterBidireccional;
+import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
+import net.gaia.vortex.tests.router2.mensajes.MensajeSupport;
+import net.gaia.vortex.tests.router2.simulador.Simulador;
+import net.gaia.vortex.tests.router2.simulador.SimuladorImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,19 +35,19 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestPasosDeSimulacion {
 
 	private Simulador simulador;
-	private RouterImpl r1;
-	private PortalImpl p1;
-	private RouterImpl r2;
-	private PortalImpl p2;
+	private RouterBidireccional r1;
+	private PortalBidireccional p1;
+	private RouterBidireccional r2;
+	private PortalBidireccional p2;
 
 	@Before
 	public void crearSimulador() {
 		MensajeSupport.resetIds();
 		simulador = SimuladorImpl.create();
-		r1 = RouterImpl.create("R1", simulador);
-		r2 = RouterImpl.create("R2", simulador);
-		p1 = PortalImpl.create("P1", simulador);
-		p2 = PortalImpl.create("P2", simulador);
+		r1 = RouterBidireccional.create("R1", simulador);
+		r2 = RouterBidireccional.create("R2", simulador);
+		p1 = PortalBidireccional.create("P1", simulador);
+		p2 = PortalBidireccional.create("P2", simulador);
 	}
 
 	@Test
@@ -58,13 +59,13 @@ public class TestPasosDeSimulacion {
 
 	@Test
 	public void deberiaMostrarLaConexionBidiComoUnSoloPaso() {
-		p1.conectarBidi(r1);
+		p1.simularConexionBidi(r1);
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 	}
 
 	@Test
 	public void siNoTieneAQuienPublicarNoDeberiaGenerarPasos() {
-		p1.setearYPublicarFiltros("tag1");
+		p1.setFiltros("tag1");
 		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
 	}
 
@@ -73,7 +74,7 @@ public class TestPasosDeSimulacion {
 		p1.conectarCon(r1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		p1.setearYPublicarFiltros("tag1");
+		p1.setFiltros("tag1");
 		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
@@ -88,7 +89,7 @@ public class TestPasosDeSimulacion {
 		r1.conectarCon(p2);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		p1.setearYPublicarFiltros("tag1");
+		p1.setFiltros("tag1");
 		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
@@ -103,11 +104,11 @@ public class TestPasosDeSimulacion {
 
 	@Test
 	public void deberiaSeguirLosPasosQueDefinimosConJavierAlPublicarUnoAUno() {
-		p1.conectarBidi(r1);
+		p1.simularConexionBidi(r1);
 		// Se realizan toda la interconexion bidireccional
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		p1.setearYPublicarFiltros("tag1");
+		p1.setFiltros("tag1");
 		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarSiguiente();
@@ -121,11 +122,11 @@ public class TestPasosDeSimulacion {
 
 	@Test
 	public void deberiaPropagarLosFiltrosEntreRouters() {
-		p1.conectarBidi(r1);
-		r1.conectarBidi(r2);
+		p1.simularConexionBidi(r1);
+		r1.simularConexionBidi(r2);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		p1.setearYPublicarFiltros("tag1");
+		p1.setFiltros("tag1");
 		// El paso de pedido de id al router
 		Assert.assertEquals(1, simulador.getCantidadDePasosPendientes());
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -135,15 +136,15 @@ public class TestPasosDeSimulacion {
 
 	@Test
 	public void deberiaRevertirLosFiltrosAlDesconectar() {
-		p1.conectarBidi(r1);
-		r1.conectarBidi(r2);
-		p1.setearYPublicarFiltros("tag1");
+		p1.simularConexionBidi(r1);
+		r1.simularConexionBidi(r2);
+		p1.setFiltros("tag1");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Verificamos que el estado inicial es que r2 filtra lo que necesita p1
 		Assert.assertTrue("El tercer nodo deberia usar el filtro", r2.usaFiltrosCon(r1, "tag1"));
 
-		p1.desconectarBidiDe(r1);
+		p1.simularDesconexionBidiDe(r1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Verificamos que ahora r2 ya no filtra para p1
@@ -152,15 +153,15 @@ public class TestPasosDeSimulacion {
 
 	@Test
 	public void deberiaPermitirLaReconexionSiEsDesconexionParcial() {
-		p1.conectarBidi(r1);
-		r1.conectarBidi(r2);
-		p1.setearYPublicarFiltros("tag1");
+		p1.simularConexionBidi(r1);
+		r1.simularConexionBidi(r2);
+		p1.setFiltros("tag1");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Verificamos que el estado inicial es que r2 filtra lo que necesita p1
 		Assert.assertTrue("El tercer nodo deberia usar el filtro", r2.usaFiltrosCon(r1, "tag1"));
 
-		r1.desconectarUniDe(r2);
+		r1.desconectarDe(r2);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Verificamos que R2 no se enteró del corte
@@ -172,7 +173,7 @@ public class TestPasosDeSimulacion {
 
 	@Test
 	public void deberiaRecibirElMensajeElRouter() {
-		p1.conectarBidi(r1);
+		p1.simularConexionBidi(r1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final MensajeNormal mensaje = MensajeNormal.create("tag1", "texto");

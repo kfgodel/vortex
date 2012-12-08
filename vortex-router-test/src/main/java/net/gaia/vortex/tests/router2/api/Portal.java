@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.tests.router2.api;
 
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
+import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
 
 /**
  * Esta interfaz representa un nodo que está especializado como portal

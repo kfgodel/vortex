@@ -16,9 +16,11 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.vortex.tests.router.impl.PortalImpl;
 import net.gaia.vortex.tests.router.impl.RouterImpl;
-import net.gaia.vortex.tests.router.impl.SimuladorImpl;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeSupport;
+import net.gaia.vortex.tests.router2.api.Router;
+import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
+import net.gaia.vortex.tests.router2.mensajes.MensajeSupport;
+import net.gaia.vortex.tests.router2.simulador.Simulador;
+import net.gaia.vortex.tests.router2.simulador.SimuladorImpl;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,23 +45,23 @@ public class TestEscenariosTipicos {
 
 	@Test
 	public void conUnChatConectadoYUnLuz_AlConectarseOtroChatDeberiaRutearBienEntreChats() {
-		final RouterImpl server = RouterImpl.create("Servidor", simulador);
+		final Router server = RouterImpl.create("Servidor", simulador);
 
 		final PortalImpl chat1 = PortalImpl.create("Chat1", simulador);
 		final PortalImpl chat2 = PortalImpl.create("Chat2", simulador);
 		final PortalImpl luz1 = PortalImpl.create("Luz1", simulador);
 
 		// Hacemos que el chat1 ya esté conectado
-		chat1.conectarBidi(server);
-		chat1.setearYPublicarFiltros("chat");
+		chat1.simularConexionBidi(server);
+		chat1.setFiltros("chat");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Se conecta el de luz
-		luz1.conectarBidi(server);
-		luz1.setearYPublicarFiltros("luz");
+		luz1.simularConexionBidi(server);
+		luz1.setFiltros("luz");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		// Si mandamos mensajes desde el chat, no debería llegar a la luz
+		// Si mandamos mensajes desde la luz, no debería llegar al de chat
 		final MensajeNormal mensajeDeLuz = MensajeNormal.create("luz", "Mensaje de luz");
 		luz1.enviar(mensajeDeLuz);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -75,8 +77,8 @@ public class TestEscenariosTipicos {
 
 		// Al conectar el de chat2 se debería poder comunicar entre ellos
 
-		chat2.conectarBidi(server);
-		chat2.setearYPublicarFiltros("chat");
+		chat2.simularConexionBidi(server);
+		chat2.setFiltros("chat");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final MensajeNormal mensajeDeChat2 = MensajeNormal.create("chat", "Mensaje de chat 2");
@@ -94,7 +96,7 @@ public class TestEscenariosTipicos {
 		Assert.assertFalse("No debería llegar al de chat", luz1.yaProceso(mensajeDeChat3));
 
 		// Si se desconecta el chat 1 los mensajes no debería llegar
-		chat1.desconectarBidiDe(server);
+		chat1.simularDesconexionBidiDe(server);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final MensajeNormal mensajeDeChat4 = MensajeNormal.create("chat", "Mensaje de chat 4");

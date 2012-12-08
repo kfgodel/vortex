@@ -16,25 +16,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.vortex.tests.router.Simulador;
-import net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
-import net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto;
-import net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros;
-import net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto;
-import net.gaia.vortex.tests.router.impl.pasos.ConectarBidi;
-import net.gaia.vortex.tests.router.impl.pasos.ConectarUni;
-import net.gaia.vortex.tests.router.impl.pasos.ConfirmarIdRemoto;
-import net.gaia.vortex.tests.router.impl.pasos.DesconectarBidi;
-import net.gaia.vortex.tests.router.impl.pasos.DesconectarUni;
-import net.gaia.vortex.tests.router.impl.pasos.EnviarMensaje;
-import net.gaia.vortex.tests.router.impl.pasos.PedirIdRemoto;
-import net.gaia.vortex.tests.router.impl.pasos.PublicarAVecino;
-import net.gaia.vortex.tests.router.impl.pasos.ResponderIdRemoto;
-import net.gaia.vortex.tests.router.impl.patas.PataConectora;
-import net.gaia.vortex.tests.router.impl.patas.filtros.Filtro;
+import net.gaia.vortex.tests.router.impl.patas.PataConectoraOld;
 import net.gaia.vortex.tests.router2.api.Mensaje;
 import net.gaia.vortex.tests.router2.api.Nodo;
+import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
+import net.gaia.vortex.tests.router2.mensajes.ConfirmacionDeIdRemoto;
+import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
+import net.gaia.vortex.tests.router2.mensajes.PedidoDeIdRemoto;
+import net.gaia.vortex.tests.router2.mensajes.PublicacionDeFiltros;
+import net.gaia.vortex.tests.router2.mensajes.RespuestaDeIdRemoto;
+import net.gaia.vortex.tests.router2.simulador.Simulador;
+import net.gaia.vortex.tests.router2.simulador.pasos.EnviarMensaje;
+import net.gaia.vortex.tests.router2.simulador.pasos.PublicarFiltros;
+import net.gaia.vortex.tests.router2.simulador.pasos.bidi.ConfirmarIdRemoto;
+import net.gaia.vortex.tests.router2.simulador.pasos.bidi.PedirIdRemoto;
+import net.gaia.vortex.tests.router2.simulador.pasos.bidi.ResponderIdRemoto;
+import net.gaia.vortex.tests.router2.simulador.pasos.conexion.ConectarBidi;
+import net.gaia.vortex.tests.router2.simulador.pasos.conexion.ConectarUni;
+import net.gaia.vortex.tests.router2.simulador.pasos.conexion.DesconectarBidi;
+import net.gaia.vortex.tests.router2.simulador.pasos.conexion.DesconectarUni;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public abstract class NodoSupport implements Nodo {
 
 	private final AtomicLong proximoIdPata = new AtomicLong(0);
 
-	private List<PataConectora> destinos;
+	private List<PataConectoraOld> destinos;
 
 	private List<Mensaje> enviados;
 	private List<Mensaje> recibidos;
@@ -93,7 +93,7 @@ public abstract class NodoSupport implements Nodo {
 	@Override
 	public void agregarDestino(final Nodo nodoDestino) {
 		final Long idNuevaPata = this.proximoIdPata.getAndIncrement();
-		final PataConectora nuevaPata = PataConectora.create(idNuevaPata, nodoDestino);
+		final PataConectoraOld nuevaPata = PataConectoraOld.create(idNuevaPata, nodoDestino);
 		getDestinos().add(nuevaPata);
 
 		// Después de agregarlo como salida intentamos ver si es bidireccional
@@ -105,7 +105,7 @@ public abstract class NodoSupport implements Nodo {
 	 */
 	@Override
 	public void quitarDestino(final Nodo nodoDestino) {
-		final PataConectora pataConectora = getPataPorNodo(nodoDestino);
+		final PataConectoraOld pataConectora = getPataPorNodo(nodoDestino);
 		if (pataConectora == null) {
 			LOG.debug("En [{}] no se puede quitar la pata correspondiente al nodo[{}] porque no existe",
 					this.getNombre(), nodoDestino);
@@ -117,9 +117,9 @@ public abstract class NodoSupport implements Nodo {
 		publicarFiltros();
 	}
 
-	public List<PataConectora> getDestinos() {
+	public List<PataConectoraOld> getDestinos() {
 		if (destinos == null) {
-			destinos = new ArrayList<PataConectora>();
+			destinos = new ArrayList<PataConectoraOld>();
 		}
 		return destinos;
 	}
@@ -129,8 +129,8 @@ public abstract class NodoSupport implements Nodo {
 	 */
 	@Override
 	public boolean tieneComoDestinoA(final Nodo otro) {
-		final List<PataConectora> allDestinos = getDestinos();
-		for (final PataConectora pataConectora : allDestinos) {
+		final List<PataConectoraOld> allDestinos = getDestinos();
+		for (final PataConectoraOld pataConectora : allDestinos) {
 			if (pataConectora.conectaA(otro)) {
 				return true;
 			}
@@ -139,10 +139,10 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router2.api.Nodo#conectarBidi(net.gaia.vortex.tests.router2.api.Nodo)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#simularConexionBidi(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
 	@Override
-	public void conectarBidi(final Nodo otro) {
+	public void simularConexionBidi(final Nodo otro) {
 		simulador.agregar(ConectarBidi.create(this, otro));
 	}
 
@@ -158,14 +158,14 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirPublicacion(net.gaia.vortex.tests.router.impl.mensajes.PublicacionDeFiltros)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#evento_recibirPublicacion(net.gaia.vortex.tests.router2.mensajes.PublicacionDeFiltros)
 	 */
 	@Override
 	public void recibirPublicacion(final PublicacionDeFiltros publicacion) {
 		getRecibidos().add(publicacion);
 
 		final Long idLocal = publicacion.getIdDePata();
-		final PataConectora pataSalida = getPataPorIdLocal(idLocal);
+		final PataConectoraOld pataSalida = getPataPorIdLocal(idLocal);
 		if (pataSalida == null) {
 			LOG.debug("  Rechazando publicacion en [{},{}] por que ya no existe conexion",
 					new Object[] { this.getNombre(), idLocal });
@@ -193,7 +193,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirPedidoDeId(net.gaia.vortex.tests.router.impl.mensajes.PedidoDeIdRemoto)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#evento_recibirPedidoDeId(net.gaia.vortex.tests.router2.mensajes.PedidoDeIdRemoto)
 	 */
 	@Override
 	public void recibirPedidoDeId(final PedidoDeIdRemoto pedido) {
@@ -202,7 +202,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirRespuestaDeIdRemoto(net.gaia.vortex.tests.router.impl.mensajes.RespuestaDeIdRemoto)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#evento_recibirRespuestaDeIdRemoto(net.gaia.vortex.tests.router2.mensajes.RespuestaDeIdRemoto)
 	 */
 	@Override
 	public void recibirRespuestaDeIdRemoto(final RespuestaDeIdRemoto respuesta) {
@@ -218,7 +218,7 @@ public abstract class NodoSupport implements Nodo {
 
 		final Long idLocal = pedidoOriginal.getIdDePata();
 		final Long idRemoto = respuesta.getIdAsignado();
-		final PataConectora pataSalida = asociarIdRemotoAPataLocal(idLocal, idRemoto);
+		final PataConectoraOld pataSalida = asociarIdRemotoAPataLocal(idLocal, idRemoto);
 		if (pataSalida == null) {
 			// Ya no está más conectado
 			LOG.debug("  Publicacion de filtros desde [{},{}] a [?,{}] no posible por que ya no existe conexion",
@@ -229,7 +229,7 @@ public abstract class NodoSupport implements Nodo {
 		// publicarFiltrosEn(pataSalida);
 	}
 
-	private void enviarConfirmacionDeIdEn(final PataConectora pataSalida, final RespuestaDeIdRemoto respuesta) {
+	private void enviarConfirmacionDeIdEn(final PataConectoraOld pataSalida, final RespuestaDeIdRemoto respuesta) {
 		final Long idLocal = pataSalida.getIdLocal();
 		final ConfirmacionDeIdRemoto confirmacion = ConfirmacionDeIdRemoto.create(respuesta, idLocal);
 		agregarComoEnviado(confirmacion);
@@ -245,8 +245,8 @@ public abstract class NodoSupport implements Nodo {
 	 * @param idRemoto
 	 * @return La pata local a la que corresponde la respuesta
 	 */
-	private PataConectora asociarIdRemotoAPataLocal(final Long idLocal, final Long idRemoto) {
-		final PataConectora pataSalida = getPataPorIdLocal(idLocal);
+	private PataConectoraOld asociarIdRemotoAPataLocal(final Long idLocal, final Long idRemoto) {
+		final PataConectoraOld pataSalida = getPataPorIdLocal(idLocal);
 		if (pataSalida == null) {
 			// Ya no existe la paga
 			return null;
@@ -255,8 +255,8 @@ public abstract class NodoSupport implements Nodo {
 		return pataSalida;
 	}
 
-	protected PataConectora getPataPorIdLocal(final Long idLocal) {
-		for (final PataConectora pataSalida : getDestinos()) {
+	protected PataConectoraOld getPataPorIdLocal(final Long idLocal) {
+		for (final PataConectoraOld pataSalida : getDestinos()) {
 			final Long idDePata = pataSalida.getIdLocal();
 			if (idDePata.equals(idLocal)) {
 				return pataSalida;
@@ -272,9 +272,9 @@ public abstract class NodoSupport implements Nodo {
 	 *            El nodo cuya pata quiere obtenerse
 	 * @return La pata del nodo o null si no existe
 	 */
-	protected PataConectora getPataPorNodo(final Nodo nodo) {
-		final List<PataConectora> allDestinos = getDestinos();
-		for (final PataConectora pataConectora : allDestinos) {
+	protected PataConectoraOld getPataPorNodo(final Nodo nodo) {
+		final List<PataConectoraOld> allDestinos = getDestinos();
+		for (final PataConectoraOld pataConectora : allDestinos) {
 			if (pataConectora.getNodoRemoto().equals(nodo)) {
 				return pataConectora;
 			}
@@ -286,13 +286,13 @@ public abstract class NodoSupport implements Nodo {
 	 * 
 	 */
 	public void publicarFiltros() {
-		final List<PataConectora> destinos = getDestinos();
+		final List<PataConectoraOld> destinos = getDestinos();
 		if (destinos.isEmpty()) {
 			LOG.debug("  Publicación desde [{}] sin patas de salida. Abortando", this.getNombre());
 			return;
 		}
 
-		for (final PataConectora pataSalida : destinos) {
+		for (final PataConectoraOld pataSalida : destinos) {
 			publicarFiltrosEn(pataSalida);
 		}
 	}
@@ -303,7 +303,7 @@ public abstract class NodoSupport implements Nodo {
 	 * @param pataSalida
 	 *            La pata por la que se intentará comunicar los filtros a otro nodo
 	 */
-	protected void publicarFiltrosEn(final PataConectora pataSalida) {
+	protected void publicarFiltrosEn(final PataConectoraOld pataSalida) {
 		if (!pataSalida.tieneIdRemoto()) {
 			// Si no tiene ID tenemos que conseguirlo antes de publicar
 			conseguirIdRemotoDe(pataSalida);
@@ -319,7 +319,7 @@ public abstract class NodoSupport implements Nodo {
 	 * @param pataSalida
 	 *            La pata que se actualizará
 	 */
-	private void actualizarFiltrosEn(final PataConectora pataSalida) {
+	private void actualizarFiltrosEn(final PataConectoraOld pataSalida) {
 		final Long idRemoto = pataSalida.getIdRemoto();
 		final Filtro filtrosParaLaPata = calcularFiltrosPara(pataSalida);
 		if (pataSalida.yaSePublico(filtrosParaLaPata)) {
@@ -331,7 +331,7 @@ public abstract class NodoSupport implements Nodo {
 				getNombre(), pataSalida.getIdLocal(), pataSalida.getFiltroPublicado(), filtrosParaLaPata });
 		final PublicacionDeFiltros publicacion = PublicacionDeFiltros.create(idRemoto, filtrosParaLaPata);
 		agregarComoEnviado(publicacion);
-		getSimulador().agregar(PublicarAVecino.create(this, pataSalida, publicacion));
+		getSimulador().agregar(PublicarFiltros.create(this, pataSalida, publicacion));
 	}
 
 	/**
@@ -342,7 +342,7 @@ public abstract class NodoSupport implements Nodo {
 	 *            la pata a la que se enviara la publicacion de los filtros calculado
 	 * @return El conjunto de los filtros que define los mensajes que queremos recibir por esa pata
 	 */
-	protected abstract Filtro calcularFiltrosPara(final PataConectora pataSalida);
+	protected abstract Filtro calcularFiltrosPara(final PataConectoraOld pataSalida);
 
 	/**
 	 * Intenta intercambiar ids de patas para poder publicar filtros
@@ -350,7 +350,7 @@ public abstract class NodoSupport implements Nodo {
 	 * @param pataSalida
 	 *            La pata sin id
 	 */
-	private void conseguirIdRemotoDe(final PataConectora pataSalida) {
+	private void conseguirIdRemotoDe(final PataConectoraOld pataSalida) {
 		final Long idLocal = pataSalida.getIdLocal();
 		final PedidoDeIdRemoto pedidoDeIdRemoto = PedidoDeIdRemoto.create(idLocal);
 		agregarComoEnviado(pedidoDeIdRemoto);
@@ -364,13 +364,13 @@ public abstract class NodoSupport implements Nodo {
 	 *            El pedido recibido
 	 */
 	private void responderPedido(final PedidoDeIdRemoto pedido) {
-		final List<PataConectora> destinos = getDestinos();
+		final List<PataConectoraOld> destinos = getDestinos();
 		if (destinos.isEmpty()) {
 			LOG.debug("  Respuesta desde [{}] sin salidas para pedido{}", this.getNombre(), pedido);
 			return;
 		}
 
-		for (final PataConectora pataSalida : destinos) {
+		for (final PataConectoraOld pataSalida : destinos) {
 			responderPedidoA(pataSalida, pedido);
 		}
 	}
@@ -383,7 +383,7 @@ public abstract class NodoSupport implements Nodo {
 	 * @param pedido
 	 *            El pedido que recibimos
 	 */
-	private void responderPedidoA(final PataConectora pataSalida, final PedidoDeIdRemoto pedido) {
+	private void responderPedidoA(final PataConectoraOld pataSalida, final PedidoDeIdRemoto pedido) {
 		final Long idLocal = pataSalida.getIdLocal();
 		final RespuestaDeIdRemoto respuesta = RespuestaDeIdRemoto.create(pedido, idLocal);
 		agregarComoEnviado(respuesta);
@@ -391,7 +391,7 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirConfirmacionDeIdRemoto(net.gaia.vortex.tests.router.impl.mensajes.ConfirmacionDeIdRemoto)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#evento_recibirConfirmacionDeIdRemoto(net.gaia.vortex.tests.router2.mensajes.ConfirmacionDeIdRemoto)
 	 */
 	@Override
 	public void recibirConfirmacionDeIdRemoto(final ConfirmacionDeIdRemoto confirmacion) {
@@ -407,7 +407,7 @@ public abstract class NodoSupport implements Nodo {
 
 		final Long idLocal = respuestaOriginal.getIdAsignado();
 		final Long idRemoto = confirmacion.getIdAsignado();
-		final PataConectora pataSalida = asociarIdRemotoAPataLocal(idLocal, idRemoto);
+		final PataConectoraOld pataSalida = asociarIdRemotoAPataLocal(idLocal, idRemoto);
 		if (pataSalida == null) {
 			// Ya no está más conectado
 			LOG.debug("  Respuesta de filtros desde [{},{}] a [?,{}] no posible por que ya no existe conexion",
@@ -417,33 +417,33 @@ public abstract class NodoSupport implements Nodo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router2.api.Nodo#desconectarBidiDe(net.gaia.vortex.tests.router2.api.Nodo)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#simularDesconexionBidiDe(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
 	@Override
-	public void desconectarBidiDe(final Nodo otroConectado) {
+	public void simularDesconexionBidiDe(final Nodo otroConectado) {
 		simulador.agregar(DesconectarBidi.create(this, otroConectado));
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router2.api.Nodo#desconectarUniDe(net.gaia.vortex.tests.router2.api.Nodo)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#desconectarDe(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
 	@Override
-	public void desconectarUniDe(final Nodo destino) {
+	public void desconectarDe(final Nodo destino) {
 		simulador.agregar(DesconectarUni.create(this, destino));
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirMensaje(net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal)
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirMensaje(net.gaia.vortex.tests.router2.mensajes.MensajeNormal)
 	 */
 	@Override
 	public void recibirMensaje(final MensajeNormal mensaje) {
 		if (getRecibidos().contains(mensaje)) {
-			LOG.debug("  Rechazando mensaje[{}] recibido en [{}] por figurar como ya recibido", mensaje.getId(),
+			LOG.debug("  Rechazando mensaje[{}] recibido en [{}] por figurar como ya recibido", mensaje.getIdDeMensaje(),
 					this.getNombre());
 			return;
 		}
 		if (getEnviados().contains(mensaje)) {
-			LOG.debug("  Rechazando mensaje[{}] recibido en [{}] por figurar como ya enviado", mensaje.getId(),
+			LOG.debug("  Rechazando mensaje[{}] recibido en [{}] por figurar como ya enviado", mensaje.getIdDeMensaje(),
 					this.getNombre());
 			return;
 		}
@@ -469,13 +469,13 @@ public abstract class NodoSupport implements Nodo {
 		// Lo registramos como que lo enviamos
 		agregarComoEnviado(mensaje);
 
-		final List<PataConectora> patasDeSalida = getDestinos();
-		LOG.debug("Propagando mensaje[{}] desde [{}] a {} patas", new Object[] { mensaje.getId(), this.getNombre(),
+		final List<PataConectoraOld> patasDeSalida = getDestinos();
+		LOG.debug("Propagando mensaje[{}] desde [{}] a {} patas", new Object[] { mensaje.getIdDeMensaje(), this.getNombre(),
 				patasDeSalida.size() });
-		for (final PataConectora pataConectora : patasDeSalida) {
+		for (final PataConectoraOld pataConectora : patasDeSalida) {
 			if (pataConectora.getIdLocal().equals(mensaje.getIdDePataRemota())) {
 				LOG.debug("  Evitando enviar desde [{},{}] el mensaje[{}] porque provino de esa pata", new Object[] {
-						this.getNombre(), pataConectora.getIdLocal(), mensaje.getId() });
+						this.getNombre(), pataConectora.getIdLocal(), mensaje.getIdDeMensaje() });
 				continue;
 			}
 
@@ -484,7 +484,7 @@ public abstract class NodoSupport implements Nodo {
 			} else {
 				LOG.debug(
 						"  Evitando enviar desde [{},{}] el mensaje[{}] porque su filtro no lo admite: {}",
-						new Object[] { this.getNombre(), pataConectora.getIdLocal(), mensaje.getId(),
+						new Object[] { this.getNombre(), pataConectora.getIdLocal(), mensaje.getIdDeMensaje(),
 								pataConectora.getFiltroDeSalida() });
 			}
 		}

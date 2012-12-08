@@ -16,9 +16,10 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.vortex.tests.router.impl.PortalImpl;
 import net.gaia.vortex.tests.router.impl.RouterImpl;
-import net.gaia.vortex.tests.router.impl.SimuladorImpl;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeSupport;
+import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
+import net.gaia.vortex.tests.router2.mensajes.MensajeSupport;
+import net.gaia.vortex.tests.router2.simulador.Simulador;
+import net.gaia.vortex.tests.router2.simulador.SimuladorImpl;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -54,10 +55,10 @@ public class TestRuteoDeMensajes {
 		final RouterImpl r2 = RouterImpl.create("r2", simulador);
 		final PortalImpl panificador = PortalImpl.create("Panificador", simulador);
 
-		pan.conectarBidi(r1);
-		torta.conectarBidi(r1);
-		r1.conectarBidi(r2);
-		r2.conectarBidi(panificador);
+		pan.simularConexionBidi(r1);
+		torta.simularConexionBidi(r1);
+		r1.simularConexionBidi(r2);
+		r2.simularConexionBidi(panificador);
 
 		simulador.ejecutarPasos(40);
 		simulador.ejecutarSiguiente();
@@ -89,18 +90,18 @@ public class TestRuteoDeMensajes {
 		final RouterImpl r2 = RouterImpl.create("r2", simulador);
 		final PortalImpl panificador = PortalImpl.create("Panificador", simulador);
 
-		pan.conectarBidi(r1);
+		pan.simularConexionBidi(r1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		pan.setearYPublicarFiltros("pan");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		torta.conectarBidi(r1);
+		torta.simularConexionBidi(r1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		torta.setearYPublicarFiltros("torta");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		r1.conectarBidi(r2);
-		r2.conectarBidi(panificador);
+		r1.simularConexionBidi(r2);
+		r2.simularConexionBidi(panificador);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 	}
 
