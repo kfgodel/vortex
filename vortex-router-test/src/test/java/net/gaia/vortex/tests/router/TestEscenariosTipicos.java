@@ -47,8 +47,11 @@ public class TestEscenariosTipicos {
 		final RouterBidireccional server = RouterBidireccional.create("Servidor", simulador);
 
 		final PortalBidireccional chat1 = PortalBidireccional.create("Chat1", simulador);
+		chat1.setListenerDeFiltrosExternos(ListenerDeFiltrosParaLog.create(chat1));
 		final PortalBidireccional chat2 = PortalBidireccional.create("Chat2", simulador);
+		chat2.setListenerDeFiltrosExternos(ListenerDeFiltrosParaLog.create(chat2));
 		final PortalBidireccional luz1 = PortalBidireccional.create("Luz1", simulador);
+		luz1.setListenerDeFiltrosExternos(ListenerDeFiltrosParaLog.create(luz1));
 
 		// Hacemos que el chat1 ya esté conectado
 		chat1.simularConexionBidi(server);
