@@ -16,13 +16,11 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import net.gaia.vortex.tests.router2.api.ListenerDeFiltros;
 import net.gaia.vortex.tests.router2.api.Mensaje;
 import net.gaia.vortex.tests.router2.api.Portal;
 import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
+import net.gaia.vortex.tests.router2.impl.filtros.FiltroPasaTodo;
 import net.gaia.vortex.tests.router2.impl.filtros.FiltroPorStrings;
-import net.gaia.vortex.tests.router2.impl.filtros.ListenerDeFiltrosNulo;
-import net.gaia.vortex.tests.router2.impl.filtros.SinFiltro;
 import net.gaia.vortex.tests.router2.impl.patas.PataBidireccional;
 import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router2.simulador.Simulador;
@@ -43,14 +41,11 @@ public class PortalBidireccional extends NodoBidireccional implements Portal {
 
 	private Filtro filtroCliente;
 
-	private ListenerDeFiltros listenerDeFiltros;
-
 	public static PortalBidireccional create(final String nombre, final Simulador simulador) {
 		final PortalBidireccional portal = new PortalBidireccional();
 		portal.setNombre(nombre);
 		portal.setSimulador(simulador);
-		portal.listenerDeFiltros = ListenerDeFiltrosNulo.create();
-		portal.filtroCliente = SinFiltro.create();
+		portal.filtroCliente = FiltroPasaTodo.create();
 		return portal;
 	}
 
@@ -79,7 +74,7 @@ public class PortalBidireccional extends NodoBidireccional implements Portal {
 		Filtro filtroPedido;
 		if (filtros.length == 0) {
 			// Es un "pasa todos"
-			filtroPedido = SinFiltro.create();
+			filtroPedido = FiltroPasaTodo.create();
 		} else {
 			final LinkedHashSet<String> pedidos = new LinkedHashSet<String>(Arrays.asList(filtros));
 			filtroPedido = FiltroPorStrings.create(pedidos);
@@ -93,16 +88,6 @@ public class PortalBidireccional extends NodoBidireccional implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.tests.router2.impl.NodoBidireccional#evento_cambioEstadoFiltrosRemotos()
-	 */
-	@Override
-	protected void evento_cambioEstadoFiltrosRemotos() {
-		// Obtenemos el filtro unificado de todas las patas sin excepcion (una sola por ser portal)
-		final Filtro filtroUnificadoRemoto = mergearFiltrosDePatasExcluyendoA(null);
-		this.listenerDeFiltros.onCambioDeFiltro(filtroUnificadoRemoto);
-	}
-
-	/**
 	 * @see net.gaia.vortex.tests.router2.api.Portal#enviar(net.gaia.vortex.tests.router2.mensajes.MensajeNormal)
 	 */
 	@Override
@@ -111,14 +96,6 @@ public class PortalBidireccional extends NodoBidireccional implements Portal {
 		for (final PataBidireccional pataConectora : allPatas) {
 			pataConectora.enviarMensajeNormal(mensaje);
 		}
-	}
-
-	/**
-	 * @see net.gaia.vortex.tests.router2.api.Portal#setListenerDeFiltrosExternos(net.gaia.vortex.tests.router2.api.ListenerDeFiltros)
-	 */
-	@Override
-	public void setListenerDeFiltrosExternos(final ListenerDeFiltros listenerDeExternos) {
-		this.listenerDeFiltros = listenerDeExternos;
 	}
 
 	/**

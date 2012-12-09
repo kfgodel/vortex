@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.tests.router2.api;
 
-
 /**
  * Esta interfaz representa los elementos comunes a portales y routers
  * 
@@ -45,5 +44,14 @@ public interface Nodo {
 	 *            El mensaje a recibir
 	 */
 	public void recibirMensaje(Mensaje mensaje);
+
+	/**
+	 * Establece el listener a utilizar cuando se producen cambios en los filtros externos (el nodo
+	 * externo cambio sus filtros)
+	 * 
+	 * @param listenerDeExternos
+	 *            El listener invocado para notificar el nuevo filtro
+	 */
+	public void setListenerDeFiltrosExternos(ListenerDeFiltros listenerDeExternos);
 
 }

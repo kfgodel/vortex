@@ -20,7 +20,7 @@ import net.gaia.vortex.tests.router2.api.ListenerDeFiltros;
 import net.gaia.vortex.tests.router2.api.Mensaje;
 import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
 import net.gaia.vortex.tests.router2.impl.filtros.ListenerDeFiltrosNulo;
-import net.gaia.vortex.tests.router2.impl.filtros.SinFiltro;
+import net.gaia.vortex.tests.router2.impl.filtros.FiltroPasaTodo;
 import net.gaia.vortex.tests.router2.mensajes.ConfirmacionDeIdRemoto;
 import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router2.mensajes.PedidoDeIdRemoto;
@@ -85,9 +85,9 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 		pata.setSimulador(simulador);
 		pata.nodoLocal = nodoLocal;
 		pata.nodoRemoto = nodoRemoto;
-		pata.filtroDeSalida = SinFiltro.create();
-		pata.filtroDeEntrada = SinFiltro.create();
-		pata.filtroDeEntradaPublicado = SinFiltro.create();
+		pata.filtroDeSalida = FiltroPasaTodo.create();
+		pata.filtroDeEntrada = FiltroPasaTodo.create();
+		pata.filtroDeEntradaPublicado = FiltroPasaTodo.create();
 		pata.listener = ListenerDeFiltrosNulo.create();
 		return pata;
 	}

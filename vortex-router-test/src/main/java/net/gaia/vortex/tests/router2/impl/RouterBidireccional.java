@@ -31,6 +31,8 @@ public class RouterBidireccional extends NodoBidireccional implements Router {
 	 */
 	@Override
 	protected void evento_cambioEstadoFiltrosRemotos() {
+		// Notificamos a listeners
+		super.evento_cambioEstadoFiltrosRemotos();
 		// Para el router, su filtro local esta compuesto de los remotos
 		evento_cambioEstadoFiltrosLocales();
 	}

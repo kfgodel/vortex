@@ -74,7 +74,7 @@ public class FiltroPorStrings implements Filtro {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof SinFiltro) {
+		if (obj instanceof FiltroPasaTodo) {
 			return false;
 		}
 		if (!(obj instanceof FiltroPorStrings)) {
@@ -90,8 +90,11 @@ public class FiltroPorStrings implements Filtro {
 	 */
 	@Override
 	public Filtro mergearCon(final Filtro otroFiltro) {
-		if (otroFiltro instanceof SinFiltro) {
+		if (otroFiltro instanceof FiltroPasaTodo) {
 			return otroFiltro;
+		}
+		if (otroFiltro instanceof FiltroPasaNada) {
+			return this;
 		}
 		final FiltroPorStrings that = (FiltroPorStrings) otroFiltro;
 		final LinkedHashSet<String> mergeados = new LinkedHashSet<String>();

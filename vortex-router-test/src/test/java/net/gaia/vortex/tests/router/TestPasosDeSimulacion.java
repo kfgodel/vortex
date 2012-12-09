@@ -45,9 +45,13 @@ public class TestPasosDeSimulacion {
 		MensajeSupport.resetIds();
 		simulador = SimuladorImpl.create();
 		r1 = RouterBidireccional.create("R1", simulador);
+		r1.setListenerDeFiltrosExternos(ListenerDeFiltrosParaLog.create(r1));
 		r2 = RouterBidireccional.create("R2", simulador);
+		r2.setListenerDeFiltrosExternos(ListenerDeFiltrosParaLog.create(r2));
 		p1 = PortalBidireccional.create("P1", simulador);
+		p1.setListenerDeFiltrosExternos(ListenerDeFiltrosParaLog.create(p1));
 		p2 = PortalBidireccional.create("P2", simulador);
+		p2.setListenerDeFiltrosExternos(ListenerDeFiltrosParaLog.create(p2));
 	}
 
 	@Test

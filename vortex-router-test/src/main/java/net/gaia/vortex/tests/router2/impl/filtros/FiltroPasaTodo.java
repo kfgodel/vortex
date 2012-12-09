@@ -17,11 +17,11 @@ import java.util.Collection;
 import net.gaia.vortex.tests.router2.api.Mensaje;
 
 /**
- * Este filtro representa el filtro inicial y más permisivo
+ * Este filtro representa el filtro inicial y más permisivo que deja pasar todo mensaje
  * 
  * @author D. García
  */
-public class SinFiltro implements Filtro {
+public class FiltroPasaTodo implements Filtro {
 
 	/**
 	 * @see net.gaia.vortex.tests.router2.impl.filtros.Filtro#aceptaA(net.gaia.vortex.tests.router2.api.Mensaje)
@@ -32,8 +32,8 @@ public class SinFiltro implements Filtro {
 		return true;
 	}
 
-	public static SinFiltro create() {
-		final SinFiltro filtro = new SinFiltro();
+	public static FiltroPasaTodo create() {
+		final FiltroPasaTodo filtro = new FiltroPasaTodo();
 		return filtro;
 	}
 
@@ -50,7 +50,7 @@ public class SinFiltro implements Filtro {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof SinFiltro) {
+		if (obj instanceof FiltroPasaTodo) {
 			return true;
 		}
 		return false;
@@ -69,6 +69,6 @@ public class SinFiltro implements Filtro {
 	 */
 	@Override
 	public String toString() {
-		return "SinFiltro";
+		return getClass().getSimpleName();
 	}
 }

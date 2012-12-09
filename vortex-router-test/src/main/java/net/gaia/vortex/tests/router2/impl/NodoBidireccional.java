@@ -20,7 +20,8 @@ import net.gaia.vortex.tests.router2.api.ListenerDeFiltros;
 import net.gaia.vortex.tests.router2.api.Mensaje;
 import net.gaia.vortex.tests.router2.api.Nodo;
 import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
-import net.gaia.vortex.tests.router2.impl.filtros.SinFiltro;
+import net.gaia.vortex.tests.router2.impl.filtros.FiltroPasaNada;
+import net.gaia.vortex.tests.router2.impl.filtros.ListenerDeFiltrosNulo;
 import net.gaia.vortex.tests.router2.impl.patas.PataBidireccional;
 import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router2.simulador.NodoSimulacion;
@@ -43,6 +44,10 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	private List<PataBidireccional> patas;
 	public static final String patas_FIELD = "patas";
 
+	private Filtro ultimoFiltroNotificadoAlListener;
+
+	private ListenerDeFiltros listenerDeFiltros = ListenerDeFiltrosNulo.create();
+
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.Nodo#conectarCon(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
@@ -57,9 +62,20 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 
 	/**
 	 * Invocado cuando cambian los filtros externos de las patas conectoras.<br>
-	 * Cuando cambia lo que los nodos remotos quieren
+	 * Cuando cambia lo que los nodos remotos quieren.<br>
+	 * En todos los nodos notificamos al listener del estado global
 	 */
-	protected abstract void evento_cambioEstadoFiltrosRemotos();
+	protected void evento_cambioEstadoFiltrosRemotos() {
+		// Obtenemos el filtro unificado de todas las patas sin excepcion (una sola por ser portal)
+		final Filtro filtroUnificadoRemoto = mergearFiltrosDePatasExcluyendoA(null);
+		if (filtroUnificadoRemoto.equals(ultimoFiltroNotificadoAlListener)) {
+			// No es necesario notificar porque no hubo cambio de estado en el filtro
+			return;
+		}
+		// Es un filtro distinto del que informamos la ultima vez
+		ultimoFiltroNotificadoAlListener = filtroUnificadoRemoto;
+		this.listenerDeFiltros.onCambioDeFiltro(filtroUnificadoRemoto);
+	}
 
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.Nodo#desconectarDe(net.gaia.vortex.tests.router2.api.Nodo)
@@ -182,7 +198,7 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	 * @return El filtro unificado
 	 */
 	protected Filtro mergearFiltrosDePatasExcluyendoA(final PataBidireccional pataExcluida) {
-		Filtro filtroResultante = null;
+		Filtro filtroResultante = FiltroPasaNada.create();
 		final List<PataBidireccional> allPatas = getPatas();
 		for (final PataBidireccional pataConectora : allPatas) {
 			if (pataConectora.equals(pataExcluida)) {
@@ -196,9 +212,6 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 			} else {
 				filtroResultante = filtroResultante.mergearCon(filtroDePata);
 			}
-		}
-		if (filtroResultante == null) {
-			filtroResultante = SinFiltro.create();
 		}
 		return filtroResultante;
 	}
@@ -251,6 +264,14 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	public boolean yaProceso(final MensajeNormal mensaje) {
 		final boolean yaSeProceso = getRecibidos().contains(mensaje);
 		return yaSeProceso;
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router2.api.Nodo#setListenerDeFiltrosExternos(net.gaia.vortex.tests.router2.api.ListenerDeFiltros)
+	 */
+	@Override
+	public void setListenerDeFiltrosExternos(final ListenerDeFiltros listenerDeExternos) {
+		this.listenerDeFiltros = listenerDeExternos;
 	}
 
 }

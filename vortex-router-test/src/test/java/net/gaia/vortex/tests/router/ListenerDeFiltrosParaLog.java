@@ -13,8 +13,8 @@
 package net.gaia.vortex.tests.router;
 
 import net.gaia.vortex.tests.router2.api.ListenerDeFiltros;
-import net.gaia.vortex.tests.router2.impl.PortalBidireccional;
 import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
+import net.gaia.vortex.tests.router2.simulador.NodoSimulacion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,20 +28,20 @@ import org.slf4j.LoggerFactory;
 public class ListenerDeFiltrosParaLog implements ListenerDeFiltros {
 	private static final Logger LOG = LoggerFactory.getLogger(ListenerDeFiltrosParaLog.class);
 
-	private PortalBidireccional portalCambiado;
+	private NodoSimulacion portalCambiado;
 
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.ListenerDeFiltros#onCambioDeFiltro(net.gaia.vortex.tests.router2.impl.filtros.Filtro)
 	 */
 	@Override
 	public void onCambioDeFiltro(final Filtro nuevoFiltro) {
-		LOG.info("  El cliente del portal [{}] fue notificado del cambio de filtro a: {}", portalCambiado.getNombre(),
-				nuevoFiltro);
+		LOG.info("  El listener del nodo [{}] fue notificado del cambio de filtros remotos a: {}",
+				portalCambiado.getNombre(), nuevoFiltro);
 	}
 
-	public static ListenerDeFiltrosParaLog create(final PortalBidireccional portal) {
+	public static ListenerDeFiltrosParaLog create(final NodoSimulacion nodo) {
 		final ListenerDeFiltrosParaLog listener = new ListenerDeFiltrosParaLog();
-		listener.portalCambiado = portal;
+		listener.portalCambiado = nodo;
 		return listener;
 	}
 }

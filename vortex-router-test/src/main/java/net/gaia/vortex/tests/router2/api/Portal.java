@@ -37,13 +37,4 @@ public interface Portal extends Nodo {
 	 */
 	public void enviar(final MensajeNormal mensaje);
 
-	/**
-	 * Establece el listener a utilizar cuando se producen cambios en los filtros externos (el nodo
-	 * externo cambio sus filtros)
-	 * 
-	 * @param listenerDeExternos
-	 *            El listener invocado para notificar el nuevo filtro
-	 */
-	public void setListenerDeFiltrosExternos(ListenerDeFiltros listenerDeExternos);
-
 }
