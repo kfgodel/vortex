@@ -131,11 +131,13 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	 */
 	@Override
 	protected void evento_recibirMensajeEnNodo(final Mensaje mensaje) {
-		propagarAPatas(mensaje);
 		// Si es un metamensaje no es procesable por los handlers
 		if (mensaje instanceof MensajeNormal) {
 			procesarConHandlersInternos(mensaje);
 		}
+
+		propagarAPatas(mensaje);
+
 	}
 
 	/**

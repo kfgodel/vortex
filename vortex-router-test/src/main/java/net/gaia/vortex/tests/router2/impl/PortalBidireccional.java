@@ -117,4 +117,18 @@ public class PortalBidireccional extends NodoBidireccional implements Portal {
 	public void simularEnvioDe(final MensajeNormal mensajeAEnviar) {
 		procesar(EnviarMensaje.create(this, mensajeAEnviar));
 	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router2.impl.NodoBidireccional#evento_recibirMensajeEnNodo(net.gaia.vortex.tests.router2.api.Mensaje)
+	 */
+	@Override
+	protected void evento_recibirMensajeEnNodo(final Mensaje mensaje) {
+		if (mensaje instanceof MensajeNormal) {
+			// Si es un mensaje normal no queremos que se propague a las patas
+			procesarConHandlersInternos(mensaje);
+		} else {
+			// Es un metamensaje
+			super.evento_recibirMensajeEnNodo(mensaje);
+		}
+	}
 }

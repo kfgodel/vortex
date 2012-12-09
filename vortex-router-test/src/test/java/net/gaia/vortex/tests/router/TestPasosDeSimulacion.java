@@ -109,7 +109,7 @@ public class TestPasosDeSimulacion {
 	public void deberiaSeguirLosPasosQueDefinimosConJavierAlPublicarUnoAUno() {
 		p1.simularConexionBidi(r1);
 		// Se realizan toda la interconexion bidireccional
-		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		simulador.ejecutarTodos(TimeMagnitude.of(10000, TimeUnit.SECONDS));
 
 		p1.simularSeteoDeFiltros("tag1");
 		// El paso del seteo en sí
@@ -183,7 +183,7 @@ public class TestPasosDeSimulacion {
 	}
 
 	@Test
-	public void deberiaRecibirElMensajeElRouter() {
+	public void unSoloPortalConectadoAUnRouterNoDeberiaEnviarMensajesSinInteresados() {
 		p1.simularConexionBidi(r1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
@@ -191,7 +191,53 @@ public class TestPasosDeSimulacion {
 		p1.simularEnvioDe(mensaje);
 
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertTrue("R1 debería haber recibido el mensaje", r1.getRecibidos().contains(mensaje));
+		Assert.assertFalse("R1 debería descartar el mensaje sin que llegue a R1", r1.getRecibidos().contains(mensaje));
 	}
 
+	@Test
+	public void deberiaRestablecerLosFiltrosSiSeProduceUnaReconexion() {
+		p1.simularConexionBidi(r1);
+		r1.simularConexionBidi(r2);
+		p2.simularConexionBidi(r2);
+		p1.simularSeteoDeFiltros("tag1");
+		p2.simularSeteoDeFiltros("tag2");
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Verificamos que cada router tienen los tags correctos para cada lado
+		Assert.assertTrue("R1 deberia usar el filtro correcto para P1", r1.usaFiltrosCon(p1, "tag1"));
+		Assert.assertTrue("R1 deberia usar el filtro correcto para R2", r1.usaFiltrosCon(r2, "tag2"));
+		Assert.assertTrue("R2 deberia usar el filtro correcto para R1", r2.usaFiltrosCon(r1, "tag1"));
+		Assert.assertTrue("R2 deberia usar el filtro correcto para P2", r2.usaFiltrosCon(p2, "tag2"));
+
+		// Verificamos que los portales tienen filtros de su contraparte
+		Assert.assertTrue("P1 deberia usar el filtro correcto para R1", p1.usaFiltrosCon(r1, "tag2"));
+		Assert.assertTrue("P2 deberia usar el filtro correcto para R2", p2.usaFiltrosCon(r2, "tag1"));
+
+		r1.simularDesconexionUniDe(r2);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Verificamos que R2 no se enteró de los cambios pero R1 sí
+		Assert.assertTrue("R1 deberia usar el filtro correcto para P1", r1.usaFiltrosCon(p1, "tag1"));
+		Assert.assertFalse("R1 NO deberia usar el filtro correcto para R2", r1.usaFiltrosCon(r2, "tag2"));
+		Assert.assertTrue("R2 deberia usar el filtro correcto para R1", r2.usaFiltrosCon(r1, "tag1"));
+		Assert.assertTrue("R2 deberia usar el filtro correcto para P2", r2.usaFiltrosCon(p2, "tag2"));
+
+		// Verificamos que P1 fue afectado pero P2
+		Assert.assertFalse("P1 NO deberia usar el filtro correcto para R1", p1.usaFiltrosCon(r1, "tag2"));
+		Assert.assertTrue("P2 deberia usar el filtro correcto para R2", p2.usaFiltrosCon(r2, "tag1"));
+
+		r1.simularConexionCon(r2);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Verificamos que al reconectar los filtros fueron propagados
+		Assert.assertTrue("R1 deberia usar el filtro correcto para P1", r1.usaFiltrosCon(p1, "tag1"));
+		Assert.assertTrue("R1 deberia usar el filtro correcto para R2", r1.usaFiltrosCon(r2, "tag2"));
+		Assert.assertTrue("R2 deberia usar el filtro correcto para R1", r2.usaFiltrosCon(r1, "tag1"));
+		Assert.assertTrue("R2 deberia usar el filtro correcto para P2", r2.usaFiltrosCon(p2, "tag2"));
+
+		// Verificamos que los portales tienen filtros de su contraparte
+		Assert.assertTrue("P1 deberia usar el filtro correcto para R1", p1.usaFiltrosCon(r1, "tag2"));
+		Assert.assertTrue("P2 deberia usar el filtro correcto para R2", p2.usaFiltrosCon(r2, "tag1"));
+
+	}
 }

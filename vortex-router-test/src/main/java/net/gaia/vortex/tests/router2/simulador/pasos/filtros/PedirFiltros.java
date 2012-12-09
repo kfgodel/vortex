@@ -1,5 +1,5 @@
 /**
- * 13/10/2012 12:28:55 Copyright (C) 2011 Darío L. García
+ * 09/12/2012 13:27:26 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,44 +12,37 @@
  */
 package net.gaia.vortex.tests.router2.simulador.pasos.filtros;
 
-import net.gaia.vortex.tests.router2.api.Nodo;
 import net.gaia.vortex.tests.router2.impl.patas.PataBidireccional;
-import net.gaia.vortex.tests.router2.mensajes.PublicacionDeFiltros;
+import net.gaia.vortex.tests.router2.mensajes.PedidoDeFiltros;
+import net.gaia.vortex.tests.router2.simulador.NodoSimulacion;
 import net.gaia.vortex.tests.router2.simulador.pasos.PasoSupport;
 
 /**
- * Esta clase representa el paso donde un nodo le publica sus filtros al vecino
+ * Esta clase representa el paso del simulador en el que un nodo le manda el mensaje de pedido de
+ * filtro a otro nodo
  * 
  * @author D. García
  */
-public class PublicarFiltros extends PasoSupport {
+public class PedirFiltros extends PasoSupport {
 
 	private PataBidireccional pata;
-	private PublicacionDeFiltros mensaje;
+	private PedidoDeFiltros mensaje;
 
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
 	@Override
 	public void ejecutar() {
-		final Nodo nodoVecino = pata.getNodoRemoto();
-		nodoVecino.recibirMensaje(mensaje);
+		final NodoSimulacion nodoRemoto = pata.getNodoRemoto();
+		nodoRemoto.recibirMensaje(mensaje);
 	}
 
-	public static PublicarFiltros create(final PataBidireccional pataSalida, final PublicacionDeFiltros publicacion) {
-		final PublicarFiltros name = new PublicarFiltros();
-		name.setNodoLocal(pataSalida.getNodoLocal());
-		name.pata = pataSalida;
-		name.mensaje = publicacion;
-		return name;
-	}
-
-	public PublicacionDeFiltros getMensaje() {
-		return mensaje;
-	}
-
-	public void setMensaje(final PublicacionDeFiltros mensaje) {
-		this.mensaje = mensaje;
+	public static PedirFiltros create(final PataBidireccional pata, final PedidoDeFiltros mensaje) {
+		final PedirFiltros pedido = new PedirFiltros();
+		pedido.setNodoLocal(pata.getNodoLocal());
+		pedido.mensaje = mensaje;
+		pedido.pata = pata;
+		return pedido;
 	}
 
 	public PataBidireccional getPata() {
@@ -60,13 +53,21 @@ public class PublicarFiltros extends PasoSupport {
 		this.pata = pata;
 	}
 
+	public PedidoDeFiltros getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(final PedidoDeFiltros mensaje) {
+		this.mensaje = mensaje;
+	}
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("Publicación[");
+		builder.append("Solicitud[");
 		if (this.mensaje != null) {
 			builder.append(this.mensaje.getIdDeMensaje());
 		}
@@ -84,10 +85,7 @@ public class PublicarFiltros extends PasoSupport {
 			builder.append(",");
 			builder.append(getPata().getIdRemoto());
 		}
-		builder.append("] de filtros: ");
-		if (getMensaje() != null) {
-			builder.append(this.getMensaje().getFiltro());
-		}
+		builder.append("] de filtros remotos");
 		return builder.toString();
 	}
 }
