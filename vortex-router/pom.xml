@@ -102,6 +102,13 @@
 	  <artifactId>vortex-sets</artifactId>
 	  <version>0.4.3</version>
 	</dependency>
+	
+	<!-- Definicion de portales -->
+	<dependency>
+	  <groupId>net.gaia.vortex</groupId>
+	  <artifactId>vortex-portal</artifactId>
+	  <version>0.4.3-SNAPSHOT</version>
+	</dependency>
 
 
     <dependency>
