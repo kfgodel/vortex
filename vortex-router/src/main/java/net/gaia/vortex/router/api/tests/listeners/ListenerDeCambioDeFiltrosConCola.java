@@ -51,8 +51,10 @@ public class ListenerDeCambioDeFiltrosConCola implements ListenerDeCambiosDeFilt
 	 * 
 	 * @param timeMagnitude
 	 *            El tiempo máximo para esperar
+	 * @throws TimeoutExceededException
+	 *             Si se acabo el tiempo de espera
 	 */
-	public Condicion esperarPorCambio(final TimeMagnitude timeMagnitude) {
+	public Condicion esperarPorCambio(final TimeMagnitude timeMagnitude) throws TimeoutExceededException {
 		try {
 			final Condicion condicion = condiciones.poll(timeMagnitude.getQuantity(), timeMagnitude.getTimeUnit());
 			if (condicion == null) {

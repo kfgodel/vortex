@@ -14,6 +14,7 @@ package net.gaia.vortex.router.api.moleculas;
 
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
+import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 
 /**
  * Esta interfaz representa un nodo cuyas conexiones son bidireccionales.<br>
@@ -29,8 +30,17 @@ public interface NodoBidireccional extends Nodo {
 	 * En el caso del portal esto corresponderá a un sólo nodo, en el caso del router el filtro
 	 * puede ser una versión unificada de varios nodos
 	 * 
-	 * @param listener
+	 * @param listenerDeFiltros
 	 *            El listener a invocar
 	 */
-	public void setListenerDeFiltrosRemotos(ListenerDeCambiosDeFiltro listener);
+	public void setListenerDeFiltrosRemotos(ListenerDeCambiosDeFiltro listenerDeFiltros);
+
+	/**
+	 * Establece en este nodo a qué listener se debe invocar cuando se produce ruteos informando qué
+	 * mensaje se envio a qué nodo destino
+	 * 
+	 * @param listenerDeRuteos
+	 *            El listener que será notificado de cada mensaje entregado
+	 */
+	public void setListenerDeRuteos(ListenerDeRuteo listenerDeRuteos);
 }

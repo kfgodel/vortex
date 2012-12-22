@@ -72,4 +72,17 @@ public class PasoDeRuteo {
 		return ToString.de(this).con(origen_FIELD, origen).con(destino_FIELD, destino).con(mensaje_FIELD, mensaje)
 				.toString();
 	}
+
+	/**
+	 * Indica si este paso corresponde el emisor enviando el mensaje indicado al receptor
+	 * 
+	 * @param emisor
+	 *            El emisor del mensaje
+	 * @param receptor
+	 *            El receptor
+	 * @return true si corresponde a este paso
+	 */
+	public boolean representaA(final Emisor emisor, final Receptor receptor) {
+		return this.origen.equals(emisor) && this.destino.equals(receptor);
+	}
 }
