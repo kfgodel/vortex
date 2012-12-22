@@ -25,6 +25,8 @@ import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.listeners.IgnorarCambioDeFiltro;
 import net.gaia.vortex.router.impl.listeners.IgnorarRuteos;
+import net.gaia.vortex.router.impl.moleculas.patas.ListenerDeCambioDeFiltroEnPata;
+import net.gaia.vortex.router.impl.moleculas.patas.PataBidi;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 
 /**
@@ -32,7 +34,8 @@ import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
  * 
  * @author D. García
  */
-public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidireccional {
+public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidireccional,
+		ListenerDeCambioDeFiltroEnPata {
 
 	private List<PataBidireccional> patas;
 
@@ -63,7 +66,10 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 	 */
 	@Override
 	public void conectarCon(final Receptor destino) {
-		// TODO Auto-generated method stub
+		if (destino == null) {
+			throw new IllegalArgumentException("El destino del nodo no puede ser null");
+		}
+		final PataBidi nuevaPata = PataBidi.create(this, destino, this);
 
 	}
 

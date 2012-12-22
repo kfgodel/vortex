@@ -12,11 +12,110 @@
  */
 package net.gaia.vortex.router.impl.moleculas.patas;
 
+import java.util.concurrent.atomic.AtomicLong;
+
+import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
+import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
+import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
+import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
+
 /**
  * Esta clase es la implementación de la pata bidireccional
  * 
  * @author D. García
  */
 public class PataBidi implements PataBidireccional {
+
+	private static final AtomicLong proximoId = new AtomicLong(0);
+
+	private NodoBidireccional nodoLocal;
+	public static final String nodoLocal_FIELD = "nodoLocal";
+
+	private Receptor nodoRemoto;
+	public static final String nodoRemoto_FIELD = "nodoRemoto";
+
+	private Long idLocal;
+	public static final String idLocal_FIELD = "idLocal";
+
+	private Long idRemoto;
+	public static final String idRemoto_FIELD = "idRemoto";
+
+	private Condicion filtroDeSalida;
+	public static final String filtroDeSalida_FIELD = "filtroDeSalida";
+
+	private Condicion filtroDeEntrada;
+	public static final String filtroDeEntrada_FIELD = "filtroDeEntrada";
+
+	private Condicion filtroDeEntradaPublicado;
+	public static final String filtroDeEntradaPublicado_FIELD = "filtroDeEntradaPublicado";
+
+	private MemoriaDeMensajes memoriaDeEnviados;
+
+	private ListenerDeCambioDeFiltroEnPata listener;
+
+	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
+			final ListenerDeCambioDeFiltroEnPata listener) {
+		final PataBidi pata = new PataBidi();
+		pata.setIdLocal(proximoId.getAndIncrement());
+		pata.nodoLocal = nodoLocal;
+		pata.nodoRemoto = nodoRemoto;
+		pata.listener = listener;
+		pata.memoriaDeEnviados = MemoriaLimitadaDeMensajes.create(NexoFiltroDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
+		pata.inicializarFiltros();
+		return pata;
+	}
+
+	/**
+	 * Establece el estado inicial de los filtros en esta pata
+	 */
+	private void inicializarFiltros() {
+		// Inicialmente entra y sale todo lo que recibamos
+		this.filtroDeSalida = SiempreTrue.getInstancia();
+		this.filtroDeEntrada = SiempreTrue.getInstancia();
+		this.resetearFiltroDeEntradaPublicado();
+	}
+
+	/**
+	 * Cambia el estado de publicación del filtro de entrada. Marcándolo como si el filtro de
+	 * entrada aún no estuviese publicado (para posterior publicación)
+	 */
+	private void resetearFiltroDeEntradaPublicado() {
+		this.filtroDeEntradaPublicado = FiltroNoPublicado.getInstancia();
+	}
+
+	public NodoBidireccional getNodoLocal() {
+		return nodoLocal;
+	}
+
+	public void setNodoLocal(final NodoBidireccional nodoLocal) {
+		this.nodoLocal = nodoLocal;
+	}
+
+	public Receptor getNodoRemoto() {
+		return nodoRemoto;
+	}
+
+	public void setNodoRemoto(final Receptor nodoRemoto) {
+		this.nodoRemoto = nodoRemoto;
+	}
+
+	public Long getIdLocal() {
+		return idLocal;
+	}
+
+	public void setIdLocal(final Long idLocal) {
+		this.idLocal = idLocal;
+	}
+
+	public Long getIdRemoto() {
+		return idRemoto;
+	}
+
+	public void setIdRemoto(final Long idRemoto) {
+		this.idRemoto = idRemoto;
+	}
 
 }

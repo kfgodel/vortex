@@ -107,7 +107,7 @@ public class TestAtomos {
 	public void elBifurcadorDeberiaElegirElDelegadoPorTrueSiLaCondicionEsCumplida() {
 		final ReceptorEncolador receptorPorTrue = ReceptorEncolador.create();
 		final ReceptorEncolador receptorPorFalse = ReceptorEncolador.create();
-		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreTrue.create(), receptorPorTrue,
+		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreTrue.getInstancia(), receptorPorTrue,
 				receptorPorFalse);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorTrue);
 		verificarMensajeNoRecibido(0, receptorPorFalse);
@@ -117,8 +117,8 @@ public class TestAtomos {
 	public void elBifurcadorDeberiaElegirElDelegadoPorFalseSiLaCondicionNoEsCumplida() {
 		final ReceptorEncolador receptorPorTrue = ReceptorEncolador.create();
 		final ReceptorEncolador receptorPorFalse = ReceptorEncolador.create();
-		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreFalse.create(), receptorPorTrue,
-				receptorPorFalse);
+		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreFalse.getInstancia(),
+				receptorPorTrue, receptorPorFalse);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorFalse);
 		verificarMensajeNoRecibido(0, receptorPorTrue);
 	}

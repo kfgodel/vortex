@@ -88,9 +88,9 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 		pata.setSimulador(simulador);
 		pata.nodoLocal = nodoLocal;
 		pata.nodoRemoto = nodoRemoto;
+		pata.listener = ListenerDeFiltrosNulo.create();
 		pata.filtroDeSalida = FiltroPasaTodo.create();
 		pata.filtroDeEntrada = FiltroPasaTodo.create();
-		pata.listener = ListenerDeFiltrosNulo.create();
 		pata.resetearFiltroDeEntradaPublicado();
 		return pata;
 	}

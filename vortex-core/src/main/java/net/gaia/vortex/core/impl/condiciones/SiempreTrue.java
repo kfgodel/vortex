@@ -40,11 +40,6 @@ public class SiempreTrue implements Condicion {
 		return true;
 	}
 
-	public static SiempreTrue create() {
-		final SiempreTrue condicion = new SiempreTrue();
-		return condicion;
-	}
-
 	/**
 	 * @see java.lang.Object#toString()
 	 */
