@@ -14,8 +14,10 @@ package net.gaia.vortex.router.impl.moleculas.patas;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
@@ -27,7 +29,7 @@ import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
  * 
  * @author D. García
  */
-public class PataBidi implements PataBidireccional {
+public class PataBidi extends ComponenteConProcesadorSupport implements PataBidireccional {
 
 	private static final AtomicLong proximoId = new AtomicLong(0);
 
@@ -57,8 +59,9 @@ public class PataBidi implements PataBidireccional {
 	private ListenerDeCambioDeFiltroEnPata listener;
 
 	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
-			final ListenerDeCambioDeFiltroEnPata listener) {
+			final ListenerDeCambioDeFiltroEnPata listener, final TaskProcessor taskProcessor) {
 		final PataBidi pata = new PataBidi();
+		pata.initializeWith(taskProcessor);
 		pata.setIdLocal(proximoId.getAndIncrement());
 		pata.nodoLocal = nodoLocal;
 		pata.nodoRemoto = nodoRemoto;
@@ -116,6 +119,16 @@ public class PataBidi implements PataBidireccional {
 
 	public void setIdRemoto(final Long idRemoto) {
 		this.idRemoto = idRemoto;
+	}
+
+	/**
+	 * Comienza el intercambio de meta-mensajes para determinar con qué otra pata se está hablando,
+	 * y poder establecer comunicaciones bidireccionales.<br>
+	 * Esta acción mandará un meta-mensaje por esta pata para solicitar un ID de pata remota
+	 */
+	public void conseguirIdRemoto() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

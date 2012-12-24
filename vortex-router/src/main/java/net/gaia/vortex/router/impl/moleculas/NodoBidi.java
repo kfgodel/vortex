@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.atomos.condicional.Filtro;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
@@ -69,8 +70,38 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 		if (destino == null) {
 			throw new IllegalArgumentException("El destino del nodo no puede ser null");
 		}
-		final PataBidi nuevaPata = PataBidi.create(this, destino, this);
+		final PataBidi nuevaPata = PataBidi.create(this, destino, this, getProcessor());
+		agregarPata(nuevaPata);
+		// Iniciamos el proceso de identificación bidireccional de la pata
+		nuevaPata.conseguirIdRemoto();
+	}
 
+	/**
+	 * Agrega la pata indicada como una conexión más.<br>
+	 * Esta acción tiene asociada la republicación de filtros si hay cambios en el estado actual
+	 * 
+	 * @param nuevaPata
+	 */
+	private void agregarPata(final PataBidi nuevaPata) {
+		getPatas().add(nuevaPata);
+		evento_cambioEstadoFiltrosRemotos();
+	}
+
+	/**
+	 * Invocado cuando cambian los filtros externos de las patas conectoras.<br>
+	 * Cuando cambia lo que los nodos remotos quieren.<br>
+	 * En todos los nodos notificamos al listener del estado global
+	 */
+	protected void evento_cambioEstadoFiltrosRemotos() {
+		// Obtenemos el filtro unificado de todas las patas sin excepcion (una sola por ser portal)
+		final Filtro filtroUnificadoRemoto = mergearFiltrosDePatasExcluyendoA(null);
+		if (filtroUnificadoRemoto.equals(ultimoFiltroNotificadoAlListener)) {
+			// No es necesario notificar porque no hubo cambio de estado en el filtro
+			return;
+		}
+		// Es un filtro distinto del que informamos la ultima vez
+		ultimoFiltroNotificadoAlListener = filtroUnificadoRemoto;
+		this.listenerDeFiltros.onCambioDeFiltro(filtroUnificadoRemoto);
 	}
 
 	/**
@@ -114,4 +145,11 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 		}
 		this.listenerDeRuteo.set(listenerDeRuteos);
 	}
+
+	public static NodoBidi create(final TaskProcessor processor) {
+		final NodoBidi nodo = new NodoBidi();
+		nodo.initializeWith(processor);
+		return nodo;
+	}
+
 }
