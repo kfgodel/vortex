@@ -23,6 +23,7 @@ import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
+import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 
 /**
  * Esta clase es la implementación de la pata bidireccional
@@ -45,7 +46,7 @@ public class PataBidi extends ComponenteConProcesadorSupport implements PataBidi
 	private Long idRemoto;
 	public static final String idRemoto_FIELD = "idRemoto";
 
-	private Condicion filtroDeSalida;
+	private ParteDeCondiciones filtroDeSalida;
 	public static final String filtroDeSalida_FIELD = "filtroDeSalida";
 
 	private Condicion filtroDeEntrada;
@@ -59,9 +60,11 @@ public class PataBidi extends ComponenteConProcesadorSupport implements PataBidi
 	private ListenerDeCambioDeFiltroEnPata listener;
 
 	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
-			final ListenerDeCambioDeFiltroEnPata listener, final TaskProcessor taskProcessor) {
+			final ListenerDeCambioDeFiltroEnPata listener, final TaskProcessor taskProcessor,
+			final ParteDeCondiciones parteDeCondicion) {
 		final PataBidi pata = new PataBidi();
 		pata.initializeWith(taskProcessor);
+		pata.filtroDeSalida = parteDeCondicion;
 		pata.setIdLocal(proximoId.getAndIncrement());
 		pata.nodoLocal = nodoLocal;
 		pata.nodoRemoto = nodoRemoto;
@@ -76,7 +79,7 @@ public class PataBidi extends ComponenteConProcesadorSupport implements PataBidi
 	 */
 	private void inicializarFiltros() {
 		// Inicialmente entra y sale todo lo que recibamos
-		this.filtroDeSalida = SiempreTrue.getInstancia();
+		this.filtroDeSalida.cambiarA(SiempreTrue.getInstancia());
 		this.filtroDeEntrada = SiempreTrue.getInstancia();
 		this.resetearFiltroDeEntradaPublicado();
 	}

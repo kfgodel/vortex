@@ -12,7 +12,9 @@
  */
 package net.gaia.vortex.router.impl.moleculas.patas;
 
+import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
+import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 
 /**
  * Esta clase representa la interfaz que ofrece una pata de conexión bidireccional para un
@@ -21,5 +23,21 @@ import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
  * @author D. García
  */
 public interface PataBidireccional {
+
+	/**
+	 * Indica si esta pata está conectada al nodo indicado como nodo remoto
+	 * 
+	 * @param nodo
+	 *            El nodo a evaluar
+	 * @return true si esta pata enviará los mensajes al nodo indicado
+	 */
+	boolean tieneComoNodoRemotoA(Receptor nodo);
+
+	/**
+	 * Devuelve la parte de las condiciones como conjunto que administra esta pata
+	 * 
+	 * @return La parte que es modificada por esta pata
+	 */
+	ParteDeCondiciones getParteDeCondicion();
 
 }

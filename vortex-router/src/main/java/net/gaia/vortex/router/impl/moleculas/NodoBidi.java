@@ -24,11 +24,19 @@ import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
+import net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones;
+import net.gaia.vortex.router.impl.filtros.ConjuntoSincronizado;
+import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.listeners.IgnorarCambioDeFiltro;
 import net.gaia.vortex.router.impl.listeners.IgnorarRuteos;
 import net.gaia.vortex.router.impl.moleculas.patas.ListenerDeCambioDeFiltroEnPata;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidi;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 
 /**
  * Esta clase base definir comportamiento comun de los nodos bidireccionales
@@ -37,6 +45,9 @@ import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
  */
 public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidireccional,
 		ListenerDeCambioDeFiltroEnPata {
+	private static final Logger LOG = LoggerFactory.getLogger(NodoBidi.class);
+
+	private ConjuntoDeCondiciones conjuntoDeCondiciones;
 
 	private List<PataBidireccional> patas;
 
@@ -60,6 +71,7 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 		patas = new CopyOnWriteArrayList<PataBidireccional>();
 		listenerDeFiltros = new AtomicReference<ListenerDeCambiosDeFiltro>(IgnorarCambioDeFiltro.getInstancia());
 		listenerDeRuteo = new AtomicReference<ListenerDeRuteo>(IgnorarRuteos.getInstancia());
+		conjuntoDeCondiciones = ConjuntoSincronizado.create();
 	}
 
 	/**
@@ -70,21 +82,50 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 		if (destino == null) {
 			throw new IllegalArgumentException("El destino del nodo no puede ser null");
 		}
-		final PataBidi nuevaPata = PataBidi.create(this, destino, this, getProcessor());
-		agregarPata(nuevaPata);
+		final PataBidireccional pataExistente = getPataPorNodo(destino);
+		if (pataExistente != null) {
+			throw new FaultyCodeException("No se puede conectar el nodo[" + this + "] al destino[" + destino
+					+ "] por segunda vez");
+		}
+
+		final ParteDeCondiciones parteDeCondicion = conjuntoDeCondiciones.crearNuevaParte();
+		final PataBidi nuevaPata = PataBidi.create(this, destino, this, getProcessor(), parteDeCondicion);
+		getPatas().add(nuevaPata);
+
 		// Iniciamos el proceso de identificación bidireccional de la pata
 		nuevaPata.conseguirIdRemoto();
 	}
 
 	/**
-	 * Agrega la pata indicada como una conexión más.<br>
-	 * Esta acción tiene asociada la republicación de filtros si hay cambios en el estado actual
-	 * 
-	 * @param nuevaPata
+	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	private void agregarPata(final PataBidi nuevaPata) {
-		getPatas().add(nuevaPata);
-		evento_cambioEstadoFiltrosRemotos();
+	@Override
+	public void desconectarDe(final Receptor destino) {
+		final PataBidireccional pataDesconectada = getPataPorNodo(destino);
+		if (pataDesconectada == null) {
+			LOG.debug("En [{}] no se puede quitar la pata correspondiente al nodo[{}] porque no existe", this, destino);
+			return;
+		}
+		getPatas().remove(pataDesconectada);
+		final ParteDeCondiciones parteDeCondicion = pataDesconectada.getParteDeCondicion();
+		conjuntoDeCondiciones.eliminarParte(parteDeCondicion);
+	}
+
+	/**
+	 * Devuelve la pata de salida identificándola por nodo
+	 * 
+	 * @param nodo
+	 *            El nodo cuya pata quiere obtenerse
+	 * @return La pata del nodo o null si no existe
+	 */
+	protected PataBidireccional getPataPorNodo(final Receptor nodo) {
+		final List<PataBidireccional> allDestinos = getPatas();
+		for (final PataBidireccional pataConectora : allDestinos) {
+			if (pataConectora.tieneComoNodoRemotoA(nodo)) {
+				return pataConectora;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -102,15 +143,6 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 		// Es un filtro distinto del que informamos la ultima vez
 		ultimoFiltroNotificadoAlListener = filtroUnificadoRemoto;
 		this.listenerDeFiltros.onCambioDeFiltro(filtroUnificadoRemoto);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
-	 */
-	@Override
-	public void desconectarDe(final Receptor destino) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
