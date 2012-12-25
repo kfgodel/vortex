@@ -53,6 +53,16 @@ public class Or implements Condicion {
 		return create(condicionesEvaluadas);
 	}
 
+	/**
+	 * Agrega la condición pasada a este operador
+	 * 
+	 * @param condicionExtra
+	 *            La condición extra
+	 */
+	public void or(final Condicion condicionExtra) {
+		this.condiciones.add(condicionExtra);
+	}
+
 	public static Or create(final List<Condicion> condicionesEvaluadas) {
 		final Or operador = new Or();
 		operador.condiciones = condicionesEvaluadas;

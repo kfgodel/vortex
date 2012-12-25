@@ -32,4 +32,11 @@ public interface ParteDeCondiciones {
 	 */
 	void cambiarA(Condicion nuevaCondicion);
 
+	/**
+	 * Devuelve la condición actual de esta parte
+	 * 
+	 * @return La condición aplicable a esta parte
+	 */
+	Condicion getCondicion();
+
 }

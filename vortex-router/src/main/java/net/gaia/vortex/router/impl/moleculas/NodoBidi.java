@@ -17,19 +17,25 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.atomos.condicional.Filtro;
+import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
+import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
+import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
+import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones;
 import net.gaia.vortex.router.impl.filtros.ConjuntoSincronizado;
+import net.gaia.vortex.router.impl.filtros.ListenerDeConjuntoDeCondiciones;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.listeners.IgnorarCambioDeFiltro;
 import net.gaia.vortex.router.impl.listeners.IgnorarRuteos;
-import net.gaia.vortex.router.impl.moleculas.patas.ListenerDeCambioDeFiltroEnPata;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidi;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 
@@ -44,7 +50,7 @@ import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
  * @author D. García
  */
 public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidireccional,
-		ListenerDeCambioDeFiltroEnPata {
+		ListenerDeConjuntoDeCondiciones {
 	private static final Logger LOG = LoggerFactory.getLogger(NodoBidi.class);
 
 	private ConjuntoDeCondiciones conjuntoDeCondiciones;
@@ -53,6 +59,10 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 
 	private AtomicReference<ListenerDeCambiosDeFiltro> listenerDeFiltros;
 	private AtomicReference<ListenerDeRuteo> listenerDeRuteo;
+
+	private MapeadorVortex mapeador;
+
+	private MemoriaDeMensajes memoriaRecibidos;
 
 	public List<PataBidireccional> getPatas() {
 		return patas;
@@ -71,7 +81,9 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 		patas = new CopyOnWriteArrayList<PataBidireccional>();
 		listenerDeFiltros = new AtomicReference<ListenerDeCambiosDeFiltro>(IgnorarCambioDeFiltro.getInstancia());
 		listenerDeRuteo = new AtomicReference<ListenerDeRuteo>(IgnorarRuteos.getInstancia());
-		conjuntoDeCondiciones = ConjuntoSincronizado.create();
+		conjuntoDeCondiciones = ConjuntoSincronizado.create(this);
+		mapeador = MapeadorDefault.create();
+		memoriaRecibidos = MemoriaLimitadaDeMensajes.create(NexoFiltroDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
 	}
 
 	/**
@@ -89,7 +101,7 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 		}
 
 		final ParteDeCondiciones parteDeCondicion = conjuntoDeCondiciones.crearNuevaParte();
-		final PataBidi nuevaPata = PataBidi.create(this, destino, this, getProcessor(), parteDeCondicion);
+		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), parteDeCondicion, mapeador);
 		getPatas().add(nuevaPata);
 
 		// Iniciamos el proceso de identificación bidireccional de la pata
@@ -129,29 +141,28 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 	}
 
 	/**
-	 * Invocado cuando cambian los filtros externos de las patas conectoras.<br>
-	 * Cuando cambia lo que los nodos remotos quieren.<br>
-	 * En todos los nodos notificamos al listener del estado global
-	 */
-	protected void evento_cambioEstadoFiltrosRemotos() {
-		// Obtenemos el filtro unificado de todas las patas sin excepcion (una sola por ser portal)
-		final Filtro filtroUnificadoRemoto = mergearFiltrosDePatasExcluyendoA(null);
-		if (filtroUnificadoRemoto.equals(ultimoFiltroNotificadoAlListener)) {
-			// No es necesario notificar porque no hubo cambio de estado en el filtro
-			return;
-		}
-		// Es un filtro distinto del que informamos la ultima vez
-		ultimoFiltroNotificadoAlListener = filtroUnificadoRemoto;
-		this.listenerDeFiltros.onCambioDeFiltro(filtroUnificadoRemoto);
-	}
-
-	/**
 	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		// TODO Auto-generated method stub
+		if (!memoriaRecibidos.registrarNuevo(mensaje)) {
+			LOG.debug(" Mensaje[{}] descartado en nodo[{}] por ya haberse recibido antes", mensaje, this);
+			return;
+		}
+		final WorkUnit tareaAlRecibirSegunTipo = crearTareaAlRecibirSegun(mensaje);
+		procesarEnThreadPropio(tareaAlRecibirSegunTipo);
+	}
 
+	/**
+	 * Crea la tarea de recepción del mensaje que se ejecutará en hilo propio según el mensaje
+	 * recibido y según el tipo de esta instancia concreta. Por defecto se
+	 * 
+	 * @param mensaje
+	 * @return
+	 */
+	protected WorkUnit crearTareaAlRecibirSegun(final MensajeVortex mensaje) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
@@ -182,6 +193,16 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 		final NodoBidi nodo = new NodoBidi();
 		nodo.initializeWith(processor);
 		return nodo;
+	}
+
+	/**
+	 * @see net.gaia.vortex.router.impl.filtros.ListenerDeConjuntoDeCondiciones#onCambioDeCondicionEn(net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones,
+	 *      net.gaia.vortex.core.api.condiciones.Condicion)
+	 */
+	@Override
+	public void onCambioDeCondicionEn(final ConjuntoDeCondiciones conjunto, final Condicion nuevaCondicion) {
+		final ListenerDeCambiosDeFiltro listenerActual = listenerDeFiltros.get();
+		listenerActual.onCambioDeFiltros(this, nuevaCondicion);
 	}
 
 }

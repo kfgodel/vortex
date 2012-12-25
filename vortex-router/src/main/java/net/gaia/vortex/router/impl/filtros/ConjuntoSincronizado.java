@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.sets.impl.Or;
 import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
 
 /**
@@ -35,10 +37,15 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 
 	private Condicion condicionActual;
 
-	public static ConjuntoSincronizado create() {
+	public List<ParteDeCondiciones> getPartes() {
+		return partes;
+	}
+
+	public static ConjuntoSincronizado create(final ListenerDeConjuntoDeCondiciones listener) {
 		final ConjuntoSincronizado conjunto = new ConjuntoSincronizado();
 		conjunto.coordinator = ReadWriteCoordinator.create();
 		conjunto.partes = new ArrayList<ParteDeCondiciones>();
+		conjunto.listener = listener;
 		return conjunto;
 	}
 
@@ -81,8 +88,28 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 	 * @return La condicion que reune a todas las partes excepto la indicada
 	 */
 	private Condicion unificarCondicionesExceptuandoA(final ParteDeCondiciones parteExcluida) {
-		// TODO Auto-generated method stub
-		return null;
+		final List<Condicion> condiciones = new ArrayList<Condicion>();
+		final List<ParteDeCondiciones> allPartes = getPartes();
+		for (final ParteDeCondiciones parte : allPartes) {
+			if (parte.equals(parteExcluida)) {
+				// Esta no la queremos incluir
+				continue;
+			}
+			final Condicion condicionParcial = parte.getCondicion();
+			condiciones.add(condicionParcial);
+		}
+		if (condiciones.isEmpty()) {
+			// No hay condiciones, el mensaje no debería pasar?
+			return SiempreFalse.getInstancia();
+		}
+		if (condiciones.size() == 1) {
+			// Como optimización si es sólo una no creamos un operador innecesario
+			final Condicion unicaCondicion = condiciones.get(0);
+			return unicaCondicion;
+		}
+
+		final Condicion condicionUnificada = Or.create(condiciones);
+		return condicionUnificada;
 	}
 
 	/**

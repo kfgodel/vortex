@@ -15,6 +15,7 @@ package net.gaia.vortex.router.impl.filtros;
 import java.util.concurrent.Callable;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
 
 /**
@@ -36,6 +37,7 @@ public class ParteSincronizada implements ParteDeCondiciones {
 		final ParteSincronizada parte = new ParteSincronizada();
 		parte.listener = listener;
 		parte.coordinator = coordinator;
+		parte.condicionActual = SiempreFalse.getInstancia();
 		return parte;
 	}
 
@@ -54,6 +56,19 @@ public class ParteSincronizada implements ParteDeCondiciones {
 				condicionActual = nuevaCondicion;
 				listener.onCambioDeCondicion(nuevaCondicion, ParteSincronizada.this);
 				return null;
+			}
+		});
+	}
+
+	/**
+	 * @see net.gaia.vortex.router.impl.filtros.ParteDeCondiciones#getCondicion()
+	 */
+	@Override
+	public Condicion getCondicion() {
+		return coordinator.doReadOperation(new Callable<Condicion>() {
+			@Override
+			public Condicion call() throws Exception {
+				return condicionActual;
 			}
 		});
 	}

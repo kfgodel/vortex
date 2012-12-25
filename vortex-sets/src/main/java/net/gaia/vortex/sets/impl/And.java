@@ -60,6 +60,16 @@ public class And implements Condicion {
 	}
 
 	/**
+	 * Agrega la condición pasada como parte de este operador
+	 * 
+	 * @param condicionExtra
+	 *            La condición agregada para evaluar en el operador
+	 */
+	public void and(final Condicion condicionExtra) {
+		this.condiciones.add(condicionExtra);
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

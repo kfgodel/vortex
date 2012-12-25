@@ -17,13 +17,20 @@ import java.util.concurrent.atomic.AtomicLong;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
+import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
+import net.gaia.vortex.router.impl.messages.MensajeBidireccional;
+import net.gaia.vortex.router.impl.messages.PedidoDeIdRemoto;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase es la implementación de la pata bidireccional
@@ -31,6 +38,7 @@ import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
  * @author D. García
  */
 public class PataBidi extends ComponenteConProcesadorSupport implements PataBidireccional {
+	private static final Logger LOG = LoggerFactory.getLogger(PataBidi.class);
 
 	private static final AtomicLong proximoId = new AtomicLong(0);
 
@@ -57,18 +65,17 @@ public class PataBidi extends ComponenteConProcesadorSupport implements PataBidi
 
 	private MemoriaDeMensajes memoriaDeEnviados;
 
-	private ListenerDeCambioDeFiltroEnPata listener;
+	private MapeadorVortex mapeador;
 
 	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
-			final ListenerDeCambioDeFiltroEnPata listener, final TaskProcessor taskProcessor,
-			final ParteDeCondiciones parteDeCondicion) {
+			final TaskProcessor taskProcessor, final ParteDeCondiciones parteDeCondicion, final MapeadorVortex mapeador) {
 		final PataBidi pata = new PataBidi();
 		pata.initializeWith(taskProcessor);
+		pata.mapeador = mapeador;
 		pata.filtroDeSalida = parteDeCondicion;
 		pata.setIdLocal(proximoId.getAndIncrement());
 		pata.nodoLocal = nodoLocal;
 		pata.nodoRemoto = nodoRemoto;
-		pata.listener = listener;
 		pata.memoriaDeEnviados = MemoriaLimitadaDeMensajes.create(NexoFiltroDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
 		pata.inicializarFiltros();
 		return pata;
@@ -130,8 +137,49 @@ public class PataBidi extends ComponenteConProcesadorSupport implements PataBidi
 	 * Esta acción mandará un meta-mensaje por esta pata para solicitar un ID de pata remota
 	 */
 	public void conseguirIdRemoto() {
-		// TODO Auto-generated method stub
+		final PedidoDeIdRemoto pedido = PedidoDeIdRemoto.create(getIdLocal());
+		enviarMetamensaje(pedido);
+	}
 
+	/**
+	 * Envía el objeto indicado como metamensaje, metiéndolo en un mensaje vortex
+	 * 
+	 * @param metamensaje
+	 *            El metamensaje a enviar
+	 */
+	private void enviarMetamensaje(final MensajeBidireccional metamensaje) {
+		final MensajeVortex mensaje = mapeador.convertirAVortex(metamensaje);
+		enviarMensaje(mensaje);
+	}
+
+	/**
+	 * Envía el mensaje pasado al nodo remoto sólo si no lo envió antes
+	 * 
+	 * @param mensaje
+	 *            El mensaje a enviar
+	 */
+	private void enviarMensaje(final MensajeVortex mensaje) {
+		if (!memoriaDeEnviados.registrarNuevo(mensaje)) {
+			LOG.debug("  No enviando el mensaje[{}] recibido en [{}] por figurar como ya enviado", mensaje, this);
+			return;
+		}
+		getNodoRemoto().recibir(mensaje);
+	}
+
+	/**
+	 * @see net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional#tieneComoNodoRemotoA(net.gaia.vortex.core.api.atomos.Receptor)
+	 */
+	@Override
+	public boolean tieneComoNodoRemotoA(final Receptor nodo) {
+		return getNodoRemoto().equals(nodo);
+	}
+
+	/**
+	 * @see net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional#getParteDeCondicion()
+	 */
+	@Override
+	public ParteDeCondiciones getParteDeCondicion() {
+		return this.filtroDeSalida;
 	}
 
 }

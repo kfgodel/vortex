@@ -12,12 +12,24 @@
  */
 package net.gaia.vortex.router.impl.moleculas;
 
+import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+
 /**
  * Esta clase representa el componente vortex que implementa el portal con comunicaciones
  * bidireccionales, lo que le permite comunicar sus filtros y optimizar el ruteo de mensajes
  * 
  * @author D. García
  */
-public class PortalBidi {
+public class PortalBidi extends NodoBidi {
+
+	/**
+	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#crearTareaAlRecibirSegun(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 */
+	@Override
+	protected WorkUnit crearTareaAlRecibirSegun(final MensajeVortex mensaje) {
+		// TODO Auto-generated method stub
+		return super.crearTareaAlRecibirSegun(mensaje);
+	}
 
 }
