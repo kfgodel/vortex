@@ -25,7 +25,7 @@ public class MetadataDeCondiciones {
 
 	public static class TipoNot {
 		public static final String TIPO_NOT = "NOT";
-		public static final String ATRIBUTO_FILTROS = "filtro";
+		public static final String ATRIBUTO_FILTRO = "filtro";
 	}
 
 	public static class TipoClaveValor {
@@ -34,5 +34,13 @@ public class MetadataDeCondiciones {
 		public static final String ATRIBUTO_VALOR = "valor";
 	}
 
+	public static class TipoTrue {
+		public static final String TIPO_TRUE = "TRUE";
+	}
+	public static class TipoFalse {
+		public static final String TIPO_FALSE = "FALSE";
+	}
+
+	
 
 }
