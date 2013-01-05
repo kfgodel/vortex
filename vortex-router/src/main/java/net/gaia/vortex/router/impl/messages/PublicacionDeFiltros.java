@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.router.impl.messages;
 
-import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
-import net.gaia.vortex.tests.router2.impl.filtros.FiltroPorStrings;
+import java.util.Map;
+
 
 /**
  * Esta clase representa el mensaje para publicar filtros de un nodo a otro
@@ -22,29 +22,21 @@ import net.gaia.vortex.tests.router2.impl.filtros.FiltroPorStrings;
  */
 public class PublicacionDeFiltros extends MensajeBidiSupport {
 
-	private Filtro filtro;
+	private Map<String, Object> filtro;
 
-	public Filtro getFiltro() {
+	public Map<String, Object> getFiltro() {
 		return filtro;
 	}
 
-	public void setFiltro(final Filtro filtro) {
+	public void setFiltro(Map<String, Object> filtro) {
 		this.filtro = filtro;
 	}
 
-	public static PublicacionDeFiltros create(final Filtro nuevoFiltro, final Long idDePataRemota) {
+	public static PublicacionDeFiltros create(final Map<String, Object> nuevoFiltro, final Long idDePataRemota) {
 		final PublicacionDeFiltros publicacion = new PublicacionDeFiltros();
 		publicacion.filtro = nuevoFiltro;
 		publicacion.setIdDePataLocalAlReceptor(idDePataRemota);
 		return publicacion;
-	}
-
-	/**
-	 * @see net.gaia.vortex.MensajeBidireccional.router2.api.Mensaje#getTag()
-	 */
-	@Override
-	public String getTag() {
-		return FiltroPorStrings.META_MENSAJE;
 	}
 
 }
