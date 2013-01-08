@@ -9,12 +9,11 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import ar.com.dgarcia.lang.iterators.tree.NodeExploder;
-import ar.com.dgarcia.lang.iterators.tree.TreeIterator;
 import ar.com.dgarcia.lang.iterators.tree.exploders.FileNodeExploder;
 import ar.com.dgarcia.lang.iterators.tree.treeorder.BreadthFirstOrder;
 import ar.com.dgarcia.lang.iterators.tree.treeorder.DeepFirstOrder;
 import ar.com.dgarcia.lang.iterators.tree.treeorder.GraphOrder;
+import ar.com.dgarcia.lang.iterators.tree.treeorder.LeavesFirstIterator;
 import ar.com.dgarcia.lang.iterators.tree.treeorder.TreeOrder;
 
 /**
@@ -38,11 +37,12 @@ public class TreeIteratorTest {
 	public void setUp() {
 		raiz = "A";
 		nodeExplorer = new NodeExploder<String>() {
-			public Iterator<String> evaluateOn(String node) {
+			@Override
+			public Iterator<String> evaluateOn(final String node) {
 				if (node.length() > 2) {
 					return null;
 				}
-				ArrayList<String> subNodos = new ArrayList<String>();
+				final ArrayList<String> subNodos = new ArrayList<String>();
 				subNodos.add(node + "A");
 				subNodos.add(node + "B");
 				subNodos.add(node + "C");
@@ -54,9 +54,9 @@ public class TreeIteratorTest {
 
 	@Test
 	public void probarIteradorALoAncho() {
-		TreeOrder<String> order = BreadthFirstOrder.create();
-		TreeIterator<String> iterador = TreeIterator.createFromRoot(raiz, nodeExplorer, order);
-		String[] expected = new String[] { "A", //
+		final TreeOrder<String> order = BreadthFirstOrder.create();
+		final TreeIterator<String> iterador = TreeIterator.createFromRoot(raiz, nodeExplorer, order);
+		final String[] expected = new String[] { "A", //
 				"AA", //
 				"AB", //
 				"AC", //
@@ -83,9 +83,9 @@ public class TreeIteratorTest {
 
 	@Test
 	public void probarIteradorEnProfundo() {
-		TreeOrder<String> order = DeepFirstOrder.create();
-		TreeIterator<String> iterador = TreeIterator.createFromRoot(raiz, nodeExplorer, order);
-		String[] expected = new String[] { "A", //
+		final TreeOrder<String> order = DeepFirstOrder.create();
+		final TreeIterator<String> iterador = TreeIterator.createFromRoot(raiz, nodeExplorer, order);
+		final String[] expected = new String[] { "A", //
 				"AA", //
 				"AAA", //
 				"AAB", //
@@ -112,10 +112,10 @@ public class TreeIteratorTest {
 
 	@Test
 	public void probarIteradorEnProfundoGrafo() {
-		TreeOrder<String> basicOrder = DeepFirstOrder.create();
-		GraphOrder<String> graphOrder = GraphOrder.createFrom(basicOrder);
-		TreeIterator<String> iterador = TreeIterator.createFromRoot(raiz, nodeExplorer, graphOrder);
-		String[] expected = new String[] { "A", //
+		final TreeOrder<String> basicOrder = DeepFirstOrder.create();
+		final GraphOrder<String> graphOrder = GraphOrder.createFrom(basicOrder);
+		final TreeIterator<String> iterador = TreeIterator.createFromRoot(raiz, nodeExplorer, graphOrder);
+		final String[] expected = new String[] { "A", //
 				"AA", //
 				"AAA", //
 				"AAB", //
@@ -140,11 +140,11 @@ public class TreeIteratorTest {
 	 * @param expected
 	 *            Valores esperados
 	 */
-	private void checkExpected(TreeIterator<String> iterador, String[] expected) {
+	private void checkExpected(final Iterator<String> iterador, final String[] expected) {
 		for (int i = 0; i < expected.length; i++) {
-			String node = expected[i];
+			final String node = expected[i];
 			Assert.assertTrue(iterador.hasNext());
-			String obtained = iterador.next();
+			final String obtained = iterador.next();
 			Assert.assertEquals(node, obtained);
 		}
 		Assert.assertFalse(iterador.hasNext());
@@ -152,16 +152,45 @@ public class TreeIteratorTest {
 
 	@Test
 	public void probarRecorridoArchivos() {
-		String classPathString = System.getProperty("java.class.path");
-		String[] files = classPathString.split(";");
-		for (String directoryPath : files) {
-			File classPathFile = new File(directoryPath);
-			TreeOrder<File> order = BreadthFirstOrder.create();
-			TreeIterator<File> fileEntries = TreeIterator.createFromRoot(classPathFile, FileNodeExploder.getInstance(),
-					order);
+		final String classPathString = System.getProperty("java.class.path");
+		final String[] files = classPathString.split(";");
+		for (final String directoryPath : files) {
+			final File classPathFile = new File(directoryPath);
+			final TreeOrder<File> order = BreadthFirstOrder.create();
+			final TreeIterator<File> fileEntries = TreeIterator.createFromRoot(classPathFile,
+					FileNodeExploder.getInstance(), order);
 			while (fileEntries.hasNext()) {
 				System.out.println(fileEntries.next());
 			}
 		}
 	}
+
+	@Test
+	public void probarIteradorDeHojasPrimero() {
+		final Iterator<String> iterador = LeavesFirstIterator.createFromRoot(raiz, nodeExplorer);
+		final String[] expected = new String[] { "ACC", //
+				"ACC", //
+				"ACB", //
+				"ACA", //
+				"ACC", //
+				"ACC", //
+				"ACB", //
+				"ACA", //
+				"ABC", //
+				"ABC", //
+				"ABB", //
+				"ABA", //
+				"AAC", //
+				"AAC", //
+				"AAB", //
+				"AAA", //
+				"AC", //
+				"AC", //
+				"AB", //
+				"AA", //
+				"A", //
+		};
+		checkExpected(iterador, expected);
+	}
+
 }
