@@ -13,7 +13,8 @@
 package net.gaia.vortex.core.api.atomos;
 
 /**
- * Esta interfaz define los métodos que tiene cualquier componente vortex
+ * Esta interfaz define los métodos que tiene cualquier componente vortex.<br>
+ * Sirve más como marca que como
  * 
  * @author D. García
  */

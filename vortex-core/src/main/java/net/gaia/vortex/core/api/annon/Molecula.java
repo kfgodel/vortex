@@ -20,18 +20,20 @@ import java.lang.annotation.Target;
 
 /**
  * Este annotation es aplicable a los componentes de vortex que representan un segundo nivel de
- * complejidad.<br>
- * Las moléculas usan a los {@link Atomo}s internamente para definir su comportamiento. A diferencia
- * de los atomos, las moleculas pueden modificar las conexiones internas de sus atomos para
- * modificar su comportamiento en runtime alterando las conexiones entre átomos. Esto les permite
- * mayor flexibilidad, a la vez que implica mayor complejidad.<br>
+ * complejidad en comportamiento.<br>
  * <br>
- * A su vez, las moleculas pueden ser utilizadas por {@link Organismo}s como elementos base para
+ * Las moléculas usan a los {@link Atomo}s internamente para definir su comportamiento mediante
+ * conexiones. A diferencia de los atomos, las moléculas pueden alterar las conexiones internas de
+ * sus átomos para modificar su comportamiento en runtime. Esto les permite mayor flexibilidad, a la
+ * vez que implica mayor complejidad.<br>
+ * <br>
+ * Las moléculas pueden ser utilizadas por {@link Organismo}s como elementos base para
  * comportamiento más complejo.<br>
  * <br>
  * Cabe aclarar que la distinción entre {@link Atomo}, {@link Molecula} y {@link Organismo} es un
  * tanto arbitrario y en una red se pueden encontrar niveles de mezclados. La diferenciación es sólo
- * teórica
+ * teórica.<br>
+ * Estos annotations se usan para guiar al lector del código respecto de cada componente
  * 
  * @author D. García
  */

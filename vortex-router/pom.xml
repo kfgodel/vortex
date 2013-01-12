@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia.vortex</groupId>
   <artifactId>vortex-router</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.4.3</version>
   <name>Vortex[Router]</name>
   <description>Proyecto para definir el comportamiento de ruteo de mensajes de vortex</description>
   
@@ -93,7 +93,7 @@
 	<dependency>
 	  <groupId>net.gaia.vortex</groupId>
 	  <artifactId>vortex-core</artifactId>
-	  <version>0.4.3-SNAPSHOT</version>
+	  <version>0.4.3</version>
 	</dependency>
 
 	<!-- Operaciones sobre las condiciones para calcular filtros -->	
@@ -107,7 +107,7 @@
 	<dependency>
 	  <groupId>net.gaia.vortex</groupId>
 	  <artifactId>vortex-portal</artifactId>
-	  <version>0.4.3-SNAPSHOT</version>
+	  <version>0.4.3</version>
 	</dependency>
 
 

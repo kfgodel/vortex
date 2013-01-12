@@ -27,7 +27,8 @@ import java.lang.annotation.Target;
  * <br>
  * Cabe aclarar que la distinción entre {@link Atomo}, {@link Molecula} y {@link Organismo} es un
  * tanto arbitrario y en una red se pueden encontrar niveles de mezclados. La diferenciación es sólo
- * teórica
+ * teórica.<br>
+ * Estos annotations se usan para guiar al lector del código respecto de cada componente
  * 
  * @author D. García
  */

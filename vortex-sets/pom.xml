@@ -79,7 +79,7 @@
   	<dependency>
 	  <groupId>net.gaia.vortex</groupId>
 	  <artifactId>vortex-core</artifactId>
-	  <version>0.4.3-SNAPSHOT</version>
+	  <version>0.4.3</version>
   	</dependency>
   
 	<!--  Abstrae la herramienta de logueo concreta -->
