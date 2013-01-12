@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.impl.atomos.receptores;
 
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 
 import org.slf4j.Logger;

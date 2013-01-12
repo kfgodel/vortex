@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;

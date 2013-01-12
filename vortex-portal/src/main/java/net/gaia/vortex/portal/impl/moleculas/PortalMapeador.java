@@ -15,7 +15,7 @@ package net.gaia.vortex.portal.impl.moleculas;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.annon.Molecula;
+import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.condiciones.Condicion;

@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.impl.atomos.condicional;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.condicional.Filtro;
 import net.gaia.vortex.core.api.condiciones.Condicion;

@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.core.api.atomos.transformacion;
 
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 

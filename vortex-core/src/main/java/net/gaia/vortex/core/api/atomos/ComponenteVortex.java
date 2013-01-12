@@ -14,7 +14,8 @@ package net.gaia.vortex.core.api.atomos;
 
 /**
  * Esta interfaz define los métodos que tiene cualquier componente vortex.<br>
- * Sirve más como marca que como
+ * Las subclases de esta interfaz representan componentes vortex que pueden usarse para armar una
+ * red de comunicación entre módulos, aplicaciones y sistemas
  * 
  * @author D. García
  */
@@ -24,7 +25,7 @@ public interface ComponenteVortex {
 	 * Devuelve un número asignado a esta instancia para identificarlo con respecto a otros
 	 * componentes en memoria
 	 * 
-	 * @return El número que permite discriminar esta instancia
+	 * @return El número que permite discriminar esta instancia de otras
 	 */
 	public long getNumeroDeComponente();
 

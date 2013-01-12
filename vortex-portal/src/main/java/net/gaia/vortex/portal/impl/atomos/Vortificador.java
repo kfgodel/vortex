@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.portal.impl.atomos;
 
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.emisores.EmisorSupport;

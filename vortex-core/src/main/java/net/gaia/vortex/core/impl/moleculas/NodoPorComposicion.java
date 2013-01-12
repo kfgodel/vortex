@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.impl.moleculas;
 
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.annon.Molecula;
+import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Emisor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;

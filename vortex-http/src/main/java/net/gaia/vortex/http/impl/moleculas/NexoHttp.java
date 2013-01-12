@@ -14,7 +14,7 @@ package net.gaia.vortex.http.impl.moleculas;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core.api.annon.Molecula;
+import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;

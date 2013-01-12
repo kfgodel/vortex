@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.api.moleculas.ruteo;
 
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.annon.Molecula;
+import net.gaia.vortex.core.api.annotations.Molecula;
 
 /**
  * Esta interfaz representa un componente vortex que reenvía el mensaje que recibe a todos los

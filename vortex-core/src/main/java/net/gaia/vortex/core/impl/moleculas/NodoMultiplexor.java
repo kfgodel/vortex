@@ -14,7 +14,7 @@ package net.gaia.vortex.core.impl.moleculas;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.annon.Molecula;
+import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.impl.atomos.ids.MultiplexorIdentificadorSupport;
 import net.gaia.vortex.core.impl.atomos.memoria.MultiplexorSinDuplicados;
 

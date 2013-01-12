@@ -14,7 +14,7 @@ package net.gaia.vortex.core.impl.atomos.transformacion;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.transformacion.Transformador;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
