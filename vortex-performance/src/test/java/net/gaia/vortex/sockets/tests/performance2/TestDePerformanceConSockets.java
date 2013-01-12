@@ -1,5 +1,5 @@
 /**
- * 17/07/2012 23:47:34 Copyright (C) 2011 Darío L. García
+ * 01/07/2012 12:48:06 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,97 +10,98 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.tests;
+package net.gaia.vortex.sockets.tests.performance2;
 
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
-import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.extensions.IndiceCicular;
 import ar.com.dgarcia.lang.metrics.impl.MetricasPorTiempoImpl;
 import ar.com.dgarcia.lang.metrics.impl.SnapshotDeMetricaPorTiempo;
 import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
 import ar.com.dgarcia.testing.stress.StressGenerator;
+import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
+import ar.dgarcia.objectsockets.api.ObjectSocket;
+import ar.dgarcia.objectsockets.api.SocketErrorHandler;
+import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
+import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;
+import ar.dgarcia.objectsockets.impl.ObjectSocketConnector;
+import ar.dgarcia.textualizer.json.JsonTextualizer;
 
 /**
- * Esta clase mide la performance utilizando nodo sockets para la comunicación
+ * Esta clase mide la performance comparando con el utilizando sockets para la comunicación entre
+ * emisor y receptor
  * 
  * @author D. García
  */
-@Ignore("Solo correr este test manualmente con conectividad asegurada")
-public class TestDePerformanceConNodoSocketsYServidor {
-	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConNodoSocketsYServidor.class);
-
-	private TaskProcessor processorEnvios;
-	private TaskProcessor processorRecepcion;
-
-	@Before
-	public void crearProcesador() {
-		processorEnvios = VortexProcessorFactory.createProcessor();
-		processorRecepcion = VortexProcessorFactory.createProcessor();
-	}
-
-	@After
-	public void liberarRecursos() {
-		processorEnvios.detener();
-		processorRecepcion.detener();
-	}
+public class TestDePerformanceConSockets {
+	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConSockets.class);
 
 	@Test
 	public void medirPerformanceCon1ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 1;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon2ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 2;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon4ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 4;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon8ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 8;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon16ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 16;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon32ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 32;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon200ThreadDedicadoATodoElProceso() throws InterruptedException {
 
 		final int cantidadDeThreads = 200;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
+	}
+
+	@Test
+	public void medirPerformanceCon1x2() throws InterruptedException {
+		testearEsquemaConSockets(1, 2);
+	}
+
+	@Test
+	public void medirPerformanceCon2x1() throws InterruptedException {
+		testearEsquemaConSockets(2, 1);
+	}
+
+	@Test
+	public void medirPerformanceCon4x16() throws InterruptedException {
+		testearEsquemaConSockets(4, 16);
 	}
 
 	/**
@@ -113,30 +114,58 @@ public class TestDePerformanceConNodoSocketsYServidor {
 	 * @throws InterruptedException
 	 *             Si vuela todo
 	 */
-	private void testearEsquemaConNodos(final int cantidadDeThreadsDeEnvio) throws InterruptedException {
-		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->(kfgodel)->1R";
+	private void testearEsquemaConSockets(final int cantidadDeThreadsDeEnvio, final int cantidadDeThreadsDeRecepcion)
+			throws InterruptedException {
+		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->" + cantidadDeThreadsDeRecepcion + "S->R";
+
+		final List<ObjectSocketAcceptor> servidores = new CopyOnWriteArrayList<ObjectSocketAcceptor>();
+		final List<ObjectSocketConnector> clientes = new CopyOnWriteArrayList<ObjectSocketConnector>();
 
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
-		final InetSocketAddress sharedAddress = new InetSocketAddress("kfgodel.info", 61616);
-		final NodoSocket nodoClienteReceptor = NodoSocket.createAndConnectTo(sharedAddress, processorRecepcion);
-		final NodoSocket nodoClienteEmisor = NodoSocket.createAndConnectTo(sharedAddress, processorEnvios);
-		try {
-			final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(processorRecepcion,
-					nodoClienteReceptor);
-			portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
-				@Override
-				public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
-					metricas.registrarOutput();
-				}
-			});
+		// Generamos tantos sockets conectados como receptores
+		final JsonTextualizer textualizer = JsonTextualizer.createWithTypeMetadata();
+		final SocketErrorHandler handlerDeErrores = new SocketErrorHandler() {
+			@Override
+			public void onSocketError(final Throwable cause, final ObjectSocket socket) {
+				LOG.error("Se produjo un error " + cause.getClass() + ": " + cause.getMessage());
+				socket.closeAndDispose();
+			}
+		};
+		for (int i = 0; i < cantidadDeThreadsDeRecepcion; i++) {
+			final SocketAddress direccion = new InetSocketAddress(10000 + i);
+			// Creamos el socket de escucha
+			final ObjectSocketConfiguration configServer = ObjectSocketConfiguration.create(direccion,
+					new ObjectReceptionHandler() {
+						@Override
+						public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
+							// Cada vez que recibimos registramos el mensaje
+							metricas.registrarOutput();
+						}
+					}, textualizer);
+			configServer.setErrorHandler(handlerDeErrores);
+			final ObjectSocketAcceptor nuevoAcceptor = ObjectSocketAcceptor.create(configServer);
+			servidores.add(nuevoAcceptor);
 
-			correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, nodoClienteEmisor);
-		} finally {
-			nodoClienteEmisor.closeAndDispose();
-			nodoClienteReceptor.closeAndDispose();
+			// Creamos el socket cliente
+			final ObjectSocketConfiguration configCliente = ObjectSocketConfiguration.create(direccion, textualizer);
+			configCliente.setErrorHandler(handlerDeErrores);
+			final ObjectSocketConnector nuevoCiente = ObjectSocketConnector.create(configCliente);
+			clientes.add(nuevoCiente);
 		}
+
+		try {
+			correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, clientes);
+		} finally {
+			for (final ObjectSocketConnector objectSocketConnector : clientes) {
+				objectSocketConnector.closeAndDispose();
+			}
+			for (final ObjectSocketAcceptor objectSocketAcceptor : servidores) {
+				objectSocketAcceptor.closeAndDispose();
+			}
+		}
+
 	}
 
 	/**
@@ -154,21 +183,30 @@ public class TestDePerformanceConNodoSocketsYServidor {
 	 *             Si vuela algo
 	 */
 	private void correrThreadsEmisores(final int cantidadDeThreadsDeEnvio, final String nombreDelTest,
-			final MetricasPorTiempoImpl metricas, final Receptor nodoVortex) throws InterruptedException {
+			final MetricasPorTiempoImpl metricas, final List<ObjectSocketConnector> clientes)
+			throws InterruptedException {
 		// Generamos el testeador
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
-		final PortalMapeador portalDeEnvio = PortalMapeador.createForOutputWith(processorEnvios, nodoVortex);
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
 			@Override
 			public Runnable getOrCreateRunnable() {
 				return new Runnable() {
+					// Agregamos en todas las colas
+					private final IndiceCicular indicePropio = IndiceCicular.desdeCeroExcluyendoA(clientes.size());
+
 					@Override
 					public void run() {
+						final int socketAUsar = indicePropio.nextInt();
+						final ObjectSocketConnector cliente = clientes.get(socketAUsar);
+						final ObjectSocket socketCliente = cliente.getObjectSocket();
+						if (socketCliente.isClosed()) {
+							return;
+						}
 						final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
-						portalDeEnvio.enviar(mensaje);
+						socketCliente.send(mensaje);
 						metricas.registrarInput();
 					}
 				};

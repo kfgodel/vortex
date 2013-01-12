@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.tests;
+package net.gaia.vortex.sockets.tests.performance2;
 
 import java.net.InetSocketAddress;
 
@@ -41,9 +41,9 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
  * 
  * @author D. García
  */
- @Ignore("Solo correr este test manualmente con conectividad asegurada")
-public class TestDePerformanceConNodoSocketsMismaLan {
-	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConNodoSocketsMismaLan.class);
+@Ignore("Solo correr este test manualmente con conectividad asegurada")
+public class TestDePerformanceConNodoSocketsYServidor {
+	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConNodoSocketsYServidor.class);
 
 	private TaskProcessor processorEnvios;
 	private TaskProcessor processorRecepcion;
@@ -119,7 +119,7 @@ public class TestDePerformanceConNodoSocketsMismaLan {
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
-		final InetSocketAddress sharedAddress = new InetSocketAddress("192.168.1.101", 61616);
+		final InetSocketAddress sharedAddress = new InetSocketAddress("kfgodel.info", 61616);
 		final NodoSocket nodoClienteReceptor = NodoSocket.createAndConnectTo(sharedAddress, processorRecepcion);
 		final NodoSocket nodoClienteEmisor = NodoSocket.createAndConnectTo(sharedAddress, processorEnvios);
 		try {

@@ -1,5 +1,5 @@
 /**
- * 17/07/2012 23:47:34 Copyright (C) 2011 Darío L. García
+ * 01/07/2012 13:49:29 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,19 +10,17 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.tests;
-
-import java.net.InetSocketAddress;
+package net.gaia.vortex.portal.tests.performance;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
-import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,75 +28,89 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.extensions.BooleanEstocastico;
 import ar.com.dgarcia.lang.metrics.impl.MetricasPorTiempoImpl;
 import ar.com.dgarcia.lang.metrics.impl.SnapshotDeMetricaPorTiempo;
 import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
 /**
- * Esta clase mide la performance utilizando nodo sockets para la comunicación
+ * Esta clase mide la performance comparando con el utilizando portales para la comunicación entre
+ * emisor y receptor
  * 
  * @author D. García
  */
-public class TestDePerformanceConNodoSockets {
-	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConNodoSockets.class);
+public class TestDePerformanceConPortales {
+	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConPortales.class);
 
-	private TaskProcessor processorEnvios;
-	private TaskProcessor processorRecepcion;
+	private TaskProcessor processorRuteo;
 
 	@Before
 	public void crearProcesador() {
-		processorEnvios = VortexProcessorFactory.createProcessor();
-		processorRecepcion = VortexProcessorFactory.createProcessor();
+		processorRuteo = VortexProcessorFactory.createProcessor();
 	}
 
 	@After
 	public void liberarRecursos() {
-		processorEnvios.detener();
-		processorRecepcion.detener();
+		processorRuteo.detener();
 	}
 
 	@Test
 	public void medirPerformanceCon1ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 1;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon2ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 2;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon4ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 4;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon8ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 8;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon16ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 16;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon32ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 32;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
 	}
 
 	@Test
 	public void medirPerformanceCon200ThreadDedicadoATodoElProceso() throws InterruptedException {
 
 		final int cantidadDeThreads = 200;
-		testearEsquemaConNodos(cantidadDeThreads);
+		testearEsquemaConSockets(cantidadDeThreads, cantidadDeThreads);
+	}
+
+	@Test
+	public void medirPerformanceCon1x2() throws InterruptedException {
+		testearEsquemaConSockets(1, 2);
+	}
+
+	@Test
+	public void medirPerformanceCon2x1() throws InterruptedException {
+		testearEsquemaConSockets(2, 1);
+	}
+
+	@Test
+	public void medirPerformanceCon4x16() throws InterruptedException {
+		testearEsquemaConSockets(4, 16);
 	}
 
 	/**
@@ -111,29 +123,25 @@ public class TestDePerformanceConNodoSockets {
 	 * @throws InterruptedException
 	 *             Si vuela todo
 	 */
-	private void testearEsquemaConNodos(final int cantidadDeThreadsDeEnvio) throws InterruptedException {
-		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->NS->1R";
+	private void testearEsquemaConSockets(final int cantidadDeThreadsDeEnvio, final int cantidadDeThreadsDeRecepcion)
+			throws InterruptedException {
+		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->V->" + cantidadDeThreadsDeRecepcion + "R";
+
+		final NodoMultiplexor nodoVortex = NodoMultiplexor.create(processorRuteo);
 
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
-		final InetSocketAddress sharedAddress = new InetSocketAddress(10000);
-		final NodoSocket nodoServidor = NodoSocket.createAndListenTo(sharedAddress, processorRecepcion);
-		final NodoSocket nodoCliente = NodoSocket.createAndConnectTo(sharedAddress, processorEnvios);
-		try {
-			final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(processorRecepcion, nodoServidor);
-			portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
-				@Override
-				public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
-					metricas.registrarOutput();
-				}
-			});
+		// Generamos tantos portales como receptores tengamos
+		final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(processorRuteo, nodoVortex);
+		portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
+			@Override
+			public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
+				metricas.registrarOutput();
+			}
+		});
 
-			correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, nodoCliente);
-		} finally {
-			nodoCliente.closeAndDispose();
-			nodoServidor.closeAndDispose();
-		}
+		correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, nodoVortex);
 	}
 
 	/**
@@ -156,14 +164,24 @@ public class TestDePerformanceConNodoSockets {
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
-		final PortalMapeador portalDeEnvio = PortalMapeador.createForOutputWith(processorEnvios, nodoVortex);
+		final PortalMapeador portalDeEnvio = PortalMapeador.createForOutputWith(processorRuteo, nodoVortex);
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
 			@Override
 			public Runnable getOrCreateRunnable() {
 				return new Runnable() {
+					private final BooleanEstocastico booleano = BooleanEstocastico.create(0.0);
+
 					@Override
 					public void run() {
+						// Vemos si tenemos que esperar
+						if (booleano.nextValue()) {
+							try {
+								Thread.sleep(1);
+							} catch (final InterruptedException e) {
+								// Omitimos la excepción
+							}
+						}
 						final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
 						portalDeEnvio.enviar(mensaje);
 						metricas.registrarInput();
