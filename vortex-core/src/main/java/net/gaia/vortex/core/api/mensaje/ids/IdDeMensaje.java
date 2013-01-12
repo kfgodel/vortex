@@ -26,7 +26,7 @@ import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 public interface IdDeMensaje extends Comparable<IdDeMensaje> {
 
 	/**
-	 * Devuelve el identificador del emisor
+	 * Devuelve el identificador del emisor del mensaje
 	 * 
 	 * @return El objeto que identifica al emisor en la red
 	 */

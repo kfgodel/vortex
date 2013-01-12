@@ -17,12 +17,12 @@ import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 /**
  * Esta interfaz representa un mensaje vortex que es información que circula dentro de la red y
  * puede ser procesada, filtrada, transformada, etc por componentes vortex.<br>
- * Puede pensarse un mensaje vortex como un mapa raíz de clave/valor, donde la clave es un texto, y
- * el valor puede ser una primitiva u otro mapa igual (a la JSON). <br>
+ * Puede pensarse un mensaje vortex como un mapa de clave/valor, donde la clave es un texto, y el
+ * valor puede ser una primitiva u otro mapa igual (similar a JSON). <br>
  * <br>
- * Un mensaje puede ser alterado durante la circulación en la red para rutearlo, pero de manera
- * no-destructiva. Lo que significa que la información original no se pierde y por lo tanto puede
- * ser recibido en destino tal como se envió.
+ * Un mensaje puede ser alterado por la red para su ruteo, pero de manera no-destructiva. Lo que
+ * significa que la información original no se pierde y por lo tanto puede ser recibido en destino
+ * tal como se envió.
  * 
  * @author D. García
  */

@@ -36,7 +36,7 @@ public interface Filtro extends Nexo {
 
 	/**
 	 * Establece la condición utilizada por este filtro para aceptar los mensajes y pasarlos al
-	 * proximo receptor. Si la condición pasada devuelve true el mensaje circula
+	 * próximo receptor. Si la condición pasada devuelve true el mensaje circula
 	 * 
 	 * @param condicion
 	 *            La condición a utilizar

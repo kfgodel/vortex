@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.api.moleculas.ids;
 
 /**
- * Esta interfaz representa un generador de identificadores vortex para las nuevas moleculas
+ * Esta interfaz representa un generador de identificadores vortex para las nuevas moléculas
  * 
  * @author D. García
  */

@@ -14,7 +14,6 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
 import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
@@ -34,11 +33,9 @@ import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
- * Esta clase realiza las pruebas definidas en A01 de la documentación pero utilizando
- * {@link NodoHub}, por lo que no se respeta exactamente los mismos casos pero es más aproximado que
- * {@link TestRedA01ConMultiplexores}.<br>
- * De esta manera verificamos que es posible armar una red básica sin tomar en cuenta la
- * direccionalidad de las conexiones
+ * Esta clase realiza las pruebas básicas de vortex definidas en A01 de la documentación utilizando
+ * un {@link NodoMultiplexor}. Verificamos que es posible armar una red básica con conexiones
+ * unidireccionales
  * 
  * @author D. García
  */

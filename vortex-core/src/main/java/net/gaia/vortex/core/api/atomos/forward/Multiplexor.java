@@ -10,7 +10,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 /**
  * Esta interfaz representa un componente vortex que al recibir un mensaje lo envía a todos los
  * multiples destinos que conoce.<br>
- * A diferencia de un {@link Nexo} esta interfaz representa multiples conexiones posibles de salida
+ * A diferencia de un {@link Nexo} esta interfaz posee multiples conexiones posibles de salida
  * 
  * @author D. García
  */
@@ -19,7 +19,7 @@ public interface Multiplexor extends Nodo {
 
 	/**
 	 * En un {@link Multiplexor} al conectar con un receptor este es agregado al conjunto de
-	 * destintos conocidos por este componente
+	 * destinos conocidos por este componente
 	 * 
 	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
@@ -27,9 +27,8 @@ public interface Multiplexor extends Nodo {
 	public void conectarCon(Receptor destino);
 
 	/**
-	 * En yun {@link Multiplexor} al desconectar un receptor se quita del conjunto de destinos
-	 * conocidos. Lo esperable al no quedar ninguno es que este componente actue como un
-	 * {@link Receptor}, no pudiendo enviar a nadie
+	 * En un {@link Multiplexor} al desconectar un receptor se quita del conjunto de destinos
+	 * conocidos. Al quitar todos los destinos es normal que los mensajes recibidos se descarten
 	 * 
 	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
