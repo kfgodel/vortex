@@ -38,7 +38,7 @@ public class EmpiezaCon implements Condicion {
 		if (valorEnElMensaje == null) {
 			return false;
 		}
-		if (valorEnElMensaje instanceof String) {
+		if (!(valorEnElMensaje instanceof String)) {
 			// No podemos saber si tiene el prefijo
 			return false;
 		}
