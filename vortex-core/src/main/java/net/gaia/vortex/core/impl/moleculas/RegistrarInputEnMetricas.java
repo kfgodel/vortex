@@ -43,7 +43,7 @@ final class RegistrarInputEnMetricas extends ReceptorSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(numeroDeComponente_FIELD, getNumeroDeComponente()).toString();
+		return ToString.de(this).add(numeroDeComponente_FIELD, getNumeroDeInstancia()).toString();
 	}
 
 }

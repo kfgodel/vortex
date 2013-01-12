@@ -17,9 +17,9 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
+import net.gaia.vortex.core.impl.atomos.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -81,7 +81,7 @@ public abstract class MultiplexorIdentificadorSupport extends ComponenteConProce
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).toString();
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).toString();
 	}
 
 	/**

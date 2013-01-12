@@ -23,7 +23,7 @@ import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
 
 /**
- * Esta clase representa el atomo de vortex que permite filtrar mensajes duplicados descartandolos.<br>
+ * Esta clase representa el atomo de vortex que permite filtrar mensajes duplicados descartándolos.<br>
  * Un mensaje es duplicado si pasa por segunda vez con el mismo ID por este filtro
  * 
  * @author D. García

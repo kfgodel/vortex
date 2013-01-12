@@ -69,7 +69,7 @@ public class NodoPorComposicion extends ComponenteSupport implements Nodo {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.con(atomoInput_FIELD, atomoInput).con(atomoOutput_FIELD, atomoOutput).toString();
 	}
 

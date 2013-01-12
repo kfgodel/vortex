@@ -13,13 +13,10 @@
 package net.gaia.vortex.core.impl.atomos.forward;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.procesador.ReceptorConProcesador;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
-import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +25,12 @@ import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase implementa comportamiento base para las sub clases de {@link Nexo} utilizando un
- * procesador de tareas interno para realizar las tareas
+ * procesador de tareas interno para realizar las tareas, y teniendo un destino único al cual
+ * pasarle los mensajes
  * 
  * @author D. García
  */
-public abstract class NexoSupport extends ComponenteConProcesadorSupport implements Nexo {
+public abstract class NexoSupport extends ReceptorConProcesador implements Nexo {
 	private static final Logger LOG = LoggerFactory.getLogger(NexoSupport.class);
 
 	private Receptor destino;
@@ -56,8 +54,8 @@ public abstract class NexoSupport extends ComponenteConProcesadorSupport impleme
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
-				.con(destino_FIELD, getDestino()).toString();
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(destino_FIELD, getDestino())
+				.toString();
 	}
 
 	/**
@@ -103,23 +101,4 @@ public abstract class NexoSupport extends ComponenteConProcesadorSupport impleme
 		return destino;
 	}
 
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
-	 */
-	@Override
-	public void recibir(final MensajeVortex mensaje) {
-		Loggers.ATOMOS.trace("Recibido en atomo[{}] el mensaje[{}]", this.toShortString(), mensaje);
-		final WorkUnit tareaDelMensaje = crearTareaPara(mensaje);
-		procesarEnThreadPropio(tareaDelMensaje);
-	}
-
-	/**
-	 * Crea la tarea específica de esta subclase para el mensaje recibido de manera de ser procesado
-	 * en background por este componente
-	 * 
-	 * @param mensaje
-	 *            El mensaje a procesar por esta instancia
-	 * @return La tarea a procesar con el procesador interno de este componente
-	 */
-	protected abstract WorkUnit crearTareaPara(final MensajeVortex mensaje);
 }

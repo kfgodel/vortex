@@ -13,9 +13,10 @@
 package net.gaia.vortex.portal.impl.atomos;
 
 import net.gaia.vortex.core.api.annotations.Atomo;
+import net.gaia.vortex.core.api.atomos.Emisor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.emisores.EmisorSupport;
+import net.gaia.vortex.core.impl.atomos.ComponenteSupport;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 
@@ -33,7 +34,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class Vortificador extends EmisorSupport {
+public class Vortificador extends ComponenteSupport implements Emisor {
 	private static final Logger LOG = LoggerFactory.getLogger(Vortificador.class);
 
 	private Receptor delegado;
@@ -71,7 +72,7 @@ public class Vortificador extends EmisorSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(mapeador_FIELD, mapeador)
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(mapeador_FIELD, mapeador)
 				.add(delegado_FIELD, delegado).toString();
 	}
 

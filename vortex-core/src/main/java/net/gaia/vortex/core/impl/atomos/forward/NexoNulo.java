@@ -27,10 +27,10 @@ import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
 public class NexoNulo extends NexoSupport {
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		return DelegarMensaje.create(mensaje, getDestino());
 	}
 

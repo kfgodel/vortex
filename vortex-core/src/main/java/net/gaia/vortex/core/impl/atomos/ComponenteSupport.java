@@ -15,26 +15,26 @@ package net.gaia.vortex.core.impl.atomos;
 import net.gaia.vortex.core.api.atomos.ComponenteVortex;
 
 /**
- * Esta clase define el comportamiento básico de componentes vortex que permite ser extendido para
- * ser implementado
+ * Esta clase define el comportamiento básico de componentes vortex para ser extendido por las
+ * subclases
  * 
  * @author D. García
  */
-public class ComponenteSupport implements ComponenteVortex {
+public abstract class ComponenteSupport implements ComponenteVortex {
 
-	private final long numeroDeComponente;
-	public static final String numeroDeComponente_FIELD = "numeroDeComponente";
+	private final long numeroDeInstancia;
+	public static final String numeroDeInstancia_FIELD = "numeroDeInstancia";
 
 	public ComponenteSupport() {
-		this.numeroDeComponente = SecuenciadorDeComponentes.getProximoNumero();
+		this.numeroDeInstancia = SecuenciadorDeInstancias.getProximoNumero();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#getNumeroDeComponente()
+	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#getNumeroDeInstancia()
 	 */
 	@Override
-	public long getNumeroDeComponente() {
-		return numeroDeComponente;
+	public long getNumeroDeInstancia() {
+		return numeroDeInstancia;
 	}
 
 	/**

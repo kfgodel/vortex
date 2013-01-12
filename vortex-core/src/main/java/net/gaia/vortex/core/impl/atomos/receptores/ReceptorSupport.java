@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.impl.atomos.receptores;
 
 import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.impl.atomos.SecuenciadorDeComponentes;
+import net.gaia.vortex.core.impl.atomos.SecuenciadorDeInstancias;
 import net.gaia.vortex.core.impl.atomos.ToShortString;
 
 /**
@@ -28,14 +28,14 @@ public abstract class ReceptorSupport implements Receptor {
 	public static final String numeroDeComponente_FIELD = "numeroDeComponente";
 
 	public ReceptorSupport() {
-		numeroDeComponente = SecuenciadorDeComponentes.getProximoNumero();
+		numeroDeComponente = SecuenciadorDeInstancias.getProximoNumero();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#getNumeroDeComponente()
+	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#getNumeroDeInstancia()
 	 */
 	@Override
-	public long getNumeroDeComponente() {
+	public long getNumeroDeInstancia() {
 		return numeroDeComponente;
 	}
 

@@ -35,7 +35,7 @@ public class ToShortString {
 		}
 		final StringBuilder builder = new StringBuilder(componente.getClass().getSimpleName());
 		builder.append("<");
-		builder.append(componente.getNumeroDeComponente());
+		builder.append(componente.getNumeroDeInstancia());
 		builder.append(">");
 		return builder.toString();
 	}

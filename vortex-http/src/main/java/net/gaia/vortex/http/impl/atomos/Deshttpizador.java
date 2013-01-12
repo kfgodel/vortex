@@ -16,7 +16,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Emisor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
 
 import org.slf4j.Logger;
@@ -68,7 +68,7 @@ public class Deshttpizador extends ComponenteConProcesadorSupport implements Emi
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(destino_FIELD, destino)
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(destino_FIELD, destino)
 				.toString();
 	}
 

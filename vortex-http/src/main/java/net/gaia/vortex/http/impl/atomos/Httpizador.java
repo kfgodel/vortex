@@ -15,7 +15,7 @@ package net.gaia.vortex.http.impl.atomos;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.http.impl.tasks.AcumularEnSesion;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -52,7 +52,7 @@ public class Httpizador extends ComponenteConProcesadorSupport implements Recept
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(sesion_FIELD, sesion)
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(sesion_FIELD, sesion)
 				.toString();
 	}
 }

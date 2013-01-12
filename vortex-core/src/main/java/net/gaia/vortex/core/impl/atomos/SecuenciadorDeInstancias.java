@@ -15,11 +15,11 @@ package net.gaia.vortex.core.impl.atomos;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Esta clase permite obtener un número de componente único para la instancia creada
+ * Esta clase permite obtener un número de instancia único para cada componente creado
  * 
  * @author D. García
  */
-public class SecuenciadorDeComponentes {
+public class SecuenciadorDeInstancias {
 
 	private static final AtomicLong proximoDisponible = new AtomicLong(0);
 

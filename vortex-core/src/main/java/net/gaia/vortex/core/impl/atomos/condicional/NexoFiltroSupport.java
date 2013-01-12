@@ -58,15 +58,15 @@ public abstract class NexoFiltroSupport extends NexoSupport implements Filtro {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).con(condicion_FIELD, condicion)
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(condicion_FIELD, condicion)
 				.con(destino_FIELD, getDestino()).toString();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		return FiltrarMensaje.create(mensaje, condicion, getDestino());
 	}
 

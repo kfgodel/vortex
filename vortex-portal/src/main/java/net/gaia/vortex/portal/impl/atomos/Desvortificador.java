@@ -16,7 +16,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.portal.api.moleculas.HandlerDeMensaje;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.impl.tasks.DesvortificarEInvocarHandler;
@@ -67,7 +67,7 @@ public class Desvortificador<T> extends ComponenteConProcesadorSupport implement
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.add(tipoEsperado_FIELD, tipoEsperado).add(handlerDeMensajes_FIELD, handlerDeMensajes)
 				.add(mapeador_FIELD, mapeador).toString();
 	}

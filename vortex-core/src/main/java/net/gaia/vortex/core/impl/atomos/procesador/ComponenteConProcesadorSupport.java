@@ -1,19 +1,19 @@
 /**
  * 13/06/2012 11:40:08 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core.impl.atomos;
+package net.gaia.vortex.core.impl.atomos.procesador;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core.api.atomos.ComponenteVortex;
+import net.gaia.vortex.core.impl.atomos.ComponenteSupport;
 
 /**
- * Esta clase define comportamiento base para los componentes que requieran procesar tareas en
- * background con un procesador propio
+ * Esta clase define comportamiento base para los componentes que requieren procesar tareas en
+ * background con un procesador de tareas propio
  * 
  * @author D. García
  */
-public abstract class ComponenteConProcesadorSupport extends ComponenteSupport implements ComponenteVortex {
+public abstract class ComponenteConProcesadorSupport extends ComponenteSupport {
 
 	private TaskProcessor processor;
 

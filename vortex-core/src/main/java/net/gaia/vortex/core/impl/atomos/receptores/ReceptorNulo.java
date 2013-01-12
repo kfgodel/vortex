@@ -57,7 +57,7 @@ public class ReceptorNulo extends ReceptorSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).toString();
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeInstancia()).toString();
 	}
 
 }

@@ -69,15 +69,15 @@ public class NexoTransformador extends NexoSupport implements Transformador {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.add(transformacion_FIELD, transformacion).add(destino_FIELD, getDestino()).toString();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		return TransformarYDelegar.create(mensaje, transformacion, getDestino());
 	}
 }

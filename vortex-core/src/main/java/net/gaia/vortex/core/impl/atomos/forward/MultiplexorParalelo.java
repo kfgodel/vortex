@@ -7,11 +7,12 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.procesador.ReceptorConProcesador;
 import net.gaia.vortex.core.impl.tasks.MultiplexarMensaje;
 import net.gaia.vortex.core.prog.Decision;
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
@@ -25,7 +26,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class MultiplexorParalelo extends ComponenteConProcesadorSupport implements Multiplexor {
+public class MultiplexorParalelo extends ReceptorConProcesador implements Multiplexor {
 
 	/**
 	 * La lista de destinos, implementada con un {@link CopyOnWriteArrayList} porque esperamos más
@@ -37,15 +38,15 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	private ListenerDeMetricas listenerMetricas;
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)
-	public void recibir(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		// Por cada destino derivamos la entrega al procesador interno
 		final MultiplexarMensaje multiplexion = MultiplexarMensaje.create(mensaje, destinos, getProcessor(),
 				listenerMetricas);
-		procesarEnThreadPropio(multiplexion);
+		return multiplexion;
 	}
 
 	/**
@@ -76,7 +77,7 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
+	 * @see net.gaia.vortex.core.impl.atomos.procesador.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
 	@Override
 	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)
@@ -96,7 +97,7 @@ public class MultiplexorParalelo extends ComponenteConProcesadorSupport implemen
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).con(destinos_FIELD, destinos)
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(destinos_FIELD, destinos)
 				.toString();
 	}
 

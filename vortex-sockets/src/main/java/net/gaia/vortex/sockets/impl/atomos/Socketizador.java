@@ -15,7 +15,7 @@ package net.gaia.vortex.sockets.impl.atomos;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.sockets.impl.tasks.EnviarPorSocket;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
@@ -51,7 +51,7 @@ public class Socketizador extends ComponenteConProcesadorSupport implements Rece
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(socket_FIELD, socket)
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(socket_FIELD, socket)
 				.toString();
 	}
 }

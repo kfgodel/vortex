@@ -63,7 +63,7 @@ public class ReceptorVariable<R extends Receptor> extends ReceptorSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeInstancia())
 				.con("receptorActual", getReceptorActual()).toString();
 	}
 

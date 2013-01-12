@@ -59,10 +59,10 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	private MemoriaDeMensajes memoriaDeMensajes;
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		return DelegarMensaje.create(mensaje, procesoDesdeVortex);
 	}
 
@@ -113,7 +113,7 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(socket_FIELD, socket)
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(socket_FIELD, socket)
 				.add(destino_FIELD, getDestino()).toString();
 	}
 

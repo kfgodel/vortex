@@ -27,7 +27,7 @@ public interface ComponenteVortex {
 	 * 
 	 * @return El número que permite discriminar esta instancia de otras
 	 */
-	public long getNumeroDeComponente();
+	public long getNumeroDeInstancia();
 
 	/**
 	 * Devuelve una cadena corta con el nombre de clase sin package y el número secuencial de este
