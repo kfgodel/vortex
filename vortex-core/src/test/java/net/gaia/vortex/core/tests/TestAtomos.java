@@ -33,7 +33,7 @@ import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
- * Esta clase el caso feliz para cada uno de los átomos base, de manera de registrar su
+ * Esta clase prueba el caso feliz para cada uno de los átomos base, de manera de registrar su
  * comportamiento esperado y uso
  * 
  * @author D. García

@@ -43,7 +43,6 @@ public class TestComponentesIdentificadores {
 	private NexoFiltroDuplicados nexo;
 	private MensajeVortex mensajeEnviado;
 	private ReceptorEncolador receptorFinal1;
-	private IdDeComponenteVortex identificador;
 	private TaskProcessor processor;
 	private MultiplexorSinDuplicados multiplexor;
 	private ReceptorEncolador receptorFinal2;
@@ -51,7 +50,6 @@ public class TestComponentesIdentificadores {
 	@Before
 	public void crearDependencias() {
 		processor = VortexProcessorFactory.createProcessor();
-		identificador = IdsEstatiscosParaComponentes.getInstancia().generarId();
 		receptorFinal1 = ReceptorEncolador.create();
 		receptorFinal2 = ReceptorEncolador.create();
 		nexo = NexoFiltroDuplicados.create(processor, receptorFinal1);
