@@ -17,8 +17,8 @@ import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Emisor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteSupport;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
+import net.gaia.vortex.core.impl.atomos.support.ComponenteSupport;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
 

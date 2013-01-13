@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.atomos.support.ReceptorSupport;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -63,7 +64,7 @@ public class ReceptorVariable<R extends Receptor> extends ReceptorSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeInstancia())
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.con("receptorActual", getReceptorActual()).toString();
 	}
 

@@ -10,11 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos.receptores;
+package net.gaia.vortex.core.impl.atomos.support;
 
 import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.impl.atomos.SecuenciadorDeInstancias;
-import net.gaia.vortex.core.impl.atomos.ToShortString;
 
 /**
  * Esta clase define el comportamiento base para definir un receptor. Las subclases sólo deben
@@ -22,29 +20,6 @@ import net.gaia.vortex.core.impl.atomos.ToShortString;
  * 
  * @author D. García
  */
-public abstract class ReceptorSupport implements Receptor {
-
-	private final long numeroDeComponente;
-	public static final String numeroDeComponente_FIELD = "numeroDeComponente";
-
-	public ReceptorSupport() {
-		numeroDeComponente = SecuenciadorDeInstancias.getProximoNumero();
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#getNumeroDeInstancia()
-	 */
-	@Override
-	public long getNumeroDeInstancia() {
-		return numeroDeComponente;
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#toShortString()
-	 */
-	@Override
-	public String toShortString() {
-		return ToShortString.from(this);
-	}
+public abstract class ReceptorSupport extends ComponenteSupport implements Receptor {
 
 }

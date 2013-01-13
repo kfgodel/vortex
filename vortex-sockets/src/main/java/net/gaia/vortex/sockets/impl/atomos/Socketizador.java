@@ -15,7 +15,7 @@ package net.gaia.vortex.sockets.impl.atomos;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.procesador.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.support.ComponenteConProcesadorSupport;
 import net.gaia.vortex.sockets.impl.tasks.EnviarPorSocket;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;

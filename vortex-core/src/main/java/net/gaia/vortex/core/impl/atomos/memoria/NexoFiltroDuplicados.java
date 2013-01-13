@@ -17,7 +17,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroSupport;
+import net.gaia.vortex.core.impl.atomos.support.NexoFiltroSupport;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeNuevo;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;

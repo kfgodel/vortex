@@ -24,9 +24,9 @@ import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.moleculas.ids.ReceptorIdentificable;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
-import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
+import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
 import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
@@ -74,7 +74,7 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor,
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor,
 	 *      net.gaia.vortex.core.api.atomos.Receptor)
 	 */
 	@Override
@@ -96,7 +96,7 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
 	@Override
 	public void setDestino(final Receptor destino) {
@@ -105,7 +105,7 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#getDestino()
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#getDestino()
 	 */
 	@Override
 	public Receptor getDestino() {
@@ -131,7 +131,7 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {

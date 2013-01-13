@@ -19,7 +19,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.transformacion.Transformador;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
-import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
+import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.tasks.TransformarYDelegar;
 import net.gaia.vortex.core.impl.transformaciones.TransformacionNula;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -74,7 +74,7 @@ public class NexoTransformador extends NexoSupport implements Transformador {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {

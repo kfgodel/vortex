@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos.procesador;
+package net.gaia.vortex.core.impl.atomos.support;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
@@ -30,7 +30,7 @@ public abstract class ReceptorConProcesador extends ComponenteConProcesadorSuppo
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		Loggers.ATOMOS.trace("Recibido en componente[{}] el mensaje[{}]", this.toShortString(), mensaje);
+		Loggers.ATOMOS.trace("Recibido en[{}] el mensaje[{}]", this.toShortString(), mensaje);
 		final WorkUnit tareaDelMensaje = crearTareaAlRecibir(mensaje);
 		procesarEnThreadPropio(tareaDelMensaje);
 	}

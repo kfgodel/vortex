@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.impl.moleculas;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
+import net.gaia.vortex.core.impl.atomos.support.ReceptorSupport;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -43,7 +43,7 @@ final class RegistrarInputEnMetricas extends ReceptorSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).add(numeroDeComponente_FIELD, getNumeroDeInstancia()).toString();
+		return ToString.de(this).add(numeroDeInstancia_FIELD, getNumeroDeInstancia()).toString();
 	}
 
 }

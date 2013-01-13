@@ -20,9 +20,9 @@ import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
+import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
@@ -59,7 +59,7 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	private MemoriaDeMensajes memoriaDeMensajes;
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
@@ -86,7 +86,7 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
 	@Override
 	public void setDestino(final Receptor destino) {
@@ -95,7 +95,7 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#getDestino()
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#getDestino()
 	 */
 	@Override
 	public Receptor getDestino() {

@@ -10,12 +10,11 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos.forward;
+package net.gaia.vortex.core.impl.atomos.support;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
-import net.gaia.vortex.core.impl.atomos.procesador.ReceptorConProcesador;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 
 import org.slf4j.Logger;
