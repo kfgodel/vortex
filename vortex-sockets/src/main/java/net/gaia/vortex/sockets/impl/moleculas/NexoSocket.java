@@ -53,6 +53,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 
 	private Desocketizador procesoDesdeSocket;
 	private MemoriaLimitadaDeMensajes memoriaDeMensajes;
+	private NexoSinDuplicados nodoDeSalidaAVortex;
 	public static final String procesoDesdeSocket_FIELD = "procesoDesdeSocket";
 
 	private void initializeWith(final TaskProcessor processor, final Receptor delegado, final ObjectSocket socket) {
@@ -68,8 +69,8 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 
 		// Al recibir un mensaje desde el socket, descartamos duplicados y lo mandamos a la salida
 		// (a quien estemos conectados en ese momento)
-		procesoDesdeSocket = Desocketizador.create(processor,
-				NexoSinDuplicados.create(processor, memoriaDeMensajes, delegado));
+		nodoDeSalidaAVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes, delegado);
+		procesoDesdeSocket = Desocketizador.create(processor, nodoDeSalidaAVortex);
 
 		// Definimos cual es el flujo de entrada y salida de esta molecula
 		final FlujoVortex flujoInterno = FlujoInmutable.create(procesoDesdeVortex, procesoDesdeSocket);
@@ -81,7 +82,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 	 */
 	@Override
 	public void setDestino(final Receptor destino) {
-		procesoDesdeSocket.setDestino(destino);
+		nodoDeSalidaAVortex.setDestino(destino);
 	}
 
 	/**
@@ -89,7 +90,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 	 */
 	@Override
 	public Receptor getDestino() {
-		return procesoDesdeSocket.getDestino();
+		return nodoDeSalidaAVortex.getDestino();
 	}
 
 	public static NexoSocket create(final TaskProcessor processor, final ObjectSocket socket, final Receptor delegado) {

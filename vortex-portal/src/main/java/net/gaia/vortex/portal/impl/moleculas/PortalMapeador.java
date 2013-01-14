@@ -13,30 +13,28 @@
 package net.gaia.vortex.portal.impl.moleculas;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
-import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
-import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.portal.api.moleculas.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.atomos.Desvortificador;
 import net.gaia.vortex.portal.impl.atomos.Vortificador;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
-import net.gaia.vortex.portal.impl.transformaciones.GenerarIdDeMensaje;
+import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -46,44 +44,49 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class PortalMapeador extends NexoSupport implements Portal {
+public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 
 	private MapeadorVortex mapeadorVortex;
-	private ReceptorVariable<Receptor> receptorDeSalida;
-	private Receptor procesoDeEntrada;
-	private Vortificador procesoDeSalida;
+	private Receptor procesoDesdeVortex;
+	private Vortificador procesoDesdeUsuario;
 	private Multiplexor multiplexorDeCondiciones;
 	private IdDeComponenteVortex identificador;
 	public static final String identificador_FIELD = "identificador";
+
+	private NexoTransformador nodoDeSalidaAVortex;
+
+	private TaskProcessor procesador;
 
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
 	 */
 	@Override
 	public void enviar(final Object mensaje) {
-		procesoDeSalida.vortificar(mensaje);
+		procesoDesdeUsuario.vortificar(mensaje);
 	}
 
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor,
 	 *      net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado) {
+		this.procesador = processor;
 		identificador = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
 
-		receptorDeSalida = ReceptorVariable.create(delegado);
-		super.initializeWith(processor, delegado);
-		final NexoTransformador registrarIdPropioEnMensaje = NexoTransformador.create(processor,
-				GenerarIdDeMensaje.create(identificador), receptorDeSalida);
-		procesoDeSalida = Vortificador.create(mapeadorVortex, registrarIdPropioEnMensaje);
+		nodoDeSalidaAVortex = NexoTransformador.create(processor, GenerarIdEnMensaje.create(identificador), delegado);
+		procesoDesdeUsuario = Vortificador.create(mapeadorVortex, nodoDeSalidaAVortex);
 
+		// Este multiplexor delega el mensaje en cada condición del usuario
 		multiplexorDeCondiciones = MultiplexorParalelo.create(processor);
-		final NexoSinDuplicados filtroDeDuplicadosExternos = NexoSinDuplicados.create(processor,
-				multiplexorDeCondiciones);
-		// Primero descartamos los propios y luego los duplicados externos
-		procesoDeEntrada = NexoFiltro.create(processor, EsMensajeExterno.create(identificador),
-				filtroDeDuplicadosExternos);
+		final NexoSinDuplicados filtroDescartaDuplicados = NexoSinDuplicados
+				.create(processor, multiplexorDeCondiciones);
+
+		// Primero descartamos los mensajes propios y luego los duplicados externos
+		final EsMensajeExterno siEsMensajeExterno = EsMensajeExterno.create(identificador);
+		procesoDesdeVortex = NexoFiltro.create(processor, siEsMensajeExterno, filtroDescartaDuplicados);
+
+		final FlujoVortex flujoInterno = FlujoInmutable.create(procesoDesdeVortex, nodoDeSalidaAVortex);
+		initializeWith(flujoInterno);
 	}
 
 	/**
@@ -91,8 +94,7 @@ public class PortalMapeador extends NexoSupport implements Portal {
 	 */
 	@Override
 	public void setDestino(final Receptor destino) {
-		super.setDestino(destino);
-		this.receptorDeSalida.setReceptorActual(destino);
+		nodoDeSalidaAVortex.setDestino(destino);
 	}
 
 	/**
@@ -100,7 +102,7 @@ public class PortalMapeador extends NexoSupport implements Portal {
 	 */
 	@Override
 	public Receptor getDestino() {
-		return receptorDeSalida.getReceptorActual();
+		return nodoDeSalidaAVortex.getDestino();
 	}
 
 	/**
@@ -111,23 +113,19 @@ public class PortalMapeador extends NexoSupport implements Portal {
 		// Casteamos para evitar chequeos molestos
 		@SuppressWarnings("unchecked")
 		final HandlerDePortal<Object> handlerDeMensajesCasteado = (HandlerDePortal<Object>) handlerDelPortal;
+
+		// Creamos el handler que convertirá al tipo esperado por el usuario, los mensajes recibidos
 		final Class<Object> tipoEsperadoComoMensajes = handlerDeMensajesCasteado.getTipoEsperado();
-		final Desvortificador<Object> convertirEnTipoEsperadoEInvocarHandler = Desvortificador.create(getProcessor(),
+		final Desvortificador<Object> convertirEnTipoEsperadoEInvocarHandler = Desvortificador.create(procesador,
 				mapeadorVortex, tipoEsperadoComoMensajes, handlerDeMensajesCasteado);
 
+		// Filtramos por la condición que nos pasa el usuario
 		final Condicion condicionParaRecibirMensajeEnHandler = handlerDelPortal.getCondicionNecesaria();
-		final NexoFiltro evaluarCondicionYHandlear = NexoFiltro.create(getProcessor(),
+		final NexoFiltro evaluarCondicionYHandlear = NexoFiltro.create(procesador,
 				condicionParaRecibirMensajeEnHandler, convertirEnTipoEsperadoEInvocarHandler);
-		multiplexorDeCondiciones.conectarCon(evaluarCondicionYHandlear);
-	}
 
-	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
-	 */
-	@Override
-	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
-		// Al recibir un mensaje se lo pasamos al filtro de entrada
-		return DelegarMensaje.create(mensaje, procesoDeEntrada);
+		// Agregamos el caso al multiplexor de mensajes recibidos
+		multiplexorDeCondiciones.conectarCon(evaluarCondicionYHandlear);
 	}
 
 	/**
@@ -171,7 +169,7 @@ public class PortalMapeador extends NexoSupport implements Portal {
 	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
-				.con(identificador_FIELD, identificador).con(destino_FIELD, getDestino()).toString();
+				.con(identificador_FIELD, identificador).con("destino", getDestino()).toString();
 	}
 
 }

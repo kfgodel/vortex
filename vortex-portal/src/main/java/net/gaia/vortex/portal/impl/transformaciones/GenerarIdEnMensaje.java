@@ -26,7 +26,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class GenerarIdDeMensaje implements Transformacion {
+public class GenerarIdEnMensaje implements Transformacion {
 
 	private GeneradorDeIdsDeMensajes generadorDeIds;
 	public static final String generadorDeIds_FIELD = "generadorDeIds";
@@ -41,13 +41,13 @@ public class GenerarIdDeMensaje implements Transformacion {
 		return mensaje;
 	}
 
-	public static GenerarIdDeMensaje create(final IdDeComponenteVortex identificadorDeEmisor) {
+	public static GenerarIdEnMensaje create(final IdDeComponenteVortex identificadorDeEmisor) {
 		final GeneradorDeIdsDeMensajes generador = GeneradorSecuencialDeIdDeMensaje.create(identificadorDeEmisor);
 		return create(generador);
 	}
 
-	public static GenerarIdDeMensaje create(final GeneradorDeIdsDeMensajes generador) {
-		final GenerarIdDeMensaje transformacion = new GenerarIdDeMensaje();
+	public static GenerarIdEnMensaje create(final GeneradorDeIdsDeMensajes generador) {
+		final GenerarIdEnMensaje transformacion = new GenerarIdEnMensaje();
 		transformacion.generadorDeIds = generador;
 		return transformacion;
 	}

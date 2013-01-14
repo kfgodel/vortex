@@ -52,6 +52,7 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 	public static final String procesoDesdeHttp_FIELD = "procesoDesdeHttp";
 
 	private MemoriaDeMensajes memoriaDeMensajes;
+	private NexoSinDuplicados nodoDeSalidaAVortex;
 
 	private void initializeWith(final TaskProcessor processor, final Receptor delegado, final SesionVortexHttp sesion) {
 		// Guardamos la referencia para saber cual es nuestra sesión
@@ -65,10 +66,10 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 				Httpizador.create(processor, sesion));
 
 		// Al recibir de http, descartamos duplicados y mandamos por vortex
-		procesoDesdeHttp = Deshttpizador.create(processor,
-				NexoSinDuplicados.create(processor, memoriaDeMensajes, delegado));
+		nodoDeSalidaAVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes, delegado);
+		procesoDesdeHttp = Deshttpizador.create(processor, nodoDeSalidaAVortex);
 
-		final FlujoVortex flujoInterno = FlujoInmutable.create(procesoDesdeVortex, procesoDesdeHttp);
+		final FlujoVortex flujoInterno = FlujoInmutable.create(procesoDesdeVortex, nodoDeSalidaAVortex);
 		initializeWith(flujoInterno);
 
 	}
@@ -76,15 +77,17 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
+	@Override
 	public void setDestino(final Receptor destino) {
-		procesoDesdeHttp.setDestino(destino);
+		nodoDeSalidaAVortex.setDestino(destino);
 	}
 
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#getDestino()
 	 */
+	@Override
 	public Receptor getDestino() {
-		return procesoDesdeHttp.getDestino();
+		return nodoDeSalidaAVortex.getDestino();
 	}
 
 	public static NexoHttp create(final TaskProcessor processor, final SesionVortexHttp sesion, final Receptor delegado) {
