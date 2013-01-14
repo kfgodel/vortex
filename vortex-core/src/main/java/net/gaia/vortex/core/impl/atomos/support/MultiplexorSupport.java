@@ -16,12 +16,9 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
-import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensaje;
 import net.gaia.vortex.core.prog.Decision;
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -83,14 +80,4 @@ public abstract class MultiplexorSupport extends ReceptorConProcesador implement
 		return destinos;
 	}
 
-	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
-	 */
-	@Override
-	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)
-	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
-		// Por cada destino derivamos la entrega al procesador interno
-		final MultiplexarMensaje multiplexion = MultiplexarMensaje.create(mensaje, getDestinos(), getProcessor(), null);
-		return multiplexion;
-	}
 }

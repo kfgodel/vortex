@@ -15,17 +15,16 @@ package net.gaia.vortex.sockets.impl.moleculas;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
-import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
-import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
-import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.sockets.impl.atomos.Desocketizador;
 import net.gaia.vortex.sockets.impl.atomos.Socketizador;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -43,7 +42,8 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * @author D. García
  */
 @Molecula
-public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, Disposable, ComponenteConMemoria {
+public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHandler, Disposable, Nexo,
+		ComponenteConMemoria {
 
 	private ObjectSocket socket;
 	public static final String socket_FIELD = "socket";
@@ -52,37 +52,27 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	public static final String procesoDesdeVortex_FIELD = "procesoDesdeVortex";
 
 	private Desocketizador procesoDesdeSocket;
+	private MemoriaLimitadaDeMensajes memoriaDeMensajes;
 	public static final String procesoDesdeSocket_FIELD = "procesoDesdeSocket";
 
-	private ReceptorVariable<Receptor> destinoDesdeSocket;
-
-	private MemoriaDeMensajes memoriaDeMensajes;
-
-	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
-	 */
-	@Override
-	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
-		return DelegarMensaje.create(mensaje, procesoDesdeVortex);
-	}
-
 	private void initializeWith(final TaskProcessor processor, final Receptor delegado, final ObjectSocket socket) {
-		// Creamos el receptor variable antes que nada
-		destinoDesdeSocket = ReceptorVariable.create(delegado);
-		super.initializeWith(processor, delegado);
-		// Guardamos la referencia para saber cual es nuestro socket
+		// Guardamos la referencia al socket
 		this.socket = socket;
 
-		// Creamos una memoria compartida entre el filtro de entrada y de salida de duplicados
-		this.memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
+		// Con esta memoria evitamos recibir mensajes que el NodoSocket nos reenvíe siendo nuestros
+		memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
 
-		// No envíamos al socket los mensajes recibidos desde el socket (por la memoria
-		// compartida)
+		// Al recibir un mensaje desde vortex, descartamos duplicados y lo mandamos por el socket
 		procesoDesdeVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes,
 				Socketizador.create(processor, socket));
-		// No enviamos a la red los mensajes recibidos desde la red (por la memoria compartida)
+
+		// Al recibir un mensaje desde el socket, descartamos duplicados y lo mandamos a la salida
+		// (a quien estemos conectados en ese momento)
 		procesoDesdeSocket = Desocketizador.create(processor,
-				NexoSinDuplicados.create(processor, memoriaDeMensajes, destinoDesdeSocket));
+				NexoSinDuplicados.create(processor, memoriaDeMensajes, delegado));
+
+		final FlujoVortex flujoInterno = FlujoInmutable.create(procesoDesdeVortex, procesoDesdeSocket);
+		initializeWith(flujoInterno);
 	}
 
 	/**
@@ -90,8 +80,7 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	 */
 	@Override
 	public void setDestino(final Receptor destino) {
-		super.setDestino(destino);
-		this.destinoDesdeSocket.setReceptorActual(destino);
+		procesoDesdeSocket.setDestino(destino);
 	}
 
 	/**
@@ -99,7 +88,7 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	 */
 	@Override
 	public Receptor getDestino() {
-		return destinoDesdeSocket.getReceptorActual();
+		return procesoDesdeSocket.getDestino();
 	}
 
 	public static NexoSocket create(final TaskProcessor processor, final ObjectSocket socket, final Receptor delegado) {
@@ -114,7 +103,7 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(socket_FIELD, socket)
-				.add(destino_FIELD, getDestino()).toString();
+				.add("destino", getDestino()).toString();
 	}
 
 	/**
@@ -157,8 +146,6 @@ public class NexoSocket extends NexoSupport implements ObjectReceptionHandler, D
 	 */
 	@Override
 	public boolean yaRecibio(final MensajeVortex mensaje) {
-		final boolean yaRecibido = this.memoriaDeMensajes.tieneRegistroDe(mensaje);
-		return yaRecibido;
+		return memoriaDeMensajes.tieneRegistroDe(mensaje);
 	}
-
 }

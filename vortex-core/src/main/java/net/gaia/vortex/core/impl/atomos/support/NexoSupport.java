@@ -87,7 +87,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	@Override
 	public void setDestino(final Receptor destino) {
 		if (destino == null) {
-			throw new IllegalArgumentException("El delegado del proxy no puede ser null. A lo sumo un "
+			throw new IllegalArgumentException("El delegado del nexo no puede ser null. A lo sumo un "
 					+ ReceptorNulo.class);
 		}
 		this.destino = destino;

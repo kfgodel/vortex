@@ -13,10 +13,11 @@
 package net.gaia.vortex.sockets.impl.atomos;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Emisor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
 
 import org.slf4j.Logger;
@@ -28,36 +29,12 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
 
 /**
  * Esta clase representa un componente vortex que al recibir un mensaje desde un socket lo introduce
- * en la red a través del receptor que conoce
+ * en la red a través del receptor destino al que está conectado
  * 
  * @author D. García
  */
-public class Desocketizador extends ComponenteConProcesadorSupport implements Emisor, ObjectReceptionHandler {
+public class Desocketizador extends NexoSupport implements ObjectReceptionHandler, Nexo {
 	private static final Logger LOG = LoggerFactory.getLogger(Desocketizador.class);
-
-	private Receptor destino;
-	public static final String destino_FIELD = "destino";
-
-	/**
-	 * Reemplaza el receptor previo con el nuevo pasado
-	 * 
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
-	 */
-	@Override
-	public void conectarCon(final Receptor destino) {
-		if (destino == null) {
-			throw new IllegalArgumentException("El dstino[" + destino + "] no puede ser null en esta desocketizador");
-		}
-		this.destino = destino;
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
-	 */
-	@Override
-	public void desconectarDe(final Receptor destino) {
-		LOG.info("Se intentó desconectar un destino[" + destino + "] del desocketizador. Ignorando");
-	}
 
 	/**
 	 * @see ar.dgarcia.objectsockets.api.ObjectReceptionHandler#onObjectReceived(java.lang.Object,
@@ -70,10 +47,18 @@ public class Desocketizador extends ComponenteConProcesadorSupport implements Em
 					+ "] que no es un mensaje vortex. Ignorando");
 			return;
 		}
-		// Le pasamos el mensaje que vino desde el socket al receptor destino de la red
+		// El mensaje del socket lo introducimos en la red desde nosotros como punto inicial
 		final MensajeVortex mensajeRecibido = (MensajeVortex) received;
-		final DelegarMensaje delegacion = DelegarMensaje.create(mensajeRecibido, destino);
-		procesarEnThreadPropio(delegacion);
+		this.recibir(mensajeRecibido);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 */
+	@Override
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
+		final DelegarMensaje delegacion = DelegarMensaje.create(mensaje, getDestino());
+		return delegacion;
 	}
 
 	/**
@@ -81,14 +66,14 @@ public class Desocketizador extends ComponenteConProcesadorSupport implements Em
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(destino_FIELD, destino)
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(destino_FIELD, getDestino())
 				.toString();
 	}
 
 	public static Desocketizador create(final TaskProcessor processor, final Receptor destino) {
 		final Desocketizador desocketizador = new Desocketizador();
-		desocketizador.initializeWith(processor);
-		desocketizador.conectarCon(destino);
+		desocketizador.initializeWith(processor, destino);
 		return desocketizador;
 	}
+
 }

@@ -15,6 +15,7 @@ package net.gaia.vortex.sockets.impl.moleculas;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSupport;
 import net.gaia.vortex.server.impl.RealizarConexiones;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
@@ -30,6 +31,7 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketException;
  * 
  * @author D. García
  */
+@Molecula
 public class NodoSocket extends MultiplexorSinDuplicadosSupport implements Disposable {
 
 	/**

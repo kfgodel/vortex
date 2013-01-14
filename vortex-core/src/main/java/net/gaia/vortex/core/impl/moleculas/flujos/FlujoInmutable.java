@@ -47,10 +47,10 @@ public class FlujoInmutable implements FlujoVortex {
 		return salida;
 	}
 
-	public static FlujoInmutable create(final Receptor entrada, final Emisor salida) {
+	public static FlujoInmutable create(final Receptor componenteDeEntrada, final Emisor componenteDeSalida) {
 		final FlujoInmutable flujo = new FlujoInmutable();
-		flujo.entrada = entrada;
-		flujo.salida = salida;
+		flujo.entrada = componenteDeEntrada;
+		flujo.salida = componenteDeSalida;
 		return flujo;
 	}
 
