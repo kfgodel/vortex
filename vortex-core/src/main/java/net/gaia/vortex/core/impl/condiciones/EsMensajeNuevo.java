@@ -19,7 +19,7 @@ import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la condición que evalúa si un mensaje es previamente conocido. Para lo cual
- * registra los IDS de los nuevos mensajes no conocidos hasta cierto límite.<br>
+ * registra los IDs de los nuevos mensajes no conocidos hasta cierto límite.<br>
  * Si se supera el límite se van descartando los IDs viejos;
  * 
  * @author D. García

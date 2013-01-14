@@ -81,4 +81,23 @@ public class NodoMoleculaSupport extends NodoSupport {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.con(flujoInterno_FIELD, flujoInterno).toString();
 	}
+
+	/**
+	 * Devuelve el componente de este nodo que sirve de entrada de los mensajes
+	 * 
+	 * @return El componente al que se envían todos los mensajes recibidos
+	 */
+	protected Receptor getEntrada() {
+		return flujoInterno.getEntrada();
+	}
+
+	/**
+	 * Devuelve el componente de este nodo que se encarga de las salidas de los mensajes
+	 * 
+	 * @return El componente de salida de los mensajes de este nodo
+	 */
+	protected Emisor getSalida() {
+		return flujoInterno.getSalida();
+	}
+
 }

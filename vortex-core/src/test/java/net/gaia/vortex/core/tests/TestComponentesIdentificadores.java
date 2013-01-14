@@ -21,7 +21,7 @@ import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.memoria.MultiplexorSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
@@ -40,7 +40,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  */
 public class TestComponentesIdentificadores {
 
-	private NexoFiltroDuplicados nexo;
+	private NexoSinDuplicados nexo;
 	private MensajeVortex mensajeEnviado;
 	private ReceptorEncolador receptorFinal1;
 	private TaskProcessor processor;
@@ -52,7 +52,7 @@ public class TestComponentesIdentificadores {
 		processor = VortexProcessorFactory.createProcessor();
 		receptorFinal1 = ReceptorEncolador.create();
 		receptorFinal2 = ReceptorEncolador.create();
-		nexo = NexoFiltroDuplicados.create(processor, receptorFinal1);
+		nexo = NexoSinDuplicados.create(processor, receptorFinal1);
 		multiplexor = MultiplexorSinDuplicados.create(processor);
 		multiplexor.conectarCon(receptorFinal1);
 		multiplexor.conectarCon(receptorFinal2);

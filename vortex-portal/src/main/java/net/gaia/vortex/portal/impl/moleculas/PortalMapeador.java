@@ -24,7 +24,7 @@ import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.moleculas.ids.ReceptorIdentificable;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
@@ -88,7 +88,7 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 		procesoDeSalida = Vortificador.create(mapeadorVortex, registrarIdPropioEnMensaje);
 
 		multiplexorDeCondiciones = MultiplexorParalelo.create(processor);
-		final NexoFiltroDuplicados filtroDeDuplicadosExternos = NexoFiltroDuplicados.create(processor,
+		final NexoSinDuplicados filtroDeDuplicadosExternos = NexoSinDuplicados.create(processor,
 				multiplexorDeCondiciones);
 		// Primero descartamos los propios y luego los duplicados externos
 		procesoDeEntrada = NexoFiltro.create(processor, EsMensajeExterno.create(identificador),

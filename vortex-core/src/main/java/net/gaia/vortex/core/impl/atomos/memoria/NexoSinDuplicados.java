@@ -28,20 +28,20 @@ import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
  * 
  * @author D. García
  */
-public class NexoFiltroDuplicados extends NexoFiltroSupport implements ComponenteConMemoria {
+public class NexoSinDuplicados extends NexoFiltroSupport implements ComponenteConMemoria {
 
 	public static final int CANTIDAD_MENSAJES_RECORDADOS = 1000;
 
 	private MemoriaDeMensajes memoria;
 
-	public static NexoFiltroDuplicados create(final TaskProcessor processor, final Receptor delegado) {
+	public static NexoSinDuplicados create(final TaskProcessor processor, final Receptor delegado) {
 		final MemoriaDeMensajes memoriaDelNexo = MemoriaLimitadaDeMensajes.create(CANTIDAD_MENSAJES_RECORDADOS);
 		return create(processor, memoriaDelNexo, delegado);
 	}
 
-	public static NexoFiltroDuplicados create(final TaskProcessor processor, final MemoriaDeMensajes memoriaDelNexo,
+	public static NexoSinDuplicados create(final TaskProcessor processor, final MemoriaDeMensajes memoriaDelNexo,
 			final Receptor delegado) {
-		final NexoFiltroDuplicados nexo = new NexoFiltroDuplicados();
+		final NexoSinDuplicados nexo = new NexoSinDuplicados();
 		nexo.memoria = memoriaDelNexo;
 		final Condicion condicion = EsMensajeNuevo.create(memoriaDelNexo);
 		nexo.initializeWith(processor, delegado, condicion);

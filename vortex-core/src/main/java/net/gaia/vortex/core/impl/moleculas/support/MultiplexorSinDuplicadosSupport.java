@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos.support;
+package net.gaia.vortex.core.impl.moleculas.support;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
@@ -18,7 +18,7 @@ import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -29,11 +29,11 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public abstract class MultiplexorIdentificadorSupport extends ComponenteConProcesadorSupport implements Multiplexor,
+public abstract class MultiplexorSinDuplicadosSupport extends ComponenteConProcesadorSupport implements Multiplexor,
 		ComponenteConMemoria {
 
 	private MultiplexorParalelo multiplexorDeSalida;
-	private NexoFiltroDuplicados procesoDeEntrada;
+	private NexoSinDuplicados procesoDeEntrada;
 
 	protected MultiplexorParalelo getMultiplexorDeSalida() {
 		return multiplexorDeSalida;
@@ -73,7 +73,7 @@ public abstract class MultiplexorIdentificadorSupport extends ComponenteConProce
 	protected void initializeWith(final TaskProcessor processor) {
 		super.initializeWith(processor);
 		multiplexorDeSalida = MultiplexorParalelo.create(processor);
-		procesoDeEntrada = NexoFiltroDuplicados.create(processor, multiplexorDeSalida);
+		procesoDeEntrada = NexoSinDuplicados.create(processor, multiplexorDeSalida);
 	}
 
 	/**

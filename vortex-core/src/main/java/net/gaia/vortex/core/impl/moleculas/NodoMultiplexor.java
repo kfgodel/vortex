@@ -16,7 +16,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.impl.atomos.memoria.MultiplexorSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.support.MultiplexorIdentificadorSupport;
+import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSupport;
 
 /**
  * Esta clase representa un nodo que puede identificar los mensajes que recibe para descartar los
@@ -28,7 +28,7 @@ import net.gaia.vortex.core.impl.atomos.support.MultiplexorIdentificadorSupport;
  * @author D. García
  */
 @Molecula
-public class NodoMultiplexor extends MultiplexorIdentificadorSupport implements Nodo {
+public class NodoMultiplexor extends MultiplexorSinDuplicadosSupport implements Nodo {
 
 	public static NodoMultiplexor create(final TaskProcessor processor) {
 		final NodoMultiplexor nodo = new NodoMultiplexor();

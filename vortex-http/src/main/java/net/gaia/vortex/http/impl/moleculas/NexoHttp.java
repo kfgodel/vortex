@@ -18,7 +18,7 @@ import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
@@ -71,14 +71,14 @@ public class NexoHttp extends NexoSupport implements ComponenteConMemoria {
 		this.sesion = sesion;
 
 		// Creamos una memoria compartida entre el filtro de entrada y de salida de duplicados
-		this.memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoFiltroDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
+		this.memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
 
 		// No envíamos a http los mensajes recibidos desde http (por la memoria compartida)
-		procesoDesdeVortex = NexoFiltroDuplicados.create(processor, memoriaDeMensajes,
+		procesoDesdeVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes,
 				Httpizador.create(processor, sesion));
 		// No enviamos a la red los mensajes recibidos desde la red (por la memoria compartida)
 		procesoDesdeHttp = Deshttpizador.create(processor,
-				NexoFiltroDuplicados.create(processor, memoriaDeMensajes, destinoDesdeHttp));
+				NexoSinDuplicados.create(processor, memoriaDeMensajes, destinoDesdeHttp));
 	}
 
 	/**

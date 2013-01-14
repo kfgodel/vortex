@@ -4,7 +4,7 @@
 package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 
 /**
@@ -19,7 +19,7 @@ public class TestDePerformanceNexoFiltroDuplicados extends TestDePerformanceNodo
 	 */
 	@Override
 	protected Nodo crearNodoATestear() {
-		return NexoFiltroDuplicados.create(getProcessor(), ReceptorNulo.getInstancia());
+		return NexoSinDuplicados.create(getProcessor(), ReceptorNulo.getInstancia());
 	}
 
 }

@@ -16,7 +16,7 @@ import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcador;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
@@ -132,7 +132,7 @@ public class TestAtomos {
 		mensaje.asignarId(idDelMensaje);
 
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final NexoFiltroDuplicados filtro = NexoFiltroDuplicados.create(processor, receptor);
+		final NexoSinDuplicados filtro = NexoSinDuplicados.create(processor, receptor);
 		// La primera vez debería llegar
 		checkMensajeEnviadoYRecibido(mensaje, mensaje, filtro, receptor);
 
@@ -143,7 +143,7 @@ public class TestAtomos {
 	@Test
 	public void elFiltroDeMensajesConocidosDeberiaGenerarUnErrorSiElMensajeNoTieneId() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final NexoFiltroDuplicados filtro = NexoFiltroDuplicados.create(processor, receptor);
+		final NexoSinDuplicados filtro = NexoSinDuplicados.create(processor, receptor);
 		// La primera vez debería llegar
 		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, filtro, receptor);
 	}
