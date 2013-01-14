@@ -12,11 +12,14 @@
  */
 package net.gaia.vortex.core.impl.moleculas.support;
 
+import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Emisor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.support.basicos.NodoSupport;
+import net.gaia.vortex.core.prog.Loggers;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase es base para nodos que representan moleculas y cuyo comportamiendo se define por un
@@ -24,9 +27,11 @@ import net.gaia.vortex.core.impl.atomos.support.basicos.NodoSupport;
  * 
  * @author D. García
  */
+@Molecula
 public class NodoMoleculaSupport extends NodoSupport {
 
 	private FlujoVortex flujoInterno;
+	public static final String flujoInterno_FIELD = "flujoInterno";
 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
@@ -51,7 +56,10 @@ public class NodoMoleculaSupport extends NodoSupport {
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
+		Loggers.ATOMOS.trace("Recibido en nodo[{}] el mensaje[{}]", this.toShortString(), mensaje);
 		final Receptor componenteEntrada = flujoInterno.getEntrada();
+		Loggers.ATOMOS.debug("Delegando a nodo input[{}] el mensaje[{}] desde[{}]",
+				new Object[] { componenteEntrada.toShortString(), mensaje, this.toShortString() });
 		componenteEntrada.recibir(mensaje);
 	}
 
@@ -65,4 +73,12 @@ public class NodoMoleculaSupport extends NodoSupport {
 		this.flujoInterno = flujoInterno;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
+				.con(flujoInterno_FIELD, flujoInterno).toString();
+	}
 }
