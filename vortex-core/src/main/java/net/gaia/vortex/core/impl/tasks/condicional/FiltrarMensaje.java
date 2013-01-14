@@ -1,12 +1,13 @@
 /**
  * 13/06/2012 11:27:27 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core.impl.tasks;
+package net.gaia.vortex.core.impl.tasks.condicional;
 
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
+import net.gaia.vortex.core.impl.tasks.support.CondicionalSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**

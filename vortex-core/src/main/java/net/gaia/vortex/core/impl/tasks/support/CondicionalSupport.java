@@ -1,12 +1,13 @@
 /**
  * 16/06/2012 11:59:52 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core.impl.tasks;
+package net.gaia.vortex.core.impl.tasks.support;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
 import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;

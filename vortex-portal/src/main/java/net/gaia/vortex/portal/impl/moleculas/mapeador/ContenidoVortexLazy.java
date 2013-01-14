@@ -19,7 +19,7 @@ import java.util.concurrent.Callable;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
-import net.gaia.vortex.core.impl.mensaje.ContenidoVortexSupport;
+import net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

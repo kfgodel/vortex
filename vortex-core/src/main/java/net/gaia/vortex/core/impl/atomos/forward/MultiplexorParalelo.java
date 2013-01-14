@@ -8,7 +8,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.MultiplexorSupport;
-import net.gaia.vortex.core.impl.tasks.MultiplexarMensaje;
+import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensaje;
 import net.gaia.vortex.core.prog.Decision;
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;

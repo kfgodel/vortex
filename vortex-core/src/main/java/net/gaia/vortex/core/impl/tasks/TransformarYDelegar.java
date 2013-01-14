@@ -7,6 +7,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
+import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
 import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;

@@ -23,7 +23,7 @@ import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
-import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
+import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
 import net.gaia.vortex.http.impl.atomos.Deshttpizador;
 import net.gaia.vortex.http.impl.atomos.Httpizador;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;

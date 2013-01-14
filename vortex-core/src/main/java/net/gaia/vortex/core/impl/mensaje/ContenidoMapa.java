@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
+import net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport;
 
 /**
  * Esta clase representa la implementación default del contenido de un mensaje vortex como un mapa

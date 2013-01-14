@@ -20,7 +20,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.tasks.FiltrarMensaje;
+import net.gaia.vortex.core.impl.tasks.condicional.FiltrarMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**

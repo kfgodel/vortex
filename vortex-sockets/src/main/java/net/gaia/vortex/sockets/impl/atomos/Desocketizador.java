@@ -17,7 +17,7 @@ import net.gaia.vortex.core.api.atomos.Emisor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
-import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
+import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

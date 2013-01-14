@@ -45,7 +45,7 @@ public class NexoTransformador extends NexoSupport implements Transformador {
 	public void setTransformacion(final Transformacion transformacion) {
 		if (transformacion == null) {
 			throw new IllegalArgumentException(
-					"La transformacion del proxy ni puede ser nula. A lo sumo una instancia de "
+					"La transformacion del proxy no puede ser nula. A lo sumo una instancia de "
 							+ TransformacionNula.class);
 		}
 		this.transformacion = transformacion;

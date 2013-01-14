@@ -1,11 +1,12 @@
 /**
  * 13/06/2012 17:20:12 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core.impl.tasks;
+package net.gaia.vortex.core.impl.tasks.condicional;
 
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.tasks.support.CondicionalSupport;
 
 /**
  * Esta clase representa la tarea realizada en thread propio que evalua una condición para elegir el

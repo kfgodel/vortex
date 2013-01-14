@@ -29,14 +29,14 @@ import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
-import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
-import net.gaia.vortex.core.impl.transformaciones.GenerarIdDeMensaje;
+import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
 import net.gaia.vortex.portal.api.moleculas.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.atomos.Desvortificador;
 import net.gaia.vortex.portal.impl.atomos.Vortificador;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
+import net.gaia.vortex.portal.impl.transformaciones.GenerarIdDeMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**

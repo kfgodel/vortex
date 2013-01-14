@@ -4,14 +4,15 @@
 package net.gaia.vortex.core.impl.atomos.condicional;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.condicional.Bifurcador;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
-import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
-import net.gaia.vortex.core.impl.tasks.BifurcarMensaje;
+import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
+import net.gaia.vortex.core.impl.tasks.condicional.BifurcarMensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * @author D. García
  */
 @Atomo
-public class NexoBifurcador extends ComponenteConProcesadorSupport implements Bifurcador {
+public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador {
 	private static final Logger LOG = LoggerFactory.getLogger(NexoBifurcador.class);
 
 	private Condicion condicion;
@@ -46,13 +47,13 @@ public class NexoBifurcador extends ComponenteConProcesadorSupport implements Bi
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public void recibir(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final BifurcarMensaje elegirDelegado = BifurcarMensaje.create(mensaje, condicion, delegadoPorTrue,
 				delegadoPorFalse);
-		procesarEnThreadPropio(elegirDelegado);
+		return elegirDelegado;
 	}
 
 	public static NexoBifurcador create(final TaskProcessor processor, final Condicion condicion,
