@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.ids;
+package net.gaia.vortex.core.impl.mensaje.ids;
 
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
@@ -23,7 +23,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class IdDeMensajeConNodoYSecuencia implements IdDeMensaje {
+public class IdSecuencialDeMensaje implements IdDeMensaje {
 
 	private IdDeComponenteVortex idDelEmisor;
 	public static final String idDelEmisor_FIELD = "idDelEmisor";
@@ -31,8 +31,8 @@ public class IdDeMensajeConNodoYSecuencia implements IdDeMensaje {
 	private Long numeroDeSecuencia;
 	public static final String numeroDeSecuencia_FIELD = "numeroDeSecuencia";
 
-	public static IdDeMensajeConNodoYSecuencia create(final IdDeComponenteVortex emisor, final Long secuencia) {
-		final IdDeMensajeConNodoYSecuencia identificador = new IdDeMensajeConNodoYSecuencia();
+	public static IdSecuencialDeMensaje create(final IdDeComponenteVortex emisor, final Long secuencia) {
+		final IdSecuencialDeMensaje identificador = new IdSecuencialDeMensaje();
 		identificador.idDelEmisor = emisor;
 		identificador.numeroDeSecuencia = secuencia;
 		return identificador;
@@ -43,11 +43,11 @@ public class IdDeMensajeConNodoYSecuencia implements IdDeMensaje {
 	 */
 	@Override
 	public int compareTo(final IdDeMensaje o) {
-		if (!(o instanceof IdDeMensajeConNodoYSecuencia)) {
+		if (!(o instanceof IdSecuencialDeMensaje)) {
 			throw new UnhandledConditionException(
 					"No se como comparar un ID basado en nodo con uno que no es. Falta definir algo!");
 		}
-		final IdDeMensajeConNodoYSecuencia that = (IdDeMensajeConNodoYSecuencia) o;
+		final IdSecuencialDeMensaje that = (IdSecuencialDeMensaje) o;
 		// El orden viene dado por el ID de emisor primero y luego la secuencia
 		final int comparacionDeEmisor = this.idDelEmisor.compareTo(that.idDelEmisor);
 		if (comparacionDeEmisor != 0) {
@@ -63,10 +63,10 @@ public class IdDeMensajeConNodoYSecuencia implements IdDeMensaje {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (!(obj instanceof IdDeMensajeConNodoYSecuencia)) {
+		if (!(obj instanceof IdSecuencialDeMensaje)) {
 			return false;
 		}
-		final IdDeMensajeConNodoYSecuencia that = (IdDeMensajeConNodoYSecuencia) obj;
+		final IdSecuencialDeMensaje that = (IdSecuencialDeMensaje) obj;
 		// Comparo primero la secuencia porque requiere menos procesamiento
 		if (!this.numeroDeSecuencia.equals(that.numeroDeSecuencia)) {
 			// Las secuencias ya no coinciden

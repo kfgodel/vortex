@@ -10,10 +10,11 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.ids;
+package net.gaia.vortex.core.impl.mensaje.ids;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import net.gaia.vortex.core.api.mensaje.ids.GeneradorDeIdsDeMensajes;
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -24,7 +25,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class IdsSecuencialesParaMensajes implements GeneradorDeIdsDeMensajes {
+public class GeneradorSecuencialDeIdDeMensaje implements GeneradorDeIdsDeMensajes {
 
 	private static final int SECUENCIA_INICIAL = 0;
 
@@ -35,17 +36,17 @@ public class IdsSecuencialesParaMensajes implements GeneradorDeIdsDeMensajes {
 	public static final String proximaSecuencia_FIELD = "proximaSecuencia";
 
 	/**
-	 * @see net.gaia.vortex.core.impl.ids.GeneradorDeIdsDeMensajes#generarId()
+	 * @see net.gaia.vortex.core.api.mensaje.ids.GeneradorDeIdsDeMensajes#generarId()
 	 */
 	@Override
 	public IdDeMensaje generarId() {
 		final Long nuevaSecuencia = proximaSecuencia.getAndIncrement();
-		final IdDeMensajeConNodoYSecuencia nuevoId = IdDeMensajeConNodoYSecuencia.create(identificadorBase, nuevaSecuencia);
+		final IdSecuencialDeMensaje nuevoId = IdSecuencialDeMensaje.create(identificadorBase, nuevaSecuencia);
 		return nuevoId;
 	}
 
-	public static IdsSecuencialesParaMensajes create(final IdDeComponenteVortex identificadorBase) {
-		final IdsSecuencialesParaMensajes generador = new IdsSecuencialesParaMensajes();
+	public static GeneradorSecuencialDeIdDeMensaje create(final IdDeComponenteVortex identificadorBase) {
+		final GeneradorSecuencialDeIdDeMensaje generador = new GeneradorSecuencialDeIdDeMensaje();
 		generador.identificadorBase = identificadorBase;
 		generador.proximaSecuencia = new AtomicLong(SECUENCIA_INICIAL);
 		return generador;

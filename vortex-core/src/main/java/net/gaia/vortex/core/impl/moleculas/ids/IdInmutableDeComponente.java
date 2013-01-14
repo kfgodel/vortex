@@ -20,7 +20,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class IdEstaticoDeComponente implements IdDeComponenteVortex {
+public class IdInmutableDeComponente implements IdDeComponenteVortex {
 
 	private String valor;
 	public static final String valor_FIELD = "valor";
@@ -41,8 +41,8 @@ public class IdEstaticoDeComponente implements IdDeComponenteVortex {
 		return ToString.de(this).con(valor_FIELD, valor).toString();
 	}
 
-	public static IdEstaticoDeComponente create(final String valor) {
-		final IdEstaticoDeComponente identificador = new IdEstaticoDeComponente();
+	public static IdInmutableDeComponente create(final String valor) {
+		final IdInmutableDeComponente identificador = new IdInmutableDeComponente();
 		identificador.valor = valor;
 		return identificador;
 	}

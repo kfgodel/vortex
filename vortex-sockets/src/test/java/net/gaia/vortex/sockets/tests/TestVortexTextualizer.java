@@ -15,10 +15,10 @@ package net.gaia.vortex.sockets.tests;
 import junit.framework.Assert;
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
-import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
+import net.gaia.vortex.core.impl.mensaje.ids.GeneradorSecuencialDeIdDeMensaje;
+import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.ContenidoVortexLazy;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJackson;
@@ -86,8 +86,8 @@ public class TestVortexTextualizer {
 	@Test
 	public void unMensajeVacioConIdDeberiaTenerElObjetoIdEnSuVersionJson() {
 		final MensajeConContenido mensaje = MensajeConContenido.crearVacio();
-		final IdDeComponenteVortex idDeNodo = IdsEstatiscosParaComponentes.getInstancia().generarId();
-		final IdDeMensaje idAsignado = IdsSecuencialesParaMensajes.create(idDeNodo).generarId();
+		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
+		final IdDeMensaje idAsignado = GeneradorSecuencialDeIdDeMensaje.create(idDeNodo).generarId();
 		mensaje.asignarId(idAsignado);
 
 		final String texto = textualizer.convertToString(mensaje);

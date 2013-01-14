@@ -1,5 +1,5 @@
 /**
- * 27/06/2012 13:39:29 Copyright (C) 2011 Darío L. García
+ * 01/09/2012 12:10:19 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,21 +10,22 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.moleculas.ids;
+package net.gaia.vortex.core.api.mensaje.ids;
+
 
 /**
- * Esta interfaz es aplicable a las moléculas que tiene su identificación y que por lo tanto puede
- * trackearse en un mensaje por qué moléculas va visitando.<br>
- * Las moléculas identificables descartan los mensajes que ya las visitaron al recibirlas
+ * Esta interfaz representa el generador de IDs de mensajes que sirve para asignar nuevos IDs a los
+ * mensajes salientes de un portal
  * 
  * @author D. García
  */
-public interface VortexIdentificable {
+public interface GeneradorDeIdsDeMensajes {
 
 	/**
-	 * Devuelve el identificador de esta molécula que permite identificarla dentro de toda la red
+	 * Genera un nuevo ID unico para un mensaje
 	 * 
-	 * @return La instancia que identifica a la molécula
+	 * @return El Identificador del mensaje generado
 	 */
-	public IdDeComponenteVortex getIdentificador();
+	IdDeMensaje generarId();
+
 }

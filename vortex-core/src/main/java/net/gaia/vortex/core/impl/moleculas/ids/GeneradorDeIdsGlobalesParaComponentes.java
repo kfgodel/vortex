@@ -19,11 +19,15 @@ import net.gaia.vortex.core.api.moleculas.ids.GeneradorDeIdsComponentes;
 import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 
 /**
- * Esta clase es la implementación default del generador de ids que asigna ids fijos a cada molecula
+ * Esta clase es la implementación default del generador de ids que intenta asignar IDs distintos
+ * para los componentes de la red vortex, intentando que no existan Ids duplicados en toda la red.<br>
+ * Este ID es utilizado en la identificación de los mensajes que circulan, mientras más universal
+ * sea el ID de los componentes generador por esta instancia, menos probabilidades de colisión en
+ * los mensajes generados.
  * 
  * @author D. García
  */
-public class IdsEstatiscosParaComponentes implements GeneradorDeIdsComponentes {
+public class GeneradorDeIdsGlobalesParaComponentes implements GeneradorDeIdsComponentes {
 
 	public static final String PART_SEPARATOR = "-";
 	public static final int LONGITUD_INCIAL_SECUENCIA = 1;
@@ -31,9 +35,10 @@ public class IdsEstatiscosParaComponentes implements GeneradorDeIdsComponentes {
 	public static final int LONGITUD_INICIAL_RANDOM_PART = 4;
 	public static final int LONGITUD_INICIAL_VORTEX_TIMESTAMP = 4;
 
-	private static final IdsEstatiscosParaComponentes instancia = IdsEstatiscosParaComponentes.create();
+	private static final GeneradorDeIdsGlobalesParaComponentes instancia = GeneradorDeIdsGlobalesParaComponentes
+			.create();
 
-	public static IdsEstatiscosParaComponentes getInstancia() {
+	public static GeneradorDeIdsGlobalesParaComponentes getInstancia() {
 		return instancia;
 	}
 
@@ -46,8 +51,8 @@ public class IdsEstatiscosParaComponentes implements GeneradorDeIdsComponentes {
 	private long momentoCeroGenerador;
 	private final AtomicLong idsGenerados = new AtomicLong(0);
 
-	public static IdsEstatiscosParaComponentes create() {
-		final IdsEstatiscosParaComponentes generador = new IdsEstatiscosParaComponentes();
+	public static GeneradorDeIdsGlobalesParaComponentes create() {
+		final GeneradorDeIdsGlobalesParaComponentes generador = new GeneradorDeIdsGlobalesParaComponentes();
 		generador.inicializar();
 		return generador;
 	}
@@ -123,7 +128,7 @@ public class IdsEstatiscosParaComponentes implements GeneradorDeIdsComponentes {
 		builder.append(PART_SEPARATOR);
 		builder.append(getSecuenciaString());
 		final String nuevoValor = builder.toString();
-		final IdDeComponenteVortex identificadorCreado = IdEstaticoDeComponente.create(nuevoValor);
+		final IdDeComponenteVortex identificadorCreado = IdInmutableDeComponente.create(nuevoValor);
 		return identificadorCreado;
 	}
 

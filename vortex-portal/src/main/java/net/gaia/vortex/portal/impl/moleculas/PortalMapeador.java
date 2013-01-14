@@ -21,7 +21,6 @@ import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.moleculas.ids.ReceptorIdentificable;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
@@ -29,7 +28,7 @@ import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
-import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
+import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.core.impl.tasks.DelegarMensaje;
 import net.gaia.vortex.core.impl.transformaciones.GenerarIdDeMensaje;
 import net.gaia.vortex.portal.api.moleculas.HandlerDePortal;
@@ -47,7 +46,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdentificable {
+public class PortalMapeador extends NexoSupport implements Portal {
 
 	private MapeadorVortex mapeadorVortex;
 	private ReceptorVariable<Receptor> receptorDeSalida;
@@ -56,14 +55,6 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 	private Multiplexor multiplexorDeCondiciones;
 	private IdDeComponenteVortex identificador;
 	public static final String identificador_FIELD = "identificador";
-
-	/**
-	 * @see net.gaia.vortex.core.api.moleculas.ids.VortexIdentificable#getIdentificador()
-	 */
-	@Override
-	public IdDeComponenteVortex getIdentificador() {
-		return identificador;
-	}
 
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
@@ -79,7 +70,7 @@ public class PortalMapeador extends NexoSupport implements Portal, ReceptorIdent
 	 */
 	@Override
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado) {
-		identificador = IdsEstatiscosParaComponentes.getInstancia().generarId();
+		identificador = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
 
 		receptorDeSalida = ReceptorVariable.create(delegado);
 		super.initializeWith(processor, delegado);
