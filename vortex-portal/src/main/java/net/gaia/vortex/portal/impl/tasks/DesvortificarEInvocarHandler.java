@@ -16,7 +16,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.portal.api.mensaje.HandlerDeMensaje;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class DesvortificarEInvocarHandler<T> implements WorkUnit {
 	private MensajeVortex mensaje;
 	public static final String mensaje_FIELD = "mensaje";
 
-	private MapeadorVortex mapeador;
+	private ConversorDeMensajesVortex mapeador;
 	public static final String mapeador_FIELD = "mapeador";
 
 	private Class<? extends T> tipoEsperado;
@@ -61,7 +61,7 @@ public class DesvortificarEInvocarHandler<T> implements WorkUnit {
 	}
 
 	public static <T> DesvortificarEInvocarHandler<T> create(final MensajeVortex mensaje,
-			final MapeadorVortex mapeador, final Class<? extends T> tipoEsperado,
+			final ConversorDeMensajesVortex mapeador, final Class<? extends T> tipoEsperado,
 			final HandlerDeMensaje<? super T> handlerDeMensaje) {
 		final DesvortificarEInvocarHandler<T> conversor = new DesvortificarEInvocarHandler<T>();
 		conversor.mensaje = mensaje;

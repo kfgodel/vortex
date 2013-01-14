@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.moleculas;
+package net.gaia.vortex.portal.impl.mensaje;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -34,19 +34,19 @@ import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
  */
 public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 
-	private Condicion condicionNecesaria;
+	private Condicion condicionSuficiente;
 
 	/**
 	 * Constructor que toma la condición necesaria para recibir los mensajes en este handler
 	 * 
-	 * @param condicionNecesaria
+	 * @param condicionSuficiente
 	 *            La condición que deben cumplir los mensajes de este handler
 	 */
-	public HandlerTipado(final Condicion condicionNecesaria) {
-		if (condicionNecesaria == null) {
+	public HandlerTipado(final Condicion condicionSuficiente) {
+		if (condicionSuficiente == null) {
 			throw new IllegalArgumentException("La condición no puede ser null para construir el handler tipado");
 		}
-		this.condicionNecesaria = condicionNecesaria;
+		this.condicionSuficiente = condicionSuficiente;
 	}
 
 	/**
@@ -73,14 +73,14 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	 */
 	@Override
 	public Condicion getCondicionSuficiente() {
-		return condicionNecesaria;
+		return condicionSuficiente;
 	}
 
-	public void setCondicionNecesaria(final Condicion condicionNecesaria) {
+	public void setCondicionSuficiente(final Condicion condicionNecesaria) {
 		if (condicionNecesaria == null) {
 			throw new IllegalArgumentException("La condición del handler de portal no puede ser null");
 		}
-		this.condicionNecesaria = condicionNecesaria;
+		this.condicionSuficiente = condicionNecesaria;
 	}
 
 	/**

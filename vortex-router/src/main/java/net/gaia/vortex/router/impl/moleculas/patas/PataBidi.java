@@ -23,7 +23,7 @@ import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesad
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.messages.MensajeBidireccional;
@@ -65,10 +65,10 @@ public class PataBidi extends ComponenteConProcesadorSupport implements PataBidi
 
 	private MemoriaDeMensajes memoriaDeEnviados;
 
-	private MapeadorVortex mapeador;
+	private ConversorDeMensajesVortex mapeador;
 
 	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
-			final TaskProcessor taskProcessor, final ParteDeCondiciones parteDeCondicion, final MapeadorVortex mapeador) {
+			final TaskProcessor taskProcessor, final ParteDeCondiciones parteDeCondicion, final ConversorDeMensajesVortex mapeador) {
 		final PataBidi pata = new PataBidi();
 		pata.initializeWith(taskProcessor);
 		pata.mapeador = mapeador;

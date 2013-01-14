@@ -30,10 +30,10 @@ import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.Portal;
-import net.gaia.vortex.portal.impl.atomos.Objetivizador;
 import net.gaia.vortex.portal.impl.atomos.Desobjetivizador;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
+import net.gaia.vortex.portal.impl.atomos.Objetivizador;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
+import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -46,10 +46,14 @@ import ar.com.dgarcia.lang.strings.ToString;
 @Molecula
 public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 
-	private MapeadorVortex mapeadorVortex;
+	private ConversorDeMensajesVortex mapeadorVortex;
+
 	private Receptor procesoDesdeVortex;
+
 	private Desobjetivizador procesoDesdeUsuario;
+
 	private Multiplexor multiplexorDeCondiciones;
+
 	private IdDeComponenteVortex identificador;
 	public static final String identificador_FIELD = "identificador";
 
@@ -158,7 +162,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 	 */
 	public static PortalMapeador createForOutputWith(final TaskProcessor processor, final Receptor destino) {
 		final PortalMapeador portal = new PortalMapeador();
-		portal.mapeadorVortex = MapeadorDefault.create();
+		portal.mapeadorVortex = ConversorDefaultDeMensajes.create();
 		portal.initializeWith(processor, destino);
 		return portal;
 	}

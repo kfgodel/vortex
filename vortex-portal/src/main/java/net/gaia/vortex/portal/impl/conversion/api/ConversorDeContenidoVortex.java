@@ -10,23 +10,23 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.moleculas.mapeador;
+package net.gaia.vortex.portal.impl.conversion.api;
 
 import java.util.Map;
 
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 
 /**
- * Esta interfaz representa el contrato esperado por el mapeador que permite pasar de un objeto a un
- * mapa de primitivas vortex y vice versa
+ * Esta interfaz representa el contrato esperado por el conversor de mensajes que permite pasar de
+ * un objeto a un mapa de primitivas vortex y vice versa para generar su contenido
  * 
  * @author D. García
  */
-public interface MapeadorDeObjetos {
+public interface ConversorDeContenidoVortex {
 
 	/**
 	 * Convierte el objeto pasado a un mapa de puro estado de primitivas con posibles niveles de
-	 * anidamiento
+	 * anidamiento que representa el contenido del mensaje
 	 * 
 	 * @param objeto
 	 *            El objeto a convertir

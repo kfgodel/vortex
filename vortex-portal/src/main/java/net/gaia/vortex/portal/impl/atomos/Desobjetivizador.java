@@ -20,7 +20,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -36,7 +36,7 @@ import ar.com.dgarcia.lang.strings.ToString;
 @Atomo
 public class Desobjetivizador extends NexoSupport {
 
-	private MapeadorVortex mapeador;
+	private ConversorDeMensajesVortex mapeador;
 	public static final String mapeador_FIELD = "mapeador";
 
 	/**
@@ -71,7 +71,7 @@ public class Desobjetivizador extends NexoSupport {
 				.add("destino", getDestino()).toString();
 	}
 
-	public static Desobjetivizador create(final TaskProcessor processor, final MapeadorVortex mapeador,
+	public static Desobjetivizador create(final TaskProcessor processor, final ConversorDeMensajesVortex mapeador,
 			final Receptor delegado) {
 		final Desobjetivizador vortificador = new Desobjetivizador();
 		vortificador.mapeador = mapeador;

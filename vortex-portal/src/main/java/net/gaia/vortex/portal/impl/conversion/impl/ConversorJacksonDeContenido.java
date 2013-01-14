@@ -10,12 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.moleculas.mapeador;
+package net.gaia.vortex.portal.impl.conversion.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
 
@@ -23,16 +24,16 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Esta clase implementa el {@link MapeadorDeObjetos} utilizando la librería jackson
+ * Esta clase implementa el {@link ConversorDeContenidoVortex} utilizando la librería jackson
  * 
  * @author D. García
  */
-public class MapeadorJackson implements MapeadorDeObjetos {
+public class ConversorJacksonDeContenido implements ConversorDeContenidoVortex {
 
 	private ObjectMapper jacksonMapper;
 
 	/**
-	 * @see net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDeObjetos#convertirAEstado(java.lang.Object)
+	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex#convertirAEstado(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -55,7 +56,7 @@ public class MapeadorJackson implements MapeadorDeObjetos {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDeObjetos#convertirDesdeEstado(java.util.Map,
+	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex#convertirDesdeEstado(java.util.Map,
 	 *      java.lang.Class)
 	 */
 	@Override
@@ -71,8 +72,8 @@ public class MapeadorJackson implements MapeadorDeObjetos {
 		return objeto;
 	}
 
-	public static MapeadorJackson create() {
-		final MapeadorJackson mapeador = new MapeadorJackson();
+	public static ConversorJacksonDeContenido create() {
+		final ConversorJacksonDeContenido mapeador = new ConversorJacksonDeContenido();
 		mapeador.jacksonMapper = new ObjectMapper();
 		mapeador.jacksonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		return mapeador;

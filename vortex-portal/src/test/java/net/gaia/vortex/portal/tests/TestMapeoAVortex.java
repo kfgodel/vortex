@@ -13,8 +13,8 @@
 package net.gaia.vortex.portal.tests;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
+import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,11 +32,11 @@ import ar.com.dgarcia.lang.time.SystemChronometer;
 public class TestMapeoAVortex {
 	private static final Logger LOG = LoggerFactory.getLogger(TestMapeoAVortex.class);
 
-	private MapeadorVortex mapeadorVortex;
+	private ConversorDeMensajesVortex mapeadorVortex;
 
 	@Before
 	public void crearDependencias() {
-		mapeadorVortex = MapeadorDefault.create();
+		mapeadorVortex = ConversorDefaultDeMensajes.create();
 	}
 
 	@Test

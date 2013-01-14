@@ -25,8 +25,8 @@ import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
+import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
@@ -60,7 +60,7 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 	private AtomicReference<ListenerDeCambiosDeFiltro> listenerDeFiltros;
 	private AtomicReference<ListenerDeRuteo> listenerDeRuteo;
 
-	private MapeadorVortex mapeador;
+	private ConversorDeMensajesVortex mapeador;
 
 	private MemoriaDeMensajes memoriaRecibidos;
 
@@ -82,7 +82,7 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 		listenerDeFiltros = new AtomicReference<ListenerDeCambiosDeFiltro>(IgnorarCambioDeFiltro.getInstancia());
 		listenerDeRuteo = new AtomicReference<ListenerDeRuteo>(IgnorarRuteos.getInstancia());
 		conjuntoDeCondiciones = ConjuntoSincronizado.create(this);
-		mapeador = MapeadorDefault.create();
+		mapeador = ConversorDefaultDeMensajes.create();
 		memoriaRecibidos = MemoriaLimitadaDeMensajes.create(NexoSinDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
 	}
 

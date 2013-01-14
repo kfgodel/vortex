@@ -10,13 +10,15 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.moleculas.mapeador;
+package net.gaia.vortex.portal.impl.conversion.impl;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.mensaje.ContenidoVortexLazy;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -29,12 +31,12 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class MapeadorDefault implements MapeadorVortex {
+public class ConversorDefaultDeMensajes implements ConversorDeMensajesVortex {
 
-	private MapeadorDeObjetos mapeadorDeObjetos;
+	private ConversorDeContenidoVortex mapeadorDeObjetos;
 
 	/**
-	 * @see net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex#convertirAVortex(java.lang.Object)
+	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex#convertirAVortex(java.lang.Object)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -57,7 +59,7 @@ public class MapeadorDefault implements MapeadorVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex#convertirDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex,
+	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex#convertirDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex,
 	 *      java.lang.Class)
 	 */
 	@Override
@@ -95,9 +97,9 @@ public class MapeadorDefault implements MapeadorVortex {
 		return objeto;
 	}
 
-	public static MapeadorDefault create() {
-		final MapeadorDefault mapeador = new MapeadorDefault();
-		mapeador.mapeadorDeObjetos = MapeadorJackson.create();
+	public static ConversorDefaultDeMensajes create() {
+		final ConversorDefaultDeMensajes mapeador = new ConversorDefaultDeMensajes();
+		mapeador.mapeadorDeObjetos = ConversorJacksonDeContenido.create();
 		return mapeador;
 	}
 

@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDeObjetos;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	private ContenidoVortexSupport cache;
 	public static final String cache_FIELD = "cache";
 
-	private MapeadorDeObjetos mapeadorDeObjetos;
+	private ConversorDeContenidoVortex mapeadorDeObjetos;
 
 	public Object getObjetoOriginal() {
 		return objetoOriginal;
@@ -233,7 +233,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 		return cache.entrySet();
 	}
 
-	public static ContenidoVortexLazy create(final Object objeto, final MapeadorDeObjetos mapeadorDeObjetos) {
+	public static ContenidoVortexLazy create(final Object objeto, final ConversorDeContenidoVortex mapeadorDeObjetos) {
 		if (ContenidoPrimitiva.esPrimitivaVortex(objeto)) {
 			throw new IllegalArgumentException("El contenido lazy no puede crearse desde una primitiva[" + objeto + "]");
 		}

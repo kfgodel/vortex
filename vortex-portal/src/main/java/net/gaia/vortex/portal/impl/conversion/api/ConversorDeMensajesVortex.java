@@ -1,7 +1,7 @@
 /**
  * 14/06/2012 20:33:20 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.portal.impl.moleculas.mapeador;
+package net.gaia.vortex.portal.impl.conversion.api;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
@@ -12,11 +12,14 @@ import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
  * <br>
  * Normalmente las implementaciones de este mapeador deben asegurar que las operaciones son
  * reversibles (o sea {@link Object} <-> {@link MensajeVortex}) y que son thread-safe (o sea varios
- * threads pueden convertir en paralelo con la misma instancia de mapeador)
+ * threads pueden convertir en paralelo con la misma instancia de mapeador).<br>
+ * <br>
+ * La implementaciones de esta interfaz normalmente usarán implementaciones de
+ * {@link ConversorDeContenidoVortex}
  * 
  * @author D. García
  */
-public interface MapeadorVortex {
+public interface ConversorDeMensajesVortex {
 
 	/**
 	 * Convierte el objeto pasado interpretado como mensaje, en un mensaje vortex.<br>

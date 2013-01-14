@@ -17,8 +17,8 @@ import java.util.Arrays;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
+import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,11 +38,11 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
 public class TestDePerformanceMapeadorVortex {
 	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceMapeadorVortex.class);
 
-	private MapeadorVortex mapeador;
+	private ConversorDeMensajesVortex mapeador;
 
 	@Before
 	public void crearMapeador() {
-		mapeador = MapeadorDefault.create();
+		mapeador = ConversorDefaultDeMensajes.create();
 	}
 
 	@Test
