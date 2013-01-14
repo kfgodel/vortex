@@ -13,7 +13,7 @@
 package net.gaia.vortex.portal.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.portal.api.moleculas.HandlerDeMensaje;
+import net.gaia.vortex.portal.api.mensaje.HandlerDeMensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

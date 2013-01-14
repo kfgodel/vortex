@@ -20,7 +20,7 @@ import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.ContenidoVortexLazy;
+import net.gaia.vortex.portal.impl.mensaje.ContenidoVortexLazy;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJackson;
 import net.gaia.vortex.sockets.external.json.VortexSocketTextualizer;
 

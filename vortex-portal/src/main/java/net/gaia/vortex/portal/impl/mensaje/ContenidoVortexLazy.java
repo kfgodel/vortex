@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.moleculas.mapeador;
+package net.gaia.vortex.portal.impl.mensaje;
 
 import java.util.Collection;
 import java.util.Map;
@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDeObjetos;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

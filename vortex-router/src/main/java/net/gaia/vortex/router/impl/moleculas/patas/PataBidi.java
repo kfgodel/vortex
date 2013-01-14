@@ -23,7 +23,7 @@ import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesad
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
-import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.messages.MensajeBidireccional;

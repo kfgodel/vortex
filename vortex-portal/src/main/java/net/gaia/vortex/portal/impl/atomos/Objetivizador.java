@@ -13,25 +13,27 @@
 package net.gaia.vortex.portal.impl.atomos;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
-import net.gaia.vortex.portal.api.moleculas.HandlerDeMensaje;
-import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
+import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
+import net.gaia.vortex.portal.api.mensaje.HandlerDeMensaje;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
 import net.gaia.vortex.portal.impl.tasks.DesvortificarEInvocarHandler;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa un componente que linda en el límite de la red vortex y es utilizado por el
- * portal para recibir mensajes desde la red.<br>
+ * Esta clase representa un componente vortex que convierte los mensajes recibidos en objetos de un
+ * tipo esperado.<br>
+ * A través de instancias de esta clase el portal puede recrear los objetos del usuario a partir de
+ * los mensajes recibidos.<br>
  * Este componente convierte los mensajes vortex en objetos utilizando su propio thread y luego
- * invoca el handler
+ * invoca el handler (también en su thread)
  * 
  * @author D. García
  */
 @Atomo
-public class Desvortificador<T> extends ComponenteConProcesadorSupport implements Receptor {
+public class Objetivizador<T> extends ReceptorConProcesador {
 
 	private MapeadorVortex mapeador;
 	public static final String mapeador_FIELD = "mapeador";
@@ -42,9 +44,9 @@ public class Desvortificador<T> extends ComponenteConProcesadorSupport implement
 	private HandlerDeMensaje<? super T> handlerDeMensajes;
 	public static final String handlerDeMensajes_FIELD = "handlerDeMensajes";
 
-	public static <T> Desvortificador<T> create(final TaskProcessor processor, final MapeadorVortex mapeador,
+	public static <T> Objetivizador<T> create(final TaskProcessor processor, final MapeadorVortex mapeador,
 			final Class<? extends T> tipoEsperado, final HandlerDeMensaje<? super T> handlerDeMensaje) {
-		final Desvortificador<T> conversor = new Desvortificador<T>();
+		final Objetivizador<T> conversor = new Objetivizador<T>();
 		conversor.initializeWith(processor);
 		conversor.mapeador = mapeador;
 		conversor.handlerDeMensajes = handlerDeMensaje;
@@ -53,13 +55,13 @@ public class Desvortificador<T> extends ComponenteConProcesadorSupport implement
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public void recibir(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final DesvortificarEInvocarHandler<T> desvortificacion = DesvortificarEInvocarHandler.create(mensaje, mapeador,
 				tipoEsperado, handlerDeMensajes);
-		procesarEnThreadPropio(desvortificacion);
+		return desvortificacion;
 	}
 
 	/**

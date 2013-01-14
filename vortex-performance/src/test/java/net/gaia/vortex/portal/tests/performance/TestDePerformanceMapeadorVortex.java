@@ -17,8 +17,8 @@ import java.util.Arrays;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -101,7 +101,7 @@ public class TestRuteoDeUsoBasico {
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptor = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
-			public Condicion getCondicionNecesaria() {
+			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoIgual.create(valorEsperado,
 						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
 			}
@@ -136,7 +136,7 @@ public class TestRuteoDeUsoBasico {
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptor = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
-			public Condicion getCondicionNecesaria() {
+			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoIgual.create("!" + valorEsperado,
 						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
 			}
@@ -211,7 +211,7 @@ public class TestRuteoDeUsoBasico {
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptorPositivo = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
-			public Condicion getCondicionNecesaria() {
+			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoIgual.create(valorEsperado,
 						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
 			}
@@ -221,7 +221,7 @@ public class TestRuteoDeUsoBasico {
 		final String valorNoEsperado = "chau";
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptorNegativo = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
-			public Condicion getCondicionNecesaria() {
+			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoIgual.create(valorNoEsperado,
 						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
 			}

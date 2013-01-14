@@ -1,14 +1,14 @@
 /**
  * 14/06/2012 20:42:52 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.portal.api.moleculas;
+package net.gaia.vortex.portal.api.mensaje;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.portal.api.moleculas.Portal;
 
 /**
- * Esta interfaz representa un handler de mensajes para utilizar con un {@link Portal} que tiene
- * asociado un tipo para la recepción de los mensajes y una condición que deben ser respetados al
- * invocarla.<br>
+ * Esta interfaz representa un handler de mensajes para utilizar en un {@link Portal}, que define
+ * una condición que deben cumplir los mensajes, y un tipo esperado de esos mensajes<br>
  * Esta interfaz asegura que los mensajes recibidos son del tipo esperado y que cumplen la condicion
  * asociada
  * 
@@ -29,5 +29,5 @@ public interface HandlerDePortal<T> extends HandlerDeMensaje<T> {
 	 * 
 	 * @return La condición a evaluar en cada mensaje antes de invocar este handler
 	 */
-	public Condicion getCondicionNecesaria();
+	public Condicion getCondicionSuficiente();
 }

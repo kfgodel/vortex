@@ -17,7 +17,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
+import net.gaia.vortex.portal.impl.mensaje.ContenidoVortexLazy;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -34,7 +34,7 @@ public class MapeadorDefault implements MapeadorVortex {
 	private MapeadorDeObjetos mapeadorDeObjetos;
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.MapeadorVortex#convertirAVortex(java.lang.Object)
+	 * @see net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex#convertirAVortex(java.lang.Object)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -57,7 +57,7 @@ public class MapeadorDefault implements MapeadorVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.MapeadorVortex#convertirDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex,
+	 * @see net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex#convertirDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex,
 	 *      java.lang.Class)
 	 */
 	@Override

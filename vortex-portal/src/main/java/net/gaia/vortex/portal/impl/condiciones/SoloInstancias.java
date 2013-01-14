@@ -15,7 +15,7 @@ package net.gaia.vortex.portal.impl.condiciones;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.ContenidoVortexLazy;
+import net.gaia.vortex.portal.impl.mensaje.ContenidoVortexLazy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

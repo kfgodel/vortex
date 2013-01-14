@@ -22,7 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
-import net.gaia.vortex.portal.api.moleculas.HandlerDePortal;
+import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import ar.com.dgarcia.coding.anno.MayBeNull;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 
@@ -50,7 +50,7 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.HandlerDePortal#getTipoEsperado()
+	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#getTipoEsperado()
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -69,10 +69,10 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	 * Devuelve la condición necesaria de este handler, devolviendo la condición
 	 * {@link SiempreFalse} si la actual es null
 	 * 
-	 * @see net.gaia.vortex.portal.api.moleculas.HandlerDePortal#getCondicionNecesaria()
+	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#getCondicionSuficiente()
 	 */
 	@Override
-	public Condicion getCondicionNecesaria() {
+	public Condicion getCondicionSuficiente() {
 		return condicionNecesaria;
 	}
 

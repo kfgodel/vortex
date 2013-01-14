@@ -14,9 +14,9 @@ package net.gaia.vortex.portal.impl.tasks;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.portal.api.mensaje.HandlerDeMensaje;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.api.moleculas.HandlerDeMensaje;
-import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -32,7 +32,7 @@ public abstract class HandlerEncolador<T> extends HandlerTipado<T> {
 	private final BlockingQueue<Object> mensajes;
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.HandlerDePortal#onMensajeRecibido(java.lang.Object)
+	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#onMensajeRecibido(java.lang.Object)
 	 */
 	@Override
 	public void onMensajeRecibido(final T mensaje) {

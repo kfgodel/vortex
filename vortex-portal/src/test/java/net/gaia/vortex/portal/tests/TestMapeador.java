@@ -16,8 +16,8 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
 
 import org.junit.Assert;
 import org.junit.Before;

@@ -28,12 +28,12 @@ import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
-import net.gaia.vortex.portal.api.moleculas.HandlerDePortal;
-import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
+import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.Portal;
-import net.gaia.vortex.portal.impl.atomos.Desvortificador;
-import net.gaia.vortex.portal.impl.atomos.Vortificador;
+import net.gaia.vortex.portal.impl.atomos.Objetivizador;
+import net.gaia.vortex.portal.impl.atomos.Desobjetivizador;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
+import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorVortex;
 import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -48,7 +48,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 
 	private MapeadorVortex mapeadorVortex;
 	private Receptor procesoDesdeVortex;
-	private Vortificador procesoDesdeUsuario;
+	private Desobjetivizador procesoDesdeUsuario;
 	private Multiplexor multiplexorDeCondiciones;
 	private IdDeComponenteVortex identificador;
 	public static final String identificador_FIELD = "identificador";
@@ -74,7 +74,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 		identificador = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
 
 		nodoDeSalidaAVortex = NexoTransformador.create(processor, GenerarIdEnMensaje.create(identificador), delegado);
-		procesoDesdeUsuario = Vortificador.create(mapeadorVortex, nodoDeSalidaAVortex);
+		procesoDesdeUsuario = Desobjetivizador.create(processor, mapeadorVortex, nodoDeSalidaAVortex);
 
 		// Este multiplexor delega el mensaje en cada condición del usuario
 		multiplexorDeCondiciones = MultiplexorParalelo.create(processor);
@@ -106,7 +106,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.moleculas.HandlerDePortal)
+	 * @see net.gaia.vortex.portal.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
 	 */
 	@Override
 	public void recibirCon(final HandlerDePortal<?> handlerDelPortal) {
@@ -116,11 +116,11 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 
 		// Creamos el handler que convertirá al tipo esperado por el usuario, los mensajes recibidos
 		final Class<Object> tipoEsperadoComoMensajes = handlerDeMensajesCasteado.getTipoEsperado();
-		final Desvortificador<Object> convertirEnTipoEsperadoEInvocarHandler = Desvortificador.create(procesador,
+		final Objetivizador<Object> convertirEnTipoEsperadoEInvocarHandler = Objetivizador.create(procesador,
 				mapeadorVortex, tipoEsperadoComoMensajes, handlerDeMensajesCasteado);
 
 		// Filtramos por la condición que nos pasa el usuario
-		final Condicion condicionParaRecibirMensajeEnHandler = handlerDelPortal.getCondicionNecesaria();
+		final Condicion condicionParaRecibirMensajeEnHandler = handlerDelPortal.getCondicionSuficiente();
 		final NexoFiltro evaluarCondicionYHandlear = NexoFiltro.create(procesador,
 				condicionParaRecibirMensajeEnHandler, convertirEnTipoEsperadoEInvocarHandler);
 
