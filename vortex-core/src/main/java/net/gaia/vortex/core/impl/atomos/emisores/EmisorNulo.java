@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.impl.atomos.emisores;
 
 import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.impl.atomos.support.EmisorSupport;
+import net.gaia.vortex.core.impl.atomos.support.basicos.EmisorSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

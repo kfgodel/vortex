@@ -7,7 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.ReceptorSupport;
+import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;

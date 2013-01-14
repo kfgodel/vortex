@@ -14,7 +14,7 @@ package net.gaia.vortex.core.impl.atomos.receptores;
 
 import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.ReceptorSupport;
+import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

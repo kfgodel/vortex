@@ -10,7 +10,7 @@ import net.gaia.vortex.core.api.atomos.condicional.Bifurcador;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
-import net.gaia.vortex.core.impl.atomos.support.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.tasks.BifurcarMensaje;
 
 import org.slf4j.Logger;

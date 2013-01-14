@@ -25,7 +25,7 @@ public class MultiplexorParalelo extends MultiplexorSupport {
 	private ListenerDeMetricas listenerMetricas;
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)

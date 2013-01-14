@@ -18,6 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
+import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.core.prog.Decision;
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -57,7 +58,7 @@ public abstract class MultiplexorSupport extends ReceptorConProcesador implement
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
 	@Override
 	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)

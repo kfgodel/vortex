@@ -22,7 +22,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
-import net.gaia.vortex.core.impl.atomos.support.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
@@ -73,7 +73,7 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
 	@Override
 	protected void initializeWith(final TaskProcessor processor) {

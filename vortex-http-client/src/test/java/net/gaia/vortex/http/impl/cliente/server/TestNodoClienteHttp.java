@@ -15,7 +15,7 @@ package net.gaia.vortex.http.impl.cliente.server;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.ReceptorSupport;
+import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import net.gaia.vortex.http.impl.moleculas.NodoClienteHttp;
 
 import org.junit.After;

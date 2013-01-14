@@ -1,5 +1,5 @@
 /**
- * 13/01/2013 22:06:18 Copyright (C) 2011 Darío L. García
+ * 13/01/2013 19:49:41 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,16 +10,16 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos.support;
+package net.gaia.vortex.core.impl.atomos.support.basicos;
 
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.atomos.Emisor;
 
 /**
- * Esta clase define comportamiento base para nodos que no requieren un procesador de tareas
- * necesariamente
+ * Esta clase define comportamiento base para los emisores que no utilizan necesariamente un
+ * procesador
  * 
  * @author D. García
  */
-public abstract class NodoSupport extends ComponenteSupport implements Nodo {
+public abstract class EmisorSupport extends ComponenteSupport implements Emisor {
 
 }

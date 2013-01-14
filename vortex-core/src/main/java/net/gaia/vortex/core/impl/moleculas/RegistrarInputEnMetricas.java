@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.impl.moleculas;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.ReceptorSupport;
+import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.strings.ToString;
 

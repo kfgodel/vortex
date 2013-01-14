@@ -19,7 +19,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
-import net.gaia.vortex.core.impl.atomos.support.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;

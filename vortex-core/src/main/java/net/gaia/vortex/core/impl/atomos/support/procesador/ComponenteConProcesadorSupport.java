@@ -1,10 +1,11 @@
 /**
  * 13/06/2012 11:40:08 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core.impl.atomos.support;
+package net.gaia.vortex.core.impl.atomos.support.procesador;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.vortex.core.impl.atomos.support.basicos.ComponenteSupport;
 
 /**
  * Esta clase define comportamiento base para los componentes que requieren procesar tareas en
