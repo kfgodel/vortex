@@ -15,7 +15,6 @@ package net.gaia.vortex.sockets.impl.atomos;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
@@ -33,7 +32,7 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * 
  * @author D. García
  */
-public class Desocketizador extends NexoSupport implements ObjectReceptionHandler, Nexo {
+public class Desocketizador extends NexoSupport implements ObjectReceptionHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(Desocketizador.class);
 
 	/**
