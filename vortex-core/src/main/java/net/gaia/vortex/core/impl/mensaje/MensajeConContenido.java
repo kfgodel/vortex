@@ -15,12 +15,12 @@ package net.gaia.vortex.core.impl.mensaje;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
-import net.gaia.vortex.core.impl.mensaje.ids.IdSecuencialDeMensaje;
-import net.gaia.vortex.core.impl.moleculas.ids.IdInmutableDeComponente;
+import net.gaia.vortex.core.impl.ids.componentes.IdInmutableDeComponente;
+import net.gaia.vortex.core.impl.ids.mensajes.IdSecuencialDeMensaje;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -165,7 +165,7 @@ public class MensajeConContenido implements MensajeVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#asignarId(net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje)
+	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#asignarId(net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje)
 	 */
 	@Override
 	public void asignarId(final IdDeMensaje idNuevo) {

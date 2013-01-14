@@ -10,10 +10,10 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.mensaje.ids;
+package net.gaia.vortex.core.impl.ids.mensajes;
 
-import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -89,7 +89,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje#esOriginadoEn(net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex)
+	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#esOriginadoEn(net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex)
 	 */
 	@Override
 	public boolean esOriginadoEn(final IdDeComponenteVortex idDelNodo) {
@@ -107,7 +107,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje#getIdDelEmisor()
+	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#getIdDelEmisor()
 	 */
 	@Override
 	public IdDeComponenteVortex getIdDelEmisor() {
@@ -115,7 +115,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje#getNumeroDeSecuencia()
+	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#getNumeroDeSecuencia()
 	 */
 	@Override
 	public Long getNumeroDeSecuencia() {

@@ -10,9 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.moleculas.ids;
+package net.gaia.vortex.core.impl.ids.componentes;
 
-import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -26,7 +26,7 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	public static final String valor_FIELD = "valor";
 
 	/**
-	 * @see net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex#getValorActual()
+	 * @see net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex#getValorActual()
 	 */
 	@Override
 	public String getValorActual() {

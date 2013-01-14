@@ -10,13 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.moleculas.ids;
+package net.gaia.vortex.core.impl.ids.componentes;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.vortex.core.api.moleculas.ids.GeneradorDeIdsComponentes;
-import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.ids.componentes.GeneradorDeIdsComponentes;
+import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 
 /**
  * Esta clase es la implementación default del generador de ids que intenta asignar IDs distintos
@@ -117,7 +117,7 @@ public class GeneradorDeIdsGlobalesParaComponentes implements GeneradorDeIdsComp
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.moleculas.ids.GeneradorDeIdsComponentes#generarId()
+	 * @see net.gaia.vortex.core.api.ids.componentes.GeneradorDeIdsComponentes#generarId()
 	 */
 	@Override
 	public IdDeComponenteVortex generarId() {

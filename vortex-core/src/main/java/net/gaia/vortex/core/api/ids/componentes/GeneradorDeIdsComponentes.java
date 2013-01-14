@@ -1,5 +1,5 @@
 /**
- * 01/09/2012 12:10:19 Copyright (C) 2011 Darío L. García
+ * 27/06/2012 14:03:35 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,22 +10,20 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.mensaje.ids;
-
+package net.gaia.vortex.core.api.ids.componentes;
 
 /**
- * Esta interfaz representa el generador de IDs de mensajes que sirve para asignar nuevos IDs a los
- * mensajes salientes de un portal
+ * Esta interfaz representa un generador de identificadores vortex para las nuevas moléculas
  * 
  * @author D. García
  */
-public interface GeneradorDeIdsDeMensajes {
+public interface GeneradorDeIdsComponentes {
 
 	/**
-	 * Genera un nuevo ID unico para un mensaje
+	 * Genera un nuevo identificador para la molécula
 	 * 
-	 * @return El Identificador del mensaje generado
+	 * @return El identificador generado
 	 */
-	IdDeMensaje generarId();
+	public IdDeComponenteVortex generarId();
 
 }

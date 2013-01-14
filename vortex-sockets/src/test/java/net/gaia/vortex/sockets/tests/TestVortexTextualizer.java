@@ -13,12 +13,12 @@
 package net.gaia.vortex.sockets.tests;
 
 import junit.framework.Assert;
-import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
+import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
+import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.core.impl.mensaje.ids.GeneradorSecuencialDeIdDeMensaje;
-import net.gaia.vortex.core.impl.moleculas.ids.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.ContenidoVortexLazy;
 import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJackson;
