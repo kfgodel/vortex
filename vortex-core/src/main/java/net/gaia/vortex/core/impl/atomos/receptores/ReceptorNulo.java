@@ -45,7 +45,7 @@ public class ReceptorNulo extends ReceptorSupport {
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		LOG.trace("Se recibió un mensaje[{}] en el componente nulo", mensaje);
+		LOG.trace("Se recibió un mensaje[{}] en el receptor nulo", mensaje);
 	}
 
 	public static ReceptorNulo create() {
