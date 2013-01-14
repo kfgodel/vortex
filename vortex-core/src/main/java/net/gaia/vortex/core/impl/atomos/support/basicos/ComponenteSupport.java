@@ -13,8 +13,8 @@
 package net.gaia.vortex.core.impl.atomos.support.basicos;
 
 import net.gaia.vortex.core.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core.impl.atomos.SecuenciadorDeInstancias;
-import net.gaia.vortex.core.impl.atomos.ToShortString;
+import net.gaia.vortex.core.impl.atomos.helpers.SecuenciadorDeInstancias;
+import net.gaia.vortex.core.impl.atomos.helpers.ToShortString;
 
 /**
  * Esta clase define el comportamiento básico de componentes vortex para ser extendido por las
