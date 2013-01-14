@@ -34,8 +34,8 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase realiza las pruebas básicas de vortex definidas en A01 de la documentación utilizando
- * un {@link NodoMultiplexor}. Verificamos que es posible armar una red básica con conexiones
- * unidireccionales
+ * un {@link MultiplexorSinDuplicados}. Verificamos que es posible armar una red básica con
+ * conexiones unidireccionales
  * 
  * @author D. García
  */
@@ -59,12 +59,19 @@ public class TestRedA01ConNodoMultiplexor {
 		final IdDeMensaje generarId = generadorDeIdsDelNodo.generarId();
 		mensaje1.asignarId(generarId);
 
-		nodoEmisor = MultiplexorSinDuplicados.create(processor);
-		nodoRuteador = MultiplexorSinDuplicados.create(processor);
-		nodoReceptor = MultiplexorSinDuplicados.create(processor);
+		nodoEmisor = crearNodoDefault();
+		nodoRuteador = crearNodoDefault();
+		nodoReceptor = crearNodoDefault();
 
 		interconectar(nodoEmisor, nodoRuteador);
 		interconectar(nodoRuteador, nodoReceptor);
+	}
+
+	/**
+	 * Crea un nodo tipo para las pruebas
+	 */
+	private MultiplexorSinDuplicados crearNodoDefault() {
+		return MultiplexorSinDuplicados.create(processor);
 	}
 
 	@After
@@ -206,10 +213,10 @@ public class TestRedA01ConNodoMultiplexor {
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayNodosEnElMedio() {
-		final Nodo nodoEmisor = MultiplexorSinDuplicados.create(processor);
-		final Nodo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
-		final Nodo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
-		final Nodo nodoReceptor = MultiplexorSinDuplicados.create(processor);
+		final Nodo nodoEmisor = crearNodoDefault();
+		final Nodo nodoIntermedio1 = crearNodoDefault();
+		final Nodo nodoIntermedio2 = crearNodoDefault();
+		final Nodo nodoReceptor = crearNodoDefault();
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		nodoReceptor.conectarCon(handlerReceptor);
@@ -236,14 +243,14 @@ public class TestRedA01ConNodoMultiplexor {
 	 */
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosNodosEnElMedioInterconectados() {
-		final Nodo nodoEmisor = MultiplexorSinDuplicados.create(processor);
+		final Nodo nodoEmisor = crearNodoDefault();
 		// Le conectamos un receptor directo al emisor para ver los que le llegan
 		final ReceptorEncolador recibidosPorElEmisor = ReceptorEncolador.create();
 		nodoEmisor.conectarCon(recibidosPorElEmisor);
 
-		final Nodo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
-		final Nodo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
-		final Nodo nodoReceptor = MultiplexorSinDuplicados.create(processor);
+		final Nodo nodoIntermedio1 = crearNodoDefault();
+		final Nodo nodoIntermedio2 = crearNodoDefault();
+		final Nodo nodoReceptor = crearNodoDefault();
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		nodoReceptor.conectarCon(handlerReceptor);
@@ -279,7 +286,7 @@ public class TestRedA01ConNodoMultiplexor {
 		nodoReceptor.conectarCon(handlerReceptor1);
 
 		final ReceptorEncolador handlerReceptor2 = ReceptorEncolador.create();
-		final Nodo nodoReceptor2 = MultiplexorSinDuplicados.create(processor);
+		final Nodo nodoReceptor2 = crearNodoDefault();
 		nodoReceptor2.conectarCon(handlerReceptor2);
 
 		interconectar(nodoRuteador, nodoReceptor2);

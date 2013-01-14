@@ -13,6 +13,7 @@
 package net.gaia.vortex.portal.tests.performance;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
@@ -45,10 +46,10 @@ public class TestDeComunicacionTipicaEnMemoria {
 	private TaskProcessor procesadorDelNodoEmisor;
 	private TaskProcessor procesadorDelNodoReceptor;
 
-	private MultiplexorSinDuplicados nodoEmisor;
-	private MultiplexorSinDuplicados nodoReceptor;
+	private Nodo nodoEmisor;
+	private Nodo nodoReceptor;
 
-	private MultiplexorSinDuplicados nodoSever;
+	private Nodo nodoSever;
 
 	private TaskProcessor procesadorDelNodoServer;
 
