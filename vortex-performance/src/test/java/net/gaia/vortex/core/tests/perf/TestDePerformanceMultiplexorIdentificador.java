@@ -4,7 +4,7 @@
 package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.impl.atomos.memoria.MultiplexorSinDuplicados;
+import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
 
 /**
  * Esta clase prueba las velocidades de procesamiento de cada uno de los componentes bajo estrés de

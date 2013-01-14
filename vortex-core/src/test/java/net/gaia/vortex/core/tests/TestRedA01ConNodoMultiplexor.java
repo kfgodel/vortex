@@ -18,8 +18,8 @@ import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
 import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
+import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
 import net.gaia.vortex.core.prog.Loggers;
 
 import org.junit.After;
@@ -42,9 +42,9 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestRedA01ConNodoMultiplexor {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConNodoMultiplexor.class);
 
-	private NodoMultiplexor nodoEmisor;
-	private NodoMultiplexor nodoRuteador;
-	private NodoMultiplexor nodoReceptor;
+	private Nodo nodoEmisor;
+	private Nodo nodoRuteador;
+	private Nodo nodoReceptor;
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
@@ -59,9 +59,9 @@ public class TestRedA01ConNodoMultiplexor {
 		final IdDeMensaje generarId = generadorDeIdsDelNodo.generarId();
 		mensaje1.asignarId(generarId);
 
-		nodoEmisor = NodoMultiplexor.create(processor);
-		nodoRuteador = NodoMultiplexor.create(processor);
-		nodoReceptor = NodoMultiplexor.create(processor);
+		nodoEmisor = MultiplexorSinDuplicados.create(processor);
+		nodoRuteador = MultiplexorSinDuplicados.create(processor);
+		nodoReceptor = MultiplexorSinDuplicados.create(processor);
 
 		interconectar(nodoEmisor, nodoRuteador);
 		interconectar(nodoRuteador, nodoReceptor);
@@ -206,10 +206,10 @@ public class TestRedA01ConNodoMultiplexor {
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayNodosEnElMedio() {
-		final NodoMultiplexor nodoEmisor = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoIntermedio1 = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoIntermedio2 = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoReceptor = NodoMultiplexor.create(processor);
+		final Nodo nodoEmisor = MultiplexorSinDuplicados.create(processor);
+		final Nodo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
+		final Nodo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
+		final Nodo nodoReceptor = MultiplexorSinDuplicados.create(processor);
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		nodoReceptor.conectarCon(handlerReceptor);
@@ -236,14 +236,14 @@ public class TestRedA01ConNodoMultiplexor {
 	 */
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosNodosEnElMedioInterconectados() {
-		final NodoMultiplexor nodoEmisor = NodoMultiplexor.create(processor);
+		final Nodo nodoEmisor = MultiplexorSinDuplicados.create(processor);
 		// Le conectamos un receptor directo al emisor para ver los que le llegan
 		final ReceptorEncolador recibidosPorElEmisor = ReceptorEncolador.create();
 		nodoEmisor.conectarCon(recibidosPorElEmisor);
 
-		final NodoMultiplexor nodoIntermedio1 = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoIntermedio2 = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoReceptor = NodoMultiplexor.create(processor);
+		final Nodo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
+		final Nodo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
+		final Nodo nodoReceptor = MultiplexorSinDuplicados.create(processor);
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		nodoReceptor.conectarCon(handlerReceptor);
@@ -279,7 +279,7 @@ public class TestRedA01ConNodoMultiplexor {
 		nodoReceptor.conectarCon(handlerReceptor1);
 
 		final ReceptorEncolador handlerReceptor2 = ReceptorEncolador.create();
-		final NodoMultiplexor nodoReceptor2 = NodoMultiplexor.create(processor);
+		final Nodo nodoReceptor2 = MultiplexorSinDuplicados.create(processor);
 		nodoReceptor2.conectarCon(handlerReceptor2);
 
 		interconectar(nodoRuteador, nodoReceptor2);

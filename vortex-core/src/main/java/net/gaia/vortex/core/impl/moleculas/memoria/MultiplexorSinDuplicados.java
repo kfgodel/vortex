@@ -10,10 +10,10 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos.memoria;
+package net.gaia.vortex.core.impl.moleculas.memoria;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.annotations.Atomo;
+import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSupport;
 
 /**
@@ -25,7 +25,7 @@ import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSuppo
  * 
  * @author D. García
  */
-@Atomo
+@Molecula
 public class MultiplexorSinDuplicados extends MultiplexorSinDuplicadosSupport {
 
 	public static MultiplexorSinDuplicados create(final TaskProcessor processor) {

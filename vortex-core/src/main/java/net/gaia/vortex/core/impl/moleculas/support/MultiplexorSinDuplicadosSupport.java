@@ -13,14 +13,13 @@
 package net.gaia.vortex.core.impl.moleculas.support;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
-import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -29,51 +28,18 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public abstract class MultiplexorSinDuplicadosSupport extends ComponenteConProcesadorSupport implements Multiplexor,
+public abstract class MultiplexorSinDuplicadosSupport extends NodoMoleculaSupport implements Multiplexor,
 		ComponenteConMemoria {
 
-	private MultiplexorParalelo multiplexorDeSalida;
 	private NexoSinDuplicados procesoDeEntrada;
 
-	protected MultiplexorParalelo getMultiplexorDeSalida() {
-		return multiplexorDeSalida;
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
-	 */
-	@Override
-	public void conectarCon(final Receptor destino) {
-		multiplexorDeSalida.conectarCon(destino);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
-	 */
-	@Override
-	public void desconectarDe(final Receptor destino) {
-		multiplexorDeSalida.desconectarDe(destino);
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
-	 */
-	@Override
-	public void recibir(final MensajeVortex mensaje) {
-		Loggers.ATOMOS.trace("Recibido en nodo[{}] el mensaje[{}]", this.toShortString(), mensaje);
-		Loggers.ATOMOS.debug("Delegando a atomo[{}] el mensaje[{}] desde el nodo[{}]",
-				new Object[] { procesoDeEntrada.toShortString(), mensaje, this.toShortString() });
-		procesoDeEntrada.recibir(mensaje);
-	}
-
-	/**
-	 * Inicializa el estado de esta instancia
-	 */
-	@Override
 	protected void initializeWith(final TaskProcessor processor) {
-		super.initializeWith(processor);
-		multiplexorDeSalida = MultiplexorParalelo.create(processor);
+		// A la salida enviamos a muchos
+		final MultiplexorParalelo multiplexorDeSalida = MultiplexorParalelo.create(processor);
+		// A la entrada evitamos los duplicados
 		procesoDeEntrada = NexoSinDuplicados.create(processor, multiplexorDeSalida);
+		final FlujoVortex flujo = FlujoInmutable.create(procesoDeEntrada, multiplexorDeSalida);
+		initializeWith(flujo);
 	}
 
 	/**

@@ -13,7 +13,10 @@
 package net.gaia.vortex.core.impl.moleculas;
 
 import net.gaia.vortex.core.api.annotations.Molecula;
+import net.gaia.vortex.core.api.atomos.Emisor;
+import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 
 /**
@@ -29,5 +32,20 @@ public class NodoMolecula extends NodoMoleculaSupport {
 		final NodoMolecula molecula = new NodoMolecula();
 		molecula.initializeWith(flujo);
 		return molecula;
+	}
+
+	/**
+	 * Crea un nodo molecula con los componentes indicados como entrada y salida. Los componentes
+	 * deberían estar conectados entre sí antes de usar este nodo creado
+	 * 
+	 * @param componenteDeEntrada
+	 *            El componente que recibirá los mensajes
+	 * @param componenteDeSalida
+	 *            El componente que enviará los mensajes a la salida
+	 * @return El nodo creado
+	 */
+	public static NodoMolecula create(final Receptor componenteDeEntrada, final Emisor componenteDeSalida) {
+		final FlujoInmutable flujo = FlujoInmutable.create(componenteDeEntrada, componenteDeSalida);
+		return create(flujo);
 	}
 }

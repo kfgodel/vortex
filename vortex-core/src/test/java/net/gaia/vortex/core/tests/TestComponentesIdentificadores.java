@@ -20,11 +20,11 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.atomos.memoria.MultiplexorSinDuplicados;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
+import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
 
 import org.junit.After;
 import org.junit.Before;
