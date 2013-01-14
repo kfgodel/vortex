@@ -1,8 +1,11 @@
 package net.gaia.vortex.http.impl.cliente.server;
 
+import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
+import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 import net.gaia.vortex.http.impl.cliente.server.comandos.CerrarSesionCliente;
 import net.gaia.vortex.http.impl.cliente.server.comandos.CrearSesionCliente;
 import net.gaia.vortex.http.impl.cliente.server.comandos.IntercambiarMensajesCliente;
+import net.gaia.vortex.http.messages.PaqueteHttpVortex;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -34,12 +37,16 @@ import ar.dgarcia.http.simple.impl.ApacheResponseProvider;
 public class TestProxyServer {
 	private static final Logger LOG = LoggerFactory.getLogger(TestProxyServer.class);
 
+	private final VortexHttpTextualizer textualizer = JacksonHttpTextualizer.create();
+
 	@Test
-	public void deberiaRespnderCorrectamenteALosComandos() {
+	public void deberiaResponderCorrectamenteALosComandos() {
 		final ServerVortexHttpRemoto servidor = ServerVortexHttpRemoto.create("http://kfgodel.info:62626",
 				ApacheResponseProvider.create());
 		// Creamos una sesion
-		final CrearSesionCliente comandoCrearSesion = CrearSesionCliente.create(null);
+		final PaqueteHttpVortex paquete = PaqueteHttpVortex.create(0, 10000);
+		final String parametrosDeSesion = textualizer.convertToString(paquete);
+		final CrearSesionCliente comandoCrearSesion = CrearSesionCliente.create(parametrosDeSesion);
 		servidor.enviarComando(comandoCrearSesion);
 
 		final String idDeSesion = comandoCrearSesion.getIdDeSesionCreada();

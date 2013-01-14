@@ -71,6 +71,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 		procesoDesdeSocket = Desocketizador.create(processor,
 				NexoSinDuplicados.create(processor, memoriaDeMensajes, delegado));
 
+		// Definimos cual es el flujo de entrada y salida de esta molecula
 		final FlujoVortex flujoInterno = FlujoInmutable.create(procesoDesdeVortex, procesoDesdeSocket);
 		initializeWith(flujoInterno);
 	}

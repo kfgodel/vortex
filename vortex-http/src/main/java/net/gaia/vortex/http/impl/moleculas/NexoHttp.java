@@ -13,17 +13,17 @@
 package net.gaia.vortex.http.impl.moleculas;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorVariable;
-import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
-import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.http.impl.atomos.Deshttpizador;
 import net.gaia.vortex.http.impl.atomos.Httpizador;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
@@ -40,7 +40,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class NexoHttp extends NexoSupport implements ComponenteConMemoria {
+public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemoria, Nexo {
 
 	private SesionVortexHttp sesion;
 	public static final String sesion_FIELD = "sesion";
@@ -51,51 +51,40 @@ public class NexoHttp extends NexoSupport implements ComponenteConMemoria {
 	private Deshttpizador procesoDesdeHttp;
 	public static final String procesoDesdeHttp_FIELD = "procesoDesdeHttp";
 
-	private ReceptorVariable<Receptor> destinoDesdeHttp;
-
 	private MemoriaDeMensajes memoriaDeMensajes;
 
-	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
-	 */
-	@Override
-	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
-		return DelegarMensaje.create(mensaje, procesoDesdeVortex);
-	}
-
 	private void initializeWith(final TaskProcessor processor, final Receptor delegado, final SesionVortexHttp sesion) {
-		// Creamos el receptor variable antes que nada
-		destinoDesdeHttp = ReceptorVariable.create(delegado);
-		super.initializeWith(processor, delegado);
-		// Guardamos la referencia para saber cual es nuestra sesion
+		// Guardamos la referencia para saber cual es nuestra sesión
 		this.sesion = sesion;
 
-		// Creamos una memoria compartida entre el filtro de entrada y de salida de duplicados
+		// Esta memoria nos permite descartar los mensajes que mandamos al nodo y vienen de vuelta
 		this.memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
 
-		// No envíamos a http los mensajes recibidos desde http (por la memoria compartida)
+		// Al recibir de vortex, descartamos duplicados y mandamos por http
 		procesoDesdeVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes,
 				Httpizador.create(processor, sesion));
-		// No enviamos a la red los mensajes recibidos desde la red (por la memoria compartida)
+
+		// Al recibir de http, descartamos duplicados y mandamos por vortex
 		procesoDesdeHttp = Deshttpizador.create(processor,
-				NexoSinDuplicados.create(processor, memoriaDeMensajes, destinoDesdeHttp));
+				NexoSinDuplicados.create(processor, memoriaDeMensajes, delegado));
+
+		final FlujoVortex flujoInterno = FlujoInmutable.create(procesoDesdeVortex, procesoDesdeHttp);
+		initializeWith(flujoInterno);
+
 	}
 
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
 	public void setDestino(final Receptor destino) {
-		super.setDestino(destino);
-		this.destinoDesdeHttp.setReceptorActual(destino);
+		procesoDesdeHttp.setDestino(destino);
 	}
 
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#getDestino()
 	 */
-	@Override
 	public Receptor getDestino() {
-		return destinoDesdeHttp.getReceptorActual();
+		return procesoDesdeHttp.getDestino();
 	}
 
 	public static NexoHttp create(final TaskProcessor processor, final SesionVortexHttp sesion, final Receptor delegado) {
@@ -110,7 +99,7 @@ public class NexoHttp extends NexoSupport implements ComponenteConMemoria {
 	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(sesion_FIELD, sesion)
-				.add(destino_FIELD, getDestino()).toString();
+				.add("destino", getDestino()).toString();
 	}
 
 	public void onMensajeDesdeHttp(final MensajeVortex received) {
