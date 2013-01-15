@@ -15,7 +15,6 @@ package net.gaia.vortex.portal.impl.condiciones;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.portal.impl.mensaje.ContenidoVortexLazy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,16 +42,6 @@ public class SoloInstancias implements Condicion {
 	@Override
 	public boolean esCumplidaPor(final MensajeVortex mensaje) {
 		final ContenidoVortex contenido = mensaje.getContenido();
-
-		// Vemos si podemos chequear directamente contra el objeto original
-		if (contenido instanceof ContenidoVortexLazy) {
-			final Object objetoOriginal = ((ContenidoVortexLazy) contenido).getObjetoOriginal();
-			if (objetoOriginal != null) {
-				// Podemos evaluar directamente contra el objeto
-				final boolean esDelTipoEsperado = tipoEsperado.isInstance(objetoOriginal);
-				return esDelTipoEsperado;
-			}
-		}
 
 		if (contenido.tieneValorComoPrimitiva()) {
 			final Object valorPrimitivo = contenido.getValorComoPrimitiva();

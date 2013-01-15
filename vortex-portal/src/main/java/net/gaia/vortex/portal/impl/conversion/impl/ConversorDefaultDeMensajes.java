@@ -12,14 +12,16 @@
  */
 package net.gaia.vortex.portal.impl.conversion.impl;
 
+import java.util.Map;
+
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
-import net.gaia.vortex.portal.impl.mensaje.ContenidoVortexLazy;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -46,16 +48,32 @@ public class ConversorDefaultDeMensajes implements ConversorDeMensajesVortex {
 			throw new ErrorDeMapeoVortexException(
 					"El objeto original no puede ser null para ser convertido en mensaje vortex");
 		}
-
-		ContenidoVortex contenidoDelMensaje;
-		// Las primitivas viajan como tipo especial de mensaje
-		if (ContenidoPrimitiva.esPrimitivaVortex(objetoOriginal)) {
-			contenidoDelMensaje = ContenidoPrimitiva.create(objetoOriginal);
-		} else {
-			contenidoDelMensaje = ContenidoVortexLazy.create(objetoOriginal, mapeadorDeObjetos);
-		}
+		final ContenidoVortex contenidoDelMensaje = generarContenidoDesde(objetoOriginal);
 		final MensajeConContenido mensajeVortex = MensajeConContenido.create(contenidoDelMensaje);
 		return mensajeVortex;
+	}
+
+	/**
+	 * Genera el contenido que se incluirá como estado del mensaje, representando el objeto pasado
+	 * 
+	 * @param objetoOriginal
+	 *            El objeto a representar como contenido vortex
+	 * @return El contenido generado
+	 */
+	private ContenidoVortex generarContenidoDesde(final Object objetoOriginal) {
+
+		// El mapeador falla con las primitivas, por eso hacemos una excepción
+		if (ContenidoPrimitiva.esPrimitivaVortex(objetoOriginal)) {
+			return ContenidoPrimitiva.create(objetoOriginal);
+		}
+
+		// Si es un objeto común, lo convertimos con el mapeador
+		final Map<String, Object> estadoGenerado = mapeadorDeObjetos.convertirAEstado(objetoOriginal);
+		final ContenidoMapa contenido = ContenidoMapa.create(estadoGenerado);
+
+		// Registramos el nombre de la clase original para optimizar algunas condiciones
+		contenido.setNombreDelTipoOriginalDesde(objetoOriginal);
+		return contenido;
 	}
 
 	/**
@@ -72,28 +90,31 @@ public class ConversorDefaultDeMensajes implements ConversorDeMensajesVortex {
 		}
 
 		final ContenidoVortex contenidoVortex = mensajeVortex.getContenido();
-		// Vemos si podemos optimizar el proceso usando el objeto original
-		if (contenidoVortex instanceof ContenidoVortexLazy) {
-			final ContenidoVortexLazy contenidoLazy = (ContenidoVortexLazy) contenidoVortex;
-			final Object objetoOriginal = contenidoLazy.getObjetoOriginal();
-			if (tipoEsperado.isInstance(objetoOriginal)) {
-				// Estamos en memoria y justo nos piden lo que tenemos (no hace falta conversion)
-				return (T) objetoOriginal;
-			}
-			// Nos piden otro tipo del que tenemos, pasamos por la conversión
-		}
+		final T objeto = (T) generarObjetoDesde(contenidoVortex, tipoEsperado);
+		return objeto;
+	}
 
-		// Verificamos si no es un mensaje con primitiva
-		if (contenidoVortex.tieneValorComoPrimitiva()) {
-			final Object valorPrimitivo = contenidoVortex.getValorComoPrimitiva();
+	/**
+	 * Genera el objeto esperado a partir del contenido pasado, intentando reconstruir la instancia
+	 * del tipo
+	 * 
+	 * @param contenido
+	 *            El contenido desde el cual se obtiene el estado para regenerar el objeto
+	 * @return El objeto generado
+	 */
+	private Object generarObjetoDesde(final ContenidoVortex contenido, final Class<?> tipoEsperado) {
+		// Si representa una primitiva tenemos que hacer una excepción porque el mapeador falla
+		if (contenido.tieneValorComoPrimitiva()) {
+			final Object valorPrimitivo = contenido.getValorComoPrimitiva();
 			if (!tipoEsperado.isInstance(valorPrimitivo)) {
 				throw new UnhandledConditionException("Me piden un tipo[" + tipoEsperado
 						+ "] distinto de la primitiva[" + valorPrimitivo + "] que tengo. Conversión no implementada");
 			}
-			return (T) valorPrimitivo;
+			return valorPrimitivo;
 		}
 
-		final T objeto = mapeadorDeObjetos.convertirDesdeEstado(contenidoVortex, tipoEsperado);
+		// Para el resto de los casos el mapeador se la banca
+		final Object objeto = mapeadorDeObjetos.convertirDesdeEstado(contenido, tipoEsperado);
 		return objeto;
 	}
 

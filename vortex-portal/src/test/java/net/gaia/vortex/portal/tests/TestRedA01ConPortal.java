@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.portal.tests;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -69,16 +71,23 @@ public class TestRedA01ConPortal {
 	}
 
 	@Test
-	public void esPosibleEnviarUnaInstanciDeObjectPorElPortal() {
-		final HandlerEncolador<Object> handlerReceptor = new HandlerEncolador<Object>() {
+	public void siSeEsperaUnMapaSeRecibenTodasLasClavesDelEstadoDelMensaje() {
+		final HandlerEncolador<Map<String, Object>> handlerReceptor = new HandlerEncolador<Map<String, Object>>() {
 		};
 		nodoReceptor.recibirCon(handlerReceptor);
 
-		final Object mensajeEnviado = new Object();
+		final Map<String, Object> mensajeEnviado = new HashMap<String, Object>();
+		mensajeEnviado.put("hola", "manola");
 		nodoEmisor.enviar(mensajeEnviado);
 
 		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensajeEnviado, mensajeRecibido);
+		Assert.assertTrue("Deberíamos recibir un mapa", mensajeRecibido instanceof Map);
+
+		@SuppressWarnings("unchecked")
+		final Map<String, Object> mapaRecibido = (Map<String, Object>) mensajeRecibido;
+		Assert.assertEquals("El mapa debería tener los valores del mapa original", "manola", mapaRecibido.get("hola"));
+
+		Assert.assertTrue("Pero además tener otras kesy que no mandamos!", mensajeEnviado.size() < mapaRecibido.size());
 	}
 
 	/**
