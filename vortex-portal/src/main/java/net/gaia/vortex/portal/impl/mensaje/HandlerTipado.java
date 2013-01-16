@@ -17,6 +17,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -25,6 +26,9 @@ import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import ar.com.dgarcia.coding.anno.MayBeNull;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
+import ar.com.dgarcia.lang.reflection.types.Linaje;
+import ar.com.dgarcia.lang.reflection.types.Tipo;
+import ar.com.dgarcia.lang.reflection.types.Tipos;
 
 /**
  * Esta clase es la implementación abstracta del handler de portal que deduce su tipo a partir del
@@ -35,6 +39,7 @@ import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 
 	private Condicion condicionSuficiente;
+	private Class<T> tipoEsperado;
 
 	/**
 	 * Constructor que toma la condición necesaria para recibir los mensajes en este handler
@@ -55,14 +60,22 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Class<T> getTipoEsperado() {
-		final Class<?> tipoEsperado = getConcreteTypeForFirstParameterOf(HandlerTipado.class, getClass());
+		if (tipoEsperado != null) {
+			return tipoEsperado;
+		}
+		final Tipo tipoDeEstaSubclase = Tipos.desdeType(getClass());
+		final Linaje linajeDeEstaSubclase = tipoDeEstaSubclase.getLinaje();
+		final Tipo tipoDehandlerTipado = linajeDeEstaSubclase.getTipoDe(HandlerTipado.class);
+		final List<Tipo> parametrosGenerics = tipoDehandlerTipado.getParametrosGenerics();
+		final Tipo tipoDelParametroGeneric = parametrosGenerics.get(0);
+		tipoEsperado = (Class<T>) tipoDelParametroGeneric.getClassInstance();
 		if (tipoEsperado == null) {
 			throw new UnhandledConditionException(
 					"No fue posible determinar el tipo esperado de mensaje para el handler[" + this
 							+ "], buscando en la jerarquía de la clase [" + getClass()
 							+ "]. La clase define un tipo concreto para la superclase " + HandlerTipado.class + "?");
 		}
-		return (Class<T>) tipoEsperado;
+		return tipoEsperado;
 	}
 
 	/**
