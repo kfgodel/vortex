@@ -12,8 +12,11 @@
  */
 package net.gaia.vortex.core.impl.mensaje.support;
 
+import java.util.Map;
+
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
+import net.gaia.vortex.core.impl.mensaje.copia.CopiarMapaVortex;
 import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
@@ -44,7 +47,14 @@ public class ContenidoVortexSupport extends CaseInsensitiveHashMap<Object> imple
 	 * @return El valor adaptado
 	 */
 	private Object adaptValueToVortex(final Object value) {
-		return value;
+		if (!(value instanceof Map) || (value instanceof CaseInsensitiveHashMap)) {
+			// Si no es un mapa, o ya es case insensitive lo dejamos como está
+			return value;
+		}
+		@SuppressWarnings("unchecked")
+		final Map<String, Object> mapaNoCi = (Map<String, Object>) value;
+		final Map<String, Object> mapaCi = CopiarMapaVortex.convertirAMapaVortex(mapaNoCi);
+		return mapaCi;
 	}
 
 	/**

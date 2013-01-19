@@ -12,9 +12,6 @@
  */
 package net.gaia.vortex.core.impl.mensaje.copia;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
@@ -59,17 +56,7 @@ public class ClonadorDeMensajes {
 	 */
 	private ContenidoVortex copiarContenido(final ContenidoVortex contenidoOriginal) {
 		final ContenidoMapa contenidoCopia = ContenidoMapa.create();
-
-		final List<CopiarMapaVortex> pendientes = new ArrayList<CopiarMapaVortex>();
-		pendientes.add(CopiarMapaVortex.create(contenidoOriginal, contenidoCopia));
-
-		while (!pendientes.isEmpty()) {
-			final CopiarMapaVortex copiaActual = pendientes.remove(0);
-
-			final List<CopiarMapaVortex> pendientesAdicionales = copiaActual.copiar();
-			pendientes.addAll(pendientesAdicionales);
-		}
-
+		CopiarMapaVortex.copiarContenidoVortexDesde(contenidoOriginal, contenidoCopia);
 		return contenidoCopia;
 	}
 

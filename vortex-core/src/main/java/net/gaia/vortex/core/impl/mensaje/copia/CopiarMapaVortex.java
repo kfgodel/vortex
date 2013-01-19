@@ -58,7 +58,7 @@ public class CopiarMapaVortex {
 				// Si es un mapa generamos otra copia para que sea modificable
 				@SuppressWarnings("unchecked")
 				final Map<String, Object> subMapaOriginal = (Map<String, Object>) value;
-				final CaseInsensitiveHashMap<Object> subMapaCopia = new CaseInsensitiveHashMap<Object>();
+				final Map<String, Object> subMapaCopia = crearMapaVortex();
 				// La operación de copia queda para despues
 				copiasPendientes.add(CopiarMapaVortex.create(subMapaOriginal, subMapaCopia));
 				// Reemplazamos el valor para que se use el mapa que creamos
@@ -75,6 +75,52 @@ public class CopiarMapaVortex {
 	@Override
 	public String toString() {
 		return ToString.de(this).con(mapaOriginal_FIELD, mapaOriginal).con(mapaCopia_FIELD, mapaCopia).toString();
+	}
+
+	/**
+	 * Crea un mapa para usar anidado en contenido vortex. Case insensitive
+	 * 
+	 * @return El mapa a utilizar
+	 */
+	public static Map<String, Object> crearMapaVortex() {
+		return new CaseInsensitiveHashMap<Object>();
+	}
+
+	/**
+	 * Crea una version adaptada a vortex del mapa que es case insensitive. El contenido es el
+	 * mismo.<br>
+	 * Cualquier submapa es convertido también
+	 * 
+	 * @param mapaOriginal
+	 *            El mapa a convertir
+	 * @return El mapa clonado
+	 */
+	public static Map<String, Object> convertirAMapaVortex(final Map<String, Object> mapaOriginal) {
+		final Map<String, Object> mapaCopia = crearMapaVortex();
+		copiarContenidoVortexDesde(mapaOriginal, mapaCopia);
+		return mapaCopia;
+	}
+
+	/**
+	 * Copia el contenido de un mapa en el otro, generado mapas Case Insensitive por cada submapa
+	 * que debe clonar
+	 * 
+	 * @param mapaOrigen
+	 *            El mapa original con los datos
+	 * @param mapaDestino
+	 *            El mapa destino donde se va a clonar el contenido
+	 */
+	public static void copiarContenidoVortexDesde(final Map<String, Object> mapaOrigen,
+			final Map<String, Object> mapaDestino) {
+		final List<CopiarMapaVortex> pendientes = new ArrayList<CopiarMapaVortex>();
+		pendientes.add(CopiarMapaVortex.create(mapaOrigen, mapaDestino));
+
+		while (!pendientes.isEmpty()) {
+			final CopiarMapaVortex copiaActual = pendientes.remove(0);
+
+			final List<CopiarMapaVortex> pendientesAdicionales = copiaActual.copiar();
+			pendientes.addAll(pendientesAdicionales);
+		}
 	}
 
 }
