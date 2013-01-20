@@ -19,7 +19,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.sets.impl.And;
+import net.gaia.vortex.sets.impl.AndCompuesto;
 
 import org.junit.Test;
 
@@ -33,13 +33,13 @@ public class TestFiltroPorAnd {
 	@Test
 	public void deberiaDarTrueParaDosCondicionesTrue() {
 		Assert.assertEquals(ResultadoDeCondicion.TRUE,
-				And.create(SiempreTrue.getInstancia(), SiempreTrue.getInstancia()).esCumplidaPor(null));
+				AndCompuesto.de(SiempreTrue.getInstancia(), SiempreTrue.getInstancia()).esCumplidaPor(null));
 	}
 
 	@Test
 	public void deberiaDarFalseSiAlgunaEsFalse() {
 		Assert.assertEquals(ResultadoDeCondicion.FALSE,
-				And.create(SiempreTrue.getInstancia(), SiempreFalse.getInstancia(), SiempreTrue.getInstancia())
+				AndCompuesto.de(SiempreTrue.getInstancia(), SiempreFalse.getInstancia(), SiempreTrue.getInstancia())
 						.esCumplidaPor(null));
 	}
 
@@ -47,7 +47,7 @@ public class TestFiltroPorAnd {
 	public void noDeberiaEvaluarElRestoSiLaPrimeraEsFalse() {
 		final CondicionTestWrapper condicionEvaluada = CondicionTestWrapper.create(SiempreFalse.getInstancia());
 		final CondicionTestWrapper condicionNoEvaluada = CondicionTestWrapper.create(SiempreTrue.getInstancia());
-		Assert.assertEquals(ResultadoDeCondicion.FALSE, And.create(condicionEvaluada, condicionNoEvaluada)
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, AndCompuesto.de(condicionEvaluada, condicionNoEvaluada)
 				.esCumplidaPor(null));
 		Assert.assertTrue(condicionEvaluada.isEvaluada());
 		Assert.assertFalse(condicionNoEvaluada.isEvaluada());
@@ -59,7 +59,7 @@ public class TestFiltroPorAnd {
 	 */
 	@Test
 	public void deberiaDarTrueSiNoTieneCondiciones() {
-		Assert.assertEquals(ResultadoDeCondicion.TRUE, And.create(new ArrayList<Condicion>()).esCumplidaPor(null));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE, AndCompuesto.create(new ArrayList<Condicion>()).esCumplidaPor(null));
 	}
 
 }

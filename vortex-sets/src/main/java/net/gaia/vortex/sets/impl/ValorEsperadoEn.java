@@ -26,7 +26,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class ValorEsperadoIgual implements Condicion {
+public class ValorEsperadoEn implements Condicion {
 
 	private ValueAccessor valueAccessor;
 	public static final String valueAccessor_FIELD = "valueAccessor";
@@ -72,20 +72,20 @@ public class ValorEsperadoIgual implements Condicion {
 	/**
 	 * Crea una nueva condición que evalua si el valor esperado se encuentra en la cadena de
 	 * propiedades de cada mensaje que recibe
-	 * 
-	 * @param valorEsperado
-	 *            El valor que debe tener el mensaje
 	 * @param propertyPath
 	 *            La cadena de propiedades a evaluar en el mensaje
+	 * @param valorEsperado
+	 *            El valor que debe tener el mensaje
+	 * 
 	 * @return La condición creada
 	 */
-	public static ValorEsperadoIgual a(final Object valorEsperado, final String propertyPath) {
+	public static ValorEsperadoEn elAtributo(final String propertyPath, final Object valorEsperado) {
 		final ValueAccessor valueAccessor = PropertyChainAccessor.createAccessor(propertyPath);
 		return create(valorEsperado, valueAccessor);
 	}
 
-	public static ValorEsperadoIgual create(final Object valorEsperado, final ValueAccessor valueAccessor) {
-		final ValorEsperadoIgual condicion = new ValorEsperadoIgual();
+	public static ValorEsperadoEn create(final Object valorEsperado, final ValueAccessor valueAccessor) {
+		final ValorEsperadoEn condicion = new ValorEsperadoEn();
 		condicion.valorEsperado = valorEsperado;
 		condicion.valueAccessor = valueAccessor;
 		return condicion;

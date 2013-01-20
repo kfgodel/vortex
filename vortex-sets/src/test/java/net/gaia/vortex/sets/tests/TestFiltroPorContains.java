@@ -18,7 +18,7 @@ import java.util.HashMap;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.sets.impl.ContieneA;
+import net.gaia.vortex.sets.impl.ColeccionContiene;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -64,52 +64,52 @@ public class TestFiltroPorContains {
 	@Test
 	public void deberiaIndicarTrueSiLaPropiedadContieneElValorBuscado() {
 		Assert.assertEquals(ResultadoDeCondicion.TRUE,
-				ContieneA.valor(PRIMER_TEXTO, COLECCION_FIELD).esCumplidaPor(mensaje));
+				ColeccionContiene.alValor(PRIMER_TEXTO, COLECCION_FIELD).esCumplidaPor(mensaje));
 		Assert.assertEquals(ResultadoDeCondicion.TRUE,
-				ContieneA.valor(PRIMER_NUMERO, COLECCION_FIELD).esCumplidaPor(mensaje));
+				ColeccionContiene.alValor(PRIMER_NUMERO, COLECCION_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarTrueSiElValorEsperadoEsnullYLaColeccionLoTiene() {
-		Assert.assertEquals(ResultadoDeCondicion.TRUE, ContieneA.valor(null, COLECCION_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE, ColeccionContiene.alValor(null, COLECCION_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadNoContieneElValorBuscado() {
-		Assert.assertEquals(ResultadoDeCondicion.FALSE, ContieneA.valor("Lolololololoooo", COLECCION_FIELD)
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, ColeccionContiene.alValor("Lolololololoooo", COLECCION_FIELD)
 				.esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadNoExiste() {
-		Assert.assertEquals(ResultadoDeCondicion.FALSE, ContieneA.valor(PRIMER_NUMERO, INEXISTENTE_FIELD)
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, ColeccionContiene.alValor(PRIMER_NUMERO, INEXISTENTE_FIELD)
 				.esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarTrueSiLaPropiedadAnidadaContieneElValor() {
 		Assert.assertEquals(ResultadoDeCondicion.TRUE,
-				ContieneA.valor(PRIMER_NUMERO, OBJETO_FIELD + "." + COLECCION_FIELD).esCumplidaPor(mensaje));
+				ColeccionContiene.alValor(PRIMER_NUMERO, OBJETO_FIELD + "." + COLECCION_FIELD).esCumplidaPor(mensaje));
 		Assert.assertEquals(ResultadoDeCondicion.TRUE,
-				ContieneA.valor(PRIMER_TEXTO, OBJETO_FIELD + "." + COLECCION_FIELD).esCumplidaPor(mensaje));
+				ColeccionContiene.alValor(PRIMER_TEXTO, OBJETO_FIELD + "." + COLECCION_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarTrueSiLaPropiedadAnidadaContieneAlNullBuscado() {
-		Assert.assertEquals(ResultadoDeCondicion.TRUE, ContieneA.valor(null, OBJETO_FIELD + "." + COLECCION_FIELD)
+		Assert.assertEquals(ResultadoDeCondicion.TRUE, ColeccionContiene.alValor(null, OBJETO_FIELD + "." + COLECCION_FIELD)
 				.esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadIntermediaEsNull() {
 		Assert.assertEquals(ResultadoDeCondicion.FALSE,
-				ContieneA.valor(PRIMER_NUMERO, NULL_FIELD + "." + COLECCION_FIELD).esCumplidaPor(mensaje));
+				ColeccionContiene.alValor(PRIMER_NUMERO, NULL_FIELD + "." + COLECCION_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadIntermediaNoEsUnMapa() {
 		Assert.assertEquals(ResultadoDeCondicion.FALSE,
-				ContieneA.valor(PRIMER_NUMERO, COLECCION_FIELD + "." + COLECCION_FIELD).esCumplidaPor(mensaje));
+				ColeccionContiene.alValor(PRIMER_NUMERO, COLECCION_FIELD + "." + COLECCION_FIELD).esCumplidaPor(mensaje));
 	}
 
 }

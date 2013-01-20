@@ -12,6 +12,11 @@
  */
 package net.gaia.vortex.router.impl.messages;
 
+import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.sets.impl.AndCompuesto;
+import net.gaia.vortex.sets.impl.AtributoPresente;
+import net.gaia.vortex.sets.impl.ValorEsperadoEn;
+
 /**
  * Esta clase representa el mensaje enviado por un nodo para conocer el id con el que otro nodo lo
  * conoce.<br>
@@ -23,12 +28,12 @@ public class PedidoDeIdRemoto extends MensajeBidiSupport {
 
 	public static final String NOMBRE_DE_TIPO = "vortex.id.pedido";
 
+	private Long idDePataLocalAlEmisor;
+	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
+
 	public PedidoDeIdRemoto() {
 		super(NOMBRE_DE_TIPO);
 	}
-
-	private Long idDePataLocalAlEmisor;
-	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
 
 	public Long getIdDePataLocalAlEmisor() {
 		return idDePataLocalAlEmisor;
@@ -42,6 +47,19 @@ public class PedidoDeIdRemoto extends MensajeBidiSupport {
 		final PedidoDeIdRemoto pedido = new PedidoDeIdRemoto();
 		pedido.setIdDePataLocalAlEmisor(idDePataLocal);
 		return pedido;
+	}
+
+	/**
+	 * Devuelve el filtro que permite recibir este tipo de mensajes
+	 * 
+	 * @return El filtro que descarta otros mensajes y permite recibir este tipo
+	 */
+	public static Condicion getFiltroDelTipo() {
+		final Condicion filtroDePedidos = AndCompuesto.de( //
+				ValorEsperadoEn.elAtributo(nombreDeTipo_FIELD, NOMBRE_DE_TIPO),//
+				AtributoPresente.conNombre(idDePataLocalAlEmisor_FIELD)//
+				);
+		return filtroDePedidos;
 	}
 
 }

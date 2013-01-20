@@ -26,7 +26,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class And implements Condicion {
+public class AndCompuesto implements Condicion {
 
 	private List<Condicion> condiciones;
 	public static final String condiciones_FIELD = "condiciones";
@@ -59,7 +59,7 @@ public class And implements Condicion {
 		return ResultadoDeCondicion.TRUE;
 	}
 
-	public static And create(final Condicion condicion1, final Condicion condicion2, final Condicion... adicionales) {
+	public static AndCompuesto de(final Condicion condicion1, final Condicion condicion2, final Condicion... adicionales) {
 		final ArrayList<Condicion> condicionesEvaluadas = new ArrayList<Condicion>(adicionales.length + 2);
 		condicionesEvaluadas.add(condicion1);
 		condicionesEvaluadas.add(condicion2);
@@ -69,8 +69,8 @@ public class And implements Condicion {
 		return create(condicionesEvaluadas);
 	}
 
-	public static And create(final List<Condicion> condicionesEvaluadas) {
-		final And operador = new And();
+	public static AndCompuesto create(final List<Condicion> condicionesEvaluadas) {
+		final AndCompuesto operador = new AndCompuesto();
 		operador.condiciones = condicionesEvaluadas;
 		return operador;
 	}

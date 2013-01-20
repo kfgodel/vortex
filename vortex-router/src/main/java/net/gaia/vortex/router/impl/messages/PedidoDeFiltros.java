@@ -12,6 +12,10 @@
  */
 package net.gaia.vortex.router.impl.messages;
 
+import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.sets.impl.AndCompuesto;
+import net.gaia.vortex.sets.impl.AtributoPresente;
+import net.gaia.vortex.sets.impl.ValorEsperadoEn;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -42,4 +46,16 @@ public class PedidoDeFiltros extends MensajeBidiSupport {
 		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdDePataLocalAlReceptor()).toString();
 	}
 
+	/**
+	 * Devuelve el filtro que permite recibir este tipo de mensajes
+	 * 
+	 * @return El filtro que descarta otros mensajes y permite recibir este tipo
+	 */
+	public static Condicion getFiltroDelTipo() {
+		final Condicion filtroDePedidos = AndCompuesto.de( //
+				ValorEsperadoEn.elAtributo(nombreDeTipo_FIELD, NOMBRE_DE_TIPO),//
+				AtributoPresente.conNombre(idDePataLocalAlReceptor_FIELD)//
+				);
+		return filtroDePedidos;
+	}
 }

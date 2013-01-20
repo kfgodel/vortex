@@ -9,7 +9,7 @@ import junit.framework.Assert;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.sets.impl.EmpiezaCon;
+import net.gaia.vortex.sets.impl.AtributoEmpieza;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,60 +52,60 @@ public class TestFiltroEmpiezaCon {
 	@Test
 	public void deberiaIndicarTrueSiLaPropiedadDelObjetoEmpiezaConElPrefijo() {
 		Assert.assertEquals(ResultadoDeCondicion.TRUE,
-				EmpiezaCon.elPrefijo(PREFIJO_VALIDO, TEXTO_FIELD).esCumplidaPor(mensaje));
+				AtributoEmpieza.conPrefijo(PREFIJO_VALIDO, TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadDelObjetoNoEmpiezaConElPrefijo() {
-		Assert.assertEquals(ResultadoDeCondicion.FALSE, EmpiezaCon.elPrefijo(PREFIJO_INVALIDO, TEXTO_FIELD)
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, AtributoEmpieza.conPrefijo(PREFIJO_INVALIDO, TEXTO_FIELD)
 				.esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiElPrefijoDifiereEnUnAcento() {
-		Assert.assertEquals(ResultadoDeCondicion.FALSE, EmpiezaCon.elPrefijo(PREFIJO_CON_ACENTO, TEXTO_FIELD)
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, AtributoEmpieza.conPrefijo(PREFIJO_CON_ACENTO, TEXTO_FIELD)
 				.esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiElPrefijoTieneDistintoCase() {
-		Assert.assertEquals(ResultadoDeCondicion.FALSE, EmpiezaCon.elPrefijo(PREFIJO_CON_DISTINTO_CASE, TEXTO_FIELD)
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, AtributoEmpieza.conPrefijo(PREFIJO_CON_DISTINTO_CASE, TEXTO_FIELD)
 				.esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiElValorDeLaPropiedadEsNull() {
 		Assert.assertEquals(ResultadoDeCondicion.FALSE,
-				EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NULL_FIELD).esCumplidaPor(mensaje));
+				AtributoEmpieza.conPrefijo(PREFIJO_VALIDO, NULL_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarTrueSiLaPropiedadAnidadaEmpiezaConElPrefijo() {
 		Assert.assertEquals(ResultadoDeCondicion.TRUE,
-				EmpiezaCon.elPrefijo(PREFIJO_VALIDO, OBJETO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
+				AtributoEmpieza.conPrefijo(PREFIJO_VALIDO, OBJETO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadIntermediaEsNull() {
 		Assert.assertEquals(ResultadoDeCondicion.FALSE,
-				EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NULL_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
+				AtributoEmpieza.conPrefijo(PREFIJO_VALIDO, NULL_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadIntermediaNoEsUnMapa() {
 		Assert.assertEquals(ResultadoDeCondicion.FALSE,
-				EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NUMERO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
+				AtributoEmpieza.conPrefijo(PREFIJO_VALIDO, NUMERO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadNoExiste() {
-		Assert.assertEquals(ResultadoDeCondicion.FALSE, EmpiezaCon.elPrefijo(PREFIJO_VALIDO, INEXISTENTE_FIELD)
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, AtributoEmpieza.conPrefijo(PREFIJO_VALIDO, INEXISTENTE_FIELD)
 				.esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiElValorDeLaPropiedadNoEsString() {
-		Assert.assertEquals(ResultadoDeCondicion.FALSE, EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NUMERO_FIELD)
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, AtributoEmpieza.conPrefijo(PREFIJO_VALIDO, NUMERO_FIELD)
 				.esCumplidaPor(mensaje));
 	}
 }

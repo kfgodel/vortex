@@ -14,7 +14,11 @@ package net.gaia.vortex.router.impl.messages;
 
 import java.util.Map;
 
+import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.sets.impl.AndCompuesto;
+import net.gaia.vortex.sets.impl.AtributoPresente;
+import net.gaia.vortex.sets.impl.ValorEsperadoEn;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -67,6 +71,21 @@ public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 	public String toString() {
 		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdDePataLocalAlReceptor())
 				.con(idDePataLocalAlEmisor_FIELD, idDePataLocalAlEmisor).con(idDePedido_FIELD, idDePedido).toString();
+	}
+
+	/**
+	 * Devuelve el filtro que permite recibir este tipo de mensajes
+	 * 
+	 * @return El filtro que descarta otros mensajes y permite recibir este tipo
+	 */
+	public static Condicion getFiltroDelTipo() {
+		final Condicion filtroDeRespuestas = AndCompuesto.de( //
+				ValorEsperadoEn.elAtributo(nombreDeTipo_FIELD, NOMBRE_DE_TIPO),//
+				AtributoPresente.conNombre(idDePataLocalAlReceptor_FIELD),//
+				AtributoPresente.conNombre(idDePataLocalAlEmisor_FIELD),//
+				AtributoPresente.conNombre(idDePedido_FIELD)//
+				);
+		return filtroDeRespuestas;
 	}
 
 }

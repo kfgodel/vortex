@@ -22,7 +22,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class Not implements Condicion {
+public class Negacion implements Condicion {
 
 	private Condicion condicionNegada;
 	public static final String condicionNegada_FIELD = "condicionNegada";
@@ -45,8 +45,8 @@ public class Not implements Condicion {
 		return ResultadoDeCondicion.INDECIDIBLE;
 	}
 
-	public static Not de(final Condicion condicionANegar) {
-		final Not condicion = new Not();
+	public static Negacion de(final Condicion condicionANegar) {
+		final Negacion condicion = new Negacion();
 		condicion.condicionNegada = condicionANegar;
 		return condicion;
 	}

@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.router.impl.messages;
 
+
 /**
  * Esta clase es super de todos los mensajes y tiene operaciones comunes
  * 
@@ -20,6 +21,7 @@ package net.gaia.vortex.router.impl.messages;
 public abstract class MensajeBidiSupport implements MensajeBidireccional {
 
 	private final String nombreDeTipo;
+	public static final String nombreDeTipo_FIELD = "nombreDeTipo";
 
 	private Long idDePataLocalAlReceptor;
 	public static final String idDePataLocalAlReceptor_FIELD = "idDePataLocalAlReceptor";

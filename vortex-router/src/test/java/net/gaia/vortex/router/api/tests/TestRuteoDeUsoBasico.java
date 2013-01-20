@@ -22,7 +22,7 @@ import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.api.moleculas.Router;
 import net.gaia.vortex.router.api.tests.listeners.ListenerDeCambioDeFiltrosConCola;
 import net.gaia.vortex.router.api.tests.listeners.ListenerDeRuteoEnPasos;
-import net.gaia.vortex.sets.impl.ValorEsperadoIgual;
+import net.gaia.vortex.sets.impl.ValorEsperadoEn;
 import net.gaia.vortex.sets.reflection.accessors.PropertyAccessor;
 
 import org.junit.After;
@@ -102,7 +102,7 @@ public class TestRuteoDeUsoBasico {
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptor = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
-				return ValorEsperadoIgual.create(valorEsperado,
+				return ValorEsperadoEn.create(valorEsperado,
 						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
 			}
 		};
@@ -137,7 +137,7 @@ public class TestRuteoDeUsoBasico {
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptor = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
-				return ValorEsperadoIgual.create("!" + valorEsperado,
+				return ValorEsperadoEn.create("!" + valorEsperado,
 						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
 			}
 		};
@@ -212,7 +212,7 @@ public class TestRuteoDeUsoBasico {
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptorPositivo = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
-				return ValorEsperadoIgual.create(valorEsperado,
+				return ValorEsperadoEn.create(valorEsperado,
 						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
 			}
 		};
@@ -222,7 +222,7 @@ public class TestRuteoDeUsoBasico {
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptorNegativo = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
-				return ValorEsperadoIgual.create(valorNoEsperado,
+				return ValorEsperadoEn.create(valorNoEsperado,
 						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
 			}
 		};

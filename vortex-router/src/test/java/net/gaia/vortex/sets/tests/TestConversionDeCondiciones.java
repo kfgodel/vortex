@@ -10,10 +10,10 @@ import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.router.impl.sets.converter.ConversorDeCondiciones;
 import net.gaia.vortex.router.impl.sets.converter.MetadataDeCondiciones;
-import net.gaia.vortex.sets.impl.And;
-import net.gaia.vortex.sets.impl.Not;
-import net.gaia.vortex.sets.impl.Or;
-import net.gaia.vortex.sets.impl.ValorEsperadoIgual;
+import net.gaia.vortex.sets.impl.AndCompuesto;
+import net.gaia.vortex.sets.impl.Negacion;
+import net.gaia.vortex.sets.impl.OrCompuesto;
+import net.gaia.vortex.sets.impl.ValorEsperadoEn;
 import net.gaia.vortex.sets.reflection.accessors.PropertyAccessor;
 
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class TestConversionDeCondiciones {
 	public void deberiaConvertirEnMapaUnaCondicionPorClaveValor() {
 		String valorEsperado = "valor";
 		String claveEsperada = "clave";
-		ValorEsperadoIgual condicionClaveValor = ValorEsperadoIgual.create(valorEsperado, PropertyAccessor.create(claveEsperada));
+		ValorEsperadoEn condicionClaveValor = ValorEsperadoEn.create(valorEsperado, PropertyAccessor.create(claveEsperada));
 		Map<String, Object> mapaConvertido = conversor.convertirAMapa(condicionClaveValor);
 		Assert.assertEquals(MetadataDeCondiciones.TipoClaveValor.TIPO_CLAVE_VALOR, mapaConvertido.get(MetadataDeCondiciones.ATRIBUTO_TIPO));
 		Assert.assertEquals(claveEsperada, mapaConvertido.get(MetadataDeCondiciones.TipoClaveValor.ATRIBUTO_CLAVE));
@@ -54,7 +54,7 @@ public class TestConversionDeCondiciones {
 
 	@Test
 	public void deberiaConvertirEnUnMapaUnAndVacio(){
-		And condicionAnd = And.create(new ArrayList<Condicion>());
+		AndCompuesto condicionAnd = AndCompuesto.create(new ArrayList<Condicion>());
 		
 		Map<String, Object> mapaConvertido = conversor.convertirAMapa(condicionAnd);
 		Assert.assertEquals(MetadataDeCondiciones.TipoAnd.TIPO_AND, mapaConvertido.get(MetadataDeCondiciones.ATRIBUTO_TIPO));
@@ -68,7 +68,7 @@ public class TestConversionDeCondiciones {
 	
 	@Test
 	public void deberiaConvertirEnUnMapaUnOrVacio(){
-		Or condicionOr = Or.create(new ArrayList<Condicion>());
+		OrCompuesto condicionOr = OrCompuesto.create(new ArrayList<Condicion>());
 		
 		Map<String, Object> mapaConvertido = conversor.convertirAMapa(condicionOr);
 		Assert.assertEquals(MetadataDeCondiciones.TipoOr.TIPO_OR, mapaConvertido.get(MetadataDeCondiciones.ATRIBUTO_TIPO));
@@ -82,7 +82,7 @@ public class TestConversionDeCondiciones {
 
 	@Test
 	public void deberiaConvertirEnUnMapaUnNotVacio(){
-		Not condicionNot = Not.de(null);
+		Negacion condicionNot = Negacion.de(null);
 		
 		Map<String, Object> mapaConvertido = conversor.convertirAMapa(condicionNot);
 		Assert.assertEquals(MetadataDeCondiciones.TipoNot.TIPO_NOT, mapaConvertido.get(MetadataDeCondiciones.ATRIBUTO_TIPO));
@@ -96,7 +96,7 @@ public class TestConversionDeCondiciones {
 	
 	@Test
 	public void deberiaConvertirEnMapasAnidadosSiHayVariasCondiciones() {
-		And condicionAnd = And.create(SiempreTrue.getInstancia(), SiempreFalse.getInstancia());
+		AndCompuesto condicionAnd = AndCompuesto.de(SiempreTrue.getInstancia(), SiempreFalse.getInstancia());
 		
 		Map<String, Object> mapaConvertido = conversor.convertirAMapa(condicionAnd);
 		Assert.assertEquals(MetadataDeCondiciones.TipoAnd.TIPO_AND, mapaConvertido.get(MetadataDeCondiciones.ATRIBUTO_TIPO));

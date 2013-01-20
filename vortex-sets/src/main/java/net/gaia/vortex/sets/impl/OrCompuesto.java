@@ -26,7 +26,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class Or implements Condicion {
+public class OrCompuesto implements Condicion {
 
 	private List<Condicion> condiciones;
 	public static final String condiciones_FIELD = "condiciones";
@@ -59,7 +59,7 @@ public class Or implements Condicion {
 		return ResultadoDeCondicion.FALSE;
 	}
 
-	public static Or create(final Condicion condicion1, final Condicion condicion2, final Condicion... adicionales) {
+	public static OrCompuesto de(final Condicion condicion1, final Condicion condicion2, final Condicion... adicionales) {
 		final ArrayList<Condicion> condicionesEvaluadas = new ArrayList<Condicion>(adicionales.length + 2);
 		condicionesEvaluadas.add(condicion1);
 		condicionesEvaluadas.add(condicion2);
@@ -79,8 +79,8 @@ public class Or implements Condicion {
 		this.condiciones.add(condicionExtra);
 	}
 
-	public static Or create(final List<Condicion> condicionesEvaluadas) {
-		final Or operador = new Or();
+	public static OrCompuesto create(final List<Condicion> condicionesEvaluadas) {
+		final OrCompuesto operador = new OrCompuesto();
 		operador.condiciones = condicionesEvaluadas;
 		return operador;
 	}

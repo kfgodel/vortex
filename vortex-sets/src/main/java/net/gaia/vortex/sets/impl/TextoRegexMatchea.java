@@ -30,7 +30,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class RegexMatchea implements Condicion {
+public class TextoRegexMatchea implements Condicion {
 
 	private ValueAccessor valueAccessor;
 	public static final String valueAccessor_FIELD = "valueAccessor";
@@ -57,7 +57,7 @@ public class RegexMatchea implements Condicion {
 	 *            La cadena de propiedades para navegar en el mensaje
 	 * @return La condición creada
 	 */
-	public static RegexMatchea laExpresion(final String expresionRegular, final String propertyPath) {
+	public static TextoRegexMatchea laExpresion(final String expresionRegular, final String propertyPath) {
 		Pattern pattern;
 		try {
 			pattern = Pattern.compile(expresionRegular);
@@ -68,8 +68,8 @@ public class RegexMatchea implements Condicion {
 		return create(pattern, valueAccessor);
 	}
 
-	public static RegexMatchea create(final Pattern pattern, final ValueAccessor valueAccessor) {
-		final RegexMatchea condicion = new RegexMatchea();
+	public static TextoRegexMatchea create(final Pattern pattern, final ValueAccessor valueAccessor) {
+		final TextoRegexMatchea condicion = new TextoRegexMatchea();
 		condicion.expresion = pattern;
 		condicion.valueAccessor = valueAccessor;
 		return condicion;

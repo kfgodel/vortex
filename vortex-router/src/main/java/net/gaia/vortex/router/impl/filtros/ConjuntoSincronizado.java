@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
-import net.gaia.vortex.sets.impl.Or;
+import net.gaia.vortex.sets.impl.OrCompuesto;
 import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
 
 /**
@@ -108,7 +108,7 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 			return unicaCondicion;
 		}
 
-		final Condicion condicionUnificada = Or.create(condiciones);
+		final Condicion condicionUnificada = OrCompuesto.create(condiciones);
 		return condicionUnificada;
 	}
 

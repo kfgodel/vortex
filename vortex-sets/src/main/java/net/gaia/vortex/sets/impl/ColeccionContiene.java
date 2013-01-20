@@ -23,12 +23,12 @@ import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la condición que evalua si una propiedad en el mapa de tipo colección o
+ * Esta clase representa la condición que evalúa si una propiedad en el mapa de tipo colección o
  * iterable contiene al valor indicado
  * 
  * @author D. García
  */
-public class ContieneA implements Condicion {
+public class ColeccionContiene implements Condicion {
 
 	private ValueAccessor valueAccessor;
 	public static final String valueAccessor_FIELD = "valueAccessor";
@@ -64,7 +64,7 @@ public class ContieneA implements Condicion {
 		}
 		final Iterable<?> iterable = (Iterable<?>) valorEnElMensaje;
 		for (final Object elementoEnMensaje : iterable) {
-			final boolean sonIguales = ValorEsperadoIgual.compararPorEquals(valorEsperado, elementoEnMensaje);
+			final boolean sonIguales = ValorEsperadoEn.compararPorEquals(valorEsperado, elementoEnMensaje);
 			if (sonIguales) {
 				return ResultadoDeCondicion.TRUE;
 			}
@@ -82,13 +82,13 @@ public class ContieneA implements Condicion {
 	 *            La cadena de propiedades que representa una colección o iterable
 	 * @return La condición creada
 	 */
-	public static ContieneA valor(final Object valorEsperado, final String propertyPath) {
+	public static ColeccionContiene alValor(final Object valorEsperado, final String propertyPath) {
 		final ValueAccessor valueAccessor = PropertyChainAccessor.createAccessor(propertyPath);
 		return create(valorEsperado, valueAccessor);
 	}
 
-	public static ContieneA create(final Object valorEsperado, final ValueAccessor valueAccessor) {
-		final ContieneA condicion = new ContieneA();
+	public static ColeccionContiene create(final Object valorEsperado, final ValueAccessor valueAccessor) {
+		final ColeccionContiene condicion = new ColeccionContiene();
 		condicion.valorEsperado = valorEsperado;
 		condicion.valueAccessor = valueAccessor;
 		return condicion;

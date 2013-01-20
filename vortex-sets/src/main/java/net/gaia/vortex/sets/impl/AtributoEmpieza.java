@@ -17,7 +17,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class EmpiezaCon implements Condicion {
+public class AtributoEmpieza implements Condicion {
 
 	private ValueAccessor valueAccessor;
 	public static final String valueAccessor_FIELD = "valueAccessor";
@@ -59,8 +59,8 @@ public class EmpiezaCon implements Condicion {
 				.toString();
 	}
 
-	public static EmpiezaCon elPrefijo(final String prefjioEsperado, final String propertyPath) {
-		final EmpiezaCon condicion = new EmpiezaCon();
+	public static AtributoEmpieza conPrefijo(final String prefjioEsperado, final String propertyPath) {
+		final AtributoEmpieza condicion = new AtributoEmpieza();
 		condicion.prefijoEsperado = prefjioEsperado;
 		condicion.valueAccessor = PropertyChainAccessor.createAccessor(propertyPath);
 		return condicion;

@@ -5,7 +5,11 @@ package net.gaia.vortex.router.impl.messages;
 
 import java.util.Map;
 
+import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.sets.impl.AndCompuesto;
+import net.gaia.vortex.sets.impl.AtributoPresente;
+import net.gaia.vortex.sets.impl.ValorEsperadoEn;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -65,4 +69,18 @@ public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
 				.toString();
 	}
 
+	/**
+	 * Devuelve el filtro que permite recibir este tipo de mensajes
+	 * 
+	 * @return El filtro que descarta otros mensajes y permite recibir este tipo
+	 */
+	public static Condicion getFiltroDelTipo() {
+		final Condicion filtroDeConfirmacion = AndCompuesto.de( //
+				ValorEsperadoEn.elAtributo(nombreDeTipo_FIELD, NOMBRE_DE_TIPO),//
+				AtributoPresente.conNombre(idDePataLocalAlReceptor_FIELD),//
+				AtributoPresente.conNombre(idDePataLocalAlEmisor_FIELD),//
+				AtributoPresente.conNombre(idDeRespuesta_FIELD)//
+				);
+		return filtroDeConfirmacion;
+	}
 }
