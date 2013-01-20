@@ -31,4 +31,11 @@ public interface MensajeBidireccional {
 	 */
 	public Long getIdDePataLocalAlReceptor();
 
+	/**
+	 * Devuelve el nombre del tipo de mensaje que permite discriminarlo
+	 * 
+	 * @return El nombre de este tipo de mensaje en particular
+	 */
+	public String getNombreDeTipo();
+
 }

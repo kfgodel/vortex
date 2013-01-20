@@ -23,11 +23,17 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class PublicacionDeFiltros extends MensajeBidiSupport {
 
+	public static final String NOMBRE_DE_TIPO = "vortex.filtro.publicacion";
+
 	private Map<String, Object> filtro;
 	public static final String filtro_FIELD = "filtro";
 
 	private Map<String, Object> idDePedido;
 	public static final String idDePedido_FIELD = "idDePedido";
+
+	public PublicacionDeFiltros() {
+		super(NOMBRE_DE_TIPO);
+	}
 
 	public Map<String, Object> getIdDePedido() {
 		return idDePedido;

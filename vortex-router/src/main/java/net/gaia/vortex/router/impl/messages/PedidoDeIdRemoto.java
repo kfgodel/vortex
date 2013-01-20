@@ -21,6 +21,12 @@ package net.gaia.vortex.router.impl.messages;
  */
 public class PedidoDeIdRemoto extends MensajeBidiSupport {
 
+	public static final String NOMBRE_DE_TIPO = "vortex.id.pedido";
+
+	public PedidoDeIdRemoto() {
+		super(NOMBRE_DE_TIPO);
+	}
+
 	private Long idDePataLocalAlEmisor;
 	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
 

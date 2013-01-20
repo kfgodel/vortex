@@ -22,6 +22,12 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class PedidoDeFiltros extends MensajeBidiSupport {
 
+	public static final String NOMBRE_DE_TIPO = "vortex.filtro.pedido";
+
+	public PedidoDeFiltros() {
+		super(NOMBRE_DE_TIPO);
+	}
+
 	public static PedidoDeFiltros create(final Long idDePataRemota) {
 		final PedidoDeFiltros solicitud = new PedidoDeFiltros();
 		solicitud.setIdDePataLocalAlReceptor(idDePataRemota);

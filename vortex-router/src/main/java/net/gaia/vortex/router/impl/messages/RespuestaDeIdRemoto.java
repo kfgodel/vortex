@@ -25,11 +25,17 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 
+	public static final String NOMBRE_DE_TIPO = "vortex.id.respuesta";
+
 	private Long idDePataLocalAlEmisor;
 	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
 
 	private Map<String, Object> idDePedido;
 	public static final String idDePedido_FIELD = "idDePedido";
+
+	public RespuestaDeIdRemoto() {
+		super(NOMBRE_DE_TIPO);
+	}
 
 	public Map<String, Object> getIdDePedido() {
 		return idDePedido;

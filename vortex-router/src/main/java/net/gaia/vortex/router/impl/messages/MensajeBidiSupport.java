@@ -19,6 +19,8 @@ package net.gaia.vortex.router.impl.messages;
  */
 public abstract class MensajeBidiSupport implements MensajeBidireccional {
 
+	private final String nombreDeTipo;
+
 	private Long idDePataLocalAlReceptor;
 	public static final String idDePataLocalAlReceptor_FIELD = "idDePataLocalAlReceptor";
 
@@ -29,6 +31,15 @@ public abstract class MensajeBidiSupport implements MensajeBidireccional {
 
 	public void setIdDePataLocalAlReceptor(final Long idDePataConductora) {
 		this.idDePataLocalAlReceptor = idDePataConductora;
+	}
+
+	public MensajeBidiSupport(final String nombreDeTipo) {
+		this.nombreDeTipo = nombreDeTipo;
+	}
+
+	@Override
+	public String getNombreDeTipo() {
+		return nombreDeTipo;
 	}
 
 }

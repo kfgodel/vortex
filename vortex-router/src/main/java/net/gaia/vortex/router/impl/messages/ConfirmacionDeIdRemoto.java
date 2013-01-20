@@ -17,11 +17,20 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
 
+	/**
+	 * Identificador para este tipo de mensajes bidi
+	 */
+	public static final String NOMBRE_DE_TIPO = "vortex.id.confirmacion";
+
 	private Long idDePataLocalAlEmisor;
 	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
 
 	private Map<String, Object> idDeRespuesta;
 	public static final String idDeRespuesta_FIELD = "idDeRespuesta";
+
+	public ConfirmacionDeIdRemoto() {
+		super(NOMBRE_DE_TIPO);
+	}
 
 	public Map<String, Object> getIdDeRespuesta() {
 		return idDeRespuesta;
