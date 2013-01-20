@@ -13,6 +13,7 @@
 package net.gaia.vortex.core.impl.condiciones;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -33,9 +34,9 @@ public class NoPasoPreviamente implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final boolean elComponenteNoTieneRegistradoElId = !componente.yaRecibio(mensaje);
-		return elComponenteNoTieneRegistradoElId;
+		return ResultadoDeCondicion.paraBooleano(elComponenteNoTieneRegistradoElId);
 	}
 
 	public static NoPasoPreviamente por(final ComponenteConMemoria componente) {

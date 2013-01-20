@@ -13,6 +13,7 @@
 package net.gaia.vortex.sets.impl;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.sets.reflection.ValueAccessor;
@@ -37,14 +38,16 @@ public class ValorEsperadoIgual implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final ContenidoVortex contenidoDelMensaje = mensaje.getContenido();
 		if (!valueAccessor.hasValueIn(contenidoDelMensaje)) {
-			// Consideramos que si no tiene la propiedad no es igual al esperado
-			return false;
+			// Consideramos que si no, mucho menos el valor esperado
+			return ResultadoDeCondicion.FALSE;
 		}
 		final Object valorEnElMensaje = valueAccessor.getValueFrom(contenidoDelMensaje);
-		return compararPorEquals(valorEsperado, valorEnElMensaje);
+		final boolean valoresIguales = compararPorEquals(valorEsperado, valorEnElMensaje);
+		final ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(valoresIguales);
+		return resultado;
 	}
 
 	/**

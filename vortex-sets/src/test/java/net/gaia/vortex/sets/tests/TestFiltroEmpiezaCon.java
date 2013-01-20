@@ -6,6 +6,7 @@ package net.gaia.vortex.sets.tests;
 import java.util.HashMap;
 
 import junit.framework.Assert;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.sets.impl.EmpiezaCon;
@@ -50,52 +51,61 @@ public class TestFiltroEmpiezaCon {
 
 	@Test
 	public void deberiaIndicarTrueSiLaPropiedadDelObjetoEmpiezaConElPrefijo() {
-		Assert.assertTrue(EmpiezaCon.elPrefijo(PREFIJO_VALIDO, TEXTO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				EmpiezaCon.elPrefijo(PREFIJO_VALIDO, TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadDelObjetoNoEmpiezaConElPrefijo() {
-		Assert.assertFalse(EmpiezaCon.elPrefijo(PREFIJO_INVALIDO, TEXTO_FIELD).esCumplidaPor(mensaje));
-	}
-
-	@Test
-	public void deberiaIndicarFalseSiElPrefijoDifiereEnUnAcento() {
-		Assert.assertFalse(EmpiezaCon.elPrefijo(PREFIJO_CON_ACENTO, TEXTO_FIELD).esCumplidaPor(mensaje));
-	}
-
-	@Test
-	public void deberiaIndicarFalseSiElPrefijoTieneDistintoCase() {
-		Assert.assertFalse(EmpiezaCon.elPrefijo(PREFIJO_CON_DISTINTO_CASE, TEXTO_FIELD).esCumplidaPor(mensaje));
-	}
-
-	@Test
-	public void deberiaIndicarFalseSiElValorDeLaPropiedadEsNull() {
-		Assert.assertFalse(EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NULL_FIELD).esCumplidaPor(mensaje));
-	}
-
-	@Test
-	public void deberiaIndicarTrueSiLaPropiedadAnidadaEmpiezaConElPrefijo() {
-		Assert.assertTrue(EmpiezaCon.elPrefijo(PREFIJO_VALIDO, OBJETO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
-	}
-
-	@Test
-	public void deberiaIndicarFalseSiLaPropiedadIntermediaEsNull() {
-		Assert.assertFalse(EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NULL_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
-	}
-
-	@Test
-	public void deberiaIndicarFalseSiLaPropiedadIntermediaNoEsUnMapa() {
-		Assert.assertFalse(EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NUMERO_FIELD + "." + TEXTO_FIELD)
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, EmpiezaCon.elPrefijo(PREFIJO_INVALIDO, TEXTO_FIELD)
 				.esCumplidaPor(mensaje));
 	}
 
 	@Test
+	public void deberiaIndicarFalseSiElPrefijoDifiereEnUnAcento() {
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, EmpiezaCon.elPrefijo(PREFIJO_CON_ACENTO, TEXTO_FIELD)
+				.esCumplidaPor(mensaje));
+	}
+
+	@Test
+	public void deberiaIndicarFalseSiElPrefijoTieneDistintoCase() {
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, EmpiezaCon.elPrefijo(PREFIJO_CON_DISTINTO_CASE, TEXTO_FIELD)
+				.esCumplidaPor(mensaje));
+	}
+
+	@Test
+	public void deberiaIndicarFalseSiElValorDeLaPropiedadEsNull() {
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NULL_FIELD).esCumplidaPor(mensaje));
+	}
+
+	@Test
+	public void deberiaIndicarTrueSiLaPropiedadAnidadaEmpiezaConElPrefijo() {
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				EmpiezaCon.elPrefijo(PREFIJO_VALIDO, OBJETO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
+	}
+
+	@Test
+	public void deberiaIndicarFalseSiLaPropiedadIntermediaEsNull() {
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NULL_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
+	}
+
+	@Test
+	public void deberiaIndicarFalseSiLaPropiedadIntermediaNoEsUnMapa() {
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NUMERO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
+	}
+
+	@Test
 	public void deberiaIndicarFalseSiLaPropiedadNoExiste() {
-		Assert.assertFalse(EmpiezaCon.elPrefijo(PREFIJO_VALIDO, INEXISTENTE_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, EmpiezaCon.elPrefijo(PREFIJO_VALIDO, INEXISTENTE_FIELD)
+				.esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiElValorDeLaPropiedadNoEsString() {
-		Assert.assertFalse(EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NUMERO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, EmpiezaCon.elPrefijo(PREFIJO_VALIDO, NUMERO_FIELD)
+				.esCumplidaPor(mensaje));
 	}
 }

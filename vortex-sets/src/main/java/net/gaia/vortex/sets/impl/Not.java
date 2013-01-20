@@ -13,6 +13,7 @@
 package net.gaia.vortex.sets.impl;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -30,9 +31,18 @@ public class Not implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
-		final boolean esCumplidaPorOtra = condicionNegada.esCumplidaPor(mensaje);
-		return !esCumplidaPorOtra;
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
+		final ResultadoDeCondicion resultado = condicionNegada.esCumplidaPor(mensaje);
+		// La negación de true es false
+		if (ResultadoDeCondicion.TRUE.equals(resultado)) {
+			return ResultadoDeCondicion.FALSE;
+		}
+		// La negación de false es true
+		if (ResultadoDeCondicion.FALSE.equals(resultado)) {
+			return ResultadoDeCondicion.TRUE;
+		}
+		// La negación de indecidible sigue siendo indecidible
+		return ResultadoDeCondicion.INDECIDIBLE;
 	}
 
 	public static Not de(final Condicion condicionANegar) {

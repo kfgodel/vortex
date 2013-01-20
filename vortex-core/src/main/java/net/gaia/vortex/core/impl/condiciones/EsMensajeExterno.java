@@ -13,6 +13,7 @@
 package net.gaia.vortex.core.impl.condiciones;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -33,10 +34,11 @@ public class EsMensajeExterno implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final IdDeMensaje idDelMensaje = mensaje.getIdDeMensaje();
-		final boolean esMensajeDelNodo = idDelMensaje.esOriginadoEn(idDelNodo);
-		return !esMensajeDelNodo;
+		final boolean esMensajeExterno = !idDelMensaje.esOriginadoEn(idDelNodo);
+		ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(esMensajeExterno);
+		return resultado;
 	}
 
 	public static EsMensajeExterno create(final IdDeComponenteVortex idDelNodo) {

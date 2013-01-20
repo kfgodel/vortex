@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.sets.reflection.ValueAccessor;
@@ -78,25 +79,26 @@ public class RegexMatchea implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final ContenidoVortex contenidoDelMensaje = mensaje.getContenido();
 		if (!valueAccessor.hasValueIn(contenidoDelMensaje)) {
 			// Consideramos que si no tiene la propiedad no matchea
-			return false;
+			return ResultadoDeCondicion.FALSE;
 		}
 		final Object valorEnElMensaje = valueAccessor.getValueFrom(contenidoDelMensaje);
 		if (valorEnElMensaje == null) {
 			// Consideramos que no matchea si es null
-			return false;
+			return ResultadoDeCondicion.FALSE;
 		}
 		if (!(valorEnElMensaje instanceof CharSequence)) {
 			// Solo podemos evaluar cadenas de caracteres
-			return false;
+			return ResultadoDeCondicion.FALSE;
 		}
 		final CharSequence cadenaDelMensaje = (CharSequence) valorEnElMensaje;
 		final Matcher matcher = expresion.matcher(cadenaDelMensaje);
 		final boolean matchea = matcher.matches();
-		return matchea;
+		ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(matchea);
+		return resultado;
 	}
 
 }

@@ -15,6 +15,7 @@ package net.gaia.vortex.sets.tests;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.sets.impl.RegexMatchea;
@@ -61,50 +62,57 @@ public class TestFiltroPorRegex {
 
 	@Test
 	public void deberiaIndicarTrueSiLaPropiedadMatcheaLaExpresionRegular() {
-		Assert.assertTrue(RegexMatchea.laExpresion(".*", TEXTO_FIELD).esCumplidaPor(mensaje));
-		Assert.assertTrue(RegexMatchea.laExpresion("^Hola", TEXTO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				RegexMatchea.laExpresion(".*", TEXTO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				RegexMatchea.laExpresion("^Hola", TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaProiedadNoMactcheaLaExpresion() {
-		Assert.assertFalse(RegexMatchea.laExpresion("Chau$", TEXTO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				RegexMatchea.laExpresion("Chau$", TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadNoExiste() {
-		Assert.assertFalse(RegexMatchea.laExpresion(".*", INEXISTENTE_FIELD).esCumplidaPor(mensaje));
-	}
-
-	@Test
-	public void deberiaIndicarFalseSiLaPropiedadEsNull() {
-		Assert.assertFalse(RegexMatchea.laExpresion(".*", NULL_FIELD).esCumplidaPor(mensaje));
-	}
-
-	@Test
-	public void deberiaIndicarTrueSiLaExpresionEsIgualALaPropiedad() {
-		Assert.assertTrue(RegexMatchea.laExpresion(PRIMER_TEXTO, TEXTO_FIELD).esCumplidaPor(mensaje));
-	}
-
-	@Test
-	public void deberiaIndicarFalseSiLaPropiedadNoEsDeTipoCharSequence() {
-		Assert.assertFalse(RegexMatchea.laExpresion(PRIMER_TEXTO, NUMERO_FIELD).esCumplidaPor(mensaje));
-	}
-
-	@Test
-	public void deberiaIndicarFalseSiLaPropiedadItermediaEsNull() {
-		Assert.assertFalse(RegexMatchea.laExpresion(PRIMER_TEXTO, NULL_FIELD + "." + TEXTO_FIELD)
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, RegexMatchea.laExpresion(".*", INEXISTENTE_FIELD)
 				.esCumplidaPor(mensaje));
 	}
 
 	@Test
+	public void deberiaIndicarFalseSiLaPropiedadEsNull() {
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				RegexMatchea.laExpresion(".*", NULL_FIELD).esCumplidaPor(mensaje));
+	}
+
+	@Test
+	public void deberiaIndicarTrueSiLaExpresionEsIgualALaPropiedad() {
+		Assert.assertEquals(ResultadoDeCondicion.TRUE, RegexMatchea.laExpresion(PRIMER_TEXTO, TEXTO_FIELD)
+				.esCumplidaPor(mensaje));
+	}
+
+	@Test
+	public void deberiaIndicarFalseSiLaPropiedadNoEsDeTipoCharSequence() {
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, RegexMatchea.laExpresion(PRIMER_TEXTO, NUMERO_FIELD)
+				.esCumplidaPor(mensaje));
+	}
+
+	@Test
+	public void deberiaIndicarFalseSiLaPropiedadItermediaEsNull() {
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				RegexMatchea.laExpresion(PRIMER_TEXTO, NULL_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
+	}
+
+	@Test
 	public void deberiaIndicarTrueSiLaPropiedadAnidadaMatchea() {
-		Assert.assertTrue(RegexMatchea.laExpresion(SEGUNDO_TEXTO, OBJETO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(
-				mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				RegexMatchea.laExpresion(SEGUNDO_TEXTO, OBJETO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaIndicarFalseSiLaPropiedadIntermediaNoEsUnMapa() {
-		Assert.assertFalse(RegexMatchea.laExpresion(SEGUNDO_TEXTO, COLECCION_FIELD + "." + TEXTO_FIELD).esCumplidaPor(
-				mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				RegexMatchea.laExpresion(SEGUNDO_TEXTO, COLECCION_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 }

@@ -15,6 +15,7 @@ package net.gaia.vortex.sets.impl;
 import java.util.Collection;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.sets.reflection.ValueAccessor;
@@ -39,34 +40,36 @@ public class ContieneA implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final ContenidoVortex contenidoDelMensaje = mensaje.getContenido();
 		if (!valueAccessor.hasValueIn(contenidoDelMensaje)) {
-			// Consideramos que si no tiene la propiedad no es igual al esperado
-			return false;
+			// Consideramos que si no tiene la propiedad no puede contener el valor
+			return ResultadoDeCondicion.FALSE;
 		}
 		final Object valorEnElMensaje = valueAccessor.getValueFrom(contenidoDelMensaje);
 		if (valorEnElMensaje == null) {
-			return false;
+			// Si el valor es nulo tampoco contiene el valor esperado
+			return ResultadoDeCondicion.FALSE;
 		}
 		// Probamos con la api de collection primero
 		if (valorEnElMensaje instanceof Collection) {
 			final Collection<?> coleccion = (Collection<?>) valorEnElMensaje;
 			final boolean contieneElValor = coleccion.contains(valorEsperado);
-			return contieneElValor;
+			final ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(contieneElValor);
+			return resultado;
 		}
 		if (!(valorEnElMensaje instanceof Iterable)) {
-			// Es un objeto que no podemos iterar
-			return false;
+			// Al no ser collecion ni iterable, asumimos que no contiene al valor
+			return ResultadoDeCondicion.FALSE;
 		}
 		final Iterable<?> iterable = (Iterable<?>) valorEnElMensaje;
 		for (final Object elementoEnMensaje : iterable) {
 			final boolean sonIguales = ValorEsperadoIgual.compararPorEquals(valorEsperado, elementoEnMensaje);
 			if (sonIguales) {
-				return true;
+				return ResultadoDeCondicion.TRUE;
 			}
 		}
-		return false;
+		return ResultadoDeCondicion.FALSE;
 	}
 
 	/**

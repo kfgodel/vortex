@@ -4,6 +4,7 @@
 package net.gaia.vortex.sets.impl;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.sets.reflection.ValueAccessor;
@@ -28,23 +29,25 @@ public class EmpiezaCon implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final ContenidoVortex contenidoDelMensaje = mensaje.getContenido();
 		if (!valueAccessor.hasValueIn(contenidoDelMensaje)) {
-			// Consideramos que si no tiene la propiedad no es igual al esperado
-			return false;
+			// Consideramos que si no tiene la propiedad, no empieza con un valor
+			return ResultadoDeCondicion.FALSE;
 		}
 		final Object valorEnElMensaje = valueAccessor.getValueFrom(contenidoDelMensaje);
 		if (valorEnElMensaje == null) {
-			return false;
+			// Consideramos que null tampoco empieza con el prefijo
+			return ResultadoDeCondicion.FALSE;
 		}
 		if (!(valorEnElMensaje instanceof String)) {
-			// No podemos saber si tiene el prefijo
-			return false;
+			// Si no es un string asumimos que no empieza con el prefijo
+			return ResultadoDeCondicion.FALSE;
 		}
 		final String cadenaEnMensaje = (String) valorEnElMensaje;
 		final boolean empiezaConElPrefijo = cadenaEnMensaje.startsWith(prefijoEsperado);
-		return empiezaConElPrefijo;
+		ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(empiezaConElPrefijo);
+		return resultado;
 	}
 
 	/**

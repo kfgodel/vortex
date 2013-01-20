@@ -12,8 +12,10 @@
  */
 package ar.com.dgarcia.colecciones.maps.impl;
 
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -272,5 +274,63 @@ public class CaseInsensitiveHashMap<V> implements ConcurrentMap<String, V>, Read
 	@Override
 	public String toString() {
 		return internalMap.toString();
+	}
+
+	/**
+	 * Tomado de {@link AbstractMap#equals(Object)}
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		}
+
+		if (!(obj instanceof Map)) {
+			return false;
+		}
+		@SuppressWarnings("unchecked")
+		final Map<String, V> m = (Map<String, V>) obj;
+		if (m.size() != size()) {
+			return false;
+		}
+
+		try {
+			final Iterator<Entry<String, V>> i = entrySet().iterator();
+			while (i.hasNext()) {
+				final Entry<String, V> e = i.next();
+				final String key = e.getKey();
+				final V value = e.getValue();
+				if (value == null) {
+					if (!(m.get(key) == null && m.containsKey(key))) {
+						return false;
+					}
+				} else {
+					if (!value.equals(m.get(key))) {
+						return false;
+					}
+				}
+			}
+		} catch (final ClassCastException unused) {
+			return false;
+		} catch (final NullPointerException unused) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		int h = 0;
+		final Iterator<Entry<String, V>> i = entrySet().iterator();
+		while (i.hasNext()) {
+			h += i.next().hashCode();
+		}
+		return h;
 	}
 }

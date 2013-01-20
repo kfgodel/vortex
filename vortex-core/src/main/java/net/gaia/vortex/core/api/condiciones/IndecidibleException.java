@@ -1,5 +1,5 @@
 /**
- * 13/06/2012 00:44:34 Copyright (C) 2011 Darío L. García
+ * 20/01/2013 14:09:25 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,25 +12,25 @@
  */
 package net.gaia.vortex.core.api.condiciones;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-
 /**
- * Esta interfaz representa una condición que puede ser evaluada sobre un mensaje para determinar si
- * la cumple o no.<br>
- * Normalmente las condiciones deben ser thread-safe, lo que permite la evaluación en paralelo de
- * multiples threads
+ * Esta clase representa la excepción obtenida al intentar evaluar como booleano un valor de
+ * resultado indecidible
  * 
  * @author D. García
  */
-public interface Condicion {
+public class IndecidibleException extends RuntimeException {
+	private static final long serialVersionUID = 27946286035278066L;
 
-	/**
-	 * Indica si el mensaje pasado cumple la condición o no representada por esta instancia
-	 * 
-	 * @param mensaje
-	 *            El mensaje a evaluar
-	 * @return true si la condición es cumplida por el mensaje
-	 */
-	public ResultadoDeCondicion esCumplidaPor(MensajeVortex mensaje);
+	public IndecidibleException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
+
+	public IndecidibleException(final String message) {
+		super(message);
+	}
+
+	public IndecidibleException(final Throwable cause) {
+		super(cause);
+	}
 
 }

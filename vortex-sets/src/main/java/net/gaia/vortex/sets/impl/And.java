@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -34,13 +35,28 @@ public class And implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
+		// Evaluamos cada condición que compone este AND
+		boolean alMenosUnIndecidible = false;
 		for (final Condicion condicion : condiciones) {
-			if (!condicion.esCumplidaPor(mensaje)) {
-				return false;
+			final ResultadoDeCondicion resultado = condicion.esCumplidaPor(mensaje);
+
+			if (ResultadoDeCondicion.FALSE.equals(resultado)) {
+				// Un false hace false todo el AND, no es necesario seguir
+				return ResultadoDeCondicion.FALSE;
+			}
+			if (ResultadoDeCondicion.INDECIDIBLE.equals(resultado)) {
+				// Un indecidible hace indecidible todo a menos que haya un false
+				alMenosUnIndecidible = true;
 			}
 		}
-		return true;
+		// Si todas las condiciones fueron true menos una, dependiendo del valor de esa podría ser
+		// true o false el and, no lo sabemos
+		if (alMenosUnIndecidible) {
+			return ResultadoDeCondicion.INDECIDIBLE;
+		}
+		// Todas fueron true
+		return ResultadoDeCondicion.TRUE;
 	}
 
 	public static And create(final Condicion condicion1, final Condicion condicion2, final Condicion... adicionales) {

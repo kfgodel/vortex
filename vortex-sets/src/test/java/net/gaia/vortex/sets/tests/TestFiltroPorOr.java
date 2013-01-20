@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import junit.framework.Assert;
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.sets.impl.Or;
@@ -31,21 +32,23 @@ public class TestFiltroPorOr {
 
 	@Test
 	public void deberiaDarFalseParaDosCondicionesFalse() {
-		Assert.assertFalse(Or.create(SiempreFalse.getInstancia(), SiempreFalse.getInstancia()).esCumplidaPor(null));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				Or.create(SiempreFalse.getInstancia(), SiempreFalse.getInstancia()).esCumplidaPor(null));
 	}
 
 	@Test
 	public void deberiaDarTrueSiAlgunaEsTrue() {
-		Assert.assertTrue(Or
-				.create(SiempreFalse.getInstancia(), SiempreTrue.getInstancia(), SiempreTrue.getInstancia())
-				.esCumplidaPor(null));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				Or.create(SiempreFalse.getInstancia(), SiempreTrue.getInstancia(), SiempreTrue.getInstancia())
+						.esCumplidaPor(null));
 	}
 
 	@Test
 	public void noDeberiaEvaluarElRestoSiLaPrimeraEsTrue() {
 		final CondicionTestWrapper condicionEvaluada = CondicionTestWrapper.create(SiempreTrue.getInstancia());
 		final CondicionTestWrapper condicionNoEvaluada = CondicionTestWrapper.create(SiempreFalse.getInstancia());
-		Assert.assertTrue(Or.create(condicionEvaluada, condicionNoEvaluada).esCumplidaPor(null));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				Or.create(condicionEvaluada, condicionNoEvaluada).esCumplidaPor(null));
 		Assert.assertTrue(condicionEvaluada.isEvaluada());
 		Assert.assertFalse(condicionNoEvaluada.isEvaluada());
 	}
@@ -56,6 +59,6 @@ public class TestFiltroPorOr {
 	 */
 	@Test
 	public void deberiaDarFalseSiNoTieneCondiciones() {
-		Assert.assertFalse(Or.create(new ArrayList<Condicion>()).esCumplidaPor(null));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, Or.create(new ArrayList<Condicion>()).esCumplidaPor(null));
 	}
 }

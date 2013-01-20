@@ -13,6 +13,7 @@
 package net.gaia.vortex.portal.impl.condiciones;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 
@@ -40,25 +41,25 @@ public class SoloInstancias implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final ContenidoVortex contenido = mensaje.getContenido();
 
 		if (contenido.tieneValorComoPrimitiva()) {
 			final Object valorPrimitivo = contenido.getValorComoPrimitiva();
 			final boolean esInstanciaDelTipoEsperado = tipoEsperado.isInstance(valorPrimitivo);
-			return esInstanciaDelTipoEsperado;
+			return ResultadoDeCondicion.paraBooleano(esInstanciaDelTipoEsperado);
 		}
 		// Como optimización verificamos si justo es del tipo esperado
 		final String nombreDelTipoOriginal = contenido.getNombreDelTipoOriginal();
 		if (tipoEsperado.getName().equals(nombreDelTipoOriginal)) {
 			// Es del mismo tipo que esperabamos
-			return true;
+			return ResultadoDeCondicion.TRUE;
 		}
 		if (nombreDelTipoOriginal == null) {
 			// No sabemos de que tipo era originalmente
 			if (Object.class.equals(tipoEsperado)) {
 				// Solo lo aceptamos si el tipo esperado es object (todo es casteable a Object)
-				return true;
+				return ResultadoDeCondicion.TRUE;
 			}
 			throw new UnhandledConditionException(
 					"No es posible determinar el tipo asociado al mensaje["
@@ -81,7 +82,7 @@ public class SoloInstancias implements Condicion {
 					e);
 		}
 		final boolean esInstanciaDelTipoEsperado = tipoEsperado.isAssignableFrom(tipoDelMensajeOriginal);
-		return esInstanciaDelTipoEsperado;
+		return ResultadoDeCondicion.paraBooleano(esInstanciaDelTipoEsperado);
 	}
 
 	/**

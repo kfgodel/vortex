@@ -13,6 +13,7 @@
 package net.gaia.vortex.core.impl.condiciones;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -33,9 +34,9 @@ public class EsMensajeNuevo implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final boolean agregadoComoNuevo = mensajesConocidos.registrarNuevo(mensaje);
-		return agregadoComoNuevo;
+		return ResultadoDeCondicion.paraBooleano(agregadoComoNuevo);
 	}
 
 	/**

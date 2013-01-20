@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import junit.framework.Assert;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.sets.impl.ValorEsperadoIgual;
@@ -61,46 +62,54 @@ public class TestFiltroPorEquals {
 
 	@Test
 	public void deberiaPermitirDeterminarSiUnaPropiedadTieneElValorEsperado() {
-		Assert.assertTrue(ValorEsperadoIgual.a(PRIMER_NUMERO, NUMERO_FIELD).esCumplidaPor(mensaje));
-		Assert.assertTrue(ValorEsperadoIgual.a(PRIMER_TEXTO, TEXTO_FIELD).esCumplidaPor(mensaje));
-		Assert.assertTrue(ValorEsperadoIgual.a(objeto, OBJETO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				ValorEsperadoIgual.a(PRIMER_NUMERO, NUMERO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				ValorEsperadoIgual.a(PRIMER_TEXTO, TEXTO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE, ValorEsperadoIgual.a(objeto, OBJETO_FIELD)
+				.esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void siLaPropiedadNoExisteDeberíaEvaluarAFalse() {
 		mensaje.getContenido().remove(NUMERO_FIELD);
-		Assert.assertFalse(ValorEsperadoIgual.a(PRIMER_NUMERO, NUMERO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, ValorEsperadoIgual.a(PRIMER_NUMERO, NUMERO_FIELD)
+				.esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaPermitirEvaluarUnaPropiedadAnidada() {
-		Assert.assertTrue(ValorEsperadoIgual.a(SEGUNDO_NUMERO, OBJETO_FIELD + "." + NUMERO_FIELD)
-				.esCumplidaPor(mensaje));
-		Assert.assertTrue(ValorEsperadoIgual.a(SEGUNDO_TEXTO, OBJETO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				ValorEsperadoIgual.a(SEGUNDO_NUMERO, OBJETO_FIELD + "." + NUMERO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				ValorEsperadoIgual.a(SEGUNDO_TEXTO, OBJETO_FIELD + "." + TEXTO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void siUnaPropiedadAnidadaIntermediaEsNullDeberiaEvaluarAFalse() {
-		Assert.assertFalse(ValorEsperadoIgual.a(PRIMER_NUMERO, INEXISTENTE_FIELD + "." + NUMERO_FIELD).esCumplidaPor(
-				mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				ValorEsperadoIgual.a(PRIMER_NUMERO, INEXISTENTE_FIELD + "." + NUMERO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void siUnaPropiedadAnidadaIntermediaEsUnaColeccionDeberiaEvaluarAFalseSiLaPropiedadSiguienteNoEsDeCollection() {
-		Assert.assertFalse(ValorEsperadoIgual.a(PRIMER_NUMERO, COLECCION_FIELD + "." + NUMERO_FIELD).esCumplidaPor(
-				mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				ValorEsperadoIgual.a(PRIMER_NUMERO, COLECCION_FIELD + "." + NUMERO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaEvaluarAFalseAlCompararObjetosCuyoEqualsDaFalse() {
-		Assert.assertFalse(ValorEsperadoIgual.a(PRIMER_NUMERO, TEXTO_FIELD).esCumplidaPor(mensaje));
-		Assert.assertFalse(ValorEsperadoIgual.a(PRIMER_TEXTO, NUMERO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				ValorEsperadoIgual.a(PRIMER_NUMERO, TEXTO_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				ValorEsperadoIgual.a(PRIMER_TEXTO, NUMERO_FIELD).esCumplidaPor(mensaje));
 	}
 
 	@Test
 	public void deberiaEvaluarATrueSiUnapropiedadNulaSeComparaConNull() {
-		Assert.assertTrue(ValorEsperadoIgual.a(null, NULL_FIELD).esCumplidaPor(mensaje));
-		Assert.assertTrue(ValorEsperadoIgual.a(null, OBJETO_FIELD + "." + NULL_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE, ValorEsperadoIgual.a(null, NULL_FIELD).esCumplidaPor(mensaje));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE, ValorEsperadoIgual.a(null, OBJETO_FIELD + "." + NULL_FIELD)
+				.esCumplidaPor(mensaje));
 	}
 
 }
