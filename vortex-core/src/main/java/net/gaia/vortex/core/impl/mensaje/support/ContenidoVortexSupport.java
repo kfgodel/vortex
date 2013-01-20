@@ -14,9 +14,16 @@ package net.gaia.vortex.core.impl.mensaje.support;
 
 import java.util.Map;
 
+import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
+import net.gaia.vortex.core.impl.ids.mensajes.IdSecuencialDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.copia.CopiarMapaVortex;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
@@ -27,6 +34,7 @@ import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
  * @author D. García
  */
 public class ContenidoVortexSupport extends CaseInsensitiveHashMap<Object> implements ContenidoVortex {
+	private static final Logger LOG = LoggerFactory.getLogger(ContenidoVortexSupport.class);
 
 	/**
 	 * @see ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap#put(java.lang.String,
@@ -125,6 +133,47 @@ public class ContenidoVortexSupport extends CaseInsensitiveHashMap<Object> imple
 			nombreDelTipo = valor.getClass().getName();
 		}
 		setNombreDelTipoOriginal(nombreDelTipo);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getIdDeMensaje()
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public IdDeMensaje getIdDeMensaje() {
+		final Object object = get(ContenidoVortex.ID_DE_MENSAJE_KEY);
+		if (object == null) {
+			return null;
+		}
+		final Map<String, Object> idComoMapa;
+		try {
+			idComoMapa = (Map<String, Object>) object;
+		} catch (final ClassCastException e) {
+			LOG.error(
+					"El mensaje tiene como atributo[" + ContenidoVortex.ID_DE_MENSAJE_KEY
+							+ "] un valor que no es un mapa de valores: " + object + " mensaje[" + this
+							+ "]. Asumiendo sin ID", e);
+			return null;
+		}
+		try {
+			final IdDeMensaje idRegenerado = IdSecuencialDeMensaje.regenerarDesde(idComoMapa);
+			return idRegenerado;
+		} catch (final UnhandledConditionException e) {
+			LOG.error("Algo fallo en la regeneracion del ID para el contenido[" + this + "]. Asumiendo sin ID", e);
+			return null;
+		}
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setIdDeMensaje(net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje)
+	 */
+	@Override
+	public void setIdDeMensaje(final IdDeMensaje idDelMensaje) {
+		Map<String, Object> idComoMapa = null;
+		if (idDelMensaje != null) {
+			idComoMapa = idDelMensaje.getAsMap();
+		}
+		put(ContenidoVortex.ID_DE_MENSAJE_KEY, idComoMapa);
 	}
 
 }

@@ -12,6 +12,10 @@
  */
 package net.gaia.vortex.router.impl.messages;
 
+import java.util.Map;
+
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la respuesta que genera un nodo para indicar el id que le asignó a otro.<br>
@@ -24,20 +28,21 @@ public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 	private Long idDePataLocalAlEmisor;
 	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
 
-	private PedidoDeIdRemoto pedido;
+	private Map<String, Object> idDePedido;
+	public static final String idDePedido_FIELD = "idDePedido";
 
-	public PedidoDeIdRemoto getPedido() {
-		return pedido;
+	public Map<String, Object> getIdDePedido() {
+		return idDePedido;
 	}
 
-	public void setPedido(final PedidoDeIdRemoto pedido) {
-		this.pedido = pedido;
+	public void setIdDePedido(final Map<String, Object> idDePedido) {
+		this.idDePedido = idDePedido;
 	}
 
-	public static RespuestaDeIdRemoto create(final PedidoDeIdRemoto pedido, final Long idLocal) {
+	public static RespuestaDeIdRemoto create(final MensajeVortex pedidoOriginal, final Long idLocal) {
 		final RespuestaDeIdRemoto name = new RespuestaDeIdRemoto();
-		name.pedido = pedido;
 		name.setIdDePataLocalAlEmisor(idLocal);
+		name.idDePedido = pedidoOriginal.getIdDeMensaje().getAsMap();
 		return name;
 	}
 
@@ -47,6 +52,15 @@ public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 
 	public void setIdDePataLocalAlEmisor(final Long idDePataLocalAlEmisor) {
 		this.idDePataLocalAlEmisor = idDePataLocalAlEmisor;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdDePataLocalAlReceptor())
+				.con(idDePataLocalAlEmisor_FIELD, idDePataLocalAlEmisor).con(idDePedido_FIELD, idDePedido).toString();
 	}
 
 }

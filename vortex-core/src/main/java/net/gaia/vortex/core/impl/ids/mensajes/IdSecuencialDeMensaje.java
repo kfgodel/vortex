@@ -12,9 +12,13 @@
  */
 package net.gaia.vortex.core.impl.ids.mensajes;
 
+import java.util.Map;
+
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
+import net.gaia.vortex.core.impl.ids.componentes.IdInmutableDeComponente;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
+import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -122,4 +126,57 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 		return this.numeroDeSecuencia;
 	}
 
+	/**
+	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#getAsMap()
+	 */
+	@Override
+	public Map<String, Object> getAsMap() {
+		final Map<String, Object> mapa = new CaseInsensitiveHashMap<Object>();
+
+		final String idDelEmisor = getIdDelEmisor().getValorActual();
+		mapa.put(IdDeMensaje.EMISOR_DEL_ID_KEY, idDelEmisor);
+
+		mapa.put(IdDeMensaje.SECUENCIA_DEL_ID_KEY, getNumeroDeSecuencia());
+
+		return mapa;
+	}
+
+	/**
+	 * Regenera el id representado por el mapa pasado
+	 * 
+	 * @param mapa
+	 *            El mapa cuyo estado representa un ID
+	 * @return El Id regenerado
+	 * @throws UnhandledConditionException
+	 *             Si el mapa no representa un ID en la forma esperada
+	 */
+	public static IdDeMensaje regenerarDesde(final Map<String, Object> idComoMapa) throws UnhandledConditionException {
+		final Object emisorEnMensaje = idComoMapa.get(IdDeMensaje.EMISOR_DEL_ID_KEY);
+		if (emisorEnMensaje == null) {
+			throw new UnhandledConditionException("El mapa no tiene emisor como ID: " + idComoMapa);
+		}
+		String valorDelIdDelEmisor;
+		try {
+			valorDelIdDelEmisor = (String) emisorEnMensaje;
+		} catch (final ClassCastException e) {
+			throw new UnhandledConditionException("La parte del ID correspondiente al emisor no es String: "
+					+ emisorEnMensaje + " mapa[" + idComoMapa + "]", e);
+		}
+
+		final Object secuenciaDeMensaje = idComoMapa.get(IdDeMensaje.SECUENCIA_DEL_ID_KEY);
+		if (secuenciaDeMensaje == null) {
+			throw new UnhandledConditionException("El mapa no tiene secuencia en como ID" + idComoMapa);
+		}
+		Number numeroDeSecuencia;
+		try {
+			numeroDeSecuencia = (Number) secuenciaDeMensaje;
+		} catch (final ClassCastException e) {
+			throw new UnhandledConditionException("El mapa tiene una secuencia que no es Number: " + emisorEnMensaje
+					+ " mensaje[" + idComoMapa + "]", e);
+		}
+
+		final IdDeComponenteVortex idDelEmisor = IdInmutableDeComponente.create(valorDelIdDelEmisor);
+		final IdDeMensaje idGenerado = IdSecuencialDeMensaje.create(idDelEmisor, numeroDeSecuencia.longValue());
+		return idGenerado;
+	}
 }

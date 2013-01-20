@@ -47,7 +47,7 @@ public class TestMensajes {
 		mensajeOriginal.asignarId(idDeMensaje);
 
 		final ContenidoVortex contenido = mensajeOriginal.getContenido();
-		final Object mapaDelId = contenido.get(MensajeConContenido.ID_DE_MENSAJE_KEY);
+		final Object mapaDelId = contenido.get(ContenidoVortex.ID_DE_MENSAJE_KEY);
 		Assert.assertTrue("Deberia ser un mapa insensitive", mapaDelId instanceof CaseInsensitiveHashMap);
 	}
 

@@ -14,6 +14,7 @@ package net.gaia.vortex.router.impl.messages;
 
 import java.util.Map;
 
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa el mensaje para publicar filtros de un nodo a otro
@@ -23,12 +24,24 @@ import java.util.Map;
 public class PublicacionDeFiltros extends MensajeBidiSupport {
 
 	private Map<String, Object> filtro;
+	public static final String filtro_FIELD = "filtro";
+
+	private Map<String, Object> idDePedido;
+	public static final String idDePedido_FIELD = "idDePedido";
+
+	public Map<String, Object> getIdDePedido() {
+		return idDePedido;
+	}
+
+	public void setIdDePedido(final Map<String, Object> idDePedido) {
+		this.idDePedido = idDePedido;
+	}
 
 	public Map<String, Object> getFiltro() {
 		return filtro;
 	}
 
-	public void setFiltro(Map<String, Object> filtro) {
+	public void setFiltro(final Map<String, Object> filtro) {
 		this.filtro = filtro;
 	}
 
@@ -37,6 +50,15 @@ public class PublicacionDeFiltros extends MensajeBidiSupport {
 		publicacion.filtro = nuevoFiltro;
 		publicacion.setIdDePataLocalAlReceptor(idDePataRemota);
 		return publicacion;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdDePataLocalAlReceptor())
+				.con(idDePedido_FIELD, idDePedido).con(filtro_FIELD, filtro).toString();
 	}
 
 }

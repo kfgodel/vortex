@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.core.api.ids.mensajes;
 
+import java.util.Map;
+
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 
 /**
@@ -24,6 +26,15 @@ import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
  * @author D. García
  */
 public interface IdDeMensaje extends Comparable<IdDeMensaje> {
+
+	/**
+	 * Nombre del atributo que corresponde al identificador del componente emisor
+	 */
+	public static final String EMISOR_DEL_ID_KEY = "id_del_emisor";
+	/**
+	 * Nombre del atributo que corresponde al numero de secuencia del mensaje
+	 */
+	public static final String SECUENCIA_DEL_ID_KEY = "numero_secuencia";
 
 	/**
 	 * Devuelve el identificador del emisor del mensaje
@@ -46,4 +57,10 @@ public interface IdDeMensaje extends Comparable<IdDeMensaje> {
 	 */
 	boolean esOriginadoEn(IdDeComponenteVortex idDelNodo);
 
+	/**
+	 * Devuelve este ID expresado como mapa serializable
+	 * 
+	 * @return El mapa cuyo estado es equivalente a esta instancia
+	 */
+	public Map<String, Object> getAsMap();
 }

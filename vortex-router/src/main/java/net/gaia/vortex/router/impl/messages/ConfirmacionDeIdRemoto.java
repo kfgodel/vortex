@@ -3,6 +3,10 @@
  */
 package net.gaia.vortex.router.impl.messages;
 
+import java.util.Map;
+
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa el ultimo mensaje del handshake para cerrar la comunicacion bidireccional
@@ -16,20 +20,21 @@ public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
 	private Long idDePataLocalAlEmisor;
 	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
 
-	private RespuestaDeIdRemoto respuesta;
+	private Map<String, Object> idDeRespuesta;
+	public static final String idDeRespuesta_FIELD = "idDeRespuesta";
 
-	public RespuestaDeIdRemoto getRespuesta() {
-		return respuesta;
+	public Map<String, Object> getIdDeRespuesta() {
+		return idDeRespuesta;
 	}
 
-	public void setRespuesta(final RespuestaDeIdRemoto respuesta) {
-		this.respuesta = respuesta;
+	public void setIdDeRespuesta(final Map<String, Object> idDeRespuesta) {
+		this.idDeRespuesta = idDeRespuesta;
 	}
 
-	public static ConfirmacionDeIdRemoto create(final RespuestaDeIdRemoto respuesta, final Long idLocal) {
+	public static ConfirmacionDeIdRemoto create(final MensajeVortex respuesta, final Long idLocal) {
 		final ConfirmacionDeIdRemoto confirmacion = new ConfirmacionDeIdRemoto();
-		confirmacion.respuesta = respuesta;
 		confirmacion.setIdDePataLocalAlEmisor(idLocal);
+		confirmacion.idDeRespuesta = respuesta.getIdDeMensaje().getAsMap();
 		return confirmacion;
 	}
 
@@ -39,6 +44,16 @@ public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
 
 	public void setIdDePataLocalAlEmisor(final Long idDePataLocalAlEmisor) {
 		this.idDePataLocalAlEmisor = idDePataLocalAlEmisor;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdDePataLocalAlReceptor())
+				.con(idDePataLocalAlEmisor_FIELD, idDePataLocalAlEmisor).con(idDeRespuesta_FIELD, idDeRespuesta)
+				.toString();
 	}
 
 }

@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.router.impl.messages;
 
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa el mensaje enviado por un nodo para que otro le indique qué filtros debe
@@ -25,6 +26,14 @@ public class PedidoDeFiltros extends MensajeBidiSupport {
 		final PedidoDeFiltros solicitud = new PedidoDeFiltros();
 		solicitud.setIdDePataLocalAlReceptor(idDePataRemota);
 		return solicitud;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdDePataLocalAlReceptor()).toString();
 	}
 
 }
