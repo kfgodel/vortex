@@ -9,7 +9,7 @@ import junit.framework.Assert;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.sets.impl.AtributoEmpieza;
+import net.gaia.vortex.sets.impl.condiciones.AtributoEmpieza;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -22,7 +22,7 @@ import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.api.moleculas.Router;
 import net.gaia.vortex.router.api.tests.listeners.ListenerDeCambioDeFiltrosConCola;
 import net.gaia.vortex.router.api.tests.listeners.ListenerDeRuteoEnPasos;
-import net.gaia.vortex.sets.impl.ValorEsperadoEn;
+import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 import net.gaia.vortex.sets.reflection.accessors.PropertyAccessor;
 
 import org.junit.After;

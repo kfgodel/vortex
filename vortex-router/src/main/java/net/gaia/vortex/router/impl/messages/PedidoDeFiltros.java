@@ -13,9 +13,9 @@
 package net.gaia.vortex.router.impl.messages;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.sets.impl.AndCompuesto;
-import net.gaia.vortex.sets.impl.AtributoPresente;
-import net.gaia.vortex.sets.impl.ValorEsperadoEn;
+import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
+import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
+import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**

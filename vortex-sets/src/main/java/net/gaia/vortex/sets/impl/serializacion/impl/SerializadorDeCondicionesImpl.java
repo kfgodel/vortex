@@ -17,12 +17,12 @@ import java.util.Map;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.sets.impl.serializacion.ConfiguracionDeSerializacionDeCondiciones;
-import net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion;
-import net.gaia.vortex.sets.impl.serializacion.DeserializadorDeTipo;
-import net.gaia.vortex.sets.impl.serializacion.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.ProblemaDeSerializacionException;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones;
-import net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo;
+import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo;
+import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.lang.iterators.tree.treeorder.LeavesFirstIterator;
 
 /**

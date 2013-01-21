@@ -10,10 +10,10 @@ import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.router.impl.sets.converter.ConversorDeCondiciones;
 import net.gaia.vortex.router.impl.sets.converter.MetadataDeCondiciones;
-import net.gaia.vortex.sets.impl.AndCompuesto;
-import net.gaia.vortex.sets.impl.Negacion;
-import net.gaia.vortex.sets.impl.OrCompuesto;
-import net.gaia.vortex.sets.impl.ValorEsperadoEn;
+import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
+import net.gaia.vortex.sets.impl.condiciones.Negacion;
+import net.gaia.vortex.sets.impl.condiciones.OrCompuesto;
+import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 import net.gaia.vortex.sets.reflection.accessors.PropertyAccessor;
 
 import org.junit.Test;

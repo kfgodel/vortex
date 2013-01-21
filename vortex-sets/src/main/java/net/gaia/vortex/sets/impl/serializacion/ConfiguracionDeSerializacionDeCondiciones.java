@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.sets.impl.serializacion;
 
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
+
 /**
  * Esta interfaz define los metodos necesarios en la configuracion de serializacion para determinar
  * tipos conocidos al serializar y deserializar

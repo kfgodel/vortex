@@ -17,42 +17,42 @@ import java.util.Map;
 
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.sets.impl.AndCompuesto;
-import net.gaia.vortex.sets.impl.AtributoEmpieza;
-import net.gaia.vortex.sets.impl.AtributoPresente;
-import net.gaia.vortex.sets.impl.ColeccionContiene;
-import net.gaia.vortex.sets.impl.CondicionDesconocida;
-import net.gaia.vortex.sets.impl.Negacion;
-import net.gaia.vortex.sets.impl.OrCompuesto;
-import net.gaia.vortex.sets.impl.TextoRegexMatchea;
-import net.gaia.vortex.sets.impl.ValorEsperadoEn;
+import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
+import net.gaia.vortex.sets.impl.condiciones.AtributoEmpieza;
+import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
+import net.gaia.vortex.sets.impl.condiciones.ColeccionContiene;
+import net.gaia.vortex.sets.impl.condiciones.CondicionDesconocida;
+import net.gaia.vortex.sets.impl.condiciones.Negacion;
+import net.gaia.vortex.sets.impl.condiciones.OrCompuesto;
+import net.gaia.vortex.sets.impl.condiciones.TextoRegexMatchea;
+import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 import net.gaia.vortex.sets.impl.serializacion.ConfiguracionDeSerializacionDeCondiciones;
-import net.gaia.vortex.sets.impl.serializacion.DeserializadorDeTipo;
-import net.gaia.vortex.sets.impl.serializacion.MetadataDeSerializacion;
-import net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo;
-import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorAnd;
-import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorContiene;
-import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDesconocido;
-import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorEmpieza;
-import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorEquals;
-import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorFalse;
-import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorNot;
-import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorOr;
-import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorPresente;
-import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorRegex;
-import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorTrue;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorAnd;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorAnonimo;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorContiene;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDesconocida;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorEmpieza;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorEquals;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorFalse;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorNot;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorOr;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorPresente;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorRegex;
-import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorTrue;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo;
+import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
+import net.gaia.vortex.sets.impl.serializacion.tipos.deserial.DeserializadorAnd;
+import net.gaia.vortex.sets.impl.serializacion.tipos.deserial.DeserializadorContiene;
+import net.gaia.vortex.sets.impl.serializacion.tipos.deserial.DeserializadorDesconocido;
+import net.gaia.vortex.sets.impl.serializacion.tipos.deserial.DeserializadorEmpieza;
+import net.gaia.vortex.sets.impl.serializacion.tipos.deserial.DeserializadorEquals;
+import net.gaia.vortex.sets.impl.serializacion.tipos.deserial.DeserializadorFalse;
+import net.gaia.vortex.sets.impl.serializacion.tipos.deserial.DeserializadorNot;
+import net.gaia.vortex.sets.impl.serializacion.tipos.deserial.DeserializadorOr;
+import net.gaia.vortex.sets.impl.serializacion.tipos.deserial.DeserializadorPresente;
+import net.gaia.vortex.sets.impl.serializacion.tipos.deserial.DeserializadorRegex;
+import net.gaia.vortex.sets.impl.serializacion.tipos.deserial.DeserializadorTrue;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorAnd;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorAnonimo;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorContiene;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorDesconocida;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorEmpieza;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorEquals;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorFalse;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorNot;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorOr;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorPresente;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorRegex;
+import net.gaia.vortex.sets.impl.serializacion.tipos.serial.SerializadorTrue;
 
 /**
  * Esta clase es la implementación de la configuración de serializaciones
@@ -161,7 +161,7 @@ public class ConfiguracionDeSerializacionDeCondicionesImpl implements Configurac
 
 	/**
 	 * @see net.gaia.vortex.sets.impl.serializacion.ConfiguracionDeSerializacionDeCondiciones#putSerializadorDelTipo(java.lang.Class,
-	 *      net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo)
+	 *      net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo)
 	 */
 	@Override
 	public <C> void putSerializadorDelTipo(final Class<? super C> clase,
@@ -171,7 +171,7 @@ public class ConfiguracionDeSerializacionDeCondicionesImpl implements Configurac
 
 	/**
 	 * @see net.gaia.vortex.sets.impl.serializacion.ConfiguracionDeSerializacionDeCondiciones#putDeserializadorDelTipo(java.lang.String,
-	 *      net.gaia.vortex.sets.impl.serializacion.DeserializadorDeTipo)
+	 *      net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo)
 	 */
 	@Override
 	public <C> void putDeserializadorDelTipo(final String tipo, final DeserializadorDeTipo<? extends C> serializador) {

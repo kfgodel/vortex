@@ -19,7 +19,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.sets.impl.OrCompuesto;
+import net.gaia.vortex.sets.impl.condiciones.OrCompuesto;
 
 import org.junit.Test;
 

@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
-import net.gaia.vortex.sets.impl.OrCompuesto;
+import net.gaia.vortex.sets.impl.condiciones.OrCompuesto;
 import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
 
 /**

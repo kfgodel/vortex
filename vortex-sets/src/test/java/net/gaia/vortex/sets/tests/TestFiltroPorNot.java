@@ -18,9 +18,9 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.sets.impl.ColeccionContiene;
-import net.gaia.vortex.sets.impl.Negacion;
-import net.gaia.vortex.sets.impl.ValorEsperadoEn;
+import net.gaia.vortex.sets.impl.condiciones.ColeccionContiene;
+import net.gaia.vortex.sets.impl.condiciones.Negacion;
+import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 
 import org.junit.Test;
 

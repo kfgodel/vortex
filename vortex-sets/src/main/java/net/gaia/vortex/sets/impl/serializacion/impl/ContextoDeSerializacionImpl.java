@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion;
+import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 
 /**
@@ -51,7 +51,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion#guardarSerializadoDe(net.gaia.vortex.core.api.condiciones.Condicion,
+	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion#guardarSerializadoDe(net.gaia.vortex.core.api.condiciones.Condicion,
 	 *      java.util.Map)
 	 */
 	@Override
@@ -60,7 +60,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion#obtenerSerializadoDe(net.gaia.vortex.core.api.condiciones.Condicion)
+	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion#obtenerSerializadoDe(net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
 	@Override
 	public Map<String, Object> obtenerSerializadoDe(final Condicion condicionRaiz) throws FaultyCodeException {
@@ -69,7 +69,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion#guardarDeserializadoDe(java.util.Map,
+	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion#guardarDeserializadoDe(java.util.Map,
 	 *      net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
 	@Override
@@ -78,7 +78,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion#obtenerDeserializadoDe(java.util.Map)
+	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion#obtenerDeserializadoDe(java.util.Map)
 	 */
 	@Override
 	public Condicion obtenerDeserializadoDe(final Map<String, Object> mapaRaiz) throws FaultyCodeException {
@@ -87,7 +87,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion#obtenerSerializadosDe(java.util.List)
+	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion#obtenerSerializadosDe(java.util.List)
 	 */
 	@Override
 	public List<Map<String, Object>> obtenerSerializadosDe(final List<Condicion> condiciones)
@@ -101,7 +101,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion#obtenerDeserializadosDe(java.util.List)
+	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion#obtenerDeserializadosDe(java.util.List)
 	 */
 	@Override
 	public List<Condicion> obtenerDeserializadosDe(final List<Map<String, Object>> mapas) throws FaultyCodeException {
