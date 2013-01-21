@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.portal.impl.condiciones;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
@@ -106,4 +109,13 @@ public class SoloInstancias implements Condicion {
 	public String toString() {
 		return ToString.de(this).add(tipoEsperado_FIELD, tipoEsperado).toString();
 	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
+	}
+
 }

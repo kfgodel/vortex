@@ -13,6 +13,8 @@
 package net.gaia.vortex.sets.impl;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
@@ -101,6 +103,14 @@ public class ColeccionContiene implements Condicion {
 	public String toString() {
 		return ToString.de(this).con(valorEsperado_FIELD, valorEsperado).con(valueAccessor_FIELD, valueAccessor)
 				.toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
 	}
 
 }

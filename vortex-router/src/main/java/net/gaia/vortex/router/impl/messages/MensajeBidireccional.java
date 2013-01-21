@@ -29,13 +29,13 @@ public interface MensajeBidireccional {
 	 * @return El id que corresponde a la pata que recibe el mensaje en destino, o null si no se
 	 *         conoce
 	 */
-	public Long getIdDePataLocalAlReceptor();
+	public Long getIdLocalAlReceptor();
 
 	/**
 	 * Devuelve el nombre del tipo de mensaje que permite discriminarlo
 	 * 
 	 * @return El nombre de este tipo de mensaje en particular
 	 */
-	public String getNombreDeTipo();
+	public String getTipoDeMensaje();
 
 }

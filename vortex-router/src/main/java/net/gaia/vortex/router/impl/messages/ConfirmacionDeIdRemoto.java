@@ -24,39 +24,39 @@ public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
 	/**
 	 * Identificador para este tipo de mensajes bidi
 	 */
-	public static final String NOMBRE_DE_TIPO = "vortex.id.confirmacion";
+	public static final String NOMBRE_DE_TIPO = "IdRemoto.Confirmacion";
 
-	private Long idDePataLocalAlEmisor;
+	private Long idLocalAlEmisor;
 	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
 
-	private Map<String, Object> idDeRespuesta;
+	private Map<String, Object> idRespuestaOriginal;
 	public static final String idDeRespuesta_FIELD = "idDeRespuesta";
 
 	public ConfirmacionDeIdRemoto() {
 		super(NOMBRE_DE_TIPO);
 	}
 
-	public Map<String, Object> getIdDeRespuesta() {
-		return idDeRespuesta;
+	public Map<String, Object> getIdRespuestaOriginal() {
+		return idRespuestaOriginal;
 	}
 
-	public void setIdDeRespuesta(final Map<String, Object> idDeRespuesta) {
-		this.idDeRespuesta = idDeRespuesta;
+	public void setIdRespuestaOriginal(final Map<String, Object> idDeRespuesta) {
+		this.idRespuestaOriginal = idDeRespuesta;
 	}
 
 	public static ConfirmacionDeIdRemoto create(final MensajeVortex respuesta, final Long idLocal) {
 		final ConfirmacionDeIdRemoto confirmacion = new ConfirmacionDeIdRemoto();
-		confirmacion.setIdDePataLocalAlEmisor(idLocal);
-		confirmacion.idDeRespuesta = respuesta.getIdDeMensaje().getAsMap();
+		confirmacion.setIdLocalAlEmisor(idLocal);
+		confirmacion.idRespuestaOriginal = respuesta.getIdDeMensaje().getAsMap();
 		return confirmacion;
 	}
 
-	public Long getIdDePataLocalAlEmisor() {
-		return idDePataLocalAlEmisor;
+	public Long getIdLocalAlEmisor() {
+		return idLocalAlEmisor;
 	}
 
-	public void setIdDePataLocalAlEmisor(final Long idDePataLocalAlEmisor) {
-		this.idDePataLocalAlEmisor = idDePataLocalAlEmisor;
+	public void setIdLocalAlEmisor(final Long idDePataLocalAlEmisor) {
+		this.idLocalAlEmisor = idDePataLocalAlEmisor;
 	}
 
 	/**
@@ -64,8 +64,8 @@ public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdDePataLocalAlReceptor())
-				.con(idDePataLocalAlEmisor_FIELD, idDePataLocalAlEmisor).con(idDeRespuesta_FIELD, idDeRespuesta)
+		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdLocalAlReceptor())
+				.con(idDePataLocalAlEmisor_FIELD, idLocalAlEmisor).con(idDeRespuesta_FIELD, idRespuestaOriginal)
 				.toString();
 	}
 
@@ -76,7 +76,7 @@ public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
 	 */
 	public static Condicion getFiltroDelTipo() {
 		final Condicion filtroDeConfirmacion = AndCompuesto.de( //
-				ValorEsperadoEn.elAtributo(nombreDeTipo_FIELD, NOMBRE_DE_TIPO),//
+				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
 				AtributoPresente.conNombre(idDePataLocalAlReceptor_FIELD),//
 				AtributoPresente.conNombre(idDePataLocalAlEmisor_FIELD),//
 				AtributoPresente.conNombre(idDeRespuesta_FIELD)//

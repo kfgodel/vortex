@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.core.impl.condiciones;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -47,6 +50,14 @@ public class SiempreTrue implements Condicion {
 	@Override
 	public String toString() {
 		return ToString.de(this).toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
 	}
 
 }

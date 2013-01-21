@@ -3,6 +3,9 @@
  */
 package net.gaia.vortex.sets.impl;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
@@ -46,7 +49,7 @@ public class AtributoEmpieza implements Condicion {
 		}
 		final String cadenaEnMensaje = (String) valorEnElMensaje;
 		final boolean empiezaConElPrefijo = cadenaEnMensaje.startsWith(prefijoEsperado);
-		ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(empiezaConElPrefijo);
+		final ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(empiezaConElPrefijo);
 		return resultado;
 	}
 
@@ -64,5 +67,13 @@ public class AtributoEmpieza implements Condicion {
 		condicion.prefijoEsperado = prefjioEsperado;
 		condicion.valueAccessor = PropertyChainAccessor.createAccessor(propertyPath);
 		return condicion;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
 	}
 }

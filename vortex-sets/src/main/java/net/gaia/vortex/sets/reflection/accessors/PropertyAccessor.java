@@ -76,4 +76,12 @@ public class PropertyAccessor implements ValueAccessor {
 		return ToString.de(this).con(propertyName_FIELD, propertyName).toString();
 	}
 
+	/**
+	 * @see net.gaia.vortex.sets.reflection.ValueAccessor#getPropertyPath()
+	 */
+	@Override
+	public String getPropertyPath() {
+		return propertyName;
+	}
+
 }

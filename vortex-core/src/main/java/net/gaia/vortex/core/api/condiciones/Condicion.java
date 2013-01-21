@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.core.api.condiciones;
 
+import java.util.List;
+
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 
 /**
@@ -33,4 +35,10 @@ public interface Condicion {
 	 */
 	public ResultadoDeCondicion esCumplidaPor(MensajeVortex mensaje);
 
+	/**
+	 * Devuelve una lista de las subcondiciones que forman esta condición
+	 * 
+	 * @return Una lista vacia para aquellas condiciones que no son compuestas por otras
+	 */
+	public List<Condicion> getSubCondiciones();
 }

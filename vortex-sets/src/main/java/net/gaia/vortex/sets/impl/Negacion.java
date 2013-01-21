@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.sets.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -57,6 +60,24 @@ public class Negacion implements Condicion {
 	@Override
 	public String toString() {
 		return ToString.de(this).con(condicionNegada_FIELD, condicionNegada).toString();
+	}
+
+	public Condicion getCondicionNegada() {
+		return condicionNegada;
+	}
+
+	public void setCondicionNegada(final Condicion condicionNegada) {
+		this.condicionNegada = condicionNegada;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		final ArrayList<Condicion> condicion = new ArrayList<Condicion>(1);
+		condicion.add(condicionNegada);
+		return condicion;
 	}
 
 }

@@ -58,7 +58,7 @@ public class PublicacionDeFiltros extends MensajeBidiSupport {
 	public static PublicacionDeFiltros create(final Map<String, Object> nuevoFiltro, final Long idDePataRemota) {
 		final PublicacionDeFiltros publicacion = new PublicacionDeFiltros();
 		publicacion.filtro = nuevoFiltro;
-		publicacion.setIdDePataLocalAlReceptor(idDePataRemota);
+		publicacion.setIdLocalAlReceptor(idDePataRemota);
 		return publicacion;
 	}
 
@@ -67,7 +67,7 @@ public class PublicacionDeFiltros extends MensajeBidiSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdDePataLocalAlReceptor())
+		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdLocalAlReceptor())
 				.con(idDePedido_FIELD, idDePedido).con(filtro_FIELD, filtro).toString();
 	}
 
@@ -78,7 +78,7 @@ public class PublicacionDeFiltros extends MensajeBidiSupport {
 	 */
 	public static Condicion getFiltroDelTipo() {
 		final Condicion filtroDePublicaciones = AndCompuesto.de( //
-				ValorEsperadoEn.elAtributo(nombreDeTipo_FIELD, NOMBRE_DE_TIPO),//
+				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
 				AtributoPresente.conNombre(idDePataLocalAlReceptor_FIELD),//
 				AtributoPresente.conNombre(filtro_FIELD),//
 				AtributoPresente.conNombre(idDePedido_FIELD)//

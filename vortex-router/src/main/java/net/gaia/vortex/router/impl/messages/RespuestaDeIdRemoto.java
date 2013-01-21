@@ -29,39 +29,39 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 
-	public static final String NOMBRE_DE_TIPO = "vortex.id.respuesta";
+	public static final String NOMBRE_DE_TIPO = "IdRemoto.Respuesta";
 
-	private Long idDePataLocalAlEmisor;
+	private Long idLocalAlEmisor;
 	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
 
-	private Map<String, Object> idDePedido;
+	private Map<String, Object> idPedidoOriginal;
 	public static final String idDePedido_FIELD = "idDePedido";
 
 	public RespuestaDeIdRemoto() {
 		super(NOMBRE_DE_TIPO);
 	}
 
-	public Map<String, Object> getIdDePedido() {
-		return idDePedido;
+	public Map<String, Object> getIdPedidoOriginal() {
+		return idPedidoOriginal;
 	}
 
-	public void setIdDePedido(final Map<String, Object> idDePedido) {
-		this.idDePedido = idDePedido;
+	public void setIdPedidoOriginal(final Map<String, Object> idDePedido) {
+		this.idPedidoOriginal = idDePedido;
 	}
 
 	public static RespuestaDeIdRemoto create(final MensajeVortex pedidoOriginal, final Long idLocal) {
 		final RespuestaDeIdRemoto name = new RespuestaDeIdRemoto();
-		name.setIdDePataLocalAlEmisor(idLocal);
-		name.idDePedido = pedidoOriginal.getIdDeMensaje().getAsMap();
+		name.setIdLocalAlEmisor(idLocal);
+		name.idPedidoOriginal = pedidoOriginal.getIdDeMensaje().getAsMap();
 		return name;
 	}
 
-	public Long getIdDePataLocalAlEmisor() {
-		return idDePataLocalAlEmisor;
+	public Long getIdLocalAlEmisor() {
+		return idLocalAlEmisor;
 	}
 
-	public void setIdDePataLocalAlEmisor(final Long idDePataLocalAlEmisor) {
-		this.idDePataLocalAlEmisor = idDePataLocalAlEmisor;
+	public void setIdLocalAlEmisor(final Long idDePataLocalAlEmisor) {
+		this.idLocalAlEmisor = idDePataLocalAlEmisor;
 	}
 
 	/**
@@ -69,8 +69,8 @@ public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdDePataLocalAlReceptor())
-				.con(idDePataLocalAlEmisor_FIELD, idDePataLocalAlEmisor).con(idDePedido_FIELD, idDePedido).toString();
+		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdLocalAlReceptor())
+				.con(idDePataLocalAlEmisor_FIELD, idLocalAlEmisor).con(idDePedido_FIELD, idPedidoOriginal).toString();
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 	 */
 	public static Condicion getFiltroDelTipo() {
 		final Condicion filtroDeRespuestas = AndCompuesto.de( //
-				ValorEsperadoEn.elAtributo(nombreDeTipo_FIELD, NOMBRE_DE_TIPO),//
+				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
 				AtributoPresente.conNombre(idDePataLocalAlReceptor_FIELD),//
 				AtributoPresente.conNombre(idDePataLocalAlEmisor_FIELD),//
 				AtributoPresente.conNombre(idDePedido_FIELD)//

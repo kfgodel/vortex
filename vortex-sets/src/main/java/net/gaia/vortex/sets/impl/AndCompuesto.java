@@ -59,7 +59,8 @@ public class AndCompuesto implements Condicion {
 		return ResultadoDeCondicion.TRUE;
 	}
 
-	public static AndCompuesto de(final Condicion condicion1, final Condicion condicion2, final Condicion... adicionales) {
+	public static AndCompuesto de(final Condicion condicion1, final Condicion condicion2,
+			final Condicion... adicionales) {
 		final ArrayList<Condicion> condicionesEvaluadas = new ArrayList<Condicion>(adicionales.length + 2);
 		condicionesEvaluadas.add(condicion1);
 		condicionesEvaluadas.add(condicion2);
@@ -91,6 +92,22 @@ public class AndCompuesto implements Condicion {
 	@Override
 	public String toString() {
 		return ToString.de(this).con(condiciones_FIELD, condiciones).toString();
+	}
+
+	public List<Condicion> getCondiciones() {
+		return condiciones;
+	}
+
+	public void setCondiciones(final List<Condicion> condiciones) {
+		this.condiciones = condiciones;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return getCondiciones();
 	}
 
 }

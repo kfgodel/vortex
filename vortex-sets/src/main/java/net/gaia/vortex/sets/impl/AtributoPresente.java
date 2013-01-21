@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.sets.impl;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
@@ -44,6 +47,14 @@ public class AtributoPresente implements Condicion {
 		final ContenidoVortex contenidoDelMensaje = mensaje.getContenido();
 		final boolean tieneValor = valueAccessor.hasValueIn(contenidoDelMensaje);
 		return ResultadoDeCondicion.paraBooleano(tieneValor);
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
 	}
 
 }

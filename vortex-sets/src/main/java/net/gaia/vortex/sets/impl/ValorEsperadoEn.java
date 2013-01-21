@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.sets.impl;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
@@ -72,6 +75,7 @@ public class ValorEsperadoEn implements Condicion {
 	/**
 	 * Crea una nueva condición que evalua si el valor esperado se encuentra en la cadena de
 	 * propiedades de cada mensaje que recibe
+	 * 
 	 * @param propertyPath
 	 *            La cadena de propiedades a evaluar en el mensaje
 	 * @param valorEsperado
@@ -98,6 +102,30 @@ public class ValorEsperadoEn implements Condicion {
 	public String toString() {
 		return ToString.de(this).con(valorEsperado_FIELD, valorEsperado).con(valueAccessor_FIELD, valueAccessor)
 				.toString();
+	}
+
+	public ValueAccessor getValueAccessor() {
+		return valueAccessor;
+	}
+
+	public void setValueAccessor(final ValueAccessor valueAccessor) {
+		this.valueAccessor = valueAccessor;
+	}
+
+	public Object getValorEsperado() {
+		return valorEsperado;
+	}
+
+	public void setValorEsperado(final Object valorEsperado) {
+		this.valorEsperado = valorEsperado;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
 	}
 
 }

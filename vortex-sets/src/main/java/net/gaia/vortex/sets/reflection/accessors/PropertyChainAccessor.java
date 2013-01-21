@@ -198,4 +198,20 @@ public class PropertyChainAccessor implements ValueAccessor {
 		return ToString.de(this).con(propertyNames_FIELD, Arrays.toString(propertyNames)).toString();
 	}
 
+	/**
+	 * @see net.gaia.vortex.sets.reflection.ValueAccessor#getPropertyPath()
+	 */
+	@Override
+	public String getPropertyPath() {
+		final StringBuilder propertyPath = new StringBuilder();
+		for (int i = 0; i < propertyNames.length; i++) {
+			final String propertyName = propertyNames[i];
+			if (i > 0) {
+				propertyPath.append(PROPERTY_DELIMITER);
+			}
+			propertyPath.append(propertyName);
+		}
+		return propertyPath.toString();
+	}
+
 }

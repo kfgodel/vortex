@@ -93,4 +93,20 @@ public class OrCompuesto implements Condicion {
 		return ToString.de(this).con(condiciones_FIELD, condiciones).toString();
 	}
 
+	public List<Condicion> getCondiciones() {
+		return condiciones;
+	}
+
+	public void setCondiciones(final List<Condicion> condiciones) {
+		this.condiciones = condiciones;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return getCondiciones();
+	}
+
 }

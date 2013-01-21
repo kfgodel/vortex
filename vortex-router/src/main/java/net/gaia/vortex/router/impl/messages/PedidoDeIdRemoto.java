@@ -26,26 +26,26 @@ import net.gaia.vortex.sets.impl.ValorEsperadoEn;
  */
 public class PedidoDeIdRemoto extends MensajeBidiSupport {
 
-	public static final String NOMBRE_DE_TIPO = "vortex.id.pedido";
+	public static final String NOMBRE_DE_TIPO = "IdRemoto.Pedido";
 
-	private Long idDePataLocalAlEmisor;
+	private Long idLocalAlEmisor;
 	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
 
 	public PedidoDeIdRemoto() {
 		super(NOMBRE_DE_TIPO);
 	}
 
-	public Long getIdDePataLocalAlEmisor() {
-		return idDePataLocalAlEmisor;
+	public Long getIdLocalAlEmisor() {
+		return idLocalAlEmisor;
 	}
 
-	public void setIdDePataLocalAlEmisor(final Long idDePataLocalAlEmisor) {
-		this.idDePataLocalAlEmisor = idDePataLocalAlEmisor;
+	public void setIdLocalAlEmisor(final Long idDePataLocalAlEmisor) {
+		this.idLocalAlEmisor = idDePataLocalAlEmisor;
 	}
 
 	public static PedidoDeIdRemoto create(final Long idDePataLocal) {
 		final PedidoDeIdRemoto pedido = new PedidoDeIdRemoto();
-		pedido.setIdDePataLocalAlEmisor(idDePataLocal);
+		pedido.setIdLocalAlEmisor(idDePataLocal);
 		return pedido;
 	}
 
@@ -56,7 +56,7 @@ public class PedidoDeIdRemoto extends MensajeBidiSupport {
 	 */
 	public static Condicion getFiltroDelTipo() {
 		final Condicion filtroDePedidos = AndCompuesto.de( //
-				ValorEsperadoEn.elAtributo(nombreDeTipo_FIELD, NOMBRE_DE_TIPO),//
+				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
 				AtributoPresente.conNombre(idDePataLocalAlEmisor_FIELD)//
 				);
 		return filtroDePedidos;

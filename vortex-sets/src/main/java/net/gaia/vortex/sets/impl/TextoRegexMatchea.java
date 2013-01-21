@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.sets.impl;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -97,8 +99,16 @@ public class TextoRegexMatchea implements Condicion {
 		final CharSequence cadenaDelMensaje = (CharSequence) valorEnElMensaje;
 		final Matcher matcher = expresion.matcher(cadenaDelMensaje);
 		final boolean matchea = matcher.matches();
-		ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(matchea);
+		final ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(matchea);
 		return resultado;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
 	}
 
 }

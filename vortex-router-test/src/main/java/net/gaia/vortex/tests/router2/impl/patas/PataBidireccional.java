@@ -254,14 +254,14 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	 */
 	private void evento_recibirRespuestaDeIdRemoto(final RespuestaDeIdRemoto respuesta) {
 		final PedidoDeIdRemoto pedidoOriginal = respuesta.getPedido();
-		final Long idDePataEmisora = pedidoOriginal.getIdDePataLocalAlEmisor();
-		if (!getIdLocal().equals(idDePataEmisora)) {
-			LOG.debug("  Rechazando en [{},{}] respuesta{} por pedido{} que fue emitido en otra", new Object[] {
+		if (!getEnviados().contains(pedidoOriginal)) {
+			LOG.debug("  Rechazando en [{},{}] respuesta{} por pedido{} no realizado en esta pata", new Object[] {
 					this.getNodoLocal().getNombre(), getIdLocal(), respuesta, pedidoOriginal });
 			return;
 		}
-		if (!getEnviados().contains(pedidoOriginal)) {
-			LOG.debug("  Rechazando en [{},{}] respuesta{} por pedido{} no realizado en esta pata", new Object[] {
+		final Long idDePataEmisora = pedidoOriginal.getIdDePataLocalAlEmisor();
+		if (!getIdLocal().equals(idDePataEmisora)) {
+			LOG.debug("  Rechazando en [{},{}] respuesta{} por pedido{} que fue emitido en otra", new Object[] {
 					this.getNodoLocal().getNombre(), getIdLocal(), respuesta, pedidoOriginal });
 			return;
 		}

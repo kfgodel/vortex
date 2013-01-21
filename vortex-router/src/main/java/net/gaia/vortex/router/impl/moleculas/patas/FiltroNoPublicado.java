@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.router.impl.moleculas.patas;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -39,6 +42,14 @@ public class FiltroNoPublicado implements Condicion {
 	@Override
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		throw new UnhandledConditionException("Esta condición no puede evaluarse");
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
 	}
 
 }

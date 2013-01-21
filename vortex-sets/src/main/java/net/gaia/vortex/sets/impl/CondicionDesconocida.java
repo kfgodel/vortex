@@ -12,6 +12,10 @@
  */
 package net.gaia.vortex.sets.impl;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -37,12 +41,36 @@ public class CondicionDesconocida implements Condicion {
 		return ultimaReferencia.get();
 	}
 
+	private Map<String, Object> formaOriginal;
+
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		return ResultadoDeCondicion.INDECIDIBLE;
+	}
+
+	public static CondicionDesconocida create(final Map<String, Object> formaOriginal) {
+		final CondicionDesconocida condicion = new CondicionDesconocida();
+		condicion.formaOriginal = formaOriginal;
+		return condicion;
+	}
+
+	public Map<String, Object> getFormaOriginal() {
+		return formaOriginal;
+	}
+
+	public void setFormaOriginal(final Map<String, Object> formaOriginal) {
+		this.formaOriginal = formaOriginal;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
 	}
 
 }
