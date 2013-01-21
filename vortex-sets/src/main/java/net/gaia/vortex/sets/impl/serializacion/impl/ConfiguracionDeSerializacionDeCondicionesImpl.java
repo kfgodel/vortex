@@ -15,13 +15,32 @@ package net.gaia.vortex.sets.impl.serializacion.impl;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.sets.impl.AndCompuesto;
 import net.gaia.vortex.sets.impl.CondicionDesconocida;
+import net.gaia.vortex.sets.impl.Negacion;
+import net.gaia.vortex.sets.impl.OrCompuesto;
+import net.gaia.vortex.sets.impl.ValorEsperadoEn;
 import net.gaia.vortex.sets.impl.serializacion.ConfiguracionDeSerializacionDeCondiciones;
 import net.gaia.vortex.sets.impl.serializacion.DeserializadorDeTipo;
+import net.gaia.vortex.sets.impl.serializacion.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorAnd;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDesconocido;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorEquals;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorFalse;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorNot;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorOr;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorTrue;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorAnd;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorAnonimo;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDesconocida;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorEquals;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorFalse;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorNot;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorOr;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorTrue;
 
 /**
  * Esta clase es la implementación de la configuración de serializaciones
@@ -61,15 +80,34 @@ public class ConfiguracionDeSerializacionDeCondicionesImpl implements Configurac
 		putSerializadorDelTipo(CondicionDesconocida.class, SerializadorDesconocida.getInstancia());
 
 		// AND
+		putSerializadorDelTipo(AndCompuesto.class, SerializadorAnd.getInstancia());
+		putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_AND, DeserializadorAnd.getInstancia());
+
 		// OR
+		putSerializadorDelTipo(OrCompuesto.class, SerializadorOr.getInstancia());
+		putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_OR, DeserializadorOr.getInstancia());
+
 		// NOT
+		putSerializadorDelTipo(Negacion.class, SerializadorNot.getInstancia());
+		putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_NOT, DeserializadorNot.getInstancia());
+
 		// EQUALS
+		putSerializadorDelTipo(ValorEsperadoEn.class, SerializadorEquals.getInstancia());
+		putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_EQUALS, DeserializadorEquals.getInstancia());
+
+		// TRUE
+		putSerializadorDelTipo(SiempreTrue.class, SerializadorTrue.getInstancia());
+		putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_TRUE, DeserializadorTrue.getInstancia());
+		// FALSE
+		putSerializadorDelTipo(SiempreFalse.class, SerializadorFalse.getInstancia());
+		putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_FALSE, DeserializadorFalse.getInstancia());
+
 		// EMPIEZA_CON
+		// putSerializadorDelTipo(.class, .getInstancia());
+		// putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_, .getInstancia());
 		// ATRIBUTO_PRESENTE
 		// CONTIENE
 		// REGEX_MATCH
-		// TRUE
-		// FALSE
 	}
 
 	/**

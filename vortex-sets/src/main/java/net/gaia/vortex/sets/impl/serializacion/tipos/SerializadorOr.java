@@ -1,5 +1,5 @@
 /**
- * 21/01/2013 17:48:59 Copyright (C) 2011 Darío L. García
+ * 21/01/2013 18:33:22 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,9 +12,11 @@
  */
 package net.gaia.vortex.sets.impl.serializacion.tipos;
 
+import java.util.List;
 import java.util.Map;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.sets.impl.OrCompuesto;
 import net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo;
@@ -23,19 +25,15 @@ import ar.com.dgarcia.coding.caching.WeakSingleton;
 import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
- * Esta clase representa el serializador utilizado cuando no existe configuración para un tipo de
- * condición dada.<br>
- * Este serializador es utilizado cuando falta definir en la configuración la serialización de un
- * tipo
+ * Esta clase implementa el serializador de condiciones OR
  * 
  * @author D. García
  */
-public class SerializadorAnonimo implements SerializadorDeTipo<Condicion> {
+public class SerializadorOr implements SerializadorDeTipo<OrCompuesto> {
+	private static final WeakSingleton<SerializadorOr> ultimaReferencia = new WeakSingleton<SerializadorOr>(
+			DefaultInstantiator.create(SerializadorOr.class));
 
-	private static final WeakSingleton<SerializadorAnonimo> ultimaReferencia = new WeakSingleton<SerializadorAnonimo>(
-			DefaultInstantiator.create(SerializadorAnonimo.class));
-
-	public static SerializadorAnonimo getInstancia() {
+	public static SerializadorOr getInstancia() {
 		return ultimaReferencia.get();
 	}
 
@@ -44,10 +42,15 @@ public class SerializadorAnonimo implements SerializadorDeTipo<Condicion> {
 	 *      net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion)
 	 */
 	@Override
-	public Map<String, Object> serializarDesde(final Condicion origen, final ContextoDeSerializacion contexto) {
+	public Map<String, Object> serializarDesde(final OrCompuesto origen, final ContextoDeSerializacion contexto) {
 		final Map<String, Object> serializado = new CaseInsensitiveHashMap<Object>();
-		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_ANONIMO);
-		serializado.put(MetadataDeSerializacion.TIPO_ANONIMO_CLASE, origen.getClass().getName());
+		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_OR);
+
+		final List<Condicion> subCondiciones = origen.getSubCondiciones();
+		final List<Map<String, Object>> subSerializados = contexto.obtenerSerializadosDe(subCondiciones);
+		serializado.put(MetadataDeSerializacion.TIPO_OR_FILTROS, subSerializados);
+
 		return serializado;
 	}
+
 }

@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.sets.impl.serializacion;
 
+import java.util.List;
 import java.util.Map;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
@@ -66,5 +67,27 @@ public interface ContextoDeSerializacion {
 	 *             Si nunca se registró la versión serializada de la condición pasada
 	 */
 	Condicion obtenerDeserializadoDe(Map<String, Object> mapaRaiz) throws FaultyCodeException;
+
+	/**
+	 * Obtiene la version serializada de todas las condiciones pasadas.<br>
+	 * Este método es una facilidad para condiciones compuestas
+	 * 
+	 * @param condiciones
+	 *            Las condiciones a obtener su version serializada
+	 * @throws FaultyCodeException
+	 *             Si alguna de las condiciones no tiene su version serializada
+	 */
+	List<Map<String, Object>> obtenerSerializadosDe(List<Condicion> condiciones) throws FaultyCodeException;
+
+	/**
+	 * Obtiene la version deserializada de todas las condiciones pasadas.<br>
+	 * Este método es una facilidad para condiciones compuestas
+	 * 
+	 * @param mapas
+	 *            Los mapas cuyas condiciones se deben obtener
+	 * @throws FaultyCodeException
+	 *             Si alguna de las condiciones no tiene su version serializada
+	 */
+	List<Condicion> obtenerDeserializadosDe(List<Map<String, Object>> mapas) throws FaultyCodeException;
 
 }

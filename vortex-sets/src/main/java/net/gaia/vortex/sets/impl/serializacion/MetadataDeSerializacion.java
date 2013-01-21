@@ -39,4 +39,20 @@ public class MetadataDeSerializacion {
 
 	public final static String TIPO_TRUE = "TRUE";
 	public final static String TIPO_FALSE = "FALSE";
+
+	public final static String TIPO_EMPIEZA = "EMPIEZA";
+	public final static String TIPO_EMPIEZA_CLAVE = "clave";
+	public final static String TIPO_EMPIEZA_PREFIJO = "prefijo";
+
+	public final static String TIPO_PRESENTE = "PRESENTE";
+	public final static String TIPO_PRESENTE_CLAVE = "clave";
+
+	public final static String TIPO_CONTIENE = "CONTIENE";
+	public final static String TIPO_CONTIENE_CLAVE = "clave";
+	public final static String TIPO_CONTIENE_PREFIJO = "valor";
+
+	public final static String TIPO_REGEX = "PERL_REGEX";
+	public final static String TIPO_REGEX_CLAVE = "clave";
+	public final static String TIPO_REGEX_PREFIJO = "expresion";
+
 }

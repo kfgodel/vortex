@@ -12,7 +12,9 @@
  */
 package net.gaia.vortex.sets.impl.serializacion.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
@@ -54,7 +56,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	 */
 	@Override
 	public void guardarSerializadoDe(final Condicion condicionOriginal, final Map<String, Object> condicionSerializada) {
-		mapasPorCondicion.put(condicionOriginal, condicionSerializada);
+		getMapasPorCondicion().put(condicionOriginal, condicionSerializada);
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	 */
 	@Override
 	public Map<String, Object> obtenerSerializadoDe(final Condicion condicionRaiz) throws FaultyCodeException {
-		final Map<String, Object> serializado = mapasPorCondicion.get(condicionRaiz);
+		final Map<String, Object> serializado = getMapasPorCondicion().get(condicionRaiz);
 		return serializado;
 	}
 
@@ -72,7 +74,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	 */
 	@Override
 	public void guardarDeserializadoDe(final Map<String, Object> mapaOriginal, final Condicion condicionDeserializada) {
-		condicionesPorMapa.put(mapaOriginal, condicionDeserializada);
+		getCondicionesPorMapa().put(mapaOriginal, condicionDeserializada);
 	}
 
 	/**
@@ -80,7 +82,34 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	 */
 	@Override
 	public Condicion obtenerDeserializadoDe(final Map<String, Object> mapaRaiz) throws FaultyCodeException {
-		final Condicion deserializada = condicionesPorMapa.get(mapaRaiz);
+		final Condicion deserializada = getCondicionesPorMapa().get(mapaRaiz);
 		return deserializada;
+	}
+
+	/**
+	 * @see net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion#obtenerSerializadosDe(java.util.List)
+	 */
+	@Override
+	public List<Map<String, Object>> obtenerSerializadosDe(final List<Condicion> condiciones)
+			throws FaultyCodeException {
+		final List<Map<String, Object>> serializados = new ArrayList<Map<String, Object>>(condiciones.size());
+		for (final Condicion condicion : condiciones) {
+			final Map<String, Object> subSerializado = obtenerSerializadoDe(condicion);
+			serializados.add(subSerializado);
+		}
+		return serializados;
+	}
+
+	/**
+	 * @see net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion#obtenerDeserializadosDe(java.util.List)
+	 */
+	@Override
+	public List<Condicion> obtenerDeserializadosDe(final List<Map<String, Object>> mapas) throws FaultyCodeException {
+		final List<Condicion> deserializados = new ArrayList<Condicion>(mapas.size());
+		for (final Map<String, Object> mapa : mapas) {
+			final Condicion condicion = obtenerDeserializadoDe(mapa);
+			deserializados.add(condicion);
+		}
+		return deserializados;
 	}
 }

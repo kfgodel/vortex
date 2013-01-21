@@ -49,6 +49,16 @@ public class ObtenerSubMapas implements NodeExploder<Map<String, Object>> {
 				final Map<String, Object> subMapa = (Map<String, Object>) value;
 				subMapas.add(subMapa);
 			}
+			if (value instanceof Iterable) {
+				final Iterable<?> iterable = (Iterable<?>) value;
+				for (final Object object : iterable) {
+					if (object instanceof Map) {
+						@SuppressWarnings("unchecked")
+						final Map<String, Object> subMapa = (Map<String, Object>) object;
+						subMapas.add(subMapa);
+					}
+				}
+			}
 		}
 
 		return subMapas.iterator();

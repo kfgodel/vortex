@@ -21,6 +21,7 @@ import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la condición que es desconocida por esta aplicación y que puede formar
@@ -42,6 +43,7 @@ public class CondicionDesconocida implements Condicion {
 	}
 
 	private Map<String, Object> formaOriginal;
+	public static final String formaOriginal_FIELD = "formaOriginal";
 
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
@@ -71,6 +73,14 @@ public class CondicionDesconocida implements Condicion {
 	@Override
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(formaOriginal_FIELD, formaOriginal).toString();
 	}
 
 }

@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.sets.impl.serializacion.impl;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,9 +38,13 @@ public class ObtenerSubCondiciones implements NodeExploder<Condicion> {
 	/**
 	 * @see ar.com.dgarcia.lang.iterators.tree.NodeExploder#evaluateOn(java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<Condicion> evaluateOn(final Condicion node) {
 		final List<Condicion> subcondiciones = node.getSubCondiciones();
+		if (subcondiciones == null) {
+			return Collections.EMPTY_LIST.iterator();
+		}
 		return subcondiciones.iterator();
 	}
 
