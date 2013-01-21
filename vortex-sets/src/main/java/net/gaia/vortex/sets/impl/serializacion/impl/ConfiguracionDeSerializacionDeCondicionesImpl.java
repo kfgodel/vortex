@@ -31,19 +31,27 @@ import net.gaia.vortex.sets.impl.serializacion.DeserializadorDeTipo;
 import net.gaia.vortex.sets.impl.serializacion.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorAnd;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorContiene;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDesconocido;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorEmpieza;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorEquals;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorFalse;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorNot;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorOr;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorPresente;
+import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorRegex;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorTrue;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorAnd;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorAnonimo;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorContiene;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDesconocida;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorEmpieza;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorEquals;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorFalse;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorNot;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorOr;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorPresente;
+import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorRegex;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorTrue;
 
 /**

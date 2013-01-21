@@ -12,8 +12,14 @@
  */
 package net.gaia.vortex.sets.impl.serializacion.tipos;
 
+import java.util.Map;
+
 import net.gaia.vortex.sets.impl.AtributoPresente;
+import net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.DeserializadorDeTipo;
+import net.gaia.vortex.sets.impl.serializacion.MetadataDeSerializacion;
+import net.gaia.vortex.sets.impl.serializacion.ProblemaDeSerializacionException;
+import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
 
@@ -28,6 +34,28 @@ public class DeserializadorPresente implements DeserializadorDeTipo<AtributoPres
 
 	public static DeserializadorPresente getInstancia() {
 		return ultimaReferencia.get();
+	}
+
+	/**
+	 * @see net.gaia.vortex.sets.impl.serializacion.DeserializadorDeTipo#deserializarDesde(java.util.Map,
+	 *      net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion)
+	 */
+	@Override
+	public AtributoPresente deserializarDesde(final Map<String, Object> mapaOrigen,
+			final ContextoDeSerializacion contexto) {
+		final Object clave = mapaOrigen.get(MetadataDeSerializacion.TIPO_PRESENTE_CLAVE);
+		if (!(clave instanceof String)) {
+			throw new ProblemaDeSerializacionException("La clave de un " + MetadataDeSerializacion.TIPO_CONTIENE
+					+ " no es un String: " + clave);
+		}
+		final String propertyPath = (String) clave;
+		if (!PropertyChainAccessor.isPropertyChain(propertyPath)) {
+			throw new ProblemaDeSerializacionException("La clave de un " + MetadataDeSerializacion.TIPO_CONTIENE
+					+ " no respeta la forma de un property chain: " + propertyPath);
+		}
+
+		final AtributoPresente deserializado = AtributoPresente.conNombre(propertyPath);
+		return deserializado;
 	}
 
 }

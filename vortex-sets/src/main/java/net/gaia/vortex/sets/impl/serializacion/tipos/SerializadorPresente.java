@@ -12,10 +12,15 @@
  */
 package net.gaia.vortex.sets.impl.serializacion.tipos;
 
+import java.util.Map;
+
 import net.gaia.vortex.sets.impl.AtributoPresente;
+import net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion;
+import net.gaia.vortex.sets.impl.serializacion.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
  * Esta clase implementa el serializador de condiciones por atributo presente
@@ -28,6 +33,19 @@ public class SerializadorPresente implements SerializadorDeTipo<AtributoPresente
 
 	public static SerializadorPresente getInstancia() {
 		return ultimaReferencia.get();
+	}
+
+	/**
+	 * @see net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo#serializarDesde(java.lang.Object,
+	 *      net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion)
+	 */
+	@Override
+	public Map<String, Object> serializarDesde(final AtributoPresente origen, final ContextoDeSerializacion contexto) {
+		final Map<String, Object> serializado = new CaseInsensitiveHashMap<Object>();
+		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_PRESENTE);
+
+		serializado.put(MetadataDeSerializacion.TIPO_PRESENTE_CLAVE, origen.getValueAccessor().getPropertyPath());
+		return serializado;
 	}
 
 }

@@ -45,12 +45,13 @@ public class DeserializadorEquals implements DeserializadorDeTipo<ValorEsperadoE
 			final ContextoDeSerializacion contexto) {
 		final Object clave = mapaOrigen.get(MetadataDeSerializacion.TIPO_EQUALS_CLAVE);
 		if (!(clave instanceof String)) {
-			throw new ProblemaDeSerializacionException("La clave de un EQ no es un String: " + clave);
+			throw new ProblemaDeSerializacionException("La clave de un " + MetadataDeSerializacion.TIPO_EQUALS
+					+ " no es un String: " + clave);
 		}
 		final String propertyPath = (String) clave;
 		if (!PropertyChainAccessor.isPropertyChain(propertyPath)) {
-			throw new ProblemaDeSerializacionException("La clave de un EQ no respeta la forma de un property chain: "
-					+ propertyPath);
+			throw new ProblemaDeSerializacionException("La clave de un " + MetadataDeSerializacion.TIPO_EQUALS
+					+ " no respeta la forma de un property chain: " + propertyPath);
 		}
 
 		final Object valor = mapaOrigen.get(MetadataDeSerializacion.TIPO_EQUALS_VALOR);

@@ -12,10 +12,15 @@
  */
 package net.gaia.vortex.sets.impl.serializacion.tipos;
 
+import java.util.Map;
+
 import net.gaia.vortex.sets.impl.TextoRegexMatchea;
+import net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion;
+import net.gaia.vortex.sets.impl.serializacion.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
  * Esta clase implementa el serializador de condiciones regex
@@ -28,6 +33,20 @@ public class SerializadorRegex implements SerializadorDeTipo<TextoRegexMatchea> 
 
 	public static SerializadorRegex getInstancia() {
 		return ultimaReferencia.get();
+	}
+
+	/**
+	 * @see net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo#serializarDesde(java.lang.Object,
+	 *      net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion)
+	 */
+	@Override
+	public Map<String, Object> serializarDesde(final TextoRegexMatchea origen, final ContextoDeSerializacion contexto) {
+		final Map<String, Object> serializado = new CaseInsensitiveHashMap<Object>();
+		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_REGEX);
+
+		serializado.put(MetadataDeSerializacion.TIPO_REGEX_CLAVE, origen.getValueAccessor().getPropertyPath());
+		serializado.put(MetadataDeSerializacion.TIPO_REGEX_EXPRESION, origen.getExpresion().toString());
+		return serializado;
 	}
 
 }

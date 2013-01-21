@@ -44,7 +44,8 @@ public class DeserializadorNot implements DeserializadorDeTipo<Negacion> {
 	public Negacion deserializarDesde(final Map<String, Object> mapaOrigen, final ContextoDeSerializacion contexto) {
 		final Object valor = mapaOrigen.get(MetadataDeSerializacion.TIPO_NOT_FILTRO);
 		if (!(valor instanceof Map)) {
-			throw new ProblemaDeSerializacionException("El sub filtro de un NOT no es un mapa: " + valor);
+			throw new ProblemaDeSerializacionException("El sub filtro de un " + MetadataDeSerializacion.TIPO_NOT
+					+ " no es un mapa: " + valor);
 		}
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> subSerializado = (Map<String, Object>) valor;

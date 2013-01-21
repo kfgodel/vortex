@@ -46,7 +46,8 @@ public class DeserializadorAnd implements DeserializadorDeTipo<AndCompuesto> {
 	public AndCompuesto deserializarDesde(final Map<String, Object> mapaOrigen, final ContextoDeSerializacion contexto) {
 		final Object valor = mapaOrigen.get(MetadataDeSerializacion.TIPO_AND_FILTROS);
 		if (!(valor instanceof Iterable)) {
-			throw new ProblemaDeSerializacionException("Los filtros de un AND no son iterables: " + valor);
+			throw new ProblemaDeSerializacionException("Los filtros de un " + MetadataDeSerializacion.TIPO_AND
+					+ " no son iterables: " + valor);
 		}
 		@SuppressWarnings("unchecked")
 		final Iterable<Object> subFiltros = (Iterable<Object>) valor;
@@ -54,8 +55,8 @@ public class DeserializadorAnd implements DeserializadorDeTipo<AndCompuesto> {
 		int i = 0;
 		for (final Object filtro : subFiltros) {
 			if (!(filtro instanceof Map)) {
-				throw new ProblemaDeSerializacionException("El sub filtro[" + i + "] de un AND no es un mapa: "
-						+ filtro);
+				throw new ProblemaDeSerializacionException("El sub filtro[" + i + "] de un "
+						+ MetadataDeSerializacion.TIPO_AND + " no es un mapa: " + filtro);
 			}
 			@SuppressWarnings("unchecked")
 			final Map<String, Object> subSerializado = (Map<String, Object>) filtro;

@@ -44,6 +44,8 @@ public class SerializadorEmpieza implements SerializadorDeTipo<AtributoEmpieza> 
 		final Map<String, Object> serializado = new CaseInsensitiveHashMap<Object>();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_EMPIEZA);
 
+		serializado.put(MetadataDeSerializacion.TIPO_EMPIEZA_CLAVE, origen.getValueAccessor().getPropertyPath());
+		serializado.put(MetadataDeSerializacion.TIPO_EMPIEZA_PREFIJO, origen.getPrefijoEsperado());
 		return serializado;
 	}
 

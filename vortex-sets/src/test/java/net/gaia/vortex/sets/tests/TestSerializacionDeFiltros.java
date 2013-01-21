@@ -402,7 +402,7 @@ public class TestSerializacionDeFiltros {
 		Assert.assertTrue(deserializado instanceof TextoRegexMatchea);
 		final TextoRegexMatchea regex = (TextoRegexMatchea) deserializado;
 		Assert.assertEquals("atributo", regex.getValueAccessor().getPropertyPath());
-		Assert.assertEquals("valor", regex.getExpresion());
+		Assert.assertEquals("expresion", regex.getExpresion().toString());
 	}
 
 }

@@ -12,8 +12,14 @@
  */
 package net.gaia.vortex.sets.impl.serializacion.tipos;
 
+import java.util.Map;
+
 import net.gaia.vortex.sets.impl.AtributoEmpieza;
+import net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.DeserializadorDeTipo;
+import net.gaia.vortex.sets.impl.serializacion.MetadataDeSerializacion;
+import net.gaia.vortex.sets.impl.serializacion.ProblemaDeSerializacionException;
+import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
 
@@ -28,6 +34,34 @@ public class DeserializadorEmpieza implements DeserializadorDeTipo<AtributoEmpie
 
 	public static DeserializadorEmpieza getInstancia() {
 		return ultimaReferencia.get();
+	}
+
+	/**
+	 * @see net.gaia.vortex.sets.impl.serializacion.DeserializadorDeTipo#deserializarDesde(java.util.Map,
+	 *      net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion)
+	 */
+	@Override
+	public AtributoEmpieza deserializarDesde(final Map<String, Object> mapaOrigen,
+			final ContextoDeSerializacion contexto) {
+		final Object clave = mapaOrigen.get(MetadataDeSerializacion.TIPO_EMPIEZA_CLAVE);
+		if (!(clave instanceof String)) {
+			throw new ProblemaDeSerializacionException("La clave de un " + MetadataDeSerializacion.TIPO_EMPIEZA
+					+ " no es un String: " + clave);
+		}
+		final String propertyPath = (String) clave;
+		if (!PropertyChainAccessor.isPropertyChain(propertyPath)) {
+			throw new ProblemaDeSerializacionException("La clave de un " + MetadataDeSerializacion.TIPO_EMPIEZA
+					+ " no respeta la forma de un property chain: " + propertyPath);
+		}
+
+		final Object valor = mapaOrigen.get(MetadataDeSerializacion.TIPO_EMPIEZA_PREFIJO);
+		if (!(valor instanceof String)) {
+			throw new ProblemaDeSerializacionException("El prefijo de un " + MetadataDeSerializacion.TIPO_EMPIEZA
+					+ " no es un String: " + valor);
+		}
+		final String prefijo = (String) valor;
+		final AtributoEmpieza deserializado = AtributoEmpieza.conPrefijo(prefijo, propertyPath);
+		return deserializado;
 	}
 
 }

@@ -12,10 +12,15 @@
  */
 package net.gaia.vortex.sets.impl.serializacion.tipos;
 
+import java.util.Map;
+
 import net.gaia.vortex.sets.impl.ColeccionContiene;
+import net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion;
+import net.gaia.vortex.sets.impl.serializacion.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
  * Esta clase implementa el serializador de condiciones que verifica si una coleccion contiene un
@@ -29,6 +34,20 @@ public class SerializadorContiene implements SerializadorDeTipo<ColeccionContien
 
 	public static SerializadorContiene getInstancia() {
 		return ultimaReferencia.get();
+	}
+
+	/**
+	 * @see net.gaia.vortex.sets.impl.serializacion.SerializadorDeTipo#serializarDesde(java.lang.Object,
+	 *      net.gaia.vortex.sets.impl.serializacion.ContextoDeSerializacion)
+	 */
+	@Override
+	public Map<String, Object> serializarDesde(final ColeccionContiene origen, final ContextoDeSerializacion contexto) {
+		final Map<String, Object> serializado = new CaseInsensitiveHashMap<Object>();
+		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_CONTIENE);
+
+		serializado.put(MetadataDeSerializacion.TIPO_CONTIENE_CLAVE, origen.getValueAccessor().getPropertyPath());
+		serializado.put(MetadataDeSerializacion.TIPO_CONTIENE_VALOR, origen.getValorEsperado());
+		return serializado;
 	}
 
 }
