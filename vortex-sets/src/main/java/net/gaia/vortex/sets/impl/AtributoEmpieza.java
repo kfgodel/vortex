@@ -76,4 +76,21 @@ public class AtributoEmpieza implements Condicion {
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}
+
+	public ValueAccessor getValueAccessor() {
+		return valueAccessor;
+	}
+
+	public void setValueAccessor(final ValueAccessor valueAccessor) {
+		this.valueAccessor = valueAccessor;
+	}
+
+	public String getPrefijoEsperado() {
+		return prefijoEsperado;
+	}
+
+	public void setPrefijoEsperado(final String prefijoEsperado) {
+		this.prefijoEsperado = prefijoEsperado;
+	}
+
 }

@@ -49,10 +49,10 @@ public class MetadataDeSerializacion {
 
 	public final static String TIPO_CONTIENE = "CONTIENE";
 	public final static String TIPO_CONTIENE_CLAVE = "clave";
-	public final static String TIPO_CONTIENE_PREFIJO = "valor";
+	public final static String TIPO_CONTIENE_VALOR = "valor";
 
 	public final static String TIPO_REGEX = "PERL_REGEX";
 	public final static String TIPO_REGEX_CLAVE = "clave";
-	public final static String TIPO_REGEX_PREFIJO = "expresion";
+	public final static String TIPO_REGEX_EXPRESION = "expresion";
 
 }

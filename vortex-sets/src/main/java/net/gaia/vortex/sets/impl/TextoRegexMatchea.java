@@ -111,4 +111,20 @@ public class TextoRegexMatchea implements Condicion {
 		return Collections.emptyList();
 	}
 
+	public ValueAccessor getValueAccessor() {
+		return valueAccessor;
+	}
+
+	public void setValueAccessor(final ValueAccessor valueAccessor) {
+		this.valueAccessor = valueAccessor;
+	}
+
+	public Pattern getExpresion() {
+		return expresion;
+	}
+
+	public void setExpresion(final Pattern expresion) {
+		this.expresion = expresion;
+	}
+
 }

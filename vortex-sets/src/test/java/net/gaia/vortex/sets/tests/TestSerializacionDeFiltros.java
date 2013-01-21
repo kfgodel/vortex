@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import junit.framework.Assert;
 import net.gaia.vortex.core.api.condiciones.Condicion;
@@ -24,9 +26,13 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.sets.impl.AndCompuesto;
+import net.gaia.vortex.sets.impl.AtributoEmpieza;
+import net.gaia.vortex.sets.impl.AtributoPresente;
+import net.gaia.vortex.sets.impl.ColeccionContiene;
 import net.gaia.vortex.sets.impl.CondicionDesconocida;
 import net.gaia.vortex.sets.impl.Negacion;
 import net.gaia.vortex.sets.impl.OrCompuesto;
+import net.gaia.vortex.sets.impl.TextoRegexMatchea;
 import net.gaia.vortex.sets.impl.ValorEsperadoEn;
 import net.gaia.vortex.sets.impl.serializacion.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones;
@@ -120,14 +126,31 @@ public class TestSerializacionDeFiltros {
 	 * Verifica que el ojeto pasado esté correctamente serializado como condicion EQ
 	 */
 	private void checkSerializadoComoEq(final Object object, final String atributoEsperado, final String valorEsperado) {
+		final Map<String, Object> estadoEsperado = new HashMap<String, Object>();
+		estadoEsperado.put(MetadataDeSerializacion.TIPO_EQUALS_CLAVE, atributoEsperado);
+		estadoEsperado.put(MetadataDeSerializacion.TIPO_EQUALS_VALOR, valorEsperado);
+
+		checkSerializado(object, MetadataDeSerializacion.TIPO_EQUALS, estadoEsperado);
+	}
+
+	/**
+	 * @param object
+	 * @param tipoEsperado
+	 * @param estadoEsperado
+	 */
+	private void checkSerializado(final Object object, final String tipoEsperado,
+			final Map<String, Object> estadoEsperado) {
 		Assert.assertTrue(object instanceof Map);
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> mapaDeCondicionEq = (Map<String, Object>) object;
 
-		Assert.assertEquals(MetadataDeSerializacion.TIPO_EQUALS,
-				mapaDeCondicionEq.get(MetadataDeSerializacion.ATRIBUTO_TIPO));
-		Assert.assertEquals(atributoEsperado, mapaDeCondicionEq.get(MetadataDeSerializacion.TIPO_EQUALS_CLAVE));
-		Assert.assertEquals(valorEsperado, mapaDeCondicionEq.get(MetadataDeSerializacion.TIPO_EQUALS_VALOR));
+		Assert.assertEquals(tipoEsperado, mapaDeCondicionEq.get(MetadataDeSerializacion.ATRIBUTO_TIPO));
+		final Set<Entry<String, Object>> entriesEsperadas = estadoEsperado.entrySet();
+		for (final Entry<String, Object> entryEsperada : entriesEsperadas) {
+			final String clave = entryEsperada.getKey();
+			final Object valueEsperado = entryEsperada.getValue();
+			Assert.assertEquals(valueEsperado, mapaDeCondicionEq.get(clave));
+		}
 	}
 
 	@Test
@@ -285,4 +308,101 @@ public class TestSerializacionDeFiltros {
 		Assert.assertSame("Al pasar como desconocida no debería alterar la forma original", mapaDeFormaDesconocida,
 				serializado);
 	}
+
+	@Test
+	public void deberiaSerializarUnFiltroPorEmpieza() {
+		final Map<String, Object> serializado = serializador.serializar(AtributoEmpieza.conPrefijo("prefijo",
+				"atributo"));
+		final Map<String, Object> estadoEsperado = new HashMap<String, Object>();
+		estadoEsperado.put(MetadataDeSerializacion.TIPO_EMPIEZA_CLAVE, "atributo");
+		estadoEsperado.put(MetadataDeSerializacion.TIPO_EMPIEZA_PREFIJO, "prefijo");
+
+		checkSerializado(serializado, MetadataDeSerializacion.TIPO_EMPIEZA, estadoEsperado);
+	}
+
+	@Test
+	public void deberiaReconstruirUnFiltroPorEmpieza() {
+		final Map<String, Object> mapa = new HashMap<String, Object>();
+		mapa.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_EMPIEZA);
+		mapa.put(MetadataDeSerializacion.TIPO_EMPIEZA_CLAVE, "atributo");
+		mapa.put(MetadataDeSerializacion.TIPO_EMPIEZA_PREFIJO, "prefijo");
+
+		final Condicion deserializado = serializador.deserializar(mapa);
+		Assert.assertTrue(deserializado instanceof AtributoEmpieza);
+		final AtributoEmpieza empieza = (AtributoEmpieza) deserializado;
+		Assert.assertEquals("atributo", empieza.getValueAccessor().getPropertyPath());
+		Assert.assertEquals("prefijo", empieza.getPrefijoEsperado());
+	}
+
+	@Test
+	public void deberiaSerializarUnFiltroPorPresente() {
+		final Map<String, Object> serializado = serializador.serializar(AtributoPresente.conNombre("atributo"));
+		final Map<String, Object> estadoEsperado = new HashMap<String, Object>();
+		estadoEsperado.put(MetadataDeSerializacion.TIPO_PRESENTE_CLAVE, "atributo");
+
+		checkSerializado(serializado, MetadataDeSerializacion.TIPO_PRESENTE, estadoEsperado);
+	}
+
+	@Test
+	public void deberiaReconstruirUnFiltroPorPresente() {
+		final Map<String, Object> mapa = new HashMap<String, Object>();
+		mapa.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_PRESENTE);
+		mapa.put(MetadataDeSerializacion.TIPO_PRESENTE_CLAVE, "atributo");
+
+		final Condicion deserializado = serializador.deserializar(mapa);
+		Assert.assertTrue(deserializado instanceof AtributoPresente);
+		final AtributoPresente presente = (AtributoPresente) deserializado;
+		Assert.assertEquals("atributo", presente.getValueAccessor().getPropertyPath());
+	}
+
+	@Test
+	public void deberiaSerializarUnFiltroPorContiene() {
+		final Map<String, Object> serializado = serializador.serializar(ColeccionContiene.alValor("valor", "atributo"));
+		final Map<String, Object> estadoEsperado = new HashMap<String, Object>();
+		estadoEsperado.put(MetadataDeSerializacion.TIPO_CONTIENE_CLAVE, "atributo");
+		estadoEsperado.put(MetadataDeSerializacion.TIPO_CONTIENE_VALOR, "valor");
+
+		checkSerializado(serializado, MetadataDeSerializacion.TIPO_CONTIENE, estadoEsperado);
+
+	}
+
+	@Test
+	public void deberiaReconstruirUnFiltroPorContiene() {
+		final Map<String, Object> mapa = new HashMap<String, Object>();
+		mapa.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_CONTIENE);
+		mapa.put(MetadataDeSerializacion.TIPO_CONTIENE_CLAVE, "atributo");
+		mapa.put(MetadataDeSerializacion.TIPO_CONTIENE_VALOR, "valor");
+
+		final Condicion deserializado = serializador.deserializar(mapa);
+		Assert.assertTrue(deserializado instanceof ColeccionContiene);
+		final ColeccionContiene contiene = (ColeccionContiene) deserializado;
+		Assert.assertEquals("atributo", contiene.getValueAccessor().getPropertyPath());
+		Assert.assertEquals("valor", contiene.getValorEsperado());
+	}
+
+	@Test
+	public void deberiaSerializarUnFiltroPorRegex() {
+		final Map<String, Object> serializado = serializador.serializar(TextoRegexMatchea.laExpresion("expresion",
+				"atributo"));
+		final Map<String, Object> estadoEsperado = new HashMap<String, Object>();
+		estadoEsperado.put(MetadataDeSerializacion.TIPO_REGEX_CLAVE, "atributo");
+		estadoEsperado.put(MetadataDeSerializacion.TIPO_REGEX_EXPRESION, "expresion");
+
+		checkSerializado(serializado, MetadataDeSerializacion.TIPO_REGEX, estadoEsperado);
+	}
+
+	@Test
+	public void deberiaReconstruirUnFiltroPorRegex() {
+		final Map<String, Object> mapa = new HashMap<String, Object>();
+		mapa.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_REGEX);
+		mapa.put(MetadataDeSerializacion.TIPO_REGEX_CLAVE, "atributo");
+		mapa.put(MetadataDeSerializacion.TIPO_REGEX_EXPRESION, "expresion");
+
+		final Condicion deserializado = serializador.deserializar(mapa);
+		Assert.assertTrue(deserializado instanceof TextoRegexMatchea);
+		final TextoRegexMatchea regex = (TextoRegexMatchea) deserializado;
+		Assert.assertEquals("atributo", regex.getValueAccessor().getPropertyPath());
+		Assert.assertEquals("valor", regex.getExpresion());
+	}
+
 }

@@ -18,9 +18,13 @@ import java.util.Map;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.sets.impl.AndCompuesto;
+import net.gaia.vortex.sets.impl.AtributoEmpieza;
+import net.gaia.vortex.sets.impl.AtributoPresente;
+import net.gaia.vortex.sets.impl.ColeccionContiene;
 import net.gaia.vortex.sets.impl.CondicionDesconocida;
 import net.gaia.vortex.sets.impl.Negacion;
 import net.gaia.vortex.sets.impl.OrCompuesto;
+import net.gaia.vortex.sets.impl.TextoRegexMatchea;
 import net.gaia.vortex.sets.impl.ValorEsperadoEn;
 import net.gaia.vortex.sets.impl.serializacion.ConfiguracionDeSerializacionDeCondiciones;
 import net.gaia.vortex.sets.impl.serializacion.DeserializadorDeTipo;
@@ -103,11 +107,20 @@ public class ConfiguracionDeSerializacionDeCondicionesImpl implements Configurac
 		putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_FALSE, DeserializadorFalse.getInstancia());
 
 		// EMPIEZA_CON
-		// putSerializadorDelTipo(.class, .getInstancia());
-		// putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_, .getInstancia());
+		putSerializadorDelTipo(AtributoEmpieza.class, SerializadorEmpieza.getInstancia());
+		putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_EMPIEZA, DeserializadorEmpieza.getInstancia());
+
 		// ATRIBUTO_PRESENTE
+		putSerializadorDelTipo(AtributoPresente.class, SerializadorPresente.getInstancia());
+		putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_PRESENTE, DeserializadorPresente.getInstancia());
+
 		// CONTIENE
+		putSerializadorDelTipo(ColeccionContiene.class, SerializadorContiene.getInstancia());
+		putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_CONTIENE, DeserializadorContiene.getInstancia());
+
 		// REGEX_MATCH
+		putSerializadorDelTipo(TextoRegexMatchea.class, SerializadorRegex.getInstancia());
+		putDeserializadorDelTipo(MetadataDeSerializacion.TIPO_REGEX, DeserializadorRegex.getInstancia());
 	}
 
 	/**

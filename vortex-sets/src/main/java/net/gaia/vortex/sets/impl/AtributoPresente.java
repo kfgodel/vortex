@@ -57,4 +57,12 @@ public class AtributoPresente implements Condicion {
 		return Collections.emptyList();
 	}
 
+	public ValueAccessor getValueAccessor() {
+		return valueAccessor;
+	}
+
+	public void setValueAccessor(final ValueAccessor valueAccessor) {
+		this.valueAccessor = valueAccessor;
+	}
+
 }

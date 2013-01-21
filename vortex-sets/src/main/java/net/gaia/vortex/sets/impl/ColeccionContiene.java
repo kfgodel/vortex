@@ -113,4 +113,20 @@ public class ColeccionContiene implements Condicion {
 		return Collections.emptyList();
 	}
 
+	public ValueAccessor getValueAccessor() {
+		return valueAccessor;
+	}
+
+	public void setValueAccessor(final ValueAccessor valueAccessor) {
+		this.valueAccessor = valueAccessor;
+	}
+
+	public Object getValorEsperado() {
+		return valorEsperado;
+	}
+
+	public void setValorEsperado(final Object valorEsperado) {
+		this.valorEsperado = valorEsperado;
+	}
+
 }
