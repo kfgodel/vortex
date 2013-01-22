@@ -26,7 +26,7 @@ import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
  */
 public class PedidoDeIdRemoto extends MensajeBidiSupport {
 
-	public static final String NOMBRE_DE_TIPO = "IdRemoto.Pedido";
+	public static final String NOMBRE_DE_TIPO = PREFIJO_BIDI + "Pedido";
 
 	private Long idLocalAlEmisor;
 	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";

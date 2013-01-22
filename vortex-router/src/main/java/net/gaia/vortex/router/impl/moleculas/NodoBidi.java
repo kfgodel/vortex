@@ -17,14 +17,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
+import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
-import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
-import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
@@ -36,6 +33,7 @@ import net.gaia.vortex.router.impl.filtros.ListenerDeConjuntoDeCondiciones;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.listeners.IgnorarCambioDeFiltro;
 import net.gaia.vortex.router.impl.listeners.IgnorarRuteos;
+import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidi;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 
@@ -49,7 +47,7 @@ import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
  * 
  * @author D. García
  */
-public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidireccional,
+public abstract class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidireccional,
 		ListenerDeConjuntoDeCondiciones {
 	private static final Logger LOG = LoggerFactory.getLogger(NodoBidi.class);
 
@@ -62,7 +60,9 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 
 	private ConversorDeMensajesVortex mapeador;
 
-	private MemoriaDeMensajes memoriaRecibidos;
+	private FlujoVortex flujoDeMensajesRecibidos;
+
+	private ComportamientoBidi comportamientoBidi;
 
 	public List<PataBidireccional> getPatas() {
 		return patas;
@@ -75,15 +75,15 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
-	@Override
-	protected void initializeWith(final TaskProcessor processor) {
-		super.initializeWith(processor);
+	protected void initializeWith(final TaskProcessor processor, final ComportamientoBidi comportamiento) {
+		initializeWith(processor);
+		comportamientoBidi = comportamiento;
+		flujoDeMensajesRecibidos = comportamiento.crearFlujoParaMensajesRecibidos(processor);
 		patas = new CopyOnWriteArrayList<PataBidireccional>();
 		listenerDeFiltros = new AtomicReference<ListenerDeCambiosDeFiltro>(IgnorarCambioDeFiltro.getInstancia());
 		listenerDeRuteo = new AtomicReference<ListenerDeRuteo>(IgnorarRuteos.getInstancia());
 		conjuntoDeCondiciones = ConjuntoSincronizado.create(this);
 		mapeador = ConversorDefaultDeMensajes.create();
-		memoriaRecibidos = MemoriaLimitadaDeMensajes.create(NexoSinDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
 	}
 
 	/**
@@ -104,6 +104,9 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), parteDeCondicion, mapeador);
 		getPatas().add(nuevaPata);
 
+		// Agregamos la pata al conjunto que puede recibir mensajes
+		flujoDeMensajesRecibidos.getSalida().conectarCon(nuevaPata);
+
 		// Iniciamos el proceso de identificación bidireccional de la pata
 		nuevaPata.conseguirIdRemoto();
 	}
@@ -118,6 +121,9 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 			LOG.debug("En [{}] no se puede quitar la pata correspondiente al nodo[{}] porque no existe", this, destino);
 			return;
 		}
+		// La quitamos del grupo que recibe mensajes
+		flujoDeMensajesRecibidos.getSalida().desconectarDe(pataDesconectada);
+
 		getPatas().remove(pataDesconectada);
 		final ParteDeCondiciones parteDeCondicion = pataDesconectada.getParteDeCondicion();
 		conjuntoDeCondiciones.eliminarParte(parteDeCondicion);
@@ -145,24 +151,8 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		if (!memoriaRecibidos.registrarNuevo(mensaje)) {
-			LOG.debug(" Mensaje[{}] descartado en nodo[{}] por ya haberse recibido antes", mensaje, this);
-			return;
-		}
-		final WorkUnit tareaAlRecibirSegunTipo = crearTareaAlRecibirSegun(mensaje);
-		procesarEnThreadPropio(tareaAlRecibirSegunTipo);
-	}
-
-	/**
-	 * Crea la tarea de recepción del mensaje que se ejecutará en hilo propio según el mensaje
-	 * recibido y según el tipo de esta instancia concreta. Por defecto se
-	 * 
-	 * @param mensaje
-	 * @return
-	 */
-	protected WorkUnit crearTareaAlRecibirSegun(final MensajeVortex mensaje) {
-		// TODO Auto-generated method stub
-		return null;
+		// Al recibir delegamos en el flujo que nos definió el comportamiento
+		flujoDeMensajesRecibidos.getEntrada().recibir(mensaje);
 	}
 
 	/**
@@ -187,12 +177,6 @@ public class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidi
 					+ IgnorarCambioDeFiltro.class);
 		}
 		this.listenerDeRuteo.set(listenerDeRuteos);
-	}
-
-	public static NodoBidi create(final TaskProcessor processor) {
-		final NodoBidi nodo = new NodoBidi();
-		nodo.initializeWith(processor);
-		return nodo;
 	}
 
 	/**

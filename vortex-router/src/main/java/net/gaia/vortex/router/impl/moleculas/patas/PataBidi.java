@@ -68,7 +68,8 @@ public class PataBidi extends ComponenteConProcesadorSupport implements PataBidi
 	private ConversorDeMensajesVortex mapeador;
 
 	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
-			final TaskProcessor taskProcessor, final ParteDeCondiciones parteDeCondicion, final ConversorDeMensajesVortex mapeador) {
+			final TaskProcessor taskProcessor, final ParteDeCondiciones parteDeCondicion,
+			final ConversorDeMensajesVortex mapeador) {
 		final PataBidi pata = new PataBidi();
 		pata.initializeWith(taskProcessor);
 		pata.mapeador = mapeador;
@@ -180,6 +181,15 @@ public class PataBidi extends ComponenteConProcesadorSupport implements PataBidi
 	@Override
 	public ParteDeCondiciones getParteDeCondicion() {
 		return this.filtroDeSalida;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 */
+	@Override
+	public void recibir(final MensajeVortex mensaje) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

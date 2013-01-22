@@ -29,7 +29,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 
-	public static final String NOMBRE_DE_TIPO = "IdRemoto.Respuesta";
+	public static final String NOMBRE_DE_TIPO = PREFIJO_BIDI + "Respuesta";
 
 	private Long idLocalAlEmisor;
 	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";

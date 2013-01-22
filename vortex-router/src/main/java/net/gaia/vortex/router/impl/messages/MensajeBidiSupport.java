@@ -20,7 +20,6 @@ package net.gaia.vortex.router.impl.messages;
 public abstract class MensajeBidiSupport implements MensajeBidireccional {
 
 	private final String tipoDeMensaje;
-	public static final String tipoDeMensaje_FIELD = "tipoDeMensaje";
 
 	private Long idLocalAlReceptor;
 	public static final String idDePataLocalAlReceptor_FIELD = "idDePataLocalAlReceptor";

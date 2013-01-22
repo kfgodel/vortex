@@ -21,6 +21,16 @@ package net.gaia.vortex.router.impl.messages;
 public interface MensajeBidireccional {
 
 	/**
+	 * Prefijo usado para los mensajes bidi
+	 */
+	public static final String PREFIJO_BIDI = "IdRemoto.";
+
+	/**
+	 * Atributo para describir el tipo de mensaje
+	 */
+	public static final String tipoDeMensaje_FIELD = "tipoDeMensaje";
+
+	/**
 	 * Indica opcionalmente el ID de pata local al receptor del mensaje por el cual se envía este
 	 * mensaje.<br>
 	 * Para que este ID esté definido previamente los nodos deben conocer el ID de pata de su

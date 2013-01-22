@@ -24,7 +24,7 @@ public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
 	/**
 	 * Identificador para este tipo de mensajes bidi
 	 */
-	public static final String NOMBRE_DE_TIPO = "IdRemoto.Confirmacion";
+	public static final String NOMBRE_DE_TIPO = PREFIJO_BIDI + "Confirmacion";
 
 	private Long idLocalAlEmisor;
 	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";

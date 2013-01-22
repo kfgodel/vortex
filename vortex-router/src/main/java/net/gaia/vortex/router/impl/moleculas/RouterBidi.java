@@ -12,12 +12,21 @@
  */
 package net.gaia.vortex.router.impl.moleculas;
 
+import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.vortex.router.api.moleculas.Router;
+import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoRouter;
+
 /**
  * Esta calse representa el router bidireccional que a partir de la publicación de los filtros de
  * los portales puede rutear mensajes evitando nodos no interesados
  * 
  * @author D. García
  */
-public class RouterBidi {
+public class RouterBidi extends NodoBidi implements Router {
 
+	public static RouterBidi create(final TaskProcessor processor) {
+		final RouterBidi router = new RouterBidi();
+		router.initializeWith(processor, ComportamientoRouter.create());
+		return router;
+	}
 }

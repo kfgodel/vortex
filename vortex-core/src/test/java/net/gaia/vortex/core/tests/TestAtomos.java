@@ -10,6 +10,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcador;
@@ -23,6 +24,7 @@ import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
+import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -126,7 +128,8 @@ public class TestAtomos {
 	@Test
 	public void elFiltroDeMensajesConocidosDeberiaDescartarElMensajeLaSegundaVezSITieneId() {
 		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
-		final GeneradorSecuencialDeIdDeMensaje generadorDeIdsMensajes = GeneradorSecuencialDeIdDeMensaje.create(idDeNodo);
+		final GeneradorSecuencialDeIdDeMensaje generadorDeIdsMensajes = GeneradorSecuencialDeIdDeMensaje
+				.create(idDeNodo);
 		final IdDeMensaje idDelMensaje = generadorDeIdsMensajes.generarId();
 		final MensajeVortex mensaje = MensajeConContenido.crearVacio();
 		mensaje.asignarId(idDelMensaje);
@@ -217,4 +220,19 @@ public class TestAtomos {
 		}
 	}
 
+	/**
+	 * Verifica que el selector deriva bien los mensajes
+	 */
+	@Test
+	public void elSelectorDeberiEntregarElMensajeAlQueCumpleLaCondicion() {
+		final ReceptorEncolador receptorSiempreTrue = ReceptorEncolador.create();
+		final ReceptorEncolador receptorSiempreFalse = ReceptorEncolador.create();
+
+		final Selector selector = SelectorConFiltros.create(processor);
+		selector.conectarCon(receptorSiempreTrue, SiempreTrue.getInstancia());
+		selector.conectarCon(receptorSiempreFalse, SiempreFalse.getInstancia());
+
+		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, selector, receptorSiempreTrue);
+		verificarMensajeNoRecibido(1, receptorSiempreFalse);
+	}
 }

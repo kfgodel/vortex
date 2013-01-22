@@ -22,7 +22,7 @@ import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
  * 
  * @author D. García
  */
-public interface PataBidireccional {
+public interface PataBidireccional extends Receptor {
 
 	/**
 	 * Indica si esta pata está conectada al nodo indicado como nodo remoto

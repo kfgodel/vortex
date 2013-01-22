@@ -16,16 +16,16 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
+import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
-import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
+import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
@@ -52,7 +52,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 
 	private Desobjetivizador procesoDesdeUsuario;
 
-	private Multiplexor multiplexorDeCondiciones;
+	private Selector selectorDeMensajesEntrantes;
 
 	private IdDeComponenteVortex identificador;
 	public static final String identificador_FIELD = "identificador";
@@ -80,10 +80,10 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 		nodoDeSalidaAVortex = NexoTransformador.create(processor, GenerarIdEnMensaje.create(identificador), delegado);
 		procesoDesdeUsuario = Desobjetivizador.create(processor, mapeadorVortex, nodoDeSalidaAVortex);
 
-		// Este multiplexor delega el mensaje en cada condición del usuario
-		multiplexorDeCondiciones = MultiplexorParalelo.create(processor);
-		final NexoSinDuplicados filtroDescartaDuplicados = NexoSinDuplicados
-				.create(processor, multiplexorDeCondiciones);
+		// El selector enviará el mensaje según la condición que indique el usuario
+		selectorDeMensajesEntrantes = SelectorConFiltros.create(processor);
+		final NexoSinDuplicados filtroDescartaDuplicados = NexoSinDuplicados.create(processor,
+				selectorDeMensajesEntrantes);
 
 		// Primero descartamos los mensajes propios y luego los duplicados externos
 		final EsMensajeExterno siEsMensajeExterno = EsMensajeExterno.create(identificador);
@@ -125,11 +125,10 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 
 		// Filtramos por la condición que nos pasa el usuario
 		final Condicion condicionParaRecibirMensajeEnHandler = handlerDelPortal.getCondicionSuficiente();
-		final NexoFiltro evaluarCondicionYHandlear = NexoFiltro.create(procesador,
-				condicionParaRecibirMensajeEnHandler, convertirEnTipoEsperadoEInvocarHandler);
 
-		// Agregamos el caso al multiplexor de mensajes recibidos
-		multiplexorDeCondiciones.conectarCon(evaluarCondicionYHandlear);
+		// Agregamos el caso al selector de mensajes recibidos
+		selectorDeMensajesEntrantes.conectarCon(convertirEnTipoEsperadoEInvocarHandler,
+				condicionParaRecibirMensajeEnHandler);
 	}
 
 	/**
