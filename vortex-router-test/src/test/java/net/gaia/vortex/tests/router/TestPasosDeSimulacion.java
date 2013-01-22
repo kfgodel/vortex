@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.Assert;
 import net.gaia.vortex.tests.router2.impl.PortalBidireccional;
 import net.gaia.vortex.tests.router2.impl.RouterBidireccional;
+import net.gaia.vortex.tests.router2.impl.filtros.FiltroPasaNada;
+import net.gaia.vortex.tests.router2.impl.filtros.FiltroPasaTodo;
 import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
 import net.gaia.vortex.tests.router2.mensajes.MensajeSupport;
 import net.gaia.vortex.tests.router2.simulador.Simulador;
@@ -103,6 +105,41 @@ public class TestPasosDeSimulacion {
 
 		// El portal nunca contesto
 		Assert.assertEquals(0, simulador.getCantidadDePasosPendientes());
+	}
+
+	@Test
+	public void deberiaPublicarFiltrosAunqueSeSetenAntesDeQueTermineLaConexionBidi() {
+		p1.simularConexionBidi(r1);
+		p1.simularSeteoDeFiltros("filtro1");
+
+		simulador.ejecutarTodos(TimeMagnitude.of(10, TimeUnit.SECONDS));
+		Assert.assertTrue("R1 deberia saber lo que P1 quiere", r1.usaFiltrosCon(p1, "filtro1"));
+	}
+
+	/**
+	 * Al no tener conexión bidireccional no sabemos lo que el otro quiere. Por eso le mandamos todo
+	 * para que descarte. No hay termino medio
+	 */
+	@Test
+	public void siLaConexionEsUniElRouterDeberiaAsumirUnPasaTodo() {
+		r1.simularConexionCon(p1);
+
+		simulador.ejecutarTodos(TimeMagnitude.of(10, TimeUnit.SECONDS));
+		Assert.assertEquals("R1 deberia asumir pasa todo por no tener conexion bidi", FiltroPasaTodo.class, r1
+				.getFiltroDeSalidaPara(p1).getClass());
+	}
+
+	/**
+	 * Si tenemos conexion bidi, entonces podemos asumir un pasa nada, y que el otro nos publique
+	 * exactamente lo que quiere
+	 */
+	@Test
+	public void siLaConexionEsBidiElRouterDeberiaAsumirUnPasaNada() {
+		r1.simularConexionBidi(p1);
+
+		simulador.ejecutarTodos(TimeMagnitude.of(10, TimeUnit.SECONDS));
+		Assert.assertEquals("R1 deberia asumir pasa todo por no tener conexion bidi", FiltroPasaNada.class, r1
+				.getFiltroDeSalidaPara(p1).getClass());
 	}
 
 	@Test

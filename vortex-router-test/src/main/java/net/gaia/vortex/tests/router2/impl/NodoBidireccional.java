@@ -150,8 +150,8 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	private void propagarAPatas(final Mensaje mensaje) {
 		final List<PataBidireccional> allPatas = getPatas();
 		if (allPatas.isEmpty()) {
-			LOG.debug("  Rechazando mensaje{} en [{}] porque no existen patas de comunicacion para procesar",
-					new Object[] { mensaje, this.getNombre() });
+			LOG.debug("  Rechazando mensaje {}{} en [{}] porque no existen patas de comunicacion para procesar",
+					new Object[] { mensaje.getClass().getSimpleName(), mensaje, this.getNombre() });
 			return;
 		}
 
@@ -251,12 +251,25 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	 */
 	@Override
 	public boolean usaFiltrosCon(final Nodo nodo, final String... filtros) {
-		final PataBidireccional pataSalida = getPataPorNodo(nodo);
-		if (pataSalida == null) {
+		final Filtro filtroDelNodo = getFiltroDeSalidaPara(nodo);
+		if (filtroDelNodo == null) {
+			// Si no tiene filtro, no esta aplicando los pasados
 			return false;
 		}
-		final boolean usaFiltro = pataSalida.getFiltroDeSalida().usaA(Arrays.asList(filtros));
+		final boolean usaFiltro = filtroDelNodo.usaA(Arrays.asList(filtros));
 		return usaFiltro;
+	}
+
+	/**
+	 * @see net.gaia.vortex.tests.router2.simulador.NodoSimulacion#getFiltroDeSalidaPara(net.gaia.vortex.tests.router2.api.Nodo)
+	 */
+	@Override
+	public Filtro getFiltroDeSalidaPara(final Nodo nodo) {
+		final PataBidireccional pataSalida = getPataPorNodo(nodo);
+		if (pataSalida == null) {
+			return null;
+		}
+		return pataSalida.getFiltroDeSalida();
 	}
 
 	/**

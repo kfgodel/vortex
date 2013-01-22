@@ -52,17 +52,13 @@ public class TestRuteoDeMensajes {
 		final PortalBidireccional pan = PortalBidireccional.create("Pan", simulador);
 		final PortalBidireccional torta = PortalBidireccional.create("Torta", simulador);
 		final RouterBidireccional r1 = RouterBidireccional.create("R1", simulador);
-		final RouterBidireccional r2 = RouterBidireccional.create("r2", simulador);
+		final RouterBidireccional r2 = RouterBidireccional.create("R2", simulador);
 		final PortalBidireccional panificador = PortalBidireccional.create("Panificador", simulador);
 
 		pan.simularConexionBidi(r1);
 		torta.simularConexionBidi(r1);
 		r1.simularConexionBidi(r2);
 		r2.simularConexionBidi(panificador);
-
-		simulador.ejecutarPasos(40);
-		simulador.ejecutarSiguiente();
-		simulador.ejecutarPasos(100);
 
 		simulador.ejecutarTodos(TimeMagnitude.of(10, TimeUnit.SECONDS));
 
@@ -76,8 +72,6 @@ public class TestRuteoDeMensajes {
 		panificador.simularEnvioDe(nuevoPan);
 		simulador.ejecutarTodos(TimeMagnitude.of(5, TimeUnit.MINUTES));
 
-		// correr la simulacion
-		// verificar que el mensaje llego a donde debía y no a donde no
 	}
 
 	@Ignore("Por ahora lo saco")

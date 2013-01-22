@@ -13,6 +13,7 @@
 package net.gaia.vortex.tests.router2.simulador;
 
 import net.gaia.vortex.tests.router2.api.Nodo;
+import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
 import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
 
 /**
@@ -87,4 +88,15 @@ public interface NodoSimulacion extends Nodo, Nombrable {
 	 * @return true si ya se envio o recibio este mensaje
 	 */
 	public boolean yaProceso(final MensajeNormal mensaje);
+
+	/**
+	 * Devuelve el filtro de salida usado para enviar mensajes al nodo indicado
+	 * 
+	 * @param nodo
+	 *            El para el que se solicita su filtro
+	 * @return El filtro que este router utiliza antes de enviar mensajes al nodo, null si no existe
+	 *         conexion con el nodo pasado
+	 */
+	public Filtro getFiltroDeSalidaPara(final Nodo nodo);
+
 }

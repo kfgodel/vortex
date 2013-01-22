@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import net.gaia.vortex.tests.router2.api.ListenerDeFiltros;
 import net.gaia.vortex.tests.router2.api.Mensaje;
 import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
+import net.gaia.vortex.tests.router2.impl.filtros.FiltroPasaNada;
 import net.gaia.vortex.tests.router2.impl.filtros.FiltroPasaTodo;
 import net.gaia.vortex.tests.router2.impl.filtros.ListenerDeFiltrosNulo;
 import net.gaia.vortex.tests.router2.mensajes.ConfirmacionDeIdRemoto;
@@ -89,8 +90,10 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 		pata.nodoLocal = nodoLocal;
 		pata.nodoRemoto = nodoRemoto;
 		pata.listener = ListenerDeFiltrosNulo.create();
+		// Inicialmente no sabemos lo que quiere el otro asumimos que todo
 		pata.filtroDeSalida = FiltroPasaTodo.create();
-		pata.filtroDeEntrada = FiltroPasaTodo.create();
+		// Inicialmente no pedimos nada, si queremos algo tenemos que pedirlo explicitamente
+		pata.filtroDeEntrada = FiltroPasaNada.create();
 		pata.resetearFiltroDeEntradaPublicado();
 		return pata;
 	}

@@ -19,6 +19,7 @@ import java.util.List;
 import net.gaia.vortex.tests.router2.api.Mensaje;
 import net.gaia.vortex.tests.router2.api.Portal;
 import net.gaia.vortex.tests.router2.impl.filtros.Filtro;
+import net.gaia.vortex.tests.router2.impl.filtros.FiltroPasaNada;
 import net.gaia.vortex.tests.router2.impl.filtros.FiltroPasaTodo;
 import net.gaia.vortex.tests.router2.impl.filtros.FiltroPorStrings;
 import net.gaia.vortex.tests.router2.impl.patas.PataBidireccional;
@@ -45,7 +46,8 @@ public class PortalBidireccional extends NodoBidireccional implements Portal {
 		final PortalBidireccional portal = new PortalBidireccional();
 		portal.setNombre(nombre);
 		portal.setSimulador(simulador);
-		portal.filtroCliente = FiltroPasaTodo.create();
+		// Inicialmente tomamos que el cliente no quiere nada, y que lo cambie
+		portal.filtroCliente = FiltroPasaNada.create();
 		return portal;
 	}
 
