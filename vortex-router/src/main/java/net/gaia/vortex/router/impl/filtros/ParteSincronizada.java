@@ -17,6 +17,7 @@ import java.util.concurrent.Callable;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase es la implementación de la parte de un {@link ConjuntoDeCondiciones} que sincroniza
@@ -27,6 +28,7 @@ import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
 public class ParteSincronizada implements ParteDeCondiciones {
 
 	private Condicion condicionActual;
+	public static final String condicionActual_FIELD = "condicionActual";
 
 	private ListenerDeParteDeCondicion listener;
 
@@ -72,4 +74,13 @@ public class ParteSincronizada implements ParteDeCondiciones {
 			}
 		});
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(condicionActual_FIELD, condicionActual).toString();
+	}
+
 }

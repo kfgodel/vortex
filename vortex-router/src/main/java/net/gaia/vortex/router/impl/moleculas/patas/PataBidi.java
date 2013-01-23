@@ -40,10 +40,13 @@ import net.gaia.vortex.router.impl.condiciones.EsReconfirmacionDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsReconfirmacionParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaParaEstaPata;
+import net.gaia.vortex.router.impl.condiciones.LeInteresaElMensaje;
+import net.gaia.vortex.router.impl.condiciones.NoVinoPorEstaPata;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.messages.bidi.PedidoDeIdRemoto;
 import net.gaia.vortex.router.impl.moleculas.memoria.MemoriaDePedidosDeId;
 import net.gaia.vortex.router.impl.transformaciones.ConvertirPedidoEnRespuestaDeId;
+import net.gaia.vortex.router.impl.transformaciones.ModificarIdLocalAlReceptor;
 import net.gaia.vortex.router.impl.transformaciones.RegistrarIdRemotoYEnviarConfirmacion;
 import net.gaia.vortex.router.impl.transformaciones.RegistrarIdRemotoYEnviarReconfirmacion;
 
@@ -135,8 +138,38 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		final Receptor procesoAlRecibirReconfirmacionDeId = crearProcesoParaRecibirReconfirmacionDeIds(taskProcessor);
 		selectorDeEntrada.conectarCon(procesoAlRecibirReconfirmacionDeId, EsReconfirmacionDeIdRemoto.create());
 
+		// Al recibir un mensaje normal (no meta)
+		final Receptor procesoAlRecibirMensajeNormal = crearProcesoParaRecibirMensajesNormales(taskProcessor);
+		selectorDeEntrada.conectarCon(procesoAlRecibirMensajeNormal, EsReconfirmacionDeIdRemoto.create());
+
 		final FlujoVortex flujo = FlujoInmutable.create(selectorDeEntrada, EmisorNulo.getInstancia());
 		initializeWith(flujo);
+	}
+
+	/**
+	 * Crea el componente que procesa los mensajes normales (no metamensajes) antes de enviarlos a
+	 * destino
+	 * 
+	 * @param taskProcessor
+	 *            El procesador para los componentes creados
+	 * @return El componente de entrada para los mensajes
+	 */
+	private Receptor crearProcesoParaRecibirMensajesNormales(final TaskProcessor taskProcessor) {
+		// Descartamos los mensajes que vinieron de esta pata (evitando rebote de mensajes)
+		final NexoFiltro descartarMensajesPropios = NexoFiltro.create(taskProcessor,
+				NoVinoPorEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
+
+		// Verificamos si el nodo remoto acepta el mensaje según los filtros que nos dijo
+		final NexoFiltro descartarMensajesQueNoLeInteresan = NexoFiltro.create(taskProcessor,
+				LeInteresaElMensaje.create(filtroDeSalida), ReceptorNulo.getInstancia());
+		descartarMensajesPropios.conectarCon(descartarMensajesQueNoLeInteresan);
+
+		// Le registramos nuestro ID de pata para evitar rebotes
+		final NexoTransformador asignadoDeIdRemoto = NexoTransformador.create(taskProcessor,
+				ModificarIdLocalAlReceptor.create(getIdLocal()), getNodoRemoto());
+		descartarMensajesQueNoLeInteresan.conectarCon(asignadoDeIdRemoto);
+
+		return descartarMensajesPropios;
 	}
 
 	/**

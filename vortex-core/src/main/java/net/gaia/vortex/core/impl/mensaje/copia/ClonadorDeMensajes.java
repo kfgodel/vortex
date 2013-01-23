@@ -27,7 +27,7 @@ public class ClonadorDeMensajes {
 
 	private MensajeVortex mensajeOriginal;
 
-	public static ClonadorDeMensajes create(final MensajeConContenido mensajeOriginal) {
+	public static ClonadorDeMensajes create(final MensajeVortex mensajeOriginal) {
 		final ClonadorDeMensajes clonador = new ClonadorDeMensajes();
 		clonador.mensajeOriginal = mensajeOriginal;
 		return clonador;
