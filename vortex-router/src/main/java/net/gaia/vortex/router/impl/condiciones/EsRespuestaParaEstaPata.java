@@ -43,7 +43,7 @@ public class EsRespuestaParaEstaPata implements Condicion {
 	 */
 	@Override
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
-		final Object idDePedido = mensaje.getContenido().get(RespuestaDeIdRemoto.idDePedido_FIELD);
+		final Object idDePedido = mensaje.getContenido().get(RespuestaDeIdRemoto.idPedidoOriginal_FIELD);
 		if (!(idDePedido instanceof Map)) {
 			LOG.error("Recibimos una respuesta de id[" + mensaje + "] cuyo id de pedido no es un mapa?: " + idDePedido
 					+ ". Asumiendo que no fue pedido por la pata");

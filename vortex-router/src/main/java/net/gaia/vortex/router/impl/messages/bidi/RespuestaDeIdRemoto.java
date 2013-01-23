@@ -35,7 +35,7 @@ public class RespuestaDeIdRemoto extends MetamensajeSupport {
 	public static final String idLocalAlEmisor_FIELD = "idLocalAlEmisor";
 
 	private Map<String, Object> idPedidoOriginal;
-	public static final String idDePedido_FIELD = "idDePedido";
+	public static final String idPedidoOriginal_FIELD = "idPedidoOriginal";
 
 	public RespuestaDeIdRemoto() {
 		super(NOMBRE_DE_TIPO);
@@ -69,8 +69,8 @@ public class RespuestaDeIdRemoto extends MetamensajeSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idLocalAlEmisor_FIELD, idLocalAlEmisor).con(idDePedido_FIELD, idPedidoOriginal)
-				.toString();
+		return ToString.de(this).con(idLocalAlEmisor_FIELD, idLocalAlEmisor)
+				.con(idPedidoOriginal_FIELD, idPedidoOriginal).toString();
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class RespuestaDeIdRemoto extends MetamensajeSupport {
 		final Condicion filtroDeRespuestas = AndCompuesto.de( //
 				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
 				AtributoPresente.conNombre(idLocalAlEmisor_FIELD),//
-				AtributoPresente.conNombre(idDePedido_FIELD)//
+				AtributoPresente.conNombre(idPedidoOriginal_FIELD)//
 				);
 		return filtroDeRespuestas;
 	}

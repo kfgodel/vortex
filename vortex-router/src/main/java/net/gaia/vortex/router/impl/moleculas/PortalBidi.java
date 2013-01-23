@@ -16,6 +16,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
+import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoPortal;
 
@@ -27,12 +28,13 @@ import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoPortal;
  */
 public class PortalBidi extends NodoBidi implements PortalBidireccional {
 
-	private static ComportamientoPortal comportamiento;
+	private Portal portalInterno;
 
 	public static PortalBidi create(final TaskProcessor processor) {
 		final PortalBidi portal = new PortalBidi();
-		comportamiento = ComportamientoPortal.create();
+		final ComportamientoPortal comportamiento = ComportamientoPortal.create();
 		portal.initializeWith(processor, comportamiento);
+		portal.portalInterno = comportamiento.getPortalInterno();
 		return portal;
 	}
 
@@ -41,8 +43,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	 */
 	@Override
 	public void enviar(final Object mensaje) throws ErrorDeMapeoVortexException {
-		// TODO Auto-generated method stub
-
+		portalInterno.enviar(mensaje);
 	}
 
 	/**
