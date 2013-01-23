@@ -24,9 +24,9 @@ import net.gaia.vortex.tests.router2.impl.filtros.FiltroPasaTodo;
 import net.gaia.vortex.tests.router2.impl.filtros.ListenerDeFiltrosNulo;
 import net.gaia.vortex.tests.router2.mensajes.ConfirmacionDeIdRemoto;
 import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
-import net.gaia.vortex.tests.router2.mensajes.PedidoDeFiltros;
 import net.gaia.vortex.tests.router2.mensajes.PedidoDeIdRemoto;
 import net.gaia.vortex.tests.router2.mensajes.PublicacionDeFiltros;
+import net.gaia.vortex.tests.router2.mensajes.ReconfirmacionDeIdRemoto;
 import net.gaia.vortex.tests.router2.mensajes.RespuestaDeIdRemoto;
 import net.gaia.vortex.tests.router2.simulador.ComponenteSimulable;
 import net.gaia.vortex.tests.router2.simulador.NodoSimulacion;
@@ -34,9 +34,9 @@ import net.gaia.vortex.tests.router2.simulador.PasoSimulacion;
 import net.gaia.vortex.tests.router2.simulador.Simulador;
 import net.gaia.vortex.tests.router2.simulador.pasos.bidi.ConfirmarIdRemoto;
 import net.gaia.vortex.tests.router2.simulador.pasos.bidi.PedirIdRemoto;
+import net.gaia.vortex.tests.router2.simulador.pasos.bidi.ReconfirmarIdRemoto;
 import net.gaia.vortex.tests.router2.simulador.pasos.bidi.ResponderIdRemoto;
 import net.gaia.vortex.tests.router2.simulador.pasos.filtros.FiltroNoPublicado;
-import net.gaia.vortex.tests.router2.simulador.pasos.filtros.PedirFiltros;
 import net.gaia.vortex.tests.router2.simulador.pasos.filtros.PublicarFiltros;
 import net.gaia.vortex.tests.router2.simulador.pasos.mensajes.PropagarMensaje;
 
@@ -82,6 +82,8 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 
 	private ListenerDeFiltros listener;
 
+	private Boolean habilitadadaComoBidi;
+
 	public static PataBidireccional create(final NodoSimulacion nodoLocal, final NodoSimulacion nodoRemoto,
 			final Simulador simulador) {
 		final PataBidireccional pata = new PataBidireccional();
@@ -89,6 +91,7 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 		pata.setSimulador(simulador);
 		pata.nodoLocal = nodoLocal;
 		pata.nodoRemoto = nodoRemoto;
+		pata.habilitadadaComoBidi = false;
 		pata.listener = ListenerDeFiltrosNulo.create();
 		// Inicialmente no sabemos lo que quiere el otro asumimos que todo
 		pata.filtroDeSalida = FiltroPasaTodo.create();
@@ -169,8 +172,8 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 		} else if (mensaje instanceof ConfirmacionDeIdRemoto) {
 			evento_recibirConfirmacionDeIdRemoto((ConfirmacionDeIdRemoto) mensaje);
 			return null;
-		} else if (mensaje instanceof PedidoDeFiltros) {
-			evento_recibirPedidoDeFiltros((PedidoDeFiltros) mensaje);
+		} else if (mensaje instanceof ReconfirmacionDeIdRemoto) {
+			evento_recibirReconfirmacionDeIdRemoto((ReconfirmacionDeIdRemoto) mensaje);
 			return null;
 		} else if (mensaje instanceof PublicacionDeFiltros) {
 			evento_recibirPublicacionDeFiltros((PublicacionDeFiltros) mensaje);
@@ -182,17 +185,25 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	}
 
 	/**
-	 * Invocado cuando el nodo remoto nos pide los filtros de este nodo
+	 * @param mensaje
 	 */
-	private void evento_recibirPedidoDeFiltros(final PedidoDeFiltros pedido) {
-		final Long idDePataReceptora = pedido.getIdDePataLocalAlReceptor();
-		if (!getIdLocal().equals(idDePataReceptora)) {
-			LOG.debug("  Rechazando en [{},{}] solicitud{} por ser para otra pata", new Object[] {
-					this.getNodoLocal().getNombre(), getIdLocal(), pedido });
+	private void evento_recibirReconfirmacionDeIdRemoto(final ReconfirmacionDeIdRemoto reconfirmacion) {
+		final ConfirmacionDeIdRemoto confirmacionOriginal = reconfirmacion.getConfirmacion();
+		final Long idDePataEmisora = confirmacionOriginal.getIdDePataLocalAlEmisor();
+		if (!getIdLocal().equals(idDePataEmisora)) {
+			LOG.debug(
+					"  Rechazando en [{},{}] reconfirmacion{} por respuesta{} que fue emitida en otra pata",
+					new Object[] { this.getNodoLocal().getNombre(), getIdLocal(), reconfirmacion, confirmacionOriginal });
 			return;
 		}
-		resetearFiltroDeEntradaPublicado();
-		publicarFiltroDeEntrada();
+		if (!getEnviados().contains(confirmacionOriginal)) {
+			LOG.debug(
+					"  Rechazando en [{},{}] reconfirmacion{} por confirmacion{} no realizada en esta pata",
+					new Object[] { this.getNodoLocal().getNombre(), getIdLocal(), reconfirmacion, confirmacionOriginal });
+			return;
+		}
+
+		evento_nevaConexionBidireccional();
 	}
 
 	/**
@@ -239,16 +250,15 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 			return;
 		}
 
+		// Guardamos el id de la pata
 		final Long idRemotoDeEstaPata = confirmacion.getIdDePataLocalAlEmisor();
-		final Long idAnterior = getIdRemoto();
 		this.setIdRemoto(idRemotoDeEstaPata);
 
-		if (idRemotoDeEstaPata.equals(idAnterior)) {
-			LOG.debug(
-					"  Evitando en [{},{}] el evento de nueva conexion bidi para la confirmacion{} porque ya existía id remoto",
-					new Object[] { this.getNodoLocal().getNombre(), getIdLocal(), confirmacion });
-			return;
-		}
+		// Le avisamos al otro que ya estamos listos de este lado
+		final ReconfirmacionDeIdRemoto reconfirmacionDeIdRemoto = ReconfirmacionDeIdRemoto.create(confirmacion,
+				getIdLocal());
+		enviarMensaje(reconfirmacionDeIdRemoto);
+
 		evento_nevaConexionBidireccional();
 	}
 
@@ -280,24 +290,20 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 		}
 		final ConfirmacionDeIdRemoto confirmacionDeIdRemoto = ConfirmacionDeIdRemoto.create(respuesta, getIdLocal());
 		enviarMensaje(confirmacionDeIdRemoto);
-
-		evento_nevaConexionBidireccional();
 	}
 
 	/**
 	 * Invocado al completarse los pasos para la comunicación bidireccional de esta pata
 	 */
 	private void evento_nevaConexionBidireccional() {
-		pedirFiltrosDeSalidaAlNodoRemoto();
-	}
-
-	/**
-	 * Genera una solicitud de filtros remotos para que el nodo nos indique que filtros usar a la
-	 * salida
-	 */
-	private void pedirFiltrosDeSalidaAlNodoRemoto() {
-		final PedidoDeFiltros pedidoDeFiltros = PedidoDeFiltros.create(getIdRemoto());
-		enviarMensaje(pedidoDeFiltros);
+		if (habilitadadaComoBidi) {
+			// Ya estaba habilitada como bidi anteriormente
+			return;
+		}
+		LOG.debug("  En [{},{}] se estableció como conexion bidireccional", new Object[] {
+				this.getNodoLocal().getNombre(), this.getIdLocal() });
+		habilitadadaComoBidi = true;
+		publicarFiltroDeEntrada();
 	}
 
 	/**
@@ -376,8 +382,8 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 			pasoDelSimulador = ResponderIdRemoto.create(this, (RespuestaDeIdRemoto) mensaje);
 		} else if (mensaje instanceof ConfirmacionDeIdRemoto) {
 			pasoDelSimulador = ConfirmarIdRemoto.create(this, (ConfirmacionDeIdRemoto) mensaje);
-		} else if (mensaje instanceof PedidoDeFiltros) {
-			pasoDelSimulador = PedirFiltros.create(this, (PedidoDeFiltros) mensaje);
+		} else if (mensaje instanceof ReconfirmacionDeIdRemoto) {
+			pasoDelSimulador = ReconfirmarIdRemoto.create(this, (ReconfirmacionDeIdRemoto) mensaje);
 		} else if (mensaje instanceof PublicacionDeFiltros) {
 			pasoDelSimulador = PublicarFiltros.create(this, (PublicacionDeFiltros) mensaje);
 		} else if (mensaje instanceof MensajeNormal) {
@@ -437,6 +443,13 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	 */
 	private void publicarFiltroDeEntrada() {
 		final Filtro filtroAPublicar = this.getFiltroDeEntrada();
+		if (!habilitadadaComoBidi) {
+			LOG.debug("  En [{},{}] no se publica filtro {} porque la pata aun no es bidi", new Object[] {
+					this.getNodoLocal().getNombre(), this.getIdLocal(), filtroAPublicar });
+			// Aún no tenemos un ID remoto con el cual publicar los filtros
+			return;
+		}
+
 		final Long idRemotoDeEstaPata = getIdRemoto();
 		if (idRemotoDeEstaPata == null) {
 			LOG.debug("  En [{},{}] no se publica filtro {} porque no tenemos ID remoto", new Object[] {
