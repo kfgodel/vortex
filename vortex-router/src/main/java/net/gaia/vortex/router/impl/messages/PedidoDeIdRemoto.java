@@ -13,8 +13,6 @@
 package net.gaia.vortex.router.impl.messages;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
-import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 
 /**
@@ -55,10 +53,7 @@ public class PedidoDeIdRemoto extends MensajeBidiSupport {
 	 * @return El filtro que descarta otros mensajes y permite recibir este tipo
 	 */
 	public static Condicion getFiltroDelTipo() {
-		final Condicion filtroDePedidos = AndCompuesto.de( //
-				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
-				AtributoPresente.conNombre(idLocalAlEmisor_FIELD)//
-				);
+		final Condicion filtroDePedidos = ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO);
 		return filtroDePedidos;
 	}
 

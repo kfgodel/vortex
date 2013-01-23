@@ -58,4 +58,13 @@ public class RespuestaDeIdRemoto extends MensajeSupport {
 		this.idDePataLocalAlEmisor = idDePataLocalAlEmisor;
 	}
 
+	/**
+	 * @see net.gaia.vortex.tests.router2.api.Mensaje#getIdLocalAlReceptor()
+	 */
+	@Override
+	public Long getIdLocalAlReceptor() {
+		// No lo sabemos aun
+		return null;
+	}
+
 }

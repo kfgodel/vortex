@@ -74,8 +74,6 @@ public class ResponderIdRemoto extends PasoSupport {
 		builder.append("] a [");
 		if (getPataSalida() != null) {
 			builder.append(getPataSalida().getNodoRemoto().getNombre());
-			builder.append(",");
-			builder.append(getRespuesta().getPedido().getIdDePataLocalAlEmisor());
 		}
 		builder.append("] de id remoto por pedido[");
 		if (respuesta != null) {

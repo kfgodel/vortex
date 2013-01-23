@@ -19,6 +19,8 @@ package net.gaia.vortex.tests.router2.api;
  */
 public interface Mensaje {
 
+	public static final String idDeLocalAlReceptor_FIELD = "idLocalAlReceptor";
+
 	/**
 	 * Devuelve el ID de este mensaje
 	 */
@@ -38,6 +40,6 @@ public interface Mensaje {
 	 * @return El id que corresponde a la pata que recibe el mensaje en destino, o null si no se
 	 *         conoce
 	 */
-	public Long getIdDePataLocalAlReceptor();
+	public Long getIdLocalAlReceptor();
 
 }

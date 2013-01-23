@@ -12,13 +12,12 @@
  */
 package net.gaia.vortex.tests.router2.mensajes;
 
-
 /**
  * Esta clase representa el mensaje vortex normal con un tag para discriminar y filtrarlo
  * 
  * @author D. García
  */
-public class MensajeNormal extends MensajeSupport {
+public class MensajeNormal extends MensajeBidiSuppor {
 
 	private String tagDelMensaje;
 	public static final String tagDelMensaje_FIELD = "tagDelMensaje";
@@ -68,7 +67,7 @@ public class MensajeNormal extends MensajeSupport {
 		builder.append(":\"");
 		builder.append(getTag());
 		builder.append("\" -(pata:");
-		builder.append(getIdDePataLocalAlReceptor());
+		builder.append(getIdLocalAlReceptor());
 		builder.append(")]: \"");
 		builder.append(getTextoAdicional());
 		builder.append("\"");
@@ -77,7 +76,7 @@ public class MensajeNormal extends MensajeSupport {
 
 	public MensajeNormal clonar() {
 		final MensajeNormal copia = MensajeNormal.create(tagDelMensaje, textoAdicional);
-		copia.setIdDePataLocalAlReceptor(getIdDePataLocalAlReceptor());
+		copia.setIdLocalAlReceptor(getIdLocalAlReceptor());
 		copia.setIdDeMensaje(getIdDeMensaje());
 		return copia;
 	}

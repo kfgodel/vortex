@@ -66,13 +66,9 @@ public class ConfirmarIdRemoto extends PasoSupport {
 		if (getPataSalida() != null) {
 			builder.append(getPataSalida().getNodoRemoto().getNombre());
 			builder.append(",");
-			builder.append(getConfirmacion().getRespuesta().getIdDePataLocalAlEmisor());
+			builder.append(getConfirmacion().getIdLocalAlReceptor());
 		}
-		builder.append("] de id remoto por respuesta[");
-		if (confirmacion != null) {
-			builder.append(confirmacion.getRespuesta().getIdDeMensaje());
-		}
-		builder.append("]");
+		builder.append("] de id remoto");
 		return builder.toString();
 	}
 

@@ -27,17 +27,6 @@ public abstract class MensajeSupport implements Mensaje {
 
 	private Long idDeMensaje;
 
-	private Long idDePataLocalAlReceptor;
-
-	@Override
-	public Long getIdDePataLocalAlReceptor() {
-		return idDePataLocalAlReceptor;
-	}
-
-	public void setIdDePataLocalAlReceptor(final Long idDePataConductora) {
-		this.idDePataLocalAlReceptor = idDePataConductora;
-	}
-
 	/**
 	 * Crea el mensaje tomando un id
 	 */

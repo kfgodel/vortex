@@ -12,48 +12,19 @@
  */
 package net.gaia.vortex.tests.router2.mensajes;
 
-import net.gaia.vortex.tests.router2.impl.filtros.FiltroPorStrings;
 
 /**
  * Esta clase representa el mensaje de reconfirmacion que cierra la conexion bidid
  * 
  * @author D. García
  */
-public class ReconfirmacionDeIdRemoto extends MensajeSupport {
+public class ReconfirmacionDeIdRemoto extends MensajeBidiSuppor {
 
-	private Long idDePataLocalAlEmisor;
-	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
-
-	private ConfirmacionDeIdRemoto confirmacion;
-
-	public ConfirmacionDeIdRemoto getConfirmacion() {
-		return confirmacion;
-	}
-
-	public void setConfirmacion(final ConfirmacionDeIdRemoto confirmacion) {
-		this.confirmacion = confirmacion;
-	}
-
-	public static ReconfirmacionDeIdRemoto create(final ConfirmacionDeIdRemoto confirmacion, final Long idLocal) {
+	public static ReconfirmacionDeIdRemoto create(final Long idRemoto, final Long idLocal) {
 		final ReconfirmacionDeIdRemoto reconfirmacion = new ReconfirmacionDeIdRemoto();
-		reconfirmacion.confirmacion = confirmacion;
-		reconfirmacion.setIdDePataLocalAlEmisor(idLocal);
+		reconfirmacion.setIdLocalAlEmisor(idLocal);
+		reconfirmacion.setIdLocalAlReceptor(idRemoto);
 		return reconfirmacion;
 	}
 
-	/**
-	 * @see net.gaia.vortex.tests.router2.api.Mensaje#getTag()
-	 */
-	@Override
-	public String getTag() {
-		return FiltroPorStrings.META_MENSAJE;
-	}
-
-	public Long getIdDePataLocalAlEmisor() {
-		return idDePataLocalAlEmisor;
-	}
-
-	public void setIdDePataLocalAlEmisor(final Long idDePataLocalAlEmisor) {
-		this.idDePataLocalAlEmisor = idDePataLocalAlEmisor;
-	}
 }

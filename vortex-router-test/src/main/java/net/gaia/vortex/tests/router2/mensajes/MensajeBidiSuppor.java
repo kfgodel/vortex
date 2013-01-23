@@ -1,5 +1,5 @@
 /**
- * 13/10/2012 21:19:44 Copyright (C) 2011 Darío L. García
+ * 23/01/2013 12:25:27 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -15,17 +15,32 @@ package net.gaia.vortex.tests.router2.mensajes;
 import net.gaia.vortex.tests.router2.impl.filtros.FiltroPorStrings;
 
 /**
- * Esta clase representa el mensaje enviado por un nodo para conocer el id con el que otro nodo lo
- * conoce.<br>
- * El id de pata del pedido corresponde al ID local del nodo que manda el pedido
+ * Esta clase representa un mensaje que hace referencia a la pata receptora
  * 
  * @author D. García
  */
-public class PedidoDeIdRemoto extends MensajeSupport {
+public class MensajeBidiSuppor extends MensajeSupport {
 
-	public static PedidoDeIdRemoto create() {
-		final PedidoDeIdRemoto pedido = new PedidoDeIdRemoto();
-		return pedido;
+	private Long idLocalAlReceptor;
+
+	private Long idLocalAlEmisor;
+	public static final String idLocalAlEmisor_FIELD = "idLocalAlEmisor";
+
+	public Long getIdLocalAlEmisor() {
+		return idLocalAlEmisor;
+	}
+
+	public void setIdLocalAlEmisor(final Long idDePataLocalAlEmisor) {
+		this.idLocalAlEmisor = idDePataLocalAlEmisor;
+	}
+
+	@Override
+	public Long getIdLocalAlReceptor() {
+		return idLocalAlReceptor;
+	}
+
+	public void setIdLocalAlReceptor(final Long idDePataConductora) {
+		this.idLocalAlReceptor = idDePataConductora;
 	}
 
 	/**
@@ -36,12 +51,4 @@ public class PedidoDeIdRemoto extends MensajeSupport {
 		return FiltroPorStrings.META_MENSAJE;
 	}
 
-	/**
-	 * @see net.gaia.vortex.tests.router2.api.Mensaje#getIdLocalAlReceptor()
-	 */
-	@Override
-	public Long getIdLocalAlReceptor() {
-		// No lo sabemos
-		return null;
-	}
 }

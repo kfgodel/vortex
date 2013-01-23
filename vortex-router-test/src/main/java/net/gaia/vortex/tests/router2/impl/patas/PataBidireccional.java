@@ -113,7 +113,7 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	 * Inicia el proceso de pedido de id remoto
 	 */
 	public void conseguirIdRemoto() {
-		final PedidoDeIdRemoto pedidoDeId = PedidoDeIdRemoto.create(getIdLocal());
+		final PedidoDeIdRemoto pedidoDeId = PedidoDeIdRemoto.create();
 		enviarMensaje(pedidoDeId);
 	}
 
@@ -188,18 +188,10 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	 * @param mensaje
 	 */
 	private void evento_recibirReconfirmacionDeIdRemoto(final ReconfirmacionDeIdRemoto reconfirmacion) {
-		final ConfirmacionDeIdRemoto confirmacionOriginal = reconfirmacion.getConfirmacion();
-		final Long idDePataEmisora = confirmacionOriginal.getIdDePataLocalAlEmisor();
-		if (!getIdLocal().equals(idDePataEmisora)) {
-			LOG.debug(
-					"  Rechazando en [{},{}] reconfirmacion{} por respuesta{} que fue emitida en otra pata",
-					new Object[] { this.getNodoLocal().getNombre(), getIdLocal(), reconfirmacion, confirmacionOriginal });
-			return;
-		}
-		if (!getEnviados().contains(confirmacionOriginal)) {
-			LOG.debug(
-					"  Rechazando en [{},{}] reconfirmacion{} por confirmacion{} no realizada en esta pata",
-					new Object[] { this.getNodoLocal().getNombre(), getIdLocal(), reconfirmacion, confirmacionOriginal });
+		final Long idDePataReceptora = reconfirmacion.getIdLocalAlReceptor();
+		if (!getIdLocal().equals(idDePataReceptora)) {
+			LOG.debug("  Rechazando en [{},{}] reconfirmacion{} por que es para otra pata", new Object[] {
+					this.getNodoLocal().getNombre(), getIdLocal(), reconfirmacion });
 			return;
 		}
 
@@ -210,7 +202,7 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	 * Invocado al recibir una publicacion de filtros
 	 */
 	private void evento_recibirPublicacionDeFiltros(final PublicacionDeFiltros publicacion) {
-		final Long idDePataReceptora = publicacion.getIdDePataLocalAlReceptor();
+		final Long idDePataReceptora = publicacion.getIdLocalAlReceptor();
 		if (!getIdLocal().equals(idDePataReceptora)) {
 			LOG.debug("  Rechazando en [{},{}] publicacion{} por ser para otra pata", new Object[] {
 					this.getNodoLocal().getNombre(), getIdLocal(), publicacion });
@@ -237,25 +229,19 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	 * Invocado al recibir una confirmación de id remoto
 	 */
 	private void evento_recibirConfirmacionDeIdRemoto(final ConfirmacionDeIdRemoto confirmacion) {
-		final RespuestaDeIdRemoto respuestaOriginal = confirmacion.getRespuesta();
-		final Long idDePataEmisora = respuestaOriginal.getIdDePataLocalAlEmisor();
-		if (!getIdLocal().equals(idDePataEmisora)) {
-			LOG.debug("  Rechazando en [{},{}] confirmacion{} por respuesta{} que fue emitida en otra pata",
-					new Object[] { this.getNodoLocal().getNombre(), getIdLocal(), confirmacion, respuestaOriginal });
-			return;
-		}
-		if (!getEnviados().contains(respuestaOriginal)) {
-			LOG.debug("  Rechazando en [{},{}] confirmacion{} por respuesta{} no realizada en esta pata", new Object[] {
-					this.getNodoLocal().getNombre(), getIdLocal(), confirmacion, respuestaOriginal });
+		final Long idDePataReceptora = confirmacion.getIdLocalAlReceptor();
+		if (!getIdLocal().equals(idDePataReceptora)) {
+			LOG.debug("  Rechazando en [{},{}] confirmacion{} porque es para otra pata", new Object[] {
+					this.getNodoLocal().getNombre(), getIdLocal(), confirmacion });
 			return;
 		}
 
 		// Guardamos el id de la pata
-		final Long idRemotoDeEstaPata = confirmacion.getIdDePataLocalAlEmisor();
+		final Long idRemotoDeEstaPata = confirmacion.getIdLocalAlEmisor();
 		this.setIdRemoto(idRemotoDeEstaPata);
 
 		// Le avisamos al otro que ya estamos listos de este lado
-		final ReconfirmacionDeIdRemoto reconfirmacionDeIdRemoto = ReconfirmacionDeIdRemoto.create(confirmacion,
+		final ReconfirmacionDeIdRemoto reconfirmacionDeIdRemoto = ReconfirmacionDeIdRemoto.create(idRemotoDeEstaPata,
 				getIdLocal());
 		enviarMensaje(reconfirmacionDeIdRemoto);
 
@@ -272,12 +258,6 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 					this.getNodoLocal().getNombre(), getIdLocal(), respuesta, pedidoOriginal });
 			return;
 		}
-		final Long idDePataEmisora = pedidoOriginal.getIdDePataLocalAlEmisor();
-		if (!getIdLocal().equals(idDePataEmisora)) {
-			LOG.debug("  Rechazando en [{},{}] respuesta{} por pedido{} que fue emitido en otra", new Object[] {
-					this.getNodoLocal().getNombre(), getIdLocal(), respuesta, pedidoOriginal });
-			return;
-		}
 
 		final Long idRemotoDeEstaPata = respuesta.getIdDePataLocalAlEmisor();
 		final Long idAnterior = getIdRemoto();
@@ -288,7 +268,8 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 					new Object[] { this.getNodoLocal().getNombre(), getIdLocal(), respuesta });
 			return;
 		}
-		final ConfirmacionDeIdRemoto confirmacionDeIdRemoto = ConfirmacionDeIdRemoto.create(respuesta, getIdLocal());
+		final ConfirmacionDeIdRemoto confirmacionDeIdRemoto = ConfirmacionDeIdRemoto
+				.create(getIdRemoto(), getIdLocal());
 		enviarMensaje(confirmacionDeIdRemoto);
 	}
 
@@ -331,7 +312,7 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 	 *            El mensaje a enviar
 	 */
 	public void enviarMensajeNormal(final MensajeNormal mensaje) {
-		final Long idDePataOrigen = mensaje.getIdDePataLocalAlReceptor();
+		final Long idDePataOrigen = mensaje.getIdLocalAlReceptor();
 		if (this.getIdLocal().equals(idDePataOrigen)) {
 			LOG.debug("  Evitando enviar desde [{},{}] el mensaje[{}] porque provino de esa pata", new Object[] {
 					this.getNodoLocal().getNombre(), getIdLocal(), mensaje.getIdDeMensaje() });
@@ -346,7 +327,7 @@ public class PataBidireccional extends ComponenteSimulable implements PataConect
 		// Antes de enviar decimos por qué pata va, para evitar rebote
 		final MensajeNormal mensajeAdaptadoAlReceptor = mensaje.clonar();
 		final Long idRemotoDePataConductora = getIdRemoto();
-		mensajeAdaptadoAlReceptor.setIdDePataLocalAlReceptor(idRemotoDePataConductora);
+		mensajeAdaptadoAlReceptor.setIdLocalAlReceptor(idRemotoDePataConductora);
 
 		enviarMensaje(mensajeAdaptadoAlReceptor);
 	}

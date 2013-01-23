@@ -20,7 +20,7 @@ import net.gaia.vortex.tests.router2.impl.filtros.FiltroPorStrings;
  * 
  * @author D. García
  */
-public class PublicacionDeFiltros extends MensajeSupport {
+public class PublicacionDeFiltros extends MensajeBidiSuppor {
 
 	private Filtro filtro;
 
@@ -35,7 +35,7 @@ public class PublicacionDeFiltros extends MensajeSupport {
 	public static PublicacionDeFiltros create(final Filtro nuevoFiltro, final Long idDePataRemota) {
 		final PublicacionDeFiltros publicacion = new PublicacionDeFiltros();
 		publicacion.filtro = nuevoFiltro;
-		publicacion.setIdDePataLocalAlReceptor(idDePataRemota);
+		publicacion.setIdLocalAlReceptor(idDePataRemota);
 		return publicacion;
 	}
 
