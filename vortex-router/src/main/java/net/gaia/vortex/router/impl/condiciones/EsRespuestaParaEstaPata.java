@@ -14,11 +14,17 @@ package net.gaia.vortex.router.impl.condiciones;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.router.impl.moleculas.memoria.MemoriaDeMensajesReconstructiva;
+import net.gaia.vortex.router.impl.messages.bidi.RespuestaDeIdRemoto;
+import net.gaia.vortex.router.impl.moleculas.memoria.MemoriaDePedidosDeId;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -28,17 +34,25 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class EsRespuestaParaEstaPata implements Condicion {
+	private static final Logger LOG = LoggerFactory.getLogger(EsRespuestaParaEstaPata.class);
 
-	private Long idDePata;
-	private MemoriaDeMensajesReconstructiva memoria;
+	private MemoriaDePedidosDeId memoria;
 
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
-		mensaje.getIdDeMensaje()
-		return null;
+		final Object idDePedido = mensaje.getContenido().get(RespuestaDeIdRemoto.idDePedido_FIELD);
+		if (!(idDePedido instanceof Map)) {
+			LOG.error("Recibimos una respuesta de id[" + mensaje + "] cuyo id de pedido no es un mapa?: " + idDePedido
+					+ ". Asumiendo que no fue pedido por la pata");
+			return ResultadoDeCondicion.FALSE;
+		}
+		@SuppressWarnings("unchecked")
+		final Map<String, Object> idDePedidoComoMapa = (Map<String, Object>) idDePedido;
+		final boolean pedidoHechoPorLaPata = memoria.tieneRegistroDelPedido(idDePedidoComoMapa);
+		return ResultadoDeCondicion.paraBooleano(pedidoHechoPorLaPata);
 	}
 
 	/**
@@ -49,8 +63,9 @@ public class EsRespuestaParaEstaPata implements Condicion {
 		return Collections.emptyList();
 	}
 
-	public static EsRespuestaParaEstaPata create() {
+	public static EsRespuestaParaEstaPata create(final MemoriaDePedidosDeId memoriaDeLaPata) {
 		final EsRespuestaParaEstaPata condicion = new EsRespuestaParaEstaPata();
+		condicion.memoria = memoriaDeLaPata;
 		return condicion;
 	}
 

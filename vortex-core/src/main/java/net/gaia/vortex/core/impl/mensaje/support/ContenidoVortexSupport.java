@@ -176,4 +176,21 @@ public class ContenidoVortexSupport extends CaseInsensitiveHashMap<Object> imple
 		put(ContenidoVortex.ID_DE_MENSAJE_KEY, idComoMapa);
 	}
 
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getIdDeMensajeComoMapa()
+	 */
+	@Override
+	public Map<String, Object> getIdDeMensajeComoMapa() {
+		final Object valorDelId = get(ContenidoVortex.ID_DE_MENSAJE_KEY);
+		if (valorDelId == null) {
+			// No está definido
+			return null;
+		}
+		if (!(valorDelId instanceof Map)) {
+			throw new UnhandledConditionException("El contenido[" + this + "] tiene un ID que no es mapa? "
+					+ valorDelId);
+		}
+		final Map<String, Object> idComoMapa = (Map<String, Object>) valorDelId;
+		return idComoMapa;
+	}
 }

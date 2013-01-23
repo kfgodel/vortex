@@ -1,25 +1,22 @@
 /**
  * 30/10/2012 11:38:19 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.router.impl.messages;
-
-import java.util.Map;
+package net.gaia.vortex.router.impl.messages.bidi;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.router.impl.messages.meta.MetamensajeSupport;
 import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
 import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa el ultimo mensaje del handshake para cerrar la comunicacion bidireccional
+ * Esta clase representa el último mensaje del handshake para cerrar la comunicación bidireccional
  * entre patas de nodos distintos.<br>
- * El id de pata conductora corresponde al ID local
  * 
  * @author D. García
  */
-public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
+public class ConfirmacionDeIdRemoto extends MetamensajeSupport {
 
 	/**
 	 * Identificador para este tipo de mensajes bidi
@@ -29,25 +26,25 @@ public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
 	private Long idLocalAlEmisor;
 	public static final String idLocalAlEmisor_FIELD = "idLocalAlEmisor";
 
-	private Map<String, Object> idRespuestaOriginal;
-	public static final String idDeRespuesta_FIELD = "idDeRespuesta";
+	private Long idLocalAlReceptor;
+	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";
 
 	public ConfirmacionDeIdRemoto() {
 		super(NOMBRE_DE_TIPO);
 	}
 
-	public Map<String, Object> getIdRespuestaOriginal() {
-		return idRespuestaOriginal;
+	public Long getIdLocalAlReceptor() {
+		return idLocalAlReceptor;
 	}
 
-	public void setIdRespuestaOriginal(final Map<String, Object> idDeRespuesta) {
-		this.idRespuestaOriginal = idDeRespuesta;
+	public void setIdLocalAlReceptor(final Long idLocalAlReceptor) {
+		this.idLocalAlReceptor = idLocalAlReceptor;
 	}
 
-	public static ConfirmacionDeIdRemoto create(final MensajeVortex respuesta, final Long idLocal) {
+	public static ConfirmacionDeIdRemoto create(final Long idRemoto, final Long idLocal) {
 		final ConfirmacionDeIdRemoto confirmacion = new ConfirmacionDeIdRemoto();
 		confirmacion.setIdLocalAlEmisor(idLocal);
-		confirmacion.idRespuestaOriginal = respuesta.getIdDeMensaje().getAsMap();
+		confirmacion.setIdLocalAlReceptor(idRemoto);
 		return confirmacion;
 	}
 
@@ -64,8 +61,8 @@ public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idLocalAlReceptor_FIELD, getIdLocalAlReceptor())
-				.con(idLocalAlEmisor_FIELD, idLocalAlEmisor).con(idDeRespuesta_FIELD, idRespuestaOriginal).toString();
+		return ToString.de(this).con(idLocalAlReceptor_FIELD, idLocalAlReceptor)
+				.con(idLocalAlEmisor_FIELD, idLocalAlEmisor).toString();
 	}
 
 	/**
@@ -77,8 +74,7 @@ public class ConfirmacionDeIdRemoto extends MensajeBidiSupport {
 		final Condicion filtroDeConfirmacion = AndCompuesto.de( //
 				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
 				AtributoPresente.conNombre(idLocalAlReceptor_FIELD),//
-				AtributoPresente.conNombre(idLocalAlEmisor_FIELD),//
-				AtributoPresente.conNombre(idDeRespuesta_FIELD)//
+				AtributoPresente.conNombre(idLocalAlEmisor_FIELD)//
 				);
 		return filtroDeConfirmacion;
 	}

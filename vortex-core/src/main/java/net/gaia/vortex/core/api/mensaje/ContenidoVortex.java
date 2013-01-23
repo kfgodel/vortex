@@ -98,4 +98,11 @@ public interface ContenidoVortex extends Map<String, Object> {
 	 *            El id que se debe guardar como parte de este contenido
 	 */
 	public void setIdDeMensaje(IdDeMensaje idDelMensaje);
+
+	/**
+	 * Devuelve el mapa que representa el ID de este mensaje en el contenido
+	 * 
+	 * @return null si no está definido
+	 */
+	public Map<String, Object> getIdDeMensajeComoMapa();
 }

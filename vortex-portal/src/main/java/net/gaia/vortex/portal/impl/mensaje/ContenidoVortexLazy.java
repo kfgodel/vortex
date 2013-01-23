@@ -343,4 +343,13 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 		}
 		put(ContenidoVortex.ID_DE_MENSAJE_KEY, idComoMapa);
 	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getIdDeMensajeComoMapa()
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, Object> getIdDeMensajeComoMapa() {
+		return (Map<String, Object>) get(ID_DE_MENSAJE_KEY);
+	}
 }

@@ -15,6 +15,7 @@ package net.gaia.vortex.router.impl.messages;
 import java.util.Map;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.router.impl.messages.meta.MetamensajeSupport;
 import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
 import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
@@ -25,26 +26,18 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class PublicacionDeFiltros extends MensajeBidiSupport {
+public class PublicacionDeFiltros extends MetamensajeSupport {
 
 	public static final String NOMBRE_DE_TIPO = "vortex.filtro.publicacion";
+
+	private Long idLocalAlReceptor;
+	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";
 
 	private Map<String, Object> filtro;
 	public static final String filtro_FIELD = "filtro";
 
-	private Map<String, Object> idDePedido;
-	public static final String idDePedido_FIELD = "idDePedido";
-
 	public PublicacionDeFiltros() {
 		super(NOMBRE_DE_TIPO);
-	}
-
-	public Map<String, Object> getIdDePedido() {
-		return idDePedido;
-	}
-
-	public void setIdDePedido(final Map<String, Object> idDePedido) {
-		this.idDePedido = idDePedido;
 	}
 
 	public Map<String, Object> getFiltro() {
@@ -58,8 +51,16 @@ public class PublicacionDeFiltros extends MensajeBidiSupport {
 	public static PublicacionDeFiltros create(final Map<String, Object> nuevoFiltro, final Long idDePataRemota) {
 		final PublicacionDeFiltros publicacion = new PublicacionDeFiltros();
 		publicacion.filtro = nuevoFiltro;
-		publicacion.setIdLocalAlReceptor(idDePataRemota);
+		publicacion.idLocalAlReceptor = idDePataRemota;
 		return publicacion;
+	}
+
+	public Long getIdLocalAlReceptor() {
+		return idLocalAlReceptor;
+	}
+
+	public void setIdLocalAlReceptor(final Long idLocalAlReceptor) {
+		this.idLocalAlReceptor = idLocalAlReceptor;
 	}
 
 	/**
@@ -67,8 +68,7 @@ public class PublicacionDeFiltros extends MensajeBidiSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idLocalAlReceptor_FIELD, getIdLocalAlReceptor())
-				.con(idDePedido_FIELD, idDePedido).con(filtro_FIELD, filtro).toString();
+		return ToString.de(this).con(idLocalAlReceptor_FIELD, idLocalAlReceptor).con(filtro_FIELD, filtro).toString();
 	}
 
 	/**
@@ -80,10 +80,8 @@ public class PublicacionDeFiltros extends MensajeBidiSupport {
 		final Condicion filtroDePublicaciones = AndCompuesto.de( //
 				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
 				AtributoPresente.conNombre(idLocalAlReceptor_FIELD),//
-				AtributoPresente.conNombre(filtro_FIELD),//
-				AtributoPresente.conNombre(idDePedido_FIELD)//
+				AtributoPresente.conNombre(filtro_FIELD)//
 				);
 		return filtroDePublicaciones;
 	}
-
 }

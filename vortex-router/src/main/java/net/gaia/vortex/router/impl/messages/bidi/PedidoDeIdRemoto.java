@@ -10,9 +10,10 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.router.impl.messages;
+package net.gaia.vortex.router.impl.messages.bidi;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.router.impl.messages.meta.MetamensajeSupport;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 
 /**
@@ -22,28 +23,16 @@ import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
  * 
  * @author D. García
  */
-public class PedidoDeIdRemoto extends MensajeBidiSupport {
+public class PedidoDeIdRemoto extends MetamensajeSupport {
 
 	public static final String NOMBRE_DE_TIPO = PREFIJO_METAMENSAJE + "IdRemoto.Pedido";
-
-	private Long idLocalAlEmisor;
-	public static final String idLocalAlEmisor_FIELD = "idLocalAlEmisor";
 
 	public PedidoDeIdRemoto() {
 		super(NOMBRE_DE_TIPO);
 	}
 
-	public Long getIdLocalAlEmisor() {
-		return idLocalAlEmisor;
-	}
-
-	public void setIdLocalAlEmisor(final Long idDePataLocalAlEmisor) {
-		this.idLocalAlEmisor = idDePataLocalAlEmisor;
-	}
-
-	public static PedidoDeIdRemoto create(final Long idDePataLocal) {
+	public static PedidoDeIdRemoto create() {
 		final PedidoDeIdRemoto pedido = new PedidoDeIdRemoto();
-		pedido.setIdLocalAlEmisor(idDePataLocal);
 		return pedido;
 	}
 

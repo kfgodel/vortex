@@ -1,5 +1,5 @@
 /**
- * 13/10/2012 21:33:23 Copyright (C) 2011 Darío L. García
+ * 23/01/2013 11:54:25 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,49 +10,50 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.router.impl.messages;
-
-import java.util.Map;
+package net.gaia.vortex.router.impl.messages.bidi;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.router.impl.messages.meta.MetamensajeSupport;
 import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
 import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la respuesta que genera un nodo para indicar el id que le asignó a otro.<br>
- * El id de pata corresponde al ID local del nodo que responde el pedido
+ * Esta clase representa la reconfirmación enviada por una pata para indicar que ya es bidireccional
  * 
  * @author D. García
  */
-public class RespuestaDeIdRemoto extends MensajeBidiSupport {
+public class ReconfirmacionDeIdRemoto extends MetamensajeSupport {
 
-	public static final String NOMBRE_DE_TIPO = PREFIJO_METAMENSAJE + "IdRemoto.Respuesta";
+	/**
+	 * Identificador para este tipo de mensajes bidi
+	 */
+	public static final String NOMBRE_DE_TIPO = PREFIJO_METAMENSAJE + "IdRemoto.ReConfirmacion";
 
 	private Long idLocalAlEmisor;
 	public static final String idLocalAlEmisor_FIELD = "idLocalAlEmisor";
 
-	private Map<String, Object> idPedidoOriginal;
-	public static final String idDePedido_FIELD = "idDePedido";
+	private Long idLocalAlReceptor;
+	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";
 
-	public RespuestaDeIdRemoto() {
+	public ReconfirmacionDeIdRemoto() {
 		super(NOMBRE_DE_TIPO);
 	}
 
-	public Map<String, Object> getIdPedidoOriginal() {
-		return idPedidoOriginal;
+	public Long getIdLocalAlReceptor() {
+		return idLocalAlReceptor;
 	}
 
-	public void setIdPedidoOriginal(final Map<String, Object> idDePedido) {
-		this.idPedidoOriginal = idDePedido;
+	public void setIdLocalAlReceptor(final Long idLocalAlReceptor) {
+		this.idLocalAlReceptor = idLocalAlReceptor;
 	}
 
-	public static RespuestaDeIdRemoto create(final Map<String, Object> idPedidoOriginal, final Long idLocal) {
-		final RespuestaDeIdRemoto name = new RespuestaDeIdRemoto();
-		name.setIdLocalAlEmisor(idLocal);
-		name.idPedidoOriginal = idPedidoOriginal;
-		return name;
+	public static ReconfirmacionDeIdRemoto create(final Long idRemoto, final Long idLocal) {
+		final ReconfirmacionDeIdRemoto confirmacion = new ReconfirmacionDeIdRemoto();
+		confirmacion.setIdLocalAlEmisor(idLocal);
+		confirmacion.setIdLocalAlReceptor(idRemoto);
+		return confirmacion;
 	}
 
 	public Long getIdLocalAlEmisor() {
@@ -68,8 +69,8 @@ public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idLocalAlReceptor_FIELD, getIdLocalAlReceptor())
-				.con(idLocalAlEmisor_FIELD, idLocalAlEmisor).con(idDePedido_FIELD, idPedidoOriginal).toString();
+		return ToString.de(this).con(idLocalAlReceptor_FIELD, idLocalAlReceptor)
+				.con(idLocalAlEmisor_FIELD, idLocalAlEmisor).toString();
 	}
 
 	/**
@@ -78,13 +79,11 @@ public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 	 * @return El filtro que descarta otros mensajes y permite recibir este tipo
 	 */
 	public static Condicion getFiltroDelTipo() {
-		final Condicion filtroDeRespuestas = AndCompuesto.de( //
+		final Condicion filtroDeConfirmacion = AndCompuesto.de( //
 				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
 				AtributoPresente.conNombre(idLocalAlReceptor_FIELD),//
-				AtributoPresente.conNombre(idLocalAlEmisor_FIELD),//
-				AtributoPresente.conNombre(idDePedido_FIELD)//
+				AtributoPresente.conNombre(idLocalAlEmisor_FIELD)//
 				);
-		return filtroDeRespuestas;
+		return filtroDeConfirmacion;
 	}
-
 }

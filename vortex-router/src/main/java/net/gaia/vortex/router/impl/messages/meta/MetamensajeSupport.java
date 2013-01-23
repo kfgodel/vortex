@@ -1,5 +1,5 @@
 /**
- * 13/10/2012 18:14:59 Copyright (C) 2011 Darío L. García
+ * 23/01/2013 14:53:36 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,36 +10,34 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.router.impl.messages;
+package net.gaia.vortex.router.impl.messages.meta;
+
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase es super de todos los mensajes y tiene operaciones comunes
+ * Esta clase implementa una parte base del metamensaje vortex
  * 
  * @author D. García
  */
-public abstract class MensajeBidiSupport implements MensajeBidireccional {
+public class MetamensajeSupport implements MetamensajeVortex {
 
 	private final String tipoDeMensaje;
 
-	private Long idLocalAlReceptor;
-	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";
-
-	@Override
-	public Long getIdLocalAlReceptor() {
-		return idLocalAlReceptor;
-	}
-
-	public void setIdLocalAlReceptor(final Long idDePataConductora) {
-		this.idLocalAlReceptor = idDePataConductora;
-	}
-
-	public MensajeBidiSupport(final String nombreDeTipo) {
+	public MetamensajeSupport(final String nombreDeTipo) {
 		this.tipoDeMensaje = nombreDeTipo;
 	}
 
 	@Override
 	public String getTipoDeMensaje() {
 		return tipoDeMensaje;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(tipoDeMensaje_FIELD, tipoDeMensaje).toString();
 	}
 
 }

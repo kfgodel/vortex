@@ -13,7 +13,7 @@
 package net.gaia.vortex.router.impl.condiciones;
 
 import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
-import net.gaia.vortex.router.impl.messages.MensajeBidireccional;
+import net.gaia.vortex.router.impl.messages.meta.MetamensajeVortex;
 import net.gaia.vortex.sets.impl.condiciones.AtributoEmpieza;
 
 /**
@@ -26,8 +26,8 @@ public class EsMetaMensaje extends CondicionTipadaSupport {
 
 	public static EsMetaMensaje create() {
 		final EsMetaMensaje condicion = new EsMetaMensaje();
-		condicion.initializeWith(AtributoEmpieza.conPrefijo(MensajeBidireccional.PREFIJO_METAMENSAJE,
-				MensajeBidireccional.tipoDeMensaje_FIELD));
+		condicion.initializeWith(AtributoEmpieza.conPrefijo(MetamensajeVortex.PREFIJO_METAMENSAJE,
+				MetamensajeVortex.tipoDeMensaje_FIELD));
 		return condicion;
 	}
 

@@ -18,7 +18,7 @@ import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
-import net.gaia.vortex.router.impl.messages.RespuestaDeIdRemoto;
+import net.gaia.vortex.router.impl.messages.bidi.RespuestaDeIdRemoto;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -28,7 +28,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class ResponderPedidoDeId implements Transformacion {
+public class ConvertirPedidoEnRespuestaDeId implements Transformacion {
 
 	private Long idLocalDePata;
 	public static final String idLocalDePata_FIELD = "idLocalDePata";
@@ -53,8 +53,8 @@ public class ResponderPedidoDeId implements Transformacion {
 		return mensajeEnviable;
 	}
 
-	public static ResponderPedidoDeId create(final Long idDePata, final ConversorDeMensajesVortex mapeador) {
-		final ResponderPedidoDeId responder = new ResponderPedidoDeId();
+	public static ConvertirPedidoEnRespuestaDeId create(final Long idDePata, final ConversorDeMensajesVortex mapeador) {
+		final ConvertirPedidoEnRespuestaDeId responder = new ConvertirPedidoEnRespuestaDeId();
 		responder.idLocalDePata = idDePata;
 		responder.mapeador = mapeador;
 		return responder;

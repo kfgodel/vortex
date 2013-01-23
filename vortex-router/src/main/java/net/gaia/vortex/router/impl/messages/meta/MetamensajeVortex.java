@@ -1,5 +1,5 @@
 /**
- * 13/10/2012 18:13:38 Copyright (C) 2011 Darío L. García
+ * 23/01/2013 14:49:36 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,15 +10,14 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.router.impl.messages;
+package net.gaia.vortex.router.impl.messages.meta;
 
 /**
- * Esta interfaz representa el contrato que se espera de un mensaje bidireccional (tiene referencias
- * de dónde viene)
+ * Esta interfaz define el contrato esperable de todo metamensaje vortex
  * 
  * @author D. García
  */
-public interface MensajeBidireccional {
+public interface MetamensajeVortex {
 
 	/**
 	 * Prefijo usado para los mensajes bidi
@@ -29,17 +28,6 @@ public interface MensajeBidireccional {
 	 * Atributo para describir el tipo de mensaje
 	 */
 	public static final String tipoDeMensaje_FIELD = "tipoDeMensaje";
-
-	/**
-	 * Indica opcionalmente el ID de pata local al receptor del mensaje por el cual se envía este
-	 * mensaje.<br>
-	 * Para que este ID esté definido previamente los nodos deben conocer el ID de pata de su
-	 * receptor.
-	 * 
-	 * @return El id que corresponde a la pata que recibe el mensaje en destino, o null si no se
-	 *         conoce
-	 */
-	public Long getIdLocalAlReceptor();
 
 	/**
 	 * Devuelve el nombre del tipo de mensaje que permite discriminarlo

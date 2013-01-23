@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.router.impl.moleculas.patas;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
@@ -21,8 +22,9 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
+import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.emisores.EmisorNulo;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
+import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
@@ -31,13 +33,19 @@ import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
+import net.gaia.vortex.router.impl.condiciones.EsConfirmacionDeIdRemoto;
+import net.gaia.vortex.router.impl.condiciones.EsConfirmacionParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.EsPedidoDeIdRemoto;
+import net.gaia.vortex.router.impl.condiciones.EsReconfirmacionDeIdRemoto;
+import net.gaia.vortex.router.impl.condiciones.EsReconfirmacionParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaDeIdRemoto;
+import net.gaia.vortex.router.impl.condiciones.EsRespuestaParaEstaPata;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
-import net.gaia.vortex.router.impl.messages.MensajeBidireccional;
-import net.gaia.vortex.router.impl.messages.PedidoDeIdRemoto;
-import net.gaia.vortex.router.impl.moleculas.memoria.MemoriaDeMetamensajes;
-import net.gaia.vortex.router.impl.transformaciones.ResponderPedidoDeId;
+import net.gaia.vortex.router.impl.messages.bidi.PedidoDeIdRemoto;
+import net.gaia.vortex.router.impl.moleculas.memoria.MemoriaDePedidosDeId;
+import net.gaia.vortex.router.impl.transformaciones.ConvertirPedidoEnRespuestaDeId;
+import net.gaia.vortex.router.impl.transformaciones.RegistrarIdRemotoYEnviarConfirmacion;
+import net.gaia.vortex.router.impl.transformaciones.RegistrarIdRemotoYEnviarReconfirmacion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,8 +59,6 @@ import org.slf4j.LoggerFactory;
 public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	private static final Logger LOG = LoggerFactory.getLogger(PataBidi.class);
 
-	private static final int CANTIDAD_DE_MENSAJES_RECORDADOS = 100;
-
 	private static final AtomicLong proximoId = new AtomicLong(0);
 
 	private NodoBidireccional nodoLocal;
@@ -64,7 +70,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	private Long idLocal;
 	public static final String idLocal_FIELD = "idLocal";
 
-	private Long idRemoto;
+	private AtomicLong idRemoto;
 	public static final String idRemoto_FIELD = "idRemoto";
 
 	private ParteDeCondiciones filtroDeSalida;
@@ -76,15 +82,16 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	private Condicion filtroDeEntradaPublicado;
 	public static final String filtroDeEntradaPublicado_FIELD = "filtroDeEntradaPublicado";
 
-	private MemoriaDeMetamensajes memoriaDeMetamensajes;
+	private MemoriaDePedidosDeId memoriaDePedidosEnviados;
 
 	private ConversorDeMensajesVortex mapeador;
 
 	private GenerarIdEnMensaje generadorDeIds;
 
-	private NexoTransformador identificadorParaPedidosYRespuestas;
-
-	private NexoTransformador identificadorParaConfirmaciones;
+	/**
+	 * Asigna ID a los metamensajes que son generados en esta pata
+	 */
+	private NexoTransformador identificadorDeMetamensajes;
 
 	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
 			final TaskProcessor taskProcessor, final ParteDeCondiciones parteDeCondicion,
@@ -94,9 +101,11 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		pata.filtroDeSalida = parteDeCondicion;
 		pata.setIdLocal(proximoId.getAndIncrement());
 		pata.nodoLocal = nodoLocal;
+		pata.idRemoto = new AtomicLong();
 		pata.nodoRemoto = nodoRemoto;
 		pata.generadorDeIds = generadorDeIds;
-		pata.memoriaDeMetamensajes = MemoriaDeMetamensajes.create(CANTIDAD_DE_MENSAJES_RECORDADOS);
+		pata.memoriaDePedidosEnviados = MemoriaDePedidosDeId.create();
+		pata.identificadorDeMetamensajes = NexoTransformador.create(taskProcessor, generadorDeIds, nodoRemoto);
 		pata.initializeWith(taskProcessor);
 		pata.inicializarFiltros();
 		return pata;
@@ -106,23 +115,66 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 * Inicializa el estado de esta pata y las conexiones internas
 	 */
 	private void initializeWith(final TaskProcessor taskProcessor) {
-
-		// Creamos los componentes que se usarán a la salida de los mensajes
-		crearComponentesCompartidosEntreSalidas(taskProcessor);
-
-		// Creamos un selector para tomar un camino segun el tipo de mensaje
+		// Creamos un selector para tomar un camino según el tipo de mensaje
 		final Selector selectorDeEntrada = SelectorConFiltros.create(taskProcessor);
 
 		// Al recibir un pedido enviamos la respuesta identificando esta pata
-		final Receptor procesoAlRecibirPedidoDeId = crearProcesoAlRecibirPedidoDeIds(taskProcessor);
+		final Receptor procesoAlRecibirPedidoDeId = crearProcesoParaRecibirPedidoDeIds(taskProcessor);
 		selectorDeEntrada.conectarCon(procesoAlRecibirPedidoDeId, EsPedidoDeIdRemoto.create());
 
-		// Al recibir una respuesta registramos el id de la pata remota y enviamos confirmacion
-		final Receptor procesoAlRecibirRespuestaDeId = crearProcesoAlRecibirRespuestaDeIds(taskProcessor);
+		// Al recibir una respuesta registramos el id de la pata remota y enviamos confirmación
+		final Receptor procesoAlRecibirRespuestaDeId = crearProcesoParaRecibirRespuestaDeIds(taskProcessor);
 		selectorDeEntrada.conectarCon(procesoAlRecibirRespuestaDeId, EsRespuestaDeIdRemoto.create());
+
+		// Al recibir una confirmación registramos el id de la pata remota y enviamos una
+		// re-confirmación
+		final Receptor procesoAlRecibirConfirmacionDeId = crearProcesoParaRecibirConfirmacionDeIds(taskProcessor);
+		selectorDeEntrada.conectarCon(procesoAlRecibirConfirmacionDeId, EsConfirmacionDeIdRemoto.create());
+
+		// Al recibir una reconfirmación registramos el evento de nueva conexion bidi
+		final Receptor procesoAlRecibirReconfirmacionDeId = crearProcesoParaRecibirReconfirmacionDeIds(taskProcessor);
+		selectorDeEntrada.conectarCon(procesoAlRecibirReconfirmacionDeId, EsReconfirmacionDeIdRemoto.create());
 
 		final FlujoVortex flujo = FlujoInmutable.create(selectorDeEntrada, EmisorNulo.getInstancia());
 		initializeWith(flujo);
+	}
+
+	/**
+	 * Crea el proceso utlizado para procesar el mensaje que corresponde a una reconfirmación de id
+	 * 
+	 * @param taskProcessor
+	 *            El procesador para crear los componentes
+	 * @return El receptor de entrada para los mensajes
+	 */
+	private Receptor crearProcesoParaRecibirReconfirmacionDeIds(final TaskProcessor taskProcessor) {
+		// Primero descartamos las confirmaciones que son para otras patas
+		final NexoFiltro descartadorDeReconfirmacionesAjenas = NexoFiltro.create(taskProcessor,
+				EsReconfirmacionParaEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
+
+		return descartadorDeReconfirmacionesAjenas;
+	}
+
+	/**
+	 * Crea el proceso utilizado al recibir mensajes de confirmación
+	 * 
+	 * @param taskProcessor
+	 *            El procesador para crear los componentes
+	 * @return El componente de entrada para los mensajes
+	 */
+	private Receptor crearProcesoParaRecibirConfirmacionDeIds(final TaskProcessor taskProcessor) {
+		// Primero descartamos las confirmaciones que son para otras patas
+		final NexoFiltro descartadorDeConfirmacionesAjenas = NexoFiltro.create(taskProcessor,
+				EsConfirmacionParaEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
+
+		// disparamos el evento de nueva conexion
+
+		// Finalmente registramos id remoto y convertimos la respuesta en confirmación
+		final NexoTransformador registradorDeId = NexoTransformador.create(taskProcessor,
+				RegistrarIdRemotoYEnviarReconfirmacion.create(getIdLocal(), idRemoto, mapeador),
+				identificadorDeMetamensajes);
+		descartadorDeConfirmacionesAjenas.conectarCon(registradorDeId);
+
+		return descartadorDeConfirmacionesAjenas;
 	}
 
 	/**
@@ -132,24 +184,18 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 *            El procesador para crear los componentes
 	 * @return El componente que es el inicio del proceso
 	 */
-	private Receptor crearProcesoAlRecibirRespuestaDeIds(final TaskProcessor taskProcessor) {
+	private Receptor crearProcesoParaRecibirRespuestaDeIds(final TaskProcessor taskProcessor) {
+		// Primero descartamos las respuestas que son para otras patas
+		final NexoFiltro descartadorDeRespuestasAjenas = NexoFiltro.create(taskProcessor,
+				EsRespuestaParaEstaPata.create(memoriaDePedidosEnviados), ReceptorNulo.getInstancia());
 
-		return null;
-	}
+		// Finalmente registramos id remoto y convertimos la respuesta en confirmación
+		final NexoTransformador registradorDeId = NexoTransformador.create(taskProcessor,
+				RegistrarIdRemotoYEnviarConfirmacion.create(getIdLocal(), idRemoto, mapeador),
+				identificadorDeMetamensajes);
+		descartadorDeRespuestasAjenas.conectarCon(registradorDeId);
 
-	/**
-	 * Crea los componentes compartidos por varias salidas para que estén disponibles posteriormente
-	 */
-	private void crearComponentesCompartidosEntreSalidas(final TaskProcessor taskProcessor) {
-		// Los pedidos y respuestas enviados necesitamos registrarlos
-		final NexoSinDuplicados registradorDeEnviados = NexoSinDuplicados.create(taskProcessor, memoriaDeMetamensajes,
-				getNodoRemoto());
-		// Además los identificamos
-		identificadorParaPedidosYRespuestas = NexoTransformador.create(taskProcessor, generadorDeIds,
-				registradorDeEnviados);
-
-		// Las confirmaciones y mensajes normales sólo los identificamos
-		identificadorParaConfirmaciones = NexoTransformador.create(taskProcessor, generadorDeIds, getNodoRemoto());
+		return descartadorDeRespuestasAjenas;
 	}
 
 	/**
@@ -159,12 +205,13 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 *            El procesador de tareas para crear los componentes
 	 * @return El proceso creado
 	 */
-	private Receptor crearProcesoAlRecibirPedidoDeIds(final TaskProcessor taskProcessor) {
-		// Al recibir un pedido enviamos la respuesta identificando esta pata
-		final NexoTransformador procesoAlRecibirPedidoDeId = NexoTransformador.create(taskProcessor,
-				ResponderPedidoDeId.create(getIdLocal(), mapeador), identificadorParaPedidosYRespuestas);
+	private Receptor crearProcesoParaRecibirPedidoDeIds(final TaskProcessor taskProcessor) {
 
-		return procesoAlRecibirPedidoDeId;
+		// Convertimos el pedido recibido en una respuesta con nuestro id de pata
+		final NexoTransformador convertidorEnRespuesta = NexoTransformador.create(taskProcessor,
+				ConvertirPedidoEnRespuestaDeId.create(getIdLocal(), mapeador), identificadorDeMetamensajes);
+
+		return convertidorEnRespuesta;
 	}
 
 	/**
@@ -210,11 +257,11 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	}
 
 	public Long getIdRemoto() {
-		return idRemoto;
+		return idRemoto.get();
 	}
 
 	public void setIdRemoto(final Long idRemoto) {
-		this.idRemoto = idRemoto;
+		this.idRemoto.set(idRemoto);
 	}
 
 	/**
@@ -223,33 +270,19 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 * Esta acción mandará un meta-mensaje por esta pata para solicitar un ID de pata remota
 	 */
 	public void conseguirIdRemoto() {
-		final PedidoDeIdRemoto pedido = PedidoDeIdRemoto.create(getIdLocal());
-		enviarMetamensaje(pedido);
+		enviarPedidoDeId();
 	}
 
 	/**
-	 * Envía el objeto indicado como metamensaje, metiéndolo en un mensaje vortex
-	 * 
-	 * @param metamensaje
-	 *            El metamensaje a enviar
+	 * Genera un nuevo pedido de id registrándolo y enviándolo al nodo remoto
 	 */
-	private void enviarMetamensaje(final MensajeBidireccional metamensaje) {
-		final MensajeVortex mensaje = mapeador.convertirAVortex(metamensaje);
-		nexoIdentificadorDeMensajesSalientes.recibir(mensaje);
-	}
-
-	/**
-	 * Envía el mensaje pasado al nodo remoto sólo si no lo envió antes
-	 * 
-	 * @param mensaje
-	 *            El mensaje a enviar
-	 */
-	private void enviarMensaje(final MensajeVortex mensaje) {
-		if (!memoriaDeMetamensajes.registrarNuevo(mensaje)) {
-			LOG.debug("  No enviando el mensaje[{}] recibido en [{}] por figurar como ya enviado", mensaje, this);
-			return;
-		}
-		getNodoRemoto().recibir(mensaje);
+	private void enviarPedidoDeId() {
+		final PedidoDeIdRemoto pedido = PedidoDeIdRemoto.create();
+		final MensajeVortex mensajeDelPedido = mapeador.convertirAVortex(pedido);
+		final MensajeVortex mensajeConId = generadorDeIds.transformar(mensajeDelPedido);
+		final Map<String, Object> idDeMensajeComoMapa = mensajeConId.getContenido().getIdDeMensajeComoMapa();
+		memoriaDePedidosEnviados.registrarPedidoConId(idDeMensajeComoMapa);
+		getNodoRemoto().recibir(mensajeConId);
 	}
 
 	/**

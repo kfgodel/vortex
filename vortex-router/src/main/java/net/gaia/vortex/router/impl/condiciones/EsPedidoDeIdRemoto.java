@@ -13,7 +13,7 @@
 package net.gaia.vortex.router.impl.condiciones;
 
 import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
-import net.gaia.vortex.router.impl.messages.PedidoDeIdRemoto;
+import net.gaia.vortex.router.impl.messages.bidi.PedidoDeIdRemoto;
 
 /**
  * Esta clase representa la condición que evalúa si un mensaje representa un pedido de ID remoto
