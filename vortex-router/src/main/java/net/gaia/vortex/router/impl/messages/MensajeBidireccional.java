@@ -23,7 +23,7 @@ public interface MensajeBidireccional {
 	/**
 	 * Prefijo usado para los mensajes bidi
 	 */
-	public static final String PREFIJO_BIDI = "IdRemoto.";
+	public static final String PREFIJO_METAMENSAJE = "Vortex.";
 
 	/**
 	 * Atributo para describir el tipo de mensaje

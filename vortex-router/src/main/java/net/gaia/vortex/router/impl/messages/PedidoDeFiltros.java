@@ -43,7 +43,7 @@ public class PedidoDeFiltros extends MensajeBidiSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdLocalAlReceptor()).toString();
+		return ToString.de(this).con(idLocalAlReceptor_FIELD, getIdLocalAlReceptor()).toString();
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class PedidoDeFiltros extends MensajeBidiSupport {
 	public static Condicion getFiltroDelTipo() {
 		final Condicion filtroDePedidos = AndCompuesto.de( //
 				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
-				AtributoPresente.conNombre(idDePataLocalAlReceptor_FIELD)//
+				AtributoPresente.conNombre(idLocalAlReceptor_FIELD)//
 				);
 		return filtroDePedidos;
 	}

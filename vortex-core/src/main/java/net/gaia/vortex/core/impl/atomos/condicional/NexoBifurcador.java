@@ -17,6 +17,8 @@ import net.gaia.vortex.core.impl.tasks.condicional.BifurcarMensaje;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.strings.ToString;
+
 /**
  * Esta clase representa un componente de la red vortex que puede delegarle el mensaje recibido a
  * otros dos componentes, dependiendo de una condicion eligira uno u otro en forma excluyente para
@@ -30,8 +32,11 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	private static final Logger LOG = LoggerFactory.getLogger(NexoBifurcador.class);
 
 	private Condicion condicion;
+	public static final String condicion_FIELD = "condicion";
 	private Receptor delegadoPorTrue;
+	public static final String delegadoPorTrue_FIELD = "delegadoPorTrue";
 	private Receptor delegadoPorFalse;
+	public static final String delegadoPorFalse_FIELD = "delegadoPorFalse";
 
 	@Override
 	public Condicion getCondicion() {
@@ -121,4 +126,14 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	public Receptor getReceptorPorFalse() {
 		return delegadoPorFalse;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(condicion_FIELD, condicion).con(delegadoPorTrue_FIELD, delegadoPorTrue)
+				.con(delegadoPorFalse_FIELD, delegadoPorFalse).toString();
+	}
+
 }

@@ -19,11 +19,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
+import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
@@ -64,6 +67,10 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 
 	private ComportamientoBidi comportamientoBidi;
 
+	private IdDeComponenteVortex identificador;
+
+	private GenerarIdEnMensaje generadorDeIds;
+
 	public List<PataBidireccional> getPatas() {
 		return patas;
 	}
@@ -77,6 +84,8 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 	 */
 	protected void initializeWith(final TaskProcessor processor, final ComportamientoBidi comportamiento) {
 		initializeWith(processor);
+		identificador = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
+		generadorDeIds = GenerarIdEnMensaje.create(identificador);
 		comportamientoBidi = comportamiento;
 		flujoDeMensajesRecibidos = comportamiento.crearFlujoParaMensajesRecibidos(processor);
 		patas = new CopyOnWriteArrayList<PataBidireccional>();
@@ -101,7 +110,8 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 		}
 
 		final ParteDeCondiciones parteDeCondicion = conjuntoDeCondiciones.crearNuevaParte();
-		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), parteDeCondicion, mapeador);
+		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), parteDeCondicion, mapeador,
+				generadorDeIds);
 		getPatas().add(nuevaPata);
 
 		// Agregamos la pata al conjunto que puede recibir mensajes

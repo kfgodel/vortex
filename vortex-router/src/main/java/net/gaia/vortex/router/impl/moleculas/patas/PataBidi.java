@@ -15,19 +15,29 @@ package net.gaia.vortex.router.impl.moleculas.patas;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.api.moleculas.FlujoVortex;
+import net.gaia.vortex.core.api.moleculas.condicional.Selector;
+import net.gaia.vortex.core.impl.atomos.emisores.EmisorNulo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
+import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
+import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
+import net.gaia.vortex.router.impl.condiciones.EsPedidoDeIdRemoto;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.messages.MensajeBidireccional;
 import net.gaia.vortex.router.impl.messages.PedidoDeIdRemoto;
+import net.gaia.vortex.router.impl.transformaciones.ResponderPedidoDeId;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +47,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class PataBidi extends ComponenteConProcesadorSupport implements PataBidireccional {
+@Molecula
+public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	private static final Logger LOG = LoggerFactory.getLogger(PataBidi.class);
 
 	private static final AtomicLong proximoId = new AtomicLong(0);
@@ -67,19 +78,44 @@ public class PataBidi extends ComponenteConProcesadorSupport implements PataBidi
 
 	private ConversorDeMensajesVortex mapeador;
 
+	private NexoTransformador nexoIdentificadorDeMensajesSalientes;
+
 	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
 			final TaskProcessor taskProcessor, final ParteDeCondiciones parteDeCondicion,
-			final ConversorDeMensajesVortex mapeador) {
+			final ConversorDeMensajesVortex mapeador, final GenerarIdEnMensaje generadorDeIds) {
 		final PataBidi pata = new PataBidi();
-		pata.initializeWith(taskProcessor);
 		pata.mapeador = mapeador;
 		pata.filtroDeSalida = parteDeCondicion;
 		pata.setIdLocal(proximoId.getAndIncrement());
 		pata.nodoLocal = nodoLocal;
 		pata.nodoRemoto = nodoRemoto;
 		pata.memoriaDeEnviados = MemoriaLimitadaDeMensajes.create(NexoSinDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
+		pata.initializeWith(taskProcessor, generadorDeIds);
 		pata.inicializarFiltros();
 		return pata;
+	}
+
+	/**
+	 * Inicializa el estado de esta pata y las conexiones internas
+	 */
+	private void initializeWith(final TaskProcessor taskProcessor, final GenerarIdEnMensaje generadorDeIds) {
+		// Cada mensaje enviado queremos recordarlo para poder contestarlos
+		final NexoSinDuplicados nexoSinDuplicadosDeSalida = NexoSinDuplicados.create(taskProcessor, memoriaDeEnviados,
+				getNodoRemoto());
+		// Para poder enviar mensajes necesitamos identificarlos
+		nexoIdentificadorDeMensajesSalientes = NexoTransformador.create(taskProcessor, generadorDeIds,
+				nexoSinDuplicadosDeSalida);
+
+		// El selector elegirá el camino de acuerdo al tipo de mensaje
+		final Selector selectorDeEntrada = SelectorConFiltros.create(taskProcessor);
+
+		// Que hacemos al recibir pedidos de ID remoto
+		final NexoTransformador procesoAlRecibirPedidoDeId = NexoTransformador.create(taskProcessor,
+				ResponderPedidoDeId.create(getIdLocal(), mapeador), nexoIdentificadorDeMensajesSalientes);
+		selectorDeEntrada.conectarCon(procesoAlRecibirPedidoDeId, EsPedidoDeIdRemoto.create());
+
+		final FlujoVortex flujo = FlujoInmutable.create(selectorDeEntrada, EmisorNulo.getInstancia());
+		initializeWith(flujo);
 	}
 
 	/**
@@ -150,7 +186,7 @@ public class PataBidi extends ComponenteConProcesadorSupport implements PataBidi
 	 */
 	private void enviarMetamensaje(final MensajeBidireccional metamensaje) {
 		final MensajeVortex mensaje = mapeador.convertirAVortex(metamensaje);
-		enviarMensaje(mensaje);
+		nexoIdentificadorDeMensajesSalientes.recibir(mensaje);
 	}
 
 	/**
@@ -181,15 +217,6 @@ public class PataBidi extends ComponenteConProcesadorSupport implements PataBidi
 	@Override
 	public ParteDeCondiciones getParteDeCondicion() {
 		return this.filtroDeSalida;
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
-	 */
-	@Override
-	public void recibir(final MensajeVortex mensaje) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

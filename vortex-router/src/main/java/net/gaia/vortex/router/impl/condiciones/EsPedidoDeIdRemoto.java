@@ -1,5 +1,5 @@
 /**
- * 22/01/2013 16:34:09 Copyright (C) 2011 Darío L. García
+ * 22/01/2013 19:04:02 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -13,22 +13,18 @@
 package net.gaia.vortex.router.impl.condiciones;
 
 import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
-import net.gaia.vortex.router.impl.messages.MensajeBidireccional;
-import net.gaia.vortex.sets.impl.condiciones.AtributoEmpieza;
+import net.gaia.vortex.router.impl.messages.PedidoDeIdRemoto;
 
 /**
- * Esta clase representa la condición que permite identificar si un mensaje representa un
- * meta-mensaje bidi o no
+ * Esta clase representa la condición que evalúa si un mensaje representa un pedido de ID remoto
  * 
  * @author D. García
  */
-public class EsMetaMensaje extends CondicionTipadaSupport {
+public class EsPedidoDeIdRemoto extends CondicionTipadaSupport {
 
-	public static EsMetaMensaje create() {
-		final EsMetaMensaje condicion = new EsMetaMensaje();
-		condicion.initializeWith(AtributoEmpieza.conPrefijo(MensajeBidireccional.PREFIJO_METAMENSAJE,
-				MensajeBidireccional.tipoDeMensaje_FIELD));
+	public static EsPedidoDeIdRemoto create() {
+		final EsPedidoDeIdRemoto condicion = new EsPedidoDeIdRemoto();
+		condicion.initializeWith(PedidoDeIdRemoto.getFiltroDelTipo());
 		return condicion;
 	}
-
 }

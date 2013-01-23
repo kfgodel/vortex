@@ -22,7 +22,7 @@ public abstract class MensajeBidiSupport implements MensajeBidireccional {
 	private final String tipoDeMensaje;
 
 	private Long idLocalAlReceptor;
-	public static final String idDePataLocalAlReceptor_FIELD = "idDePataLocalAlReceptor";
+	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";
 
 	@Override
 	public Long getIdLocalAlReceptor() {

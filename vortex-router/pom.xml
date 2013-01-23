@@ -111,11 +111,6 @@
 	</dependency>
 
 
-    <dependency>
-      <groupId>ar.com.dgarcia</groupId>
-      <artifactId>dgarcia-commons</artifactId>
-      <version>1.0.4</version>
-    </dependency>
 	<!--  Abstrae la herramienta de logueo concreta -->
     <dependency>
       <groupId>org.slf4j</groupId>

@@ -26,10 +26,10 @@ import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
  */
 public class PedidoDeIdRemoto extends MensajeBidiSupport {
 
-	public static final String NOMBRE_DE_TIPO = PREFIJO_BIDI + "Pedido";
+	public static final String NOMBRE_DE_TIPO = PREFIJO_METAMENSAJE + "IdRemoto.Pedido";
 
 	private Long idLocalAlEmisor;
-	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
+	public static final String idLocalAlEmisor_FIELD = "idLocalAlEmisor";
 
 	public PedidoDeIdRemoto() {
 		super(NOMBRE_DE_TIPO);
@@ -57,7 +57,7 @@ public class PedidoDeIdRemoto extends MensajeBidiSupport {
 	public static Condicion getFiltroDelTipo() {
 		final Condicion filtroDePedidos = AndCompuesto.de( //
 				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
-				AtributoPresente.conNombre(idDePataLocalAlEmisor_FIELD)//
+				AtributoPresente.conNombre(idLocalAlEmisor_FIELD)//
 				);
 		return filtroDePedidos;
 	}

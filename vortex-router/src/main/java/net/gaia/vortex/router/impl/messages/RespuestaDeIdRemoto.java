@@ -15,7 +15,6 @@ package net.gaia.vortex.router.impl.messages;
 import java.util.Map;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
 import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
@@ -29,10 +28,10 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 
-	public static final String NOMBRE_DE_TIPO = PREFIJO_BIDI + "Respuesta";
+	public static final String NOMBRE_DE_TIPO = PREFIJO_METAMENSAJE + "IdRemoto.Respuesta";
 
 	private Long idLocalAlEmisor;
-	public static final String idDePataLocalAlEmisor_FIELD = "idDePataLocalAlEmisor";
+	public static final String idLocalAlEmisor_FIELD = "idLocalAlEmisor";
 
 	private Map<String, Object> idPedidoOriginal;
 	public static final String idDePedido_FIELD = "idDePedido";
@@ -49,10 +48,10 @@ public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 		this.idPedidoOriginal = idDePedido;
 	}
 
-	public static RespuestaDeIdRemoto create(final MensajeVortex pedidoOriginal, final Long idLocal) {
+	public static RespuestaDeIdRemoto create(final Map<String, Object> idPedidoOriginal, final Long idLocal) {
 		final RespuestaDeIdRemoto name = new RespuestaDeIdRemoto();
 		name.setIdLocalAlEmisor(idLocal);
-		name.idPedidoOriginal = pedidoOriginal.getIdDeMensaje().getAsMap();
+		name.idPedidoOriginal = idPedidoOriginal;
 		return name;
 	}
 
@@ -69,8 +68,8 @@ public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idDePataLocalAlReceptor_FIELD, getIdLocalAlReceptor())
-				.con(idDePataLocalAlEmisor_FIELD, idLocalAlEmisor).con(idDePedido_FIELD, idPedidoOriginal).toString();
+		return ToString.de(this).con(idLocalAlReceptor_FIELD, getIdLocalAlReceptor())
+				.con(idLocalAlEmisor_FIELD, idLocalAlEmisor).con(idDePedido_FIELD, idPedidoOriginal).toString();
 	}
 
 	/**
@@ -81,8 +80,8 @@ public class RespuestaDeIdRemoto extends MensajeBidiSupport {
 	public static Condicion getFiltroDelTipo() {
 		final Condicion filtroDeRespuestas = AndCompuesto.de( //
 				ValorEsperadoEn.elAtributo(tipoDeMensaje_FIELD, NOMBRE_DE_TIPO),//
-				AtributoPresente.conNombre(idDePataLocalAlReceptor_FIELD),//
-				AtributoPresente.conNombre(idDePataLocalAlEmisor_FIELD),//
+				AtributoPresente.conNombre(idLocalAlReceptor_FIELD),//
+				AtributoPresente.conNombre(idLocalAlEmisor_FIELD),//
 				AtributoPresente.conNombre(idDePedido_FIELD)//
 				);
 		return filtroDeRespuestas;

@@ -1,5 +1,5 @@
 /**
- * 20/01/2013 19:09:32 Copyright (C) 2011 Darío L. García
+ * 22/01/2013 19:05:52 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,44 +10,33 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sets.impl.condiciones;
+package net.gaia.vortex.core.impl.condiciones.support;
 
 import java.util.Collections;
 import java.util.List;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.sets.reflection.ValueAccessor;
-import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la condición que evalua si el mapa de contenidos tiene un atributo, o
- * secuencia de atributos especificados
+ * Esta clase base define el comportamiento para poder subclasificar y tener condiciones con un
+ * tipo, que en realidad utilizan condiciones estándar para definirse
  * 
  * @author D. García
  */
-public class AtributoPresente implements Condicion {
+public class CondicionTipadaSupport implements Condicion {
 
-	private ValueAccessor valueAccessor;
-	public static final String valueAccessor_FIELD = "valueAccessor";
-
-	public static AtributoPresente conNombre(final String propertyPath) {
-		final AtributoPresente condicion = new AtributoPresente();
-		condicion.valueAccessor = PropertyChainAccessor.createAccessor(propertyPath);
-		return condicion;
-	}
+	private Condicion condicionReal;
+	public static final String condicionReal_FIELD = "condicionReal";
 
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
-		final ContenidoVortex contenidoDelMensaje = mensaje.getContenido();
-		final boolean tieneValor = valueAccessor.hasValueIn(contenidoDelMensaje);
-		return ResultadoDeCondicion.paraBooleano(tieneValor);
+		return condicionReal.esCumplidaPor(mensaje);
 	}
 
 	/**
@@ -58,12 +47,13 @@ public class AtributoPresente implements Condicion {
 		return Collections.emptyList();
 	}
 
-	public ValueAccessor getValueAccessor() {
-		return valueAccessor;
-	}
-
-	public void setValueAccessor(final ValueAccessor valueAccessor) {
-		this.valueAccessor = valueAccessor;
+	/**
+	 * Inicializa esta instancia definiendo qué condición se utilizará para evaluar los mensajes
+	 * 
+	 * @param condicionReal
+	 */
+	protected void initializeWith(final Condicion condicionReal) {
+		this.condicionReal = condicionReal;
 	}
 
 	/**
@@ -71,7 +61,7 @@ public class AtributoPresente implements Condicion {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(valueAccessor_FIELD, valueAccessor).toString();
+		return ToString.de(this).toString();
 	}
 
 }

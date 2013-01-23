@@ -13,6 +13,9 @@
 package net.gaia.vortex.router.impl.moleculas;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
+import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoPortal;
 
@@ -24,10 +27,49 @@ import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoPortal;
  */
 public class PortalBidi extends NodoBidi implements PortalBidireccional {
 
+	private static ComportamientoPortal comportamiento;
+
 	public static PortalBidi create(final TaskProcessor processor) {
 		final PortalBidi portal = new PortalBidi();
-		portal.initializeWith(processor, ComportamientoPortal.create());
+		comportamiento = ComportamientoPortal.create();
+		portal.initializeWith(processor, comportamiento);
 		return portal;
+	}
+
+	/**
+	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
+	 */
+	@Override
+	public void enviar(final Object mensaje) throws ErrorDeMapeoVortexException {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * @see net.gaia.vortex.portal.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
+	 */
+	@Override
+	public void recibirCon(final HandlerDePortal<?> handlerDeMensajes) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
+	 */
+	@Override
+	public void setDestino(final Receptor destino) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#getDestino()
+	 */
+	@Override
+	public Receptor getDestino() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

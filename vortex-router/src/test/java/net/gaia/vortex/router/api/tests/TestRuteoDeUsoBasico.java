@@ -15,13 +15,17 @@ package net.gaia.vortex.router.api.tests;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
+import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.portal.tests.HandlerEncolador;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
 import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.api.moleculas.Router;
 import net.gaia.vortex.router.api.tests.listeners.ListenerDeCambioDeFiltrosConCola;
 import net.gaia.vortex.router.api.tests.listeners.ListenerDeRuteoEnPasos;
+import net.gaia.vortex.router.impl.moleculas.PortalBidi;
+import net.gaia.vortex.router.impl.moleculas.RouterBidi;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 import net.gaia.vortex.sets.reflection.accessors.PropertyAccessor;
 
@@ -44,15 +48,20 @@ public class TestRuteoDeUsoBasico {
 	private PortalBidireccional receptorPositivo1;
 	private PortalBidireccional receptorNegativo1;
 	private Router routerCentral;
+	private TaskProcessor processor;
 
 	@Before
 	public void crearNodos() {
-
+		processor = VortexProcessorFactory.createProcessor();
+		emisor = PortalBidi.create(processor);
+		receptorPositivo1 = PortalBidi.create(processor);
+		receptorNegativo1 = PortalBidi.create(processor);
+		routerCentral = RouterBidi.create(processor);
 	}
 
 	@After
 	public void eliminarNodos() {
-
+		processor.detener();
 	}
 
 	public static class MensajeDeRuteoParaTest {

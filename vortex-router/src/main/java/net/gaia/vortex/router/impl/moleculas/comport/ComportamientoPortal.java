@@ -62,4 +62,13 @@ public class ComportamientoPortal implements ComportamientoBidi {
 				multiplexorDePatasParaMetamensajes);
 		return flujoDeMensajes;
 	}
+
+	public Portal getPortalInterno() {
+		return portalInterno;
+	}
+
+	public void setPortalInterno(final Portal portalInterno) {
+		this.portalInterno = portalInterno;
+	}
+
 }
