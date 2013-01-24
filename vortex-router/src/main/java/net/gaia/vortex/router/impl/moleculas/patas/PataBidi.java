@@ -48,7 +48,7 @@ import net.gaia.vortex.router.impl.condiciones.EsReconfirmacionParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.LeInteresaElMensaje;
-import net.gaia.vortex.router.impl.condiciones.NoEsMetaMensaje;
+import net.gaia.vortex.router.impl.condiciones.EsMensajeNormal;
 import net.gaia.vortex.router.impl.condiciones.VinoPorOtraPata;
 import net.gaia.vortex.router.impl.ejecutos.CambiarFiltroDeSalida;
 import net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones;
@@ -151,7 +151,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 
 		// Al recibir un mensaje normal (no meta)
 		final Receptor procesoAlRecibirMensajeNormal = crearProcesoParaRecibirMensajesNormales(taskProcessor);
-		selectorDeEntrada.conectarCon(procesoAlRecibirMensajeNormal, NoEsMetaMensaje.create());
+		selectorDeEntrada.conectarCon(procesoAlRecibirMensajeNormal, EsMensajeNormal.create());
 
 		// Al recibir un pedido enviamos la respuesta identificando esta pata
 		final Receptor procesoAlRecibirPedidoDeId = crearProcesoParaRecibirPedidoDeIds(taskProcessor);

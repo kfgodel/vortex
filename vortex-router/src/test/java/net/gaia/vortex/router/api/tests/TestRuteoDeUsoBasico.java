@@ -68,8 +68,26 @@ public class TestRuteoDeUsoBasico {
 		public String atributo;
 		public static final String atributo_FIELD = "atributo";
 
+		public MensajeDeRuteoParaTest() {
+		}
+
 		public MensajeDeRuteoParaTest(final String valor) {
 			this.atributo = valor;
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (!(obj instanceof MensajeDeRuteoParaTest)) {
+				return false;
+			}
+			final MensajeDeRuteoParaTest that = (MensajeDeRuteoParaTest) obj;
+			final boolean mismoAtributo = this.atributo.equals(that.atributo);
+			return mismoAtributo;
+		}
+
+		@Override
+		public int hashCode() {
+			return this.atributo.hashCode();
 		}
 	}
 
@@ -93,14 +111,18 @@ public class TestRuteoDeUsoBasico {
 		emisor.enviar(mensajeEnviado);
 
 		// Verificamos que no haya llegado
-		final Object mensajeRecibidoPor1 = handlerReceptor1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertEquals("El primer receptor debería haber recibido el mensaje", mensajeEnviado, mensajeRecibidoPor1);
+		try {
+			handlerReceptor1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("No deberíamos haber recibido nada");
+		} catch (final UnsuccessfulWaitException e) {
+			// Es la excepcion que esperamos
+		}
 	}
 
 	@Test
-	public void elMensajeDeberiaLlegarSiSeDeclaraUnFiltroPositivo() {
+	public void elMensajeDeberiaLlegarSiSeDeclaraUnFiltroPositivo() throws InterruptedException {
 		// Definimos el listener para saber cuando el router adaptó sus filtros
-		final ListenerDeCambioDeFiltrosConCola listenerFiltrosRouter = new ListenerDeCambioDeFiltrosConCola();
+		final ListenerDeCambioDeFiltrosConCola listenerFiltrosRouter = ListenerDeCambioDeFiltrosConCola.create();
 		routerCentral.setListenerDeFiltrosRemotos(listenerFiltrosRouter);
 
 		// Interconectamos las partes
@@ -108,6 +130,9 @@ public class TestRuteoDeUsoBasico {
 		routerCentral.conectarCon(emisor);
 		receptorPositivo1.conectarCon(routerCentral);
 		routerCentral.conectarCon(receptorPositivo1);
+
+		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
+		Thread.sleep(1000);
 
 		// Le definimos al receptor qué es lo que queremos recibir
 		final String valorEsperado = "hola";
@@ -122,6 +147,9 @@ public class TestRuteoDeUsoBasico {
 
 		// Esperamos que el router adapte sus filtros según lo que pide el receptor
 		listenerFiltrosRouter.esperarPorCambio(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
+		Thread.sleep(1000);
 
 		// Mandamos el mensaje
 		final MensajeDeRuteoParaTest mensajeEnviado = new MensajeDeRuteoParaTest(valorEsperado);

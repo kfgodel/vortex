@@ -20,10 +20,10 @@ import net.gaia.vortex.sets.impl.condiciones.Negacion;
  * 
  * @author D. García
  */
-public class NoEsMetaMensaje extends CondicionTipadaSupport {
+public class EsMensajeNormal extends CondicionTipadaSupport {
 
-	public static NoEsMetaMensaje create() {
-		final NoEsMetaMensaje condicion = new NoEsMetaMensaje();
+	public static EsMensajeNormal create() {
+		final EsMensajeNormal condicion = new EsMensajeNormal();
 		condicion.initializeWith(Negacion.de(EsMetaMensaje.create()));
 		return condicion;
 	}

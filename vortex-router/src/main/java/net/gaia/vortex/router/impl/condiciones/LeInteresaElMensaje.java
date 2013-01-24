@@ -19,6 +19,10 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -28,6 +32,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class LeInteresaElMensaje implements Condicion {
+	private static final Logger LOG = LoggerFactory.getLogger(LeInteresaElMensaje.class);
 
 	private ParteDeCondiciones filtroDeSalida;
 	public static final String filtroDeSalida_FIELD = "filtroDeSalida";
@@ -39,6 +44,10 @@ public class LeInteresaElMensaje implements Condicion {
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final Condicion condicionActual = filtroDeSalida.getCondicion();
 		final ResultadoDeCondicion resultado = condicionActual.esCumplidaPor(mensaje);
+		if (ResultadoDeCondicion.FALSE.equals(resultado)) {
+			LOG.debug("El mensaje[{}] será descartado porque no interesa al destino segun condicion[{}]", mensaje,
+					condicionActual);
+		}
 		return resultado;
 	}
 

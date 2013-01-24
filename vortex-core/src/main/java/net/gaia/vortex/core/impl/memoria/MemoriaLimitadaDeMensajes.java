@@ -153,7 +153,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idsRegistrados_FIELD, idsRegistrados).toString();
+		return ToString.de(this).con(idsRegistrados_FIELD, idsRegistrados.size()).toString();
 	}
 
 	/**
