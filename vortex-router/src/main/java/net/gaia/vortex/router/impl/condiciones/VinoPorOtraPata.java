@@ -24,10 +24,10 @@ import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
  * 
  * @author D. García
  */
-public class NoVinoPorEstaPata extends CondicionTipadaSupport {
+public class VinoPorOtraPata extends CondicionTipadaSupport {
 
-	public static NoVinoPorEstaPata create(final Long idLocalDePata) {
-		final NoVinoPorEstaPata condicion = new NoVinoPorEstaPata();
+	public static VinoPorOtraPata create(final Long idLocalDePata) {
+		final VinoPorOtraPata condicion = new VinoPorOtraPata();
 		condicion.initializeWith(Negacion.de(ValorEsperadoEn.elAtributo(MetadataDeMensajes.idLocalAlReceptor_FIELD,
 				idLocalDePata)));
 		return condicion;

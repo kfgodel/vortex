@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.impl.transformaciones;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
@@ -29,7 +29,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class RegistrarIdRemotoYEnviarConfirmacion implements Transformacion {
 
-	private AtomicLong idDePataRemota;
+	private AtomicReference<Long> idDePataRemota;
 	public static final String idDePataRemota_FIELD = "idDePataRemota";
 
 	private Long idLocalDePata;
@@ -52,7 +52,7 @@ public class RegistrarIdRemotoYEnviarConfirmacion implements Transformacion {
 		return mensajeEnviable;
 	}
 
-	public static RegistrarIdRemotoYEnviarConfirmacion create(final Long idLocal, final AtomicLong idRemoto,
+	public static RegistrarIdRemotoYEnviarConfirmacion create(final Long idLocal, final AtomicReference<Long> idRemoto,
 			final ConversorDeMensajesVortex mapeador) {
 		final RegistrarIdRemotoYEnviarConfirmacion registrar = new RegistrarIdRemotoYEnviarConfirmacion();
 		registrar.idDePataRemota = idRemoto;

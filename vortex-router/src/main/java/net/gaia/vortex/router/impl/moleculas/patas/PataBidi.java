@@ -15,6 +15,7 @@ package net.gaia.vortex.router.impl.moleculas.patas;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.annotations.Molecula;
@@ -48,15 +49,15 @@ import net.gaia.vortex.router.impl.condiciones.EsRespuestaDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.LeInteresaElMensaje;
 import net.gaia.vortex.router.impl.condiciones.NoEsMetaMensaje;
-import net.gaia.vortex.router.impl.condiciones.NoVinoPorEstaPata;
-import net.gaia.vortex.router.impl.ejecutos.CambiarFiltroDeEntrada;
+import net.gaia.vortex.router.impl.condiciones.VinoPorOtraPata;
+import net.gaia.vortex.router.impl.ejecutos.CambiarFiltroDeSalida;
 import net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.messages.PublicacionDeFiltros;
 import net.gaia.vortex.router.impl.messages.bidi.PedidoDeIdRemoto;
 import net.gaia.vortex.router.impl.moleculas.memoria.MemoriaDePedidosDeId;
+import net.gaia.vortex.router.impl.transformaciones.AsignarIdLocalAlReceptor;
 import net.gaia.vortex.router.impl.transformaciones.ConvertirPedidoEnRespuestaDeId;
-import net.gaia.vortex.router.impl.transformaciones.ModificarIdLocalAlReceptor;
 import net.gaia.vortex.router.impl.transformaciones.RegistrarIdRemotoYEnviarConfirmacion;
 import net.gaia.vortex.router.impl.transformaciones.RegistrarIdRemotoYEnviarReconfirmacion;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones;
@@ -84,7 +85,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	private Long idLocal;
 	public static final String idLocal_FIELD = "idLocal";
 
-	private AtomicLong idRemoto;
+	private AtomicReference<Long> idRemoto;
 	public static final String idRemoto_FIELD = "idRemoto";
 
 	private ParteDeCondiciones filtroDeSalida;
@@ -131,7 +132,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		pata.habilitadaComoBidi = new AtomicBoolean(false);
 		pata.setIdLocal(proximoId.getAndIncrement());
 		pata.nodoLocal = nodoLocal;
-		pata.idRemoto = new AtomicLong();
+		pata.idRemoto = new AtomicReference<Long>(null);
 		pata.nodoRemoto = nodoRemoto;
 		pata.generadorDeIds = generadorDeIds;
 		pata.memoriaDePedidosEnviados = MemoriaDePedidosDeId.create();
@@ -191,7 +192,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 				EsPublicacionParaEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
 
 		// Actualizamos el filtro que tenemos de salida en esta pata
-		final CambiarFiltroDeEntrada cambiadorDeFiltro = CambiarFiltroDeEntrada.create(mapeador, serializador,
+		final CambiarFiltroDeSalida cambiadorDeFiltro = CambiarFiltroDeSalida.create(mapeador, serializador,
 				filtroDeSalida);
 		descartadorDePublicacionesAjenas.conectarCon(cambiadorDeFiltro);
 
@@ -209,7 +210,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	private Receptor crearProcesoParaRecibirMensajesNormales(final TaskProcessor taskProcessor) {
 		// Descartamos los mensajes que vinieron de esta pata (evitando rebote de mensajes)
 		final NexoFiltro descartarMensajesPropios = NexoFiltro.create(taskProcessor,
-				NoVinoPorEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
+				VinoPorOtraPata.create(getIdLocal()), ReceptorNulo.getInstancia());
 
 		// Verificamos si el nodo remoto acepta el mensaje según los filtros que nos dijo
 		final NexoFiltro descartarMensajesQueNoLeInteresan = NexoFiltro.create(taskProcessor,
@@ -218,7 +219,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 
 		// Le registramos nuestro ID de pata para evitar rebotes
 		final NexoTransformador asignadoDeIdRemoto = NexoTransformador.create(taskProcessor,
-				ModificarIdLocalAlReceptor.create(getIdLocal()), getNodoRemoto());
+				AsignarIdLocalAlReceptor.create(getIdLocal()), getNodoRemoto());
 		descartarMensajesQueNoLeInteresan.conectarCon(asignadoDeIdRemoto);
 
 		return descartarMensajesPropios;
@@ -237,9 +238,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 				EsReconfirmacionParaEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
 
 		// Disparamos el evento de nueva conexión bidi
-		final NexoEjecutor disparadorDeEvento = NexoEjecutor.create(taskProcessor, dispararEventoConexionBidi,
-				ReceptorNulo.getInstancia());
-		descartadorDeReconfirmacionesAjenas.conectarCon(disparadorDeEvento);
+		descartadorDeReconfirmacionesAjenas.conectarCon(dispararEventoConexionBidi);
 
 		return descartadorDeReconfirmacionesAjenas;
 	}

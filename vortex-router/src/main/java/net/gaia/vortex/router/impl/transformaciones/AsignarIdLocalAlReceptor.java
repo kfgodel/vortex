@@ -24,7 +24,7 @@ import net.gaia.vortex.router.impl.messages.MetadataDeMensajes;
  * 
  * @author D. García
  */
-public class ModificarIdLocalAlReceptor implements Transformacion {
+public class AsignarIdLocalAlReceptor implements Transformacion {
 
 	private Long idLocalAlReceptor;
 
@@ -41,8 +41,8 @@ public class ModificarIdLocalAlReceptor implements Transformacion {
 		return copiaModificable;
 	}
 
-	public static ModificarIdLocalAlReceptor create(final Long idDePataRemota) {
-		final ModificarIdLocalAlReceptor transformacion = new ModificarIdLocalAlReceptor();
+	public static AsignarIdLocalAlReceptor create(final Long idDePataRemota) {
+		final AsignarIdLocalAlReceptor transformacion = new AsignarIdLocalAlReceptor();
 		transformacion.idLocalAlReceptor = idDePataRemota;
 		return transformacion;
 	}

@@ -30,7 +30,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class CambiarFiltroDeEntrada extends ReceptorSupport {
+public class CambiarFiltroDeSalida extends ReceptorSupport {
 
 	private ConversorDeMensajesVortex conversor;
 	private SerializadorDeCondiciones serializador;
@@ -58,9 +58,9 @@ public class CambiarFiltroDeEntrada extends ReceptorSupport {
 		return ToString.de(this).toString();
 	}
 
-	public static CambiarFiltroDeEntrada create(final ConversorDeMensajesVortex conversor,
+	public static CambiarFiltroDeSalida create(final ConversorDeMensajesVortex conversor,
 			final SerializadorDeCondiciones serializador, final ParteDeCondiciones filtroDeLaPata) {
-		final CambiarFiltroDeEntrada cambiar = new CambiarFiltroDeEntrada();
+		final CambiarFiltroDeSalida cambiar = new CambiarFiltroDeSalida();
 		cambiar.conversor = conversor;
 		cambiar.filtroDeLaPata = filtroDeLaPata;
 		cambiar.serializador = serializador;
