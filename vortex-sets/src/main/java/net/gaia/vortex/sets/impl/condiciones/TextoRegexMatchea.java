@@ -14,6 +14,7 @@ package net.gaia.vortex.sets.impl.condiciones;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -24,6 +25,7 @@ import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.sets.reflection.ValueAccessor;
 import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
+import ar.com.dgarcia.lang.reflection.ReflectionUtils;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -125,6 +127,33 @@ public class TextoRegexMatchea implements Condicion {
 
 	public void setExpresion(final Pattern expresion) {
 		this.expresion = expresion;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof TextoRegexMatchea)) {
+			return false;
+		}
+		final TextoRegexMatchea that = (TextoRegexMatchea) obj;
+		if (!this.valueAccessor.equals(that.valueAccessor)) {
+			// Son para propiedades distintas
+			return false;
+		}
+		final boolean mismoValor = this.expresion.equals(that.expresion);
+		return mismoValor;
+	}
+
+	/**
+	 * Tomado de {@link TreeMap.Entry#equals}
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return ReflectionUtils.hashDeDosValores(valueAccessor, expresion);
 	}
 
 }

@@ -80,4 +80,25 @@ public class Negacion implements Condicion {
 		return condicion;
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof Negacion)) {
+			return false;
+		}
+		final Negacion that = (Negacion) obj;
+		final boolean mismoConjuntoDeCondiciones = this.condicionNegada.equals(that.condicionNegada);
+		return mismoConjuntoDeCondiciones;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return this.condicionNegada.hashCode();
+	}
+
 }

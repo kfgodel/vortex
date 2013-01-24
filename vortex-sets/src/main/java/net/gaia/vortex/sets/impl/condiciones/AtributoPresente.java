@@ -14,6 +14,7 @@ package net.gaia.vortex.sets.impl.condiciones;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
@@ -74,4 +75,26 @@ public class AtributoPresente implements Condicion {
 		return ToString.de(this).con(valueAccessor_FIELD, valueAccessor).toString();
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof AtributoPresente)) {
+			return false;
+		}
+		final AtributoPresente that = (AtributoPresente) obj;
+		final boolean mismoAtributo = this.valueAccessor.equals(that.valueAccessor);
+		return mismoAtributo;
+	}
+
+	/**
+	 * Tomado de {@link TreeMap.Entry#equals}
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return valueAccessor.hashCode();
+	}
 }

@@ -13,7 +13,9 @@
 package net.gaia.vortex.sets.impl.condiciones;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
@@ -110,4 +112,26 @@ public class AndCompuesto implements Condicion {
 		return getCondiciones();
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof AndCompuesto)) {
+			return false;
+		}
+		final AndCompuesto that = (AndCompuesto) obj;
+		final Set<Condicion> thisCondiciones = new HashSet<Condicion>(this.condiciones);
+		final Set<Condicion> thatCondiciones = new HashSet<Condicion>(that.condiciones);
+		final boolean mismoConjuntoDeCondiciones = thisCondiciones.equals(thatCondiciones);
+		return mismoConjuntoDeCondiciones;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return this.condiciones.hashCode();
+	}
 }

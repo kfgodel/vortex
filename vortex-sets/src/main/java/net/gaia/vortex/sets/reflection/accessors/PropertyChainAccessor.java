@@ -29,7 +29,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class PropertyChainAccessor implements ValueAccessor {
+public class PropertyChainAccessor extends ValueAccessorSupport {
 
 	/**
 	 * Caracter utilizado para delimitar las propiedades de la cadena

@@ -15,6 +15,7 @@ package net.gaia.vortex.sets.impl.condiciones;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
@@ -22,6 +23,7 @@ import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.sets.reflection.ValueAccessor;
 import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
+import ar.com.dgarcia.lang.reflection.ReflectionUtils;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -127,6 +129,33 @@ public class ColeccionContiene implements Condicion {
 
 	public void setValorEsperado(final Object valorEsperado) {
 		this.valorEsperado = valorEsperado;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof ColeccionContiene)) {
+			return false;
+		}
+		final ColeccionContiene that = (ColeccionContiene) obj;
+		if (!this.valueAccessor.equals(that.valueAccessor)) {
+			// Son para propiedades distintas
+			return false;
+		}
+		final boolean mismoValor = this.valorEsperado.equals(that.valorEsperado);
+		return mismoValor;
+	}
+
+	/**
+	 * Tomado de {@link TreeMap.Entry#equals}
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return ReflectionUtils.hashDeDosValores(valueAccessor, valorEsperado);
 	}
 
 }

@@ -5,6 +5,7 @@ package net.gaia.vortex.sets.impl.condiciones;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
@@ -12,6 +13,7 @@ import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.sets.reflection.ValueAccessor;
 import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
+import ar.com.dgarcia.lang.reflection.ReflectionUtils;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -91,6 +93,33 @@ public class AtributoEmpieza implements Condicion {
 
 	public void setPrefijoEsperado(final String prefijoEsperado) {
 		this.prefijoEsperado = prefijoEsperado;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof AtributoEmpieza)) {
+			return false;
+		}
+		final AtributoEmpieza that = (AtributoEmpieza) obj;
+		if (!this.valueAccessor.equals(that.valueAccessor)) {
+			// Son para propiedades distintas
+			return false;
+		}
+		final boolean mismoPrefijo = this.prefijoEsperado.equals(that.prefijoEsperado);
+		return mismoPrefijo;
+	}
+
+	/**
+	 * Tomado de {@link TreeMap.Entry#equals}
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return ReflectionUtils.hashDeDosValores(valueAccessor, prefijoEsperado);
 	}
 
 }
