@@ -28,7 +28,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class PublicacionDeFiltros extends MetamensajeSupport {
 
-	public static final String NOMBRE_DE_TIPO = "vortex.filtro.publicacion";
+	public static final String NOMBRE_DE_TIPO = "Vortex.Filtro.Publicacion";
 
 	private Long idLocalAlReceptor;
 	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";

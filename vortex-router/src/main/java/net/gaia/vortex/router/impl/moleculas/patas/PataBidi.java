@@ -136,8 +136,8 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		pata.generadorDeIds = generadorDeIds;
 		pata.memoriaDePedidosEnviados = MemoriaDePedidosDeId.create();
 		pata.identificadorDeMetamensajes = NexoTransformador.create(taskProcessor, generadorDeIds, nodoRemoto);
-		pata.initializeWith(taskProcessor);
 		pata.inicializarFiltros(conjuntoDeCondiciones);
+		pata.initializeWith(taskProcessor);
 		return pata;
 	}
 
@@ -274,7 +274,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 * Invocado al completarse los pasos para la comunicación bidireccional de esta pata
 	 */
 	protected void evento_nevaConexionBidireccional() {
-		if (habilitadaComoBidi.compareAndSet(false, true)) {
+		if (!habilitadaComoBidi.compareAndSet(false, true)) {
 			// Ya estaba habilitada como bidi anteriormente
 			return;
 		}

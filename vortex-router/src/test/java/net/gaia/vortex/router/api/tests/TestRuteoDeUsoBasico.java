@@ -74,7 +74,7 @@ public class TestRuteoDeUsoBasico {
 	}
 
 	@Test
-	public void elMensajeDeberiaLlegarSiNoSeDeclaraNingunFiltro() {
+	public void elMensajeNoDeberiaLlegarSiNoSeDeclaraNingunFiltro() throws InterruptedException {
 		// Definimos el handler para recibir el mensaje
 		final HandlerEncoladorDeStrings handlerReceptor1 = HandlerEncoladorDeStrings.create();
 		receptorPositivo1.recibirCon(handlerReceptor1);
@@ -85,11 +85,14 @@ public class TestRuteoDeUsoBasico {
 		receptorPositivo1.conectarCon(routerCentral);
 		routerCentral.conectarCon(receptorPositivo1);
 
+		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
+		Thread.sleep(1000);
+
 		// Mandamos el mensaje
 		final String mensajeEnviado = "Hola manola";
 		emisor.enviar(mensajeEnviado);
 
-		// Verificamos que haya llegado
+		// Verificamos que no haya llegado
 		final Object mensajeRecibidoPor1 = handlerReceptor1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.assertEquals("El primer receptor debería haber recibido el mensaje", mensajeEnviado, mensajeRecibidoPor1);
 	}
