@@ -12,13 +12,20 @@
  */
 package net.gaia.vortex.router.impl.moleculas;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
+import net.gaia.vortex.router.impl.filtros.ConjuntoSincronizado;
 import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoPortal;
+import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 
 /**
  * Esta clase representa el componente vortex que implementa el portal con comunicaciones
@@ -29,10 +36,12 @@ import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoPortal;
 public class PortalBidi extends NodoBidi implements PortalBidireccional {
 
 	private Portal portalInterno;
+	private List<Condicion> condicionesDelPortal;
 
 	public static PortalBidi create(final TaskProcessor processor) {
 		final PortalBidi portal = new PortalBidi();
 		final ComportamientoPortal comportamiento = ComportamientoPortal.create();
+		portal.condicionesDelPortal = new ArrayList<Condicion>();
 		portal.initializeWith(processor, comportamiento);
 		portal.portalInterno = comportamiento.getPortalInterno();
 		return portal;
@@ -51,17 +60,29 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	 */
 	@Override
 	public void recibirCon(final HandlerDePortal<?> handlerDeMensajes) {
-		// TODO Auto-generated method stub
+		// Registramos la condición para poder unificarlas
+		final Condicion nuevaCondicion = handlerDeMensajes.getCondicionSuficiente();
+		condicionesDelPortal.add(nuevaCondicion);
 
+		// Le pasamos el handler al portal real
+		portalInterno.recibirCon(handlerDeMensajes);
+
+		// Notificamos del cambio interno
+		evento_cambioEstadoFiltrosLocales();
 	}
 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
 	@Override
-	public void setDestino(final Receptor destino) {
-		// TODO Auto-generated method stub
-
+	public void setDestino(final Receptor nuevoDestino) {
+		final Receptor destinoAnterior = getDestino();
+		if (destinoAnterior.equals(nuevoDestino)) {
+			// Ya estamos conectados
+			return;
+		}
+		desconectarDe(destinoAnterior);
+		conectarCon(nuevoDestino);
 	}
 
 	/**
@@ -69,8 +90,21 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	 */
 	@Override
 	public Receptor getDestino() {
-		// TODO Auto-generated method stub
-		return null;
+		final List<Receptor> allDestinos = getDestinos();
+		if (allDestinos.isEmpty()) {
+			// No estamos conectados a nadie
+			return ReceptorNulo.getInstancia();
+		}
+		final Receptor primerYUnicoDestino = allDestinos.get(0);
+		return primerYUnicoDestino;
 	}
 
+	/**
+	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#calcularFiltroDeEntradaPara(net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
+	 */
+	@Override
+	protected Condicion calcularFiltroDeEntradaPara(final PataBidireccional pataConectora) {
+		final Condicion filtroDeEntradaParaEstePortal = ConjuntoSincronizado.unificarCondiciones(condicionesDelPortal);
+		return filtroDeEntradaParaEstePortal;
+	}
 }

@@ -19,7 +19,6 @@ import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcador;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
@@ -44,22 +43,21 @@ public class ComportamientoPortal implements ComportamientoBidi {
 	 */
 	@Override
 	public FlujoVortex crearFlujoParaMensajesRecibidos(final TaskProcessor processor) {
-		// Los metamensajes se los mandamos a las patas
-		final Multiplexor multiplexorDePatasParaMetamensajes = MultiplexorParalelo.create(processor);
+		// Los metamensajes se los mandamos directo a las patas
+		final Multiplexor multiplexorDePatas = MultiplexorParalelo.create(processor);
 
-		// Los mensajes normales al portal interno
-		portalInterno = PortalMapeador.createForOutputWith(processor, ReceptorNulo.getInstancia());
+		// El portal interno recibe los mensaje normales, y envía a las patas
+		portalInterno = PortalMapeador.createForOutputWith(processor, multiplexorDePatas);
 
-		// Necesitamos bifurcar en una de las dos posibilidades
-		final Receptor bifurcador = NexoBifurcador.create(processor, EsMetaMensaje.create(),
-				multiplexorDePatasParaMetamensajes, portalInterno);
+		// Si es metamensaje va directo a las patas, si es mensaje normal al portal interno
+		final Receptor bifurcador = NexoBifurcador.create(processor, EsMetaMensaje.create(), multiplexorDePatas,
+				portalInterno);
 
 		// Y antes que nada filtrar los mensajes duplicados que ya recibimos
 		final NexoSinDuplicados filtroDeDuplicados = NexoSinDuplicados.create(processor, bifurcador);
 
 		// En la entrada van los mensajes, en la salida se conectan las patas
-		final FlujoVortex flujoDeMensajes = FlujoInmutable.create(filtroDeDuplicados,
-				multiplexorDePatasParaMetamensajes);
+		final FlujoVortex flujoDeMensajes = FlujoInmutable.create(filtroDeDuplicados, multiplexorDePatas);
 		return flujoDeMensajes;
 	}
 

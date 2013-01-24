@@ -13,6 +13,7 @@
 package net.gaia.vortex.router.impl.moleculas.patas;
 
 import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 
@@ -39,5 +40,20 @@ public interface PataBidireccional extends Receptor {
 	 * @return La parte que es modificada por esta pata
 	 */
 	ParteDeCondiciones getParteDeCondicion();
+
+	/**
+	 * Devuelve el nodo al que esta pata está conectado
+	 * 
+	 * @return El nodo destino de esta pata
+	 */
+	Receptor getNodoRemoto();
+
+	/**
+	 * Modifica el estado de esta pata avisando que cambio el filtro utilizado para recibir mensajes
+	 * 
+	 * @param nuevoFiltro
+	 *            La nueva condicion
+	 */
+	public void actualizarFiltroDeEntrada(final Condicion nuevoFiltro);
 
 }

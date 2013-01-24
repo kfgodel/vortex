@@ -13,6 +13,7 @@
 package net.gaia.vortex.router.impl.moleculas.patas;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
@@ -24,8 +25,11 @@ import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.emisores.EmisorNulo;
+import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
+import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
+import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
@@ -36,19 +40,26 @@ import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.condiciones.EsConfirmacionDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsConfirmacionParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.EsPedidoDeIdRemoto;
+import net.gaia.vortex.router.impl.condiciones.EsPublicacionDeFiltros;
+import net.gaia.vortex.router.impl.condiciones.EsPublicacionParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.EsReconfirmacionDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsReconfirmacionParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.LeInteresaElMensaje;
+import net.gaia.vortex.router.impl.condiciones.NoEsMetaMensaje;
 import net.gaia.vortex.router.impl.condiciones.NoVinoPorEstaPata;
+import net.gaia.vortex.router.impl.ejecutos.CambiarFiltroDeEntrada;
+import net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
+import net.gaia.vortex.router.impl.messages.PublicacionDeFiltros;
 import net.gaia.vortex.router.impl.messages.bidi.PedidoDeIdRemoto;
 import net.gaia.vortex.router.impl.moleculas.memoria.MemoriaDePedidosDeId;
 import net.gaia.vortex.router.impl.transformaciones.ConvertirPedidoEnRespuestaDeId;
 import net.gaia.vortex.router.impl.transformaciones.ModificarIdLocalAlReceptor;
 import net.gaia.vortex.router.impl.transformaciones.RegistrarIdRemotoYEnviarConfirmacion;
 import net.gaia.vortex.router.impl.transformaciones.RegistrarIdRemotoYEnviarReconfirmacion;
+import net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,17 +102,33 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 
 	private GenerarIdEnMensaje generadorDeIds;
 
+	private AtomicBoolean habilitadaComoBidi;
+
 	/**
 	 * Asigna ID a los metamensajes que son generados en esta pata
 	 */
 	private NexoTransformador identificadorDeMetamensajes;
 
+	private SerializadorDeCondiciones serializador;
+
+	/**
+	 * Este receptor sólo sirve para que al ser invocado se ejecute el método indicado
+	 */
+	private final ReceptorSupport dispararEventoConexionBidi = new ReceptorSupport() {
+		@Override
+		public void recibir(final MensajeVortex mensaje) {
+			evento_nevaConexionBidireccional();
+		}
+	};
+
 	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
-			final TaskProcessor taskProcessor, final ParteDeCondiciones parteDeCondicion,
-			final ConversorDeMensajesVortex mapeador, final GenerarIdEnMensaje generadorDeIds) {
+			final TaskProcessor taskProcessor, final ConjuntoDeCondiciones conjuntoDeCondiciones,
+			final ConversorDeMensajesVortex mapeador, final GenerarIdEnMensaje generadorDeIds,
+			final SerializadorDeCondiciones serializador) {
 		final PataBidi pata = new PataBidi();
+		pata.serializador = serializador;
 		pata.mapeador = mapeador;
-		pata.filtroDeSalida = parteDeCondicion;
+		pata.habilitadaComoBidi = new AtomicBoolean(false);
 		pata.setIdLocal(proximoId.getAndIncrement());
 		pata.nodoLocal = nodoLocal;
 		pata.idRemoto = new AtomicLong();
@@ -110,7 +137,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		pata.memoriaDePedidosEnviados = MemoriaDePedidosDeId.create();
 		pata.identificadorDeMetamensajes = NexoTransformador.create(taskProcessor, generadorDeIds, nodoRemoto);
 		pata.initializeWith(taskProcessor);
-		pata.inicializarFiltros();
+		pata.inicializarFiltros(conjuntoDeCondiciones);
 		return pata;
 	}
 
@@ -120,6 +147,10 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	private void initializeWith(final TaskProcessor taskProcessor) {
 		// Creamos un selector para tomar un camino según el tipo de mensaje
 		final Selector selectorDeEntrada = SelectorConFiltros.create(taskProcessor);
+
+		// Al recibir un mensaje normal (no meta)
+		final Receptor procesoAlRecibirMensajeNormal = crearProcesoParaRecibirMensajesNormales(taskProcessor);
+		selectorDeEntrada.conectarCon(procesoAlRecibirMensajeNormal, NoEsMetaMensaje.create());
 
 		// Al recibir un pedido enviamos la respuesta identificando esta pata
 		final Receptor procesoAlRecibirPedidoDeId = crearProcesoParaRecibirPedidoDeIds(taskProcessor);
@@ -138,12 +169,33 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		final Receptor procesoAlRecibirReconfirmacionDeId = crearProcesoParaRecibirReconfirmacionDeIds(taskProcessor);
 		selectorDeEntrada.conectarCon(procesoAlRecibirReconfirmacionDeId, EsReconfirmacionDeIdRemoto.create());
 
-		// Al recibir un mensaje normal (no meta)
-		final Receptor procesoAlRecibirMensajeNormal = crearProcesoParaRecibirMensajesNormales(taskProcessor);
-		selectorDeEntrada.conectarCon(procesoAlRecibirMensajeNormal, EsReconfirmacionDeIdRemoto.create());
+		// Al recibir una publicación de filtros
+		final Receptor procesoAlRecibirPublicacionDeFiltros = crearProcesoParaRecibirPublicacionDeFiltros(taskProcessor);
+		selectorDeEntrada.conectarCon(procesoAlRecibirPublicacionDeFiltros, EsPublicacionDeFiltros.create());
 
 		final FlujoVortex flujo = FlujoInmutable.create(selectorDeEntrada, EmisorNulo.getInstancia());
 		initializeWith(flujo);
+	}
+
+	/**
+	 * Crea el componente vortex que realiza el proceso de esta pata al realizar un mensaje de
+	 * publicación de filtros
+	 * 
+	 * @param taskProcessor
+	 *            El procesador para crear los componentes
+	 * @return El comopnente creado como entrada
+	 */
+	private Receptor crearProcesoParaRecibirPublicacionDeFiltros(final TaskProcessor taskProcessor) {
+		// Primero descartamos las publicaciones que son para otras patas
+		final NexoFiltro descartadorDePublicacionesAjenas = NexoFiltro.create(taskProcessor,
+				EsPublicacionParaEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
+
+		// Actualizamos el filtro que tenemos de salida en esta pata
+		final CambiarFiltroDeEntrada cambiadorDeFiltro = CambiarFiltroDeEntrada.create(mapeador, serializador,
+				filtroDeSalida);
+		descartadorDePublicacionesAjenas.conectarCon(cambiadorDeFiltro);
+
+		return descartadorDePublicacionesAjenas;
 	}
 
 	/**
@@ -184,6 +236,11 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		final NexoFiltro descartadorDeReconfirmacionesAjenas = NexoFiltro.create(taskProcessor,
 				EsReconfirmacionParaEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
 
+		// Disparamos el evento de nueva conexión bidi
+		final NexoEjecutor disparadorDeEvento = NexoEjecutor.create(taskProcessor, dispararEventoConexionBidi,
+				ReceptorNulo.getInstancia());
+		descartadorDeReconfirmacionesAjenas.conectarCon(disparadorDeEvento);
+
 		return descartadorDeReconfirmacionesAjenas;
 	}
 
@@ -199,15 +256,31 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		final NexoFiltro descartadorDeConfirmacionesAjenas = NexoFiltro.create(taskProcessor,
 				EsConfirmacionParaEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
 
-		// disparamos el evento de nueva conexion
-
-		// Finalmente registramos id remoto y convertimos la respuesta en confirmación
+		// Registramos id remoto y convertimos la respuesta en confirmación
 		final NexoTransformador registradorDeId = NexoTransformador.create(taskProcessor,
 				RegistrarIdRemotoYEnviarReconfirmacion.create(getIdLocal(), idRemoto, mapeador),
 				identificadorDeMetamensajes);
 		descartadorDeConfirmacionesAjenas.conectarCon(registradorDeId);
 
+		// Antes de mandar el mensaje disparamos el evento de nueva conexion bidi creada
+		final NexoEjecutor disparadorDeNuevaConexion = NexoEjecutor.create(taskProcessor, dispararEventoConexionBidi,
+				identificadorDeMetamensajes);
+		registradorDeId.conectarCon(disparadorDeNuevaConexion);
+
 		return descartadorDeConfirmacionesAjenas;
+	}
+
+	/**
+	 * Invocado al completarse los pasos para la comunicación bidireccional de esta pata
+	 */
+	protected void evento_nevaConexionBidireccional() {
+		if (habilitadaComoBidi.compareAndSet(false, true)) {
+			// Ya estaba habilitada como bidi anteriormente
+			return;
+		}
+		LOG.debug("  En [{},{}] se estableció como conexion bidireccional",
+				new Object[] { this.getNodoLocal(), this.getIdLocal() });
+		publicarFiltroDeEntrada();
 	}
 
 	/**
@@ -249,11 +322,13 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 
 	/**
 	 * Establece el estado inicial de los filtros en esta pata
+	 * 
+	 * @param conjuntoDeCondiciones
 	 */
-	private void inicializarFiltros() {
+	private void inicializarFiltros(final ConjuntoDeCondiciones conjuntoDeCondiciones) {
 		// Inicialmente entra y sale todo lo que recibamos
-		this.filtroDeSalida.cambiarA(SiempreTrue.getInstancia());
-		this.filtroDeEntrada = SiempreTrue.getInstancia();
+		this.filtroDeSalida = conjuntoDeCondiciones.crearNuevaParte(SiempreTrue.getInstancia());
+		this.filtroDeEntrada = SiempreFalse.getInstancia();
 		this.resetearFiltroDeEntradaPublicado();
 	}
 
@@ -273,6 +348,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		this.nodoLocal = nodoLocal;
 	}
 
+	@Override
 	public Receptor getNodoRemoto() {
 		return nodoRemoto;
 	}
@@ -332,6 +408,66 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	@Override
 	public ParteDeCondiciones getParteDeCondicion() {
 		return this.filtroDeSalida;
+	}
+
+	/**
+	 * @see net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional#actualizarFiltroDeEntrada(net.gaia.vortex.core.api.condiciones.Condicion)
+	 */
+	@Override
+	public void actualizarFiltroDeEntrada(final Condicion nuevoFiltro) {
+		this.setFiltroDeEntrada(nuevoFiltro);
+		publicarFiltroDeEntrada();
+	}
+
+	public Condicion getFiltroDeEntrada() {
+		return filtroDeEntrada;
+	}
+
+	public void setFiltroDeEntrada(final Condicion filtroDeEntrada) {
+		this.filtroDeEntrada = filtroDeEntrada;
+	}
+
+	/**
+	 * Publica el filtro actual de entrada sólo si es distinto del publicado previamente
+	 */
+	private void publicarFiltroDeEntrada() {
+		final Condicion filtroAPublicar = this.getFiltroDeEntrada();
+		if (!habilitadaComoBidi.get()) {
+			LOG.debug("  En [{},{}] no se publica filtro {} porque la pata aun no es bidi",
+					new Object[] { this.getNodoLocal(), this.getIdLocal(), filtroAPublicar });
+			// El otro nodo no está preparado para recibir la publicacion
+			return;
+		}
+
+		final Long idRemotoDeEstaPata = getIdRemoto();
+		if (idRemotoDeEstaPata == null) {
+			LOG.debug("  En [{},{}] no se publica filtro {} porque no tenemos ID remoto",
+					new Object[] { this.getNodoLocal(), this.getIdLocal(), filtroAPublicar });
+			// Aún no tenemos un ID remoto con el cual publicar los filtros
+			return;
+		}
+		if (filtroAPublicar.equals(this.getFiltroDeEntradaPublicado())) {
+			LOG.debug("  En [{},{}] no se publica porque no hubo cambio de filtro de entrada: {}",
+					new Object[] { this.getNodoLocal(), this.getIdLocal(), filtroAPublicar });
+			return;
+		}
+		LOG.debug("  En [{},{}] se publica el cambio de filtro de entrada de {} a: {}",
+				new Object[] { this.getNodoLocal(), this.getIdLocal(), getFiltroDeEntradaPublicado(), filtroAPublicar });
+
+		setFiltroDeEntradaPublicado(filtroAPublicar);
+		final Map<String, Object> filtroSerializado = serializador.serializar(filtroAPublicar);
+		final PublicacionDeFiltros publicacion = PublicacionDeFiltros.create(filtroSerializado, idRemotoDeEstaPata);
+		final MensajeVortex mensajeDePublicacion = mapeador.convertirAVortex(publicacion);
+
+		identificadorDeMetamensajes.recibir(mensajeDePublicacion);
+	}
+
+	public Condicion getFiltroDeEntradaPublicado() {
+		return filtroDeEntradaPublicado;
+	}
+
+	public void setFiltroDeEntradaPublicado(final Condicion filtroDeEntradaPublicado) {
+		this.filtroDeEntradaPublicado = filtroDeEntradaPublicado;
 	}
 
 }

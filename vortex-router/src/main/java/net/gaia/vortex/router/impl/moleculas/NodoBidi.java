@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.router.impl.moleculas;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -39,6 +40,8 @@ import net.gaia.vortex.router.impl.listeners.IgnorarRuteos;
 import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidi;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
+import net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones;
+import net.gaia.vortex.sets.impl.serializacion.impl.SerializadorDeCondicionesImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +74,8 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 
 	private GenerarIdEnMensaje generadorDeIds;
 
+	private SerializadorDeCondiciones serializador;
+
 	public List<PataBidireccional> getPatas() {
 		return patas;
 	}
@@ -93,6 +98,7 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 		listenerDeRuteo = new AtomicReference<ListenerDeRuteo>(IgnorarRuteos.getInstancia());
 		conjuntoDeCondiciones = ConjuntoSincronizado.create(this);
 		mapeador = ConversorDefaultDeMensajes.create();
+		serializador = SerializadorDeCondicionesImpl.create();
 	}
 
 	/**
@@ -109,9 +115,8 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 					+ "] por segunda vez");
 		}
 
-		final ParteDeCondiciones parteDeCondicion = conjuntoDeCondiciones.crearNuevaParte();
-		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), parteDeCondicion, mapeador,
-				generadorDeIds);
+		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), conjuntoDeCondiciones, mapeador,
+				generadorDeIds, serializador);
 		getPatas().add(nuevaPata);
 
 		// Agregamos la pata al conjunto que puede recibir mensajes
@@ -196,7 +201,59 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 	@Override
 	public void onCambioDeCondicionEn(final ConjuntoDeCondiciones conjunto, final Condicion nuevaCondicion) {
 		final ListenerDeCambiosDeFiltro listenerActual = listenerDeFiltros.get();
-		listenerActual.onCambioDeFiltros(this, nuevaCondicion);
+		try {
+			listenerActual.onCambioDeFiltros(this, nuevaCondicion);
+		} catch (final Exception e) {
+			LOG.error("Se produjo un error en el listener[" + listenerActual + "] de cambios de filtros de este nodo["
+					+ this + "]", e);
+		}
 	}
+
+	/**
+	 * Devuelve todos los nodos destinos a los que este nodo esta conectado
+	 * 
+	 * @return La lista de destinos conectados
+	 */
+	protected List<Receptor> getDestinos() {
+		final List<PataBidireccional> allPatas = getPatas();
+		final ArrayList<Receptor> destinos = new ArrayList<Receptor>(allPatas.size());
+		for (final PataBidireccional pata : allPatas) {
+			final Receptor destino = pata.getNodoRemoto();
+			destinos.add(destino);
+		}
+		return destinos;
+	}
+
+	/**
+	 * Invocado cuando cambian los filtros internos del nodo, y por lo tanto se debe notificar a los
+	 * nodos remotos
+	 */
+	protected void evento_cambioEstadoFiltrosLocales() {
+		final List<PataBidireccional> allPatas = getPatas();
+		for (final PataBidireccional pataConectora : allPatas) {
+			final Condicion nuevoFiltro = calcularFiltroDeEntradaPara(pataConectora);
+			pataConectora.actualizarFiltroDeEntrada(nuevoFiltro);
+		}
+	}
+
+	public ConjuntoDeCondiciones getConjuntoDeCondiciones() {
+		return conjuntoDeCondiciones;
+	}
+
+	public void setConjuntoDeCondiciones(final ConjuntoDeCondiciones conjuntoDeCondiciones) {
+		this.conjuntoDeCondiciones = conjuntoDeCondiciones;
+	}
+
+	/**
+	 * Se calcula el filtro que correspondería a la pata pasada de acuerdo al tipo de esta
+	 * instancia.<br>
+	 * En el caso del portal el filtro es fijo. En el caso del router es la suma de los filtros de
+	 * otras patas
+	 * 
+	 * @param pataConectora
+	 *            La pata para la que se pide el calculo
+	 * @return El filtro correspondiente a la pata
+	 */
+	protected abstract Condicion calcularFiltroDeEntradaPara(PataBidireccional pataConectora);
 
 }

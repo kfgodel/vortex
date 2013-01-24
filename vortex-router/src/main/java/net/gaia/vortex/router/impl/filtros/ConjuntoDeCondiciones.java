@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.router.impl.filtros;
 
+import net.gaia.vortex.core.api.condiciones.Condicion;
+
 /**
  * Esta interfaz representa un conjunto de condiciones que es modificable por partes (cada condición
  * por separado), pero que a la vez puede verse como una sola gran condición.<br>
@@ -27,9 +29,12 @@ public interface ConjuntoDeCondiciones {
 	 * Crea una nueva parte de este conjunto de condiciones que permitirá modificar sólo una
 	 * condición, posiblemente alterando el estado global de este con
 	 * 
+	 * @param condicionInicial
+	 *            Condición con la que se creará la parte
+	 * 
 	 * @return La parte creada
 	 */
-	ParteDeCondiciones crearNuevaParte();
+	ParteDeCondiciones crearNuevaParte(Condicion condicionInicial);
 
 	/**
 	 * Elimina una de las partes de este conjunto, posiblemente alterando el estado global de este
@@ -39,5 +44,16 @@ public interface ConjuntoDeCondiciones {
 	 *            La parte a eliminar
 	 */
 	void eliminarParte(ParteDeCondiciones parteDeCondicion);
+
+	/**
+	 * Devuelve la condicion que representa al conjunto menos la parte indicada
+	 * 
+	 * @param parteExceptuada
+	 *            La parte que será exluida de la condicion global
+	 * 
+	 * @return La condicion que representa al resto de las partes. Si no hay otras partes se
+	 *         devolverá la condicion FALSE, que representa el conjunto vacio
+	 */
+	Condicion getCondicionDelConjuntoMenos(ParteDeCondiciones parteExceptuada);
 
 }

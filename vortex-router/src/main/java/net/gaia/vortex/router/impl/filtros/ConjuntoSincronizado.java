@@ -53,8 +53,8 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 	 * @see net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones#crearNuevaParte()
 	 */
 	@Override
-	public ParteDeCondiciones crearNuevaParte() {
-		final ParteSincronizada parte = ParteSincronizada.create(this, coordinator);
+	public ParteDeCondiciones crearNuevaParte(final Condicion condicionInicial) {
+		final ParteSincronizada parte = ParteSincronizada.create(this, coordinator, condicionInicial);
 		coordinator.doWriteOperation(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
@@ -98,6 +98,18 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 			final Condicion condicionParcial = parte.getCondicion();
 			condiciones.add(condicionParcial);
 		}
+		return unificarCondiciones(condiciones);
+	}
+
+	/**
+	 * Genera una condicion unificada con todas las condiciones pasadas.<br>
+	 * La implementación actual hace un or de todo
+	 * 
+	 * @param condiciones
+	 *            Las condiciones a evaluar
+	 * @return La condición que representa a todas las pasadas
+	 */
+	public static Condicion unificarCondiciones(final List<Condicion> condiciones) {
 		if (condiciones.isEmpty()) {
 			// No hay condiciones, el mensaje no debería pasar?
 			return SiempreFalse.getInstancia();
@@ -134,5 +146,14 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 	@Override
 	public void onCambioDeCondicion(final Condicion nuevaCondicion, final ParteDeCondiciones parte) {
 		onCambioEnElConjunto();
+	}
+
+	/**
+	 * @see net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones#getCondicionDelConjuntoMenos(net.gaia.vortex.router.impl.filtros.ParteDeCondiciones)
+	 */
+	@Override
+	public Condicion getCondicionDelConjuntoMenos(final ParteDeCondiciones parteExceptuada) {
+		final Condicion condicionDelResto = unificarCondicionesExceptuandoA(parteExceptuada);
+		return condicionDelResto;
 	}
 }
