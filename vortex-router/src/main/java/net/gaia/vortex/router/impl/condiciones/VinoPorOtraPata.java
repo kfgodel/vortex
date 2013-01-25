@@ -12,10 +12,16 @@
  */
 package net.gaia.vortex.router.impl.condiciones;
 
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
 import net.gaia.vortex.router.impl.messages.MetadataDeMensajes;
 import net.gaia.vortex.sets.impl.condiciones.Negacion;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -26,6 +32,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class VinoPorOtraPata extends CondicionTipadaSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(VinoPorOtraPata.class);
 
 	private Long idLocalDePata;
 	public static final String idLocalDePata_FIELD = "idLocalDePata";
@@ -36,6 +43,18 @@ public class VinoPorOtraPata extends CondicionTipadaSupport {
 		condicion.initializeWith(Negacion.de(ValorEsperadoEn.elAtributo(MetadataDeMensajes.idLocalAlReceptor_FIELD,
 				idLocalDePata)));
 		return condicion;
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 */
+	@Override
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
+		final ResultadoDeCondicion resultado = super.esCumplidaPor(mensaje);
+		if (ResultadoDeCondicion.FALSE.equals(resultado)) {
+			LOG.debug("La pata[{}] no enviará el mensaje[{}] porque proviene de ahí", idLocalDePata, mensaje);
+		}
+		return resultado;
 	}
 
 	/**

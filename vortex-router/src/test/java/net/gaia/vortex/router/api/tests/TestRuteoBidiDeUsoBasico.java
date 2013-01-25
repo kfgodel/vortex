@@ -297,4 +297,69 @@ public class TestRuteoBidiDeUsoBasico {
 		}
 	}
 
+	@Test
+	public void elMensajeNoDeberiaRebotarAlEmisor() throws InterruptedException {
+
+		// Definimos el listener para saber los pasos de ruteo del router
+		final ListenerDeRuteoEnPasos listenerDeRuteo = ListenerDeRuteoEnPasos.create();
+		routerCentral.setListenerDeRuteos(listenerDeRuteo);
+
+		// Definimos al receptor y emisor como interesados en lo mismo
+		final String valorEsperado = "hola";
+		final HandlerEncolador<MensajeDeRuteoParaTest> handlerEmisor = new HandlerEncolador<MensajeDeRuteoParaTest>() {
+			@Override
+			public Condicion getCondicionSuficiente() {
+				return ValorEsperadoEn.create(valorEsperado,
+						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
+			}
+		};
+		emisor.recibirCon(handlerEmisor);
+
+		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptorPositivo = new HandlerEncolador<MensajeDeRuteoParaTest>() {
+			@Override
+			public Condicion getCondicionSuficiente() {
+				return ValorEsperadoEn.create(valorEsperado,
+						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
+			}
+		};
+		receptorPositivo1.recibirCon(handlerReceptorPositivo);
+
+		// Interconectamos las partes
+		emisor.conectarCon(routerCentral);
+		routerCentral.conectarCon(emisor);
+		receptorPositivo1.conectarCon(routerCentral);
+		routerCentral.conectarCon(receptorPositivo1);
+
+		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
+		Thread.sleep(1000);
+
+		// Mandamos un mensaje desde el emisor que le interesa a ambos
+		final MensajeDeRuteoParaTest mensajeEnviado = new MensajeDeRuteoParaTest("hola");
+		emisor.enviar(mensajeEnviado);
+
+		// Verificamos que el router ruteo el mensaje al receptor
+		listenerDeRuteo.esperarRuteo(routerCentral, receptorPositivo1, TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Y que NO lo ruteo al emisor aunque lo tiene como interesado
+		try {
+			listenerDeRuteo.esperarRuteo(routerCentral, emisor, TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("No debería existir el ruteo hacia atrás");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperabamos
+		}
+
+		// Verificamos que haya llegado al receptor correcto
+		final Object mensajeRecibidoPor1 = handlerReceptorPositivo.esperarPorMensaje(TimeMagnitude.of(1,
+				TimeUnit.SECONDS));
+		Assert.assertEquals("El primer receptor debería haber recibido el mensaje", mensajeEnviado, mensajeRecibidoPor1);
+
+		// Verificamos que el emisor no recibió el mensaje
+		try {
+			handlerEmisor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		} catch (final UnsuccessfulWaitException e) {
+			// Es la excepción que esperabamos
+		}
+
+	}
+
 }

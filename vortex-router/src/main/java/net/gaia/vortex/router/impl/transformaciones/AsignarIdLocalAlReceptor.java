@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.router.impl.transformaciones;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
@@ -27,7 +29,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class AsignarIdLocalAlReceptor implements Transformacion {
 
-	private Long idLocalAlReceptor;
+	private AtomicReference<Long> idLocalAlReceptor;
 	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";
 
 	/**
@@ -39,11 +41,12 @@ public class AsignarIdLocalAlReceptor implements Transformacion {
 		final MensajeVortex copiaModificable = ClonadorDeMensajes.create(mensaje).clonar();
 
 		final ContenidoVortex contenidoModificable = copiaModificable.getContenido();
-		contenidoModificable.put(MetadataDeMensajes.idLocalAlReceptor_FIELD, idLocalAlReceptor);
+		Long valorActualDelId = idLocalAlReceptor.get();
+		contenidoModificable.put(MetadataDeMensajes.idLocalAlReceptor_FIELD, valorActualDelId);
 		return copiaModificable;
 	}
 
-	public static AsignarIdLocalAlReceptor create(final Long idDePataRemota) {
+	public static AsignarIdLocalAlReceptor create(final AtomicReference<Long> idDePataRemota) {
 		final AsignarIdLocalAlReceptor transformacion = new AsignarIdLocalAlReceptor();
 		transformacion.idLocalAlReceptor = idDePataRemota;
 		return transformacion;

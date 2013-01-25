@@ -226,7 +226,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 
 		// Le registramos nuestro ID de pata para evitar rebotes
 		final NexoTransformador asignadoDeIdRemoto = NexoTransformador.create(taskProcessor,
-				AsignarIdLocalAlReceptor.create(getIdLocal()), ReceptorNulo.getInstancia());
+				AsignarIdLocalAlReceptor.create(idRemoto), ReceptorNulo.getInstancia());
 		descartarMensajesQueNoLeInteresan.conectarCon(asignadoDeIdRemoto);
 
 		// Registramos el ruteo que estamos haciendo del mensaje
