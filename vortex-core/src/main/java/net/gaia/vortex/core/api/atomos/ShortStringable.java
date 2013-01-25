@@ -1,5 +1,5 @@
 /**
- * 06/07/2012 00:10:42 Copyright (C) 2011 Darío L. García
+ * 25/01/2013 14:14:32 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -13,20 +13,18 @@
 package net.gaia.vortex.core.api.atomos;
 
 /**
- * Esta interfaz define los métodos que tiene cualquier componente vortex.<br>
- * Las subclases de esta interfaz representan componentes vortex que pueden usarse para armar una
- * red de comunicación entre módulos, aplicaciones y sistemas
+ * Esta interfaz es aplicable a los objetos que tienen una versión corta de su método toString()
  * 
  * @author D. García
  */
-public interface ComponenteVortex extends ShortStringable {
+public interface ShortStringable {
 
 	/**
-	 * Devuelve un número asignado a esta instancia para identificarlo con respecto a otros
-	 * componentes en memoria
+	 * Devuelve una cadena corta con la descripción de esta instancia para ser usada de referencia
+	 * en otra
 	 * 
-	 * @return El número que permite discriminar esta instancia de otras
+	 * @return La cadena que permite identificar este componente
 	 */
-	public long getNumeroDeInstancia();
+	public abstract String toShortString();
 
 }

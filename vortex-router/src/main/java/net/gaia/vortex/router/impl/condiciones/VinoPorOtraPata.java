@@ -16,6 +16,7 @@ import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
 import net.gaia.vortex.router.impl.messages.MetadataDeMensajes;
+import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 import net.gaia.vortex.sets.impl.condiciones.Negacion;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 
@@ -34,14 +35,14 @@ import ar.com.dgarcia.lang.strings.ToString;
 public class VinoPorOtraPata extends CondicionTipadaSupport {
 	private static final Logger LOG = LoggerFactory.getLogger(VinoPorOtraPata.class);
 
-	private Long idLocalDePata;
-	public static final String idLocalDePata_FIELD = "idLocalDePata";
+	private PataBidireccional pata;
+	public static final String pata_FIELD = "pata";
 
-	public static VinoPorOtraPata create(final Long idLocalDePata) {
+	public static VinoPorOtraPata create(final PataBidireccional pata) {
 		final VinoPorOtraPata condicion = new VinoPorOtraPata();
-		condicion.idLocalDePata = idLocalDePata;
+		condicion.pata = pata;
 		condicion.initializeWith(Negacion.de(ValorEsperadoEn.elAtributo(MetadataDeMensajes.idLocalAlReceptor_FIELD,
-				idLocalDePata)));
+				pata.getIdLocal())));
 		return condicion;
 	}
 
@@ -52,7 +53,8 @@ public class VinoPorOtraPata extends CondicionTipadaSupport {
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final ResultadoDeCondicion resultado = super.esCumplidaPor(mensaje);
 		if (ResultadoDeCondicion.FALSE.equals(resultado)) {
-			LOG.debug("La pata[{}] no enviará el mensaje[{}] porque proviene de ahí", idLocalDePata, mensaje);
+			LOG.debug("  En [{}] evitando rebote del mensaje[{}] porque proviene de ahí", pata.toShortString(),
+					mensaje.toShortString());
 		}
 		return resultado;
 	}
@@ -62,7 +64,7 @@ public class VinoPorOtraPata extends CondicionTipadaSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idLocalDePata_FIELD, idLocalDePata).toString();
+		return ToString.de(this).con(pata_FIELD, pata).toString();
 	}
 
 }

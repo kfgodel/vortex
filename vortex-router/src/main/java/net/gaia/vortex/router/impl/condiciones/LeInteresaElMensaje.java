@@ -19,6 +19,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
+import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,8 @@ import ar.com.dgarcia.lang.strings.ToString;
 public class LeInteresaElMensaje implements Condicion {
 	private static final Logger LOG = LoggerFactory.getLogger(LeInteresaElMensaje.class);
 
+	private PataBidireccional pata;
+
 	private ParteDeCondiciones filtroDeSalida;
 	public static final String filtroDeSalida_FIELD = "filtroDeSalida";
 
@@ -45,8 +48,9 @@ public class LeInteresaElMensaje implements Condicion {
 		final Condicion condicionActual = filtroDeSalida.getCondicion();
 		final ResultadoDeCondicion resultado = condicionActual.esCumplidaPor(mensaje);
 		if (ResultadoDeCondicion.FALSE.equals(resultado)) {
-			LOG.debug("El mensaje[{}] será descartado porque no interesa al destino segun condicion[{}]", mensaje,
-					condicionActual);
+			LOG.debug("El mensaje[{}] es descartado en[{}] porque no interesa al destino[{}] segun condicion[{}]",
+					new Object[] { mensaje.toShortString(), pata.toShortString(), pata.getNodoRemoto().toShortString(),
+							condicionActual });
 		}
 		return resultado;
 	}
@@ -67,9 +71,10 @@ public class LeInteresaElMensaje implements Condicion {
 		return ToString.de(this).con(filtroDeSalida_FIELD, filtroDeSalida).toString();
 	}
 
-	public static LeInteresaElMensaje create(final ParteDeCondiciones filtroDeSalida) {
+	public static LeInteresaElMensaje create(final ParteDeCondiciones filtroDeSalida, final PataBidireccional pata) {
 		final LeInteresaElMensaje condicion = new LeInteresaElMensaje();
 		condicion.filtroDeSalida = filtroDeSalida;
+		condicion.pata = pata;
 		return condicion;
 	}
 

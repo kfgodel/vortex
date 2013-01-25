@@ -13,10 +13,11 @@
 package net.gaia.vortex.router.impl.moleculas.comport;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
-import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -37,7 +38,7 @@ public class ComportamientoRouter implements ComportamientoBidi {
 	@Override
 	public FlujoVortex crearFlujoParaMensajesRecibidos(final TaskProcessor processor) {
 		// Todo lo que entra en el router va a parar a las patas
-		final MultiplexorParalelo multiplexorDePatas = MultiplexorParalelo.create(processor);
+		final Multiplexor multiplexorDePatas = MultiplexorDePatas.create(processor);
 
 		// Y antes que nada filtramos los mensajes duplicados que ya recibimos
 		final NexoSinDuplicados filtroDeDuplicados = NexoSinDuplicados.create(processor, multiplexorDePatas);

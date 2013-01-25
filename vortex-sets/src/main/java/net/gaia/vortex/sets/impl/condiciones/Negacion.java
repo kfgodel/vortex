@@ -18,6 +18,8 @@ import java.util.List;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -25,7 +27,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class Negacion implements Condicion {
+public class Negacion implements Condicion, Simplificable {
 
 	private Condicion condicionNegada;
 	public static final String condicionNegada_FIELD = "condicionNegada";
@@ -101,4 +103,31 @@ public class Negacion implements Condicion {
 		return this.condicionNegada.hashCode();
 	}
 
+	/**
+	 * @see net.gaia.vortex.sets.impl.condiciones.Simplificable#simplificar()
+	 */
+	@Override
+	public Condicion simplificar() {
+		boolean huboSimplificacion = false;
+		Condicion subCondicion = condicionNegada;
+		if (subCondicion instanceof Simplificable) {
+			final Condicion simplificada = ((Simplificable) condicionNegada).simplificar();
+			if (simplificada != subCondicion) {
+				huboSimplificacion = true;
+				subCondicion = simplificada;
+			}
+		}
+		if (subCondicion instanceof SiempreFalse) {
+			// !false simplificado es true
+			return SiempreTrue.getInstancia();
+		} else if (subCondicion instanceof SiempreTrue) {
+			// !true simplificado es false
+			return SiempreFalse.getInstancia();
+		}
+		if (!huboSimplificacion) {
+			return this;
+		}
+		Negacion negacionSimplificada = Negacion.de(subCondicion);
+		return negacionSimplificada;
+	}
 }

@@ -76,4 +76,12 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 		final int orden = this.getValorActual().compareTo(o.getValorActual());
 		return orden;
 	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.atomos.ShortStringable#toShortString()
+	 */
+	@Override
+	public String toShortString() {
+		return getValorActual();
+	}
 }

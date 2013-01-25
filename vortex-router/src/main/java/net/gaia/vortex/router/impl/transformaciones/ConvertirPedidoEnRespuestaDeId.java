@@ -19,6 +19,10 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.router.impl.messages.bidi.RespuestaDeIdRemoto;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -29,6 +33,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class ConvertirPedidoEnRespuestaDeId implements Transformacion {
+	private static final Logger LOG = LoggerFactory.getLogger(ConvertirPedidoEnRespuestaDeId.class);
 
 	private Long idLocalDePata;
 	public static final String idLocalDePata_FIELD = "idLocalDePata";
@@ -49,8 +54,9 @@ public class ConvertirPedidoEnRespuestaDeId implements Transformacion {
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> idDePedidoOriginal = (Map<String, Object>) valorDelId;
 		final RespuestaDeIdRemoto respuesta = RespuestaDeIdRemoto.create(idDePedidoOriginal, idLocalDePata);
-		final MensajeVortex mensajeEnviable = mapeador.convertirAVortex(respuesta);
-		return mensajeEnviable;
+		final MensajeVortex respuestaEnviable = mapeador.convertirAVortex(respuesta);
+		LOG.debug("Enviando respuesta[{}] al pedido[{}] recibido", respuesta, pedido.toShortString());
+		return respuestaEnviable;
 	}
 
 	public static ConvertirPedidoEnRespuestaDeId create(final Long idDePata, final ConversorDeMensajesVortex mapeador) {

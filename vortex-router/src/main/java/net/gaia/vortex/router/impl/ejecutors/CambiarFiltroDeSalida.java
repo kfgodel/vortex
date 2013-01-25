@@ -21,6 +21,10 @@ import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.messages.PublicacionDeFiltros;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -31,6 +35,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class CambiarFiltroDeSalida extends ReceptorSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(CambiarFiltroDeSalida.class);
 
 	private ConversorDeMensajesVortex conversor;
 	private SerializadorDeCondiciones serializador;
@@ -47,6 +52,8 @@ public class CambiarFiltroDeSalida extends ReceptorSupport {
 			throw new UnhandledConditionException("Recibimos un filtro nulo como publicación en el mensaje: " + mensaje);
 		}
 		final Condicion nuevaCondicion = serializador.deserializar(nuevoFiltro);
+		LOG.debug("Cambiando filtro remoto a[{}] segun publicacion recibida[{}]", nuevaCondicion,
+				mensaje.toShortString());
 		filtroDeLaPata.cambiarA(nuevaCondicion);
 	}
 

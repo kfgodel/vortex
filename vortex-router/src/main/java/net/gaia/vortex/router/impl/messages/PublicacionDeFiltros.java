@@ -15,6 +15,7 @@ package net.gaia.vortex.router.impl.messages;
 import java.util.Map;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.router.impl.messages.meta.MensajeConIdDePataReceptora;
 import net.gaia.vortex.router.impl.messages.meta.MetamensajeSupport;
 import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
 import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
@@ -26,12 +27,11 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class PublicacionDeFiltros extends MetamensajeSupport {
+public class PublicacionDeFiltros extends MetamensajeSupport implements MensajeConIdDePataReceptora {
 
 	public static final String NOMBRE_DE_TIPO = "Vortex.Filtro.Publicacion";
 
 	private Long idLocalAlReceptor;
-	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";
 
 	private Map<String, Object> filtro;
 	public static final String filtro_FIELD = "filtro";
@@ -55,6 +55,7 @@ public class PublicacionDeFiltros extends MetamensajeSupport {
 		return publicacion;
 	}
 
+	@Override
 	public Long getIdLocalAlReceptor() {
 		return idLocalAlReceptor;
 	}

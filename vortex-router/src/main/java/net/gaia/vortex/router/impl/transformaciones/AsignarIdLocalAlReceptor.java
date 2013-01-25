@@ -19,6 +19,10 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.impl.mensaje.copia.ClonadorDeMensajes;
 import net.gaia.vortex.router.impl.messages.MetadataDeMensajes;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -28,6 +32,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class AsignarIdLocalAlReceptor implements Transformacion {
+	private static final Logger LOG = LoggerFactory.getLogger(AsignarIdLocalAlReceptor.class);
 
 	private AtomicReference<Long> idLocalAlReceptor;
 	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";
@@ -41,8 +46,11 @@ public class AsignarIdLocalAlReceptor implements Transformacion {
 		final MensajeVortex copiaModificable = ClonadorDeMensajes.create(mensaje).clonar();
 
 		final ContenidoVortex contenidoModificable = copiaModificable.getContenido();
-		Long valorActualDelId = idLocalAlReceptor.get();
+		final Object valorAnterior = contenidoModificable.get(MetadataDeMensajes.idLocalAlReceptor_FIELD);
+		final Long valorActualDelId = idLocalAlReceptor.get();
 		contenidoModificable.put(MetadataDeMensajes.idLocalAlReceptor_FIELD, valorActualDelId);
+		LOG.debug("  Actualizando id de receptor desde[{}] a [{}] en mensaje[{}] antes de ruteo a destino",
+				new Object[] { valorAnterior, valorActualDelId, mensaje.toShortString() });
 		return copiaModificable;
 	}
 

@@ -17,11 +17,11 @@ import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcador;
-import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import net.gaia.vortex.router.impl.condiciones.EsMetaMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -46,7 +46,7 @@ public class ComportamientoPortal implements ComportamientoBidi {
 	@Override
 	public FlujoVortex crearFlujoParaMensajesRecibidos(final TaskProcessor processor) {
 		// Los metamensajes se los mandamos directo a las patas
-		final Multiplexor multiplexorDePatas = MultiplexorParalelo.create(processor);
+		final Multiplexor multiplexorDePatas = MultiplexorDePatas.create(processor);
 
 		// El portal interno recibe los mensaje normales, y envía a las patas
 		portalInterno = PortalMapeador.createForOutputWith(processor, multiplexorDePatas);

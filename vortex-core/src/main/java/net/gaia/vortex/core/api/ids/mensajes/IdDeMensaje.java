@@ -14,6 +14,7 @@ package net.gaia.vortex.core.api.ids.mensajes;
 
 import java.util.Map;
 
+import net.gaia.vortex.core.api.atomos.ShortStringable;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 
 /**
@@ -25,7 +26,7 @@ import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
  * 
  * @author D. García
  */
-public interface IdDeMensaje extends Comparable<IdDeMensaje> {
+public interface IdDeMensaje extends Comparable<IdDeMensaje>, ShortStringable {
 
 	/**
 	 * Nombre del atributo que corresponde al identificador del componente emisor

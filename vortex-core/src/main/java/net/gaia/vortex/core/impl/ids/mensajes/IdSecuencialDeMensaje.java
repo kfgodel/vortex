@@ -179,4 +179,16 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 		final IdDeMensaje idGenerado = IdSecuencialDeMensaje.create(idDelEmisor, numeroDeSecuencia.longValue());
 		return idGenerado;
 	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.atomos.ShortStringable#toShortString()
+	 */
+	@Override
+	public String toShortString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append(numeroDeSecuencia);
+		builder.append(":");
+		builder.append(idDelEmisor.toShortString());
+		return builder.toString();
+	}
 }

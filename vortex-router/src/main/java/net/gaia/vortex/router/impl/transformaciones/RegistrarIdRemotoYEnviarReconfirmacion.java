@@ -19,6 +19,10 @@ import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.router.impl.messages.bidi.ConfirmacionDeIdRemoto;
 import net.gaia.vortex.router.impl.messages.bidi.ReconfirmacionDeIdRemoto;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -28,6 +32,8 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class RegistrarIdRemotoYEnviarReconfirmacion implements Transformacion {
+	private static final Logger LOG = LoggerFactory.getLogger(RegistrarIdRemotoYEnviarReconfirmacion.class);
+
 	private AtomicReference<Long> idDePataRemota;
 	public static final String idDePataRemota_FIELD = "idDePataRemota";
 
@@ -40,14 +46,16 @@ public class RegistrarIdRemotoYEnviarReconfirmacion implements Transformacion {
 	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public MensajeVortex transformar(final MensajeVortex mensajeDeRespuesta) {
-		final ConfirmacionDeIdRemoto confirmacion = mapeador.convertirDesdeVortex(mensajeDeRespuesta,
+	public MensajeVortex transformar(final MensajeVortex mensajeDeconfirmacion) {
+		final ConfirmacionDeIdRemoto confirmacion = mapeador.convertirDesdeVortex(mensajeDeconfirmacion,
 				ConfirmacionDeIdRemoto.class);
 		final Long idRemoto = confirmacion.getIdLocalAlEmisor();
 		idDePataRemota.set(idRemoto);
 
 		final ReconfirmacionDeIdRemoto reconfirmacion = ReconfirmacionDeIdRemoto.create(idRemoto, idLocalDePata);
 		final MensajeVortex mensajeEnviable = mapeador.convertirAVortex(reconfirmacion);
+		LOG.debug("Enviando reconfirmacion[{}] para la confirmacion[{}] recibida", reconfirmacion,
+				mensajeDeconfirmacion.toShortString());
 		return mensajeEnviable;
 	}
 

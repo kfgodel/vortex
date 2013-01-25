@@ -14,12 +14,16 @@ package net.gaia.vortex.sets.impl.condiciones;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -28,7 +32,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class OrCompuesto implements Condicion {
+public class OrCompuesto implements Condicion, Simplificable {
 
 	private List<Condicion> condiciones;
 	public static final String condiciones_FIELD = "condiciones";
@@ -132,5 +136,56 @@ public class OrCompuesto implements Condicion {
 	@Override
 	public int hashCode() {
 		return this.condiciones.hashCode();
+	}
+
+	/**
+	 * @see net.gaia.vortex.sets.impl.condiciones.Simplificable#simplificar()
+	 */
+	@Override
+	public Condicion simplificar() {
+		boolean huboAlMenosUnaSimplificacion = false;
+
+		final List<Condicion> condicionesAnteriores = getCondiciones();
+		// Metemos en un set para descartar las condiciones iguales
+		final Set<Condicion> condicionesSimplificadas = new LinkedHashSet<Condicion>(condicionesAnteriores.size());
+
+		for (final Condicion condicion : condicionesAnteriores) {
+			Condicion condicionActual = condicion;
+
+			if (condicionActual instanceof Simplificable) {
+				// Intentamos simplificarla
+				final Condicion simplificada = ((Simplificable) condicionActual).simplificar();
+				if (simplificada != condicionActual) {
+					huboAlMenosUnaSimplificacion = true;
+					condicionActual = simplificada;
+				}
+			}
+			if (condicionActual instanceof SiempreTrue) {
+				// Caso de corte para el OR. Si alguna es true, hace true a todo el OR
+				return condicionActual;
+			}
+			if (condicionActual instanceof SiempreFalse) {
+				// El false es redundante en un OR (A or false = A), lo omitimos
+				huboAlMenosUnaSimplificacion = true;
+				continue;
+			}
+			condicionesSimplificadas.add(condicionActual);
+		}
+		if (condicionesSimplificadas.isEmpty()) {
+			// Eran todas false
+			return SiempreFalse.getInstancia();
+		}
+		if (condicionesSimplificadas.size() == 1) {
+			// Si es una condicion, no hace falta el OR
+			final Iterator<Condicion> iterator = condicionesSimplificadas.iterator();
+			iterator.hasNext();
+			final Condicion unicaCondicion = iterator.next();
+			return unicaCondicion;
+		}
+		if (!huboAlMenosUnaSimplificacion) {
+			return this;
+		}
+		final OrCompuesto orSimplificada = OrCompuesto.create(new ArrayList<Condicion>(condicionesSimplificadas));
+		return orSimplificada;
 	}
 }

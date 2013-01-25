@@ -26,6 +26,10 @@ import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.impl.filtros.ConjuntoSincronizado;
 import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoPortal;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -35,6 +39,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class PortalBidi extends NodoBidi implements PortalBidireccional {
+	private static final Logger LOG = LoggerFactory.getLogger(PortalBidi.class);
 
 	private Portal portalInterno;
 	private List<Condicion> condicionesDelPortal;
@@ -68,6 +73,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 		// Le pasamos el handler al portal real
 		portalInterno.recibirCon(handlerDeMensajes);
 
+		LOG.debug(" En [{}] se modificó el estado de los filtros locales: {}", this.toShortString(), getFiltroLocal());
 		// Notificamos del cambio interno
 		evento_cambioEstadoFiltrosLocales();
 	}
@@ -105,8 +111,17 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	 */
 	@Override
 	protected Condicion calcularFiltroDeEntradaPara(final PataBidireccional pataConectora) {
-		final Condicion filtroDeEntradaParaEstePortal = ConjuntoSincronizado.unificarCondiciones(condicionesDelPortal);
+		final Condicion filtroDeEntradaParaEstePortal = getFiltroLocal();
 		return filtroDeEntradaParaEstePortal;
+	}
+
+	/**
+	 * Devuelve el filtro unificado para todas las condiciones indicadas por el usuario
+	 * 
+	 * @return La condición global
+	 */
+	private Condicion getFiltroLocal() {
+		return ConjuntoSincronizado.unificarCondiciones(condicionesDelPortal);
 	}
 
 	/**

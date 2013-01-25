@@ -19,6 +19,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
+import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,17 +38,18 @@ public class RegistrarRuteo extends ReceptorSupport {
 	private AtomicReference<ListenerDeRuteo> listenerDeRuteos;
 	public static final String listenerDeRuteos_FIELD = "listenerDeRuteos";
 
-	private NodoBidireccional nodoOrigen;
-	public static final String nodoOrigen_FIELD = "nodoOrigen";
-
-	private Receptor destino;
-	public static final String destino_FIELD = "destino";
+	private PataBidireccional pataRuteadora;
+	public static final String pataRuteadora_FIELD = "pataRuteadora";
 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
+		final NodoBidireccional nodoOrigen = pataRuteadora.getNodoLocal();
+		final Receptor destino = pataRuteadora.getNodoRemoto();
+		LOG.debug("  Ruteando por[{}] mensaje[{}] a[{}] desde[{}]", new Object[] { pataRuteadora.toShortString(),
+				mensaje.toShortString(), destino.toShortString(), nodoOrigen.toShortString() });
 		final ListenerDeRuteo listenerActual = listenerDeRuteos.get();
 		try {
 			listenerActual.onMensajeRuteado(nodoOrigen, mensaje, destino);
@@ -57,11 +59,10 @@ public class RegistrarRuteo extends ReceptorSupport {
 	}
 
 	public static RegistrarRuteo create(final AtomicReference<ListenerDeRuteo> listenerDeRuteo,
-			final NodoBidireccional nodoOrigen, final Receptor destino) {
+			final PataBidireccional pata) {
 		final RegistrarRuteo registro = new RegistrarRuteo();
-		registro.destino = destino;
 		registro.listenerDeRuteos = listenerDeRuteo;
-		registro.nodoOrigen = nodoOrigen;
+		registro.pataRuteadora = pata;
 		return registro;
 	}
 
@@ -70,8 +71,7 @@ public class RegistrarRuteo extends ReceptorSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(listenerDeRuteos_FIELD, listenerDeRuteos)
-				.con(nodoOrigen_FIELD, nodoOrigen.toShortString()).con(destino_FIELD, destino.toShortString())
+		return ToString.de(this).con(listenerDeRuteos_FIELD, listenerDeRuteos).con(pataRuteadora_FIELD, pataRuteadora)
 				.toString();
 	}
 

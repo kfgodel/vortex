@@ -56,4 +56,24 @@ public interface PataBidireccional extends Receptor {
 	 */
 	public void actualizarFiltroDeEntrada(final Condicion nuevoFiltro);
 
+	/**
+	 * Devuelve el identificador local de esta pata
+	 * 
+	 * @return El identificador con el que esta pata se discrimina en este nodo
+	 */
+	public Long getIdLocal();
+
+	/**
+	 * Devuelve el identificador remoto de esta pata
+	 * 
+	 * @return El identificador que el otro nodo le asigno a esta pata
+	 */
+	public Long getIdRemoto();
+
+	/**
+	 * El nodo local a esta pata
+	 * 
+	 * @return El componente creador de esta pata
+	 */
+	public NodoBidireccional getNodoLocal();
 }

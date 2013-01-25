@@ -12,12 +12,14 @@
  */
 package net.gaia.vortex.core.api.ids.componentes;
 
+import net.gaia.vortex.core.api.atomos.ShortStringable;
+
 /**
  * Esta interfaz representa un identificador dentro de la red vortex para una molécula
  * 
  * @author D. García
  */
-public interface IdDeComponenteVortex extends Comparable<IdDeComponenteVortex> {
+public interface IdDeComponenteVortex extends Comparable<IdDeComponenteVortex>, ShortStringable {
 
 	/**
 	 * Devuelve el valor actual del identificador para ser usado en la identificación de la ruta de

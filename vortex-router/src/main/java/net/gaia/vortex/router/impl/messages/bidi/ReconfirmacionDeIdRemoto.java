@@ -13,6 +13,7 @@
 package net.gaia.vortex.router.impl.messages.bidi;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.router.impl.messages.meta.MensajeConIdDePataReceptora;
 import net.gaia.vortex.router.impl.messages.meta.MetamensajeSupport;
 import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
 import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
@@ -24,7 +25,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class ReconfirmacionDeIdRemoto extends MetamensajeSupport {
+public class ReconfirmacionDeIdRemoto extends MetamensajeSupport implements MensajeConIdDePataReceptora {
 
 	/**
 	 * Identificador para este tipo de mensajes bidi
@@ -35,12 +36,12 @@ public class ReconfirmacionDeIdRemoto extends MetamensajeSupport {
 	public static final String idLocalAlEmisor_FIELD = "idLocalAlEmisor";
 
 	private Long idLocalAlReceptor;
-	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";
 
 	public ReconfirmacionDeIdRemoto() {
 		super(NOMBRE_DE_TIPO);
 	}
 
+	@Override
 	public Long getIdLocalAlReceptor() {
 		return idLocalAlReceptor;
 	}

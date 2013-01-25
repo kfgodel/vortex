@@ -25,6 +25,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
+import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
@@ -118,12 +119,15 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 					+ "] por segunda vez");
 		}
 
+		LOG.debug("Conectando bidi desde[{}] a [{}]", this.toShortString(), destino.toShortString());
 		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), conjuntoDeCondiciones, mapeador,
 				generadorDeIds, serializador, listenerDeRuteo);
 		getPatas().add(nuevaPata);
 
 		// Agregamos la pata al conjunto que puede recibir mensajes
 		flujoDeMensajesRecibidos.getSalida().conectarCon(nuevaPata);
+		LOG.debug("Pata[{}] creada en [{}] para conectar con [{}]",
+				new Object[] { nuevaPata.toShortString(), this.toShortString(), destino.toShortString() });
 
 		// Iniciamos el proceso de identificación bidireccional de la pata
 		nuevaPata.conseguirIdRemoto();
@@ -169,8 +173,13 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		// Al recibir delegamos en el flujo que nos definió el comportamiento
-		flujoDeMensajesRecibidos.getEntrada().recibir(mensaje);
+		LOG.debug("Recibido en[{}] el mensaje[{}]: {}", new Object[] { this.toShortString(), mensaje.toShortString(),
+				mensaje.getContenido() });
+		Loggers.ATOMOS.trace("Recibido en nodo[{}] el mensaje[{}]", this.toShortString(), mensaje);
+		final Receptor componenteEntrada = flujoDeMensajesRecibidos.getEntrada();
+		Loggers.ATOMOS.debug("Delegando a nodo input[{}] el mensaje[{}] desde[{}]",
+				new Object[] { componenteEntrada.toShortString(), mensaje.toShortString(), this.toShortString() });
+		componenteEntrada.recibir(mensaje);
 	}
 
 	/**
@@ -203,6 +212,8 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 	 */
 	@Override
 	public void onCambioDeCondicionEn(final ConjuntoDeCondiciones conjunto, final Condicion nuevaCondicion) {
+		LOG.debug("El [{}] cambio su estado de filtros remotos a[{}]", this.toShortString(), nuevaCondicion);
+
 		final ListenerDeCambiosDeFiltro listenerActual = listenerDeFiltros.get();
 		try {
 			listenerActual.onCambioDeFiltros(this, nuevaCondicion);

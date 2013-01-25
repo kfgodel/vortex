@@ -19,6 +19,10 @@ import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.router.impl.messages.bidi.ConfirmacionDeIdRemoto;
 import net.gaia.vortex.router.impl.messages.bidi.RespuestaDeIdRemoto;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -28,6 +32,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class RegistrarIdRemotoYEnviarConfirmacion implements Transformacion {
+	private static final Logger LOG = LoggerFactory.getLogger(RegistrarIdRemotoYEnviarConfirmacion.class);
 
 	private AtomicReference<Long> idDePataRemota;
 	public static final String idDePataRemota_FIELD = "idDePataRemota";
@@ -49,6 +54,8 @@ public class RegistrarIdRemotoYEnviarConfirmacion implements Transformacion {
 
 		final ConfirmacionDeIdRemoto confirmacion = ConfirmacionDeIdRemoto.create(idRemoto, idLocalDePata);
 		final MensajeVortex mensajeEnviable = mapeador.convertirAVortex(confirmacion);
+		LOG.debug("Enviando confirmacion[{}] para la respuesta[{}] recibido", confirmacion,
+				mensajeDeRespuesta.toShortString());
 		return mensajeEnviable;
 	}
 

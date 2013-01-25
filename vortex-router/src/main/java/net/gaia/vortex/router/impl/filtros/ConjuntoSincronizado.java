@@ -123,8 +123,9 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 			return unicaCondicion;
 		}
 
-		final Condicion condicionUnificada = OrCompuesto.create(condiciones);
-		return condicionUnificada;
+		final OrCompuesto condicionUnificada = OrCompuesto.create(condiciones);
+		final Condicion unificadaSimplificada = condicionUnificada.simplificar();
+		return unificadaSimplificada;
 	}
 
 	/**

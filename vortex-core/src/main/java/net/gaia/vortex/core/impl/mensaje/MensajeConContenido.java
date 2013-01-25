@@ -107,4 +107,12 @@ public class MensajeConContenido implements MensajeVortex {
 		getContenido().setIdDeMensaje(idNuevo);
 	}
 
+	/**
+	 * @see net.gaia.vortex.core.api.atomos.ShortStringable#toShortString()
+	 */
+	@Override
+	public String toShortString() {
+		return idDeMensaje.toShortString();
+	}
+
 }

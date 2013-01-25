@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.core.api.mensaje;
 
+import net.gaia.vortex.core.api.atomos.ShortStringable;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 
 /**
@@ -26,7 +27,7 @@ import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
  * 
  * @author D. García
  */
-public interface MensajeVortex {
+public interface MensajeVortex extends ShortStringable {
 
 	/**
 	 * Devuelve el mapa de datos que contiene este mensaje y que representa un mensaje
