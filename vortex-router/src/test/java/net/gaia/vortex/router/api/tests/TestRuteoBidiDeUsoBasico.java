@@ -19,7 +19,6 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.portal.tests.HandlerEncolador;
-import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
 import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.api.moleculas.Router;
 import net.gaia.vortex.router.api.tests.listeners.ListenerDeCambioDeFiltrosConCola;
@@ -93,9 +92,10 @@ public class TestRuteoBidiDeUsoBasico {
 
 	@Test
 	public void elMensajeNoDeberiaLlegarSiNoSeDeclaraNingunFiltro() throws InterruptedException {
-		// Definimos el handler para recibir el mensaje
-		final HandlerEncoladorDeStrings handlerReceptor1 = HandlerEncoladorDeStrings.create();
-		receptorPositivo1.recibirCon(handlerReceptor1);
+
+		// Definimos el listener para saber los pasos de ruteo del router
+		final ListenerDeRuteoEnPasos listenerDeRuteo = ListenerDeRuteoEnPasos.create();
+		routerCentral.setListenerDeRuteos(listenerDeRuteo);
 
 		// Interconectamos las partes
 		emisor.conectarCon(routerCentral);
@@ -110,12 +110,11 @@ public class TestRuteoBidiDeUsoBasico {
 		final String mensajeEnviado = "Hola manola";
 		emisor.enviar(mensajeEnviado);
 
-		// Verificamos que no haya llegado
 		try {
-			handlerReceptor1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-			Assert.fail("No deberíamos haber recibido nada");
-		} catch (final UnsuccessfulWaitException e) {
-			// Es la excepcion que esperamos
+			listenerDeRuteo.esperarRuteo(routerCentral, receptorPositivo1, TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("No debería existir el ruteo");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperabamos
 		}
 	}
 
@@ -126,7 +125,7 @@ public class TestRuteoBidiDeUsoBasico {
 		routerCentral.setListenerDeFiltrosRemotos(listenerFiltrosRouter);
 
 		// Le definimos al receptor qué es lo que queremos recibir ANTES de conectarlo (para no
-		// tener que esperar propagaciones despues)
+		// tener que esperar propagaciones después)
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptor = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
@@ -156,18 +155,13 @@ public class TestRuteoBidiDeUsoBasico {
 	}
 
 	@Test
-	public void elMensajeNoDeberiaLlegarSiSeDeclaraUnFiltroNegativo() {
+	public void elMensajeNoDeberiaLlegarSiSeDeclaraUnFiltroNegativo() throws InterruptedException {
 		// Definimos el listener para saber cuando el router adaptó sus filtros
-		final ListenerDeCambioDeFiltrosConCola listenerFiltrosRouter = new ListenerDeCambioDeFiltrosConCola();
+		final ListenerDeCambioDeFiltrosConCola listenerFiltrosRouter = ListenerDeCambioDeFiltrosConCola.create();
 		routerCentral.setListenerDeFiltrosRemotos(listenerFiltrosRouter);
 
-		// Interconectamos las partes
-		emisor.conectarCon(routerCentral);
-		routerCentral.conectarCon(emisor);
-		receptorPositivo1.conectarCon(routerCentral);
-		routerCentral.conectarCon(receptorPositivo1);
-
-		// Le definimos al receptor qué es lo que queremos recibir
+		// Le definimos al receptor qué es lo que queremos recibir antes de conectar para no tener
+		// que esperar despues
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptor = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
@@ -178,8 +172,14 @@ public class TestRuteoBidiDeUsoBasico {
 		};
 		receptorPositivo1.recibirCon(handlerReceptor);
 
-		// Esperamos que el router adapte sus filtros según lo que pide el receptor
-		listenerFiltrosRouter.esperarPorCambio(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		// Interconectamos las partes
+		emisor.conectarCon(routerCentral);
+		routerCentral.conectarCon(emisor);
+		receptorPositivo1.conectarCon(routerCentral);
+		routerCentral.conectarCon(receptorPositivo1);
+
+		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
+		Thread.sleep(1000);
 
 		// Mandamos el mensaje
 		final MensajeDeRuteoParaTest mensajeEnviado = new MensajeDeRuteoParaTest(valorEsperado);
@@ -194,10 +194,10 @@ public class TestRuteoBidiDeUsoBasico {
 	}
 
 	@Test
-	public void elMensajeNoDeberiaSalirDelPortalSiNoHayInteresado() {
+	public void elMensajeNoDeberiaSalirDelPortalSiNoHayInteresado() throws InterruptedException {
 		// Definimos el listener para saber cuando el portal adapta sus filtros a lo que diga el
 		// router
-		final ListenerDeCambioDeFiltrosConCola listenerFiltrosPortal = new ListenerDeCambioDeFiltrosConCola();
+		final ListenerDeCambioDeFiltrosConCola listenerFiltrosPortal = ListenerDeCambioDeFiltrosConCola.create();
 		emisor.setListenerDeFiltrosRemotos(listenerFiltrosPortal);
 
 		// Definimos el listener para saber los pasos de ruteo del portal
@@ -208,41 +208,34 @@ public class TestRuteoBidiDeUsoBasico {
 		emisor.conectarCon(routerCentral);
 		routerCentral.conectarCon(emisor);
 
-		// Esperamos que el portal sea notificado de los filtros del router
-		listenerFiltrosPortal.esperarPorCambio(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
+		Thread.sleep(1000);
 
 		// Mandamos el mensaje
 		final MensajeDeRuteoParaTest mensajeEnviado = new MensajeDeRuteoParaTest("hola");
 		emisor.enviar(mensajeEnviado);
 
-		listenerDeRuteo.esperarRuteo(emisor, routerCentral, TimeMagnitude.of(1, TimeUnit.SECONDS));
+		try {
+			listenerDeRuteo.esperarRuteo(emisor, routerCentral, TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("No debería existir el ruteo");
+		} catch (final TimeoutExceededException e) {
+			// Es la excepción que esperabamos
+		}
 	}
 
 	@Test
-	public void elMensajeNoDeberiaEntregarseAPortalNoInteresadoYSiAlInteresado() {
+	public void elMensajeNoDeberiaEntregarseAPortalNoInteresadoYSiAlInteresado() throws InterruptedException {
 		// Definimos el listener para saber cuando el portal adapta sus filtros a lo que diga el
 		// router
-		final ListenerDeCambioDeFiltrosConCola listenerFiltrosEmisor = new ListenerDeCambioDeFiltrosConCola();
+		final ListenerDeCambioDeFiltrosConCola listenerFiltrosEmisor = ListenerDeCambioDeFiltrosConCola.create();
 		emisor.setListenerDeFiltrosRemotos(listenerFiltrosEmisor);
 
 		// Definimos el listener para saber los pasos de ruteo del router
 		final ListenerDeRuteoEnPasos listenerDeRuteo = ListenerDeRuteoEnPasos.create();
 		routerCentral.setListenerDeRuteos(listenerDeRuteo);
 
-		// Interconectamos las partes
-		receptorPositivo1.conectarCon(routerCentral);
-		routerCentral.conectarCon(receptorPositivo1);
-
-		receptorNegativo1.conectarCon(routerCentral);
-		routerCentral.conectarCon(receptorNegativo1);
-
-		emisor.conectarCon(routerCentral);
-		routerCentral.conectarCon(emisor);
-
-		// Esperamos que el emisor sea notificado de los filtros del router
-		listenerFiltrosEmisor.esperarPorCambio(TimeMagnitude.of(1, TimeUnit.SECONDS));
-
-		// Definimos qué quiere recibir cada receptor
+		// Definimos qué quiere recibir cada receptor antes de conecarlos para no esperar
+		// propagacion de filtros
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptorPositivo = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
@@ -263,8 +256,18 @@ public class TestRuteoBidiDeUsoBasico {
 		};
 		receptorNegativo1.recibirCon(handlerReceptorNegativo);
 
-		// Esperamos que el emisor sea notificado de los filtros del router
-		listenerFiltrosEmisor.esperarPorCambio(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		// Interconectamos las partes
+		receptorPositivo1.conectarCon(routerCentral);
+		routerCentral.conectarCon(receptorPositivo1);
+
+		receptorNegativo1.conectarCon(routerCentral);
+		routerCentral.conectarCon(receptorNegativo1);
+
+		emisor.conectarCon(routerCentral);
+		routerCentral.conectarCon(emisor);
+
+		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
+		Thread.sleep(1000);
 
 		// Mandamos el mensaje
 		final MensajeDeRuteoParaTest mensajeEnviado = new MensajeDeRuteoParaTest("hola");

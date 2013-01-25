@@ -119,7 +119,7 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 		}
 
 		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), conjuntoDeCondiciones, mapeador,
-				generadorDeIds, serializador);
+				generadorDeIds, serializador, listenerDeRuteo);
 		getPatas().add(nuevaPata);
 
 		// Agregamos la pata al conjunto que puede recibir mensajes
