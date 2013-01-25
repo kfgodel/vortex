@@ -49,7 +49,7 @@ public interface ConjuntoDeCondiciones {
 	 * Devuelve la condicion que representa al conjunto menos la parte indicada
 	 * 
 	 * @param parteExceptuada
-	 *            La parte que será exluida de la condicion global
+	 *            La parte que será exluida de la condicion global (puede ser null)
 	 * 
 	 * @return La condicion que representa al resto de las partes. Si no hay otras partes se
 	 *         devolverá la condicion FALSE, que representa el conjunto vacio

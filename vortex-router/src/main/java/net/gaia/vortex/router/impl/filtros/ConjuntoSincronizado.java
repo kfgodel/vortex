@@ -84,10 +84,10 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 	}
 
 	/**
-	 * Genera una condición unificada de todas las partes
+	 * Genera una condición unificada de todas las partes menos la indicada
 	 * 
 	 * @param parteExcluida
-	 *            La parte que será excluida de la condicion resultante
+	 *            La parte que será excluida de la condicion resultante (puede ser null)
 	 * @return La condicion que reune a todas las partes excepto la indicada
 	 */
 	private Condicion unificarCondicionesExceptuandoA(final ParteDeCondiciones parteExcluida) {

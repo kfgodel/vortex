@@ -23,9 +23,9 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
-import net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
-import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
@@ -55,7 +55,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public abstract class NodoBidi extends ComponenteConProcesadorSupport implements NodoBidireccional,
+public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidireccional,
 		ListenerDeConjuntoDeCondiciones {
 	private static final Logger LOG = LoggerFactory.getLogger(NodoBidi.class);
 
@@ -71,14 +71,18 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 
 	private FlujoVortex flujoDeMensajesRecibidos;
 
-	private ComportamientoBidi comportamientoBidi;
-
 	private IdDeComponenteVortex identificador;
 	public static final String identificador_FIELD = "identificador";
 
 	private GenerarIdEnMensaje generadorDeIds;
 
 	private SerializadorDeCondiciones serializador;
+
+	private TaskProcessor processor;
+
+	public TaskProcessor getProcessor() {
+		return processor;
+	}
 
 	public List<PataBidireccional> getPatas() {
 		return patas;
@@ -92,17 +96,23 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
 	protected void initializeWith(final TaskProcessor processor, final ComportamientoBidi comportamiento) {
-		initializeWith(processor);
+		this.processor = processor;
 		identificador = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
 		generadorDeIds = GenerarIdEnMensaje.create(identificador);
-		comportamientoBidi = comportamiento;
-		flujoDeMensajesRecibidos = comportamiento.crearFlujoParaMensajesRecibidos(processor);
 		patas = new CopyOnWriteArrayList<PataBidireccional>();
 		listenerDeFiltros = new AtomicReference<ListenerDeCambiosDeFiltro>(IgnorarCambioDeFiltro.getInstancia());
 		listenerDeRuteo = new AtomicReference<ListenerDeRuteo>(IgnorarRuteos.getInstancia());
 		conjuntoDeCondiciones = ConjuntoSincronizado.create(this);
 		mapeador = ConversorDefaultDeMensajes.create();
 		serializador = SerializadorDeCondicionesImpl.create();
+
+		// El flujo que se usará
+		flujoDeMensajesRecibidos = comportamiento.crearFlujoParaMensajesRecibidos(processor);
+
+		// La entrada es lo que haya definido el comportamiento y como salida usamos esta propio
+		// componente
+		final FlujoVortex flujoInterno = FlujoInmutable.create(flujoDeMensajesRecibidos.getEntrada(), this);
+		initializeWith(flujoInterno);
 	}
 
 	/**
@@ -119,9 +129,12 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 					+ "] por segunda vez");
 		}
 
+		// Creamos la parte que nos permite conocer el filtro de cada pata
+		final Condicion filtroDeEntradaParaPataNueva = calcularFiltroDeEntradaPara(null);
+
 		LOG.debug("Conectando bidi desde[{}] a [{}]", this.toShortString(), destino.toShortString());
-		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), conjuntoDeCondiciones, mapeador,
-				generadorDeIds, serializador, listenerDeRuteo);
+		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), conjuntoDeCondiciones,
+				filtroDeEntradaParaPataNueva, mapeador, generadorDeIds, serializador, listenerDeRuteo);
 		getPatas().add(nuevaPata);
 
 		// Agregamos la pata al conjunto que puede recibir mensajes
@@ -175,11 +188,7 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 	public void recibir(final MensajeVortex mensaje) {
 		LOG.debug("Recibido en[{}] el mensaje[{}]: {}", new Object[] { this.toShortString(), mensaje.toShortString(),
 				mensaje.getContenido() });
-		Loggers.ATOMOS.trace("Recibido en nodo[{}] el mensaje[{}]", this.toShortString(), mensaje);
-		final Receptor componenteEntrada = flujoDeMensajesRecibidos.getEntrada();
-		Loggers.ATOMOS.debug("Delegando a nodo input[{}] el mensaje[{}] desde[{}]",
-				new Object[] { componenteEntrada.toShortString(), mensaje.toShortString(), this.toShortString() });
-		componenteEntrada.recibir(mensaje);
+		super.recibir(mensaje);
 	}
 
 	/**
@@ -268,7 +277,7 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 	 * otras patas
 	 * 
 	 * @param pataConectora
-	 *            La pata para la que se pide el calculo
+	 *            La pata para la que se pide el calculo (puede ser null)
 	 * @return El filtro correspondiente a la pata
 	 */
 	protected abstract Condicion calcularFiltroDeEntradaPara(PataBidireccional pataConectora);

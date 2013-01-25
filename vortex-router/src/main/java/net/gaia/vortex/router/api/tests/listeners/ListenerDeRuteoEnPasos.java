@@ -52,14 +52,21 @@ public class ListenerDeRuteoEnPasos implements ListenerDeRuteo {
 	}
 
 	/**
-	 * Espera hasta que se produzca el paso de
+	 * Espera hasta que se produzca el paso de ruteo indicado por el origen y destino. Si se produce
+	 * otros ruteos durante la espera estos serán descartados hasta que se produzca el ruteo
+	 * esperado o hasta que se termine el tiempo.<br>
+	 * Si se producen otros ruteos después del esperado, serán mantenidos en este listener para
+	 * posteriores consultas
 	 * 
 	 * @param emisor
-	 * @param mensajeEnviado
+	 *            El emisor que indica el origen del ruteo esperado
 	 * @param receptor
+	 *            El receptor que indica el destino del ruteo esperado
 	 * @param esperaMaxima
-	 * @return
+	 *            La espera máxima por el ruteo
+	 * @return El paso que del ruteo encontrado
 	 * @throws TimeoutExceededException
+	 *             Si se acaba el tiempo y el paso no está
 	 */
 	public PasoDeRuteo esperarRuteo(final Emisor emisor, final Receptor receptor, final TimeMagnitude esperaMaxima)
 			throws TimeoutExceededException {
@@ -67,18 +74,23 @@ public class ListenerDeRuteoEnPasos implements ListenerDeRuteo {
 		long millisRestantes = 0;
 		while ((millisRestantes = esperaMaxima.getMillis() - (System.currentTimeMillis() - startMillis)) > 0) {
 			// Vemos si el paso ya está en la lista
-			for (final PasoDeRuteo paso : pasos) {
+			PasoDeRuteo paso = pasos.poll();
+			while (paso != null) {
 				if (paso.representaA(emisor, receptor)) {
+					// Es el paso que buscamos
 					return paso;
 				}
+				paso = pasos.poll();
 			}
+
 			// Si no está esperamos el proximo paso mientras nos queden millis
 			try {
-				final PasoDeRuteo paso = pasos.poll(millisRestantes, TimeUnit.MILLISECONDS);
+				paso = pasos.poll(millisRestantes, TimeUnit.MILLISECONDS);
 				if (paso == null) {
 					throw new TimeoutExceededException("Pasó el tiempo de espera y no recibimos mensaje");
 				}
-				return paso;
+				// Lo insertamos para repetir el proceso con el paso
+				pasos.put(paso);
 			} catch (final InterruptedException e) {
 				throw new InterruptedWaitException("Se interrumpió la espera de la cola de mensajes", e);
 			}

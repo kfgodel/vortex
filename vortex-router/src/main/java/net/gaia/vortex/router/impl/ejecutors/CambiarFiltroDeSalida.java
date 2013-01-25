@@ -20,6 +20,7 @@ import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.messages.PublicacionDeFiltros;
+import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones;
 
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ import ar.com.dgarcia.lang.strings.ToString;
 public class CambiarFiltroDeSalida extends ReceptorSupport {
 	private static final Logger LOG = LoggerFactory.getLogger(CambiarFiltroDeSalida.class);
 
+	private PataBidireccional pata;
 	private ConversorDeMensajesVortex conversor;
 	private SerializadorDeCondiciones serializador;
 	private ParteDeCondiciones filtroDeLaPata;
@@ -52,8 +54,8 @@ public class CambiarFiltroDeSalida extends ReceptorSupport {
 			throw new UnhandledConditionException("Recibimos un filtro nulo como publicación en el mensaje: " + mensaje);
 		}
 		final Condicion nuevaCondicion = serializador.deserializar(nuevoFiltro);
-		LOG.debug("Cambiando filtro remoto a[{}] segun publicacion recibida[{}]", nuevaCondicion,
-				mensaje.toShortString());
+		LOG.debug(" En [{}] cambiando filtro remoto a[{}] segun publicacion recibida[{}]",
+				new Object[] { pata.toShortString(), nuevaCondicion, mensaje.toShortString() });
 		filtroDeLaPata.cambiarA(nuevaCondicion);
 	}
 
@@ -66,11 +68,13 @@ public class CambiarFiltroDeSalida extends ReceptorSupport {
 	}
 
 	public static CambiarFiltroDeSalida create(final ConversorDeMensajesVortex conversor,
-			final SerializadorDeCondiciones serializador, final ParteDeCondiciones filtroDeLaPata) {
+			final SerializadorDeCondiciones serializador, final ParteDeCondiciones filtroDeLaPata,
+			final PataBidireccional pata) {
 		final CambiarFiltroDeSalida cambiar = new CambiarFiltroDeSalida();
 		cambiar.conversor = conversor;
 		cambiar.filtroDeLaPata = filtroDeLaPata;
 		cambiar.serializador = serializador;
+		cambiar.pata = pata;
 		return cambiar;
 	}
 }

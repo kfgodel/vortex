@@ -30,7 +30,6 @@ import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
-import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
@@ -127,8 +126,9 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 
 	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
 			final TaskProcessor taskProcessor, final ConjuntoDeCondiciones conjuntoDeCondiciones,
-			final ConversorDeMensajesVortex mapeador, final GenerarIdEnMensaje generadorDeIds,
-			final SerializadorDeCondiciones serializador, final AtomicReference<ListenerDeRuteo> listenerDeRuteo) {
+			final Condicion filtroDeEntradaParaPataNueva, final ConversorDeMensajesVortex mapeador,
+			final GenerarIdEnMensaje generadorDeIds, final SerializadorDeCondiciones serializador,
+			final AtomicReference<ListenerDeRuteo> listenerDeRuteo) {
 		final PataBidi pata = new PataBidi();
 		pata.serializador = serializador;
 		pata.mapeador = mapeador;
@@ -141,7 +141,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		pata.memoriaDePedidosEnviados = MemoriaDePedidosDeId.create();
 		pata.identificadorDeMetamensajes = NexoTransformador.create(taskProcessor, generadorDeIds, nodoRemoto);
 		pata.listenerDeRuteo = listenerDeRuteo;
-		pata.inicializarFiltros(conjuntoDeCondiciones);
+		pata.inicializarFiltros(conjuntoDeCondiciones, filtroDeEntradaParaPataNueva);
 		pata.initializeWith(taskProcessor);
 		return pata;
 	}
@@ -193,7 +193,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	private Receptor crearProcesoParaRecibirPublicacionDeFiltros(final TaskProcessor taskProcessor) {
 		// Actualizamos el filtro que tenemos de salida en esta pata
 		final CambiarFiltroDeSalida cambiadorDeFiltro = CambiarFiltroDeSalida.create(mapeador, serializador,
-				filtroDeSalida);
+				filtroDeSalida, this);
 
 		return cambiadorDeFiltro;
 	}
@@ -315,11 +315,13 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 * Establece el estado inicial de los filtros en esta pata
 	 * 
 	 * @param conjuntoDeCondiciones
+	 * @param filtroDeEntradaParaPataNueva
 	 */
-	private void inicializarFiltros(final ConjuntoDeCondiciones conjuntoDeCondiciones) {
+	private void inicializarFiltros(final ConjuntoDeCondiciones conjuntoDeCondiciones,
+			final Condicion filtroDeEntradaParaPataNueva) {
 		// Inicialmente entra y sale todo lo que recibamos
 		this.filtroDeSalida = conjuntoDeCondiciones.crearNuevaParte(SiempreTrue.getInstancia());
-		this.filtroDeEntrada = SiempreFalse.getInstancia();
+		this.setFiltroDeEntrada(filtroDeEntradaParaPataNueva);
 		this.resetearFiltroDeEntradaPublicado();
 	}
 

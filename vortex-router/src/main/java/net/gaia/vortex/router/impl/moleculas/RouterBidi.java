@@ -38,10 +38,12 @@ public class RouterBidi extends NodoBidi implements Router {
 	 */
 	@Override
 	protected Condicion calcularFiltroDeEntradaPara(final PataBidireccional pataConectora) {
-		final ParteDeCondiciones parteDeLaPata = pataConectora.getParteDeCondicion();
+		ParteDeCondiciones parteDeLaPata = null;
+		if (pataConectora != null) {
+			parteDeLaPata = pataConectora.getParteDeCondicion();
+		}
 		final Condicion condicioDelRestoDeLasPatas = getConjuntoDeCondiciones().getCondicionDelConjuntoMenos(
 				parteDeLaPata);
 		return condicioDelRestoDeLasPatas;
 	}
-
 }
