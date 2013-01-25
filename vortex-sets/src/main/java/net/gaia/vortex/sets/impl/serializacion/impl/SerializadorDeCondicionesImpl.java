@@ -23,7 +23,7 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo;
 import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
-import ar.com.dgarcia.lang.iterators.tree.treeorder.LeavesFirstIterator;
+import ar.com.dgarcia.lang.iterators.tree.LeavesFirstIterator;
 
 /**
  * Esta clase implementa el serializador de condiciones

@@ -10,13 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.com.dgarcia.lang.iterators.tree.treeorder;
+package ar.com.dgarcia.lang.iterators.tree;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import ar.com.dgarcia.lang.iterators.tree.NodeExploder;
-import ar.com.dgarcia.lang.iterators.tree.TreeIterator;
+import ar.com.dgarcia.lang.iterators.tree.treeorder.BreadthFirstOrder;
+import ar.com.dgarcia.lang.iterators.tree.treeorder.TreeOrder;
 
 /**
  * Esta clase permite recorrer las hojas de un arbol iterando las hojas de un nodo, antes que el
