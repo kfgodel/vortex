@@ -70,4 +70,12 @@ public class MemoriaDePedidosDeId {
 		ultimoIdPedido = idDeMensajeComoMapa;
 	}
 
+	/**
+	 * Devuelve el id del último pedido registrado
+	 * 
+	 * @return EL mapa del id o null si no se registró ninguno aún
+	 */
+	public Map<String, Object> getIdDeultimoPedido() {
+		return ultimoIdPedido;
+	}
 }

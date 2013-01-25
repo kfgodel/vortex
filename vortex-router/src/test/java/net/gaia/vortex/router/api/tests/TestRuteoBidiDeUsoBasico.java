@@ -42,7 +42,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class TestRuteoDeUsoBasico {
+public class TestRuteoBidiDeUsoBasico {
 
 	private PortalBidireccional emisor;
 	private PortalBidireccional receptorPositivo1;
@@ -125,16 +125,8 @@ public class TestRuteoDeUsoBasico {
 		final ListenerDeCambioDeFiltrosConCola listenerFiltrosRouter = ListenerDeCambioDeFiltrosConCola.create();
 		routerCentral.setListenerDeFiltrosRemotos(listenerFiltrosRouter);
 
-		// Interconectamos las partes
-		emisor.conectarCon(routerCentral);
-		routerCentral.conectarCon(emisor);
-		receptorPositivo1.conectarCon(routerCentral);
-		routerCentral.conectarCon(receptorPositivo1);
-
-		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
-		Thread.sleep(1000);
-
-		// Le definimos al receptor qué es lo que queremos recibir
+		// Le definimos al receptor qué es lo que queremos recibir ANTES de conectarlo (para no
+		// tener que esperar propagaciones despues)
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptor = new HandlerEncolador<MensajeDeRuteoParaTest>() {
 			@Override
@@ -145,8 +137,11 @@ public class TestRuteoDeUsoBasico {
 		};
 		receptorPositivo1.recibirCon(handlerReceptor);
 
-		// Esperamos que el router adapte sus filtros según lo que pide el receptor
-		listenerFiltrosRouter.esperarPorCambio(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		// Interconectamos las partes
+		emisor.conectarCon(routerCentral);
+		routerCentral.conectarCon(emisor);
+		receptorPositivo1.conectarCon(routerCentral);
+		routerCentral.conectarCon(receptorPositivo1);
 
 		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
 		Thread.sleep(1000);

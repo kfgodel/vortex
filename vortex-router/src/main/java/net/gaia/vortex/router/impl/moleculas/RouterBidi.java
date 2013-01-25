@@ -15,7 +15,6 @@ package net.gaia.vortex.router.impl.moleculas;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.router.api.moleculas.Router;
-import net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoRouter;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
@@ -45,15 +44,4 @@ public class RouterBidi extends NodoBidi implements Router {
 		return condicioDelRestoDeLasPatas;
 	}
 
-	/**
-	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#onCambioDeCondicionEn(net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones,
-	 *      net.gaia.vortex.core.api.condiciones.Condicion)
-	 */
-	@Override
-	public void onCambioDeCondicionEn(final ConjuntoDeCondiciones conjunto, final Condicion nuevaCondicion) {
-		super.onCambioDeCondicionEn(conjunto, nuevaCondicion);
-
-		// El router esta compuesto de filtros remotos, un cambio remoto, es un cambio local
-		evento_cambioEstadoFiltrosLocales();
-	}
 }

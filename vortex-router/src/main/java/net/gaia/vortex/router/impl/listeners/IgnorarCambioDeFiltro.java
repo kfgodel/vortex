@@ -17,6 +17,7 @@ import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la implementación nula del listener de filtros que ignora los cambios
@@ -39,6 +40,14 @@ public class IgnorarCambioDeFiltro implements ListenerDeCambiosDeFiltro {
 	@Override
 	public void onCambioDeFiltros(final NodoBidireccional nodo, final Condicion nuevoFiltro) {
 		// Ignoramos todos los cambios
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).toString();
 	}
 
 }

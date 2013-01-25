@@ -133,4 +133,5 @@ public class PortalBidireccional extends NodoBidireccional implements Portal {
 			super.evento_recibirMensajeEnNodo(mensaje);
 		}
 	}
+
 }

@@ -17,6 +17,7 @@ import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa el comportamiento bidi que tiene el router
@@ -44,4 +45,13 @@ public class ComportamientoRouter implements ComportamientoBidi {
 		final FlujoVortex flujoDeMensajes = FlujoInmutable.create(filtroDeDuplicados, multiplexorDePatas);
 		return flujoDeMensajes;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).toString();
+	}
+
 }

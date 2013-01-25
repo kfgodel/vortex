@@ -26,6 +26,7 @@ import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.impl.filtros.ConjuntoSincronizado;
 import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoPortal;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa el componente vortex que implementa el portal con comunicaciones
@@ -107,4 +108,14 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 		final Condicion filtroDeEntradaParaEstePortal = ConjuntoSincronizado.unificarCondiciones(condicionesDelPortal);
 		return filtroDeEntradaParaEstePortal;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
+				.con(identificador_FIELD, getIdentificador()).con("destino", getDestino().toShortString()).toString();
+	}
+
 }

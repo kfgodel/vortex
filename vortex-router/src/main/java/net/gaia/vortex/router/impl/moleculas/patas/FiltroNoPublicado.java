@@ -21,6 +21,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa una condición no publicada por una pata
@@ -50,6 +51,14 @@ public class FiltroNoPublicado implements Condicion {
 	@Override
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).toString();
 	}
 
 }

@@ -75,6 +75,9 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 		// Es un filtro distinto del que informamos la ultima vez
 		ultimoFiltroNotificadoAlListener = filtroUnificadoRemoto;
 		this.listenerDeFiltros.onCambioDeFiltro(filtroUnificadoRemoto);
+
+		// Al cambiar los filtros remotos es posible que cambien los locales
+		evento_cambioEstadoFiltrosLocales();
 	}
 
 	/**

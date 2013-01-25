@@ -18,6 +18,7 @@ import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la implementación nula del listener de ruteo que ignora los ruteos hechos
@@ -41,6 +42,14 @@ public class IgnorarRuteos implements ListenerDeRuteo {
 	@Override
 	public void onMensajeRuteado(final NodoBidireccional origen, final MensajeVortex mensaje, final Receptor destino) {
 		// Ignoramos todos los ruteos
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).toString();
 	}
 
 }

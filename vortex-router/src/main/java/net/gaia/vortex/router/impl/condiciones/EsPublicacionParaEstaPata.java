@@ -15,6 +15,7 @@ package net.gaia.vortex.router.impl.condiciones;
 import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
 import net.gaia.vortex.router.impl.messages.PublicacionDeFiltros;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la condición que evalua si la publicación recibida es para esta pata
@@ -23,10 +24,23 @@ import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
  */
 public class EsPublicacionParaEstaPata extends CondicionTipadaSupport {
 
+	private Long idLocalDePata;
+	public static final String idLocalDePata_FIELD = "idLocalDePata";
+
 	public static EsPublicacionParaEstaPata create(final Long idLocalDePata) {
 		final EsPublicacionParaEstaPata condicion = new EsPublicacionParaEstaPata();
+		condicion.idLocalDePata = idLocalDePata;
 		condicion.initializeWith(ValorEsperadoEn
 				.elAtributo(PublicacionDeFiltros.idLocalAlReceptor_FIELD, idLocalDePata));
 		return condicion;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(idLocalDePata_FIELD, idLocalDePata).toString();
+	}
+
 }

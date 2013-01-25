@@ -20,6 +20,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.sets.impl.condiciones.OrCompuesto;
 import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase es la implemetación del {@link ConjuntoDeCondiciones} que sincroniza las operaciones
@@ -34,8 +35,10 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 	private ReadWriteCoordinator coordinator;
 
 	private List<ParteDeCondiciones> partes;
+	public static final String partes_FIELD = "partes";
 
 	private Condicion condicionActual;
+	public static final String condicionActual_FIELD = "condicionActual";
 
 	public List<ParteDeCondiciones> getPartes() {
 		return partes;
@@ -156,4 +159,14 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 		final Condicion condicionDelResto = unificarCondicionesExceptuandoA(parteExceptuada);
 		return condicionDelResto;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(partes_FIELD, partes.size()).con(condicionActual_FIELD, condicionActual)
+				.toString();
+	}
+
 }

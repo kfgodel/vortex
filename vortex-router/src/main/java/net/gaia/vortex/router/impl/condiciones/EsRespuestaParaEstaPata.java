@@ -74,7 +74,7 @@ public class EsRespuestaParaEstaPata implements Condicion {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).toString();
+		return ToString.de(this).con("ultimoId", memoria.getIdDeultimoPedido()).toString();
 	}
 
 }

@@ -277,4 +277,13 @@ public class TestPasosDeSimulacion {
 		Assert.assertTrue("P2 deberia usar el filtro correcto para R2", p2.usaFiltrosCon(r2, "tag1"));
 
 	}
+
+	@Test
+	public void deberiaPublicarElFiltroDelPortalAunqueSeDefinaAntesDeConectar() {
+		p1.simularSeteoDeFiltros("filtro1");
+		p1.simularConexionBidi(r1);
+
+		simulador.ejecutarTodos(TimeMagnitude.of(10, TimeUnit.SECONDS));
+		Assert.assertTrue("R1 deberia saber lo que P1 quiere", r1.usaFiltrosCon(p1, "filtro1"));
+	}
 }

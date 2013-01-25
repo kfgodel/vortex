@@ -47,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase base definir comportamiento comun de los nodos bidireccionales
@@ -60,6 +61,7 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 	private ConjuntoDeCondiciones conjuntoDeCondiciones;
 
 	private List<PataBidireccional> patas;
+	public static final String patas_FIELD = "patas";
 
 	private AtomicReference<ListenerDeCambiosDeFiltro> listenerDeFiltros;
 	private AtomicReference<ListenerDeRuteo> listenerDeRuteo;
@@ -71,6 +73,7 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 	private ComportamientoBidi comportamientoBidi;
 
 	private IdDeComponenteVortex identificador;
+	public static final String identificador_FIELD = "identificador";
 
 	private GenerarIdEnMensaje generadorDeIds;
 
@@ -207,6 +210,9 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 			LOG.error("Se produjo un error en el listener[" + listenerActual + "] de cambios de filtros de este nodo["
 					+ this + "]", e);
 		}
+
+		// Cambios en filtros externos también pueden implicar cambios en filtros locales
+		evento_cambioEstadoFiltrosLocales();
 	}
 
 	/**
@@ -255,5 +261,18 @@ public abstract class NodoBidi extends ComponenteConProcesadorSupport implements
 	 * @return El filtro correspondiente a la pata
 	 */
 	protected abstract Condicion calcularFiltroDeEntradaPara(PataBidireccional pataConectora);
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
+				.con(identificador_FIELD, identificador).con(patas_FIELD, patas).toString();
+	}
+
+	public IdDeComponenteVortex getIdentificador() {
+		return identificador;
+	}
 
 }

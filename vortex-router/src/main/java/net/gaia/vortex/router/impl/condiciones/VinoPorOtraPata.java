@@ -16,6 +16,7 @@ import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
 import net.gaia.vortex.router.impl.messages.MetadataDeMensajes;
 import net.gaia.vortex.sets.impl.condiciones.Negacion;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la condición que indica si un mensaje fue recibido en otra para.<br>
@@ -26,10 +27,23 @@ import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
  */
 public class VinoPorOtraPata extends CondicionTipadaSupport {
 
+	private Long idLocalDePata;
+	public static final String idLocalDePata_FIELD = "idLocalDePata";
+
 	public static VinoPorOtraPata create(final Long idLocalDePata) {
 		final VinoPorOtraPata condicion = new VinoPorOtraPata();
+		condicion.idLocalDePata = idLocalDePata;
 		condicion.initializeWith(Negacion.de(ValorEsperadoEn.elAtributo(MetadataDeMensajes.idLocalAlReceptor_FIELD,
 				idLocalDePata)));
 		return condicion;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(idLocalDePata_FIELD, idLocalDePata).toString();
+	}
+
 }

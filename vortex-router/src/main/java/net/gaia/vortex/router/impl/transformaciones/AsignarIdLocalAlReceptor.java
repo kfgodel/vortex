@@ -17,6 +17,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.impl.mensaje.copia.ClonadorDeMensajes;
 import net.gaia.vortex.router.impl.messages.MetadataDeMensajes;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la transformación utilizada para que el mensaje indique la pata por la que
@@ -27,6 +28,7 @@ import net.gaia.vortex.router.impl.messages.MetadataDeMensajes;
 public class AsignarIdLocalAlReceptor implements Transformacion {
 
 	private Long idLocalAlReceptor;
+	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";
 
 	/**
 	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
@@ -46,4 +48,13 @@ public class AsignarIdLocalAlReceptor implements Transformacion {
 		transformacion.idLocalAlReceptor = idDePataRemota;
 		return transformacion;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(idLocalAlReceptor_FIELD, idLocalAlReceptor).toString();
+	}
+
 }

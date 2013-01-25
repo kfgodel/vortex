@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.router.impl.ejecutos;
+package net.gaia.vortex.router.impl.ejecutors;
 
 import java.util.Map;
 
@@ -55,7 +55,7 @@ public class CambiarFiltroDeSalida extends ReceptorSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).toString();
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).toString();
 	}
 
 	public static CambiarFiltroDeSalida create(final ConversorDeMensajesVortex conversor,

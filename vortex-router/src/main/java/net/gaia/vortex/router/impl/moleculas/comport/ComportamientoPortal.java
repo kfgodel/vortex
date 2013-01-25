@@ -23,6 +23,7 @@ import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.router.impl.condiciones.EsMetaMensaje;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa el comportamiento bidi que tiene el portal
@@ -32,6 +33,7 @@ import net.gaia.vortex.router.impl.condiciones.EsMetaMensaje;
 public class ComportamientoPortal implements ComportamientoBidi {
 
 	private Portal portalInterno;
+	public static final String portalInterno_FIELD = "portalInterno";
 
 	public static ComportamientoPortal create() {
 		final ComportamientoPortal comportamiento = new ComportamientoPortal();
@@ -67,6 +69,14 @@ public class ComportamientoPortal implements ComportamientoBidi {
 
 	public void setPortalInterno(final Portal portalInterno) {
 		this.portalInterno = portalInterno;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(portalInterno_FIELD, portalInterno).toString();
 	}
 
 }

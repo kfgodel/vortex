@@ -40,6 +40,7 @@ import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.condiciones.EsConfirmacionDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsConfirmacionParaEstaPata;
+import net.gaia.vortex.router.impl.condiciones.EsMensajeNormal;
 import net.gaia.vortex.router.impl.condiciones.EsPedidoDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsPublicacionDeFiltros;
 import net.gaia.vortex.router.impl.condiciones.EsPublicacionParaEstaPata;
@@ -48,9 +49,8 @@ import net.gaia.vortex.router.impl.condiciones.EsReconfirmacionParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.LeInteresaElMensaje;
-import net.gaia.vortex.router.impl.condiciones.EsMensajeNormal;
 import net.gaia.vortex.router.impl.condiciones.VinoPorOtraPata;
-import net.gaia.vortex.router.impl.ejecutos.CambiarFiltroDeSalida;
+import net.gaia.vortex.router.impl.ejecutors.CambiarFiltroDeSalida;
 import net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.messages.PublicacionDeFiltros;
@@ -64,6 +64,8 @@ import net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase es la implementación de la pata bidireccional
@@ -277,8 +279,8 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 			// Ya estaba habilitada como bidi anteriormente
 			return;
 		}
-		LOG.debug("  En [{},{}] se estableció como conexion bidireccional",
-				new Object[] { this.getNodoLocal(), this.getIdLocal() });
+		LOG.debug("  En [{},{}] se estableció como conexion bidireccional", new Object[] {
+				this.getNodoLocal().toShortString(), this.getIdLocal() });
 		publicarFiltroDeEntrada();
 	}
 
@@ -432,26 +434,27 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	private void publicarFiltroDeEntrada() {
 		final Condicion filtroAPublicar = this.getFiltroDeEntrada();
 		if (!habilitadaComoBidi.get()) {
-			LOG.debug("  En [{},{}] no se publica filtro {} porque la pata aun no es bidi",
-					new Object[] { this.getNodoLocal(), this.getIdLocal(), filtroAPublicar });
+			LOG.debug("  En [{},{}] no se publica filtro {} porque la pata aun no es bidi", new Object[] {
+					this.getNodoLocal().toShortString(), this.getIdLocal(), filtroAPublicar });
 			// El otro nodo no está preparado para recibir la publicacion
 			return;
 		}
 
 		final Long idRemotoDeEstaPata = getIdRemoto();
 		if (idRemotoDeEstaPata == null) {
-			LOG.debug("  En [{},{}] no se publica filtro {} porque no tenemos ID remoto",
-					new Object[] { this.getNodoLocal(), this.getIdLocal(), filtroAPublicar });
+			LOG.debug("  En [{},{}] no se publica filtro {} porque no tenemos ID remoto", new Object[] {
+					this.getNodoLocal().toShortString(), this.getIdLocal(), filtroAPublicar });
 			// Aún no tenemos un ID remoto con el cual publicar los filtros
 			return;
 		}
 		if (filtroAPublicar.equals(this.getFiltroDeEntradaPublicado())) {
-			LOG.debug("  En [{},{}] no se publica porque no hubo cambio de filtro de entrada: {}",
-					new Object[] { this.getNodoLocal(), this.getIdLocal(), filtroAPublicar });
+			LOG.debug("  En [{},{}] no se publica porque no hubo cambio de filtro de entrada: {}", new Object[] {
+					this.getNodoLocal().toShortString(), this.getIdLocal(), filtroAPublicar });
 			return;
 		}
 		LOG.debug("  En [{},{}] se publica el cambio de filtro de entrada de {} a: {}",
-				new Object[] { this.getNodoLocal(), this.getIdLocal(), getFiltroDeEntradaPublicado(), filtroAPublicar });
+				new Object[] { this.getNodoLocal().toShortString(), this.getIdLocal(), getFiltroDeEntradaPublicado(),
+						filtroAPublicar });
 
 		setFiltroDeEntradaPublicado(filtroAPublicar);
 		final Map<String, Object> filtroSerializado = serializador.serializar(filtroAPublicar);
@@ -467,6 +470,16 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 
 	public void setFiltroDeEntradaPublicado(final Condicion filtroDeEntradaPublicado) {
 		this.filtroDeEntradaPublicado = filtroDeEntradaPublicado;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(idLocal_FIELD, idLocal)
+				.con(idRemoto_FIELD, idRemoto).con(nodoLocal_FIELD, nodoLocal.toShortString())
+				.con(nodoRemoto_FIELD, nodoRemoto.toShortString()).toString();
 	}
 
 }

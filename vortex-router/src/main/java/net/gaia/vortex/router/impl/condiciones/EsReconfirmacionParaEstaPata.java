@@ -15,6 +15,7 @@ package net.gaia.vortex.router.impl.condiciones;
 import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
 import net.gaia.vortex.router.impl.messages.bidi.ReconfirmacionDeIdRemoto;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la condición que evaluá si un mensaje es una reconfirmacion para una pata
@@ -23,10 +24,23 @@ import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
  */
 public class EsReconfirmacionParaEstaPata extends CondicionTipadaSupport {
 
+	private Long idLocalDePata;
+	public static final String idLocalDePata_FIELD = "idLocalDePata";
+
 	public static EsReconfirmacionParaEstaPata create(final Long idLocalDePata) {
 		final EsReconfirmacionParaEstaPata condicion = new EsReconfirmacionParaEstaPata();
+		condicion.idLocalDePata = idLocalDePata;
 		condicion.initializeWith(ValorEsperadoEn.elAtributo(ReconfirmacionDeIdRemoto.idLocalAlReceptor_FIELD,
 				idLocalDePata));
 		return condicion;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(idLocalDePata_FIELD, idLocalDePata).toString();
+	}
+
 }

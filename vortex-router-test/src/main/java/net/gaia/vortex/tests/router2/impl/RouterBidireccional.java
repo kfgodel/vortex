@@ -27,17 +27,6 @@ import net.gaia.vortex.tests.router2.simulador.Simulador;
 public class RouterBidireccional extends NodoBidireccional implements Router {
 
 	/**
-	 * @see net.gaia.vortex.tests.router2.impl.NodoBidireccional#evento_cambioEstadoFiltrosRemotos()
-	 */
-	@Override
-	protected void evento_cambioEstadoFiltrosRemotos() {
-		// Notificamos a listeners
-		super.evento_cambioEstadoFiltrosRemotos();
-		// Para el router, su filtro local esta compuesto de los remotos
-		evento_cambioEstadoFiltrosLocales();
-	}
-
-	/**
 	 * @see net.gaia.vortex.tests.router2.impl.NodoBidireccional#calcularFiltroDeEntradaPara(net.gaia.vortex.tests.router2.impl.patas.PataBidireccional)
 	 */
 	@Override
