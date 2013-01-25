@@ -40,13 +40,10 @@ import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.condiciones.EsConfirmacionDeIdRemoto;
-import net.gaia.vortex.router.impl.condiciones.EsConfirmacionParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.EsMensajeNormal;
 import net.gaia.vortex.router.impl.condiciones.EsPedidoDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsPublicacionDeFiltros;
-import net.gaia.vortex.router.impl.condiciones.EsPublicacionParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.EsReconfirmacionDeIdRemoto;
-import net.gaia.vortex.router.impl.condiciones.EsReconfirmacionParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaDeIdRemoto;
 import net.gaia.vortex.router.impl.condiciones.EsRespuestaParaEstaPata;
 import net.gaia.vortex.router.impl.condiciones.LeInteresaElMensaje;
@@ -194,16 +191,11 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 * @return El comopnente creado como entrada
 	 */
 	private Receptor crearProcesoParaRecibirPublicacionDeFiltros(final TaskProcessor taskProcessor) {
-		// Primero descartamos las publicaciones que son para otras patas
-		final NexoFiltro descartadorDePublicacionesAjenas = NexoFiltro.create(taskProcessor,
-				EsPublicacionParaEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
-
 		// Actualizamos el filtro que tenemos de salida en esta pata
 		final CambiarFiltroDeSalida cambiadorDeFiltro = CambiarFiltroDeSalida.create(mapeador, serializador,
 				filtroDeSalida);
-		descartadorDePublicacionesAjenas.conectarCon(cambiadorDeFiltro);
 
-		return descartadorDePublicacionesAjenas;
+		return cambiadorDeFiltro;
 	}
 
 	/**
@@ -245,14 +237,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 * @return El receptor de entrada para los mensajes
 	 */
 	private Receptor crearProcesoParaRecibirReconfirmacionDeIds(final TaskProcessor taskProcessor) {
-		// Primero descartamos las confirmaciones que son para otras patas
-		final NexoFiltro descartadorDeReconfirmacionesAjenas = NexoFiltro.create(taskProcessor,
-				EsReconfirmacionParaEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
-
-		// Disparamos el evento de nueva conexión bidi
-		descartadorDeReconfirmacionesAjenas.conectarCon(dispararEventoConexionBidi);
-
-		return descartadorDeReconfirmacionesAjenas;
+		return dispararEventoConexionBidi;
 	}
 
 	/**
@@ -263,22 +248,17 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 * @return El componente de entrada para los mensajes
 	 */
 	private Receptor crearProcesoParaRecibirConfirmacionDeIds(final TaskProcessor taskProcessor) {
-		// Primero descartamos las confirmaciones que son para otras patas
-		final NexoFiltro descartadorDeConfirmacionesAjenas = NexoFiltro.create(taskProcessor,
-				EsConfirmacionParaEstaPata.create(getIdLocal()), ReceptorNulo.getInstancia());
-
 		// Registramos id remoto y convertimos la respuesta en confirmación
 		final NexoTransformador registradorDeId = NexoTransformador.create(taskProcessor,
 				RegistrarIdRemotoYEnviarReconfirmacion.create(getIdLocal(), idRemoto, mapeador),
 				identificadorDeMetamensajes);
-		descartadorDeConfirmacionesAjenas.conectarCon(registradorDeId);
 
 		// Antes de mandar el mensaje disparamos el evento de nueva conexion bidi creada
 		final NexoEjecutor disparadorDeNuevaConexion = NexoEjecutor.create(taskProcessor, dispararEventoConexionBidi,
 				identificadorDeMetamensajes);
 		registradorDeId.conectarCon(disparadorDeNuevaConexion);
 
-		return descartadorDeConfirmacionesAjenas;
+		return registradorDeId;
 	}
 
 	/**
