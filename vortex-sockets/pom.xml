@@ -70,14 +70,6 @@
   
   <dependencies>
   
-  
-    <!-- Clases de código comun mio -->
-    <dependency>
-	  <groupId>ar.com.dgarcia</groupId>
-	  <artifactId>dgarcia-commons</artifactId>
-	  <version>1.0.5-SNAPSHOT</version>
-    </dependency>
-  
   	<!-- Agrega la parte mínima de Vortex -->
   	<dependency>
 	  <groupId>net.gaia.vortex</groupId>

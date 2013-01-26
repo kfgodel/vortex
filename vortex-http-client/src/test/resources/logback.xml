@@ -19,6 +19,10 @@
 	
 	<logger name="net.gaia.vortex.http" level="DEBUG" />
 	
+	
+	<!-- Queremos detalle de los routers bidi -->
+	<logger name="net.gaia.vortex.router" level="DEBUG" />
+	
   
 	<root level="info">
 	  <appender-ref ref="STDOUT" />

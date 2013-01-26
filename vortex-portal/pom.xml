@@ -78,7 +78,7 @@
   	<dependency>
 	  <groupId>ar.com.dgarcia</groupId>
 	  <artifactId>dgarcia-commons</artifactId>
-	  <version>1.0.5-SNAPSHOT</version>
+	  <version>[1.0.5-SNAPSHOT,)</version>
   	</dependency>
   
   	<!-- Dependencias basicas de vortex -->

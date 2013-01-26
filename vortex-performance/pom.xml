@@ -87,13 +87,6 @@
   
   <dependencies>
 
-  	<!-- NEcesitamos explicitar la version -->
-  	<dependency>
-	  <groupId>ar.com.dgarcia</groupId>
-	  <artifactId>dgarcia-commons</artifactId>
-	  <version>1.0.5-SNAPSHOT</version>
-  	</dependency>
-
 	<!-- Clases del core testeadas -->  	
   	<dependency>
 	  <groupId>net.gaia.vortex</groupId>
@@ -114,6 +107,19 @@
 	  <artifactId>vortex-sockets</artifactId>
 	  <version>0.5.0-SNAPSHOT</version>
   	</dependency>
+
+  	<!-- Tests sobre http -->
+  	<dependency>
+		  <groupId>net.gaia.vortex.http</groupId>
+		  <artifactId>vortex-http-client</artifactId>
+		  <version>0.5.0-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+		  <groupId>net.gaia.vortex.http</groupId>
+		  <artifactId>vortex-http-server</artifactId>
+		  <version>0.5.0-SNAPSHOT</version>
+  	</dependency>
+
   
     <dependency>
       <groupId>org.slf4j</groupId>

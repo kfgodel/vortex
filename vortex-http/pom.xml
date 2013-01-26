@@ -91,13 +91,6 @@
 	  <version>0.1</version>
 	</dependency>    
     
-    <!-- Clases comunes -->
-	<dependency>
-	  <groupId>ar.com.dgarcia</groupId>
-	  <artifactId>dgarcia-commons</artifactId>
-	  <version>1.0.4</version>
-	</dependency>    
-  
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
