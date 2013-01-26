@@ -235,7 +235,7 @@ public class TestCaminosDuplicados {
 		esperarPrimerMensaje.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.MINUTES));
 		LOG.debug("Esperando otros mensajes a parte del primero");
 
-		// Esperamos unos 20s más para registrar si llegan otros mensajes
+		// Esperamos unos segundos más para registrar si llegan otros mensajes
 		Thread.sleep(5000);
 
 		Assert.assertEquals("Sólo debería haber llegado un mensaje", 1, metricas.getCantidadDeOutputs());

@@ -17,8 +17,8 @@ import java.util.Map;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.impl.ids.componentes.IdInmutableDeComponente;
+import net.gaia.vortex.helpers.VortexMap;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
-import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -131,7 +131,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	 */
 	@Override
 	public Map<String, Object> getAsMap() {
-		final Map<String, Object> mapa = new CaseInsensitiveHashMap<Object>();
+		final Map<String, Object> mapa = new VortexMap();
 
 		final String idDelEmisor = getIdDelEmisor().getValorActual();
 		mapa.put(IdDeMensaje.EMISOR_DEL_ID_KEY, idDelEmisor);

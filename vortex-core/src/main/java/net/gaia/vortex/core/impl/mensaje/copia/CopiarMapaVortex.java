@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
+import net.gaia.vortex.helpers.VortexMap;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -83,7 +83,7 @@ public class CopiarMapaVortex {
 	 * @return El mapa a utilizar
 	 */
 	public static Map<String, Object> crearMapaVortex() {
-		return new CaseInsensitiveHashMap<Object>();
+		return new VortexMap();
 	}
 
 	/**

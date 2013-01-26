@@ -22,11 +22,10 @@ import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaCompo
 import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
+import net.gaia.vortex.helpers.VortexMap;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
  * Esta clase prueba algunas expectativas sobre los mensajes
@@ -48,7 +47,7 @@ public class TestMensajes {
 
 		final ContenidoVortex contenido = mensajeOriginal.getContenido();
 		final Object mapaDelId = contenido.get(ContenidoVortex.ID_DE_MENSAJE_KEY);
-		Assert.assertTrue("Deberia ser un mapa insensitive", mapaDelId instanceof CaseInsensitiveHashMap);
+		Assert.assertTrue("Deberia ser un mapa insensitive", mapaDelId instanceof VortexMap);
 	}
 
 	/**
@@ -63,7 +62,7 @@ public class TestMensajes {
 
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> object = (Map<String, Object>) contenido.get("mapa");
-		Assert.assertTrue("Deberia ser un mapa insensitive", object instanceof CaseInsensitiveHashMap);
+		Assert.assertTrue("Deberia ser un mapa insensitive", object instanceof VortexMap);
 
 		Assert.assertEquals("Deberia obtener el valor aunque la clave no coincide", "manola", object.get("hOlA"));
 	}
@@ -87,7 +86,7 @@ public class TestMensajes {
 		final Map<String, Object> level1 = (Map<String, Object>) contenido.get("mapa1");
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> level2 = (Map<String, Object>) level1.get("mapa2");
-		Assert.assertTrue("Deberia ser un mapa insensitive", level2 instanceof CaseInsensitiveHashMap);
+		Assert.assertTrue("Deberia ser un mapa insensitive", level2 instanceof VortexMap);
 
 		Assert.assertEquals("Deberia obtener el valor aunque la clave no coincide", "2", level2.get("level"));
 
@@ -116,7 +115,7 @@ public class TestMensajes {
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> level2 = (Map<String, Object>) level1.get("mapa2");
 		Assert.assertFalse("No podemos detectar la modificacion y deberia ser un mapa comun",
-				level2 instanceof CaseInsensitiveHashMap);
+				level2 instanceof VortexMap);
 
 	}
 }

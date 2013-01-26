@@ -13,11 +13,8 @@
 package net.gaia.vortex.router.impl.moleculas;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.router.api.moleculas.Router;
-import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
-import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoRouter;
-import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
+import net.gaia.vortex.router.impl.moleculas.support.RouterSupport;
 
 /**
  * Esta calse representa el router bidireccional que a partir de la publicación de los filtros de
@@ -25,25 +22,11 @@ import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
  * 
  * @author D. García
  */
-public class RouterBidi extends NodoBidi implements Router {
+public class RouterBidi extends RouterSupport implements Router {
 
 	public static RouterBidi create(final TaskProcessor processor) {
 		final RouterBidi router = new RouterBidi();
-		router.initializeWith(processor, ComportamientoRouter.create());
+		router.initializeWith(processor);
 		return router;
-	}
-
-	/**
-	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#calcularFiltroDeEntradaPara(net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
-	 */
-	@Override
-	protected Condicion calcularFiltroDeEntradaPara(final PataBidireccional pataConectora) {
-		ParteDeCondiciones parteDeLaPata = null;
-		if (pataConectora != null) {
-			parteDeLaPata = pataConectora.getParteDeCondicion();
-		}
-		final Condicion condicioDelRestoDeLasPatas = getConjuntoDeCondiciones().getCondicionDelConjuntoMenos(
-				parteDeLaPata);
-		return condicioDelRestoDeLasPatas;
 	}
 }

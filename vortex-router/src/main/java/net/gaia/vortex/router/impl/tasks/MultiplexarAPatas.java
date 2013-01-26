@@ -24,6 +24,7 @@ import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.helpers.VortexEquals;
 import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import net.gaia.vortex.router.impl.condiciones.EsMetaMensaje;
 import net.gaia.vortex.router.impl.messages.meta.MensajeConIdDePataReceptora;
@@ -99,7 +100,7 @@ public class MultiplexarAPatas implements WorkUnit {
 			return patas;
 		}
 		for (final PataBidireccional pata : patas) {
-			if (pata.getIdLocal().equals(posibleIdentificador)) {
+			if (VortexEquals.areEquals(pata.getIdLocal(), posibleIdentificador)) {
 				// Es la pata a la que va dirigida
 				final ArrayList<PataBidireccional> destinos = new ArrayList<PataBidireccional>(1);
 				destinos.add(pata);

@@ -63,33 +63,6 @@ public class TestRuteoBidiDeUsoBasico {
 		processor.detener();
 	}
 
-	public static class MensajeDeRuteoParaTest {
-		public String atributo;
-		public static final String atributo_FIELD = "atributo";
-
-		public MensajeDeRuteoParaTest() {
-		}
-
-		public MensajeDeRuteoParaTest(final String valor) {
-			this.atributo = valor;
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (!(obj instanceof MensajeDeRuteoParaTest)) {
-				return false;
-			}
-			final MensajeDeRuteoParaTest that = (MensajeDeRuteoParaTest) obj;
-			final boolean mismoAtributo = this.atributo.equals(that.atributo);
-			return mismoAtributo;
-		}
-
-		@Override
-		public int hashCode() {
-			return this.atributo.hashCode();
-		}
-	}
-
 	@Test
 	public void elMensajeNoDeberiaLlegarSiNoSeDeclaraNingunFiltro() throws InterruptedException {
 
@@ -127,11 +100,11 @@ public class TestRuteoBidiDeUsoBasico {
 		// Le definimos al receptor qué es lo que queremos recibir ANTES de conectarlo (para no
 		// tener que esperar propagaciones después)
 		final String valorEsperado = "hola";
-		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptor = new HandlerEncolador<MensajeDeRuteoParaTest>() {
+		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoEn.create(valorEsperado,
-						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
+						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
 			}
 		};
 		receptorPositivo1.recibirCon(handlerReceptor);
@@ -146,7 +119,7 @@ public class TestRuteoBidiDeUsoBasico {
 		Thread.sleep(1000);
 
 		// Mandamos el mensaje
-		final MensajeDeRuteoParaTest mensajeEnviado = new MensajeDeRuteoParaTest(valorEsperado);
+		final MensajeParaTestDeRuteo mensajeEnviado = new MensajeParaTestDeRuteo(valorEsperado);
 		emisor.enviar(mensajeEnviado);
 
 		// Verificamos que haya llegado
@@ -163,11 +136,11 @@ public class TestRuteoBidiDeUsoBasico {
 		// Le definimos al receptor qué es lo que queremos recibir antes de conectar para no tener
 		// que esperar despues
 		final String valorEsperado = "hola";
-		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptor = new HandlerEncolador<MensajeDeRuteoParaTest>() {
+		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoEn.create("!" + valorEsperado,
-						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
+						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
 			}
 		};
 		receptorPositivo1.recibirCon(handlerReceptor);
@@ -182,7 +155,7 @@ public class TestRuteoBidiDeUsoBasico {
 		Thread.sleep(1000);
 
 		// Mandamos el mensaje
-		final MensajeDeRuteoParaTest mensajeEnviado = new MensajeDeRuteoParaTest(valorEsperado);
+		final MensajeParaTestDeRuteo mensajeEnviado = new MensajeParaTestDeRuteo(valorEsperado);
 		emisor.enviar(mensajeEnviado);
 
 		// Verificamos que no llega
@@ -212,7 +185,7 @@ public class TestRuteoBidiDeUsoBasico {
 		Thread.sleep(1000);
 
 		// Mandamos el mensaje
-		final MensajeDeRuteoParaTest mensajeEnviado = new MensajeDeRuteoParaTest("hola");
+		final MensajeParaTestDeRuteo mensajeEnviado = new MensajeParaTestDeRuteo("hola");
 		emisor.enviar(mensajeEnviado);
 
 		try {
@@ -237,21 +210,21 @@ public class TestRuteoBidiDeUsoBasico {
 		// Definimos qué quiere recibir cada receptor antes de conecarlos para no esperar
 		// propagacion de filtros
 		final String valorEsperado = "hola";
-		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptorPositivo = new HandlerEncolador<MensajeDeRuteoParaTest>() {
+		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptorPositivo = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoEn.create(valorEsperado,
-						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
+						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
 			}
 		};
 		receptorPositivo1.recibirCon(handlerReceptorPositivo);
 
 		final String valorNoEsperado = "chau";
-		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptorNegativo = new HandlerEncolador<MensajeDeRuteoParaTest>() {
+		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptorNegativo = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoEn.create(valorNoEsperado,
-						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
+						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
 			}
 		};
 		receptorNegativo1.recibirCon(handlerReceptorNegativo);
@@ -270,7 +243,7 @@ public class TestRuteoBidiDeUsoBasico {
 		Thread.sleep(1000);
 
 		// Mandamos el mensaje
-		final MensajeDeRuteoParaTest mensajeEnviado = new MensajeDeRuteoParaTest("hola");
+		final MensajeParaTestDeRuteo mensajeEnviado = new MensajeParaTestDeRuteo("hola");
 		emisor.enviar(mensajeEnviado);
 
 		// Esperamos que sea ruteado
@@ -306,20 +279,20 @@ public class TestRuteoBidiDeUsoBasico {
 
 		// Definimos al receptor y emisor como interesados en lo mismo
 		final String valorEsperado = "hola";
-		final HandlerEncolador<MensajeDeRuteoParaTest> handlerEmisor = new HandlerEncolador<MensajeDeRuteoParaTest>() {
+		final HandlerEncolador<MensajeParaTestDeRuteo> handlerEmisor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoEn.create(valorEsperado,
-						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
+						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
 			}
 		};
 		emisor.recibirCon(handlerEmisor);
 
-		final HandlerEncolador<MensajeDeRuteoParaTest> handlerReceptorPositivo = new HandlerEncolador<MensajeDeRuteoParaTest>() {
+		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptorPositivo = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoEn.create(valorEsperado,
-						PropertyAccessor.create(MensajeDeRuteoParaTest.atributo_FIELD));
+						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
 			}
 		};
 		receptorPositivo1.recibirCon(handlerReceptorPositivo);
@@ -334,7 +307,7 @@ public class TestRuteoBidiDeUsoBasico {
 		Thread.sleep(1000);
 
 		// Mandamos un mensaje desde el emisor que le interesa a ambos
-		final MensajeDeRuteoParaTest mensajeEnviado = new MensajeDeRuteoParaTest("hola");
+		final MensajeParaTestDeRuteo mensajeEnviado = new MensajeParaTestDeRuteo("hola");
 		emisor.enviar(mensajeEnviado);
 
 		// Verificamos que el router ruteo el mensaje al receptor

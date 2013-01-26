@@ -15,12 +15,12 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.serial;
 import java.util.Map;
 
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.helpers.VortexMap;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
-import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
  * Esta clase implementa la serialización de condiciones siempre false
@@ -41,7 +41,7 @@ public class SerializadorFalse implements SerializadorDeTipo<SiempreFalse> {
 	 */
 	@Override
 	public Map<String, Object> serializarDesde(final SiempreFalse origen, final ContextoDeSerializacion contexto) {
-		final Map<String, Object> serializado = new CaseInsensitiveHashMap<Object>();
+		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_FALSE);
 		return serializado;
 	}

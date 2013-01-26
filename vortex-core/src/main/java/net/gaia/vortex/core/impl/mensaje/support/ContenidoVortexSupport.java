@@ -19,6 +19,7 @@ import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.impl.ids.mensajes.IdSecuencialDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.copia.CopiarMapaVortex;
+import net.gaia.vortex.helpers.VortexMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
  * 
  * @author D. García
  */
-public class ContenidoVortexSupport extends CaseInsensitiveHashMap<Object> implements ContenidoVortex {
+public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex {
 	private static final Logger LOG = LoggerFactory.getLogger(ContenidoVortexSupport.class);
 
 	/**

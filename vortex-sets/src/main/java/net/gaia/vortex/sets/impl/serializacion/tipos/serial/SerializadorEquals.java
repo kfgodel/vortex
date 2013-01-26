@@ -14,13 +14,13 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.serial;
 
 import java.util.Map;
 
+import net.gaia.vortex.helpers.VortexMap;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
-import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
  * Esta clase implementa el serializador de las condiciones por equals
@@ -41,7 +41,7 @@ public class SerializadorEquals implements SerializadorDeTipo<ValorEsperadoEn> {
 	 */
 	@Override
 	public Map<String, Object> serializarDesde(final ValorEsperadoEn origen, final ContextoDeSerializacion contexto) {
-		final Map<String, Object> serializado = new CaseInsensitiveHashMap<Object>();
+		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_EQUALS);
 
 		serializado.put(MetadataDeSerializacion.TIPO_EQUALS_CLAVE, origen.getValueAccessor().getPropertyPath());

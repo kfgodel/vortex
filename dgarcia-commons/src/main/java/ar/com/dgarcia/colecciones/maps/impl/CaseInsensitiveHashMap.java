@@ -301,13 +301,14 @@ public class CaseInsensitiveHashMap<V> implements ConcurrentMap<String, V>, Read
 			while (i.hasNext()) {
 				final Entry<String, V> e = i.next();
 				final String key = e.getKey();
-				final V value = e.getValue();
-				if (value == null) {
+				final V thisValue = e.getValue();
+				if (thisValue == null) {
 					if (!(m.get(key) == null && m.containsKey(key))) {
 						return false;
 					}
 				} else {
-					if (!value.equals(m.get(key))) {
+					final V thatValue = m.get(key);
+					if (!thisValue.equals(thatValue)) {
 						return false;
 					}
 				}

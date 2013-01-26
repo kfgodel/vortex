@@ -19,6 +19,10 @@
 	
 	<logger name="net.gaia.vortex.sockets" level="DEBUG" />
 	
+	<!-- Queremos detalle de los routers bidi -->
+	<logger name="net.gaia.vortex.router" level="DEBUG" />
+	
+	
 	<!-- No queremos el detalle de nexos abiertos por conexión  -->
 	<logger name="net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler" level="INFO" />
 	<logger name="net.gaia.vortex.server.impl.RealizarConexiones" level="WARN" />

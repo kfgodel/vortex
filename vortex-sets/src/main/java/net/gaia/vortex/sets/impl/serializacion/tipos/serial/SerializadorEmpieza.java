@@ -14,13 +14,13 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.serial;
 
 import java.util.Map;
 
+import net.gaia.vortex.helpers.VortexMap;
 import net.gaia.vortex.sets.impl.condiciones.AtributoEmpieza;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
-import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
  * Esta clase representa el serializador de las condiciones que verifican un prefijo
@@ -41,7 +41,7 @@ public class SerializadorEmpieza implements SerializadorDeTipo<AtributoEmpieza> 
 	 */
 	@Override
 	public Map<String, Object> serializarDesde(final AtributoEmpieza origen, final ContextoDeSerializacion contexto) {
-		final Map<String, Object> serializado = new CaseInsensitiveHashMap<Object>();
+		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_EMPIEZA);
 
 		serializado.put(MetadataDeSerializacion.TIPO_EMPIEZA_CLAVE, origen.getValueAccessor().getPropertyPath());

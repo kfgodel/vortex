@@ -15,13 +15,13 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.serial;
 import java.util.Map;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.helpers.VortexMap;
 import net.gaia.vortex.sets.impl.condiciones.Negacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
-import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
  * Esta clase implementa el serializador de condiciones NOT
@@ -42,7 +42,7 @@ public class SerializadorNot implements SerializadorDeTipo<Negacion> {
 	 */
 	@Override
 	public Map<String, Object> serializarDesde(final Negacion origen, final ContextoDeSerializacion contexto) {
-		final Map<String, Object> serializado = new CaseInsensitiveHashMap<Object>();
+		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_NOT);
 
 		final Condicion subCondicion = origen.getCondicionNegada();

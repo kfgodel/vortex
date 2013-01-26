@@ -20,6 +20,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.helpers.VortexEquals;
 import net.gaia.vortex.sets.reflection.ValueAccessor;
 import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
 import ar.com.dgarcia.lang.reflection.ReflectionUtils;
@@ -50,7 +51,7 @@ public class ValorEsperadoEn implements Condicion {
 			return ResultadoDeCondicion.FALSE;
 		}
 		final Object valorEnElMensaje = valueAccessor.getValueFrom(contenidoDelMensaje);
-		final boolean valoresIguales = compararPorEquals(valorEsperado, valorEnElMensaje);
+		final boolean valoresIguales = VortexEquals.areEquals(valorEsperado, valorEnElMensaje);
 		final ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(valoresIguales);
 		return resultado;
 	}

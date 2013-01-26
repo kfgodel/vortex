@@ -14,13 +14,13 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.serial;
 
 import java.util.Map;
 
+import net.gaia.vortex.helpers.VortexMap;
 import net.gaia.vortex.sets.impl.condiciones.TextoRegexMatchea;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
-import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
 
 /**
  * Esta clase implementa el serializador de condiciones regex
@@ -41,7 +41,7 @@ public class SerializadorRegex implements SerializadorDeTipo<TextoRegexMatchea> 
 	 */
 	@Override
 	public Map<String, Object> serializarDesde(final TextoRegexMatchea origen, final ContextoDeSerializacion contexto) {
-		final Map<String, Object> serializado = new CaseInsensitiveHashMap<Object>();
+		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_REGEX);
 
 		serializado.put(MetadataDeSerializacion.TIPO_REGEX_CLAVE, origen.getValueAccessor().getPropertyPath());
