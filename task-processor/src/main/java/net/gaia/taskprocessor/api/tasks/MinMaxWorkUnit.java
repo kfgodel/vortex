@@ -15,6 +15,7 @@ package net.gaia.taskprocessor.api.tasks;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
+import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
@@ -31,8 +32,8 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * demasiado pronto, ni demasiado tarde. Por lo tanto tiene un parámetro de mínima y uno de máxima
  * respecto de cuánto tiempo es necesario esperar para ejecutar de nuevo.<br>
  * Si se invoca antes del límite mínimo esta tarea no tiene efecto más que la re-planificación para
- * ejecución próxima, si no se dentro del tiempo máxima de espera, la tarea se invoca a si misma
- * antes de que se exceda el límite máximo.
+ * ejecución próxima, si no se ejecuta dentro del tiempo máxima de espera, la tarea se invoca a si
+ * misma antes de que se exceda el límite máximo.
  * 
  * @author D. García
  */
@@ -56,6 +57,11 @@ public class MinMaxWorkUnit implements WorkUnit {
 	private long momentoDeUltimaEjecucion;
 	public static final String momentoDeUltimaEjecucion_FIELD = "momentoDeUltimaEjecucion";
 
+	private long momentoDeProximaEjecucion;
+	public static final String momentoDeProximaEjecucion_FIELD = "momentoDeProximaEjecucion";
+
+	private SubmittedTask proximaPlanificacion;
+
 	private TaskProcessor procesor;
 	private ReentrantLock lockDeEjecucion;
 
@@ -67,6 +73,27 @@ public class MinMaxWorkUnit implements WorkUnit {
 		final MinMaxWorkUnit minmax = new MinMaxWorkUnit();
 		minmax.initialize(processor, delegada, esperaMinima, esperaMaxima);
 		return minmax;
+	}
+
+	/**
+	 * La tarea se autoprograma para comenzar inmediatamente utilizando el procesador indicado
+	 */
+	public void iniciarEjecucion() {
+		boolean acquired;
+		try {
+			acquired = lockDeEjecucion.tryLock(MAXIMO_PERMITIDO_PARA_ADQUIRIR_LOCK, TimeUnit.MILLISECONDS);
+		} catch (final InterruptedException e) {
+			throw new UnhandledConditionException("Fuimos interrumpidos antes de empezar?!", e);
+		}
+		if (!acquired) {
+			throw new UnhandledConditionException("No fue posible adquirir el lock para ejecutar la tarea[" + this
+					+ "]. Hay un thread bloqueado?");
+		}
+		try {
+			proximaPlanificacion = procesor.process(this);
+		} finally {
+			lockDeEjecucion.unlock();
+		}
 	}
 
 	/**
@@ -88,9 +115,15 @@ public class MinMaxWorkUnit implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 	@Override
-	public WorkUnit doWork() throws InterruptedException {
+	public WorkUnit doWork() {
 		LOG.debug("Iniciando ejecucion min-max[{}]", this);
-		final boolean acquired = lockDeEjecucion.tryLock(MAXIMO_PERMITIDO_PARA_ADQUIRIR_LOCK, TimeUnit.MILLISECONDS);
+		boolean acquired;
+		try {
+			acquired = lockDeEjecucion.tryLock(MAXIMO_PERMITIDO_PARA_ADQUIRIR_LOCK, TimeUnit.MILLISECONDS);
+		} catch (final InterruptedException e) {
+			LOG.debug("Interrupción mientras esperabamos lock para ejecutar. Nos cancelaron?", e);
+			return null;
+		}
 		if (!acquired) {
 			throw new UnhandledConditionException("No fue posible adquirir el lock para ejecutar la tarea[" + this
 					+ "]. Hay un thread bloqueado?");
@@ -117,14 +150,15 @@ public class MinMaxWorkUnit implements WorkUnit {
 			replanificarEjecucionParaDentroDe(milisFaltantesParaEjecucion);
 			return null;
 		}
-		LOG.debug("Ejecucion aceptada. Ya pasaron {} milis desde ultima ejecucion de [{}]",
-				transcurridoDesdeUltimaEjecucion, this);
+		LOG.debug("Ejecucion aceptada. Ya pasaron {} de [{},{}] milis desde ultima ejecucion de [{}]", new Object[] {
+				transcurridoDesdeUltimaEjecucion, esperaMinima, esperaMaxima, this });
 		WorkUnit resultado;
 		try {
 			resultado = ejecutarTarea();
 		} catch (final Exception e) {
 			LOG.error("Se produjo un error ejecutando la tarea repetitiva[" + this
 					+ "]. Abortando ejecuciones posteriores", e);
+			cancelarPlanificacionesAnteriores();
 			return null;
 		}
 		momentoDeUltimaEjecucion = getCurrentMillis();
@@ -136,6 +170,9 @@ public class MinMaxWorkUnit implements WorkUnit {
 	 * Cancela todas las planificaciones de esta tarea a futuro
 	 */
 	private void cancelarPlanificacionesAnteriores() {
+		if (proximaPlanificacion != null) {
+			proximaPlanificacion.cancel(true);
+		}
 		procesor.removeTasksMatching(new TaskCriteria() {
 			@Override
 			public boolean matches(final WorkUnit workUnit) {
@@ -169,8 +206,15 @@ public class MinMaxWorkUnit implements WorkUnit {
 	 */
 	private void replanificarEjecucionParaDentroDe(final long esperaEnMilis) {
 		cancelarPlanificacionesAnteriores();
-		LOG.debug("Proxima ejecucion en {} milis para [{}]", esperaEnMilis, this);
-		procesor.processDelayed(TimeMagnitude.of(esperaEnMilis, TimeUnit.MILLISECONDS), this);
+		final long momentoParaEjecutar = getCurrentMillis() + esperaEnMilis;
+		if (momentoDeProximaEjecucion == momentoParaEjecutar) {
+			LOG.debug(" Replanificacion de [{}] innecesaria porque no cambia el momento de proxima ejecucion: {}",
+					this, momentoDeProximaEjecucion);
+			return;
+		}
+		momentoDeProximaEjecucion = momentoParaEjecutar;
+		LOG.debug("Proxima ejecucion en dentro de {} milis para [{}]", esperaEnMilis, this);
+		proximaPlanificacion = procesor.processDelayed(TimeMagnitude.of(esperaEnMilis, TimeUnit.MILLISECONDS), this);
 	}
 
 	/**

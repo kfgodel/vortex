@@ -23,6 +23,10 @@ import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TaskDelayerProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
@@ -32,6 +36,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * @author D. García
  */
 public class ExecutorDelayerProcessor implements TaskDelayerProcessor {
+	private static final Logger LOG = LoggerFactory.getLogger(ExecutorDelayerProcessor.class);
 
 	private ConcurrentLinkedQueue<TaskPlanner> delayedTasks;
 	private ScheduledThreadPoolExecutor delayedExecutor;
@@ -86,6 +91,7 @@ public class ExecutorDelayerProcessor implements TaskDelayerProcessor {
 			final WorkUnit workUnit = delayedTask.getWork();
 			if (criteria.matches(workUnit)) {
 				taskPlanner.cancelExecution();
+				LOG.debug("Quitando tarea inmediata[{}] según criteria[{}]", workUnit, criteria);
 				delayedIterator.remove();
 			}
 		}
