@@ -83,13 +83,17 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	 */
 	@Override
 	public void setDestino(final Receptor nuevoDestino) {
+		if (nuevoDestino == null) {
+			throw new IllegalArgumentException("El delegado del portal no puede ser null. A lo sumo un "
+					+ ReceptorNulo.class);
+		}
 		final Receptor destinoAnterior = getDestino();
 		if (destinoAnterior.equals(nuevoDestino)) {
 			// Ya estamos conectados
 			return;
 		}
-		desconectarDe(destinoAnterior);
-		conectarCon(nuevoDestino);
+		super.desconectarDe(destinoAnterior);
+		super.conectarCon(nuevoDestino);
 	}
 
 	/**
@@ -104,6 +108,14 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 		}
 		final Receptor primerYUnicoDestino = allDestinos.get(0);
 		return primerYUnicoDestino;
+	}
+
+	/**
+	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 */
+	@Override
+	public void conectarCon(final Receptor destino) {
+		setDestino(destino);
 	}
 
 	/**
