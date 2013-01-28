@@ -1,5 +1,5 @@
 /**
- * 28/01/2013 17:04:12 Copyright (C) 2011 Darío L. García
+ * 28/01/2013 17:29:50 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -16,39 +16,34 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.vortex.core.api.atomos.Emisor;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
-import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
- * Esta clase representa el listener de conexiones bidi que permite esperar por una conexion bidi en
- * particular. Bloqueando el thread hasta que se produzca la conexion o se acabe el tiempo de espera
+ * Esta clase representa el listener de cambios de filtros que espera por uno en particular
  * 
  * @author D. García
  */
-public class EsperarConexionBidi implements ListenerDeConexionesBidiEnNodo {
-
-	private BlockingQueue<ConexionBidi> conexiones;
+public class EsperarFiltro implements ListenerDeCambiosDeFiltro {
 
 	/**
-	 * @see net.gaia.vortex.router.impl.moleculas.listeners.ListenerDeConexionesBidiEnNodo#onConexionBidiDe(net.gaia.vortex.router.api.moleculas.NodoBidireccional,
-	 *      net.gaia.vortex.core.api.atomos.Receptor,
-	 *      net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
+	 * @see net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro#onCambioDeFiltros(net.gaia.vortex.router.api.moleculas.NodoBidireccional,
+	 *      net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
 	@Override
-	public void onConexionBidiDe(final NodoBidireccional origen, final Receptor destino,
-			final PataBidireccional pataConectada) {
-		final ConexionBidi conexion = ConexionBidi.create(origen, destino, pataConectada);
-		conexiones.add(conexion);
+	public void onCambioDeFiltros(final NodoBidireccional nodo, final Condicion nuevoFiltro) {
+		condiciones.add(nuevoFiltro);
 	}
 
-	public static EsperarConexionBidi create() {
-		final EsperarConexionBidi listener = new EsperarConexionBidi();
-		listener.conexiones = new LinkedBlockingQueue<ConexionBidi>();
+	private BlockingQueue<Condicion> condiciones;
+
+	public static EsperarFiltro create() {
+		final EsperarFiltro listener = new EsperarFiltro();
+		listener.condiciones = new LinkedBlockingQueue<Condicion>();
 		return listener;
 	}
 
@@ -69,37 +64,36 @@ public class EsperarConexionBidi implements ListenerDeConexionesBidiEnNodo {
 	 * @throws TimeoutExceededException
 	 *             Si se acaba el tiempo y el paso no está
 	 */
-	public ConexionBidi esperarConexionBidiDesde(final Emisor emisor, final Receptor receptor,
-			final TimeMagnitude esperaMaxima) throws TimeoutExceededException {
+	public Condicion esperarCambioDeFiltroA(final Condicion filtroEsperado, final TimeMagnitude esperaMaxima)
+			throws TimeoutExceededException {
 		final long startMillis = System.currentTimeMillis();
 		long millisRestantes = 0;
 		while ((millisRestantes = esperaMaxima.getMillis() - (System.currentTimeMillis() - startMillis)) > 0) {
 			// Vemos si el paso ya está en la lista
-			ConexionBidi conexion = conexiones.poll();
-			while (conexion != null) {
-				if (conexion.uneA(emisor, receptor)) {
+			Condicion condicion = condiciones.poll();
+			while (condicion != null) {
+				if (condicion.equals(filtroEsperado)) {
 					// Es el paso que buscamos
-					return conexion;
+					return condicion;
 				}
-				conexion = conexiones.poll();
+				condicion = condiciones.poll();
 			}
 
 			// Si no está esperamos el proximo paso mientras nos queden millis
 			try {
-				conexion = conexiones.poll(millisRestantes, TimeUnit.MILLISECONDS);
-				if (conexion == null) {
-					throw new TimeoutExceededException(
-							"Pasó el tiempo de espera y no se establecio conexion bidi entre ["
-									+ emisor.toShortString() + "] y [" + receptor.toShortString() + "]");
+				condicion = condiciones.poll(millisRestantes, TimeUnit.MILLISECONDS);
+				if (condicion == null) {
+					throw new TimeoutExceededException("Pasó el tiempo de espera y no se produjo el filtro esperado ["
+							+ filtroEsperado + "]");
 				}
 				// Lo insertamos para repetir el proceso con el paso
-				conexiones.put(conexion);
+				condiciones.put(condicion);
 			} catch (final InterruptedException e) {
-				throw new InterruptedWaitException("Se interrumpió la espera de la cola de conexiones", e);
+				throw new InterruptedWaitException("Se interrumpió la espera de la cola de condiciones", e);
 			}
 		}
-		throw new TimeoutExceededException("Pasó el tiempo de espera y no se establecio conexion bidi entre ["
-				+ emisor.toShortString() + "] y [" + receptor.toShortString() + "]");
+		throw new TimeoutExceededException("Pasó el tiempo de espera y no se produjo el filtro esperado ["
+				+ filtroEsperado + "]");
 
 	}
 

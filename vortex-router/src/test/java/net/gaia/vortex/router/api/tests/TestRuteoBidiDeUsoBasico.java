@@ -18,15 +18,17 @@ import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
+import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.portal.tests.HandlerEncolador;
 import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.api.moleculas.Router;
-import net.gaia.vortex.router.api.tests.listeners.ListenerDeCambioDeFiltrosConCola;
 import net.gaia.vortex.router.api.tests.listeners.ListenerDeRuteoEnPasos;
 import net.gaia.vortex.router.impl.moleculas.PortalBidi;
 import net.gaia.vortex.router.impl.moleculas.RouterBidi;
 import net.gaia.vortex.router.impl.moleculas.listeners.ConexionBidi;
 import net.gaia.vortex.router.impl.moleculas.listeners.EsperarConexionBidi;
+import net.gaia.vortex.router.impl.moleculas.listeners.EsperarFiltro;
+import net.gaia.vortex.sets.impl.condiciones.OrCompuesto;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 import net.gaia.vortex.sets.reflection.accessors.PropertyAccessor;
 
@@ -50,19 +52,58 @@ public class TestRuteoBidiDeUsoBasico {
 	private PortalBidireccional receptorNegativo1;
 	private Router routerCentral;
 	private TaskProcessor processor;
+	private EsperarConexionBidi listenerDeConexionesEnRouterCentral;
+	private EsperarFiltro listenerFiltrosRemotosEnEmisor;
 
 	@Before
 	public void crearNodos() {
 		processor = VortexProcessorFactory.createProcessor();
 		emisor = PortalBidi.create(processor);
+		listenerFiltrosRemotosEnEmisor = EsperarFiltro.create();
+		emisor.setListenerDeFiltrosRemotos(listenerFiltrosRemotosEnEmisor);
 		receptorPositivo1 = PortalBidi.create(processor);
 		receptorNegativo1 = PortalBidi.create(processor);
 		routerCentral = RouterBidi.create(processor);
+		listenerDeConexionesEnRouterCentral = EsperarConexionBidi.create();
+		routerCentral.setListenerDeConexiones(listenerDeConexionesEnRouterCentral);
 	}
 
 	@After
 	public void eliminarNodos() {
 		processor.detener();
+	}
+
+	@Test
+	public void deberiaNotificarAlListenerCuandoSeEstableceLaConexionBidi() {
+		final EsperarConexionBidi esperaDeConexiones = EsperarConexionBidi.create();
+		emisor.setListenerDeConexiones(esperaDeConexiones);
+
+		// Verificamos que no existe conexión bidi todavía
+		try {
+			esperaDeConexiones.esperarConexionBidiDesde(emisor, routerCentral, TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("No deríamos tener el lock liberado");
+		} catch (final UnsuccessfulWaitException e) {
+			// Es la excepción esperada
+		}
+
+		// Conectamos solo el portal al router
+		emisor.conectarCon(routerCentral);
+
+		// Verificamos que no existe conexión bidi todavía
+		try {
+			esperaDeConexiones.esperarConexionBidiDesde(emisor, routerCentral, TimeMagnitude.of(1, TimeUnit.SECONDS));
+			Assert.fail("No deríamos tener el lock liberado");
+		} catch (final UnsuccessfulWaitException e) {
+			// Es la excepción esperada
+		}
+
+		// Al conectar de vuelta se debería detectar la conexión
+		routerCentral.conectarCon(emisor);
+
+		// Debería existir una conexión
+		final ConexionBidi conexion = esperaDeConexiones.esperarConexionBidiDesde(emisor, routerCentral,
+				TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertNotNull(conexion);
 	}
 
 	@Test
@@ -78,8 +119,9 @@ public class TestRuteoBidiDeUsoBasico {
 		receptorPositivo1.conectarCon(routerCentral);
 		routerCentral.conectarCon(receptorPositivo1);
 
-		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
-		Thread.sleep(1000);
+		// Esperamos que la última conexión bidi se establezca para probar los ruteos
+		listenerDeConexionesEnRouterCentral.esperarConexionBidiDesde(routerCentral, receptorPositivo1,
+				TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Mandamos el mensaje
 		final String mensajeEnviado = "Hola manola";
@@ -95,18 +137,13 @@ public class TestRuteoBidiDeUsoBasico {
 
 	@Test
 	public void elMensajeDeberiaLlegarSiSeDeclaraUnFiltroPositivo() throws InterruptedException {
-		// Definimos el listener para saber cuando el router adaptó sus filtros
-		final ListenerDeCambioDeFiltrosConCola listenerFiltrosRouter = ListenerDeCambioDeFiltrosConCola.create();
-		routerCentral.setListenerDeFiltrosRemotos(listenerFiltrosRouter);
-
 		// Le definimos al receptor qué es lo que queremos recibir ANTES de conectarlo (para no
 		// tener que esperar propagaciones después)
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
-				return ValorEsperadoEn.create(valorEsperado,
-						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
+				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorEsperado);
 			}
 		};
 		receptorPositivo1.recibirCon(handlerReceptor);
@@ -117,8 +154,10 @@ public class TestRuteoBidiDeUsoBasico {
 		receptorPositivo1.conectarCon(routerCentral);
 		routerCentral.conectarCon(receptorPositivo1);
 
-		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
-		Thread.sleep(1000);
+		// Esperamos que el emisor sea notificado de lo que espera el receptor
+		listenerFiltrosRemotosEnEmisor.esperarCambioDeFiltroA(
+				ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorEsperado),
+				TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Mandamos el mensaje
 		final MensajeParaTestDeRuteo mensajeEnviado = new MensajeParaTestDeRuteo(valorEsperado);
@@ -131,18 +170,13 @@ public class TestRuteoBidiDeUsoBasico {
 
 	@Test
 	public void elMensajeNoDeberiaLlegarSiSeDeclaraUnFiltroNegativo() throws InterruptedException {
-		// Definimos el listener para saber cuando el router adaptó sus filtros
-		final ListenerDeCambioDeFiltrosConCola listenerFiltrosRouter = ListenerDeCambioDeFiltrosConCola.create();
-		routerCentral.setListenerDeFiltrosRemotos(listenerFiltrosRouter);
-
 		// Le definimos al receptor qué es lo que queremos recibir antes de conectar para no tener
 		// que esperar despues
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
-				return ValorEsperadoEn.create("!" + valorEsperado,
-						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
+				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, "!" + valorEsperado);
 			}
 		};
 		receptorPositivo1.recibirCon(handlerReceptor);
@@ -153,8 +187,10 @@ public class TestRuteoBidiDeUsoBasico {
 		receptorPositivo1.conectarCon(routerCentral);
 		routerCentral.conectarCon(receptorPositivo1);
 
-		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
-		Thread.sleep(1000);
+		// Esperamos que el emisor sea notificado de lo que espera el receptor
+		listenerFiltrosRemotosEnEmisor.esperarCambioDeFiltroA(
+				ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, "!" + valorEsperado),
+				TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Mandamos el mensaje
 		final MensajeParaTestDeRuteo mensajeEnviado = new MensajeParaTestDeRuteo(valorEsperado);
@@ -170,11 +206,6 @@ public class TestRuteoBidiDeUsoBasico {
 
 	@Test
 	public void elMensajeNoDeberiaSalirDelPortalSiNoHayInteresado() throws InterruptedException {
-		// Definimos el listener para saber cuando el portal adapta sus filtros a lo que diga el
-		// router
-		final ListenerDeCambioDeFiltrosConCola listenerFiltrosPortal = ListenerDeCambioDeFiltrosConCola.create();
-		emisor.setListenerDeFiltrosRemotos(listenerFiltrosPortal);
-
 		// Definimos el listener para saber los pasos de ruteo del portal
 		final ListenerDeRuteoEnPasos listenerDeRuteo = ListenerDeRuteoEnPasos.create();
 		emisor.setListenerDeRuteos(listenerDeRuteo);
@@ -183,8 +214,9 @@ public class TestRuteoBidiDeUsoBasico {
 		emisor.conectarCon(routerCentral);
 		routerCentral.conectarCon(emisor);
 
-		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
-		Thread.sleep(1000);
+		// Esperamos que el emisor sea notificado de lo que espera el receptor
+		listenerFiltrosRemotosEnEmisor.esperarCambioDeFiltroA(SiempreFalse.getInstancia(),
+				TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Mandamos el mensaje
 		final MensajeParaTestDeRuteo mensajeEnviado = new MensajeParaTestDeRuteo("hola");
@@ -200,11 +232,6 @@ public class TestRuteoBidiDeUsoBasico {
 
 	@Test
 	public void elMensajeNoDeberiaEntregarseAPortalNoInteresadoYSiAlInteresado() throws InterruptedException {
-		// Definimos el listener para saber cuando el portal adapta sus filtros a lo que diga el
-		// router
-		final ListenerDeCambioDeFiltrosConCola listenerFiltrosEmisor = ListenerDeCambioDeFiltrosConCola.create();
-		emisor.setListenerDeFiltrosRemotos(listenerFiltrosEmisor);
-
 		// Definimos el listener para saber los pasos de ruteo del router
 		final ListenerDeRuteoEnPasos listenerDeRuteo = ListenerDeRuteoEnPasos.create();
 		routerCentral.setListenerDeRuteos(listenerDeRuteo);
@@ -215,8 +242,7 @@ public class TestRuteoBidiDeUsoBasico {
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptorPositivo = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
-				return ValorEsperadoEn.create(valorEsperado,
-						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
+				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorEsperado);
 			}
 		};
 		receptorPositivo1.recibirCon(handlerReceptorPositivo);
@@ -225,8 +251,7 @@ public class TestRuteoBidiDeUsoBasico {
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptorNegativo = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
-				return ValorEsperadoEn.create(valorNoEsperado,
-						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
+				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorNoEsperado);
 			}
 		};
 		receptorNegativo1.recibirCon(handlerReceptorNegativo);
@@ -241,8 +266,11 @@ public class TestRuteoBidiDeUsoBasico {
 		emisor.conectarCon(routerCentral);
 		routerCentral.conectarCon(emisor);
 
-		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
-		Thread.sleep(1000);
+		// Esperamos que el emisor sea notificado de lo que esperan los receptores
+		listenerFiltrosRemotosEnEmisor.esperarCambioDeFiltroA(OrCompuesto.de(
+				ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorEsperado),
+				ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorNoEsperado)), TimeMagnitude.of(
+				1, TimeUnit.SECONDS));
 
 		// Mandamos el mensaje
 		final MensajeParaTestDeRuteo mensajeEnviado = new MensajeParaTestDeRuteo("hola");
@@ -337,36 +365,4 @@ public class TestRuteoBidiDeUsoBasico {
 
 	}
 
-	@Test
-	public void deberiaNotificarAlListenerCuandoSeEstableceLaConexionBidi() {
-		final EsperarConexionBidi esperaDeConexiones = EsperarConexionBidi.create();
-		emisor.setListenerDeConexiones(esperaDeConexiones);
-
-		// Verificamos que no existe conexión bidi todavía
-		try {
-			esperaDeConexiones.esperarConexionBidiDesde(emisor, routerCentral, TimeMagnitude.of(1, TimeUnit.SECONDS));
-			Assert.fail("No deríamos tener el lock liberado");
-		} catch (final UnsuccessfulWaitException e) {
-			// Es la excepción esperada
-		}
-
-		// Conectamos solo el portal al router
-		emisor.conectarCon(routerCentral);
-
-		// Verificamos que no existe conexión bidi todavía
-		try {
-			esperaDeConexiones.esperarConexionBidiDesde(emisor, routerCentral, TimeMagnitude.of(1, TimeUnit.SECONDS));
-			Assert.fail("No deríamos tener el lock liberado");
-		} catch (final UnsuccessfulWaitException e) {
-			// Es la excepción esperada
-		}
-
-		// Al conectar de vuelta se debería detectar la conexión
-		routerCentral.conectarCon(emisor);
-
-		// Debería existir una conexión
-		final ConexionBidi conexion = esperaDeConexiones.esperarConexionBidiDesde(emisor, routerCentral,
-				TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertNotNull(conexion);
-	}
 }
