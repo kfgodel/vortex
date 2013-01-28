@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.portal.impl.transformaciones;
 
-import net.gaia.vortex.core.api.annotations.TransformacionNoParalelizable;
+import net.gaia.vortex.core.api.annotations.NoParalelizable;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.ids.mensajes.GeneradorDeIdsDeMensajes;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
@@ -27,7 +27,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-@TransformacionNoParalelizable
+@NoParalelizable
 public class GenerarIdEnMensaje implements Transformacion {
 
 	private GeneradorDeIdsDeMensajes generadorDeIds;

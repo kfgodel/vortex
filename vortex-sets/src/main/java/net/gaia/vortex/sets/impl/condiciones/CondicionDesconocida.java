@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -33,6 +34,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
+@Paralelizable
 public class CondicionDesconocida implements Condicion {
 
 	private static final WeakSingleton<CondicionDesconocida> ultimaReferencia = new WeakSingleton<CondicionDesconocida>(

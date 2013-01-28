@@ -15,6 +15,7 @@ package net.gaia.vortex.portal.impl.condiciones;
 import java.util.Collections;
 import java.util.List;
 
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
@@ -34,6 +35,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
+@Paralelizable
 public class SoloInstancias implements Condicion {
 	private static final Logger LOG = LoggerFactory.getLogger(SoloInstancias.class);
 

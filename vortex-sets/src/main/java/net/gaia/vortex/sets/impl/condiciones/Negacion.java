@@ -15,6 +15,7 @@ package net.gaia.vortex.sets.impl.condiciones;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -27,6 +28,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
+@Paralelizable
 public class Negacion implements Condicion, Simplificable {
 
 	private Condicion condicionNegada;
@@ -127,7 +129,7 @@ public class Negacion implements Condicion, Simplificable {
 		if (!huboSimplificacion) {
 			return this;
 		}
-		Negacion negacionSimplificada = Negacion.de(subCondicion);
+		final Negacion negacionSimplificada = Negacion.de(subCondicion);
 		return negacionSimplificada;
 	}
 }

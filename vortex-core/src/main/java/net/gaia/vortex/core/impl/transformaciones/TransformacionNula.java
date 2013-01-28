@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.impl.transformaciones;
 
-import net.gaia.vortex.core.api.annotations.TransformacionParalelizable;
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
@@ -24,7 +24,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-@TransformacionParalelizable
+@Paralelizable
 public class TransformacionNula implements Transformacion {
 
 	private static final WeakSingleton<TransformacionNula> ultimaReferencia = new WeakSingleton<TransformacionNula>(

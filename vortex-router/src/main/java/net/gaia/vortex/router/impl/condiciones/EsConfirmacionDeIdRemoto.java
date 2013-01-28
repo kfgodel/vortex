@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.router.impl.condiciones;
 
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
 import net.gaia.vortex.router.impl.messages.bidi.ConfirmacionDeIdRemoto;
 
@@ -21,6 +22,7 @@ import net.gaia.vortex.router.impl.messages.bidi.ConfirmacionDeIdRemoto;
  * 
  * @author D. García
  */
+@Paralelizable
 public class EsConfirmacionDeIdRemoto extends CondicionTipadaSupport {
 
 	public static EsConfirmacionDeIdRemoto create() {

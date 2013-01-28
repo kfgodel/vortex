@@ -15,6 +15,7 @@ package net.gaia.vortex.core.impl.condiciones;
 import java.util.Collections;
 import java.util.List;
 
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
@@ -28,6 +29,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
+@Paralelizable
 public class EsMensajeExterno implements Condicion {
 
 	private IdDeComponenteVortex idDelNodo;

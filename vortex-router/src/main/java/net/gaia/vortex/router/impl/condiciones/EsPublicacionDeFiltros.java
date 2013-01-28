@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.router.impl.condiciones;
 
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
 import net.gaia.vortex.router.impl.messages.PublicacionDeFiltros;
 
@@ -20,6 +21,7 @@ import net.gaia.vortex.router.impl.messages.PublicacionDeFiltros;
  * 
  * @author D. García
  */
+@Paralelizable
 public class EsPublicacionDeFiltros extends CondicionTipadaSupport {
 
 	public static EsPublicacionDeFiltros create() {

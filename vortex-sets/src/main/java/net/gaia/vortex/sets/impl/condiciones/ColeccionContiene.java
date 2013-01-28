@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
@@ -32,6 +33,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
+@Paralelizable
 public class ColeccionContiene implements Condicion {
 
 	private ValueAccessor valueAccessor;

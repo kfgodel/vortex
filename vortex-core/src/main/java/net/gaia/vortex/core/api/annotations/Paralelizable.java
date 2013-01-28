@@ -19,13 +19,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Este annotation es una marca a las transformaciones de mensaje que pueden ser ejecutadas
+ * Este annotation es una marca a las operaciones de mensaje que pueden ser ejecutadas
  * concurrentemente por varios threads. Generalmente se genera una copia del mensaje que es
  * modificado para no afectar otros threads.<br>
  * <br>
+ * Básicamente este annotation indica que si se ejecuta en paralelo cada rama no afecta a la otra.<br>
+ * <br>
  * Este tipo de transformaciones no tiene problemas en cuanto a dónde pueden ser usadas y por lo
- * tanto son el tipo preferible de transformación. (A diferencia de las
- * {@link TransformacionNoParalelizable})
+ * tanto son el tipo preferible de transformación. (A diferencia de las {@link NoParalelizable})
  * 
  * 
  * @author D. García
@@ -33,6 +34,6 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface TransformacionParalelizable {
+public @interface Paralelizable {
 
 }

@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.router.impl.condiciones;
 
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
 import net.gaia.vortex.sets.impl.condiciones.Negacion;
 
@@ -20,6 +21,7 @@ import net.gaia.vortex.sets.impl.condiciones.Negacion;
  * 
  * @author D. García
  */
+@Paralelizable
 public class EsMensajeNormal extends CondicionTipadaSupport {
 
 	public static EsMensajeNormal create() {
