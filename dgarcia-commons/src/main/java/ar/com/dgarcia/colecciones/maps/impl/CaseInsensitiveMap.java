@@ -27,11 +27,11 @@ import ar.com.dgarcia.java.lang.ParOrdenado;
  * 
  * @author D. García
  */
-public class CaseInsensitiveHashMap<V> implements Map<String, V> {
+public class CaseInsensitiveMap<V> implements Map<String, V> {
 
 	private Map<CaseInsensitiveStringKey, V> internalMap;
 
-	public CaseInsensitiveHashMap() {
+	public CaseInsensitiveMap() {
 		initialize();
 	}
 

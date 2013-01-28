@@ -15,7 +15,7 @@ package net.gaia.vortex.helpers;
 import java.util.Iterator;
 import java.util.Map;
 
-import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
+import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveMap;
 
 /**
  * Esta clase representa el mapa utilizado en vortex para representar los datos serializados de los
@@ -25,10 +25,10 @@ import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
  * 
  * @author D. García
  */
-public class VortexMap extends CaseInsensitiveHashMap<Object> {
+public class VortexMap extends CaseInsensitiveMap<Object> {
 
 	/**
-	 * @see ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap#equals(java.lang.Object)
+	 * @see ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveMap#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(final Object obj) {

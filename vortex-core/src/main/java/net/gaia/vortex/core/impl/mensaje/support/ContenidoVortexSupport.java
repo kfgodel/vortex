@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
-import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap;
+import ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveMap;
 
 /**
  * Esta clase representa un mapa de valores utilizado como contenido vortex de los mensajes.<br>
@@ -38,7 +38,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	private static final Logger LOG = LoggerFactory.getLogger(ContenidoVortexSupport.class);
 
 	/**
-	 * @see ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap#put(java.lang.String,
+	 * @see ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveMap#put(java.lang.String,
 	 *      java.lang.Object)
 	 */
 	@Override
@@ -56,7 +56,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	 * @return El valor adaptado
 	 */
 	private Object adaptValueToVortex(final Object value) {
-		if (!(value instanceof Map) || (value instanceof CaseInsensitiveHashMap)) {
+		if (!(value instanceof Map) || (value instanceof CaseInsensitiveMap)) {
 			// Si no es un mapa, o ya es case insensitive lo dejamos como está
 			return value;
 		}
