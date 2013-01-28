@@ -38,8 +38,10 @@ import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.listeners.IgnorarCambioDeFiltro;
 import net.gaia.vortex.router.impl.listeners.IgnorarRuteos;
 import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi;
+import net.gaia.vortex.router.impl.moleculas.patas.ListenerConexionBidiEnPata;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidi;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
+import net.gaia.vortex.router.impl.moleculas.support.ListenerNuloDeConexionBidiEnNodo;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones;
 import net.gaia.vortex.sets.impl.serializacion.impl.SerializadorDeCondicionesImpl;
 
@@ -55,7 +57,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidireccional,
-		ListenerDeConjuntoDeCondiciones {
+		ListenerDeConjuntoDeCondiciones, ListenerConexionBidiEnPata {
 	private static final Logger LOG = LoggerFactory.getLogger(NodoBidi.class);
 
 	private ConjuntoDeCondiciones conjuntoDeCondiciones;
@@ -79,6 +81,8 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 	private TaskProcessor processor;
 
+	private ListenerDeConexionesBidiEnNodo listenerDeConexiones;
+
 	public TaskProcessor getProcessor() {
 		return processor;
 	}
@@ -96,6 +100,7 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	 */
 	protected void initializeWith(final TaskProcessor processor, final ComportamientoBidi comportamiento) {
 		this.processor = processor;
+		this.listenerDeConexiones = ListenerNuloDeConexionBidiEnNodo.getInstancia();
 		generadorDeIds = comportamiento.obtenerGeneradorDeIdParaMensajes();
 		identificador = generadorDeIds.getIdDeComponente();
 		patas = new CopyOnWriteArrayList<PataBidireccional>();
@@ -134,6 +139,7 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 		LOG.debug("Conectando bidi desde[{}] a [{}]", this.toShortString(), destino.toShortString());
 		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), conjuntoDeCondiciones,
 				filtroDeEntradaParaPataNueva, mapeador, generadorDeIds, serializador, listenerDeRuteo);
+		nuevaPata.setListenerConexionBidi(this);
 		getPatas().add(nuevaPata);
 
 		// Agregamos la pata al conjunto que puede recibir mensajes
@@ -292,6 +298,31 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 	public IdDeComponenteVortex getIdentificador() {
 		return identificador;
+	}
+
+	/**
+	 * @see net.gaia.vortex.router.impl.moleculas.patas.ListenerConexionBidiEnPata#onConexionBidiPara(net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
+	 */
+	@Override
+	public void onConexionBidiPara(final PataBidireccional pata) {
+		final NodoBidireccional origen = pata.getNodoLocal();
+		final Receptor destino = pata.getNodoRemoto();
+		try {
+			this.listenerDeConexiones.onConexionBidiDe(origen, destino, pata);
+		} catch (final Exception e) {
+			LOG.error("Se produjo un error en el listener de conexiones bidi del nodo[" + this.toShortString() + "]", e);
+		}
+	}
+
+	public ListenerDeConexionesBidiEnNodo getListenerDeConexiones() {
+		return listenerDeConexiones;
+	}
+
+	public void setListenerDeConexiones(final ListenerDeConexionesBidiEnNodo listenerDeConexiones) {
+		if (listenerDeConexiones == null) {
+			throw new IllegalArgumentException("El listener de conexiones no puede ser null");
+		}
+		this.listenerDeConexiones = listenerDeConexiones;
 	}
 
 }

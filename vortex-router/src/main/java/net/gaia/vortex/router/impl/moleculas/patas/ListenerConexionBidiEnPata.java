@@ -1,5 +1,5 @@
 /**
- * 22/12/2012 19:36:39 Copyright (C) 2011 Darío L. García
+ * 28/01/2013 16:18:18 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,24 +12,21 @@
  */
 package net.gaia.vortex.router.impl.moleculas.patas;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
-
 /**
- * Esta interfaz representa el listener que es notificado de los cambios de filtros remotos en la
- * {@link PataBidireccional}
+ * Esta interfaz define el contrato de metodos que un listener debe tener para ser notificado de
+ * conexiones bidis establecidas en una pata
  * 
  * @author D. García
  */
-public interface ListenerDeCambioDeFiltroEnPata {
+public interface ListenerConexionBidiEnPata {
 
 	/**
-	 * Invocado cuando la pata cambia su filtro externo a partir de lo que el nodo remoto le indica
+	 * Invocado cuando la pata detecta que se estableció una conexión bidireccional con el nodo
+	 * remoto
 	 * 
 	 * @param pata
-	 *            La pata que modificó su filtro de salida
-	 * @param nuevoFiltroDeSalida
-	 *            El nuevo filtro de salida aplicado a los mensajes
+	 *            La pata que tuvo la conexión
 	 */
-	void onCambioDeFiltroEn(PataBidireccional pata, Condicion nuevoFiltroDeSalida);
+	void onConexionBidiPara(PataBidireccional pata);
 
 }

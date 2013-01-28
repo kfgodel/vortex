@@ -105,6 +105,8 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 
 	private AtomicBoolean habilitadaComoBidi;
 
+	private ListenerConexionBidiEnPata listenerConexionBidi;
+
 	/**
 	 * Asigna ID a los metamensajes que son generados en esta pata
 	 */
@@ -131,6 +133,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 			final AtomicReference<ListenerDeRuteo> listenerDeRuteo) {
 		final PataBidi pata = new PataBidi();
 		pata.serializador = serializador;
+		pata.listenerConexionBidi = ListenerNuloConexionBidiEnPata.getInstancia();
 		pata.mapeador = mapeador;
 		pata.habilitadaComoBidi = new AtomicBoolean(false);
 		pata.setIdLocal(proximoId.getAndIncrement());
@@ -144,6 +147,17 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		pata.inicializarFiltros(conjuntoDeCondiciones, filtroDeEntradaParaPataNueva);
 		pata.initializeWith(taskProcessor);
 		return pata;
+	}
+
+	public ListenerConexionBidiEnPata getListenerConexionBidi() {
+		return listenerConexionBidi;
+	}
+
+	public void setListenerConexionBidi(final ListenerConexionBidiEnPata listenerConexionBidi) {
+		if (listenerConexionBidi == null) {
+			throw new IllegalArgumentException("El listener de conexiones bidi no puede ser null");
+		}
+		this.listenerConexionBidi = listenerConexionBidi;
 	}
 
 	/**
@@ -272,6 +286,8 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		LOG.debug("En [{},{}] se estableció un conexion bidireccional", new Object[] {
 				this.getNodoLocal().toShortString(), this.toShortString() });
 		publicarFiltroDeEntrada();
+		// Notificamos al listener de la nueva conexion
+		this.listenerConexionBidi.onConexionBidiPara(this);
 	}
 
 	/**
