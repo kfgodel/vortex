@@ -14,6 +14,7 @@ package net.gaia.vortex.router.impl.transformaciones;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import net.gaia.vortex.core.api.annotations.TransformacionParalelizable;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
@@ -31,6 +32,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
+@TransformacionParalelizable
 public class RegistrarIdRemotoYEnviarReconfirmacion implements Transformacion {
 	private static final Logger LOG = LoggerFactory.getLogger(RegistrarIdRemotoYEnviarReconfirmacion.class);
 

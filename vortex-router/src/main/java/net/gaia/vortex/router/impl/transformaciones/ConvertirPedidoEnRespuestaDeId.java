@@ -14,6 +14,7 @@ package net.gaia.vortex.router.impl.transformaciones;
 
 import java.util.Map;
 
+import net.gaia.vortex.core.api.annotations.TransformacionParalelizable;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
@@ -32,6 +33,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
+@TransformacionParalelizable
 public class ConvertirPedidoEnRespuestaDeId implements Transformacion {
 	private static final Logger LOG = LoggerFactory.getLogger(ConvertirPedidoEnRespuestaDeId.class);
 
