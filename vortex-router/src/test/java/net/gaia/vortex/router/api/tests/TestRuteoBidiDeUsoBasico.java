@@ -321,8 +321,7 @@ public class TestRuteoBidiDeUsoBasico {
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptorPositivo = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			@Override
 			public Condicion getCondicionSuficiente() {
-				return ValorEsperadoEn.create(valorEsperado,
-						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
+				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorEsperado);
 			}
 		};
 		receptorPositivo1.recibirCon(handlerReceptorPositivo);
@@ -333,8 +332,10 @@ public class TestRuteoBidiDeUsoBasico {
 		receptorPositivo1.conectarCon(routerCentral);
 		routerCentral.conectarCon(receptorPositivo1);
 
-		// A falta de mejor mecanismo esperamos que las conexiones bidi se establezcan
-		Thread.sleep(1000);
+		// Esperamos que el emisor sea notificado de lo que espera el receptor
+		listenerFiltrosRemotosEnEmisor.esperarCambioDeFiltroA(
+				ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorEsperado),
+				TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Mandamos un mensaje desde el emisor que le interesa a ambos
 		final MensajeParaTestDeRuteo mensajeEnviado = new MensajeParaTestDeRuteo("hola");
