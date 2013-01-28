@@ -20,9 +20,11 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.prog.Loggers;
-import net.gaia.vortex.http.impl.moleculas.NodoServerHttp;
+import net.gaia.vortex.http.impl.moleculas.RouterServerHttp;
 import net.gaia.vortex.server.mosquito.config.ContextConfiguration;
-import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
+import net.gaia.vortex.server.mosquito.listeners.LoguearCambiosDeFiltrosRemotos;
+import net.gaia.vortex.server.mosquito.listeners.LoguearRuteos;
+import net.gaia.vortex.sockets.impl.moleculas.RouterSocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +51,10 @@ public class MosquitoSever {
 	private ContextConfiguration configuration;
 	public static final String configuration_FIELD = "configuration";
 
-	private NodoServerHttp hubDeHttp;
+	private RouterServerHttp hubDeHttp;
 	public static final String hubDeHttp_FIELD = "hubDeHttp";
 
-	private NodoSocket hubDeSockets;
+	private RouterSocket hubDeSockets;
 	public static final String hubDeSockets_FIELD = "hubDeSockets";
 
 	private TaskProcessor processor;
@@ -129,14 +131,19 @@ public class MosquitoSever {
 	public void aceptarConexiones() {
 		final SocketAddress listeningAddress = configuration.getListeningAddress();
 		Loggers.RUTEO.info("Comenzando escucha de sockets en: {}", listeningAddress);
-		hubDeSockets = NodoSocket.createAndListenTo(listeningAddress, processor);
+		hubDeSockets = RouterSocket.createAndListenTo(listeningAddress, processor);
+		hubDeSockets.setListenerDeRuteos(LoguearRuteos.getInstancia());
+		hubDeSockets.setListenerDeFiltrosRemotos(LoguearCambiosDeFiltrosRemotos.getInstancia());
 		final Integer httpPort = configuration.getHttpListeningPort();
 		if (httpPort == null) {
 			// No se debe levantar el http
 			return;
 		}
 		Loggers.RUTEO.info("Aceptando requests HTTP en: {}", httpPort);
-		hubDeHttp = NodoServerHttp.createAndAcceptRequestsOnPort(httpPort, processor);
+		hubDeHttp = RouterServerHttp.createAndAcceptRequestsOnPort(httpPort, processor);
+		hubDeHttp.setListenerDeRuteos(LoguearRuteos.getInstancia());
+		hubDeHttp.setListenerDeFiltrosRemotos(LoguearCambiosDeFiltrosRemotos.getInstancia());
+
 		// Interconectamos los nodos
 		hubDeHttp.conectarCon(hubDeSockets);
 		hubDeSockets.conectarCon(hubDeHttp);
