@@ -16,19 +16,17 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.portal.tests.HandlerEncolador;
-import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.api.moleculas.Router;
 import net.gaia.vortex.router.api.tests.listeners.ListenerDeCambioDeFiltrosConCola;
 import net.gaia.vortex.router.api.tests.listeners.ListenerDeRuteoEnPasos;
-import net.gaia.vortex.router.impl.moleculas.ListenerDeConexionesBidiEnNodo;
 import net.gaia.vortex.router.impl.moleculas.PortalBidi;
 import net.gaia.vortex.router.impl.moleculas.RouterBidi;
-import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
+import net.gaia.vortex.router.impl.moleculas.listeners.ConexionBidi;
+import net.gaia.vortex.router.impl.moleculas.listeners.EsperarConexionBidi;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 import net.gaia.vortex.sets.reflection.accessors.PropertyAccessor;
 
@@ -38,7 +36,6 @@ import org.junit.Test;
 
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
-import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
@@ -342,19 +339,12 @@ public class TestRuteoBidiDeUsoBasico {
 
 	@Test
 	public void deberiaNotificarAlListenerCuandoSeEstableceLaConexionBidi() {
-		final WaitBarrier esperarConexionBidi = WaitBarrier.create();
-
-		emisor.setListenerDeConexiones(new ListenerDeConexionesBidiEnNodo() {
-			@Override
-			public void onConexionBidiDe(final NodoBidireccional origen, final Receptor destino,
-					final PataBidireccional pataConectada) {
-				esperarConexionBidi.release();
-			}
-		});
+		final EsperarConexionBidi esperaDeConexiones = EsperarConexionBidi.create();
+		emisor.setListenerDeConexiones(esperaDeConexiones);
 
 		// Verificamos que no existe conexión bidi todavía
 		try {
-			esperarConexionBidi.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			esperaDeConexiones.esperarConexionBidiDesde(emisor, routerCentral, TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("No deríamos tener el lock liberado");
 		} catch (final UnsuccessfulWaitException e) {
 			// Es la excepción esperada
@@ -365,16 +355,18 @@ public class TestRuteoBidiDeUsoBasico {
 
 		// Verificamos que no existe conexión bidi todavía
 		try {
-			esperarConexionBidi.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			esperaDeConexiones.esperarConexionBidiDesde(emisor, routerCentral, TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("No deríamos tener el lock liberado");
 		} catch (final UnsuccessfulWaitException e) {
 			// Es la excepción esperada
 		}
 
-		// Al conectar de vuelta se debería detectar la conexion
+		// Al conectar de vuelta se debería detectar la conexión
 		routerCentral.conectarCon(emisor);
 
-		// No debería fallar
-		esperarConexionBidi.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		// Debería existir una conexión
+		final ConexionBidi conexion = esperaDeConexiones.esperarConexionBidiDesde(emisor, routerCentral,
+				TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertNotNull(conexion);
 	}
 }

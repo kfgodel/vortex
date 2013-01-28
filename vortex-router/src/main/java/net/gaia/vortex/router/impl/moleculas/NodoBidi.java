@@ -38,6 +38,7 @@ import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.listeners.IgnorarCambioDeFiltro;
 import net.gaia.vortex.router.impl.listeners.IgnorarRuteos;
 import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi;
+import net.gaia.vortex.router.impl.moleculas.listeners.ListenerDeConexionesBidiEnNodo;
 import net.gaia.vortex.router.impl.moleculas.patas.ListenerConexionBidiEnPata;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidi;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;

@@ -15,7 +15,7 @@ package net.gaia.vortex.router.api.moleculas;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
-import net.gaia.vortex.router.impl.moleculas.ListenerDeConexionesBidiEnNodo;
+import net.gaia.vortex.router.impl.moleculas.listeners.ListenerDeConexionesBidiEnNodo;
 
 /**
  * Esta interfaz representa un nodo cuyas conexiones son bidireccionales.<br>
