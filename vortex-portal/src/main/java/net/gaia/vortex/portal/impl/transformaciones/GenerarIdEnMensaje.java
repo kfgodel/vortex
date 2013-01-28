@@ -31,6 +31,8 @@ public class GenerarIdEnMensaje implements Transformacion {
 	private GeneradorDeIdsDeMensajes generadorDeIds;
 	public static final String generadorDeIds_FIELD = "generadorDeIds";
 
+	private IdDeComponenteVortex idDeComponente;
+
 	/**
 	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
@@ -42,13 +44,9 @@ public class GenerarIdEnMensaje implements Transformacion {
 	}
 
 	public static GenerarIdEnMensaje create(final IdDeComponenteVortex identificadorDeEmisor) {
-		final GeneradorDeIdsDeMensajes generador = GeneradorSecuencialDeIdDeMensaje.create(identificadorDeEmisor);
-		return create(generador);
-	}
-
-	public static GenerarIdEnMensaje create(final GeneradorDeIdsDeMensajes generador) {
 		final GenerarIdEnMensaje transformacion = new GenerarIdEnMensaje();
-		transformacion.generadorDeIds = generador;
+		transformacion.generadorDeIds = GeneradorSecuencialDeIdDeMensaje.create(identificadorDeEmisor);
+		transformacion.idDeComponente = identificadorDeEmisor;
 		return transformacion;
 	}
 
@@ -58,6 +56,10 @@ public class GenerarIdEnMensaje implements Transformacion {
 	@Override
 	public String toString() {
 		return ToString.de(this).con(generadorDeIds_FIELD, generadorDeIds).toString();
+	}
+
+	public IdDeComponenteVortex getIdDeComponente() {
+		return idDeComponente;
 	}
 
 }

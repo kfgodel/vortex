@@ -14,6 +14,7 @@ package net.gaia.vortex.router.impl.moleculas.comport;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
+import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 
 /**
  * Esta interfaz representa el comportamiento configurable para un nodo bidireccional.<br>
@@ -33,5 +34,13 @@ public interface ComportamientoBidi {
 	 * @return El flujo con el cual el nodo bidi recibe los mensajes y delega en las patas
 	 */
 	FlujoVortex crearFlujoParaMensajesRecibidos(TaskProcessor processor);
+
+	/**
+	 * Obtiene el ID que corresponde al componente.<br>
+	 * En el caso del portal se obtiene de su portal interno
+	 * 
+	 * @return El identificador para el nuevo componente bidi
+	 */
+	GenerarIdEnMensaje obtenerGeneradorDeIdParaMensajes();
 
 }

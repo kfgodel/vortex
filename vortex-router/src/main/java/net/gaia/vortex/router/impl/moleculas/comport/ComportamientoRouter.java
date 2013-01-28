@@ -16,7 +16,10 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
+import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
+import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -37,11 +40,12 @@ public class ComportamientoRouter implements ComportamientoBidi {
 	 */
 	@Override
 	public FlujoVortex crearFlujoParaMensajesRecibidos(final TaskProcessor processor) {
+		// Antes que nada filtramos los mensajes duplicados que ya recibimos
+		final NexoSinDuplicados filtroDeDuplicados = NexoSinDuplicados.create(processor, ReceptorNulo.getInstancia());
+
 		// Todo lo que entra en el router va a parar a las patas
 		final Multiplexor multiplexorDePatas = MultiplexorDePatas.create(processor);
-
-		// Y antes que nada filtramos los mensajes duplicados que ya recibimos
-		final NexoSinDuplicados filtroDeDuplicados = NexoSinDuplicados.create(processor, multiplexorDePatas);
+		filtroDeDuplicados.setDestino(multiplexorDePatas);
 
 		final FlujoVortex flujoDeMensajes = FlujoInmutable.create(filtroDeDuplicados, multiplexorDePatas);
 		return flujoDeMensajes;
@@ -55,4 +59,12 @@ public class ComportamientoRouter implements ComportamientoBidi {
 		return ToString.de(this).toString();
 	}
 
+	/**
+	 * @see net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi#obtenerGeneradorDeIdParaMensajes()
+	 */
+	@Override
+	public GenerarIdEnMensaje obtenerGeneradorDeIdParaMensajes() {
+		// Generamos uno nuevo
+		return GenerarIdEnMensaje.create(GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId());
+	}
 }

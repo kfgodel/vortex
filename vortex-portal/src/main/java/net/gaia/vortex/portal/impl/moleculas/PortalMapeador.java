@@ -22,6 +22,7 @@ import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
+import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
@@ -74,10 +75,21 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 	 *      net.gaia.vortex.core.api.atomos.Receptor)
 	 */
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado) {
-		this.procesador = processor;
-		identificador = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
+		final GenerarIdEnMensaje generador = GenerarIdEnMensaje.create(GeneradorDeIdsGlobalesParaComponentes
+				.getInstancia().generarId());
+		initializeWith(processor, delegado, generador);
+	}
 
-		nodoDeSalidaAVortex = NexoTransformador.create(processor, GenerarIdEnMensaje.create(identificador), delegado);
+	/**
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor,
+	 *      net.gaia.vortex.core.api.atomos.Receptor)
+	 */
+	protected void initializeWith(final TaskProcessor processor, final Receptor delegado,
+			final GenerarIdEnMensaje generadorDeIdsCompartido) {
+		this.procesador = processor;
+		identificador = generadorDeIdsCompartido.getIdDeComponente();
+
+		nodoDeSalidaAVortex = NexoTransformador.create(processor, generadorDeIdsCompartido, delegado);
 		procesoDesdeUsuario = Desobjetivizador.create(processor, mapeadorVortex, nodoDeSalidaAVortex);
 
 		// El selector enviará el mensaje según la condición que indique el usuario
@@ -167,12 +179,32 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 	}
 
 	/**
+	 * Crea una instancia con el procesador pasado y el receptro nulo como destino
+	 * 
+	 * @param processor
+	 *            El procesador para este componente
+	 * @param generadorDeIdsCompartido
+	 *            El id para que este portal use
+	 * @return El portal creado
+	 */
+	public static PortalMapeador create(final TaskProcessor processor, final GenerarIdEnMensaje generadorDeIdsCompartido) {
+		final PortalMapeador portal = new PortalMapeador();
+		portal.mapeadorVortex = ConversorDefaultDeMensajes.create();
+		portal.initializeWith(processor, ReceptorNulo.getInstancia(), generadorDeIdsCompartido);
+		return portal;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.con(identificador_FIELD, identificador).con("destino", getDestino()).toString();
+	}
+
+	public IdDeComponenteVortex getIdentificador() {
+		return identificador;
 	}
 
 }

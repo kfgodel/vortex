@@ -23,7 +23,6 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
-import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
@@ -97,8 +96,8 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	 */
 	protected void initializeWith(final TaskProcessor processor, final ComportamientoBidi comportamiento) {
 		this.processor = processor;
-		identificador = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
-		generadorDeIds = GenerarIdEnMensaje.create(identificador);
+		generadorDeIds = comportamiento.obtenerGeneradorDeIdParaMensajes();
+		identificador = generadorDeIds.getIdDeComponente();
 		patas = new CopyOnWriteArrayList<PataBidireccional>();
 		listenerDeFiltros = new AtomicReference<ListenerDeCambiosDeFiltro>(IgnorarCambioDeFiltro.getInstancia());
 		listenerDeRuteo = new AtomicReference<ListenerDeRuteo>(IgnorarRuteos.getInstancia());
