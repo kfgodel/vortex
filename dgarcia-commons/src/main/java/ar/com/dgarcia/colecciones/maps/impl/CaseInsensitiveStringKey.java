@@ -19,7 +19,7 @@ package ar.com.dgarcia.colecciones.maps.impl;
  * 
  * @author D. García
  */
-public class CaseInsensitiveStringKey {
+public class CaseInsensitiveStringKey implements Comparable<CaseInsensitiveStringKey> {
 
 	private String originalString;
 	private String insensitiveCaseString;
@@ -91,6 +91,15 @@ public class CaseInsensitiveStringKey {
 
 	public String getInsensitiveCaseString() {
 		return insensitiveCaseString;
+	}
+
+	/**
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(final CaseInsensitiveStringKey that) {
+		final int comparacion = this.insensitiveCaseString.compareTo(that.insensitiveCaseString);
+		return comparacion;
 	}
 
 }

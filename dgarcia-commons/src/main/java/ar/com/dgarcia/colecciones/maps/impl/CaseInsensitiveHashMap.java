@@ -18,22 +18,18 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentMap;
+import java.util.TreeMap;
 
-import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
 import ar.com.dgarcia.java.lang.ParOrdenado;
-import ar.com.dgarcia.lang.conc.ConcurrentHashMapWithNull;
-import ar.com.dgarcia.lang.conc.ReadWriteOperable;
 
 /**
  * Esta clase implementa el hashmap con claves case-insensitive
  * 
  * @author D. García
  */
-public class CaseInsensitiveHashMap<V> implements ConcurrentMap<String, V>, ReadWriteOperable {
+public class CaseInsensitiveHashMap<V> implements Map<String, V> {
 
-	private ConcurrentHashMapWithNull<CaseInsensitiveStringKey, V> internalMap;
+	private Map<CaseInsensitiveStringKey, V> internalMap;
 
 	public CaseInsensitiveHashMap() {
 		initialize();
@@ -44,7 +40,7 @@ public class CaseInsensitiveHashMap<V> implements ConcurrentMap<String, V>, Read
 	 * 
 	 * @return El mapa interno
 	 */
-	public ConcurrentHashMapWithNull<CaseInsensitiveStringKey, V> getInternalMap() {
+	public Map<CaseInsensitiveStringKey, V> getInternalMap() {
 		return internalMap;
 	}
 
@@ -52,7 +48,9 @@ public class CaseInsensitiveHashMap<V> implements ConcurrentMap<String, V>, Read
 	 * Inicializa el estado de esta instancia
 	 */
 	private void initialize() {
-		internalMap = new ConcurrentHashMapWithNull<CaseInsensitiveStringKey, V>();
+		// Elegimos treemap porque muestra los valores en orden, pero por performance convendría el
+		// Hashmap
+		internalMap = new TreeMap<CaseInsensitiveStringKey, V>();
 	}
 
 	/**
@@ -151,17 +149,11 @@ public class CaseInsensitiveHashMap<V> implements ConcurrentMap<String, V>, Read
 	public void putAll(final Map<? extends String, ? extends V> m) {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		final Set<Entry<String, V>> entrySet = (Set) m.entrySet();
-		doWriteOperation(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				for (final Entry<String, V> entry : entrySet) {
-					final String key = entry.getKey();
-					final V value = entry.getValue();
-					put(key, value);
-				}
-				return null;
-			}
-		});
+		for (final Entry<String, V> entry : entrySet) {
+			final String key = entry.getKey();
+			final V value = entry.getValue();
+			put(key, value);
+		}
 	}
 
 	/**
@@ -213,59 +205,6 @@ public class CaseInsensitiveHashMap<V> implements ConcurrentMap<String, V>, Read
 			entrySet.add(nuevoEntry);
 		}
 		return entrySet;
-	}
-
-	/**
-	 * @see java.util.concurrent.ConcurrentMap#putIfAbsent(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public V putIfAbsent(final String key, final V value) {
-		final CaseInsensitiveStringKey insensitiveKey = CaseInsensitiveStringKey.create(key);
-		return internalMap.putIfAbsent(insensitiveKey, value);
-	}
-
-	/**
-	 * @see java.util.concurrent.ConcurrentMap#remove(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public boolean remove(final Object key, final Object value) {
-		final CaseInsensitiveStringKey insensitiveKey = getInternalKeyFor(key);
-		return internalMap.remove(insensitiveKey, value);
-	}
-
-	/**
-	 * @see java.util.concurrent.ConcurrentMap#replace(java.lang.Object, java.lang.Object,
-	 *      java.lang.Object)
-	 */
-	@Override
-	public boolean replace(final String key, final V oldValue, final V newValue) {
-		final CaseInsensitiveStringKey insensitiveCase = CaseInsensitiveStringKey.create(key);
-		return internalMap.replace(insensitiveCase, oldValue, newValue);
-	}
-
-	/**
-	 * @see java.util.concurrent.ConcurrentMap#replace(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public V replace(final String key, final V value) {
-		final CaseInsensitiveStringKey insensitiveKey = CaseInsensitiveStringKey.create(key);
-		return internalMap.replace(insensitiveKey, value);
-	}
-
-	/**
-	 * @see ar.com.dgarcia.lang.conc.ReadWriteOperable#doReadOperation(java.util.concurrent.Callable)
-	 */
-	@Override
-	public <T> T doReadOperation(final Callable<T> readOperation) throws UnsuccessfulWaitException {
-		return internalMap.doReadOperation(readOperation);
-	}
-
-	/**
-	 * @see ar.com.dgarcia.lang.conc.ReadWriteOperable#doWriteOperation(java.util.concurrent.Callable)
-	 */
-	@Override
-	public <T> T doWriteOperation(final Callable<T> writeOperation) throws UnsuccessfulWaitException {
-		return internalMap.doWriteOperation(writeOperation);
 	}
 
 	/**

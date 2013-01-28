@@ -15,7 +15,6 @@ package net.gaia.vortex.portal.impl.mensaje;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
@@ -128,32 +127,25 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	 * Carga todo el estado del objeto a la caché sólo si es la primera vez
 	 */
 	private void cargarDatosEnCache() {
-		cache.doWriteOperation(new Callable<Void>() {
-			@Override
-			public Void call() {
-				if (unSyncYaEstaCargadoEnCache()) {
-					// Ya lo cargamos antes
-					return null;
-				}
-				final Map<String, Object> estado = mapeadorDeObjetos.convertirAEstado(objetoOriginal);
-				final Set<java.util.Map.Entry<String, Object>> entriesDeEstado = estado.entrySet();
-				for (final Entry<String, Object> entry : entriesDeEstado) {
-					final String key = entry.getKey();
-					final Object value = entry.getValue();
-					if (cache.containsKey(key)) {
-						final Object valorPrevio = cache.get(key);
-						LOG.warn(
-								"El valor[{}] del atributo[{}] del objeto[{}] no será cargado en el mapa porque ya existe un valor previo[{}]",
-								new Object[] { value, key, objetoOriginal, valorPrevio });
-						continue;
-					}
-					cache.put(key, value);
-				}
-				unSyncMarcarComoCargado();
-				return null;
+		if (unSyncYaEstaCargadoEnCache()) {
+			// Ya lo cargamos antes
+			return;
+		}
+		final Map<String, Object> estado = mapeadorDeObjetos.convertirAEstado(objetoOriginal);
+		final Set<java.util.Map.Entry<String, Object>> entriesDeEstado = estado.entrySet();
+		for (final Entry<String, Object> entry : entriesDeEstado) {
+			final String key = entry.getKey();
+			final Object value = entry.getValue();
+			if (cache.containsKey(key)) {
+				final Object valorPrevio = cache.get(key);
+				LOG.warn(
+						"El valor[{}] del atributo[{}] del objeto[{}] no será cargado en el mapa porque ya existe un valor previo[{}]",
+						new Object[] { value, key, objetoOriginal, valorPrevio });
+				continue;
 			}
-		});
-
+			cache.put(key, value);
+		}
+		unSyncMarcarComoCargado();
 	}
 
 	/**

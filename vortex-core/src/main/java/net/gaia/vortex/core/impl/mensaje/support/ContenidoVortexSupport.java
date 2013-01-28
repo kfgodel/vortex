@@ -67,16 +67,6 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	}
 
 	/**
-	 * @see ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveHashMap#putIfAbsent(java.lang.String,
-	 *      java.lang.Object)
-	 */
-	@Override
-	public Object putIfAbsent(final String key, final Object value) {
-		final Object adaptedValue = adaptValueToVortex(value);
-		return super.putIfAbsent(key, adaptedValue);
-	}
-
-	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getValorComoPrimitiva()
 	 */
 	@Override
