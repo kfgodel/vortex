@@ -51,7 +51,7 @@ public class TestMapeoAVortex {
 		complejo.setSubInstancia(new ClaseParaProbarMapeo());
 		complejo.setEntero(0);
 		complejo.setTexto("0");
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 30; i++) {
 			final ClaseParaProbarMapeo subI = new ClaseParaProbarMapeo();
 			subI.setSubInstancia(new ClaseParaProbarMapeo());
 			subI.setEntero(i);
@@ -69,7 +69,7 @@ public class TestMapeoAVortex {
 	 */
 	private void checkPerformance(final Object objeto) {
 		final Class<? extends Object> tipoOriginal = objeto.getClass();
-		final int cantidadDeConversiones = 100000;
+		final int cantidadDeConversiones = 20000;
 		final SystemChronometer crono = SystemChronometer.create();
 		for (int i = 0; i < cantidadDeConversiones; i++) {
 			final MensajeVortex mensajeVortex = mapeadorVortex.convertirAVortex(objeto);
