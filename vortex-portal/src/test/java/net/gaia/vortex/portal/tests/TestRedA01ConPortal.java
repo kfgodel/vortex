@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.portal.tests;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -21,10 +23,10 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
+import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
-import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
+import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 
 import org.junit.After;
@@ -47,7 +49,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestRedA01ConPortal {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConPortal.class);
 
-	private NodoMultiplexor nodoRuteador;
+	private Nodo nodoRuteador;
 
 	private Portal nodoEmisor;
 	private Portal nodoReceptor;
@@ -57,7 +59,7 @@ public class TestRedA01ConPortal {
 	public void crearNodos() {
 		processor = VortexProcessorFactory.createProcessor();
 		// Creamos un nodo central
-		nodoRuteador = NodoMultiplexor.create(processor);
+		nodoRuteador = MultiplexorSinDuplicados.create(processor);
 		// Le agregamos las interconexiones en los extremos
 		nodoEmisor = PortalMapeador.createForIOWith(processor, nodoRuteador);
 		nodoReceptor = PortalMapeador.createForIOWith(processor, nodoRuteador);
@@ -69,16 +71,23 @@ public class TestRedA01ConPortal {
 	}
 
 	@Test
-	public void esPosibleEnviarUnaInstanciDeObjectPorElPortal() {
-		final HandlerEncolador<Object> handlerReceptor = new HandlerEncolador<Object>() {
+	public void siSeEsperaUnMapaSeRecibenTodasLasClavesDelEstadoDelMensaje() {
+		final HandlerEncolador<Map<String, Object>> handlerReceptor = new HandlerEncolador<Map<String, Object>>() {
 		};
 		nodoReceptor.recibirCon(handlerReceptor);
 
-		final Object mensajeEnviado = new Object();
+		final Map<String, Object> mensajeEnviado = new HashMap<String, Object>();
+		mensajeEnviado.put("hola", "manola");
 		nodoEmisor.enviar(mensajeEnviado);
 
 		final Object mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertEquals("El enviado y recibido deberían ser iguales", mensajeEnviado, mensajeRecibido);
+		Assert.assertTrue("Deberíamos recibir un mapa", mensajeRecibido instanceof Map);
+
+		@SuppressWarnings("unchecked")
+		final Map<String, Object> mapaRecibido = (Map<String, Object>) mensajeRecibido;
+		Assert.assertEquals("El mapa debería tener los valores del mapa original", "manola", mapaRecibido.get("hola"));
+
+		Assert.assertTrue("Pero además tener otras kesy que no mandamos!", mensajeEnviado.size() < mapaRecibido.size());
 	}
 
 	/**
@@ -224,8 +233,8 @@ public class TestRedA01ConPortal {
 	@Test
 	public void elMensajeDeberiaLlegarSiHayDosNodosEnElMedio() {
 		// Creamos los nodos centrales interconectados
-		final NodoMultiplexor nodoIntermedio1 = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoIntermedio2 = NodoMultiplexor.create(processor);
+		final Nodo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
+		final Nodo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
@@ -248,8 +257,8 @@ public class TestRedA01ConPortal {
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosHubsEnElMedioInterconectados() {
 		// Creamos los nodos centrales interconectados
-		final NodoMultiplexor nodoIntermedio1 = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoIntermedio2 = NodoMultiplexor.create(processor);
+		final Nodo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
+		final Nodo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales

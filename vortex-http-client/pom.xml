@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia.vortex.http</groupId>
   <artifactId>vortex-http-client</artifactId>
-  <version>0.4.3-SNAPSHOT</version>
+  <version>0.5.0</version>
   <name>Vortex[Http-client]</name>
   <description>Proyecto cliente de vortex http</description>
   
@@ -80,7 +80,7 @@
   	<dependency>
 	  <groupId>net.gaia.vortex.http</groupId>
 	  <artifactId>vortex-http</artifactId>
-	  <version>0.4.3-SNAPSHOT</version>
+	  <version>0.5.0</version>
   	</dependency>
   	
   	<!-- Definicion abstracta del cliente (se debe agregar el proveedor concreto segun el ambiente) -->
@@ -90,6 +90,13 @@
 	  <version>0.1</version>
   	</dependency>
   	
+  	<!-- Servidor http para los tests -->
+  	<dependency>
+	  <groupId>net.gaia.vortex.http</groupId>
+	  <artifactId>vortex-http-server</artifactId>
+	  <version>0.5.0</version>
+	  <scope>test</scope>
+  	</dependency>
   	
   	<!-- Cliente http para tests -->
   	<dependency>

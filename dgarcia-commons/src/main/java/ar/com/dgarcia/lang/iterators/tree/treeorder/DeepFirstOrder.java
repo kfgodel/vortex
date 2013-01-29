@@ -9,8 +9,8 @@ import ar.com.dgarcia.colecciones.stacks.Stack;
 import ar.com.dgarcia.colecciones.stacks.impl.ArrayListStack;
 
 /**
- * Esta clase representa el orden de recorrido de nodos en el que se profundiza
- * primero antes de recorrer en ancho
+ * Esta clase representa el orden de recorrido de nodos en el que se profundiza primero antes de
+ * recorrer en ancho
  * 
  * @author dgarcia
  */
@@ -36,16 +36,18 @@ public class DeepFirstOrder implements TreeOrder<Object> {
 	/**
 	 * @see ar.com.dgarcia.lang.iterators.tree.treeorder.TreeOrder#addNodes(java.util.Iterator)
 	 */
-	public void addNodes(Iterator<Object> nodes) {
+	@Override
+	public void addNodes(final Iterator<Object> nodes) {
 		pila.push(nodes);
 	}
 
 	/**
 	 * @see ar.com.dgarcia.lang.iterators.tree.treeorder.TreeOrder#getCurrentNodes()
 	 */
+	@Override
 	public Iterator<Object> getCurrentNodes() {
 		while (!pila.isEmpty()) {
-			Iterator<Object> currentNodes = pila.peek();
+			final Iterator<Object> currentNodes = pila.peek();
 			if (currentNodes.hasNext()) {
 				return currentNodes;
 			}

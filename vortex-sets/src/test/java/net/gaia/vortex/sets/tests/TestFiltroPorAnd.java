@@ -16,9 +16,10 @@ import java.util.ArrayList;
 
 import junit.framework.Assert;
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.sets.impl.And;
+import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
 
 import org.junit.Test;
 
@@ -31,20 +32,23 @@ public class TestFiltroPorAnd {
 
 	@Test
 	public void deberiaDarTrueParaDosCondicionesTrue() {
-		Assert.assertTrue(And.create(SiempreTrue.getInstancia(), SiempreTrue.getInstancia()).esCumplidaPor(null));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				AndCompuesto.de(SiempreTrue.getInstancia(), SiempreTrue.getInstancia()).esCumplidaPor(null));
 	}
 
 	@Test
 	public void deberiaDarFalseSiAlgunaEsFalse() {
-		Assert.assertFalse(And.create(SiempreTrue.getInstancia(), SiempreFalse.getInstancia(),
-				SiempreTrue.getInstancia()).esCumplidaPor(null));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE,
+				AndCompuesto.de(SiempreTrue.getInstancia(), SiempreFalse.getInstancia(), SiempreTrue.getInstancia())
+						.esCumplidaPor(null));
 	}
 
 	@Test
 	public void noDeberiaEvaluarElRestoSiLaPrimeraEsFalse() {
 		final CondicionTestWrapper condicionEvaluada = CondicionTestWrapper.create(SiempreFalse.getInstancia());
 		final CondicionTestWrapper condicionNoEvaluada = CondicionTestWrapper.create(SiempreTrue.getInstancia());
-		Assert.assertFalse(And.create(condicionEvaluada, condicionNoEvaluada).esCumplidaPor(null));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, AndCompuesto.de(condicionEvaluada, condicionNoEvaluada)
+				.esCumplidaPor(null));
 		Assert.assertTrue(condicionEvaluada.isEvaluada());
 		Assert.assertFalse(condicionNoEvaluada.isEvaluada());
 	}
@@ -55,7 +59,7 @@ public class TestFiltroPorAnd {
 	 */
 	@Test
 	public void deberiaDarTrueSiNoTieneCondiciones() {
-		Assert.assertTrue(And.create(new ArrayList<Condicion>()).esCumplidaPor(null));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE, AndCompuesto.create(new ArrayList<Condicion>()).esCumplidaPor(null));
 	}
 
 }

@@ -13,13 +13,14 @@
 package net.gaia.vortex.sets.tests;
 
 import junit.framework.Assert;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.sets.impl.ContieneA;
-import net.gaia.vortex.sets.impl.Not;
-import net.gaia.vortex.sets.impl.ValorEsperadoIgual;
+import net.gaia.vortex.sets.impl.condiciones.ColeccionContiene;
+import net.gaia.vortex.sets.impl.condiciones.Negacion;
+import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 
 import org.junit.Test;
 
@@ -32,12 +33,12 @@ public class TestFiltroPorNot {
 
 	@Test
 	public void deberiaDevolverFalseParaUnaCondicionTrue() {
-		Assert.assertFalse(Not.de(SiempreTrue.getInstancia()).esCumplidaPor(null));
+		Assert.assertEquals(ResultadoDeCondicion.FALSE, Negacion.de(SiempreTrue.getInstancia()).esCumplidaPor(null));
 	}
 
 	@Test
 	public void deberiaDevolverTrueParaUnaCondicionFalse() {
-		Assert.assertTrue(Not.de(SiempreFalse.getInstancia()).esCumplidaPor(null));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE, Negacion.de(SiempreFalse.getInstancia()).esCumplidaPor(null));
 	}
 
 	/**
@@ -46,7 +47,8 @@ public class TestFiltroPorNot {
 	@Test
 	public void deberiaDevolverTrueSiSeNiegaLaCondicionEqualsYElAtributoNoExiste() {
 		final MensajeVortex mensajeVacio = MensajeConContenido.crearVacio();
-		Assert.assertTrue(Not.de(ValorEsperadoIgual.a(null, "inexistente")).esCumplidaPor(mensajeVacio));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				Negacion.de(ValorEsperadoEn.elAtributo("inexistente", null)).esCumplidaPor(mensajeVacio));
 	}
 
 	/**
@@ -55,7 +57,8 @@ public class TestFiltroPorNot {
 	@Test
 	public void deberiaDevolverTrueSiSeNievaLaCondicionContainsYElAtributoNoExiste() {
 		final MensajeVortex mensajeVacio = MensajeConContenido.crearVacio();
-		Assert.assertTrue(Not.de(ContieneA.valor(null, "inexistente")).esCumplidaPor(mensajeVacio));
+		Assert.assertEquals(ResultadoDeCondicion.TRUE,
+				Negacion.de(ColeccionContiene.alValor(null, "inexistente")).esCumplidaPor(mensajeVacio));
 	}
 
 }

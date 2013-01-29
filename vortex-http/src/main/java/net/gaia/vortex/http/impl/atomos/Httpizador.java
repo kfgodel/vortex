@@ -13,9 +13,9 @@
 package net.gaia.vortex.http.impl.atomos;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.http.impl.tasks.AcumularEnSesion;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -26,18 +26,18 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class Httpizador extends ComponenteConProcesadorSupport implements Receptor {
+public class Httpizador extends ReceptorConProcesador {
 
 	private SesionVortexHttp sesion;
 	public static final String sesion_FIELD = "sesion";
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public void recibir(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final AcumularEnSesion envio = AcumularEnSesion.create(mensaje, sesion);
-		procesarEnThreadPropio(envio);
+		return envio;
 	}
 
 	public static Httpizador create(final TaskProcessor processor, final SesionVortexHttp sesion) {
@@ -52,7 +52,7 @@ public class Httpizador extends ComponenteConProcesadorSupport implements Recept
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(sesion_FIELD, sesion)
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(sesion_FIELD, sesion)
 				.toString();
 	}
 }

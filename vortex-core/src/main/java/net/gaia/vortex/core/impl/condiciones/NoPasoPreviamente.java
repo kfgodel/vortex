@@ -12,7 +12,12 @@
  */
 package net.gaia.vortex.core.impl.condiciones;
 
+import java.util.Collections;
+import java.util.List;
+
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -24,6 +29,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
+@Paralelizable
 public class NoPasoPreviamente implements Condicion {
 
 	private ComponenteConMemoria componente;
@@ -33,9 +39,9 @@ public class NoPasoPreviamente implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final boolean elComponenteNoTieneRegistradoElId = !componente.yaRecibio(mensaje);
-		return elComponenteNoTieneRegistradoElId;
+		return ResultadoDeCondicion.paraBooleano(elComponenteNoTieneRegistradoElId);
 	}
 
 	public static NoPasoPreviamente por(final ComponenteConMemoria componente) {
@@ -50,6 +56,14 @@ public class NoPasoPreviamente implements Condicion {
 	@Override
 	public String toString() {
 		return ToString.de(this).add(componente_FIELD, componente).toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
 	}
 
 }

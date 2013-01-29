@@ -13,15 +13,15 @@
 package net.gaia.vortex.sockets.tests;
 
 import junit.framework.Assert;
-import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
-import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
+import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
+import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
+import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.ContenidoVortexLazy;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorJackson;
+import net.gaia.vortex.portal.impl.conversion.impl.ConversorJacksonDeContenido;
+import net.gaia.vortex.portal.impl.mensaje.ContenidoVortexLazy;
 import net.gaia.vortex.sockets.external.json.VortexSocketTextualizer;
 
 import org.junit.Before;
@@ -60,7 +60,7 @@ public class TestVortexTextualizer {
 	@Test
 	public void deberíaConvertirEnMapaDePrimitivaUnMensajeConPrimitivaLazy() {
 		final MensajeConContenido mensaje = MensajeConContenido.create(ContenidoVortexLazy.create(
-				MensajeModeloParaTests.create(), MapeadorJackson.create()));
+				MensajeModeloParaTests.create(), ConversorJacksonDeContenido.create()));
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertNotNull("Debería existir un texto", texto);
 		Assert.assertTrue("Debería tener la clave esperada",
@@ -77,7 +77,7 @@ public class TestVortexTextualizer {
 	@Test
 	public void deberiaConvertirUnaInstanciaDeObjectEnMensajeVacio() {
 		final MensajeConContenido mensaje = MensajeConContenido.create(ContenidoVortexLazy.create(new Object(),
-				MapeadorJackson.create()));
+				ConversorJacksonDeContenido.create()));
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertNotNull("Debería existir un texto", texto);
 		Assert.assertTrue("Debería tener la clave esperada", texto.contains("\"CLASSNAME_KEY\":\"java.lang.Object\""));
@@ -86,8 +86,8 @@ public class TestVortexTextualizer {
 	@Test
 	public void unMensajeVacioConIdDeberiaTenerElObjetoIdEnSuVersionJson() {
 		final MensajeConContenido mensaje = MensajeConContenido.crearVacio();
-		final IdDeComponenteVortex idDeNodo = IdsEstatiscosParaComponentes.getInstancia().generarId();
-		final IdDeMensaje idAsignado = IdsSecuencialesParaMensajes.create(idDeNodo).generarId();
+		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
+		final IdDeMensaje idAsignado = GeneradorSecuencialDeIdDeMensaje.create(idDeNodo).generarId();
 		mensaje.asignarId(idAsignado);
 
 		final String texto = textualizer.convertToString(mensaje);

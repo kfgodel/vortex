@@ -14,6 +14,8 @@ package net.gaia.vortex.core.api.mensaje;
 
 import java.util.Map;
 
+import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
+
 /**
  * Esta interfaz define la representación del estado de un mensaje vortex como un mapa de primitivas
  * con varios niveles. Es el tipo que representa un contenido JSON, pero agrega algunas operaciones
@@ -32,6 +34,11 @@ public interface ContenidoVortex extends Map<String, Object> {
 	 * origina este mensaje
 	 */
 	public static final String CLASSNAME_KEY = "CLASSNAME_KEY";
+
+	/**
+	 * Clave usada para almacenar el ID del mensaje dentro del contenido
+	 */
+	public static final String ID_DE_MENSAJE_KEY = "id_mensaje_vortex";
 
 	/**
 	 * Establece el nombre que identifica el tipo de mensaje original como parte de los datos del
@@ -76,4 +83,26 @@ public interface ContenidoVortex extends Map<String, Object> {
 	 */
 	public boolean tieneValorComoPrimitiva();
 
+	/**
+	 * Devuelve el identificador de mensaje reconstruido desde los datos internos de este contenido.<br>
+	 * Si este contenido no tiene los datos suficientes para regenerar el ID se devuelve null
+	 * 
+	 * @return El Id regenerado, o null si no existen datos para el ID
+	 */
+	public IdDeMensaje getIdDeMensaje();
+
+	/**
+	 * Establece en este contenido el ID del mensaje como estado del propio mensaje
+	 * 
+	 * @param idDelMensaje
+	 *            El id que se debe guardar como parte de este contenido
+	 */
+	public void setIdDeMensaje(IdDeMensaje idDelMensaje);
+
+	/**
+	 * Devuelve el mapa que representa el ID de este mensaje en el contenido
+	 * 
+	 * @return null si no está definido
+	 */
+	public Map<String, Object> getIdDeMensajeComoMapa();
 }

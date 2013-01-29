@@ -13,26 +13,20 @@
 package net.gaia.vortex.core.api.atomos;
 
 /**
- * Esta interfaz define los métodos que tiene cualquier componente vortex
+ * Esta interfaz define los métodos que tiene cualquier componente vortex.<br>
+ * Las subclases de esta interfaz representan componentes vortex que pueden usarse para armar una
+ * red de comunicación entre módulos, aplicaciones y sistemas
  * 
  * @author D. García
  */
-public interface ComponenteVortex {
+public interface ComponenteVortex extends ShortStringable {
 
 	/**
 	 * Devuelve un número asignado a esta instancia para identificarlo con respecto a otros
 	 * componentes en memoria
 	 * 
-	 * @return El número que permite discriminar esta instancia
+	 * @return El número que permite discriminar esta instancia de otras
 	 */
-	public long getNumeroDeComponente();
-
-	/**
-	 * Devuelve una cadena corta con el nombre de clase sin package y el número secuencial de este
-	 * componente
-	 * 
-	 * @return La cadena que permite identificar este componente unívocamente en memoria
-	 */
-	public String toShortString();
+	public long getNumeroDeInstancia();
 
 }

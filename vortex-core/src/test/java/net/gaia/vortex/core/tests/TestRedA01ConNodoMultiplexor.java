@@ -11,16 +11,15 @@ import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.moleculas.ruteo.NodoHub;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorSupport;
-import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
+import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
+import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
+import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.core.impl.moleculas.NodoMultiplexor;
-import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
+import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
 import net.gaia.vortex.core.prog.Loggers;
 
 import org.junit.After;
@@ -34,40 +33,45 @@ import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
- * Esta clase realiza las pruebas definidas en A01 de la documentación pero utilizando
- * {@link NodoHub}, por lo que no se respeta exactamente los mismos casos pero es más aproximado que
- * {@link TestRedA01ConMultiplexores}.<br>
- * De esta manera verificamos que es posible armar una red básica sin tomar en cuenta la
- * direccionalidad de las conexiones
+ * Esta clase realiza las pruebas básicas de vortex definidas en A01 de la documentación utilizando
+ * un {@link MultiplexorSinDuplicados}. Verificamos que es posible armar una red básica con
+ * conexiones unidireccionales
  * 
  * @author D. García
  */
 public class TestRedA01ConNodoMultiplexor {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConNodoMultiplexor.class);
 
-	private NodoMultiplexor nodoEmisor;
-	private NodoMultiplexor nodoRuteador;
-	private NodoMultiplexor nodoReceptor;
+	private Nodo nodoEmisor;
+	private Nodo nodoRuteador;
+	private Nodo nodoReceptor;
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
-	private IdsSecuencialesParaMensajes generadorDeIdsDelNodo;
+	private GeneradorSecuencialDeIdDeMensaje generadorDeIdsDelNodo;
 
 	@Before
 	public void crearNodos() {
 		processor = VortexProcessorFactory.createProcessor();
 		mensaje1 = MensajeConContenido.crearVacio();
-		final IdDeComponenteVortex idDeNodo = IdsEstatiscosParaComponentes.getInstancia().generarId();
-		generadorDeIdsDelNodo = IdsSecuencialesParaMensajes.create(idDeNodo);
+		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
+		generadorDeIdsDelNodo = GeneradorSecuencialDeIdDeMensaje.create(idDeNodo);
 		final IdDeMensaje generarId = generadorDeIdsDelNodo.generarId();
 		mensaje1.asignarId(generarId);
 
-		nodoEmisor = NodoMultiplexor.create(processor);
-		nodoRuteador = NodoMultiplexor.create(processor);
-		nodoReceptor = NodoMultiplexor.create(processor);
+		nodoEmisor = crearNodoDefault();
+		nodoRuteador = crearNodoDefault();
+		nodoReceptor = crearNodoDefault();
 
 		interconectar(nodoEmisor, nodoRuteador);
 		interconectar(nodoRuteador, nodoReceptor);
+	}
+
+	/**
+	 * Crea un nodo tipo para las pruebas
+	 */
+	private MultiplexorSinDuplicados crearNodoDefault() {
+		return MultiplexorSinDuplicados.create(processor);
 	}
 
 	@After
@@ -209,10 +213,10 @@ public class TestRedA01ConNodoMultiplexor {
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayNodosEnElMedio() {
-		final NodoMultiplexor nodoEmisor = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoIntermedio1 = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoIntermedio2 = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoReceptor = NodoMultiplexor.create(processor);
+		final Nodo nodoEmisor = crearNodoDefault();
+		final Nodo nodoIntermedio1 = crearNodoDefault();
+		final Nodo nodoIntermedio2 = crearNodoDefault();
+		final Nodo nodoReceptor = crearNodoDefault();
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		nodoReceptor.conectarCon(handlerReceptor);
@@ -239,14 +243,14 @@ public class TestRedA01ConNodoMultiplexor {
 	 */
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosNodosEnElMedioInterconectados() {
-		final NodoMultiplexor nodoEmisor = NodoMultiplexor.create(processor);
+		final Nodo nodoEmisor = crearNodoDefault();
 		// Le conectamos un receptor directo al emisor para ver los que le llegan
 		final ReceptorEncolador recibidosPorElEmisor = ReceptorEncolador.create();
 		nodoEmisor.conectarCon(recibidosPorElEmisor);
 
-		final NodoMultiplexor nodoIntermedio1 = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoIntermedio2 = NodoMultiplexor.create(processor);
-		final NodoMultiplexor nodoReceptor = NodoMultiplexor.create(processor);
+		final Nodo nodoIntermedio1 = crearNodoDefault();
+		final Nodo nodoIntermedio2 = crearNodoDefault();
+		final Nodo nodoReceptor = crearNodoDefault();
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		nodoReceptor.conectarCon(handlerReceptor);
@@ -282,7 +286,7 @@ public class TestRedA01ConNodoMultiplexor {
 		nodoReceptor.conectarCon(handlerReceptor1);
 
 		final ReceptorEncolador handlerReceptor2 = ReceptorEncolador.create();
-		final NodoMultiplexor nodoReceptor2 = NodoMultiplexor.create(processor);
+		final Nodo nodoReceptor2 = crearNodoDefault();
 		nodoReceptor2.conectarCon(handlerReceptor2);
 
 		interconectar(nodoRuteador, nodoReceptor2);

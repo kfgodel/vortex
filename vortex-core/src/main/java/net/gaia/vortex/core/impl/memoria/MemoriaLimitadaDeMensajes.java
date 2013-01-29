@@ -14,8 +14,8 @@ package net.gaia.vortex.core.impl.memoria;
 
 import java.util.concurrent.Callable;
 
+import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
 import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 import ar.com.dgarcia.colecciones.maps.LRUCache;
 import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
@@ -153,7 +153,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idsRegistrados_FIELD, idsRegistrados).toString();
+		return ToString.de(this).con(idsRegistrados_FIELD, idsRegistrados.size()).toString();
 	}
 
 	/**

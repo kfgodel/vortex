@@ -13,9 +13,9 @@
 package net.gaia.vortex.sockets.impl.atomos;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
+import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.sockets.impl.tasks.EnviarPorSocket;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
@@ -25,18 +25,18 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * 
  * @author D. García
  */
-public class Socketizador extends ComponenteConProcesadorSupport implements Receptor {
+public class Socketizador extends ReceptorConProcesador {
 
 	private ObjectSocket socket;
 	public static final String socket_FIELD = "socket";
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public void recibir(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final EnviarPorSocket envio = EnviarPorSocket.create(socket, mensaje);
-		procesarEnThreadPropio(envio);
+		return envio;
 	}
 
 	public static Socketizador create(final TaskProcessor processor, final ObjectSocket socket) {
@@ -51,7 +51,7 @@ public class Socketizador extends ComponenteConProcesadorSupport implements Rece
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).add(socket_FIELD, socket)
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(socket_FIELD, socket)
 				.toString();
 	}
 }

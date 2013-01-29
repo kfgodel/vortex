@@ -14,11 +14,12 @@ package net.gaia.vortex.tests.router;
 
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.vortex.tests.router.impl.PortalImpl;
-import net.gaia.vortex.tests.router.impl.RouterImpl;
-import net.gaia.vortex.tests.router.impl.SimuladorImpl;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeSupport;
+import net.gaia.vortex.tests.router2.impl.PortalBidireccional;
+import net.gaia.vortex.tests.router2.impl.RouterBidireccional;
+import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
+import net.gaia.vortex.tests.router2.mensajes.MensajeSupport;
+import net.gaia.vortex.tests.router2.simulador.Simulador;
+import net.gaia.vortex.tests.router2.simulador.SimuladorImpl;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -48,59 +49,53 @@ public class TestRuteoDeMensajes {
 	@Test
 	public void enUnaRedTipoYElqueQuiereTortaNoDeberiaRecibirPan() {
 		// armar la red conectando las cosas
-		final PortalImpl pan = PortalImpl.create("Pan", simulador);
-		final PortalImpl torta = PortalImpl.create("Torta", simulador);
-		final RouterImpl r1 = RouterImpl.create("R1", simulador);
-		final RouterImpl r2 = RouterImpl.create("r2", simulador);
-		final PortalImpl panificador = PortalImpl.create("Panificador", simulador);
+		final PortalBidireccional pan = PortalBidireccional.create("Pan", simulador);
+		final PortalBidireccional torta = PortalBidireccional.create("Torta", simulador);
+		final RouterBidireccional r1 = RouterBidireccional.create("R1", simulador);
+		final RouterBidireccional r2 = RouterBidireccional.create("R2", simulador);
+		final PortalBidireccional panificador = PortalBidireccional.create("Panificador", simulador);
 
-		pan.conectarBidi(r1);
-		torta.conectarBidi(r1);
-		r1.conectarBidi(r2);
-		r2.conectarBidi(panificador);
-
-		simulador.ejecutarPasos(40);
-		simulador.ejecutarSiguiente();
-		simulador.ejecutarPasos(100);
+		pan.simularConexionBidi(r1);
+		torta.simularConexionBidi(r1);
+		r1.simularConexionBidi(r2);
+		r2.simularConexionBidi(panificador);
 
 		simulador.ejecutarTodos(TimeMagnitude.of(10, TimeUnit.SECONDS));
 
 		// publicar los filtros de ambos portales
-		pan.setearYPublicarFiltros("pan");
-		torta.setearYPublicarFiltros("torta");
+		pan.simularSeteoDeFiltros("pan");
+		torta.simularSeteoDeFiltros("torta");
 		simulador.ejecutarTodos(TimeMagnitude.of(5, TimeUnit.MINUTES));
 
 		// enviar el mensaje desde el origen
 		final MensajeNormal nuevoPan = MensajeNormal.create("pan", "Nuevo pan desde panificador");
-		panificador.enviar(nuevoPan);
+		panificador.simularEnvioDe(nuevoPan);
 		simulador.ejecutarTodos(TimeMagnitude.of(5, TimeUnit.MINUTES));
 
-		// correr la simulacion
-		// verificar que el mensaje llego a donde debía y no a donde no
 	}
 
 	@Ignore("Por ahora lo saco")
 	@Test
 	public void ruteoConConexionesEnOrden() {
 		// armar la red conectando las cosas
-		final PortalImpl pan = PortalImpl.create("Pan", simulador);
-		final PortalImpl torta = PortalImpl.create("Torta", simulador);
-		final RouterImpl r1 = RouterImpl.create("R1", simulador);
-		final RouterImpl r2 = RouterImpl.create("r2", simulador);
-		final PortalImpl panificador = PortalImpl.create("Panificador", simulador);
+		final PortalBidireccional pan = PortalBidireccional.create("Pan", simulador);
+		final PortalBidireccional torta = PortalBidireccional.create("Torta", simulador);
+		final RouterBidireccional r1 = RouterBidireccional.create("R1", simulador);
+		final RouterBidireccional r2 = RouterBidireccional.create("r2", simulador);
+		final PortalBidireccional panificador = PortalBidireccional.create("Panificador", simulador);
 
-		pan.conectarBidi(r1);
+		pan.simularConexionBidi(r1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		pan.setearYPublicarFiltros("pan");
-		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
-
-		torta.conectarBidi(r1);
-		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		torta.setearYPublicarFiltros("torta");
+		pan.simularSeteoDeFiltros("pan");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		r1.conectarBidi(r2);
-		r2.conectarBidi(panificador);
+		torta.simularConexionBidi(r1);
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		torta.simularSeteoDeFiltros("torta");
+		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		r1.simularConexionBidi(r2);
+		r2.simularConexionBidi(panificador);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 	}
 

@@ -14,6 +14,7 @@ import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Queue;
+import java.util.TreeMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
@@ -444,4 +445,21 @@ public class ReflectionUtils {
 		return returnClass;
 	}
 
+	/**
+	 * Calcula y devuelve el hash para un par de objetos.<br>
+	 * Este método es una facilidad basado en la implementacion de
+	 * {@link TreeMap.Entry#equals(Object)}
+	 * 
+	 * @param primero
+	 *            El primero obejto (puede sr null)
+	 * @param segundo
+	 *            El segundo (puede ser null)
+	 * @return El valor de hash para representar los objetos pasados como una sola cosa
+	 */
+	public static int hashDeDosValores(final Object primero, final Object segundo) {
+		final int keyHash = (primero == null ? 0 : primero.hashCode());
+		final int valueHash = (segundo == null ? 0 : segundo.hashCode());
+		final int valorDeHash = keyHash ^ valueHash;
+		return valorDeHash;
+	}
 }

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia.vortex</groupId>
   <artifactId>vortex-sockets</artifactId>
-  <version>0.4.3-SNAPSHOT</version>
+  <version>0.5.0</version>
   <name>Vortex[Sockets]</name>
   <description>Proyecto que implementa sockets como nodos para utilizarlos en vortex</description>
   <build>
@@ -66,14 +66,16 @@
       <url>http://kfgodel.info:8081/nexus/content/groups/public/</url>
     </pluginRepository>
   </pluginRepositories>
+  
+  
   <dependencies>
   
-  	<!-- Agrega la parte mínima de Vortex -->
-  	<dependency>
+  	<!-- Componentes para ruteo bidi y core-->
+	<dependency>
 	  <groupId>net.gaia.vortex</groupId>
-	  <artifactId>vortex-core</artifactId>
-	  <version>0.4.3-SNAPSHOT</version>
-  	</dependency>
+	  <artifactId>vortex-router</artifactId>
+	  <version>0.5.0</version>
+	</dependency>  	
   	
   	<!-- Agrega los sockets de objetos -->
   	<dependency>
@@ -89,14 +91,6 @@
 	  <version>0.1</version>
 	</dependency>
 	
-	<!-- Portales para los tests -->
-	<dependency>
-	  <groupId>net.gaia.vortex</groupId>
-	  <artifactId>vortex-portal</artifactId>
-	  <version>0.4.3-SNAPSHOT</version>
-	  <scope>test</scope>
-	</dependency>  	
-  	
  	<!--  Abstrae la herramienta de logueo concreta -->
     <dependency>
       <groupId>org.slf4j</groupId>

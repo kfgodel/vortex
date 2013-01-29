@@ -29,7 +29,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class PropertyChainAccessor implements ValueAccessor {
+public class PropertyChainAccessor extends ValueAccessorSupport {
 
 	/**
 	 * Caracter utilizado para delimitar las propiedades de la cadena
@@ -196,6 +196,22 @@ public class PropertyChainAccessor implements ValueAccessor {
 	@Override
 	public String toString() {
 		return ToString.de(this).con(propertyNames_FIELD, Arrays.toString(propertyNames)).toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.sets.reflection.ValueAccessor#getPropertyPath()
+	 */
+	@Override
+	public String getPropertyPath() {
+		final StringBuilder propertyPath = new StringBuilder();
+		for (int i = 0; i < propertyNames.length; i++) {
+			final String propertyName = propertyNames[i];
+			if (i > 0) {
+				propertyPath.append(PROPERTY_DELIMITER);
+			}
+			propertyPath.append(propertyName);
+		}
+		return propertyPath.toString();
 	}
 
 }

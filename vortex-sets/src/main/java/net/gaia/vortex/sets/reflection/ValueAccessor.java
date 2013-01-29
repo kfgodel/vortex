@@ -66,4 +66,11 @@ public interface ValueAccessor {
 	 *             Si se produce un error accediendo el valor
 	 */
 	public boolean hasValueIn(Map<String, Object> contenido) throws MessageReflectionException;
+
+	/**
+	 * Devuelve la cadena que define este accesor
+	 * 
+	 * @return la cadena que representa la secuencia de propiedades de este accesor
+	 */
+	public String getPropertyPath();
 }

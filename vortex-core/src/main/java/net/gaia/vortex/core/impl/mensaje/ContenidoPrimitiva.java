@@ -15,6 +15,7 @@ package net.gaia.vortex.core.impl.mensaje;
 import java.util.Collection;
 
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
+import net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport;
 
 /**
  * Esta clase representa un contenido vortex de tipo primitiva
@@ -26,7 +27,7 @@ public class ContenidoPrimitiva extends ContenidoVortexSupport implements Conten
 	private Object valorPrimitiva;
 
 	/**
-	 * @see net.gaia.vortex.core.impl.mensaje.ContenidoVortexSupport#getValorComoPrimitiva()
+	 * @see net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport#getValorComoPrimitiva()
 	 */
 	@Override
 	public Object getValorComoPrimitiva() {
@@ -34,7 +35,7 @@ public class ContenidoPrimitiva extends ContenidoVortexSupport implements Conten
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.mensaje.ContenidoVortexSupport#setValorComoPrimitiva(java.lang.Object)
+	 * @see net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport#setValorComoPrimitiva(java.lang.Object)
 	 */
 	@Override
 	public void setValorComoPrimitiva(final Object valor) {

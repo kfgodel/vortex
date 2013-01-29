@@ -14,7 +14,6 @@ package net.gaia.vortex.sets.reflection.accessors;
 
 import java.util.Map;
 
-import net.gaia.vortex.sets.reflection.ValueAccessor;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -22,7 +21,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class PropertyAccessor implements ValueAccessor {
+public class PropertyAccessor extends ValueAccessorSupport {
 
 	private String propertyName;
 	public static final String propertyName_FIELD = "propertyName";
@@ -76,4 +75,11 @@ public class PropertyAccessor implements ValueAccessor {
 		return ToString.de(this).con(propertyName_FIELD, propertyName).toString();
 	}
 
+	/**
+	 * @see net.gaia.vortex.sets.reflection.ValueAccessor#getPropertyPath()
+	 */
+	@Override
+	public String getPropertyPath() {
+		return propertyName;
+	}
 }

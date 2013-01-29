@@ -13,14 +13,13 @@
 package net.gaia.vortex.core.api.atomos.condicional;
 
 import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 
 /**
- * Esta interfaz representa un componente vortex que bifurca el mensaje entre dos posibles
- * receptores basadondosé en una condicion. Elige el camino según el valor de la condicion al
- * evaluar el mensaje
+ * Esta interfaz representa un componente vortex que elige uno entre dos caminos para el mensaje
+ * basándose en una condicion. Elige el camino según el valor de la condicion al evaluar el mensaje
  * 
  * @author D. García
  */

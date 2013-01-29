@@ -25,6 +25,8 @@ import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
@@ -35,6 +37,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * @author D. García
  */
 public class TestMinMaxWorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(TestMinMaxWorkUnit.class);
 
 	private TaskProcessor procesor;
 
@@ -50,6 +53,7 @@ public class TestMinMaxWorkUnit {
 		public WorkUnit doWork() throws InterruptedException {
 			final long currentMillis = System.currentTimeMillis();
 			ejecuciones.add(currentMillis);
+			LOG.debug("Tarea de test ejecutada por {}º vez: {}", ejecuciones.size(), currentMillis);
 			ejecutada.release();
 			return null;
 		}
@@ -58,7 +62,7 @@ public class TestMinMaxWorkUnit {
 
 	@Before
 	public void crearProcesador() {
-		procesor = ExecutorBasedTaskProcesor.create();
+		procesor = ExecutorBasedTaskProcesor.create(4);
 	}
 
 	@After
@@ -135,7 +139,7 @@ public class TestMinMaxWorkUnit {
 
 		// Intentamos una segunda ejecución manual que no tendrá efecto hasta el segundo
 		procesor.process(minmax);
-		Thread.sleep(1500);
+		Thread.sleep(500);
 		// Verificamos que la segunda ejecución no tuvo efecto
 		Assert.assertEquals(1, testWorkUnit.ejecuciones.size());
 

@@ -17,7 +17,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 /**
  * Esta interfaz representa una transformación realizada a un mensaje vortex en la red.<br>
  * Normalmente las transformaciones deben ser thread-safe lo que permite la ejecución de multiples
- * thread en paralelo
+ * thread en paralelo con el mismo objeto
  * 
  * @author D. García
  */

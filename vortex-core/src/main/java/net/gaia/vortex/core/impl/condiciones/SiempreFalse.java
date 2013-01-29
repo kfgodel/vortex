@@ -12,7 +12,12 @@
  */
 package net.gaia.vortex.core.impl.condiciones;
 
+import java.util.Collections;
+import java.util.List;
+
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
@@ -23,6 +28,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
+@Paralelizable
 public class SiempreFalse implements Condicion {
 
 	private static final WeakSingleton<SiempreFalse> ultimaReferencia = new WeakSingleton<SiempreFalse>(
@@ -36,13 +42,8 @@ public class SiempreFalse implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(@SuppressWarnings("unused") final MensajeVortex mensaje) {
-		return false;
-	}
-
-	public static SiempreFalse create() {
-		final SiempreFalse condicion = new SiempreFalse();
-		return condicion;
+	public ResultadoDeCondicion esCumplidaPor(@SuppressWarnings("unused") final MensajeVortex mensaje) {
+		return ResultadoDeCondicion.FALSE;
 	}
 
 	/**
@@ -51,6 +52,14 @@ public class SiempreFalse implements Condicion {
 	@Override
 	public String toString() {
 		return ToString.de(this).toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
 	}
 
 }

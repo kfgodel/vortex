@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import ar.com.dgarcia.lang.strings.ToString;
+
 /**
  * Esta clase representa el paquete de mensajes enviado y recibido por http para la transferencia de
  * mensajes vortex
@@ -25,8 +27,13 @@ import java.util.Map;
 public class PaqueteHttpVortex {
 
 	private List<Map<String, Object>> contenidos;
+	public static final String contenidos_FIELD = "contenidos";
+
 	private Long proximaEsperaMinima;
+	public static final String proximaEsperaMinima_FIELD = "proximaEsperaMinima";
+
 	private Long proximaEsperaMaxima;
+	public static final String proximaEsperaMaxima_FIELD = "proximaEsperaMaxima";
 
 	public List<Map<String, Object>> getContenidos() {
 		if (contenidos == null) {
@@ -72,4 +79,14 @@ public class PaqueteHttpVortex {
 	public void agregarContenido(final Map<String, Object> contenidoTextualizable) {
 		getContenidos().add(contenidoTextualizable);
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(proximaEsperaMinima_FIELD, proximaEsperaMinima)
+				.con(proximaEsperaMaxima_FIELD, proximaEsperaMaxima).con(contenidos_FIELD, contenidos).toString();
+	}
+
 }

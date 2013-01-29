@@ -25,7 +25,8 @@ public interface ComponenteConMemoria {
 	/**
 	 * Indica si este componente tiene registro previo del mensaje pasado y por lo tanto no debe
 	 * enviársele.<br>
-	 * Es posible que por limitaciones de memoria no exista registro de recepcion previa aunque ya
+	 * 
+	 * Es posible que por limitaciones de memoria no exista registro de recepción previa aunque ya
 	 * haya ocurrido
 	 * 
 	 * @param mensaje

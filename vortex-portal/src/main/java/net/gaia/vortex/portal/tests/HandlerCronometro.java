@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
-import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
+import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
@@ -41,7 +41,7 @@ public class HandlerCronometro extends HandlerTipado<MensajeCronometro> {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.HandlerDePortal#onMensajeRecibido(java.lang.Object)
+	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#onMensajeRecibido(java.lang.Object)
 	 */
 	@Override
 	public void onMensajeRecibido(final MensajeCronometro mensaje) {

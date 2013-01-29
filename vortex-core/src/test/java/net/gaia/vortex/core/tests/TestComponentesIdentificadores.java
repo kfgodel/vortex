@@ -16,15 +16,15 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.atomos.memoria.MultiplexorSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
-import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
+import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
+import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
+import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
 
 import org.junit.After;
 import org.junit.Before;
@@ -40,10 +40,9 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  */
 public class TestComponentesIdentificadores {
 
-	private NexoFiltroDuplicados nexo;
+	private NexoSinDuplicados nexo;
 	private MensajeVortex mensajeEnviado;
 	private ReceptorEncolador receptorFinal1;
-	private IdDeComponenteVortex identificador;
 	private TaskProcessor processor;
 	private MultiplexorSinDuplicados multiplexor;
 	private ReceptorEncolador receptorFinal2;
@@ -51,17 +50,16 @@ public class TestComponentesIdentificadores {
 	@Before
 	public void crearDependencias() {
 		processor = VortexProcessorFactory.createProcessor();
-		identificador = IdsEstatiscosParaComponentes.getInstancia().generarId();
 		receptorFinal1 = ReceptorEncolador.create();
 		receptorFinal2 = ReceptorEncolador.create();
-		nexo = NexoFiltroDuplicados.create(processor, receptorFinal1);
+		nexo = NexoSinDuplicados.create(processor, receptorFinal1);
 		multiplexor = MultiplexorSinDuplicados.create(processor);
 		multiplexor.conectarCon(receptorFinal1);
 		multiplexor.conectarCon(receptorFinal2);
 
 		mensajeEnviado = MensajeConContenido.crearVacio();
-		final IdDeComponenteVortex idDeNodo = IdsEstatiscosParaComponentes.getInstancia().generarId();
-		final IdsSecuencialesParaMensajes generador = IdsSecuencialesParaMensajes.create(idDeNodo);
+		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
+		final GeneradorSecuencialDeIdDeMensaje generador = GeneradorSecuencialDeIdDeMensaje.create(idDeNodo);
 		final IdDeMensaje idDelMensaje = generador.generarId();
 		mensajeEnviado.asignarId(idDelMensaje);
 	}

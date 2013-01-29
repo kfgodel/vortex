@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.api.atomos.condicional;
 
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 
@@ -36,7 +36,7 @@ public interface Filtro extends Nexo {
 
 	/**
 	 * Establece la condición utilizada por este filtro para aceptar los mensajes y pasarlos al
-	 * proximo receptor. Si la condición pasada devuelve true el mensaje circula
+	 * próximo receptor. Si la condición pasada devuelve true el mensaje circula
 	 * 
 	 * @param condicion
 	 *            La condición a utilizar

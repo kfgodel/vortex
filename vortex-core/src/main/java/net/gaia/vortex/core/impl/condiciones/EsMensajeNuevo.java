@@ -12,18 +12,24 @@
  */
 package net.gaia.vortex.core.impl.condiciones;
 
+import java.util.Collections;
+import java.util.List;
+
+import net.gaia.vortex.core.api.annotations.Paralelizable;
 import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la condición que evalúa si un mensaje es previamente conocido. Para lo cual
- * registra los IDS de los nuevos mensajes no conocidos hasta cierto límite.<br>
+ * registra los IDs de los nuevos mensajes no conocidos hasta cierto límite.<br>
  * Si se supera el límite se van descartando los IDs viejos;
  * 
  * @author D. García
  */
+@Paralelizable
 public class EsMensajeNuevo implements Condicion {
 
 	private MemoriaDeMensajes mensajesConocidos;
@@ -33,9 +39,9 @@ public class EsMensajeNuevo implements Condicion {
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public boolean esCumplidaPor(final MensajeVortex mensaje) {
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final boolean agregadoComoNuevo = mensajesConocidos.registrarNuevo(mensaje);
-		return agregadoComoNuevo;
+		return ResultadoDeCondicion.paraBooleano(agregadoComoNuevo);
 	}
 
 	/**
@@ -51,4 +57,13 @@ public class EsMensajeNuevo implements Condicion {
 		condicion.mensajesConocidos = memoria;
 		return condicion;
 	}
+
+	/**
+	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 */
+	@Override
+	public List<Condicion> getSubCondiciones() {
+		return Collections.emptyList();
+	}
+
 }

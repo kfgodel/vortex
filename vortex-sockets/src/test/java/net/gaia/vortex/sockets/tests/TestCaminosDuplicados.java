@@ -19,7 +19,7 @@ import junit.framework.Assert;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.portal.impl.moleculas.HandlerTipado;
+import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
@@ -235,7 +235,7 @@ public class TestCaminosDuplicados {
 		esperarPrimerMensaje.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.MINUTES));
 		LOG.debug("Esperando otros mensajes a parte del primero");
 
-		// Esperamos unos 20s más para registrar si llegan otros mensajes
+		// Esperamos unos segundos más para registrar si llegan otros mensajes
 		Thread.sleep(5000);
 
 		Assert.assertEquals("Sólo debería haber llegado un mensaje", 1, metricas.getCantidadDeOutputs());

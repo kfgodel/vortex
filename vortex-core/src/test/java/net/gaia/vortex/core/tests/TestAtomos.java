@@ -7,22 +7,24 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.mensaje.ids.IdDeMensaje;
-import net.gaia.vortex.core.api.moleculas.ids.IdDeComponenteVortex;
+import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcador;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoFiltroDuplicados;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.ids.IdsSecuencialesParaMensajes;
+import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
+import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.core.impl.moleculas.ids.IdsEstatiscosParaComponentes;
+import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -33,7 +35,7 @@ import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
- * Esta clase el caso feliz para cada uno de los átomos base, de manera de registrar su
+ * Esta clase prueba el caso feliz para cada uno de los átomos base, de manera de registrar su
  * comportamiento esperado y uso
  * 
  * @author D. García
@@ -107,7 +109,7 @@ public class TestAtomos {
 	public void elBifurcadorDeberiaElegirElDelegadoPorTrueSiLaCondicionEsCumplida() {
 		final ReceptorEncolador receptorPorTrue = ReceptorEncolador.create();
 		final ReceptorEncolador receptorPorFalse = ReceptorEncolador.create();
-		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreTrue.create(), receptorPorTrue,
+		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreTrue.getInstancia(), receptorPorTrue,
 				receptorPorFalse);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorTrue);
 		verificarMensajeNoRecibido(0, receptorPorFalse);
@@ -117,22 +119,23 @@ public class TestAtomos {
 	public void elBifurcadorDeberiaElegirElDelegadoPorFalseSiLaCondicionNoEsCumplida() {
 		final ReceptorEncolador receptorPorTrue = ReceptorEncolador.create();
 		final ReceptorEncolador receptorPorFalse = ReceptorEncolador.create();
-		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreFalse.create(), receptorPorTrue,
-				receptorPorFalse);
+		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreFalse.getInstancia(),
+				receptorPorTrue, receptorPorFalse);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorFalse);
 		verificarMensajeNoRecibido(0, receptorPorTrue);
 	}
 
 	@Test
 	public void elFiltroDeMensajesConocidosDeberiaDescartarElMensajeLaSegundaVezSITieneId() {
-		final IdDeComponenteVortex idDeNodo = IdsEstatiscosParaComponentes.getInstancia().generarId();
-		final IdsSecuencialesParaMensajes generadorDeIdsMensajes = IdsSecuencialesParaMensajes.create(idDeNodo);
+		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
+		final GeneradorSecuencialDeIdDeMensaje generadorDeIdsMensajes = GeneradorSecuencialDeIdDeMensaje
+				.create(idDeNodo);
 		final IdDeMensaje idDelMensaje = generadorDeIdsMensajes.generarId();
 		final MensajeVortex mensaje = MensajeConContenido.crearVacio();
 		mensaje.asignarId(idDelMensaje);
 
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final NexoFiltroDuplicados filtro = NexoFiltroDuplicados.create(processor, receptor);
+		final NexoSinDuplicados filtro = NexoSinDuplicados.create(processor, receptor);
 		// La primera vez debería llegar
 		checkMensajeEnviadoYRecibido(mensaje, mensaje, filtro, receptor);
 
@@ -143,7 +146,7 @@ public class TestAtomos {
 	@Test
 	public void elFiltroDeMensajesConocidosDeberiaGenerarUnErrorSiElMensajeNoTieneId() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final NexoFiltroDuplicados filtro = NexoFiltroDuplicados.create(processor, receptor);
+		final NexoSinDuplicados filtro = NexoSinDuplicados.create(processor, receptor);
 		// La primera vez debería llegar
 		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, filtro, receptor);
 	}
@@ -217,4 +220,19 @@ public class TestAtomos {
 		}
 	}
 
+	/**
+	 * Verifica que el selector deriva bien los mensajes
+	 */
+	@Test
+	public void elSelectorDeberiEntregarElMensajeAlQueCumpleLaCondicion() {
+		final ReceptorEncolador receptorSiempreTrue = ReceptorEncolador.create();
+		final ReceptorEncolador receptorSiempreFalse = ReceptorEncolador.create();
+
+		final Selector selector = SelectorConFiltros.create(processor);
+		selector.conectarCon(receptorSiempreTrue, SiempreTrue.getInstancia());
+		selector.conectarCon(receptorSiempreFalse, SiempreFalse.getInstancia());
+
+		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, selector, receptorSiempreTrue);
+		verificarMensajeNoRecibido(1, receptorSiempreFalse);
+	}
 }

@@ -14,12 +14,12 @@ package net.gaia.vortex.core.impl.atomos.transformacion;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.transformacion.Transformador;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
-import net.gaia.vortex.core.impl.atomos.forward.NexoSupport;
+import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.tasks.TransformarYDelegar;
 import net.gaia.vortex.core.impl.transformaciones.TransformacionNula;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -45,7 +45,7 @@ public class NexoTransformador extends NexoSupport implements Transformador {
 	public void setTransformacion(final Transformacion transformacion) {
 		if (transformacion == null) {
 			throw new IllegalArgumentException(
-					"La transformacion del proxy ni puede ser nula. A lo sumo una instancia de "
+					"La transformacion del proxy no puede ser nula. A lo sumo una instancia de "
 							+ TransformacionNula.class);
 		}
 		this.transformacion = transformacion;
@@ -69,15 +69,15 @@ public class NexoTransformador extends NexoSupport implements Transformador {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.add(transformacion_FIELD, transformacion).add(destino_FIELD, getDestino()).toString();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		return TransformarYDelegar.create(mensaje, transformacion, getDestino());
 	}
 }

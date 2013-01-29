@@ -14,11 +14,12 @@ package net.gaia.vortex.tests.router;
 
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.vortex.tests.router.impl.PortalImpl;
-import net.gaia.vortex.tests.router.impl.RouterImpl;
-import net.gaia.vortex.tests.router.impl.SimuladorImpl;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeNormal;
-import net.gaia.vortex.tests.router.impl.mensajes.MensajeSupport;
+import net.gaia.vortex.tests.router2.impl.PortalBidireccional;
+import net.gaia.vortex.tests.router2.impl.RouterBidireccional;
+import net.gaia.vortex.tests.router2.mensajes.MensajeNormal;
+import net.gaia.vortex.tests.router2.mensajes.MensajeSupport;
+import net.gaia.vortex.tests.router2.simulador.Simulador;
+import net.gaia.vortex.tests.router2.simulador.SimuladorImpl;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,62 +44,65 @@ public class TestEscenariosTipicos {
 
 	@Test
 	public void conUnChatConectadoYUnLuz_AlConectarseOtroChatDeberiaRutearBienEntreChats() {
-		final RouterImpl server = RouterImpl.create("Servidor", simulador);
+		final RouterBidireccional server = RouterBidireccional.create("Servidor", simulador);
 
-		final PortalImpl chat1 = PortalImpl.create("Chat1", simulador);
-		final PortalImpl chat2 = PortalImpl.create("Chat2", simulador);
-		final PortalImpl luz1 = PortalImpl.create("Luz1", simulador);
+		final PortalBidireccional chat1 = PortalBidireccional.create("Chat1", simulador);
+		chat1.setListenerDeFiltrosExternos(ListenerDeFiltrosParaLog.create(chat1));
+		final PortalBidireccional chat2 = PortalBidireccional.create("Chat2", simulador);
+		chat2.setListenerDeFiltrosExternos(ListenerDeFiltrosParaLog.create(chat2));
+		final PortalBidireccional luz1 = PortalBidireccional.create("Luz1", simulador);
+		luz1.setListenerDeFiltrosExternos(ListenerDeFiltrosParaLog.create(luz1));
 
 		// Hacemos que el chat1 ya esté conectado
-		chat1.conectarBidi(server);
-		chat1.setearYPublicarFiltros("chat");
+		chat1.simularConexionBidi(server);
+		chat1.simularSeteoDeFiltros("chat");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		// Se conecta el de luz
-		luz1.conectarBidi(server);
-		luz1.setearYPublicarFiltros("luz");
+		luz1.simularConexionBidi(server);
+		luz1.simularSeteoDeFiltros("luz");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		// Si mandamos mensajes desde el chat, no debería llegar a la luz
+		// Si mandamos mensajes desde la luz, no debería llegar al de chat
 		final MensajeNormal mensajeDeLuz = MensajeNormal.create("luz", "Mensaje de luz");
-		luz1.enviar(mensajeDeLuz);
+		luz1.simularEnvioDe(mensajeDeLuz);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		Assert.assertFalse("No debería llegar al de chat", chat1.yaProceso(mensajeDeLuz));
 
 		// Mandamos el de chat y no debería llegar al de luz
 		final MensajeNormal mensajeDeChat1 = MensajeNormal.create("chat", "Mensaje de chat 1");
-		chat1.enviar(mensajeDeChat1);
+		chat1.simularEnvioDe(mensajeDeChat1);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		Assert.assertFalse("No debería llegar al de chat", luz1.yaProceso(mensajeDeChat1));
 
 		// Al conectar el de chat2 se debería poder comunicar entre ellos
 
-		chat2.conectarBidi(server);
-		chat2.setearYPublicarFiltros("chat");
+		chat2.simularConexionBidi(server);
+		chat2.simularSeteoDeFiltros("chat");
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final MensajeNormal mensajeDeChat2 = MensajeNormal.create("chat", "Mensaje de chat 2");
-		chat1.enviar(mensajeDeChat2);
+		chat1.simularEnvioDe(mensajeDeChat2);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		Assert.assertTrue("Debería llegar al de chat 2", chat2.yaProceso(mensajeDeChat2));
 		Assert.assertFalse("No debería llegar al de chat", luz1.yaProceso(mensajeDeChat2));
 
 		final MensajeNormal mensajeDeChat3 = MensajeNormal.create("chat", "Mensaje de chat 3");
-		chat2.enviar(mensajeDeChat3);
+		chat2.simularEnvioDe(mensajeDeChat3);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		Assert.assertTrue("Debería llegar al de chat 1", chat1.yaProceso(mensajeDeChat3));
 		Assert.assertFalse("No debería llegar al de chat", luz1.yaProceso(mensajeDeChat3));
 
 		// Si se desconecta el chat 1 los mensajes no debería llegar
-		chat1.desconectarBidiDe(server);
+		chat1.simularDesconexionBidiDe(server);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		final MensajeNormal mensajeDeChat4 = MensajeNormal.create("chat", "Mensaje de chat 4");
-		chat2.enviar(mensajeDeChat4);
+		chat2.simularEnvioDe(mensajeDeChat4);
 		simulador.ejecutarTodos(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 		Assert.assertFalse("No debería llegar al de chat1", chat1.yaProceso(mensajeDeChat4));

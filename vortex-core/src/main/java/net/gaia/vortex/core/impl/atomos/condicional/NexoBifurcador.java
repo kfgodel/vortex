@@ -4,17 +4,20 @@
 package net.gaia.vortex.core.impl.atomos.condicional;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.condicional.Bifurcador;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.ComponenteConProcesadorSupport;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
-import net.gaia.vortex.core.impl.tasks.BifurcarMensaje;
+import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
+import net.gaia.vortex.core.impl.tasks.condicional.BifurcarMensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa un componente de la red vortex que puede delegarle el mensaje recibido a
@@ -25,12 +28,15 @@ import org.slf4j.LoggerFactory;
  * @author D. García
  */
 @Atomo
-public class NexoBifurcador extends ComponenteConProcesadorSupport implements Bifurcador {
+public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador {
 	private static final Logger LOG = LoggerFactory.getLogger(NexoBifurcador.class);
 
 	private Condicion condicion;
+	public static final String condicion_FIELD = "condicion";
 	private Receptor delegadoPorTrue;
+	public static final String delegadoPorTrue_FIELD = "delegadoPorTrue";
 	private Receptor delegadoPorFalse;
+	public static final String delegadoPorFalse_FIELD = "delegadoPorFalse";
 
 	@Override
 	public Condicion getCondicion() {
@@ -46,13 +52,13 @@ public class NexoBifurcador extends ComponenteConProcesadorSupport implements Bi
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	public void recibir(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final BifurcarMensaje elegirDelegado = BifurcarMensaje.create(mensaje, condicion, delegadoPorTrue,
 				delegadoPorFalse);
-		procesarEnThreadPropio(elegirDelegado);
+		return elegirDelegado;
 	}
 
 	public static NexoBifurcador create(final TaskProcessor processor, final Condicion condicion,
@@ -120,4 +126,14 @@ public class NexoBifurcador extends ComponenteConProcesadorSupport implements Bi
 	public Receptor getReceptorPorFalse() {
 		return delegadoPorFalse;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(condicion_FIELD, condicion).con(delegadoPorTrue_FIELD, delegadoPorTrue)
+				.con(delegadoPorFalse_FIELD, delegadoPorFalse).toString();
+	}
+
 }

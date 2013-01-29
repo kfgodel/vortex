@@ -17,7 +17,7 @@
 	</appender>
   
 	
-	<logger name="net.gaia.vortex.tests.router" level="DEBUG" />
+	<logger name="net.gaia.vortex.tests.router2" level="DEBUG" />
 	
 	<root level="info">
 	  <appender-ref ref="STDOUT" />

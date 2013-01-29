@@ -14,11 +14,12 @@ package net.gaia.vortex.core.impl.atomos.forward;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.ComponenteVortex;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Ejecutor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.tasks.EjecutarYDelegar;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -47,15 +48,15 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente())
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.add(ejecutante_FIELD, ejecutante).add(destino_FIELD, getDestino()).toString();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.NexoSupport#crearTareaPara(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	@Override
-	protected WorkUnit crearTareaPara(final MensajeVortex mensaje) {
+	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final Receptor destino = getDestino();
 		Loggers.ATOMOS.debug("Ejecutando [{}] antes de delegar mensaje[{}] a nodo[{}]",
 				new Object[] { ejecutante.toShortString(), mensaje, destino });

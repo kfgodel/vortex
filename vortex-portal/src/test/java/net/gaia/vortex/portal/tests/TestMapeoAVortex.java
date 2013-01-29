@@ -13,8 +13,8 @@
 package net.gaia.vortex.portal.tests;
 
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.portal.api.moleculas.MapeadorVortex;
-import net.gaia.vortex.portal.impl.moleculas.mapeador.MapeadorDefault;
+import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
+import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,11 +32,11 @@ import ar.com.dgarcia.lang.time.SystemChronometer;
 public class TestMapeoAVortex {
 	private static final Logger LOG = LoggerFactory.getLogger(TestMapeoAVortex.class);
 
-	private MapeadorVortex mapeadorVortex;
+	private ConversorDeMensajesVortex mapeadorVortex;
 
 	@Before
 	public void crearDependencias() {
-		mapeadorVortex = MapeadorDefault.create();
+		mapeadorVortex = ConversorDefaultDeMensajes.create();
 	}
 
 	@Test
@@ -51,7 +51,7 @@ public class TestMapeoAVortex {
 		complejo.setSubInstancia(new ClaseParaProbarMapeo());
 		complejo.setEntero(0);
 		complejo.setTexto("0");
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 30; i++) {
 			final ClaseParaProbarMapeo subI = new ClaseParaProbarMapeo();
 			subI.setSubInstancia(new ClaseParaProbarMapeo());
 			subI.setEntero(i);
@@ -69,7 +69,7 @@ public class TestMapeoAVortex {
 	 */
 	private void checkPerformance(final Object objeto) {
 		final Class<? extends Object> tipoOriginal = objeto.getClass();
-		final int cantidadDeConversiones = 100000;
+		final int cantidadDeConversiones = 20000;
 		final SystemChronometer crono = SystemChronometer.create();
 		for (int i = 0; i < cantidadDeConversiones; i++) {
 			final MensajeVortex mensajeVortex = mapeadorVortex.convertirAVortex(objeto);

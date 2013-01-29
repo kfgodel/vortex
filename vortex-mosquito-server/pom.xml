@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia.vortex</groupId>
   <artifactId>vortex-mosquito-server</artifactId>
-  <version>0.4.3-SNAPSHOT</version>
+  <version>0.5.0</version>
   <name>Vortex[Mosquito]</name>
   <description>Aplicación servidor en mosquito que actúa como hub de sockets</description>
   
@@ -93,9 +93,6 @@
       <snapshots>
       	<updatePolicy>always</updatePolicy>
       </snapshots>
-      <releases>
-      	<updatePolicy>always</updatePolicy>
-      </releases>
     </repository>
   </repositories>
   <pluginRepositories>
@@ -105,20 +102,23 @@
       <url>http://kfgodel.info:8081/nexus/content/groups/public/</url>
     </pluginRepository>
   </pluginRepositories>
+
+  
+  
   <dependencies>
 
 	<!-- Permite la conexión mediante http a la red vortex -->
 	<dependency>
 	  <groupId>net.gaia.vortex.http</groupId>
 	  <artifactId>vortex-http-server</artifactId>
-	  <version>0.4.3-SNAPSHOT</version>
+	  <version>0.5.0</version>
 	</dependency>
 
 	<!-- Permite la conexión mediante sockets a la red vortex -->  
   	<dependency>
 	  <groupId>net.gaia.vortex</groupId>
 	  <artifactId>vortex-sockets</artifactId>
-	  <version>0.4.3-SNAPSHOT</version>
+	  <version>0.5.0</version>
   	</dependency>
   	
 	<!-- Agrega la posibilidad de detectar el ambiente automáticamente -->

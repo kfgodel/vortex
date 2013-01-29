@@ -219,6 +219,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 			final SubmittedRunnableTask inmediateTask = inmediateIterator.next();
 			final WorkUnit workUnit = inmediateTask.getWork();
 			if (criteria.matches(workUnit)) {
+				LOG.debug("Quitando tarea inmediata[{}] según criteria[{}]", workUnit, criteria);
 				inmediateIterator.remove();
 			}
 		}

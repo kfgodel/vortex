@@ -7,9 +7,10 @@ import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 
 /**
- * Esta interfaz representa un componente de vortex que permite una única conexion saliente, por lo
- * que al conectar este componente con un nuevo receptor se pierde la conexion previa.<br>
- * Esta interfaz es la abstracción máxima de muchos componentes básicos de la red vortex
+ * Esta interfaz representa un componente de vortex que permite una única conexión saliente, por lo
+ * que al conectar este componente con un nuevo receptor se pierde la conexión previa.<br>
+ * <br>
+ * Mediante este componente se pueden encadenar acciones que la red realiza al recibir los mensajes
  * 
  * 
  * @author D. García

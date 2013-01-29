@@ -12,8 +12,9 @@
  */
 package net.gaia.vortex.core.impl.atomos.receptores;
 
-import net.gaia.vortex.core.api.annon.Atomo;
+import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class ReceptorNulo extends ReceptorSupport {
 	 */
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		LOG.trace("Se recibió un mensaje[{}] en el componente nulo", mensaje);
+		LOG.trace("Se recibió un mensaje[{}] en el receptor nulo", mensaje);
 	}
 
 	public static ReceptorNulo create() {
@@ -57,7 +58,7 @@ public class ReceptorNulo extends ReceptorSupport {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeComponente_FIELD, getNumeroDeComponente()).toString();
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).toString();
 	}
 
 }
