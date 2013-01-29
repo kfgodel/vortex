@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia.vortex</groupId>
   <artifactId>vortex-portal</artifactId>
-  <version>0.5.0-SNAPSHOT</version>
+  <version>0.5.0</version>
   <name>Vortex[Portal]</name>
   <description>Clases de vortex que permiten utilizar la red a código cliente</description>
   <build>
@@ -78,14 +78,14 @@
   	<dependency>
 	  <groupId>ar.com.dgarcia</groupId>
 	  <artifactId>dgarcia-commons</artifactId>
-	  <version>[1.0.5-SNAPSHOT,)</version>
+	  <version>[1.0.5,)</version>
   	</dependency>
   
   	<!-- Dependencias basicas de vortex -->
 	<dependency>
 	  <groupId>net.gaia.vortex</groupId>
 	  <artifactId>vortex-core</artifactId>
-	  <version>0.5.0-SNAPSHOT</version>
+	  <version>0.5.0</version>
 	</dependency>  	
 	
 	<!-- Permite implementar los mapeadores con json -->
