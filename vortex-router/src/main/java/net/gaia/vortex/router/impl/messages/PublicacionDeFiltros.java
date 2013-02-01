@@ -29,7 +29,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class PublicacionDeFiltros extends MetamensajeSupport implements MensajeConIdDePataReceptora {
 
-	public static final String NOMBRE_DE_TIPO = "Vortex.Filtro.Publicacion";
+	public static final String NOMBRE_DE_TIPO = PREFIJO_METAMENSAJE + "Filtro.Publicacion";
 
 	private Long idLocalAlReceptor;
 
