@@ -77,9 +77,9 @@
 	<!-- Queremos ver el detalle de los strings que llegan por socket --> 
 	<logger name="ar.dgarcia.objectsockets.external.mina.filters.String2ObjectCodecFilter" level="DEBUG" />
 	
-	<!-- Queremos detalle de los routers bidi 
+	<!-- Queremos detalle de los routers bidi --> 
 	<logger name="net.gaia.vortex.router" level="DEBUG" />
-	-->
+	
 	
 	
 	<!-- Queremos el detalle del manejo de sockets 
