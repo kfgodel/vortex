@@ -100,47 +100,48 @@
       </dependency>
       
       
- 	<!--  Abstrae la herramienta de logueo concreta
+ 	<!--  Abstrae la herramienta de logueo concreta -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.6.4</version>
+      <version>1.7.1</version>
       <scope>test</scope>
     </dependency>
-    -->
     
-    <!-- Descomentar para generar el war -->
+    
+    <!-- Descomentar para generar el war 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-android</artifactId>
       <version>1.6.1-RC1</version>
       <scope>provided</scope>
     </dependency>
+    -->
      
       
    <!-- Implementación del logueo, necesario para los tests-->
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.9</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.9</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
-      <version>1.6.4</version>
+      <version>1.7.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
-      <version>1.6.4</version>
+      <version>1.7.1</version>
       <scope>test</scope>
     </dependency>
     
