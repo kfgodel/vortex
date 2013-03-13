@@ -1,5 +1,5 @@
 /**
- * 08/03/2013 21:16:05 Copyright (C) 2011 Darío L. García
+ * 11/03/2013 23:46:46 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,25 +10,26 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.com.iron.android.extensions.services.remote.message;
+package ar.com.iron.android.extensions.services.remote.api.support;
 
-import ar.com.iron.android.extensions.services.remote.RemoteSession;
+import ar.com.iron.android.extensions.services.remote.api.RemoteSession;
+
 
 /**
- * Esta interfaz define el método a implementar por el handlder de errores en un sesión remota
+ * Esta interfaz define el método invocado ante errores en el proceso de mensajes
  * 
  * @author D. García
  */
-public interface SessionErrorHandler {
+public interface RemoteSessionErrorHandler {
 
 	/**
-	 * Invocado cuando se produce un error en el manejo de la sesión
+	 * Invocado cuando se produce un error en el procesamiento de los mensajes
 	 * 
-	 * @param failedSession
-	 *            La sesión fallida
-	 * @param error
-	 *            El error producido
+	 * @param sesion
+	 *            La sesión en la que se produjo el error
+	 * @param e
+	 *            La excepción producida
 	 */
-	public void onExceptionCaught(RemoteSession failedSession, Throwable error);
+	void onExceptionCaught(RemoteSession sesion, Throwable e);
 
 }

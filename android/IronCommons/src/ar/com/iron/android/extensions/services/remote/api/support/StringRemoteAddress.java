@@ -10,10 +10,10 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.com.iron.android.extensions.services.remote.impl;
+package ar.com.iron.android.extensions.services.remote.api.support;
 
 import android.content.Intent;
-import ar.com.iron.android.extensions.services.remote.RemoteServiceAddress;
+import ar.com.iron.android.extensions.services.remote.api.RemoteServiceAddress;
 
 /**
  * Esta clase representa la direccion de un servicio remoto definido sólo por el string de su nombre
@@ -31,7 +31,7 @@ public class StringRemoteAddress implements RemoteServiceAddress {
 	}
 
 	/**
-	 * @see ar.com.iron.android.extensions.services.remote.RemoteServiceAddress#getAddressIntent()
+	 * @see ar.com.iron.android.extensions.services.remote.api.RemoteServiceAddress#getAddressIntent()
 	 */
 	public Intent getAddressIntent() {
 		return new Intent(nombreDelServicio);

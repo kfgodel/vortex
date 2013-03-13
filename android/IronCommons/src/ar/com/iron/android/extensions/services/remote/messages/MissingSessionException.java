@@ -1,5 +1,5 @@
 /**
- * 08/03/2013 19:44:09 Copyright (C) 2011 Darío L. García
+ * 13/03/2013 17:42:52 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,25 +10,25 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.com.iron.android.extensions.services.remote;
+package ar.com.iron.android.extensions.services.remote.messages;
 
 /**
- * Esta clase representa el error generado al fallar la conexión a un servicio remoto
+ * Esta clase representa la excepción de no encontrar la sesión de un mensaje
  * 
  * @author D. García
  */
-public class FailedRemoteServiceConnectionException extends RuntimeException {
-	private static final long serialVersionUID = 5911295873386746557L;
+public class MissingSessionException extends RuntimeException {
+	private static final long serialVersionUID = 8611490500582682196L;
 
-	public FailedRemoteServiceConnectionException(String detailMessage, Throwable throwable) {
+	public MissingSessionException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
 	}
 
-	public FailedRemoteServiceConnectionException(String detailMessage) {
+	public MissingSessionException(String detailMessage) {
 		super(detailMessage);
 	}
 
-	public FailedRemoteServiceConnectionException(Throwable throwable) {
+	public MissingSessionException(Throwable throwable) {
 		super(throwable);
 	}
 

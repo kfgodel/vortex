@@ -10,12 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.com.iron.android.extensions.services.remote.impl;
+package ar.com.iron.android.extensions.services.remote.api.support;
 
 import android.os.Message;
 import android.util.Log;
-import ar.com.iron.android.extensions.services.remote.RemoteSession;
-import ar.com.iron.android.extensions.services.remote.RemoteSessionHandler;
+import ar.com.iron.android.extensions.services.remote.api.RemoteSession;
+import ar.com.iron.android.extensions.services.remote.api.RemoteSessionHandler;
 
 /**
  * Esta clase permite implementar el handler de sesión facilmente definiendo comportamiento default
@@ -25,28 +25,21 @@ import ar.com.iron.android.extensions.services.remote.RemoteSessionHandler;
  */
 public abstract class RemoteSessionHandlerSupport implements RemoteSessionHandler {
 	/**
-	 * @see ar.com.iron.android.extensions.services.remote.RemoteSessionHandler#onSessionCreated(ar.com.iron.android.extensions.services.remote.RemoteSession)
-	 */
-	public void onSessionCreated(RemoteSession createdSession) {
-		// Por defecto no hacemos nada
-	}
-
-	/**
-	 * @see ar.com.iron.android.extensions.services.remote.RemoteSessionHandler#onSessionStarted(ar.com.iron.android.extensions.services.remote.RemoteSession)
+	 * @see ar.com.iron.android.extensions.services.remote.api.RemoteSessionHandler#onSessionStarted(ar.com.iron.android.extensions.services.remote.api.RemoteSession)
 	 */
 	public void onSessionStarted(RemoteSession startedSession) {
 		// Por defecto no hacemos nada
 	}
 
 	/**
-	 * @see ar.com.iron.android.extensions.services.remote.RemoteSessionHandler#onSessionClosed(ar.com.iron.android.extensions.services.remote.RemoteSession)
+	 * @see ar.com.iron.android.extensions.services.remote.api.support.RemoteSessionLifeListener#onSessionStopped(ar.com.iron.android.extensions.services.remote.api.RemoteSession)
 	 */
-	public void onSessionClosed(RemoteSession closedSession) {
+	public void onSessionStopped(RemoteSession sesion) {
 		// Por defecto no hacemos nada
 	}
 
 	/**
-	 * @see ar.com.iron.android.extensions.services.remote.RemoteSessionHandler#onExceptionCaught(ar.com.iron.android.extensions.services.remote.RemoteSession,
+	 * @see ar.com.iron.android.extensions.services.remote.api.RemoteSessionHandler#onExceptionCaught(ar.com.iron.android.extensions.services.remote.api.RemoteSession,
 	 *      java.lang.Throwable)
 	 */
 	public void onExceptionCaught(RemoteSession failedSession, Throwable error) {
@@ -55,13 +48,7 @@ public abstract class RemoteSessionHandlerSupport implements RemoteSessionHandle
 	}
 
 	/**
-	 * @see ar.com.iron.android.extensions.services.remote.RemoteSessionHandler#onMessageReceived(ar.com.iron.android.extensions.services.remote.RemoteSession,
-	 *      android.os.Message)
-	 */
-	public abstract void onMessageReceived(RemoteSession session, Message message);
-
-	/**
-	 * @see ar.com.iron.android.extensions.services.remote.RemoteSessionHandler#onMessageSent(ar.com.iron.android.extensions.services.remote.RemoteSession,
+	 * @see ar.com.iron.android.extensions.services.remote.api.RemoteSessionHandler#onMessageSent(ar.com.iron.android.extensions.services.remote.api.RemoteSession,
 	 *      android.os.Message)
 	 */
 	public void onMessageSent(RemoteSession session, Message message) {

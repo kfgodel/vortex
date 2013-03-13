@@ -1,5 +1,5 @@
 /**
- * 06/03/2013 20:21:46 Copyright (C) 2011 Darío L. García
+ * 08/03/2013 20:20:36 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,24 +10,26 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.com.iron.android.extensions.services.remote;
-
-import android.content.Intent;
+package ar.com.iron.android.extensions.services.remote.api;
 
 /**
- * Esta interfaz representa una dirección de servicio remoto android para ser accedido por los
- * conectores
+ * Esta clase representa el error producido al intentar enviar un mensaje sin exito
  * 
  * @author D. García
  */
-public interface RemoteServiceAddress {
+public class FailedCommunicationException extends RuntimeException {
+	private static final long serialVersionUID = -673905498448829319L;
 
-	/**
-	 * Genera y devuelve el intent que permite describir la dirección para Android y acceder al
-	 * servicio
-	 * 
-	 * @return Esta dirección como intent para ser usado en el bindeo al servicio
-	 */
-	Intent getAddressIntent();
+	public FailedCommunicationException(String detailMessage, Throwable throwable) {
+		super(detailMessage, throwable);
+	}
+
+	public FailedCommunicationException(String detailMessage) {
+		super(detailMessage);
+	}
+
+	public FailedCommunicationException(Throwable throwable) {
+		super(throwable);
+	}
 
 }

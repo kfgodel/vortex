@@ -10,10 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.com.iron.android.extensions.services.remote;
+package ar.com.iron.android.extensions.services.remote.api;
 
 import android.os.Message;
-import ar.com.iron.android.extensions.services.remote.impl.FailedCommunicationException;
 
 /**
  * Esta interfaz representa una sesión o conexión abierta entre dos componentes android para el
@@ -29,11 +28,47 @@ public interface RemoteSession {
 	void close();
 
 	/**
-	 * Envía el mensaje indicado al otro extremo
+	 * Envía el mensaje indicado al otro extremo, indicando los IDs de sesión para el receptor
 	 * 
 	 * @param message
 	 *            El mensaje a enviar
 	 */
 	void send(Message message) throws FailedCommunicationException;
 
+	/**
+	 * Devuelve el ID que identifica a esta sesión localmente
+	 * 
+	 * @return El identificador de sesión
+	 */
+	String getLocalSessionId();
+
+	/**
+	 * Devuelve el identificador de esta sesión en el extremo remoto
+	 * 
+	 * @return El identificador para usar en los mensajes enviados
+	 */
+	String getRemoteSessionId();
+
+	/**
+	 * Establece el identificador remoto para esta sesión
+	 * 
+	 * @param remoteSessionId
+	 *            El identificador de sesión
+	 */
+	void setRemoteSessionId(String remoteSessionId);
+
+	/**
+	 * Asocia el objeto indicado a esta sesión
+	 * 
+	 * @param userObject
+	 *            El objeto que quedará almacenado en esta sesión
+	 */
+	void setUserObject(Object userObject);
+
+	/**
+	 * Devuelve el objeto del usuario almacenado en esta sesión
+	 * 
+	 * @return El objeto previamente almacenado o null
+	 */
+	<T> T getUserObject();
 }

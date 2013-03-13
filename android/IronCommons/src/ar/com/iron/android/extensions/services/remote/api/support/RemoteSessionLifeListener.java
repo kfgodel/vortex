@@ -1,5 +1,5 @@
 /**
- * 08/03/2013 20:38:32 Copyright (C) 2011 Darío L. García
+ * 11/03/2013 22:59:24 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,32 +10,32 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.com.iron.android.extensions.services.remote.session;
+package ar.com.iron.android.extensions.services.remote.api.support;
 
-import ar.com.iron.android.extensions.services.remote.RemoteSession;
+import ar.com.iron.android.extensions.services.remote.api.RemoteSession;
+
 
 /**
- * Esta interfaz define los métodos necesarios para la definición de comportamiento antes los
- * eventos de la vida de una sesión remota
+ * Esta interfaz define los métodos usados en el listener del ciclo de vida de las sesiones
  * 
  * @author D. García
  */
-public interface SessionLifeListener {
+public interface RemoteSessionLifeListener {
 
 	/**
-	 * Invocado al crearse la sesión
+	 * Invocado al iniciar la sesión pasada lista para usarse
 	 * 
-	 * @param session
+	 * @param sesion
 	 *            La sesión creada
 	 */
-	public void onSessionCreated(RemoteSession session);
+	void onSessionStarted(RemoteSession sesion);
 
 	/**
-	 * Invocado al cerrarse la sesion
+	 * Invocado al cerrar la sesión pasada
 	 * 
-	 * @param session
-	 *            La sesión cerrada
+	 * @param sesion
+	 *            La sesión detenida
 	 */
-	public void onSessionClosed(RemoteSession session);
+	void onSessionStopped(RemoteSession sesion);
 
 }

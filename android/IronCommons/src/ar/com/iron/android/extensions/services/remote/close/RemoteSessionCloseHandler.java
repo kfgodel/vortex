@@ -1,5 +1,5 @@
 /**
- * 08/03/2013 20:47:38 Copyright (C) 2011 Darío L. García
+ * 13/03/2013 11:24:33 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,22 +10,23 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.com.iron.android.extensions.services.remote.message;
+package ar.com.iron.android.extensions.services.remote.close;
 
-import android.os.Message;
-import ar.com.iron.android.extensions.services.remote.RemoteSession;
+import ar.com.iron.android.extensions.services.remote.api.RemoteSession;
 
 /**
- * Esta interfaz define el método esperado para un listener de mensajes
+ * Esta interfaz define los métodos para el handler que trata los cierres de conexiones
  * 
  * @author D. García
  */
-public interface MessageReceptionListener {
+public interface RemoteSessionCloseHandler {
 
 	/**
-	 * Invocado al recibir un nuevo mensaje de la sesión enviado por el otro extremo de la
-	 * comunicación
+	 * Invocado al cerrar la sesión pasada
+	 * 
+	 * @param closingSession
+	 *            La sesion a cerrar
 	 */
-	void onMessageReceived(RemoteSession session, Message message);
+	void onSessionClosing(RemoteSession closingSession);
 
 }

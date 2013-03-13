@@ -1,5 +1,5 @@
 /**
- * 08/03/2013 20:20:36 Copyright (C) 2011 Darío L. García
+ * 08/03/2013 19:44:09 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,25 +10,25 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.com.iron.android.extensions.services.remote.impl;
+package ar.com.iron.android.extensions.services.remote.api;
 
 /**
- * Esta clase representa el error producido al intentar enviar un mensaje sin exito
+ * Esta clase representa el error generado al fallar la conexión a un servicio remoto
  * 
  * @author D. García
  */
-public class FailedCommunicationException extends RuntimeException {
-	private static final long serialVersionUID = -673905498448829319L;
+public class FailedRemoteServiceConnectionException extends RuntimeException {
+	private static final long serialVersionUID = 5911295873386746557L;
 
-	public FailedCommunicationException(String detailMessage, Throwable throwable) {
+	public FailedRemoteServiceConnectionException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
 	}
 
-	public FailedCommunicationException(String detailMessage) {
+	public FailedRemoteServiceConnectionException(String detailMessage) {
 		super(detailMessage);
 	}
 
-	public FailedCommunicationException(Throwable throwable) {
+	public FailedRemoteServiceConnectionException(Throwable throwable) {
 		super(throwable);
 	}
 

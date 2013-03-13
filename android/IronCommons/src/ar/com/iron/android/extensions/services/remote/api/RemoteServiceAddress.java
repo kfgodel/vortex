@@ -1,5 +1,5 @@
 /**
- * 06/03/2013 19:54:41 Copyright (C) 2011 Darío L. García
+ * 06/03/2013 20:21:46 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,14 +10,24 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.com.iron.android.extensions.services.remote;
+package ar.com.iron.android.extensions.services.remote.api;
+
+import android.content.Intent;
 
 /**
- * Esta clase representa un conector desde el lado del servicio remoto para aceptar conexiones desde
- * otros componentes android
+ * Esta interfaz representa una dirección de servicio remoto android para ser accedido por los
+ * conectores
  * 
  * @author D. García
  */
-public class RemoteServiceAcceptor {
+public interface RemoteServiceAddress {
+
+	/**
+	 * Genera y devuelve el intent que permite describir la dirección para Android y acceder al
+	 * servicio
+	 * 
+	 * @return Esta dirección como intent para ser usado en el bindeo al servicio
+	 */
+	Intent getAddressIntent();
 
 }
