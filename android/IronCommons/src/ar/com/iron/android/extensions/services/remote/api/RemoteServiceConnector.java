@@ -15,6 +15,7 @@ package ar.com.iron.android.extensions.services.remote.api;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Messenger;
+import android.util.Log;
 import ar.com.iron.android.extensions.services.remote.close.ConnectedCloseHandler;
 import ar.com.iron.android.extensions.services.remote.close.DisconnectedCloseHandler;
 import ar.com.iron.android.extensions.services.remote.close.RemoteSessionCloseHandler;
@@ -82,7 +83,7 @@ public class RemoteServiceConnector {
 	 * @return
 	 */
 	public void conectar() throws FailedRemoteServiceConnectionException {
-		if (currentConnection != null) {
+		if (existeConexion()) {
 			throw new IllegalStateException("Ya existe una conexión activa: " + currentConnection);
 		}
 		Intent addressIntent = serviceAddress.getAddressIntent();
@@ -96,11 +97,21 @@ public class RemoteServiceConnector {
 	}
 
 	/**
+	 * Indica si este conector tiene una conexión siendo utilizada
+	 * 
+	 * @return false si la conexión no existe o está cerrada
+	 */
+	private boolean existeConexion() {
+		return currentConnection != null && currentConnection.isOpen();
+	}
+
+	/**
 	 * Desconecta la sesión actual del servicio remoto si es que existe conexión activa
 	 */
 	public void desconectar() {
-		if (currentConnection == null) {
-			throw new IllegalStateException("No existe conexión activa para desconectar");
+		if (!existeConexion()) {
+			Log.w(getClass().getSimpleName(), "Se pidio desconectar un conector sin conexion");
+			return;
 		}
 		currentConnection = null;
 		sessionManager.closeAllSessions();

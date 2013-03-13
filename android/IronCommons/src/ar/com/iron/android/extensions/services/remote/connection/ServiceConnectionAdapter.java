@@ -29,7 +29,7 @@ public class ServiceConnectionAdapter implements ServiceConnection {
 
 	private RemoteMessageHandler messageHandler;
 	private Messenger localMessenger;
-	private RemoteSession connectionSession;
+	private RemoteSession openedSession;
 	private UnbindCloseHandler closeHandler;
 
 	/**
@@ -40,14 +40,24 @@ public class ServiceConnectionAdapter implements ServiceConnection {
 		Messenger remoteMessenger = new Messenger(service);
 		// Nos defimimos como sesion a cerrar si se termina la conexion
 		closeHandler.setCurrentConnection(this);
-		this.connectionSession = messageHandler.sendOpenMessage(localMessenger, remoteMessenger);
+		this.openedSession = messageHandler.sendOpenMessage(localMessenger, remoteMessenger);
 	}
 
 	/**
 	 * @see android.content.ServiceConnection#onServiceDisconnected(android.content.ComponentName)
 	 */
 	public void onServiceDisconnected(ComponentName name) {
-		closeHandler.onSessionClosing(connectionSession);
+		closeHandler.onSessionClosing(openedSession);
+		openedSession = null;
+	}
+
+	/**
+	 * Indica si esta conexión está abierta (tiene una sesión abierta)
+	 * 
+	 * @return
+	 */
+	public boolean isOpen() {
+		return openedSession != null;
 	}
 
 	public static ServiceConnectionAdapter create(RemoteMessageHandler messageHandler, Messenger localMessenger,
