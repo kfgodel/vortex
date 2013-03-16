@@ -14,6 +14,7 @@ package net.gaia.vortex.example.light;
 
 import net.gaia.vortex.example.light.model.Luz;
 import net.gaia.vortex.example.light.model.LuzChangeListener;
+import net.gaia.vortex.example.light.model.impl.LuzEnMemoria;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ar.com.iron.android.extensions.activities.CustomActivity;
