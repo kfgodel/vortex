@@ -14,7 +14,6 @@ package net.gaia.vortex.example.light;
 
 import net.gaia.vortex.example.light.model.Luz;
 import net.gaia.vortex.example.light.model.LuzChangeListener;
-import net.gaia.vortex.example.light.model.impl.LuzEnMemoria;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ar.com.iron.android.extensions.activities.CustomActivity;
@@ -35,7 +34,7 @@ public abstract class LuzActivitySupport extends CustomActivity {
 	 */
 	@Override
 	public void setUpComponents() {
-		luz = LuzEnMemoria.create();
+		luz = Aplicacion.app.getLuz();
 
 		textoValor = ViewHelper.findTextView(R.id.textoValor, getContentView());
 		imagenEncendida = ViewHelper.findImageView(R.id.imagen_encendida, getContentView());

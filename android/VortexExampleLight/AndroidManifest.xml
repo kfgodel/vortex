@@ -12,26 +12,39 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="Ejemplo Luz"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:name=".Aplicacion" 
+        >
         <activity
             android:name="net.gaia.vortex.example.light.ControlOnOffActivity"
-            android:label="@string/control_oonoff" >
+            android:label="@string/control_oonoff"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
         <activity
             android:name="net.gaia.vortex.example.light.ControlLinealActivity"
-            android:label="@string/control_lineal" >
+            android:label="@string/control_lineal" 
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="net.gaia.vortex.example.light.ShowLuzActivity"
+            android:label="@string/show_luz" 
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
         
     </application>
 
