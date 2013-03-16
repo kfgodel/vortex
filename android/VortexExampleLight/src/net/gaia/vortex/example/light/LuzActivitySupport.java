@@ -15,6 +15,7 @@ package net.gaia.vortex.example.light;
 import net.gaia.vortex.example.light.model.Luz;
 import net.gaia.vortex.example.light.model.LuzChangeListener;
 import net.gaia.vortex.example.light.model.impl.LuzEnMemoria;
+import android.widget.ImageView;
 import android.widget.TextView;
 import ar.com.iron.android.extensions.activities.CustomActivity;
 import ar.com.iron.helpers.ViewHelper;
@@ -27,6 +28,7 @@ public abstract class LuzActivitySupport extends CustomActivity {
 
 	private Luz luz;
 	private TextView textoValor;
+	private ImageView imagenEncendida;
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.CustomActivity#setUpComponents()
@@ -36,6 +38,7 @@ public abstract class LuzActivitySupport extends CustomActivity {
 		luz = LuzEnMemoria.create();
 
 		textoValor = ViewHelper.findTextView(R.id.textoValor, getContentView());
+		imagenEncendida = ViewHelper.findImageView(R.id.imagen_encendida, getContentView());
 		actualizarLuzRepresentada(luz.getValorActual());
 
 		luz.addChangeListener(new LuzChangeListener() {
@@ -63,6 +66,8 @@ public abstract class LuzActivitySupport extends CustomActivity {
 	 */
 	private void actualizarLuzRepresentada(int nuevoValor) {
 		textoValor.setText(String.valueOf(nuevoValor));
+		int nuevoAlpha = (int) (((nuevoValor) / 100f) * 255);
+		imagenEncendida.setAlpha(nuevoAlpha);
 	}
 
 	public Luz getLuz() {

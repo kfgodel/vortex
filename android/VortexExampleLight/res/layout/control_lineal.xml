@@ -32,4 +32,21 @@
         android:text="valorDeLuz"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <ImageView
+        android:id="@+id/imagen_apagada"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textoValor"
+        android:layout_below="@+id/textoValor"
+        android:src="@drawable/apagada" />
+
+    <ImageView
+        android:id="@+id/imagen_encendida"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imagen_apagada"
+        android:layout_alignTop="@+id/imagen_apagada"
+        android:src="@drawable/encendida" />
+    
+    
 </RelativeLayout>
