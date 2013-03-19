@@ -12,6 +12,11 @@
  */
 package net.gaia.vortex.example.light;
 
+import net.gaia.vortex.android.VortexRoot;
+import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.example.light.model.Luz;
+import net.gaia.vortex.example.light.model.impl.LuzRemota;
+import net.gaia.vortex.router.impl.moleculas.PortalBidi;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import ar.com.iron.helpers.ViewHelper;
@@ -21,6 +26,9 @@ import ar.com.iron.helpers.ViewHelper;
  * @author D. García
  */
 public class ControlLinealActivity extends LuzActivitySupport {
+
+	private Nodo nodoGlobal;
+	private PortalBidi portal;
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableActivity#getLayoutIdForActivity()
@@ -63,5 +71,27 @@ public class ControlLinealActivity extends LuzActivitySupport {
 	 */
 	protected void onBarraCambiada(int nuevoValor) {
 		getLuz().cambiarA(nuevoValor);
+	}
+
+	/**
+	 * @see net.gaia.vortex.example.light.LuzActivitySupport#crearLuz()
+	 */
+	@Override
+	protected Luz crearLuz() {
+		nodoGlobal = VortexRoot.getNode();
+		portal = PortalBidi.create(VortexRoot.getProcessor());
+		portal.conectarCon(nodoGlobal);
+		nodoGlobal.conectarCon(portal);
+		return LuzRemota.create(portal);
+	}
+
+	/**
+	 * @see ar.com.iron.android.extensions.activities.CustomActivity#onDestroy()
+	 */
+	@Override
+	protected void onDestroy() {
+		portal.desconectarDe(nodoGlobal);
+		nodoGlobal.desconectarDe(portal);
+		super.onDestroy();
 	}
 }

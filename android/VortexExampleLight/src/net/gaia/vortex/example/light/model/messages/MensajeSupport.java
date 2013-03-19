@@ -1,5 +1,5 @@
 /**
- * 16/03/2013 18:02:10 Copyright (C) 2011 Darío L. García
+ * 18/03/2013 23:57:17 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,31 +10,27 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.example.light;
-
-import ar.com.iron.android.extensions.applications.CustomApplication;
+package net.gaia.vortex.example.light.model.messages;
 
 /**
  * 
  * @author D. García
  */
-public class Aplicacion extends CustomApplication {
+public class MensajeSupport {
 
-	public static Aplicacion app;
-
-	/**
-	 * @see ar.com.iron.android.extensions.applications.CustomApplication#getMainThreadName()
-	 */
-	@Override
-	protected String getMainThreadName() {
-		return "AplicacionLuz";
+	public MensajeSupport(String tipoBase) {
+		this.tipoDeMensaje = tipoBase;
 	}
 
-	/**
-	 * @see ar.com.iron.android.extensions.applications.CustomApplication#initializeGlobalComponents()
-	 */
-	@Override
-	protected void initializeGlobalComponents() {
-		app = this;
+	private String tipoDeMensaje;
+	public static final String tipoDeMensaje_FIELD = "tipoDeMensaje";
+
+	public String getTipoDeMensaje() {
+		return tipoDeMensaje;
 	}
+
+	public void setTipoDeMensaje(String tipoDeMensaje) {
+		this.tipoDeMensaje = tipoDeMensaje;
+	}
+
 }

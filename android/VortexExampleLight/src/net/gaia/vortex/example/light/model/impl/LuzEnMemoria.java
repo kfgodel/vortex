@@ -1,5 +1,5 @@
 /**
- * 16/03/2013 16:42:07 Copyright (C) 2011 Darío L. García
+ * fredwr * 16/03/2013 16:42:07 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"

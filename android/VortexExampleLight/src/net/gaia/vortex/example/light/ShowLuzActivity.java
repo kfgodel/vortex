@@ -12,11 +12,22 @@
  */
 package net.gaia.vortex.example.light;
 
+import net.gaia.vortex.android.VortexRoot;
+import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.example.light.model.Luz;
+import net.gaia.vortex.example.light.model.impl.ControladorRemoto;
+import net.gaia.vortex.example.light.model.impl.LuzEnMemoria;
+import net.gaia.vortex.router.impl.moleculas.PortalBidi;
+
 /**
  * 
  * @author D. García
  */
 public class ShowLuzActivity extends LuzActivitySupport {
+
+	private PortalBidi portal;
+	private ControladorRemoto controlador;
+	private Nodo nodoGlobal;
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableActivity#getLayoutIdForActivity()
@@ -24,6 +35,40 @@ public class ShowLuzActivity extends LuzActivitySupport {
 	@Override
 	public int getLayoutIdForActivity() {
 		return R.layout.show_luz;
+	}
+
+	/**
+	 * @see net.gaia.vortex.example.light.LuzActivitySupport#crearLuz()
+	 */
+	@Override
+	protected Luz crearLuz() {
+		return LuzEnMemoria.create();
+	}
+
+	/**
+	 * @see net.gaia.vortex.example.light.LuzActivitySupport#setUpComponents()
+	 */
+	@Override
+	public void setUpComponents() {
+		super.setUpComponents();
+
+		// Creamos el portal para el controlador
+		nodoGlobal = VortexRoot.getNode();
+		portal = PortalBidi.create(VortexRoot.getProcessor());
+		portal.conectarCon(nodoGlobal);
+		nodoGlobal.conectarCon(portal);
+
+		controlador = ControladorRemoto.create(getLuz(), portal);
+	}
+
+	/**
+	 * @see ar.com.iron.android.extensions.activities.CustomActivity#onDestroy()
+	 */
+	@Override
+	protected void onDestroy() {
+		portal.desconectarDe(nodoGlobal);
+		nodoGlobal.desconectarDe(portal);
+		super.onDestroy();
 	}
 
 }
