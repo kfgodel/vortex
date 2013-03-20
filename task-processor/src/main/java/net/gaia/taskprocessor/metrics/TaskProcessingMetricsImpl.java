@@ -42,7 +42,7 @@ public class TaskProcessingMetricsImpl implements TaskProcessingMetricsAndListen
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getProcessedTaskCount()
 	 */
-	@Override
+	
 	public int getProcessedTaskCount() {
 		return (int) processedCount.get();
 	}
@@ -50,7 +50,7 @@ public class TaskProcessingMetricsImpl implements TaskProcessingMetricsAndListen
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getPendingTaskCount()
 	 */
-	@Override
+	
 	public int getPendingTaskCount() {
 		return pendingTasks.size();
 	}
@@ -58,7 +58,7 @@ public class TaskProcessingMetricsImpl implements TaskProcessingMetricsAndListen
 	/**
 	 * Incrementa el contador de tareas procesadas
 	 */
-	@Override
+	
 	public void incrementProcessed() {
 		processedCount.incrementAndGet();
 		metricasDeCarga.registrarOutput();
@@ -67,7 +67,7 @@ public class TaskProcessingMetricsImpl implements TaskProcessingMetricsAndListen
 	/**
 	 * Notifica a esta instancia que entró una nueva tarea como pendiente de procesar
 	 */
-	@Override
+	
 	public void incrementPending() {
 		metricasDeCarga.registrarInput();
 	}
@@ -75,7 +75,7 @@ public class TaskProcessingMetricsImpl implements TaskProcessingMetricsAndListen
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getMetricasDeCarga()
 	 */
-	@Override
+	
 	public MetricasDeCarga getMetricasDeCarga() {
 		return metricasDeCarga;
 	}

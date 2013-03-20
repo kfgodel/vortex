@@ -52,7 +52,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(destino_FIELD, getDestino())
 				.toString();
@@ -61,7 +61,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void conectarCon(final Receptor destino) {
 		setDestino(destino);
 	}
@@ -71,7 +71,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	 * 
 	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void desconectarDe(final Receptor destino) {
 		if (!getDestino().equals(destino)) {
 			LOG.debug("Se intentó desconectar un nexo[{}] de un destino[{}] al que no estaba conectado. Ignorando",
@@ -84,7 +84,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void setDestino(final Receptor destino) {
 		if (destino == null) {
 			throw new IllegalArgumentException("El delegado del nexo no puede ser null. A lo sumo un "
@@ -96,7 +96,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#getDestino()
 	 */
-	@Override
+	
 	public Receptor getDestino() {
 		return destino;
 	}

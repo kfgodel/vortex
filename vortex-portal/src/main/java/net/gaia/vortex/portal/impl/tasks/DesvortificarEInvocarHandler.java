@@ -47,7 +47,7 @@ public class DesvortificarEInvocarHandler<T> implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
+	
 	public WorkUnit doWork() throws InterruptedException {
 		T desvortificado;
 		try {
@@ -74,7 +74,7 @@ public class DesvortificarEInvocarHandler<T> implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(tipoEsperado_FIELD, tipoEsperado).add(mensaje_FIELD, mensaje)
 				.add(mapeador_FIELD, mapeador).add(handlerDeMensajes_FIELD, handlerDeMensajes).toString();

@@ -51,7 +51,7 @@ public class NaturalOrderIdentificator extends HashIdentificator {
 	 * @see ar.com.dgarcia.lang_identificators.AbstractIdentificator#compare(Object, Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public int compare(Object first, Object second) throws BadComparisonException {
 		if(first == null){
 			if(second == null){
@@ -69,7 +69,7 @@ public class NaturalOrderIdentificator extends HashIdentificator {
 	/**
 	 * @see ar.com.dgarcia.lang_identificators.AbstractIdentificator#areEquals(Object, Object)
 	 */
-	@Override
+	
 	public boolean areEquals(Object first, Object second) {
 		if(first == null){
 			return second == null;
@@ -80,7 +80,7 @@ public class NaturalOrderIdentificator extends HashIdentificator {
 	/**
 	 * @see ar.com.dgarcia.lang_identificators.HashIdentificator#discriminator(java.lang.Object)
 	 */
-	@Override
+	
 	public long discriminator(Object object) {
 		return super.discriminator(object);
 	}

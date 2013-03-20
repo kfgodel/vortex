@@ -42,7 +42,7 @@ public class AsignarIdLocalAlReceptor implements Transformacion {
 	/**
 	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public MensajeVortex transformar(final MensajeVortex mensaje) {
 		// Tenemos que clonar el mensaje porque no podemos modificarselo a otras patas
 		final MensajeVortex copiaModificable = ClonadorDeMensajes.create(mensaje).clonar();
@@ -65,7 +65,7 @@ public class AsignarIdLocalAlReceptor implements Transformacion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(idLocalAlReceptor_FIELD, idLocalAlReceptor).toString();
 	}

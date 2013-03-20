@@ -19,7 +19,6 @@ public class TareaSimulada implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
 	public WorkUnit doWork() throws InterruptedException {
 		Thread.sleep(duracionDeTarea);
 		if (barreraDeTareas != null) {

@@ -43,7 +43,7 @@ public class HandlerCronometro extends HandlerTipado<MensajeCronometro> {
 	/**
 	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#onMensajeRecibido(java.lang.Object)
 	 */
-	@Override
+	
 	public void onMensajeRecibido(final MensajeCronometro mensaje) {
 		final MensajeCronometro cronoMensaje = mensaje;
 		final long nanosDelMensaje = cronoMensaje.getTranscurrido();

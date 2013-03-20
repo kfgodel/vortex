@@ -37,7 +37,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeInputs()
 	 */
-	@Override
+	
 	public long getCantidadDeInputs() {
 		return contadorDeInputs.get();
 	}
@@ -45,7 +45,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeOutputs()
 	 */
-	@Override
+	
 	public long getCantidadDeOutputs() {
 		return contadorDeOutputs.get();
 	}
@@ -53,7 +53,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getDuracionDeMedicionEnMilis()
 	 */
-	@Override
+	
 	public long getDuracionDeMedicionEnMilis() {
 		return cronometro.getElapsedMillis();
 	}
@@ -67,7 +67,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	/**
 	 * Registra en esta métrica que se realizó una recepción de mensaje
 	 */
-	@Override
+	
 	public void registrarInput() {
 		this.contadorDeInputs.incrementAndGet();
 	}
@@ -75,7 +75,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	/**
 	 * Registra en esta métrica que se realizó un ruteo de mensaje
 	 */
-	@Override
+	
 	public void registrarOutput() {
 		this.contadorDeOutputs.incrementAndGet();
 	}
@@ -83,7 +83,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getMomentoDeInicioDeLaMedicionEnMilis()
 	 */
-	@Override
+	
 	public long getMomentoDeInicioDeLaMedicionEnMilis() {
 		return cronometro.getStartMillis();
 	}
@@ -100,7 +100,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	/**
 	 * @see ar.com.dgarcia.lang.metrics.ListenerDeMetricas#registrarInput(long)
 	 */
-	@Override
+	
 	public void registrarInput(final long cantidadIngresada) {
 		this.contadorDeInputs.addAndGet(cantidadIngresada);
 	}
@@ -108,7 +108,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	/**
 	 * @see ar.com.dgarcia.lang.metrics.ListenerDeMetricas#registrarOutput(long)
 	 */
-	@Override
+	
 	public void registrarOutput(final long cantidadEgresada) {
 		this.contadorDeOutputs.addAndGet(cantidadEgresada);
 	}
@@ -116,7 +116,7 @@ public class MetricasPorTiempoImpl extends MetricasPorTiempoSupport implements M
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(contadorDeInputs_FIELD, contadorDeInputs)
 				.con(contadorDeOutputs_FIELD, contadorDeOutputs).con(cronometro_FIELD, cronometro).toString();

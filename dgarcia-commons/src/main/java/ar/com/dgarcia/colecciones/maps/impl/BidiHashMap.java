@@ -74,7 +74,7 @@ public class BidiHashMap<K,V>
 	 * @return Valor anterior 
 	 * @see java.util.HashMap
 	 */
-	@Override
+	
 	public V put(K key, V value) {
 		V oldValue = this.get(key);
 		if(oldValue != null){
@@ -88,7 +88,7 @@ public class BidiHashMap<K,V>
 	 * @see java.util.HashMap#remove(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public V remove(Object key) {
 		V value = this.get(key);
 		this.inverseMap.removeValue(value,(K)key);

@@ -43,7 +43,7 @@ public class ReceptorNulo extends ReceptorSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public void recibir(final MensajeVortex mensaje) {
 		LOG.trace("Se recibió un mensaje[{}] en el receptor nulo", mensaje);
 	}
@@ -56,7 +56,7 @@ public class ReceptorNulo extends ReceptorSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).toString();
 	}

@@ -57,7 +57,7 @@ public class ConexionConPollingHttpCliente {
 		conexion.handlerDeMensajes = handler;
 		conexion.processor = procesor;
 		conexion.tareaDeIntercambioDeMensajes = MinMaxWorkUnit.crearWrapperDe(new WorkUnit() {
-			@Override
+			
 			public WorkUnit doWork() throws InterruptedException {
 				conexion.intercambiarMensajesConServer();
 				return null;
@@ -121,7 +121,7 @@ public class ConexionConPollingHttpCliente {
 
 	public void terminarConexion() throws VortexHttpException {
 		processor.removeTasksMatching(new TaskCriteria() {
-			@Override
+			
 			public boolean matches(final WorkUnit workUnit) {
 				return tareaDeIntercambioDeMensajes.equals(workUnit);
 			}
@@ -157,7 +157,7 @@ public class ConexionConPollingHttpCliente {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con("sesion", conexionInterna.getIdDeSesion())
 				.con("minimo", this.conexionInterna.getEsperaMinima())

@@ -32,7 +32,7 @@ public enum PropertyAccessorType {
 	 * prefijo es "is"
 	 */
 	BOOLEAN_GETTER{
-		@Override
+		
 		public String methodPreffix() {return "is";}
 	},
 	/**
@@ -40,7 +40,7 @@ public enum PropertyAccessorType {
 	 * valor
 	 */
 	GENERAL_GETTER{
-		@Override
+		
 		public String methodPreffix() {return "get";}
 	},
 	/**
@@ -48,7 +48,7 @@ public enum PropertyAccessorType {
 	 * propiedad
 	 */
 	SETTER{
-		@Override
+		
 		public String methodPreffix() {return "set";};
 	};
 

@@ -93,7 +93,7 @@ public class ObjectSocketConnector implements Disposable {
 	/**
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
-	@Override
+	
 	public void closeAndDispose() {
 		socketConnector.dispose(true);
 	}

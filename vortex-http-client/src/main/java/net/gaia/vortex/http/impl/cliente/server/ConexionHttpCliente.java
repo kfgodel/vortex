@@ -195,7 +195,7 @@ public class ConexionHttpCliente {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(idDeSesion_FIELD, idDeSesion).con(esperaMinima_FIELD, esperaMinima)
 				.con(esperaMaxima_FIELD, esperaMaxima).con(serverRemoto_FIELD, serverRemoto).toString();

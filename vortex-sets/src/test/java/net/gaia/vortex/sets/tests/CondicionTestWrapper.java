@@ -37,7 +37,7 @@ public class CondicionTestWrapper implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		evaluada = true;
 		return condicionReal.esCumplidaPor(mensaje);
@@ -53,7 +53,7 @@ public class CondicionTestWrapper implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(evaluada_FIELD, evaluada).con(condicionReal_FIELD, condicionReal).toString();
 	}
@@ -77,7 +77,7 @@ public class CondicionTestWrapper implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	@Override
+	
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}

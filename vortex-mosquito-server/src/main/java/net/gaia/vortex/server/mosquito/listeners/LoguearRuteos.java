@@ -43,7 +43,7 @@ public class LoguearRuteos implements ListenerDeRuteo {
 	 *      net.gaia.vortex.core.api.mensaje.MensajeVortex,
 	 *      net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void onMensajeRuteado(final NodoBidireccional origen, final MensajeVortex mensaje, final Receptor destino) {
 		LOG.debug(" Se ruteo el mensaje[{}] desde[{}] a [{}]",
 				new Object[] { mensaje.toShortString(), origen.toShortString(), destino.toShortString() });

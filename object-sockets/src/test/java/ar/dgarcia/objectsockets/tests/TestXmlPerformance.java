@@ -27,7 +27,7 @@ public class TestXmlPerformance extends TestSocketPerformance {
 	 * 
 	 * @return
 	 */
-	@Override
+	
 	protected ObjectTextualizer createTextualizer() {
 		return XmlTextualizer.create();
 	}

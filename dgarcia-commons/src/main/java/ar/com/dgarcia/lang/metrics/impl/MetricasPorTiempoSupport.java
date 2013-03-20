@@ -25,7 +25,7 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getTasaDeDelivery()
 	 */
-	@Override
+	
 	public double getTasaDeDelivery() {
 		final double cantidadDeMensajesRecibidos = getCantidadDeInputs();
 		if (cantidadDeMensajesRecibidos == 0) {
@@ -40,7 +40,7 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getVelocidadDeInput()
 	 */
-	@Override
+	
 	public double getVelocidadDeInput() {
 		final double cantidadDeMensajesRecibidos = getCantidadDeInputs();
 		final long milisTranscurridos = getDuracionDeMedicionEnMilis();
@@ -55,7 +55,7 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getVelocidadDeOutput()
 	 */
-	@Override
+	
 	public double getVelocidadDeOutput() {
 		final double cantidadDeMensajesEnviados = getCantidadDeOutputs();
 		final double milisTranscurridos = getDuracionDeMedicionEnMilis();
@@ -70,7 +70,7 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getMomentoDeFinDeLaMedicion()
 	 */
-	@Override
+	
 	public long getMomentoDeFinDeLaMedicion() {
 		final long momentoDeFin = getMomentoDeInicioDeLaMedicionEnMilis() + getDuracionDeMedicionEnMilis();
 		return momentoDeFin;
@@ -79,7 +79,7 @@ public abstract class MetricasPorTiempoSupport implements MetricasPorTiempo {
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getAntiguedadEnMilis()
 	 */
-	@Override
+	
 	public long getAntiguedadEnMilis() {
 		final long now = System.currentTimeMillis();
 		final long edad = now - getMomentoDeFinDeLaMedicion();

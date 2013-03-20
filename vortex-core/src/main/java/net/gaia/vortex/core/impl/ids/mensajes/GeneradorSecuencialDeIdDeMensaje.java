@@ -38,7 +38,7 @@ public class GeneradorSecuencialDeIdDeMensaje implements GeneradorDeIdsDeMensaje
 	/**
 	 * @see net.gaia.vortex.core.api.ids.mensajes.GeneradorDeIdsDeMensajes#generarId()
 	 */
-	@Override
+	
 	public IdDeMensaje generarId() {
 		final Long nuevaSecuencia = proximaSecuencia.getAndIncrement();
 		final IdSecuencialDeMensaje nuevoId = IdSecuencialDeMensaje.create(identificadorBase, nuevaSecuencia);
@@ -55,7 +55,7 @@ public class GeneradorSecuencialDeIdDeMensaje implements GeneradorDeIdsDeMensaje
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(identificadorBase_FIELD, identificadorBase)
 				.con(proximaSecuencia_FIELD, proximaSecuencia).toString();

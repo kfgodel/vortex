@@ -49,7 +49,7 @@ public class ReadWriteCoordinator implements ReadWriteOperable {
 	/**
 	 * @see ar.com.dgarcia.lang.conc.ReadWriteOperable#doReadOperation(java.util.concurrent.Callable)
 	 */
-	@Override
+	
 	public <T> T doReadOperation(final Callable<T> readOperation) throws UnsuccessfulWaitException {
 		return doOperationWith(concurrencyLock.readLock(), readOperation);
 	}
@@ -57,7 +57,7 @@ public class ReadWriteCoordinator implements ReadWriteOperable {
 	/**
 	 * @see ar.com.dgarcia.lang.conc.ReadWriteOperable#doWriteOperation(java.util.concurrent.Callable)
 	 */
-	@Override
+	
 	public <T> T doWriteOperation(final Callable<T> writeOperation) throws UnsuccessfulWaitException {
 		return doOperationWith(concurrencyLock.writeLock(), writeOperation);
 	}

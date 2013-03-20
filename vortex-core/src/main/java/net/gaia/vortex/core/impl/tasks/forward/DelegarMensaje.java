@@ -32,7 +32,7 @@ public class DelegarMensaje implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
+	
 	public WorkUnit doWork() throws InterruptedException {
 		Loggers.ATOMOS.debug("Delegando a nodo[{}] el mensaje[{}]", delegado.toShortString(), mensaje);
 		// Intentamos optimizar la entrega de mensaje no mandando a uno que ya lo recibió
@@ -66,7 +66,7 @@ public class DelegarMensaje implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(mensaje_FIELD, mensaje).add(delegado_FIELD, delegado).toString();
 	}

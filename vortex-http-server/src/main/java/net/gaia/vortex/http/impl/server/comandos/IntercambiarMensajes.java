@@ -45,7 +45,7 @@ public class IntercambiarMensajes implements ComandoHttp {
 	/**
 	 * @see net.gaia.vortex.http.external.jetty.ComandoHttp#ejecutar()
 	 */
-	@Override
+	
 	public RespuestaHttp ejecutar() {
 		final SesionVortexHttpEnServer sesion = administradorDeSesiones.getSesion(sessionId);
 		if (sesion == null) {
@@ -79,7 +79,7 @@ public class IntercambiarMensajes implements ComandoHttp {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(sessionId_FIELD, sessionId).con(mensajesComoJson_FIELD, mensajesDelClienteEnJson)
 				.toString();

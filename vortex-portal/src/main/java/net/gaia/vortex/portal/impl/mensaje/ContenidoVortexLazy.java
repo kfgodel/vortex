@@ -66,7 +66,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#size()
 	 */
-	@Override
+	
 	public int size() {
 		cargarDatosEnCache();
 		return cache.size();
@@ -75,7 +75,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#isEmpty()
 	 */
-	@Override
+	
 	public boolean isEmpty() {
 		if (!cache.isEmpty()) {
 			// No hace falta cargar el objeto para contestar
@@ -88,7 +88,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean containsKey(final Object key) {
 		if (cache.containsKey(key)) {
 			// No hace falta cargar el objeto para contestar
@@ -101,7 +101,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#containsValue(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean containsValue(final Object value) {
 		if (cache.containsValue(value)) {
 			// No hace falta cargar el objeto para contestar
@@ -114,7 +114,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
-	@Override
+	
 	public Object get(final Object key) {
 		if (!cache.containsKey(key)) {
 			// Si no está en cache puede que no esté o que tengamos que revisar el objeto
@@ -170,7 +170,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
-	@Override
+	
 	public Object put(final String key, final Object value) {
 		return cache.put(key, value);
 	}
@@ -178,7 +178,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	@Override
+	
 	public Object remove(final Object key) {
 		cargarDatosEnCache();
 		return cache.remove(key);
@@ -187,7 +187,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	@Override
+	
 	public void putAll(final Map<? extends String, ? extends Object> m) {
 		cache.putAll(m);
 	}
@@ -195,7 +195,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#clear()
 	 */
-	@Override
+	
 	public void clear() {
 		throw new UnhandledConditionException("No implementamos el clear. Que uso se le da?");
 	}
@@ -203,7 +203,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#keySet()
 	 */
-	@Override
+	
 	public Set<String> keySet() {
 		cargarDatosEnCache();
 		return cache.keySet();
@@ -212,7 +212,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#values()
 	 */
-	@Override
+	
 	public Collection<Object> values() {
 		cargarDatosEnCache();
 		return cache.values();
@@ -221,7 +221,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#entrySet()
 	 */
-	@Override
+	
 	public Set<java.util.Map.Entry<String, Object>> entrySet() {
 		cargarDatosEnCache();
 		return cache.entrySet();
@@ -243,7 +243,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		final boolean cargadoEnCache = unSyncYaEstaCargadoEnCache();
 		final ToString builder = ToString.de(this).con("cargado", cargadoEnCache);
@@ -258,7 +258,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setNombreDelTipoOriginal(java.lang.String)
 	 */
-	@Override
+	
 	public void setNombreDelTipoOriginal(final String nombreDeClaseCompleto) {
 		cache.setNombreDelTipoOriginal(nombreDeClaseCompleto);
 	}
@@ -266,7 +266,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getNombreDelTipoOriginal()
 	 */
-	@Override
+	
 	public String getNombreDelTipoOriginal() {
 		return cache.getNombreDelTipoOriginal();
 	}
@@ -274,7 +274,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getValorComoPrimitiva()
 	 */
-	@Override
+	
 	public Object getValorComoPrimitiva() {
 		return cache.getValorComoPrimitiva();
 	}
@@ -282,7 +282,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setValorComoPrimitiva(java.lang.Object)
 	 */
-	@Override
+	
 	public void setValorComoPrimitiva(final Object valor) {
 		cache.setValorComoPrimitiva(valor);
 	}
@@ -290,7 +290,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#tieneValorComoPrimitiva()
 	 */
-	@Override
+	
 	public boolean tieneValorComoPrimitiva() {
 		return cache.tieneValorComoPrimitiva();
 	}
@@ -298,7 +298,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getIdDeMensaje()
 	 */
-	@Override
+	
 	@SuppressWarnings("unchecked")
 	public IdDeMensaje getIdDeMensaje() {
 		final Object object = get(ContenidoVortex.ID_DE_MENSAJE_KEY);
@@ -327,7 +327,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setIdDeMensaje(net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje)
 	 */
-	@Override
+	
 	public void setIdDeMensaje(final IdDeMensaje idDelMensaje) {
 		Map<String, Object> idComoMapa = null;
 		if (idDelMensaje != null) {
@@ -340,7 +340,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getIdDeMensajeComoMapa()
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public Map<String, Object> getIdDeMensajeComoMapa() {
 		return (Map<String, Object>) get(ID_DE_MENSAJE_KEY);
 	}

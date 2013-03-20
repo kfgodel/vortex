@@ -27,7 +27,7 @@ public class MetamensajeSupport implements MetamensajeVortex {
 		this.tipoDeMensaje = nombreDeTipo;
 	}
 
-	@Override
+	
 	public String getTipoDeMensaje() {
 		return tipoDeMensaje;
 	}
@@ -35,7 +35,7 @@ public class MetamensajeSupport implements MetamensajeVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(tipoDeMensaje_FIELD, tipoDeMensaje).toString();
 	}

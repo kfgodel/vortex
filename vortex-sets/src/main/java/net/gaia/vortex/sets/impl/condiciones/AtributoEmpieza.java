@@ -12,9 +12,9 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.sets.reflection.HashHelper;
 import net.gaia.vortex.sets.reflection.ValueAccessor;
 import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
-import ar.com.dgarcia.lang.reflection.ReflectionUtils;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -35,7 +35,7 @@ public class AtributoEmpieza implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final ContenidoVortex contenidoDelMensaje = mensaje.getContenido();
 		if (!valueAccessor.hasValueIn(contenidoDelMensaje)) {
@@ -60,6 +60,7 @@ public class AtributoEmpieza implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+
 	@Override
 	public String toString() {
 		return ToString.de(this).con(prefijoEsperado_FIELD, prefijoEsperado).con(valueAccessor_FIELD, valueAccessor)
@@ -76,7 +77,7 @@ public class AtributoEmpieza implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	@Override
+
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}
@@ -100,6 +101,7 @@ public class AtributoEmpieza implements Condicion {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+
 	@Override
 	public boolean equals(final Object obj) {
 		if (!(obj instanceof AtributoEmpieza)) {
@@ -119,9 +121,10 @@ public class AtributoEmpieza implements Condicion {
 	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
+
 	@Override
 	public int hashCode() {
-		return ReflectionUtils.hashDeDosValores(valueAccessor, prefijoEsperado);
+		return HashHelper.hashDeDosValores(valueAccessor, prefijoEsperado);
 	}
 
 }

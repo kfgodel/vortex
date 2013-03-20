@@ -25,7 +25,7 @@ public enum SubmittedTaskState {
 	 * La tarea aún no fue comenzada
 	 */
 	PENDING {
-		@Override
+		
 		public boolean isPending() {
 			return true;
 		}
@@ -34,12 +34,12 @@ public enum SubmittedTaskState {
 	 * Se comenzó a procesar pero aun no fue terminada
 	 */
 	PROCESSING {
-		@Override
+		
 		public boolean isBeingProcessed() {
 			return true;
 		}
 
-		@Override
+		
 		public SubmittedTaskState getStateWhenCancelled() {
 			return INTERRUPTED;
 		}
@@ -48,17 +48,17 @@ public enum SubmittedTaskState {
 	 * La tarea fue cancelada antes de terminar
 	 */
 	INTERRUPTED {
-		@Override
+		
 		public boolean wasCancelled() {
 			return true;
 		}
 
-		@Override
+		
 		public boolean wasProcessed() {
 			return true;
 		}
 
-		@Override
+		
 		public SubmittedTaskState getStateWhenCancelled() {
 			return INTERRUPTED;
 		}
@@ -67,12 +67,12 @@ public enum SubmittedTaskState {
 	 * La tarea fue completada exitosamente
 	 */
 	COMPLETED {
-		@Override
+		
 		public boolean wasProcessed() {
 			return true;
 		}
 
-		@Override
+		
 		public SubmittedTaskState getStateWhenCancelled() {
 			return COMPLETED;
 		}
@@ -81,12 +81,12 @@ public enum SubmittedTaskState {
 	 * La tarea fue cancelada antes de comenzar
 	 */
 	CANCELLED {
-		@Override
+		
 		public boolean wasCancelled() {
 			return true;
 		}
 
-		@Override
+		
 		public boolean wasProcessed() {
 			return true;
 		}
@@ -95,12 +95,12 @@ public enum SubmittedTaskState {
 	 * La tarea falló con una excepción mientras se estaba procesado
 	 */
 	FAILED {
-		@Override
+		
 		public boolean hasFailed() {
 			return true;
 		}
 
-		@Override
+		
 		public boolean wasProcessed() {
 			return true;
 		}

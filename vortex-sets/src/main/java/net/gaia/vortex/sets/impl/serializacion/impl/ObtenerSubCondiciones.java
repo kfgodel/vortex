@@ -39,7 +39,7 @@ public class ObtenerSubCondiciones implements NodeExploder<Condicion> {
 	 * @see ar.com.dgarcia.lang.iterators.tree.NodeExploder#evaluateOn(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public Iterator<Condicion> evaluateOn(final Condicion node) {
 		final List<Condicion> subcondiciones = node.getSubCondiciones();
 		if (subcondiciones == null) {

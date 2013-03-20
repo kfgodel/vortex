@@ -57,7 +57,7 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	/**
 	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#getTipoEsperado()
 	 */
-	@Override
+	
 	@SuppressWarnings("unchecked")
 	public Class<T> getTipoEsperado() {
 		if (tipoEsperado != null) {
@@ -84,7 +84,7 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	 * 
 	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#getCondicionSuficiente()
 	 */
-	@Override
+	
 	public Condicion getCondicionSuficiente() {
 		return condicionSuficiente;
 	}

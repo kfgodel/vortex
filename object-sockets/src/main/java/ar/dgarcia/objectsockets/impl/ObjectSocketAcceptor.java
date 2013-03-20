@@ -76,7 +76,7 @@ public class ObjectSocketAcceptor implements Disposable {
 	/**
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
-	@Override
+	
 	public void closeAndDispose() {
 		socketAcceptor.dispose(true);
 	}

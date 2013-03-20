@@ -37,7 +37,7 @@ public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeInputs()
 	 */
-	@Override
+	
 	public long getCantidadDeInputs() {
 		return cantidadDeInputs;
 	}
@@ -45,7 +45,7 @@ public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeOutputs()
 	 */
-	@Override
+	
 	public long getCantidadDeOutputs() {
 		return cantidadDeOutputs;
 	}
@@ -53,7 +53,7 @@ public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getDuracionDeMedicionEnMilis()
 	 */
-	@Override
+	
 	public long getDuracionDeMedicionEnMilis() {
 		return duracionDeLaMedicion;
 	}
@@ -61,7 +61,7 @@ public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getMomentoDeInicioDeLaMedicionEnMilis()
 	 */
-	@Override
+	
 	public long getMomentoDeInicioDeLaMedicionEnMilis() {
 		return momentoDeInicioDeLaMedicion;
 	}
@@ -121,7 +121,7 @@ public class SnapshotDeMetricaPorTiempo extends MetricasPorTiempoSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(cantidadDeInputs_FIELD, cantidadDeInputs)
 				.con(cantidadDeOutputs_FIELD, cantidadDeOutputs).con(duracionDeLaMedicion_FIELD, duracionDeLaMedicion)

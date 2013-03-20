@@ -30,7 +30,7 @@ public class TaskPlannerRejectionHandler implements RejectedExecutionHandler {
 	 * @see java.util.concurrent.RejectedExecutionHandler#rejectedExecution(java.lang.Runnable,
 	 *      java.util.concurrent.ThreadPoolExecutor)
 	 */
-	@Override
+	
 	public void rejectedExecution(final Runnable runnable, final ThreadPoolExecutor executor) {
 		LOG.error("El executor de tareas con retraso rechazó el runnable: " + runnable
 				+ ". Posible saturación del executor?");

@@ -118,7 +118,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 * Este receptor sólo sirve para que al ser invocado se ejecute el método indicado
 	 */
 	private final ReceptorSupport dispararEventoConexionBidi = new ReceptorSupport() {
-		@Override
+		
 		public void recibir(final MensajeVortex mensaje) {
 			evento_nevaConexionBidireccional();
 		}
@@ -349,7 +349,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		this.filtroDeEntradaPublicado = FiltroNoPublicado.getInstancia();
 	}
 
-	@Override
+	
 	public NodoBidireccional getNodoLocal() {
 		return nodoLocal;
 	}
@@ -358,7 +358,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		this.nodoLocal = nodoLocal;
 	}
 
-	@Override
+	
 	public Receptor getNodoRemoto() {
 		return nodoRemoto;
 	}
@@ -367,7 +367,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		this.nodoRemoto = nodoRemoto;
 	}
 
-	@Override
+	
 	public Long getIdLocal() {
 		return idLocal;
 	}
@@ -376,7 +376,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		this.idLocal = idLocal;
 	}
 
-	@Override
+	
 	public Long getIdRemoto() {
 		return idRemoto.get();
 	}
@@ -410,7 +410,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional#tieneComoNodoRemotoA(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public boolean tieneComoNodoRemotoA(final Receptor nodo) {
 		return getNodoRemoto().equals(nodo);
 	}
@@ -418,7 +418,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional#getParteDeCondicion()
 	 */
-	@Override
+	
 	public ParteDeCondiciones getParteDeCondicion() {
 		return this.filtroDeSalida;
 	}
@@ -426,7 +426,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional#actualizarFiltroDeEntrada(net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
-	@Override
+	
 	public void actualizarFiltroDeEntrada(final Condicion nuevoFiltro) {
 		this.setFiltroDeEntrada(nuevoFiltro);
 		publicarFiltroDeEntrada();
@@ -487,7 +487,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(idLocal_FIELD, idLocal)
 				.con(idRemoto_FIELD, idRemoto).con(nodoLocal_FIELD, nodoLocal.toShortString())

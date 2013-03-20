@@ -38,12 +38,12 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	private Receptor delegadoPorFalse;
 	public static final String delegadoPorFalse_FIELD = "delegadoPorFalse";
 
-	@Override
+	
 	public Condicion getCondicion() {
 		return condicion;
 	}
 
-	@Override
+	
 	public void setCondicion(final Condicion condicion) {
 		if (condicion == null) {
 			throw new IllegalArgumentException("La condicion pasada al bifurcador no puede ser null");
@@ -54,7 +54,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final BifurcarMensaje elegirDelegado = BifurcarMensaje.create(mensaje, condicion, delegadoPorTrue,
 				delegadoPorFalse);
@@ -74,7 +74,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void conectarCon(final Receptor destino) {
 		LOG.debug("Se intento conectar el destino[{}] al bifurcador [{}] ignorando", destino, this);
 	}
@@ -82,7 +82,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void desconectarDe(final Receptor destino) {
 		LOG.debug("Se intento desconectar el destino[{}] al bifurcador [{}] ignorando", destino, this);
 	}
@@ -90,7 +90,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.condicional.Bifurcador#setReceptorPorTrue(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void setReceptorPorTrue(final Receptor receptorPorTrue) {
 		if (receptorPorTrue == null) {
 			throw new IllegalArgumentException("El delegado por true no puede ser null en el bifurcador. Usar el "
@@ -102,7 +102,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.condicional.Bifurcador#getReceptorPorTrue()
 	 */
-	@Override
+	
 	public Receptor getReceptorPorTrue() {
 		return delegadoPorTrue;
 	}
@@ -110,7 +110,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.condicional.Bifurcador#setReceptorPorFalse(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void setReceptorPorFalse(final Receptor receptorPorFalse) {
 		if (receptorPorFalse == null) {
 			throw new IllegalArgumentException("El delegado por false no puede ser null en el bifurcador. Usar el "
@@ -122,7 +122,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.condicional.Bifurcador#getReceptorPorFalse()
 	 */
-	@Override
+	
 	public Receptor getReceptorPorFalse() {
 		return delegadoPorFalse;
 	}
@@ -130,7 +130,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(condicion_FIELD, condicion).con(delegadoPorTrue_FIELD, delegadoPorTrue)
 				.con(delegadoPorFalse_FIELD, delegadoPorFalse).toString();

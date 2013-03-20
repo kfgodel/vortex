@@ -59,7 +59,7 @@ public class ParOrdenado<K, V> implements Map.Entry<K, V> {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public boolean equals(final Object obj) {
 		if (!(obj instanceof Map.Entry)) {
 			return false;
@@ -80,7 +80,7 @@ public class ParOrdenado<K, V> implements Map.Entry<K, V> {
 	/**
 	 * @return Returns the key.
 	 */
-	@Override
+	
 	public K getKey() {
 		return this.primero;
 	}
@@ -102,7 +102,7 @@ public class ParOrdenado<K, V> implements Map.Entry<K, V> {
 	/**
 	 * @return Returns the value.
 	 */
-	@Override
+	
 	public V getValue() {
 		return this.segundo;
 	}
@@ -110,7 +110,7 @@ public class ParOrdenado<K, V> implements Map.Entry<K, V> {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		final int keyHash = (this.getKey() == null) ? 0 : this.getKey().hashCode();
 		final int valueHash = (this.getValue() == null) ? 0 : this.getValue().hashCode();
@@ -152,7 +152,7 @@ public class ParOrdenado<K, V> implements Map.Entry<K, V> {
 	 * @return El objeto anterior usado como segundo
 	 * @see java.util.Map.Entry#setValue(Object)
 	 */
-	@Override
+	
 	public V setValue(final V value) {
 		final V oldValue = this.segundo;
 		this.segundo = value;
@@ -162,7 +162,7 @@ public class ParOrdenado<K, V> implements Map.Entry<K, V> {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return this.primero + "->" + this.segundo;
 	}

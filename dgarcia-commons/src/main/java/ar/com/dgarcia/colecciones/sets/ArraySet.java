@@ -67,7 +67,7 @@ public class ArraySet<T> extends AbstractSet<T> {
 	 * @return false si no hay mas espacio para agregar
 	 * @see java.util.AbstractCollection#add(Object)
 	 */
-	@Override
+	
 	public boolean add(T nuevo) {
 		int espacioLibre = indexOf(nuevo);
 		if(espacioLibre == -1){
@@ -82,7 +82,7 @@ public class ArraySet<T> extends AbstractSet<T> {
 	 * @see java.util.AbstractCollection#contains(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public boolean contains(Object o) {
 		T buscado;
 		try {
@@ -154,7 +154,7 @@ public class ArraySet<T> extends AbstractSet<T> {
 	/**
 	 * @see java.util.AbstractCollection#iterator()
 	 */
-	@Override
+	
 	public Iterator<T> iterator() {
 		ArrayIterator<T> iteradorNativo = getNativeIterator();
 		Condition<T> soloEspaciosOcupados = new Condition<T>(){
@@ -170,7 +170,7 @@ public class ArraySet<T> extends AbstractSet<T> {
 	 * @see java.util.AbstractCollection#remove(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public boolean remove(Object o) {
 		T buscado;
 		try {
@@ -200,7 +200,7 @@ public class ArraySet<T> extends AbstractSet<T> {
 	/**
 	 * @see java.util.AbstractCollection#size()
 	 */
-	@Override
+	
 	public int size() {
 		//Por razones de performance no se utiliza el iterator
 		int size = 0;

@@ -277,7 +277,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 	/**
 	 * @see java.util.AbstractMap#entrySet()
 	 */
-	@Override
+	
 	public Set<Entry<K, V>> entrySet() {
 		return this.entrySet;
 	}
@@ -289,7 +289,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 	 * @return EL valor anterior
 	 * @see java.util.AbstractMap#put(Object, Object)
 	 */
-	@Override
+	
 	public V put(K key, V value) {
 		ParOrdenado<K, V> nuevoEntry = new ParOrdenado<K,V>(key,value);
 		int posicionCorrespondiente = this.indexOf(nuevoEntry);
@@ -333,7 +333,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 	 * @see java.util.AbstractMap#containsValue(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public boolean containsValue(Object value) {
 		V buscado;
 		try {
@@ -362,7 +362,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 	 * @see java.util.AbstractMap#containsKey(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public boolean containsKey(Object key) {
 		K buscado;
 		try {
@@ -391,7 +391,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 	 * @see java.util.AbstractMap#get(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public V get(Object key) {
 		K buscado;
 		try {
@@ -420,7 +420,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 	 * @see java.util.AbstractMap#remove(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public V remove(Object key) {
 		K buscado;
 		try {
@@ -456,7 +456,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 	 * @see java.util.AbstractMap#equals(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public boolean equals(Object o) {
 		if (o == this)
 		    return true;
@@ -493,7 +493,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 	/**
 	 * @see java.util.AbstractMap#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		int h = 0;
 		Iterator<Entry<K,V>> i = entrySet().iterator();

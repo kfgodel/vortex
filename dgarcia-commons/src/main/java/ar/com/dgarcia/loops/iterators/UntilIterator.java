@@ -76,7 +76,7 @@ public class UntilIterator<T> extends AbstractIteratorDecorator<T> {
 	/**
 	 * @see ar.com.dgarcia.lang.iterators.basic.AbstractIteratorDecorator#hasNext()
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		if(stopped){
 			return false;
@@ -97,7 +97,7 @@ public class UntilIterator<T> extends AbstractIteratorDecorator<T> {
 	/**
 	 * @see ar.com.dgarcia.lang.iterators.basic.AbstractIteratorDecorator#next()
 	 */
-	@Override
+	
 	public T next() {
 		if(nextElement == null){
 			nextElement = super.next();

@@ -104,7 +104,6 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	/**
 	 * @see java.lang.Runnable#run()
 	 */
-	@Override
 	public void run() {
 		currentState.set(SubmittedTaskState.PROCESSING);
 		notifyListenerStartingProcess();
@@ -214,7 +213,6 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	/**
 	 * @see net.gaia.taskprocessor.api.SubmittedTask#getWork()
 	 */
-	@Override
 	public WorkUnit getWork() {
 		return workUnit;
 	}
@@ -222,7 +220,6 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	/**
 	 * @see net.gaia.taskprocessor.api.SubmittedTask#waitForCompletionUpTo(ar.com.fdvs.dgarcia.lang.time.TimeMagnitude)
 	 */
-	@Override
 	public void waitForCompletionUpTo(final TimeMagnitude timeout) throws UnsuccessfulWaitException {
 		try {
 			ownFuture.get(timeout.getQuantity(), timeout.getTimeUnit());
@@ -243,7 +240,6 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	/**
 	 * @see net.gaia.taskprocessor.api.SubmittedTask#getCurrentState()
 	 */
-	@Override
 	public SubmittedTaskState getCurrentState() {
 		return currentState.get();
 	}
@@ -251,7 +247,6 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	/**
 	 * @see net.gaia.taskprocessor.api.SubmittedTask#getFailingError()
 	 */
-	@Override
 	public Throwable getFailingError() {
 		return failingError.get();
 	}
@@ -271,7 +266,6 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	/**
 	 * @see net.gaia.taskprocessor.api.SubmittedTask#cancel(boolean)
 	 */
-	@Override
 	public void cancel(final boolean forceInterruption) {
 		final SubmittedTaskState estadoAnterior = currentState.get();
 		final SubmittedTaskState estadoCancelado = estadoAnterior.getStateWhenCancelled();
@@ -321,7 +315,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(currentState_FIELD, currentState).add(workUnit_FIELD, workUnit).toString();
 	}

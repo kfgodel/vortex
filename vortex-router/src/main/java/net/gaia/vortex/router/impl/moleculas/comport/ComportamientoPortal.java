@@ -49,7 +49,7 @@ public class ComportamientoPortal implements ComportamientoBidi {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi#crearFlujoParaMensajesRecibidos(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
-	@Override
+	
 	public FlujoVortex crearFlujoParaMensajesRecibidos(final TaskProcessor processor) {
 		// Primero descartamos los mensajes duplicados
 		final NexoSinDuplicados filtroDeDuplicados = NexoSinDuplicados.create(processor, ReceptorNulo.getInstancia());
@@ -86,7 +86,7 @@ public class ComportamientoPortal implements ComportamientoBidi {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(portalInterno_FIELD, portalInterno).toString();
 	}
@@ -94,7 +94,7 @@ public class ComportamientoPortal implements ComportamientoBidi {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi#obtenerGeneradorDeIdParaMensajes()
 	 */
-	@Override
+	
 	public GenerarIdEnMensaje obtenerGeneradorDeIdParaMensajes() {
 		return this.generadorDeIdsCompartido;
 	}

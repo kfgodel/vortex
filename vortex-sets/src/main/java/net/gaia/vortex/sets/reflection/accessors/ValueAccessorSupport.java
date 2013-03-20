@@ -25,7 +25,7 @@ public abstract class ValueAccessorSupport implements ValueAccessor {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean equals(final Object obj) {
 		if (!(obj instanceof ValueAccessor)) {
 			return false;
@@ -38,7 +38,7 @@ public abstract class ValueAccessorSupport implements ValueAccessor {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		return getPropertyPath().hashCode();
 	}

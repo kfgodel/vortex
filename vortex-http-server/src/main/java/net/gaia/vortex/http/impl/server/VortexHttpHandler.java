@@ -46,7 +46,7 @@ public class VortexHttpHandler extends HandlerHttpPorComandos implements Generad
 	 * @see net.gaia.vortex.http.external.jetty.HandlerHttpPorComandos#interpretarComandoDesde(java.lang.String,
 	 *      org.eclipse.jetty.server.Request)
 	 */
-	@Override
+	
 	protected ComandoHttp interpretarComandoDesde(final String target, final Request baseRequest) {
 		if (HttpMetadata.URL_CREAR.equals(target)) {
 			final String mensajesComoJson = baseRequest.getParameter(HttpMetadata.MENSAJES_PARAMETER_NAME);
@@ -94,7 +94,7 @@ public class VortexHttpHandler extends HandlerHttpPorComandos implements Generad
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
 	 */
-	@Override
+	
 	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
 		return this.creadorDeNexos.getEstrategia();
 	}
@@ -102,7 +102,7 @@ public class VortexHttpHandler extends HandlerHttpPorComandos implements Generad
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
 	 */
-	@Override
+	
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
 		if (estrategia == null) {
 			throw new IllegalArgumentException("La estrategia no puede ser null para el handler http");

@@ -50,7 +50,7 @@ public class TestTaskListenerApi {
 	public void deberíaPermitirObservarCuandoUnaTareaIngresaComoPendiente() {
 		final AtomicBoolean accepted = new AtomicBoolean();
 		taskProcessor.setProcessorListener(new TaskProcessorListenerSupport() {
-			@Override
+			
 			public void onTaskAcceptedAndPending(final SubmittedTask task, final TaskProcessor processor) {
 				accepted.set(true);
 			}
@@ -66,7 +66,7 @@ public class TestTaskListenerApi {
 	public void deberíaPermitirObservarCuandoUnaTareaSeComienzaAProcesar() throws InterruptedException {
 		final AtomicBoolean started = new AtomicBoolean();
 		taskProcessor.setProcessorListener(new TaskProcessorListenerSupport() {
-			@Override
+			
 			public void onTaskStartedToProcess(final SubmittedTask task, final TaskProcessor processor,
 					final Thread executingThread) {
 				started.set(true);
@@ -76,7 +76,7 @@ public class TestTaskListenerApi {
 		final WaitBarrier lockParaBloquearTarea = WaitBarrier.create();
 		final WaitBarrier lockParaTestearTarea = WaitBarrier.create();
 		final TestWorkUnit tarea = new TestWorkUnit() {
-			@Override
+			
 			public WorkUnit doWork() throws InterruptedException {
 				lockParaTestearTarea.release();
 				lockParaBloquearTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -95,7 +95,7 @@ public class TestTaskListenerApi {
 	public void deberíaPermitirObservarCuandoUnaTareaSeCompleta() {
 		final AtomicBoolean completed = new AtomicBoolean();
 		taskProcessor.setProcessorListener(new TaskProcessorListenerSupport() {
-			@Override
+			
 			public void onTaskCompleted(final SubmittedTask task, final TaskProcessor processor,
 					final Thread executingThread) {
 				completed.set(true);
@@ -111,7 +111,7 @@ public class TestTaskListenerApi {
 	public void deberíaPermitirObservarCuandoUnaTareaFalla() {
 		final AtomicBoolean failed = new AtomicBoolean();
 		taskProcessor.setProcessorListener(new TaskProcessorListenerSupport() {
-			@Override
+			
 			public void onTaskFailed(final SubmittedTask task, final TaskProcessor processor,
 					final Thread executingThread) {
 				failed.set(true);
@@ -119,7 +119,7 @@ public class TestTaskListenerApi {
 		});
 
 		final TestWorkUnit tarea = new TestWorkUnit() {
-			@Override
+			
 			public WorkUnit doWork() {
 				throw new RuntimeException("Fallando!");
 			}
@@ -134,7 +134,7 @@ public class TestTaskListenerApi {
 	public void deberíaPermitirObservarCuandoUnaTareaSeCancela() {
 		final AtomicBoolean cancelled = new AtomicBoolean();
 		taskProcessor.setProcessorListener(new TaskProcessorListenerSupport() {
-			@Override
+			
 			public void onTaskCancelled(final SubmittedTask task, final TaskProcessor processor) {
 				cancelled.set(true);
 			}
@@ -143,7 +143,7 @@ public class TestTaskListenerApi {
 		// Ponemos una tarea bloqueante para que la segunda se cancele
 		final WaitBarrier lockParaBloquearPrimera = WaitBarrier.create();
 		final TestWorkUnit blockingWork = new TestWorkUnit() {
-			@Override
+			
 			public WorkUnit doWork() throws InterruptedException {
 				lockParaBloquearPrimera.waitForReleaseUpTo(TimeMagnitude.of(10, TimeUnit.SECONDS));
 				return super.doWork();
@@ -164,7 +164,7 @@ public class TestTaskListenerApi {
 		final WaitBarrier lockParaEsperarNotificacionDeInterrupcion = WaitBarrier.create();
 		final AtomicBoolean interrupted = new AtomicBoolean();
 		taskProcessor.setProcessorListener(new TaskProcessorListenerSupport() {
-			@Override
+			
 			public void onTaskInterrupted(final SubmittedTask task, final TaskProcessor processor,
 					final Thread executingThread) {
 				interrupted.set(true);
@@ -175,7 +175,7 @@ public class TestTaskListenerApi {
 		final WaitBarrier lockParaBloquearTarea = WaitBarrier.create();
 		final WaitBarrier lockParaCancelarTarea = WaitBarrier.create();
 		final TestWorkUnit tarea = new TestWorkUnit() {
-			@Override
+			
 			public WorkUnit doWork() throws InterruptedException {
 				// Permitimos que el thread principal nos cancele
 				lockParaCancelarTarea.release();

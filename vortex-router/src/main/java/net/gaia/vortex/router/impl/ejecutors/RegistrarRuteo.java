@@ -44,7 +44,7 @@ public class RegistrarRuteo extends ReceptorSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public void recibir(final MensajeVortex mensaje) {
 		final NodoBidireccional nodoOrigen = pataRuteadora.getNodoLocal();
 		final Receptor destino = pataRuteadora.getNodoRemoto();
@@ -69,7 +69,7 @@ public class RegistrarRuteo extends ReceptorSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(listenerDeRuteos_FIELD, listenerDeRuteos).con(pataRuteadora_FIELD, pataRuteadora)
 				.toString();

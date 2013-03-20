@@ -78,7 +78,7 @@ public class TestTaskMetricsApi {
 		final WaitBarrier lockParaBloquearLaPrimerTarea = WaitBarrier.create();
 		final WaitBarrier lockTestearEstado = WaitBarrier.create();
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
-			@Override
+			
 			public WorkUnit doWork() throws InterruptedException {
 				super.doWork();
 				lockTestearEstado.release();

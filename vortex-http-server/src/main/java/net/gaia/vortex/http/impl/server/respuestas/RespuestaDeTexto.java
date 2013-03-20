@@ -33,7 +33,7 @@ public class RespuestaDeTexto implements RespuestaHttp {
 	/**
 	 * @see net.gaia.vortex.http.external.jetty.RespuestaHttp#reflejarEn(javax.servlet.http.HttpServletResponse)
 	 */
-	@Override
+	
 	public void reflejarEn(final HttpServletResponse response) throws IOException {
 		response.setContentType(RESPONSE_TEXT_CONTENT_TYPE);
 		response.setStatus(HttpServletResponse.SC_OK);
@@ -44,7 +44,7 @@ public class RespuestaDeTexto implements RespuestaHttp {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(textoDeRespuesta_FIELD, textoDeRespuesta).toString();
 	}

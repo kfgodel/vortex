@@ -38,7 +38,7 @@ public class ListenerNuloDeConexionBidiEnNodo implements ListenerDeConexionesBid
 	 *      net.gaia.vortex.core.api.atomos.Receptor,
 	 *      net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
 	 */
-	@Override
+	
 	public void onConexionBidiDe(final NodoBidireccional origen, final Receptor destino,
 			final PataBidireccional pataConectada) {
 		// No hacemos nada

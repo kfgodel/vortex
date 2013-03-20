@@ -33,12 +33,12 @@ public abstract class NexoFiltroSupport extends NexoSupport implements Filtro {
 	private Condicion condicion;
 	public static final String condicion_FIELD = "condicion";
 
-	@Override
+	
 	public Condicion getCondicion() {
 		return condicion;
 	}
 
-	@Override
+	
 	public void setCondicion(final Condicion condicion) {
 		if (condicion == null) {
 			throw new IllegalArgumentException("La condicion del proxy no puede ser null. A lo sumo una entre "
@@ -55,7 +55,7 @@ public abstract class NexoFiltroSupport extends NexoSupport implements Filtro {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(condicion_FIELD, condicion)
 				.con(destino_FIELD, getDestino()).toString();
@@ -64,7 +64,7 @@ public abstract class NexoFiltroSupport extends NexoSupport implements Filtro {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		return FiltrarMensaje.create(mensaje, condicion, getDestino());
 	}

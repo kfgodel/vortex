@@ -38,7 +38,7 @@ public class ComportamientoRouter implements ComportamientoBidi {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi#crearFlujoParaMensajesRecibidos()
 	 */
-	@Override
+	
 	public FlujoVortex crearFlujoParaMensajesRecibidos(final TaskProcessor processor) {
 		// Antes que nada filtramos los mensajes duplicados que ya recibimos
 		final NexoSinDuplicados filtroDeDuplicados = NexoSinDuplicados.create(processor, ReceptorNulo.getInstancia());
@@ -54,7 +54,7 @@ public class ComportamientoRouter implements ComportamientoBidi {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).toString();
 	}
@@ -62,7 +62,7 @@ public class ComportamientoRouter implements ComportamientoBidi {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi#obtenerGeneradorDeIdParaMensajes()
 	 */
-	@Override
+	
 	public GenerarIdEnMensaje obtenerGeneradorDeIdParaMensajes() {
 		// Generamos uno nuevo
 		return GenerarIdEnMensaje.create(GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId());

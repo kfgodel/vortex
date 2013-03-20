@@ -60,7 +60,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(listeningAddress_FIELD, listeningAddress).add(socketHandler_FIELD, socketHandler)
 				.toString();
@@ -69,7 +69,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	/**
 	 * @see net.gaia.vortex.sockets.api.ServidorDeSocketVortex#aceptarConexionesRemotas()
 	 */
-	@Override
+	
 	public void aceptarConexionesRemotas() throws ObjectSocketException {
 		this.metricas = MetricasDeCargaImpl.create();
 		final ObjectSocketConfiguration socketConfig = VortexSocketConfiguration.crear(listeningAddress, this.metricas);
@@ -82,7 +82,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	/**
 	 * @see net.gaia.vortex.sockets.api.ServidorDeSocketVortex#closeAndDispose()
 	 */
-	@Override
+	
 	public void closeAndDispose() {
 		internalAcceptor.closeAndDispose();
 	}
@@ -117,7 +117,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
 	 */
-	@Override
+	
 	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
 		return socketHandler.getEstrategiaDeConexion();
 	}
@@ -125,7 +125,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
 	 */
-	@Override
+	
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
 		socketHandler.setEstrategiaDeConexion(estrategia);
 	}

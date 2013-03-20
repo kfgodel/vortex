@@ -34,7 +34,7 @@ public abstract class HandlerEncolador<T> extends HandlerTipado<T> {
 	/**
 	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#onMensajeRecibido(java.lang.Object)
 	 */
-	@Override
+	
 	public void onMensajeRecibido(final T mensaje) {
 		mensajes.add(mensaje);
 	}

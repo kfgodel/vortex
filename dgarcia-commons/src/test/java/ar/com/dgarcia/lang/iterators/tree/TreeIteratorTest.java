@@ -36,7 +36,7 @@ public class TreeIteratorTest {
 	public void setUp() {
 		raiz = "A";
 		nodeExplorer = new NodeExploder<String>() {
-			@Override
+			
 			public Iterator<String> evaluateOn(final String node) {
 				if (node.length() > 2) {
 					return null;

@@ -28,7 +28,7 @@ public abstract class ReceptorConProcesador extends ComponenteConProcesadorSuppo
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public void recibir(final MensajeVortex mensaje) {
 		Loggers.ATOMOS.trace("Recibido en[{}] el mensaje[{}]", this.toShortString(), mensaje);
 		final WorkUnit tareaDelMensaje = crearTareaAlRecibir(mensaje);

@@ -35,7 +35,7 @@ public class InterpreteJackson implements InterpreteJson {
 	/**
 	 * @see net.gaia.vortex.dependencies.json.InterpreteJson#toJson(java.lang.Object)
 	 */
-	@Override
+	
 	public String toJson(final Object anyObject) throws JsonConversionException {
 		try {
 			final String respuesta = getJsonMapper().writeValueAsString(anyObject);
@@ -53,7 +53,7 @@ public class InterpreteJackson implements InterpreteJson {
 	 * @see net.gaia.vortex.dependencies.json.InterpreteJson#fromJson(java.lang.String,
 	 *      java.lang.Class)
 	 */
-	@Override
+	
 	public <T> T fromJson(final String jsonText, final Class<T> expectedtype) throws JsonConversionException {
 		try {
 			final T recibido = getJsonMapper().readValue(jsonText, expectedtype);

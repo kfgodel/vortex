@@ -45,14 +45,14 @@ public class ParteSincronizada implements ParteDeCondiciones {
 	/**
 	 * @see net.gaia.vortex.router.impl.filtros.ParteDeCondiciones#cambiarA(net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
-	@Override
+	
 	public void cambiarA(final Condicion nuevaCondicion) {
 		if (nuevaCondicion.equals(condicionActual)) {
 			// Si no hubo cambio evitamos el resto de las consecuencias
 			return;
 		}
 		coordinator.doWriteOperation(new Callable<Void>() {
-			@Override
+			
 			public Void call() throws Exception {
 				condicionActual = nuevaCondicion;
 				listener.onCambioDeCondicion(nuevaCondicion, ParteSincronizada.this);
@@ -64,10 +64,10 @@ public class ParteSincronizada implements ParteDeCondiciones {
 	/**
 	 * @see net.gaia.vortex.router.impl.filtros.ParteDeCondiciones#getCondicion()
 	 */
-	@Override
+	
 	public Condicion getCondicion() {
 		return coordinator.doReadOperation(new Callable<Condicion>() {
-			@Override
+			
 			public Condicion call() throws Exception {
 				return condicionActual;
 			}
@@ -77,7 +77,7 @@ public class ParteSincronizada implements ParteDeCondiciones {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(condicionActual_FIELD, condicionActual).toString();
 	}

@@ -28,7 +28,7 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex#getValorActual()
 	 */
-	@Override
+	
 	public String getValorActual() {
 		return valor;
 	}
@@ -36,7 +36,7 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(valor_FIELD, valor).toString();
 	}
@@ -50,7 +50,7 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean equals(final Object obj) {
 		if (!(obj instanceof IdDeComponenteVortex)) {
 			return false;
@@ -63,7 +63,7 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		return getValorActual().hashCode();
 	}
@@ -71,7 +71,7 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	/**
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	@Override
+	
 	public int compareTo(final IdDeComponenteVortex o) {
 		final int orden = this.getValorActual().compareTo(o.getValorActual());
 		return orden;
@@ -80,7 +80,7 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.ShortStringable#toShortString()
 	 */
-	@Override
+	
 	public String toShortString() {
 		return getValorActual();
 	}

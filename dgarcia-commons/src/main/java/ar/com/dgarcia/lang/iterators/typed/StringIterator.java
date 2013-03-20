@@ -65,7 +65,7 @@ public class StringIterator extends AbstractIteratorDecorator<String> {
 	/**
 	 * @see java.util.Iterator#remove()
 	 */
-	@Override
+	
 	public void remove() {
 		throw new UnsupportedOperationException("No se puede eliminar la subcadena");
 	}

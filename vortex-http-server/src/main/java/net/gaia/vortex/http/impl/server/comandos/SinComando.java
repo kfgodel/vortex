@@ -30,7 +30,7 @@ public class SinComando implements ComandoHttp {
 	/**
 	 * @see net.gaia.vortex.http.external.jetty.ComandoHttp#ejecutar()
 	 */
-	@Override
+	
 	public RespuestaHttp ejecutar() {
 		return RespuestaDeErrorDeCliente.create("No existe comando para la URL: " + urlUsada);
 	}
@@ -44,7 +44,7 @@ public class SinComando implements ComandoHttp {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(urlUsada_FIELD, urlUsada).toString();
 	}

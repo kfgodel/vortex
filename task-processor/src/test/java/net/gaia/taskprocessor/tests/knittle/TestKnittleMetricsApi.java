@@ -25,7 +25,7 @@ import org.junit.Before;
  */
 public class TestKnittleMetricsApi extends TestTaskMetricsApi {
 
-	@Override
+	
 	@Before
 	public void crearProcesador() {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();

@@ -146,7 +146,7 @@ public class ConcurrentHashSet<E> implements Set<E> {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return getInternalSet().toString();
 	}

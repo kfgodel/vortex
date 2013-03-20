@@ -38,7 +38,7 @@ public class EsMensajeExterno implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final IdDeMensaje idDelMensaje = mensaje.getIdDeMensaje();
 		final boolean esMensajeExterno = !idDelMensaje.esOriginadoEn(idDelNodo);
@@ -55,7 +55,7 @@ public class EsMensajeExterno implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(idDelNodo_FIELD, idDelNodo).toString();
 	}
@@ -63,7 +63,7 @@ public class EsMensajeExterno implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	@Override
+	
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}

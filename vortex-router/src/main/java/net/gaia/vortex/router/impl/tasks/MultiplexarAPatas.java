@@ -59,7 +59,7 @@ public class MultiplexarAPatas implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
+	
 	public WorkUnit doWork() throws InterruptedException {
 		if (patas.isEmpty()) {
 			LOG.debug("El mensaje[{}] es decartado porque no existen patas para recibirlo", mensaje.toShortString());
@@ -125,7 +125,7 @@ public class MultiplexarAPatas implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(patas_FIELD, patas).add(mensaje_FIELD, mensaje.toShortString()).toString();
 	}

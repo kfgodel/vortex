@@ -51,7 +51,7 @@ public class PublicadorSimple implements Publicador {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return this.getClass().getSimpleName();
 	}

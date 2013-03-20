@@ -41,7 +41,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	 * @see ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveMap#put(java.lang.String,
 	 *      java.lang.Object)
 	 */
-	@Override
+	
 	public Object put(final String key, final Object value) {
 		final Object adaptedValue = adaptValueToVortex(value);
 		return super.put(key, adaptedValue);
@@ -69,7 +69,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getValorComoPrimitiva()
 	 */
-	@Override
+	
 	public Object getValorComoPrimitiva() {
 		return get(ContenidoVortex.PRIMITIVA_VORTEX_KEY);
 	}
@@ -77,7 +77,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#setValorComoPrimitiva(java.lang.Object)
 	 */
-	@Override
+	
 	public void setValorComoPrimitiva(final Object valor) {
 		if (!ContenidoPrimitiva.esPrimitivaVortex(valor)) {
 			throw new IllegalArgumentException("El valor[" + valor + "] no puede ser aceptado como primitiva vortex");
@@ -88,7 +88,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#tieneValorComoPrimitiva()
 	 */
-	@Override
+	
 	public boolean tieneValorComoPrimitiva() {
 		return containsKey(ContenidoVortex.PRIMITIVA_VORTEX_KEY);
 	}
@@ -96,7 +96,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#setNombreDelTipoOriginal(java.lang.String)
 	 */
-	@Override
+	
 	public void setNombreDelTipoOriginal(final String nombreDeClaseCompleto) {
 		put(CLASSNAME_KEY, nombreDeClaseCompleto);
 	}
@@ -104,7 +104,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getNombreDelTipoOriginal()
 	 */
-	@Override
+	
 	public String getNombreDelTipoOriginal() {
 		return (String) get(CLASSNAME_KEY);
 	}
@@ -129,7 +129,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getIdDeMensaje()
 	 */
-	@Override
+	
 	@SuppressWarnings("unchecked")
 	public IdDeMensaje getIdDeMensaje() {
 		final Object object = get(ContenidoVortex.ID_DE_MENSAJE_KEY);
@@ -158,7 +158,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setIdDeMensaje(net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje)
 	 */
-	@Override
+	
 	public void setIdDeMensaje(final IdDeMensaje idDelMensaje) {
 		Map<String, Object> idComoMapa = null;
 		if (idDelMensaje != null) {
@@ -170,7 +170,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getIdDeMensajeComoMapa()
 	 */
-	@Override
+	
 	public Map<String, Object> getIdDeMensajeComoMapa() {
 		final Object valorDelId = get(ContenidoVortex.ID_DE_MENSAJE_KEY);
 		if (valorDelId == null) {

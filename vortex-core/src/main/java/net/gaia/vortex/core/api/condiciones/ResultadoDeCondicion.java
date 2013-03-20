@@ -23,7 +23,7 @@ public enum ResultadoDeCondicion {
 	 * Indica que la condición es cumplida por el mensaje
 	 */
 	TRUE {
-		@Override
+		
 		public boolean esTrue() throws IndecidibleException {
 			return true;
 		}
@@ -32,7 +32,7 @@ public enum ResultadoDeCondicion {
 	 * Indica que la condición no es cumplida por el mensaje
 	 */
 	FALSE {
-		@Override
+		
 		public boolean esTrue() throws IndecidibleException {
 			return false;
 		}
@@ -42,12 +42,12 @@ public enum ResultadoDeCondicion {
 	 * desconocida por esta aplicación, por lo que el resultado no es decidible
 	 */
 	INDECIDIBLE {
-		@Override
+		
 		public boolean esTrue() throws IndecidibleException {
 			throw new IndecidibleException("El resultado no es booleano. Podría ser tanto true como false");
 		}
 
-		@Override
+		
 		public boolean esBooleano() {
 			return false;
 		}

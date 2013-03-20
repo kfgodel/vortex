@@ -67,7 +67,7 @@ public class RespuestaDeIdRemoto extends MetamensajeSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(idLocalAlEmisor_FIELD, idLocalAlEmisor)
 				.con(idPedidoOriginal_FIELD, idPedidoOriginal).toString();

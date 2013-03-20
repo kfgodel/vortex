@@ -42,7 +42,7 @@ public class Desobjetivizador extends NexoSupport {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final DelegarMensaje delegacion = DelegarMensaje.create(mensaje, getDestino());
 		return delegacion;
@@ -65,7 +65,7 @@ public class Desobjetivizador extends NexoSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(mapeador_FIELD, mapeador)
 				.add("destino", getDestino()).toString();

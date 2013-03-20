@@ -40,7 +40,7 @@ public class EmisorNulo extends EmisorSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void conectarCon(final Receptor destino) {
 		LOG.trace("Se intento conectar el destino[{}] en el emisor nulo", destino);
 	}
@@ -48,7 +48,7 @@ public class EmisorNulo extends EmisorSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void desconectarDe(final Receptor destino) {
 		LOG.trace("Se intento desconectar el destino[{}] en el emisor nulo", destino);
 	}

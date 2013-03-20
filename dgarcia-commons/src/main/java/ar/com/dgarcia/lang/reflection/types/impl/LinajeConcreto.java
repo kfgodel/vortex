@@ -31,7 +31,7 @@ public class LinajeConcreto implements Linaje {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.Linaje#getTipoDe(java.lang.Class)
 	 */
-	@Override
+	
 	public Tipo getTipoDe(final Class<?> clase) {
 		for (final Tipo tipo : tipos) {
 			if (tipo.representaA(clase)) {
@@ -50,7 +50,7 @@ public class LinajeConcreto implements Linaje {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(tipos_FIELD, tipos).toString();
 	}
@@ -58,7 +58,7 @@ public class LinajeConcreto implements Linaje {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.Linaje#getTiposDesdeLaSubclase()
 	 */
-	@Override
+	
 	public List<Tipo> getTiposDesdeLaSubclase() {
 		return tipos;
 	}

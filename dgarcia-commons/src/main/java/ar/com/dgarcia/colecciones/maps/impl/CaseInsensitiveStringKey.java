@@ -45,7 +45,7 @@ public class CaseInsensitiveStringKey implements Comparable<CaseInsensitiveStrin
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean equals(final Object obj) {
 		if (obj instanceof CaseInsensitiveStringKey) {
 			final CaseInsensitiveStringKey that = (CaseInsensitiveStringKey) obj;
@@ -72,7 +72,7 @@ public class CaseInsensitiveStringKey implements Comparable<CaseInsensitiveStrin
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		return insensitiveCaseString.hashCode();
 	}
@@ -80,7 +80,7 @@ public class CaseInsensitiveStringKey implements Comparable<CaseInsensitiveStrin
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return insensitiveCaseString;
 	}
@@ -96,7 +96,7 @@ public class CaseInsensitiveStringKey implements Comparable<CaseInsensitiveStrin
 	/**
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	@Override
+	
 	public int compareTo(final CaseInsensitiveStringKey that) {
 		final int comparacion = this.insensitiveCaseString.compareTo(that.insensitiveCaseString);
 		return comparacion;

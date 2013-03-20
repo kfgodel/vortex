@@ -71,7 +71,7 @@ public class NodoSocket extends MultiplexorSinDuplicadosSupport implements Dispo
 	/**
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
-	@Override
+	
 	public void closeAndDispose() {
 		if (cliente != null) {
 			cliente.closeAndDispose();

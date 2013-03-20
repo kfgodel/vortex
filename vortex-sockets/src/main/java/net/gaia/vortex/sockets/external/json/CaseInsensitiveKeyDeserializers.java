@@ -14,7 +14,7 @@ public class CaseInsensitiveKeyDeserializers implements KeyDeserializers {
 	public static final CaseInsensitiveKeyDeserializer DESERIALIZER = new CaseInsensitiveKeyDeserializer();
 
 	private static class CaseInsensitiveKeyDeserializer extends KeyDeserializer {
-		@Override
+		
 		public Object deserializeKey(final String key, final DeserializationContext ctxt) throws IOException {
 			return key.toLowerCase();
 		}
@@ -25,7 +25,7 @@ public class CaseInsensitiveKeyDeserializers implements KeyDeserializers {
 	 *      com.fasterxml.jackson.databind.DeserializationConfig,
 	 *      com.fasterxml.jackson.databind.BeanDescription)
 	 */
-	@Override
+	
 	public KeyDeserializer findKeyDeserializer(final JavaType type, final DeserializationConfig config,
 			final BeanDescription beanDesc) throws JsonMappingException {
 		return DESERIALIZER;

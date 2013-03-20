@@ -39,7 +39,7 @@ public class ObjectSocketIoHandler extends IoHandlerAdapter {
 	/**
 	 * @see org.apache.mina.core.service.IoHandlerAdapter#sessionCreated(org.apache.mina.core.session.IoSession)
 	 */
-	@Override
+	
 	public void sessionCreated(final IoSession session) throws Exception {
 		LOG.debug("Creando ObjectSocket para la nueva conexion: {}", session);
 		final MinaObjectSocket objectSocket = MinaObjectSocket.create(session, defaultReceptionHandler);
@@ -58,7 +58,7 @@ public class ObjectSocketIoHandler extends IoHandlerAdapter {
 	/**
 	 * @see org.apache.mina.core.service.IoHandlerAdapter#sessionClosed(org.apache.mina.core.session.IoSession)
 	 */
-	@Override
+	
 	public void sessionClosed(final IoSession session) throws Exception {
 		LOG.debug("Cerrando ObjectSocket para la conexion: {}", session);
 		if (this.eventHandler == null) {
@@ -77,7 +77,7 @@ public class ObjectSocketIoHandler extends IoHandlerAdapter {
 	 * @see org.apache.mina.core.service.IoHandlerAdapter#messageReceived(org.apache.mina.core.session.IoSession,
 	 *      java.lang.Object)
 	 */
-	@Override
+	
 	public void messageReceived(final IoSession session, final Object message) throws Exception {
 		final MinaObjectSocket objectSocket = getConnectedSocketFor(session);
 		if (objectSocket == null) {
@@ -141,7 +141,7 @@ public class ObjectSocketIoHandler extends IoHandlerAdapter {
 	 * @see org.apache.mina.core.service.IoHandlerAdapter#exceptionCaught(org.apache.mina.core.session.IoSession,
 	 *      java.lang.Throwable)
 	 */
-	@Override
+	
 	public void exceptionCaught(final IoSession session, final Throwable cause) throws Exception {
 		if (errorHandler == null) {
 			if (cause instanceof WriteToClosedSessionException) {
@@ -167,7 +167,7 @@ public class ObjectSocketIoHandler extends IoHandlerAdapter {
 	 * @see org.apache.mina.core.service.IoHandlerAdapter#messageSent(org.apache.mina.core.session.IoSession,
 	 *      java.lang.Object)
 	 */
-	@Override
+	
 	public void messageSent(final IoSession session, final Object message) throws Exception {
 		if (!LOG.isDebugEnabled()) {
 			return;

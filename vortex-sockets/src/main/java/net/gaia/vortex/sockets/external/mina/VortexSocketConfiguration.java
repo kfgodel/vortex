@@ -41,7 +41,7 @@ public class VortexSocketConfiguration extends ObjectSocketConfiguration {
 	/**
 	 * @see ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration#configureFilterChain(org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder)
 	 */
-	@Override
+	
 	protected void configureFilterChain(final DefaultIoFilterChainBuilder filterChain) {
 		if (metricas != null) {
 			filterChain.addLast("metricasBinario", BinaryMetricsFilter.create(metricas));

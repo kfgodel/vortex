@@ -130,7 +130,6 @@ public class TestRedA01ConNodoMultiplexor {
 		final AtomicBoolean receptorBloqueado = new AtomicBoolean(false);
 		final Receptor handlerReceptor = new ReceptorSupport() {
 
-			@Override
 			public void recibir(final MensajeVortex mensaje) {
 				receptorBloqueado.set(true);
 				// Hacemos que el emisor siga ejecutando si nos estaba esperando
@@ -163,7 +162,7 @@ public class TestRedA01ConNodoMultiplexor {
 		final WaitBarrier threadDeEntregaDefinido = WaitBarrier.create();
 		final AtomicReference<Thread> threadDeEntrega = new AtomicReference<Thread>();
 		final Receptor handlerReceptor = new ReceptorSupport() {
-			@Override
+
 			public void recibir(final MensajeVortex mensaje) {
 				final Thread threadActual = Thread.currentThread();
 				threadDeEntrega.set(threadActual);
@@ -320,7 +319,7 @@ public class TestRedA01ConNodoMultiplexor {
 		final int cantidadDeMensajes = 100000;
 		final WaitBarrier espeerarEntregas = WaitBarrier.create(cantidadDeMensajes);
 		nodoReceptor.conectarCon(new ReceptorSupport() {
-			@Override
+
 			public void recibir(final MensajeVortex mensaje) {
 				espeerarEntregas.release();
 			}
@@ -340,7 +339,7 @@ public class TestRedA01ConNodoMultiplexor {
 			nodoEmisor.recibir(mensaje);
 		}
 
-		espeerarEntregas.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.MINUTES));
+		espeerarEntregas.waitForReleaseUpTo(TimeMagnitude.of(60, TimeUnit.SECONDS));
 		LOG.debug("Nanos Fin: {}", System.nanoTime());
 		final long endNanos = System.nanoTime();
 		final long elapsedNanos = endNanos - startNanos;

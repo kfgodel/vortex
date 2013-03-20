@@ -31,7 +31,7 @@ public class VortexSocketTextualizer implements ObjectTextualizer {
 	/**
 	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertToString(java.lang.Object)
 	 */
-	@Override
+	
 	public String convertToString(final Object value) throws CannotTextSerializeException {
 		if (!(value instanceof MensajeVortex)) {
 			throw new CannotTextSerializeException(
@@ -46,7 +46,7 @@ public class VortexSocketTextualizer implements ObjectTextualizer {
 	/**
 	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertFromString(java.lang.String)
 	 */
-	@Override
+	
 	public Object convertFromString(final String jsonDelContenido) throws CannotTextUnserializeException {
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> contenidoRegenerado = jsonTextualizer
@@ -58,7 +58,7 @@ public class VortexSocketTextualizer implements ObjectTextualizer {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).toString();
 	}

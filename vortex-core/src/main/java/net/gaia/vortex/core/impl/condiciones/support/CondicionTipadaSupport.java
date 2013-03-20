@@ -34,7 +34,7 @@ public class CondicionTipadaSupport implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		return condicionReal.esCumplidaPor(mensaje);
 	}
@@ -42,7 +42,7 @@ public class CondicionTipadaSupport implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	@Override
+	
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}
@@ -59,7 +59,7 @@ public class CondicionTipadaSupport implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).toString();
 	}

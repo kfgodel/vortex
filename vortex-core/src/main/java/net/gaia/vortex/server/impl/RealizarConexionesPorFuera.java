@@ -42,7 +42,7 @@ public class RealizarConexionesPorFuera implements EstrategiaDeConexionDeNexos {
 	/**
 	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
-	@Override
+	
 	public void onNexoCreado(final Nexo nuevoNexo) {
 		LOG.debug("No se realizara accion interna de conexion del nexo creado[{}]", nuevoNexo);
 	}
@@ -50,7 +50,7 @@ public class RealizarConexionesPorFuera implements EstrategiaDeConexionDeNexos {
 	/**
 	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
-	@Override
+	
 	public void onNexoCerrado(final Nexo nexoCerrado) {
 		LOG.debug("No se realizara accion interna de desconexion del nexo cerrado[{}]", nexoCerrado);
 	}

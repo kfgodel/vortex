@@ -36,7 +36,7 @@ public class TransformarYDelegar implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
+	
 	public WorkUnit doWork() throws InterruptedException {
 		Loggers.ATOMOS.trace("Transformando con [{}] el mensaje[{}]", transformacion, mensajeOriginal);
 		MensajeVortex mensajeTransformado;
@@ -66,7 +66,7 @@ public class TransformarYDelegar implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(transformacion_FIELD, transformacion).add(delegado_FIELD, delegado)
 				.add(mensaje_FIELD, mensajeOriginal).toString();

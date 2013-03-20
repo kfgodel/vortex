@@ -37,7 +37,7 @@ public class NullProcessingMetrics implements TaskProcessingMetricsAndListener {
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getProcessedTaskCount()
 	 */
-	@Override
+	
 	public int getProcessedTaskCount() {
 		LOG.warn("Se solicitaron métricas de tareas procesadas a la instancia nula. Devolviendo 0");
 		return 0;
@@ -46,7 +46,7 @@ public class NullProcessingMetrics implements TaskProcessingMetricsAndListener {
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getPendingTaskCount()
 	 */
-	@Override
+	
 	public int getPendingTaskCount() {
 		LOG.warn("Se solicitaron métricas de tareas pendientes a la instancia nula. Devolviendo 0");
 		return 0;
@@ -55,7 +55,7 @@ public class NullProcessingMetrics implements TaskProcessingMetricsAndListener {
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getMetricasDeCarga()
 	 */
-	@Override
+	
 	public MetricasDeCarga getMetricasDeCarga() {
 		LOG.warn("Se solicitaron métricas de carga a la instancia nula. Devolviendo null");
 		return null;
@@ -64,7 +64,7 @@ public class NullProcessingMetrics implements TaskProcessingMetricsAndListener {
 	/**
 	 * @see net.gaia.taskprocessor.metrics.TaskProcessingListener#incrementPending()
 	 */
-	@Override
+	
 	public void incrementPending() {
 		// No llevamos registro en esta instancia
 	}
@@ -72,7 +72,7 @@ public class NullProcessingMetrics implements TaskProcessingMetricsAndListener {
 	/**
 	 * @see net.gaia.taskprocessor.metrics.TaskProcessingListener#incrementProcessed()
 	 */
-	@Override
+	
 	public void incrementProcessed() {
 		// No llevamos registro en esta instancia
 	}

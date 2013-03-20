@@ -33,7 +33,7 @@ public class ReceptorVariable<R extends Receptor> extends ReceptorSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public void recibir(final MensajeVortex mensaje) {
 		Loggers.ATOMOS.trace("Recibido en atomo[{}] el mensaje[{}]", this.toShortString(), mensaje);
 		final Receptor receptorActual = referenciaAlReceptorActual.get();
@@ -62,7 +62,7 @@ public class ReceptorVariable<R extends Receptor> extends ReceptorSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.con("receptorActual", getReceptorActual()).toString();

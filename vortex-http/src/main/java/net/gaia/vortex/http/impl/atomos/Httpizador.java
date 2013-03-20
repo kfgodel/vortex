@@ -34,7 +34,7 @@ public class Httpizador extends ReceptorConProcesador {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final AcumularEnSesion envio = AcumularEnSesion.create(mensaje, sesion);
 		return envio;
@@ -50,7 +50,7 @@ public class Httpizador extends ReceptorConProcesador {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(sesion_FIELD, sesion)
 				.toString();

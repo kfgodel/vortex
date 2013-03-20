@@ -49,7 +49,6 @@ public class TestMinMaxWorkUnit {
 		/**
 		 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 		 */
-		@Override
 		public WorkUnit doWork() throws InterruptedException {
 			final long currentMillis = System.currentTimeMillis();
 			ejecuciones.add(currentMillis);

@@ -67,7 +67,7 @@ public class MosquitoSever {
 	}
 
 	private final WorkUnit tareaDeLogDeTransfer = new WorkUnit() {
-		@Override
+		
 		public WorkUnit doWork() throws InterruptedException {
 			registrarTransferEnLog();
 			return null;
@@ -77,7 +77,7 @@ public class MosquitoSever {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(configuration_FIELD, configuration).con(hubDeSockets_FIELD, hubDeSockets)
 				.con(hubDeHttp_FIELD, hubDeHttp).toString();
@@ -180,7 +180,7 @@ public class MosquitoSever {
 	 */
 	private void detenerLogDeTransfer() {
 		processor.removeTasksMatching(new TaskCriteria() {
-			@Override
+			
 			public boolean matches(final WorkUnit workUnit) {
 				return tareaDeLogDeTransfer.equals(workUnit);
 			}

@@ -55,7 +55,7 @@ public class PublicacionDeFiltros extends MetamensajeSupport implements MensajeC
 		return publicacion;
 	}
 
-	@Override
+	
 	public Long getIdLocalAlReceptor() {
 		return idLocalAlReceptor;
 	}
@@ -67,7 +67,7 @@ public class PublicacionDeFiltros extends MetamensajeSupport implements MensajeC
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(idLocalAlReceptor_FIELD, idLocalAlReceptor).con(filtro_FIELD, filtro).toString();
 	}

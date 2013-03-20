@@ -66,7 +66,7 @@ public abstract class TestTextualizerSupport {
 	public void deberiaPoderConvertirUnObjetoEnTexto() {
 		final String convertedValue = textualizer.convertToString(textualized);
 		Assert.assertNotNull(convertedValue);
-		Assert.assertFalse(convertedValue.isEmpty());
+		Assert.assertEquals(0, convertedValue.length());
 	}
 
 	/**
@@ -92,7 +92,7 @@ public abstract class TestTextualizerSupport {
 		generator.setCantidadDeThreadsEnEjecucion(4);
 		generator.setEsperaEntreEjecucionesEnMilis(0);
 		generator.setEjecutable(new Runnable() {
-			@Override
+
 			public void run() {
 				try {
 					final String original = "Hola";

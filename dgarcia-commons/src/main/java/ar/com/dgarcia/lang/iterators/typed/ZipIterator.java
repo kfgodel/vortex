@@ -57,7 +57,7 @@ public class ZipIterator extends EnumerationIteratorAdapter<ZipEntry> implements
 	/**
 	 * @see ar.com.dgarcia.lang.iterators.adapters.EnumerationIteratorAdapter#next()
 	 */
-	@Override
+	
 	public ZipEntry next() {
 		lastEntry = super.next();
 		return lastEntry;
@@ -98,7 +98,7 @@ public class ZipIterator extends EnumerationIteratorAdapter<ZipEntry> implements
 	/**
 	 * @see ar.com.dgarcia.lang.iterators.adapters.EnumerationIteratorAdapter#initialize(java.util.Enumeration)
 	 */
-	@Override
+	
 	protected void initialize(Enumeration<? extends ZipEntry> baseEnumeration) {
 		super.initialize(baseEnumeration);
 		this.lastEntry = null;

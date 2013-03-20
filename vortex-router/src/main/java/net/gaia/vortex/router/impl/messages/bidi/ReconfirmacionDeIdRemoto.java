@@ -41,7 +41,7 @@ public class ReconfirmacionDeIdRemoto extends MetamensajeSupport implements Mens
 		super(NOMBRE_DE_TIPO);
 	}
 
-	@Override
+	
 	public Long getIdLocalAlReceptor() {
 		return idLocalAlReceptor;
 	}
@@ -68,7 +68,7 @@ public class ReconfirmacionDeIdRemoto extends MetamensajeSupport implements Mens
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(idLocalAlReceptor_FIELD, idLocalAlReceptor)
 				.con(idLocalAlEmisor_FIELD, idLocalAlEmisor).toString();

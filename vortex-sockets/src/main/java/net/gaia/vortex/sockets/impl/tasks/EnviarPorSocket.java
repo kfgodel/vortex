@@ -37,7 +37,7 @@ public class EnviarPorSocket implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
+	
 	public WorkUnit doWork() throws InterruptedException {
 		try {
 			socket.send(datos);
@@ -58,7 +58,7 @@ public class EnviarPorSocket implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(socket_FIELD, socket).add(datos_FIELD, datos).toString();
 	}

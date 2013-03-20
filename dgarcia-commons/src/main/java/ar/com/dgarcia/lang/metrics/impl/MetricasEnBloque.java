@@ -46,7 +46,7 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeInputs()
 	 */
-	@Override
+	
 	public long getCantidadDeInputs() {
 		return getUltimoBloque().getCantidadDeInputs();
 	}
@@ -54,7 +54,7 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getCantidadDeOutputs()
 	 */
-	@Override
+	
 	public long getCantidadDeOutputs() {
 		return getUltimoBloque().getCantidadDeOutputs();
 	}
@@ -62,7 +62,7 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getDuracionDeMedicionEnMilis()
 	 */
-	@Override
+	
 	public long getDuracionDeMedicionEnMilis() {
 		return getUltimoBloque().getDuracionDeMedicionEnMilis();
 	}
@@ -70,7 +70,7 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	/**
 	 * @see net.gaia.vortex.core.api.metricas.MetricasPorTiempo#getMomentoDeInicioDeLaMedicionEnMilis()
 	 */
-	@Override
+	
 	public long getMomentoDeInicioDeLaMedicionEnMilis() {
 		return getUltimoBloque().getMomentoDeInicioDeLaMedicionEnMilis();
 	}
@@ -78,7 +78,7 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	/**
 	 * @see net.gaia.vortex.core.impl.metricas.ListenerDeMetricas#registrarInput()
 	 */
-	@Override
+	
 	public void registrarInput() {
 		cortarBloqueDe(duracionDelBloqueEnMillis, metricasContinuas, ultimoSnapshot);
 		metricasContinuas.registrarInput();
@@ -87,7 +87,7 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	/**
 	 * @see ar.com.dgarcia.lang.metrics.ListenerDeMetricas#registrarInput(long)
 	 */
-	@Override
+	
 	public void registrarInput(final long cantidadIngresada) {
 		cortarBloqueDe(duracionDelBloqueEnMillis, metricasContinuas, ultimoSnapshot);
 		metricasContinuas.registrarInput(cantidadIngresada);
@@ -96,7 +96,7 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	/**
 	 * @see net.gaia.vortex.core.impl.metricas.ListenerDeMetricas#registrarOutput()
 	 */
-	@Override
+	
 	public void registrarOutput() {
 		cortarBloqueDe(duracionDelBloqueEnMillis, metricasContinuas, ultimoSnapshot);
 		metricasContinuas.registrarOutput();
@@ -105,7 +105,7 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	/**
 	 * @see ar.com.dgarcia.lang.metrics.ListenerDeMetricas#registrarOutput(long)
 	 */
-	@Override
+	
 	public void registrarOutput(final long cantidadEgresada) {
 		cortarBloqueDe(duracionDelBloqueEnMillis, metricasContinuas, ultimoSnapshot);
 		metricasContinuas.registrarOutput(cantidadEgresada);
@@ -179,7 +179,7 @@ public class MetricasEnBloque extends MetricasPorTiempoSupport implements Metric
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(duracionDelBloqueEnMillis_FIELD, duracionDelBloqueEnMillis)
 				.con(ultimoSnapshot_FIELD, ultimoSnapshot).con(metricasContinuas_FIELD, metricasContinuas).toString();

@@ -55,11 +55,11 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 	/**
 	 * @see net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones#crearNuevaParte()
 	 */
-	@Override
+	
 	public ParteDeCondiciones crearNuevaParte(final Condicion condicionInicial) {
 		final ParteSincronizada parte = ParteSincronizada.create(this, coordinator, condicionInicial);
 		coordinator.doWriteOperation(new Callable<Void>() {
-			@Override
+			
 			public Void call() throws Exception {
 				partes.add(parte);
 				onCambioEnElConjunto();
@@ -131,10 +131,10 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 	/**
 	 * @see net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones#eliminarParte(net.gaia.vortex.router.impl.filtros.ParteDeCondiciones)
 	 */
-	@Override
+	
 	public void eliminarParte(final ParteDeCondiciones parteDeCondicion) {
 		coordinator.doWriteOperation(new Callable<Void>() {
-			@Override
+			
 			public Void call() throws Exception {
 				partes.remove(parteDeCondicion);
 				onCambioEnElConjunto();
@@ -147,7 +147,7 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 	 * @see net.gaia.vortex.router.impl.filtros.ListenerDeParteDeCondicion#onCambioDeCondicion(net.gaia.vortex.core.api.condiciones.Condicion,
 	 *      net.gaia.vortex.router.impl.filtros.ParteDeCondiciones)
 	 */
-	@Override
+	
 	public void onCambioDeCondicion(final Condicion nuevaCondicion, final ParteDeCondiciones parte) {
 		onCambioEnElConjunto();
 	}
@@ -155,7 +155,7 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 	/**
 	 * @see net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones#getCondicionDelConjuntoMenos(net.gaia.vortex.router.impl.filtros.ParteDeCondiciones)
 	 */
-	@Override
+	
 	public Condicion getCondicionDelConjuntoMenos(final ParteDeCondiciones parteExceptuada) {
 		final Condicion condicionDelResto = unificarCondicionesExceptuandoA(parteExceptuada);
 		return condicionDelResto;
@@ -164,7 +164,7 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(partes_FIELD, partes.size()).con(condicionActual_FIELD, condicionActual)
 				.toString();

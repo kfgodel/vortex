@@ -42,7 +42,7 @@ public class SocketMinaFactory implements MinaComponentsFactory {
 	/**
 	 * @see ar.com.dgarcia.agents.dependencies.memory.MinaComponentsFactory#createIoAcceptor()
 	 */
-	@Override
+	
 	public IoAcceptor createIoAcceptor() {
 		return new NioSocketAcceptor();
 	}
@@ -50,7 +50,7 @@ public class SocketMinaFactory implements MinaComponentsFactory {
 	/**
 	 * @see ar.com.dgarcia.agents.dependencies.memory.MinaComponentsFactory#createIoConnector()
 	 */
-	@Override
+	
 	public IoConnector createIoConnector() {
 		return new NioSocketConnector();
 	}
@@ -58,7 +58,7 @@ public class SocketMinaFactory implements MinaComponentsFactory {
 	/**
 	 * @see ar.com.dgarcia.agents.dependencies.memory.MinaComponentsFactory#configureChainFilters(org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder)
 	 */
-	@Override
+	
 	public void configureChainFilters(final DefaultIoFilterChainBuilder filterChain, final ObjectTextualizer textualizer) {
 		filterChain.addLast("binaryLayer", Binary2StringCodecFilter.create());
 		filterChain.addLast("stringLayer", String2ObjectCodecFilter.create(textualizer));
@@ -67,7 +67,7 @@ public class SocketMinaFactory implements MinaComponentsFactory {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).toString();
 	}

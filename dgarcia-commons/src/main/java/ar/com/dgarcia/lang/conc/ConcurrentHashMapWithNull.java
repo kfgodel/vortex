@@ -61,7 +61,7 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	 * 
 	 * @see ar.com.dgarcia.lang.conc.ReadWriteOperable#doReadOperation(java.util.concurrent.Callable)
 	 */
-	@Override
+	
 	public <T> T doReadOperation(final Callable<T> readOperation) throws UnsuccessfulWaitException {
 		return coordinator.doReadOperation(readOperation);
 	}
@@ -71,7 +71,7 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	 * 
 	 * @see ar.com.dgarcia.lang.conc.ReadWriteOperable#doWriteOperation(java.util.concurrent.Callable)
 	 */
-	@Override
+	
 	public <T> T doWriteOperation(final Callable<T> writeOperation) throws UnsuccessfulWaitException {
 		return coordinator.doWriteOperation(writeOperation);
 	}
@@ -79,10 +79,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.util.Map#size()
 	 */
-	@Override
+	
 	public int size() {
 		return doReadOperation(new Callable<Integer>() {
-			@Override
+			
 			public Integer call() throws Exception {
 				return internalMap.size();
 			}
@@ -92,7 +92,7 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.util.Map#isEmpty()
 	 */
-	@Override
+	
 	public boolean isEmpty() {
 		return size() == 0;
 	}
@@ -100,10 +100,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
-	@Override
+	
 	public V get(final Object key) {
 		return doReadOperation(new Callable<V>() {
-			@Override
+			
 			public V call() throws Exception {
 				return internalMap.get(key);
 			}
@@ -113,10 +113,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean equals(final Object o) {
 		return doReadOperation(new Callable<Boolean>() {
-			@Override
+			
 			public Boolean call() throws Exception {
 				return internalMap.equals(o);
 			}
@@ -126,10 +126,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean containsKey(final Object key) {
 		return doReadOperation(new Callable<Boolean>() {
-			@Override
+			
 			public Boolean call() throws Exception {
 				return internalMap.containsKey(key);
 			}
@@ -140,17 +140,17 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	 * @return
 	 * @see java.util.AbstractMap#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		return doReadOperation(new Callable<Integer>() {
-			@Override
+			
 			public Integer call() throws Exception {
 				return internalMap.hashCode();
 			}
 		});
 	}
 
-	@Override
+	
 	public String toString() {
 		return internalMap.toString();
 	}
@@ -158,10 +158,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.util.Map#containsValue(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean containsValue(final Object value) {
 		return doReadOperation(new Callable<Boolean>() {
-			@Override
+			
 			public Boolean call() throws Exception {
 				return internalMap.containsValue(value);
 			}
@@ -171,11 +171,11 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.lang.Object#clone()
 	 */
-	@Override
+	
 	public Object clone() {
 		final ConcurrentHashMapWithNull<K, V> copia = new ConcurrentHashMapWithNull<K, V>();
 		doReadOperation(new Callable<Void>() {
-			@Override
+			
 			public Void call() throws Exception {
 				copia.putAll(internalMap);
 				return null;
@@ -189,10 +189,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	 * 
 	 * @see java.util.Map#keySet()
 	 */
-	@Override
+	
 	public Set<K> keySet() {
 		return doReadOperation(new Callable<Set<K>>() {
-			@Override
+			
 			public Set<K> call() throws Exception {
 				final Set<K> internalSet = internalMap.keySet();
 				final HashSet<K> copia = new HashSet<K>(internalSet);
@@ -206,10 +206,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	 * 
 	 * @see java.util.Map#values()
 	 */
-	@Override
+	
 	public Collection<V> values() {
 		return doReadOperation(new Callable<Collection<V>>() {
-			@Override
+			
 			public Collection<V> call() throws Exception {
 				final Collection<V> internalCollection = internalMap.values();
 				final ArrayList<V> copia = new ArrayList<V>(internalCollection);
@@ -223,10 +223,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	 * 
 	 * @see java.util.Map#entrySet()
 	 */
-	@Override
+	
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
 		return doReadOperation(new Callable<Set<java.util.Map.Entry<K, V>>>() {
-			@Override
+			
 			public Set<java.util.Map.Entry<K, V>> call() throws Exception {
 				final Set<java.util.Map.Entry<K, V>> internalSet = internalMap.entrySet();
 				final HashSet<java.util.Map.Entry<K, V>> copia = new HashSet<Entry<K, V>>(internalSet);
@@ -238,10 +238,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
-	@Override
+	
 	public V put(final K key, final V value) {
 		return doWriteOperation(new Callable<V>() {
-			@Override
+			
 			public V call() throws Exception {
 				return internalMap.put(key, value);
 			}
@@ -251,10 +251,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	@Override
+	
 	public void putAll(final Map<? extends K, ? extends V> m) {
 		doWriteOperation(new Callable<Void>() {
-			@Override
+			
 			public Void call() throws Exception {
 				internalMap.putAll(m);
 				return null;
@@ -265,10 +265,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	@Override
+	
 	public V remove(final Object key) {
 		return doWriteOperation(new Callable<V>() {
-			@Override
+			
 			public V call() throws Exception {
 				return internalMap.remove(key);
 			}
@@ -279,10 +279,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	 * 
 	 * @see java.util.HashMap#clear()
 	 */
-	@Override
+	
 	public void clear() {
 		doWriteOperation(new Callable<Void>() {
-			@Override
+			
 			public Void call() throws Exception {
 				internalMap.clear();
 				return null;
@@ -293,10 +293,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.util.concurrent.ConcurrentMap#putIfAbsent(java.lang.Object, java.lang.Object)
 	 */
-	@Override
+	
 	public V putIfAbsent(final K key, final V value) {
 		return doWriteOperation(new Callable<V>() {
-			@Override
+			
 			public V call() throws Exception {
 				if (!internalMap.containsKey(key)) {
 					return internalMap.put(key, value);
@@ -310,10 +310,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.util.concurrent.ConcurrentMap#remove(java.lang.Object, java.lang.Object)
 	 */
-	@Override
+	
 	public boolean remove(final Object key, final Object value) {
 		return doWriteOperation(new Callable<Boolean>() {
-			@Override
+			
 			public Boolean call() throws Exception {
 				if (internalHasKeyAndValue(key, value)) {
 					internalMap.remove(key);
@@ -350,7 +350,7 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	 */
 	public boolean hasKeyAndValue(final Object key, final Object value) {
 		return doReadOperation(new Callable<Boolean>() {
-			@Override
+			
 			public Boolean call() throws Exception {
 				return internalHasKeyAndValue(key, value);
 			}
@@ -361,10 +361,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	 * @see java.util.concurrent.ConcurrentMap#replace(java.lang.Object, java.lang.Object,
 	 *      java.lang.Object)
 	 */
-	@Override
+	
 	public boolean replace(final K key, final V oldValue, final V newValue) {
 		return doWriteOperation(new Callable<Boolean>() {
-			@Override
+			
 			public Boolean call() throws Exception {
 				if (internalHasKeyAndValue(key, oldValue)) {
 					internalMap.put(key, newValue);
@@ -379,10 +379,10 @@ public class ConcurrentHashMapWithNull<K, V> implements Map<K, V>, ConcurrentMap
 	/**
 	 * @see java.util.concurrent.ConcurrentMap#replace(java.lang.Object, java.lang.Object)
 	 */
-	@Override
+	
 	public V replace(final K key, final V value) {
 		return doWriteOperation(new Callable<V>() {
-			@Override
+			
 			public V call() throws Exception {
 				if (internalMap.containsKey(key)) {
 					return internalMap.put(key, value);

@@ -30,7 +30,7 @@ public interface Selector extends Multiplexor {
 	 * 
 	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void conectarCon(Receptor destino);
 
 	/**

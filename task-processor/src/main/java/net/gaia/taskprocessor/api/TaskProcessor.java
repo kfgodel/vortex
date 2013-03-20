@@ -84,14 +84,12 @@ public interface TaskProcessor extends TaskDelayerProcessor, ThreadOwner {
 	 * Elimina de este procesador, las tareas pendientes que cumplen con el criterio pasado.<br>
 	 * Las tareas que se estén ejecutando no podrán ser eliminadas
 	 */
-	@Override
 	void removeTasksMatching(TaskCriteria criteria);
 
 	/**
 	 * Detiene la ejecución de tareas en este procesador.<br>
 	 * El procesador no es utilizable a partir de este método
 	 */
-	@Override
 	void detener();
 
 	/**

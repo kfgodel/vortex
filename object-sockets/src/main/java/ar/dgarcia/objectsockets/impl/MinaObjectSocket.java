@@ -45,7 +45,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	/**
 	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#send(java.lang.Object)
 	 */
-	@Override
+	
 	public void send(final Object objetoEnviado) {
 		minaSession.write(objetoEnviado);
 	}
@@ -73,7 +73,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	/**
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
-	@Override
+	
 	public void closeAndDispose() {
 		minaSession.close(true);
 	}
@@ -81,7 +81,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(minaSession_FIELD, minaSession).toString();
 	}
@@ -89,7 +89,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	/**
 	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#setHandler(ar.dgarcia.objectsockets.api.ObjectReceptionHandler)
 	 */
-	@Override
+	
 	public void setHandler(final ObjectReceptionHandler handler) {
 		if (handler == null) {
 			throw new IllegalArgumentException("El handler del socket no puede ser null");
@@ -100,7 +100,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	/**
 	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#getEstadoAsociado()
 	 */
-	@Override
+	
 	public ConcurrentMap<String, Object> getEstadoAsociado() {
 		final ConcurrentMap<String, Object> mapaActual = estadoRef.get();
 		if (mapaActual != null) {
@@ -122,7 +122,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	 * @see ar.dgarcia.objectsockets.api.ObjectReceptionHandler#onObjectReceived(java.lang.Object,
 	 *      ar.dgarcia.objectsockets.api.ObjectSocket)
 	 */
-	@Override
+	
 	public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 		final ObjectReceptionHandler handlerActual = handlerRef.get();
 		try {
@@ -136,7 +136,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	/**
 	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#getLocalAddress()
 	 */
-	@Override
+	
 	public SocketAddress getLocalAddress() {
 		return minaSession.getLocalAddress();
 	}
@@ -144,7 +144,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	/**
 	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#getRemoteAddress()
 	 */
-	@Override
+	
 	public SocketAddress getRemoteAddress() {
 		return minaSession.getRemoteAddress();
 	}
@@ -152,7 +152,7 @@ public class MinaObjectSocket implements ObjectSocket, ObjectReceptionHandler {
 	/**
 	 * @see ar.dgarcia.objectsockets.api.ObjectSocket#isClosed()
 	 */
-	@Override
+	
 	public boolean isClosed() {
 		return minaSession.isClosing() || !minaSession.isConnected();
 	}

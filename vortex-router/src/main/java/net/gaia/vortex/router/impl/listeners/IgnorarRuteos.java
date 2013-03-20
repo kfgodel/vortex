@@ -39,7 +39,7 @@ public class IgnorarRuteos implements ListenerDeRuteo {
 	 *      net.gaia.vortex.core.api.mensaje.MensajeVortex,
 	 *      net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void onMensajeRuteado(final NodoBidireccional origen, final MensajeVortex mensaje, final Receptor destino) {
 		// Ignoramos todos los ruteos
 	}
@@ -47,7 +47,7 @@ public class IgnorarRuteos implements ListenerDeRuteo {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).toString();
 	}

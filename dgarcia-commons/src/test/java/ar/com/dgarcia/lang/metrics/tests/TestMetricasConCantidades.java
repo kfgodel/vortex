@@ -41,7 +41,7 @@ public class TestMetricasConCantidades {
 		stressGenerator.setCantidadDeThreadsEnEjecucion(1);
 		stressGenerator.setEsperaEntreEjecucionesEnMilis(1000);
 		stressGenerator.setEjecutable(new Runnable() {
-			@Override
+			
 			public void run() {
 				metricas.registrarInput(3);
 				metricas.registrarOutput(2);

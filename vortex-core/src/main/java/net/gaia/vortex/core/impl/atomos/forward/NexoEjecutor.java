@@ -46,7 +46,7 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.add(ejecutante_FIELD, ejecutante).add(destino_FIELD, getDestino()).toString();
@@ -55,7 +55,7 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final Receptor destino = getDestino();
 		Loggers.ATOMOS.debug("Ejecutando [{}] antes de delegar mensaje[{}] a nodo[{}]",
@@ -66,7 +66,7 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Ejecutor#setEjecutante(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void setEjecutante(final Receptor escucha) {
 		if (escucha == null) {
 			throw new IllegalArgumentException("El receptor escucha no puede ser null para un ejecutor");
@@ -77,7 +77,7 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Ejecutor#getEjecutante()
 	 */
-	@Override
+	
 	public Receptor getEjecutante() {
 		return ejecutante;
 	}

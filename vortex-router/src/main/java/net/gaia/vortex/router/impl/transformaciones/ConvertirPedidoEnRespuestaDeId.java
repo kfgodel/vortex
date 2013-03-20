@@ -45,7 +45,7 @@ public class ConvertirPedidoEnRespuestaDeId implements Transformacion {
 	/**
 	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public MensajeVortex transformar(final MensajeVortex pedido) {
 		final ContenidoVortex contenidoDelPedido = pedido.getContenido();
 		final Object valorDelId = contenidoDelPedido.get(ContenidoVortex.ID_DE_MENSAJE_KEY);
@@ -71,7 +71,7 @@ public class ConvertirPedidoEnRespuestaDeId implements Transformacion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(idLocalDePata_FIELD, idLocalDePata).toString();
 	}

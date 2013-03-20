@@ -42,7 +42,7 @@ public class FiltroNoPublicado implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		throw new UnhandledConditionException("Esta condición no puede evaluarse");
 	}
@@ -50,7 +50,7 @@ public class FiltroNoPublicado implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	@Override
+	
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}
@@ -58,7 +58,7 @@ public class FiltroNoPublicado implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).toString();
 	}

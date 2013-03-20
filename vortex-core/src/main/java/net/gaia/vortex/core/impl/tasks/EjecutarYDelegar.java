@@ -44,7 +44,7 @@ public class EjecutarYDelegar implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
+	
 	public WorkUnit doWork() throws InterruptedException {
 		Loggers.ATOMOS.trace("Ejecutando atomo[{}] con el mensaje[{}]", ejecutante.toShortString(), mensaje);
 		try {
@@ -70,7 +70,7 @@ public class EjecutarYDelegar implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(ejecutante_FIELD, ejecutante).add(delegado_FIELD, delegado)
 				.add(mensaje_FIELD, mensaje).toString();

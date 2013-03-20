@@ -50,7 +50,7 @@ public class CondicionDesconocida implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		return ResultadoDeCondicion.INDECIDIBLE;
 	}
@@ -72,7 +72,7 @@ public class CondicionDesconocida implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	@Override
+	
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}
@@ -80,7 +80,7 @@ public class CondicionDesconocida implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(formaOriginal_FIELD, formaOriginal).toString();
 	}

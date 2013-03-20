@@ -46,7 +46,7 @@ public class AtributoPresente implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final ContenidoVortex contenidoDelMensaje = mensaje.getContenido();
 		final boolean tieneValor = valueAccessor.hasValueIn(contenidoDelMensaje);
@@ -56,7 +56,7 @@ public class AtributoPresente implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	@Override
+	
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}
@@ -72,7 +72,7 @@ public class AtributoPresente implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(valueAccessor_FIELD, valueAccessor).toString();
 	}
@@ -80,7 +80,7 @@ public class AtributoPresente implements Condicion {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean equals(final Object obj) {
 		if (!(obj instanceof AtributoPresente)) {
 			return false;
@@ -95,7 +95,7 @@ public class AtributoPresente implements Condicion {
 	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		return valueAccessor.hashCode();
 	}

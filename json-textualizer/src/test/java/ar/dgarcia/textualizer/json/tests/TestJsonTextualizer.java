@@ -24,7 +24,7 @@ import ar.dgarcia.textualizer.tests.TestTextualizerSupport;
  */
 public class TestJsonTextualizer extends TestTextualizerSupport {
 
-	@Override
+	
 	@Before
 	public void crearTextualizer() {
 		textualizer = JsonTextualizer.createWithTypeMetadata();

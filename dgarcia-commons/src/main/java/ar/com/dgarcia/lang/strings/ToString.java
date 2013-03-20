@@ -100,7 +100,7 @@ public class ToString {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		final boolean esLlamadaRecursiva = referenciasDelThread.get() != null;
 		if (!esLlamadaRecursiva) {

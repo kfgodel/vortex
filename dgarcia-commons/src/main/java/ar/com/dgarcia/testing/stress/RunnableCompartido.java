@@ -28,7 +28,7 @@ public class RunnableCompartido implements FactoryDeRunnable {
 	/**
 	 * @see ar.com.dgarcia.testing.stress.FactoryDeRunnable#getOrCreateRunnable()
 	 */
-	@Override
+	
 	public Runnable getOrCreateRunnable() {
 		return runnable;
 	}
@@ -42,7 +42,7 @@ public class RunnableCompartido implements FactoryDeRunnable {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(runnable_FIELD, runnable).toString();
 	}

@@ -89,17 +89,17 @@ public class MinaTests {
 			return createdSessions;
 		}
 
-		@Override
+		
 		public void sessionOpened(final IoSession session) throws Exception {
 			openedSessions++;
 		}
 
-		@Override
+		
 		public void sessionClosed(final IoSession session) throws Exception {
 			closedSessions++;
 		}
 
-		@Override
+		
 		public void sessionCreated(final IoSession session) throws Exception {
 			createdSessions++;
 		}
@@ -137,7 +137,7 @@ public class MinaTests {
 		final Semaphore semaphore = new Semaphore(0);
 		final AtomicReference<Object> received = new AtomicReference<Object>(null);
 		final IoHandlerAdapter dummyHandler = new IoHandlerAdapter() {
-			@Override
+			
 			public void messageReceived(final IoSession session, final Object message) throws Exception {
 				received.set(message);
 				semaphore.release();
@@ -189,13 +189,13 @@ public class MinaTests {
 		final AtomicBoolean sessionOpenProcessed = new AtomicBoolean(false);
 		final AtomicBoolean sessionCloseProcessedBeforeOpen = new AtomicBoolean(false);
 		final IoHandlerAdapter blockedHandler = new IoHandlerAdapter() {
-			@Override
+			
 			public void sessionOpened(final IoSession session) throws Exception {
 				openBlockingSemaphore.tryAcquire(3, TimeUnit.MINUTES);
 				sessionOpenProcessed.set(true);
 			}
 
-			@Override
+			
 			public void sessionClosed(final IoSession session) throws Exception {
 				final boolean alreadyOpened = sessionOpenProcessed.get();
 				if (!alreadyOpened) {
@@ -240,7 +240,7 @@ public class MinaTests {
 		final AtomicBoolean connectSuccessful = new AtomicBoolean(false);
 		final Semaphore semaphore = new Semaphore(0);
 		connectTask.addListener(new IoFutureListener<IoFuture>() {
-			@Override
+			
 			public void operationComplete(final IoFuture future) {
 				final ConnectFuture connectionTask = (ConnectFuture) future;
 				connectSuccessful.set(connectionTask.isConnected());
@@ -269,7 +269,7 @@ public class MinaTests {
 		final AtomicBoolean connectSuccessful = new AtomicBoolean(false);
 		final Semaphore semaphore = new Semaphore(0);
 		connectTask.addListener(new IoFutureListener<IoFuture>() {
-			@Override
+			
 			public void operationComplete(final IoFuture future) {
 				final ConnectFuture connectionTask = (ConnectFuture) future;
 				connectSuccessful.set(connectionTask.isConnected());
@@ -304,7 +304,7 @@ public class MinaTests {
 
 		final Semaphore secondResponseSent = new Semaphore(0);
 		final IoHandlerAdapter responseHandler = new IoHandlerAdapter() {
-			@Override
+			
 			public void messageReceived(final IoSession session, final Object message) throws Exception {
 				if (firstMessage.equals(message)) {
 					session.write(firstResponse);
@@ -318,7 +318,7 @@ public class MinaTests {
 			 * @see org.apache.mina.core.service.IoHandlerAdapter#messageSent(org.apache.mina.core.session.IoSession,
 			 *      java.lang.Object)
 			 */
-			@Override
+			
 			public void messageSent(final IoSession session, final Object message) throws Exception {
 				if (secondResponse.equals(message)) {
 					secondResponseSent.release();
@@ -338,7 +338,7 @@ public class MinaTests {
 
 		// Creamos el emisor que se bloquea despues de
 		final IoHandler testHandler = new IoHandlerAdapter() {
-			@Override
+			
 			public void messageReceived(final IoSession session, final Object message) throws Exception {
 				if (firstResponse.equals(message)) {
 					session.write(secondMessage);

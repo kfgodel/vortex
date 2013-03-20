@@ -102,7 +102,7 @@ public class SystemChronometer {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(startMillis_FIELD, startMillis).con(startNanos_FIELD, startNanos).toString();
 	}

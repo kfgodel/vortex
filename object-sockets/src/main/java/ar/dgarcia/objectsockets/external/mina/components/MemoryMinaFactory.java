@@ -37,17 +37,17 @@ public class MemoryMinaFactory implements MinaComponentsFactory {
 
 	public static final MemoryMinaFactory INSTANCE = new MemoryMinaFactory();
 
-	@Override
+	
 	public IoAcceptor createIoAcceptor() {
 		return new VmPipeAcceptor();
 	}
 
-	@Override
+	
 	public IoConnector createIoConnector() {
 		return new VmPipeConnector();
 	}
 
-	@Override
+	
 	public void configureChainFilters(final DefaultIoFilterChainBuilder filterChain, final ObjectTextualizer textualizer) {
 		// En memoria no agregamos filtros a los mensajes
 	}
@@ -55,7 +55,7 @@ public class MemoryMinaFactory implements MinaComponentsFactory {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).toString();
 	}

@@ -114,7 +114,6 @@ public abstract class TestDePerformanceConSaturacionSupport {
 
 		// Cada tarea incrementa el contador de salidas
 		final WorkUnit tareaDelProcesador = new WorkUnit() {
-			@Override
 			public WorkUnit doWork() throws InterruptedException {
 				// Simulamos una tarea costosa en proceso
 				Thread.currentThread().getStackTrace();
@@ -126,7 +125,6 @@ public abstract class TestDePerformanceConSaturacionSupport {
 
 		// Por cada ejecución genera el mensaje y lo entrega al handler
 		stress.setEjecutable(new Runnable() {
-			@Override
 			public void run() {
 				metricas.registrarInput();
 				processor.process(tareaDelProcesador);

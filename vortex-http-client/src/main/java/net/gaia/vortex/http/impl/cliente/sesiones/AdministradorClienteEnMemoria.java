@@ -41,7 +41,7 @@ public class AdministradorClienteEnMemoria implements AdministradorDeSesionesCli
 	/**
 	 * @see net.gaia.vortex.http.impl.cliente.sesiones.AdministradorDeSesionesCliente#abrirSesion(net.gaia.vortex.http.sesiones.SesionClienteEnMemoria)
 	 */
-	@Override
+	
 	public void abrirSesion(final SesionVortexHttpEnCliente sesionCliente) {
 		sesionCliente.iniciarComunicacion();
 		sesiones.add(sesionCliente);
@@ -51,7 +51,7 @@ public class AdministradorClienteEnMemoria implements AdministradorDeSesionesCli
 	/**
 	 * @see net.gaia.vortex.http.impl.cliente.sesiones.AdministradorDeSesionesCliente#cerrarSesion(net.gaia.vortex.http.sesiones.SesionVortexHttpEnCliente)
 	 */
-	@Override
+	
 	public void cerrarSesion(final SesionVortexHttpEnCliente sesionCerrada) {
 		listener.onSesionDestruida(sesionCerrada);
 		sesiones.remove(sesionCerrada);
@@ -61,7 +61,7 @@ public class AdministradorClienteEnMemoria implements AdministradorDeSesionesCli
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(sesiones_FIELD, sesiones).toString();
 	}

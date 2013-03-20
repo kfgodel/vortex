@@ -38,7 +38,7 @@ public class EsMensajeNuevo implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final boolean agregadoComoNuevo = mensajesConocidos.registrarNuevo(mensaje);
 		return ResultadoDeCondicion.paraBooleano(agregadoComoNuevo);
@@ -47,7 +47,7 @@ public class EsMensajeNuevo implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(mensajesConocidos_FIELD, mensajesConocidos).toString();
 	}
@@ -61,7 +61,7 @@ public class EsMensajeNuevo implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	@Override
+	
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}

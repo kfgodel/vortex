@@ -25,7 +25,7 @@ public class TestJsonPerformance extends TestSocketPerformance {
 	/**
 	 * @see ar.dgarcia.objectsockets.tests.TestXmlPerformance#createTextualizer()
 	 */
-	@Override
+	
 	protected ObjectTextualizer createTextualizer() {
 		return JsonTextualizer.createWithTypeMetadata();
 	}

@@ -40,7 +40,7 @@ public class DeserializadorDesconocido implements DeserializadorDeTipo<Condicion
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	@Override
+	
 	public Condicion deserializarDesde(final Map<String, Object> mapaOrigen, final ContextoDeSerializacion contexto) {
 		final CondicionDesconocida condicionDesconocida = CondicionDesconocida.create(mapaOrigen);
 		return condicionDesconocida;

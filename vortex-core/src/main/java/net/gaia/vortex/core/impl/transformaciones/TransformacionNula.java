@@ -37,7 +37,7 @@ public class TransformacionNula implements Transformacion {
 	/**
 	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public MensajeVortex transformar(final MensajeVortex mensaje) {
 		return mensaje;
 	}
@@ -50,7 +50,7 @@ public class TransformacionNula implements Transformacion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).toString();
 	}

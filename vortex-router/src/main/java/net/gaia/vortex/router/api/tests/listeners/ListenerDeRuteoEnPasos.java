@@ -39,7 +39,7 @@ public class ListenerDeRuteoEnPasos implements ListenerDeRuteo {
 	 *      net.gaia.vortex.core.api.mensaje.MensajeVortex,
 	 *      net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void onMensajeRuteado(final NodoBidireccional origen, final MensajeVortex mensaje, final Receptor destino) {
 		final PasoDeRuteo nuevoPaso = PasoDeRuteo.create(origen, mensaje, destino);
 		pasos.add(nuevoPaso);

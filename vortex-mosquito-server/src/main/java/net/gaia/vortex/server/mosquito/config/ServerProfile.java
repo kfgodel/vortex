@@ -37,7 +37,7 @@ public class ServerProfile implements ProfileConConfiguracion {
 	/**
 	 * @see com.tenpines.commons.profile.api.AmbientProfile#getValueFor(com.tenpines.commons.profile.api.AmbientSensor)
 	 */
-	@Override
+	
 	public String getValueFor(final AmbientSensor sensor) {
 		if (sensor instanceof HostnameSensor) {
 			return hostname;
@@ -49,7 +49,7 @@ public class ServerProfile implements ProfileConConfiguracion {
 	/**
 	 * @see com.tenpines.commons.profile.api.AmbientProfile#getHumanName()
 	 */
-	@Override
+	
 	public String getHumanName() {
 		return humanName;
 	}
@@ -57,7 +57,7 @@ public class ServerProfile implements ProfileConConfiguracion {
 	/**
 	 * @see net.gaia.vortex.server.mosquito.config.ProfileConConfiguracion#getConfig()
 	 */
-	@Override
+	
 	public ContextConfiguration getConfig() {
 		return configuration;
 	}
@@ -84,7 +84,7 @@ public class ServerProfile implements ProfileConConfiguracion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(humanName_FIELD, humanName).con(hostname_FIELD, hostname)
 				.con(workingDir_FIELD, workingDir).add(configuration_FIELD, configuration).toString();

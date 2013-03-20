@@ -71,7 +71,7 @@ public class TestRouterSockets {
 	public void elMensajeDeberiaLlegarAlOtroLadoDelSocketSiHayInteresado() throws InterruptedException {
 		// El receptor quiere mensajes con atributo="hola"
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
-			@Override
+			
 			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, "hola");
 			}
@@ -99,7 +99,7 @@ public class TestRouterSockets {
 	public void noDeberiaLlegarUnMensajeQueNoInteresa() throws InterruptedException {
 		// El receptor quiere mensajes con atributo="chau"
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
-			@Override
+			
 			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, "chau");
 			}

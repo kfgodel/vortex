@@ -46,7 +46,7 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(handler_FIELD, estrategiaDeConexion).toString();
 	}
@@ -54,7 +54,7 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 	/**
 	 * @see ar.dgarcia.objectsockets.api.SocketEventHandler#onSocketOpened(ar.dgarcia.objectsockets.api.ObjectSocket)
 	 */
-	@Override
+	
 	public void onSocketOpened(final ObjectSocket nuevoSocket) {
 		LOG.debug("Creando nexo para la conexión local[{}] - remota[{}]", nuevoSocket.getLocalAddress(),
 				nuevoSocket.getRemoteAddress());
@@ -73,7 +73,7 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 	/**
 	 * @see ar.dgarcia.objectsockets.api.SocketEventHandler#onSocketClosed(ar.dgarcia.objectsockets.api.ObjectSocket)
 	 */
-	@Override
+	
 	public void onSocketClosed(final ObjectSocket socketCerrado) {
 		LOG.debug("Cerrando nexo para la conexión local[{}] - remota[{}]", socketCerrado.getLocalAddress(),
 				socketCerrado.getRemoteAddress());
@@ -129,7 +129,7 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
 	 */
-	@Override
+	
 	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
 		return estrategiaDeConexion;
 	}
@@ -137,7 +137,7 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
 	 */
-	@Override
+	
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
 		this.estrategiaDeConexion = estrategia;
 	}

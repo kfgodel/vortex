@@ -86,12 +86,12 @@ public class TestSerializacionDeFiltros {
 	@Test
 	public void deberiaRepresentarComoAnonimaUnaCondicionSinConfiguracion() {
 		final Condicion condicionAnonima = new Condicion() {
-			@Override
+			
 			public List<Condicion> getSubCondiciones() {
 				return null;
 			}
 
-			@Override
+			
 			public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 				return null;
 			}

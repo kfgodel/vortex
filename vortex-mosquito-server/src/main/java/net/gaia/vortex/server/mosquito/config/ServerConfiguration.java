@@ -32,7 +32,7 @@ public class ServerConfiguration implements ContextConfiguration {
 	/**
 	 * @see net.gaia.vortex.server.mosquito.config.ContextConfiguration#getListeningAddress()
 	 */
-	@Override
+	
 	public SocketAddress getListeningAddress() {
 		return listeningAddress;
 	}
@@ -47,7 +47,7 @@ public class ServerConfiguration implements ContextConfiguration {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(listeningAddress_FIELD, listeningAddress)
 				.con(httpListeningPort_FIELD, httpListeningPort).toString();
@@ -56,7 +56,7 @@ public class ServerConfiguration implements ContextConfiguration {
 	/**
 	 * @see net.gaia.vortex.server.mosquito.config.ContextConfiguration#getHttpListeningPort()
 	 */
-	@Override
+	
 	public Integer getHttpListeningPort() {
 		return httpListeningPort;
 	}

@@ -37,7 +37,7 @@ public class DeserializadorFalse implements DeserializadorDeTipo<SiempreFalse> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	@Override
+	
 	public SiempreFalse deserializarDesde(final Map<String, Object> mapaOrigen, final ContextoDeSerializacion contexto) {
 		return SiempreFalse.getInstancia();
 	}

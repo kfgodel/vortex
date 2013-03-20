@@ -56,7 +56,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
 	 */
-	@Override
+	
 	public void enviar(final Object mensaje) throws ErrorDeMapeoVortexException {
 		portalInterno.enviar(mensaje);
 	}
@@ -64,7 +64,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
 	 */
-	@Override
+	
 	public void recibirCon(final HandlerDePortal<?> handlerDeMensajes) {
 		// Registramos la condición para poder unificarlas
 		final Condicion nuevaCondicion = handlerDeMensajes.getCondicionSuficiente();
@@ -81,7 +81,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void setDestino(final Receptor nuevoDestino) {
 		if (nuevoDestino == null) {
 			throw new IllegalArgumentException("El delegado del portal no puede ser null. A lo sumo un "
@@ -99,7 +99,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#getDestino()
 	 */
-	@Override
+	
 	public Receptor getDestino() {
 		final List<Receptor> allDestinos = getDestinos();
 		if (allDestinos.isEmpty()) {
@@ -113,7 +113,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void conectarCon(final Receptor destino) {
 		setDestino(destino);
 	}
@@ -121,7 +121,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#calcularFiltroDeEntradaPara(net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
 	 */
-	@Override
+	
 	protected Condicion calcularFiltroDeEntradaPara(final PataBidireccional pataConectora) {
 		final Condicion filtroDeEntradaParaEstePortal = getFiltroLocal();
 		return filtroDeEntradaParaEstePortal;
@@ -139,7 +139,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.con(identificador_FIELD, getIdentificador()).con("destino", getDestino().toShortString()).toString();

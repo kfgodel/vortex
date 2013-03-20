@@ -41,7 +41,7 @@ public class ReceptionHandlerNulo implements ObjectReceptionHandler {
 	 * @see ar.dgarcia.objectsockets.api.ObjectReceptionHandler#onObjectReceived(java.lang.Object,
 	 *      ar.dgarcia.objectsockets.api.ObjectSocket)
 	 */
-	@Override
+	
 	public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 		LOG.error("Se recibio un mensaje[" + received + "] en el receptor nulo para el socket[" + receivedFrom
 				+ "]. Falta inicializarlo?");

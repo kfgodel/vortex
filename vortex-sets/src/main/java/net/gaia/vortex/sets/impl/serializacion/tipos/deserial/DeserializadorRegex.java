@@ -40,7 +40,7 @@ public class DeserializadorRegex implements DeserializadorDeTipo<TextoRegexMatch
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	@Override
+	
 	public TextoRegexMatchea deserializarDesde(final Map<String, Object> mapaOrigen,
 			final ContextoDeSerializacion contexto) {
 		final Object clave = mapaOrigen.get(MetadataDeSerializacion.TIPO_REGEX_CLAVE);

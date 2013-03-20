@@ -46,7 +46,7 @@ public class XmlTextualizer implements ObjectTextualizer {
 	/**
 	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertToString(java.lang.Object)
 	 */
-	@Override
+	
 	public String convertToString(final Object value) throws CannotTextSerializeException {
 		String represented;
 		try {
@@ -60,7 +60,7 @@ public class XmlTextualizer implements ObjectTextualizer {
 	/**
 	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertFromString(java.lang.String)
 	 */
-	@Override
+	
 	public Object convertFromString(final String value) throws CannotTextUnserializeException {
 		Object object;
 		try {
@@ -80,7 +80,7 @@ public class XmlTextualizer implements ObjectTextualizer {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).toString();
 	}

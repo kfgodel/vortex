@@ -30,7 +30,7 @@ public class VortexMap extends CaseInsensitiveMap<Object> {
 	/**
 	 * @see ar.com.dgarcia.colecciones.maps.impl.CaseInsensitiveMap#equals(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean equals(final Object obj) {
 		if (obj == this) {
 			return true;

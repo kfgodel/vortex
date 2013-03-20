@@ -40,7 +40,7 @@ public class SerializadorNot implements SerializadorDeTipo<Negacion> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo#serializarDesde(java.lang.Object,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	@Override
+	
 	public Map<String, Object> serializarDesde(final Negacion origen, final ContextoDeSerializacion contexto) {
 		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_NOT);

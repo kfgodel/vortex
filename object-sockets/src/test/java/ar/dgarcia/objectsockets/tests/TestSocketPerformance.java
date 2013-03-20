@@ -69,7 +69,7 @@ public abstract class TestSocketPerformance {
 	private void runTest(final String nombreDelTest, final Object objetoEnviado, final int cantidadDeMensajesEnviados) {
 		final WaitBarrier esperarRecibidos = WaitBarrier.create(cantidadDeMensajesEnviados);
 		final ObjectReceptionHandler handlerReceptor = new ObjectReceptionHandler() {
-			@Override
+			
 			public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 				esperarRecibidos.release();
 			}
@@ -98,7 +98,7 @@ public abstract class TestSocketPerformance {
 		generator.setCantidadDeThreadsEnEjecucion(1);
 		generator.setEsperaEntreEjecucionesEnMilis(0);
 		generator.setEjecutable(new Runnable() {
-			@Override
+			
 			public void run() {
 				clientSocket.send(objetoEnviado);
 			}

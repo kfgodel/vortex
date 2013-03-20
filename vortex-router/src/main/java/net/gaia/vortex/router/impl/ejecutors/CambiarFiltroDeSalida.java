@@ -46,7 +46,7 @@ public class CambiarFiltroDeSalida extends ReceptorSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public void recibir(final MensajeVortex mensaje) {
 		final PublicacionDeFiltros publicacion = conversor.convertirDesdeVortex(mensaje, PublicacionDeFiltros.class);
 		final Map<String, Object> nuevoFiltro = publicacion.getFiltro();
@@ -62,7 +62,7 @@ public class CambiarFiltroDeSalida extends ReceptorSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).toString();
 	}

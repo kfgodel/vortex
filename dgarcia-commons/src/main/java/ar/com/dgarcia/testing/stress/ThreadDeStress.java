@@ -26,7 +26,7 @@ public class ThreadDeStress extends Thread {
 	/**
 	 * @see java.lang.Thread#run()
 	 */
-	@Override
+	
 	public void run() {
 		while (cantidadDeEjecucionesPorThread > 0) {
 			cantidadDeEjecucionesPorThread--;

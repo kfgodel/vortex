@@ -34,7 +34,7 @@ public class EsperarFiltro implements ListenerDeCambiosDeFiltro {
 	 * @see net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro#onCambioDeFiltros(net.gaia.vortex.router.api.moleculas.NodoBidireccional,
 	 *      net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
-	@Override
+	
 	public void onCambioDeFiltros(final NodoBidireccional nodo, final Condicion nuevoFiltro) {
 		condiciones.add(nuevoFiltro);
 	}

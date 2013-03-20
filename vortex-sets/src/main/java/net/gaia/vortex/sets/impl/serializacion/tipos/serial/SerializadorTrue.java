@@ -39,7 +39,7 @@ public class SerializadorTrue implements SerializadorDeTipo<SiempreTrue> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo#serializarDesde(java.lang.Object,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	@Override
+	
 	public Map<String, Object> serializarDesde(final SiempreTrue origen, final ContextoDeSerializacion contexto) {
 		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_TRUE);

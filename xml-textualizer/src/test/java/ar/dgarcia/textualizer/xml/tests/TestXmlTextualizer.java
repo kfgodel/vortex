@@ -24,7 +24,7 @@ import ar.dgarcia.textualizer.xml.XmlTextualizer;
  */
 public class TestXmlTextualizer extends TestTextualizerSupport {
 
-	@Override
+	
 	@Before
 	public void crearTextualizer() {
 		textualizer = XmlTextualizer.create();

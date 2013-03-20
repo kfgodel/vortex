@@ -30,7 +30,7 @@ public abstract class RouterSupport extends NodoBidi implements Router {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#calcularFiltroDeEntradaPara(net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
 	 */
-	@Override
+	
 	protected Condicion calcularFiltroDeEntradaPara(final PataBidireccional pataConectora) {
 		ParteDeCondiciones parteDeLaPata = null;
 		if (pataConectora != null) {

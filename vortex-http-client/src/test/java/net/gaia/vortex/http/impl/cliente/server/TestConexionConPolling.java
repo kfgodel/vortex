@@ -55,7 +55,7 @@ public class TestConexionConPolling {
 				ApacheResponseProvider.create());
 		final ConexionConPollingHttpCliente conexion = ConexionConPollingHttpCliente.create(procesador, servidor,
 				JacksonHttpTextualizer.create(), new HandlerHttpDeMensajesRecibidos() {
-					@Override
+					
 					public void onMensajesRecibidos(final List<MensajeVortex> mensajesRecibidos) {
 						LOG.info("Recibidos del server: {}", mensajesRecibidos);
 					}

@@ -49,7 +49,7 @@ public class IdentityIdentificator extends AbstractIdentificator<Object> {
 	 * objeto
 	 * @see ar.com.dgarcia.lang_identificators.AbstractIdentificator#areEquals(Object, Object)
 	 */
-	@Override
+	
 	public boolean areEquals(Object first, Object second) {
 		return first == second;
 	}
@@ -59,7 +59,7 @@ public class IdentityIdentificator extends AbstractIdentificator<Object> {
 	 * @return El discriminante que identifica la instancia
 	 * @see ar.com.dgarcia.lang_identificators.AbstractIdentificator#discriminator(Object)
 	 */
-	@Override
+	
 	public long discriminator(Object object) {
 		return System.identityHashCode(object);
 	}

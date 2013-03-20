@@ -114,7 +114,6 @@ public class MinMaxWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
 	public WorkUnit doWork() {
 		LOG.debug("Iniciando ejecucion min-max[{}]", this);
 		boolean acquired;
@@ -174,7 +173,6 @@ public class MinMaxWorkUnit implements WorkUnit {
 			proximaPlanificacion.cancel(true);
 		}
 		procesor.removeTasksMatching(new TaskCriteria() {
-			@Override
 			public boolean matches(final WorkUnit workUnit) {
 				return equals(workUnit);
 			}
@@ -265,7 +263,7 @@ public class MinMaxWorkUnit implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(esperaMinima_FIELD, esperaMinima).con(esperaMaxima_FIELD, esperaMaxima)
 				.con(momentoDeUltimaEjecucion_FIELD, momentoDeUltimaEjecucion)

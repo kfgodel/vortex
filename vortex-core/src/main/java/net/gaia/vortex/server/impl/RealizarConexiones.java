@@ -32,7 +32,7 @@ public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 	/**
 	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
-	@Override
+	
 	public void onNexoCreado(final Nexo nuevoNexo) {
 		Loggers.RUTEO.info("Conectando nuevo nexo[{}] con el nodo[{}]", nuevoNexo, nodoConocido);
 		nuevoNexo.conectarCon(nodoConocido);
@@ -42,7 +42,7 @@ public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 	/**
 	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
-	@Override
+	
 	public void onNexoCerrado(final Nexo nexoCerrado) {
 		Loggers.RUTEO.info("Des-Conectando nexo[{}] del nodo[{}]", nexoCerrado, nodoConocido);
 		nodoConocido.desconectarDe(nexoCerrado);
@@ -58,7 +58,7 @@ public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(hubConocido_FIELD, nodoConocido).toString();
 	}

@@ -45,7 +45,7 @@ public class ReflectionUtils {
 		 * Identifica los constructores de una clase
 		 */
 		CONSTRUCTOR {
-			@Override
+			
 			public Constructor<?>[] evaluateOn(final Class<?> element) {
 				return element.getDeclaredConstructors();
 			}
@@ -54,7 +54,7 @@ public class ReflectionUtils {
 		 * Identifica los atributos de una clase
 		 */
 		FIELD {
-			@Override
+			
 			public Field[] evaluateOn(final Class<?> element) {
 				return element.getDeclaredFields();
 			}
@@ -63,7 +63,7 @@ public class ReflectionUtils {
 		 * Identifica al tipo de los metodos
 		 */
 		METHOD {
-			@Override
+			
 			public Method[] evaluateOn(final Class<?> element) {
 				return element.getDeclaredMethods();
 			}
@@ -368,7 +368,7 @@ public class ReflectionUtils {
 	 */
 	public static Method lookupMethod(final String methodName, final Class<? extends Object> clase) {
 		final Condition<Method> hasSameName = new Condition<Method>() {
-			@Override
+			
 			public boolean isMetBy(final Method metodo) {
 				return metodo.getName().equals(methodName);
 			}

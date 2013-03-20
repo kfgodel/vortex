@@ -37,7 +37,7 @@ public class Negacion implements Condicion, Simplificable {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final ResultadoDeCondicion resultado = condicionNegada.esCumplidaPor(mensaje);
 		// La negación de true es false
@@ -61,7 +61,7 @@ public class Negacion implements Condicion, Simplificable {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(condicionNegada_FIELD, condicionNegada).toString();
 	}
@@ -77,7 +77,7 @@ public class Negacion implements Condicion, Simplificable {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	@Override
+	
 	public List<Condicion> getSubCondiciones() {
 		final ArrayList<Condicion> condicion = new ArrayList<Condicion>(1);
 		condicion.add(condicionNegada);
@@ -87,7 +87,7 @@ public class Negacion implements Condicion, Simplificable {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean equals(final Object obj) {
 		if (!(obj instanceof Negacion)) {
 			return false;
@@ -100,7 +100,7 @@ public class Negacion implements Condicion, Simplificable {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		return this.condicionNegada.hashCode();
 	}
@@ -108,7 +108,7 @@ public class Negacion implements Condicion, Simplificable {
 	/**
 	 * @see net.gaia.vortex.sets.impl.condiciones.Simplificable#simplificar()
 	 */
-	@Override
+	
 	public Condicion simplificar() {
 		boolean huboSimplificacion = false;
 		Condicion subCondicion = condicionNegada;

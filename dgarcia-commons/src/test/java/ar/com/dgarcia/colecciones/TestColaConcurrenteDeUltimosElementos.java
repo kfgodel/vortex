@@ -45,7 +45,7 @@ public class TestColaConcurrenteDeUltimosElementos {
 		stressor.setEsperaEntreEjecucionesEnMilis(0);
 		final AtomicLong numero = new AtomicLong(0);
 		stressor.setEjecutable(new Runnable() {
-			@Override
+
 			public void run() {
 				final Long valor = numero.incrementAndGet();
 				cola.add(valor);
@@ -54,7 +54,7 @@ public class TestColaConcurrenteDeUltimosElementos {
 
 		// Ejecutamos el stressor
 		stressor.start();
-		stressor.esperarTerminoDeThreads(TimeMagnitude.of(1, TimeUnit.MINUTES));
+		stressor.esperarTerminoDeThreads(TimeMagnitude.of(60, TimeUnit.SECONDS));
 
 		// Verificamos que la cantidad de elementos en cola no es más que el permitido
 		Assert.assertEquals("Deberían existir como muchos los elementos permitidos", cantidadMaximaDeElementos,

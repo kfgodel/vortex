@@ -37,7 +37,7 @@ public class SerializadorDeCondicionesImpl implements SerializadorDeCondiciones 
 	/**
 	 * @see net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones#serializar(net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
-	@Override
+	
 	public Map<String, Object> serializar(final Condicion condicionRaiz) throws ProblemaDeSerializacionException {
 		// Iteramos desde las raices para asegurarnos de resolver primero las condiciones que seran
 		// usadas por otras
@@ -66,7 +66,7 @@ public class SerializadorDeCondicionesImpl implements SerializadorDeCondiciones 
 	/**
 	 * @see net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones#deserializar(java.util.Map)
 	 */
-	@Override
+	
 	public Condicion deserializar(final Map<String, Object> mapaRaiz) throws ProblemaDeSerializacionException {
 		// Iteramos desde las raices para resolver los mapas que seran usados por sus parents
 		final Iterator<Map<String, Object>> iteradorDesdeSubCondiciones = LeavesFirstIterator.createFromRoot(mapaRaiz,

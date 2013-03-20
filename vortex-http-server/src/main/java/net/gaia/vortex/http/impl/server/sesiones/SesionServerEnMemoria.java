@@ -60,7 +60,7 @@ public class SesionServerEnMemoria implements SesionVortexHttpEnServer {
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#recibirDesdeHttp(java.lang.String)
 	 */
-	@Override
+	
 	public void recibirDesdeHttp(final String mensajesComoJson) throws CannotTextUnserializeException {
 		registrarActividad();
 		final PaqueteHttpVortex paquete = textualizer.convertFromString(mensajesComoJson);
@@ -103,7 +103,7 @@ public class SesionServerEnMemoria implements SesionVortexHttpEnServer {
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#obtenerParaHttp()
 	 */
-	@Override
+	
 	public String obtenerParaHttp() throws CannotTextSerializeException {
 		registrarActividad();
 		final PaqueteHttpVortex paqueteDeSalida = PaqueteHttpVortex.create(0, esperaMaxima);
@@ -121,7 +121,7 @@ public class SesionServerEnMemoria implements SesionVortexHttpEnServer {
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#getIdDeSesion()
 	 */
-	@Override
+	
 	public String getIdDeSesion() {
 		return idDeSesion;
 	}
@@ -155,17 +155,17 @@ public class SesionServerEnMemoria implements SesionVortexHttpEnServer {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(idDeSesion_FIELD, idDeSesion).con(nexoAsociado_FIELD, nexoAsociado).toString();
 	}
 
-	@Override
+	
 	public NexoHttp getNexoAsociado() {
 		return nexoAsociado;
 	}
 
-	@Override
+	
 	public void setNexoAsociado(final NexoHttp nexoAsociado) {
 		this.nexoAsociado = nexoAsociado;
 	}
@@ -173,7 +173,7 @@ public class SesionServerEnMemoria implements SesionVortexHttpEnServer {
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#onMensajeDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public void onMensajeDesdeVortex(final MensajeVortex mensaje) {
 		this.mensajesAcumulados.add(mensaje);
 	}
@@ -181,7 +181,7 @@ public class SesionServerEnMemoria implements SesionVortexHttpEnServer {
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#esVieja()
 	 */
-	@Override
+	
 	public boolean esVieja() {
 		final long now = getCurrentTime();
 		final long transcurridos = now - momentoDeUltimaActividad;
@@ -192,7 +192,7 @@ public class SesionServerEnMemoria implements SesionVortexHttpEnServer {
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#tomarParametrosInicialesDe(java.lang.String)
 	 */
-	@Override
+	
 	public void tomarParametrosInicialesDe(final String parametrosJson) throws CannotTextUnserializeException {
 		PaqueteHttpVortex parametros = null;
 		if (parametrosJson != null) {

@@ -107,7 +107,7 @@ public class Cronometro {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return Cronometro.niceFormatStr(this.current());
 	}

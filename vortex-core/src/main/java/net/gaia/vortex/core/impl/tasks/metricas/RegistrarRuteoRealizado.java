@@ -28,7 +28,7 @@ public class RegistrarRuteoRealizado implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
+	
 	public WorkUnit doWork() throws InterruptedException {
 		metricas.registrarOutput();
 		return null;
@@ -43,7 +43,7 @@ public class RegistrarRuteoRealizado implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).toString();
 	}

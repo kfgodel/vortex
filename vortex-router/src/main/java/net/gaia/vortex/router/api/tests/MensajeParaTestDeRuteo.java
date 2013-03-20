@@ -28,7 +28,7 @@ public class MensajeParaTestDeRuteo {
 		this.atributo = valor;
 	}
 
-	@Override
+	
 	public boolean equals(final Object obj) {
 		if (!(obj instanceof MensajeParaTestDeRuteo)) {
 			return false;
@@ -38,7 +38,7 @@ public class MensajeParaTestDeRuteo {
 		return mismoAtributo;
 	}
 
-	@Override
+	
 	public int hashCode() {
 		return this.atributo.hashCode();
 	}

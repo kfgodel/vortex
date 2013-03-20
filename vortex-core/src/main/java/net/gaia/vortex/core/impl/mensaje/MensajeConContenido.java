@@ -36,7 +36,7 @@ public class MensajeConContenido implements MensajeVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getContenido()
 	 */
-	@Override
+	
 	public ContenidoVortex getContenido() {
 		return contenido;
 	}
@@ -85,7 +85,7 @@ public class MensajeConContenido implements MensajeVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(idDeMensaje_FIELD, idDeMensaje).add(contenido_FIELD, contenido).toString();
 	}
@@ -93,7 +93,7 @@ public class MensajeConContenido implements MensajeVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getIdDeMensaje()
 	 */
-	@Override
+	
 	public IdDeMensaje getIdDeMensaje() {
 		return this.idDeMensaje;
 	}
@@ -101,7 +101,7 @@ public class MensajeConContenido implements MensajeVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#asignarId(net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje)
 	 */
-	@Override
+	
 	public void asignarId(final IdDeMensaje idNuevo) {
 		this.idDeMensaje = idNuevo;
 		getContenido().setIdDeMensaje(idNuevo);
@@ -110,7 +110,7 @@ public class MensajeConContenido implements MensajeVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.ShortStringable#toShortString()
 	 */
-	@Override
+	
 	public String toShortString() {
 		return idDeMensaje.toShortString();
 	}

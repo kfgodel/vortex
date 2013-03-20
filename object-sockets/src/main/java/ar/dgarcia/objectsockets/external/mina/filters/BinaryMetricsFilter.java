@@ -43,7 +43,7 @@ public class BinaryMetricsFilter extends IoFilterAdapter {
 	 * @see org.apache.mina.core.filterchain.IoFilterAdapter#messageReceived(org.apache.mina.core.filterchain.IoFilter.NextFilter,
 	 *      org.apache.mina.core.session.IoSession, java.lang.Object)
 	 */
-	@Override
+	
 	public void messageReceived(final NextFilter nextFilter, final IoSession session, final Object message)
 			throws Exception {
 		final IoBuffer buffer = (IoBuffer) message;
@@ -56,7 +56,7 @@ public class BinaryMetricsFilter extends IoFilterAdapter {
 	 * @see org.apache.mina.core.filterchain.IoFilterAdapter#filterWrite(org.apache.mina.core.filterchain.IoFilter.NextFilter,
 	 *      org.apache.mina.core.session.IoSession, org.apache.mina.core.write.WriteRequest)
 	 */
-	@Override
+	
 	public void filterWrite(final NextFilter nextFilter, final IoSession session, final WriteRequest writeRequest)
 			throws Exception {
 		final Object message = writeRequest.getMessage();

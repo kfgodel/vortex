@@ -45,7 +45,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	@Override
+	
 	public int compareTo(final IdDeMensaje o) {
 		if (!(o instanceof IdSecuencialDeMensaje)) {
 			throw new UnhandledConditionException(
@@ -65,7 +65,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean equals(final Object obj) {
 		if (!(obj instanceof IdSecuencialDeMensaje)) {
 			return false;
@@ -83,7 +83,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		// Basado en el hash de arrays y colecciones
 		int result = 1;
@@ -95,7 +95,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#esOriginadoEn(net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex)
 	 */
-	@Override
+	
 	public boolean esOriginadoEn(final IdDeComponenteVortex idDelNodo) {
 		final boolean mismoEmisor = this.idDelEmisor.equals(idDelNodo);
 		return mismoEmisor;
@@ -104,7 +104,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeSecuencia_FIELD, numeroDeSecuencia).con(idDelEmisor_FIELD, idDelEmisor)
 				.toString();
@@ -113,7 +113,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#getIdDelEmisor()
 	 */
-	@Override
+	
 	public IdDeComponenteVortex getIdDelEmisor() {
 		return this.idDelEmisor;
 	}
@@ -121,7 +121,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#getNumeroDeSecuencia()
 	 */
-	@Override
+	
 	public Long getNumeroDeSecuencia() {
 		return this.numeroDeSecuencia;
 	}
@@ -129,7 +129,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#getAsMap()
 	 */
-	@Override
+	
 	public Map<String, Object> getAsMap() {
 		final Map<String, Object> mapa = new VortexMap();
 
@@ -183,7 +183,7 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.ShortStringable#toShortString()
 	 */
-	@Override
+	
 	public String toShortString() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append(numeroDeSecuencia);

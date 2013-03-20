@@ -32,7 +32,7 @@ public class VariableImpl implements VariableGenerics {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.VariableGenerics#getValor()
 	 */
-	@Override
+	
 	public Tipo getValor() {
 		return valor;
 	}
@@ -40,7 +40,7 @@ public class VariableImpl implements VariableGenerics {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.VariableGenerics#getNombre()
 	 */
-	@Override
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -59,7 +59,7 @@ public class VariableImpl implements VariableGenerics {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(nombre_FIELD, nombre).con(valor_FIELD, valor).toString();
 	}

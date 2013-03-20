@@ -51,7 +51,7 @@ public class TestMultiThreadProcessing {
 		}
 
 		// Esperamos que terminen de procesar todas
-		latch.await(1, TimeUnit.MINUTES);
+		latch.await(60, TimeUnit.SECONDS);
 
 		LOG.info("Tareas por thread: {}", tasksByThread);
 		Assert.assertEquals("Deberían existir sólo dos entradas porque son dos threads", 2, tasksByThread.size());
@@ -88,7 +88,7 @@ public class TestMultiThreadProcessing {
 		}
 
 		// Esperamos que terminen de procesar todas
-		latch.await(1, TimeUnit.MINUTES);
+		latch.await(60, TimeUnit.SECONDS);
 
 		LOG.info("Tareas por thread: {}", tasksByThread);
 		Assert.assertEquals("Deberían existir sólo 3 entradas porque son dos threads", 3, tasksByThread.size());

@@ -34,7 +34,7 @@ public abstract class ComponenteSupport implements ComponenteVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#getNumeroDeInstancia()
 	 */
-	@Override
+	
 	public long getNumeroDeInstancia() {
 		return numeroDeInstancia;
 	}
@@ -42,7 +42,7 @@ public abstract class ComponenteSupport implements ComponenteVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#toShortString()
 	 */
-	@Override
+	
 	public String toShortString() {
 		return ToShortString.from(this);
 	}

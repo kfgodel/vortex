@@ -15,7 +15,7 @@ import net.gaia.taskprocessor.tests.executor.TestMultiThreadProcessing;
  */
 public class TestMultiThreadKnittleProcessing extends TestMultiThreadProcessing {
 
-	@Override
+	
 	protected TaskProcessor crearProcesorCon(final int cantidadDeThreads) {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
 		config.setMinimunThreadPoolSize(cantidadDeThreads);

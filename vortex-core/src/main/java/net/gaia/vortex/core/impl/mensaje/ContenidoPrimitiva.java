@@ -29,7 +29,7 @@ public class ContenidoPrimitiva extends ContenidoVortexSupport implements Conten
 	/**
 	 * @see net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport#getValorComoPrimitiva()
 	 */
-	@Override
+	
 	public Object getValorComoPrimitiva() {
 		return valorPrimitiva;
 	}
@@ -37,7 +37,7 @@ public class ContenidoPrimitiva extends ContenidoVortexSupport implements Conten
 	/**
 	 * @see net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport#setValorComoPrimitiva(java.lang.Object)
 	 */
-	@Override
+	
 	public void setValorComoPrimitiva(final Object valor) {
 		super.setValorComoPrimitiva(valor);
 		this.valorPrimitiva = valor;

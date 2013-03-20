@@ -114,7 +114,6 @@ public abstract class TestDePerformanceEnOptimunSupport {
 
 		// Cada tarea incrementa el contador de salidas
 		final WorkUnit tareaDelProcesador = new WorkUnit() {
-			@Override
 			public WorkUnit doWork() throws InterruptedException {
 				metricas.registrarOutput();
 				return null;
@@ -123,7 +122,7 @@ public abstract class TestDePerformanceEnOptimunSupport {
 
 		// Por cada ejecución genera el mensaje y lo entrega al handler
 		stress.setEjecutable(new Runnable() {
-			@Override
+			
 			public void run() {
 				metricas.registrarInput();
 				processor.process(tareaDelProcesador);

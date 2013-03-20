@@ -33,7 +33,7 @@ public class Socketizador extends ReceptorConProcesador {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final EnviarPorSocket envio = EnviarPorSocket.create(socket, mensaje);
 		return envio;
@@ -49,7 +49,7 @@ public class Socketizador extends ReceptorConProcesador {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(socket_FIELD, socket)
 				.toString();

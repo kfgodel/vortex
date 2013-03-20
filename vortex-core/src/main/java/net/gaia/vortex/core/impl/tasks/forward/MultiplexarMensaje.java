@@ -46,7 +46,7 @@ public class MultiplexarMensaje implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
+	
 	public WorkUnit doWork() throws InterruptedException {
 		Loggers.ATOMOS.debug("Multiplexando mensaje[{}] a {} destinos{}", new Object[] { mensaje, destinos.size(),
 				destinos });
@@ -76,7 +76,7 @@ public class MultiplexarMensaje implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(destinos_FIELD, destinos).add(mensaje_FIELD, mensaje)
 				.add(processor_FIELD, processor).toString();

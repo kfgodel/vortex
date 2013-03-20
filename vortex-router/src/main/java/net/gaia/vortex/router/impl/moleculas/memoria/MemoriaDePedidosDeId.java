@@ -43,7 +43,7 @@ public class MemoriaDePedidosDeId {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(ultimoIdPedido_FIELD, ultimoIdPedido).toString();
 	}

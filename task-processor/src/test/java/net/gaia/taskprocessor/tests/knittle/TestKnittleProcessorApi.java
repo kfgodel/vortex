@@ -25,7 +25,7 @@ import org.junit.Before;
  */
 public class TestKnittleProcessorApi extends TestTaskProcessorApi {
 
-	@Override
+	
 	@Before
 	public void crearProcesador() {
 		taskProcessor = KnittleProcessor.create(TaskProcessorConfiguration.create());

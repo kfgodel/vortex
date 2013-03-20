@@ -135,7 +135,7 @@ public class ConfiguracionDeSerializacionDeCondicionesImpl implements Configurac
 	 * @see net.gaia.vortex.sets.impl.serializacion.ConfiguracionDeSerializacionDeCondiciones#getSerializadorDelTipo(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public <C> SerializadorDeTipo<C> getSerializadorDelTipo(final Class<? extends C> clase) {
 		SerializadorDeTipo<?> serializador = getSerializadoresPorTipo().get(clase);
 		if (serializador == null) {
@@ -149,7 +149,7 @@ public class ConfiguracionDeSerializacionDeCondicionesImpl implements Configurac
 	 * @see net.gaia.vortex.sets.impl.serializacion.ConfiguracionDeSerializacionDeCondiciones#getDeserializadorDelTipo(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public <C> DeserializadorDeTipo<C> getDeserializadorDelTipo(final String tipoDeCondicion) {
 		DeserializadorDeTipo<?> deserializador = getDeserializadoresPorTipo().get(tipoDeCondicion);
 		if (deserializador == null) {
@@ -163,7 +163,7 @@ public class ConfiguracionDeSerializacionDeCondicionesImpl implements Configurac
 	 * @see net.gaia.vortex.sets.impl.serializacion.ConfiguracionDeSerializacionDeCondiciones#putSerializadorDelTipo(java.lang.Class,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo)
 	 */
-	@Override
+	
 	public <C> void putSerializadorDelTipo(final Class<? super C> clase,
 			final SerializadorDeTipo<? extends C> serializador) {
 		getSerializadoresPorTipo().put(clase, serializador);
@@ -173,7 +173,7 @@ public class ConfiguracionDeSerializacionDeCondicionesImpl implements Configurac
 	 * @see net.gaia.vortex.sets.impl.serializacion.ConfiguracionDeSerializacionDeCondiciones#putDeserializadorDelTipo(java.lang.String,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo)
 	 */
-	@Override
+	
 	public <C> void putDeserializadorDelTipo(final String tipo, final DeserializadorDeTipo<? extends C> serializador) {
 		getDeserializadoresPorTipo().put(tipo, serializador);
 	}

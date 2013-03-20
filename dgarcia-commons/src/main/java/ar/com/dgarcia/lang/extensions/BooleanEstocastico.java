@@ -39,7 +39,7 @@ public class BooleanEstocastico implements Iterator<Boolean> {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(probabilidadDeTrue_FIELD, probabilidadDeTrue).toString();
 	}
@@ -47,7 +47,7 @@ public class BooleanEstocastico implements Iterator<Boolean> {
 	/**
 	 * @see java.util.Iterator#hasNext()
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		return true;
 	}
@@ -55,7 +55,7 @@ public class BooleanEstocastico implements Iterator<Boolean> {
 	/**
 	 * @see java.util.Iterator#next()
 	 */
-	@Override
+	
 	public Boolean next() {
 		return nextValue();
 	}
@@ -63,7 +63,7 @@ public class BooleanEstocastico implements Iterator<Boolean> {
 	/**
 	 * @see java.util.Iterator#remove()
 	 */
-	@Override
+	
 	public void remove() {
 		throw new UnsupportedOperationException("El booleano estocástico no puede remover sus elementos");
 	}

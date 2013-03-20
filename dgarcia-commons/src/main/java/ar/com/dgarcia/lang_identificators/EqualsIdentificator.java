@@ -53,7 +53,7 @@ public class EqualsIdentificator extends HashIdentificator {
 	 * @param second Instancia a comparar o null
 	 * @return false si son conceptualmente distintas
 	 */
-	@Override
+	
 	public boolean areEquals(Object first, Object second) {
 		if(first != null){
 			return first.equals(second);
@@ -73,7 +73,7 @@ public class EqualsIdentificator extends HashIdentificator {
 	 * @return El delta que indica el orden
 	 * @see ar.com.dgarcia.lang_identificators.AbstractIdentificator#compare(Object, Object)
 	 */
-	@Override
+	
 	public int compare(Object first, Object second) {
 		if(!this.areEquals(first,second)){
 			return super.compare(first, second);

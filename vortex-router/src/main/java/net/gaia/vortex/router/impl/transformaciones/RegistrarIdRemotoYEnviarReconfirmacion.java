@@ -47,7 +47,7 @@ public class RegistrarIdRemotoYEnviarReconfirmacion implements Transformacion {
 	/**
 	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public MensajeVortex transformar(final MensajeVortex mensajeDeconfirmacion) {
 		final ConfirmacionDeIdRemoto confirmacion = mapeador.convertirDesdeVortex(mensajeDeconfirmacion,
 				ConfirmacionDeIdRemoto.class);
@@ -73,7 +73,7 @@ public class RegistrarIdRemotoYEnviarReconfirmacion implements Transformacion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(idLocalDePata_FIELD, idLocalDePata).con(idDePataRemota_FIELD, idDePataRemota)
 				.toString();

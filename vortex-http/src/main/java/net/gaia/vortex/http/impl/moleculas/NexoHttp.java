@@ -77,7 +77,7 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void setDestino(final Receptor destino) {
 		nodoDeSalidaAVortex.setDestino(destino);
 	}
@@ -85,7 +85,7 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#getDestino()
 	 */
-	@Override
+	
 	public Receptor getDestino() {
 		return nodoDeSalidaAVortex.getDestino();
 	}
@@ -99,7 +99,7 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(sesion_FIELD, sesion)
 				.add("destino", getDestino()).toString();
@@ -112,7 +112,7 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 	/**
 	 * @see net.gaia.vortex.core.api.memoria.ComponenteConMemoria#yaRecibio(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public boolean yaRecibio(final MensajeVortex mensaje) {
 		final boolean yaRecibido = memoriaDeMensajes.tieneRegistroDe(mensaje);
 		return yaRecibido;

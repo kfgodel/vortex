@@ -119,7 +119,7 @@ public class GeneradorDeIdsGlobalesParaComponentes implements GeneradorDeIdsComp
 	/**
 	 * @see net.gaia.vortex.core.api.ids.componentes.GeneradorDeIdsComponentes#generarId()
 	 */
-	@Override
+	
 	public IdDeComponenteVortex generarId() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append(identificadorDelGenerador);

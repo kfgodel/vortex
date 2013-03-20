@@ -65,7 +65,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
 	 */
-	@Override
+	
 	public void enviar(final Object mensaje) {
 		procesoDesdeUsuario.vortificar(mensaje);
 	}
@@ -108,7 +108,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void setDestino(final Receptor destino) {
 		nodoDeSalidaAVortex.setDestino(destino);
 	}
@@ -116,7 +116,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#getDestino()
 	 */
-	@Override
+	
 	public Receptor getDestino() {
 		return nodoDeSalidaAVortex.getDestino();
 	}
@@ -124,7 +124,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
 	 */
-	@Override
+	
 	public void recibirCon(final HandlerDePortal<?> handlerDelPortal) {
 		// Casteamos para evitar chequeos molestos
 		@SuppressWarnings("unchecked")
@@ -197,7 +197,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.con(identificador_FIELD, identificador).con("destino", getDestino()).toString();

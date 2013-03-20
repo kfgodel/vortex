@@ -53,7 +53,7 @@ public class TestNodoClienteHttp {
 		final NodoClienteHttp nodoCliente = NodoClienteHttp.createAndConnectTo("http://kfgodel.info:62626", procesador,
 				ApacheResponseProvider.create());
 		nodoCliente.conectarCon(new ReceptorSupport() {
-			@Override
+			
 			public void recibir(final MensajeVortex mensaje) {
 				LOG.info("Recibido en nexo http: {}", mensaje);
 			}

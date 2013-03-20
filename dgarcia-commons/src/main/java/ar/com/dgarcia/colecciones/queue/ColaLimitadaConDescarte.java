@@ -48,7 +48,7 @@ public class ColaLimitadaConDescarte<E> extends ConcurrentLinkedQueue<E> {
 	/**
 	 * @see java.util.concurrent.ConcurrentLinkedQueue#offer(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean offer(final E e) {
 		final boolean added = super.offer(e);
 		if (!added) {

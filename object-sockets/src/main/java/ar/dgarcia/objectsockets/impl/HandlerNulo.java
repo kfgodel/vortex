@@ -41,7 +41,7 @@ public class HandlerNulo implements ObjectReceptionHandler {
 	 * @see ar.dgarcia.objectsockets.api.ObjectReceptionHandler#onObjectReceived(java.lang.Object,
 	 *      ar.dgarcia.objectsockets.api.ObjectSocket)
 	 */
-	@Override
+	
 	public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 		LOG.error("Se utilizo el handler nulo para tratar el mensaje[" + received + "] recibido del socket["
 				+ receivedFrom + "]. Descartando. Falto indicar el handler del socket?");

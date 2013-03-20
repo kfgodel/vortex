@@ -15,7 +15,7 @@ import net.gaia.taskprocessor.tests.executor.TestProcessorPerformanceWithFixedTa
  * @author D. García
  */
 public class TestKnittlePerformanceWithFixedTaskCount extends TestProcessorPerformanceWithFixedTaskCount {
-	@Override
+	
 	protected TaskProcessor crearProcessor(final TaskProcessorConfiguration config) {
 		return KnittleProcessor.create(config);
 	}

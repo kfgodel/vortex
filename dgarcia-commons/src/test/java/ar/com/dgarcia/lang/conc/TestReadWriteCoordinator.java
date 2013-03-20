@@ -49,7 +49,7 @@ public class TestReadWriteCoordinator {
 		}
 
 		private final Callable<Object> operation = new Callable<Object>() {
-			@Override
+			
 			public Object call() throws Exception {
 				notificarComienzo.release();
 				cantidadDeOperaciones.incrementAndGet();
@@ -61,7 +61,7 @@ public class TestReadWriteCoordinator {
 		/**
 		 * @see java.lang.Thread#run()
 		 */
-		@Override
+		
 		public void run() {
 			if (esLectura) {
 				coordinador.doReadOperation(operation);

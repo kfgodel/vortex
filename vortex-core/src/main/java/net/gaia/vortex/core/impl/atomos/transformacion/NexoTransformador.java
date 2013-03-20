@@ -36,12 +36,12 @@ public class NexoTransformador extends NexoSupport implements Transformador {
 	private Transformacion transformacion;
 	public static final String transformacion_FIELD = "transformacion";
 
-	@Override
+	
 	public Transformacion getTransformacion() {
 		return transformacion;
 	}
 
-	@Override
+	
 	public void setTransformacion(final Transformacion transformacion) {
 		if (transformacion == null) {
 			throw new IllegalArgumentException(
@@ -67,7 +67,7 @@ public class NexoTransformador extends NexoSupport implements Transformador {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.add(transformacion_FIELD, transformacion).add(destino_FIELD, getDestino()).toString();
@@ -76,7 +76,7 @@ public class NexoTransformador extends NexoSupport implements Transformador {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		return TransformarYDelegar.create(mensaje, transformacion, getDestino());
 	}

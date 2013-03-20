@@ -35,7 +35,7 @@ public class JacksonHttpTextualizer implements VortexHttpTextualizer {
 	/**
 	 * @see net.gaia.vortex.http.external.json.VortexHttpTextualizer#convertFromString(java.lang.String)
 	 */
-	@Override
+	
 	public PaqueteHttpVortex convertFromString(final String mensajesComoJson) throws CannotTextUnserializeException {
 		final PaqueteHttpVortex paquete = internalTextualizer.convertFromStringAs(PaqueteHttpVortex.class,
 				mensajesComoJson);
@@ -45,7 +45,7 @@ public class JacksonHttpTextualizer implements VortexHttpTextualizer {
 	/**
 	 * @see net.gaia.vortex.http.external.json.VortexHttpTextualizer#convertToString(net.gaia.vortex.http.sesiones.PaqueteHttpVortex)
 	 */
-	@Override
+	
 	public String convertToString(final PaqueteHttpVortex paqueteDeSalida) throws CannotTextSerializeException {
 		final String convertToString = internalTextualizer.convertToString(paqueteDeSalida);
 		return convertToString;

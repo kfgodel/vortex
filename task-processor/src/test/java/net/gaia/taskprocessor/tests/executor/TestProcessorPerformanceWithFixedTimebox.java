@@ -153,7 +153,7 @@ public class TestProcessorPerformanceWithFixedTimebox {
 		stressGenerator.setEsperaEntreEjecucionesEnMilis(esperaEntreEjecucionesEnMilis);
 
 		stressGenerator.setEjecutable(new Runnable() {
-			@Override
+			
 			public void run() {
 				final TareaSimulada tarea = TareaSimulada.create(duracionDeTareaEnMillis, null);
 				procesor.process(tarea);

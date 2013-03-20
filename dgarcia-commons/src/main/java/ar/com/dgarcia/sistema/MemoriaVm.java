@@ -36,7 +36,7 @@ public class MemoriaVm {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con("libres", getMegasLibresDentroDeVm()).con("usada", getMegasOcupadosDentroDeLaVm())
 				.con("usables", getMegasMaximosParaLaVm()).toString();

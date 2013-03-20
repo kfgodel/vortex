@@ -65,7 +65,7 @@ public class ObjetoAdicionalParaTests {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(booleano_FIELD, booleano).con(numeroConComa_FIELD, numeroConComa)
 				.con(valorExtra_FIELD, valorExtra).toString();

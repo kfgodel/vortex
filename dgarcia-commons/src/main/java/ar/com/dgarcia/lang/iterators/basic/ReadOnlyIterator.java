@@ -55,7 +55,7 @@ public class ReadOnlyIterator<T> extends AbstractIteratorDecorator<T> {
 	 * 
 	 * @see java.util.Iterator#remove()
 	 */
-	@Override
+	
 	public void remove() {
 		throw new UnsupportedOperationException("Este iterador no permite remover elementos");
 	}

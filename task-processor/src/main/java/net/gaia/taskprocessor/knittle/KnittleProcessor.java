@@ -67,7 +67,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
-	@Override
 	public SubmittedTask process(final WorkUnit tarea) {
 		// Si estamos muy cargados hace esperar a los threads
 		threadBouncer.retrasarPedidoExternoSiProcesadorSaturado();
@@ -84,7 +83,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	 * @param task
 	 *            La tarea a ejecutar
 	 */
-	@Override
 	public void processImmediately(final SubmittedRunnableTask task) {
 		final boolean added = this.inmediatePendingTasks.add(task);
 		if (!added) {
@@ -98,7 +96,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#setExceptionHandler(net.gaia.taskprocessor.api.TaskExceptionHandler)
 	 */
-	@Override
 	public void setExceptionHandler(final TaskExceptionHandler taskExceptionHandler) {
 		this.exceptionHandler.set(taskExceptionHandler);
 	}
@@ -106,7 +103,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#getThreadPoolSize()
 	 */
-	@Override
 	public int getThreadPoolSize() {
 		return this.threads.size();
 	}
@@ -114,7 +110,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#getMetrics()
 	 */
-	@Override
 	public TaskProcessingMetrics getMetrics() {
 		return metrics;
 	}
@@ -122,7 +117,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#setProcessorListener(net.gaia.taskprocessor.api.TaskProcessorListener)
 	 */
-	@Override
 	public void setProcessorListener(final TaskProcessorListener listener) {
 		this.processorListener.set(listener);
 	}
@@ -130,7 +124,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#getProcessorListener()
 	 */
-	@Override
 	public TaskProcessorListener getProcessorListener() {
 		return this.processorListener.get();
 	}
@@ -138,7 +131,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#getExceptionHandler()
 	 */
-	@Override
 	public TaskExceptionHandler getExceptionHandler() {
 		return this.exceptionHandler.get();
 	}
@@ -147,7 +139,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#processDelayed(net.gaia.taskprocessor.api.TimeMagnitude,
 	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
-	@Override
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit trabajo) {
 		final SubmittedTask delayedTask = this.delayerProcessor.processDelayed(workDelay, trabajo);
 		return delayedTask;
@@ -156,7 +147,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#removeTasksMatching(net.gaia.taskprocessor.api.TaskCriteria)
 	 */
-	@Override
 	public void removeTasksMatching(final TaskCriteria criteria) {
 		// Quitamos las tareas con delay primero
 		this.delayerProcessor.removeTasksMatching(criteria);
@@ -175,7 +165,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#detener()
 	 */
-	@Override
 	public void detener() {
 		// Primero detenemos las que tienen delay
 		this.delayerProcessor.detener();
@@ -237,7 +226,7 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add("Concurrentes", this.getThreadPoolSize()).add("Activas", this.getThreadPoolSize())
 				.add("Pendientes", this.inmediatePendingTasks.size())
@@ -247,7 +236,6 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessor#getPendingTaskCount()
 	 */
-	@Override
 	public int getPendingTaskCount() {
 		return inmediatePendingTasks.size();
 	}

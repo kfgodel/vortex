@@ -42,7 +42,7 @@ public class AndCompuesto implements Condicion, Simplificable {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		// Evaluamos cada condición que compone este AND
 		boolean alMenosUnIndecidible = false;
@@ -97,7 +97,7 @@ public class AndCompuesto implements Condicion, Simplificable {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(condiciones_FIELD, condiciones).toString();
 	}
@@ -113,7 +113,7 @@ public class AndCompuesto implements Condicion, Simplificable {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	@Override
+	
 	public List<Condicion> getSubCondiciones() {
 		return getCondiciones();
 	}
@@ -121,7 +121,7 @@ public class AndCompuesto implements Condicion, Simplificable {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean equals(final Object obj) {
 		if (!(obj instanceof AndCompuesto)) {
 			return false;
@@ -136,7 +136,7 @@ public class AndCompuesto implements Condicion, Simplificable {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		return this.condiciones.hashCode();
 	}
@@ -144,7 +144,7 @@ public class AndCompuesto implements Condicion, Simplificable {
 	/**
 	 * @see net.gaia.vortex.sets.impl.condiciones.Simplificable#simplificar()
 	 */
-	@Override
+	
 	public Condicion simplificar() {
 		boolean huboAlMenosUnaSimplificacion = false;
 

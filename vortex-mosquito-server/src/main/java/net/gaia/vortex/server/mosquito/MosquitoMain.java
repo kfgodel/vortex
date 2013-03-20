@@ -56,7 +56,7 @@ public class MosquitoMain {
 		// Registramos el handler para cuando se detenga la VM
 		LOG.debug("Registrando hook para detener los sockets al detener la Vm");
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
+			
 			public void run() {
 				LOG.debug("VM apagandose, cerrando sockets");
 				currentServer.detenerConexiones();

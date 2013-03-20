@@ -83,7 +83,7 @@ public class PaqueteHttpVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(proximaEsperaMinima_FIELD, proximaEsperaMinima)
 				.con(proximaEsperaMaxima_FIELD, proximaEsperaMaxima).con(contenidos_FIELD, contenidos).toString();

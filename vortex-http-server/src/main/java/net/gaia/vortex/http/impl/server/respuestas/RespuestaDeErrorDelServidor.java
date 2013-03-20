@@ -33,7 +33,7 @@ public class RespuestaDeErrorDelServidor implements RespuestaHttp {
 	/**
 	 * @see net.gaia.vortex.http.external.jetty.RespuestaHttp#reflejarEn(javax.servlet.http.HttpServletResponse)
 	 */
-	@Override
+	
 	public void reflejarEn(final HttpServletResponse response) throws IOException {
 		response.setContentType(RESPONSE_TEXT_CONTENT_TYPE);
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -51,7 +51,7 @@ public class RespuestaDeErrorDelServidor implements RespuestaHttp {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(excepcion_FIELD, excepcion).toString();
 	}

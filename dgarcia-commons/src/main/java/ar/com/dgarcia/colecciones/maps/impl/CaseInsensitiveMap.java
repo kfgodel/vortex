@@ -56,7 +56,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.util.Map#size()
 	 */
-	@Override
+	
 	public int size() {
 		return internalMap.size();
 	}
@@ -64,7 +64,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.util.Map#isEmpty()
 	 */
-	@Override
+	
 	public boolean isEmpty() {
 		return internalMap.isEmpty();
 	}
@@ -72,7 +72,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean containsKey(final Object key) {
 		final CaseInsensitiveStringKey insensitiveKey = getInternalKeyFor(key);
 		if (insensitiveKey == null) {
@@ -104,7 +104,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.util.Map#containsValue(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean containsValue(final Object value) {
 		return internalMap.containsValue(value);
 	}
@@ -112,7 +112,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
-	@Override
+	
 	public V get(final Object key) {
 		final CaseInsensitiveStringKey insensitiveKey = getInternalKeyFor(key);
 		if (insensitiveKey == null) {
@@ -124,7 +124,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
-	@Override
+	
 	public V put(final String key, final V value) {
 		final CaseInsensitiveStringKey insensitiveKey = CaseInsensitiveStringKey.create(key);
 		return internalMap.put(insensitiveKey, value);
@@ -133,7 +133,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	@Override
+	
 	public V remove(final Object key) {
 		final CaseInsensitiveStringKey insensitiveKey = getInternalKeyFor(key);
 		if (insensitiveKey == null) {
@@ -145,7 +145,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	@Override
+	
 	public void putAll(final Map<? extends String, ? extends V> m) {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		final Set<Entry<String, V>> entrySet = (Set) m.entrySet();
@@ -159,7 +159,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.util.Map#clear()
 	 */
-	@Override
+	
 	public void clear() {
 		internalMap.clear();
 	}
@@ -169,7 +169,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	 * 
 	 * @see java.util.Map#keySet()
 	 */
-	@Override
+	
 	public Set<String> keySet() {
 		final Set<CaseInsensitiveStringKey> internalKeySet = internalMap.keySet();
 		final HashSet<String> keySet = new HashSet<String>();
@@ -183,7 +183,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.util.Map#values()
 	 */
-	@Override
+	
 	public Collection<V> values() {
 		return internalMap.values();
 	}
@@ -193,7 +193,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	 * 
 	 * @see java.util.Map#entrySet()
 	 */
-	@Override
+	
 	public Set<java.util.Map.Entry<String, V>> entrySet() {
 		final Set<java.util.Map.Entry<CaseInsensitiveStringKey, V>> internalKeySet = internalMap.entrySet();
 		final HashSet<java.util.Map.Entry<String, V>> entrySet = new HashSet<Entry<String, V>>();
@@ -210,7 +210,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return internalMap.toString();
 	}
@@ -220,7 +220,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	@Override
+	
 	public boolean equals(final Object obj) {
 		if (obj == this) {
 			return true;
@@ -264,7 +264,7 @@ public class CaseInsensitiveMap<V> implements Map<String, V> {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	@Override
+	
 	public int hashCode() {
 		int h = 0;
 		final Iterator<Entry<String, V>> i = entrySet().iterator();

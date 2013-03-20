@@ -43,7 +43,7 @@ public class TestSocketError {
 		final QueueReceptionHandler handlerReceptor = QueueReceptionHandler.create();
 		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress,
 				new ObjectReceptionHandler() {
-					@Override
+					
 					public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 						handlerReceptor.onObjectReceived(received, receivedFrom);
 						receivedFrom.closeAndDispose();
@@ -58,11 +58,11 @@ public class TestSocketError {
 		final WaitBarrier esperarNotificacionDeCierre = WaitBarrier.create();
 		final AtomicBoolean notificacionRecibida = new AtomicBoolean(false);
 		senderConfig.setEventHandler(new SocketEventHandler() {
-			@Override
+			
 			public void onSocketOpened(final ObjectSocket nuevoSocket) {
 			}
 
-			@Override
+			
 			public void onSocketClosed(final ObjectSocket socketCerrado) {
 				notificacionRecibida.set(true);
 				esperarNotificacionDeCierre.release();

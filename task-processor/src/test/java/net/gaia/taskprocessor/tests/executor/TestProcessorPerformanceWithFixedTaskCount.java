@@ -36,7 +36,7 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 		final int ejecucionesPorThread = 1000;
 		final long esperaEntreEjecucionesEnMilis = 10;
 		final long duracionDeTareaEnMillis = 10;
-		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(1, TimeUnit.MINUTES);
+		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(60, TimeUnit.SECONDS);
 
 		// Prepramos un thread que va a agregar tareas de 10ms cada 10ms
 		procesarYMedirRendimiento("mini(1 -> 1)", threadsDeProcesador, cantidadDeThreadsGeneradores,
@@ -50,7 +50,7 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 		final int ejecucionesPorThread = 1000;
 		final long esperaEntreEjecucionesEnMilis = 10;
 		final long duracionDeTareaEnMillis = 10;
-		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(1, TimeUnit.MINUTES);
+		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(60, TimeUnit.SECONDS);
 
 		// Prepramos un thread que va a agregar tareas de 10ms cada 10ms
 		procesarYMedirRendimiento("mini(2 -> 1)", threadsDeProcesador, cantidadDeThreadsGeneradores,
@@ -64,7 +64,7 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 		final int ejecucionesPorThread = 1000;
 		final long esperaEntreEjecucionesEnMilis = 10;
 		final long duracionDeTareaEnMillis = 10;
-		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(1, TimeUnit.MINUTES);
+		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(60, TimeUnit.SECONDS);
 
 		// Prepramos un thread que va a agregar tareas de 10ms cada 10ms
 		procesarYMedirRendimiento("mini(2 -> 2)", threadsDeProcesador, cantidadDeThreadsGeneradores,
@@ -78,7 +78,7 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 		final int ejecucionesPorThread = 1000;
 		final long esperaEntreEjecucionesEnMilis = 0;
 		final long duracionDeTareaEnMillis = 1;
-		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(1, TimeUnit.MINUTES);
+		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(60, TimeUnit.SECONDS);
 
 		// Prepramos un thread que va a agregar tareas de 10ms cada 10ms
 		procesarYMedirRendimiento("1Ms(4 -> 2)", threadsDeProcesador, cantidadDeThreadsGeneradores,
@@ -92,7 +92,7 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 		final int ejecucionesPorThread = 100000;
 		final long esperaEntreEjecucionesEnMilis = 0;
 		final long duracionDeTareaEnMillis = 0;
-		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(1, TimeUnit.MINUTES);
+		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(60, TimeUnit.SECONDS);
 
 		// Prepramos un thread que va a agregar tareas de 10ms cada 10ms
 		procesarYMedirRendimiento("limite(4 -> 2)", threadsDeProcesador, cantidadDeThreadsGeneradores,
@@ -106,7 +106,7 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 		final int ejecucionesPorThread = 100000;
 		final long esperaEntreEjecucionesEnMilis = 0;
 		final long duracionDeTareaEnMillis = 0;
-		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(1, TimeUnit.MINUTES);
+		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(60, TimeUnit.SECONDS);
 
 		// Prepramos un thread que va a agregar tareas de 10ms cada 10ms
 		procesarYMedirRendimiento("limite(4 -> 4)", threadsDeProcesador, cantidadDeThreadsGeneradores,
@@ -120,7 +120,7 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 		final int ejecucionesPorThread = 1000;
 		final long esperaEntreEjecucionesEnMilis = 10;
 		final long duracionDeTareaEnMillis = 100;
-		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(1, TimeUnit.MINUTES);
+		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(60, TimeUnit.SECONDS);
 
 		// Prepramos un thread que va a agregar tareas de 10ms cada 10ms
 		procesarYMedirRendimiento("lentas(1 -> 1)", threadsDeProcesador, cantidadDeThreadsGeneradores,
@@ -134,7 +134,7 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 		final int ejecucionesPorThread = 1000;
 		final long esperaEntreEjecucionesEnMilis = 10;
 		final long duracionDeTareaEnMillis = 100;
-		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(1, TimeUnit.MINUTES);
+		final TimeMagnitude esperaDeThreads = TimeMagnitude.of(60, TimeUnit.SECONDS);
 
 		// Prepramos un thread que va a agregar tareas de 10ms cada 10ms
 		procesarYMedirRendimiento("lentas(1 -> 2)", threadsDeProcesador, cantidadDeThreadsGeneradores,
@@ -156,7 +156,6 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 		final int tareasDisparadas = cantidadDeThreadsGeneradores * ejecucionesPorThread;
 		final WaitBarrier barreraDeTareas = WaitBarrier.create(tareasDisparadas);
 		stressGenerator.setEjecutable(new Runnable() {
-			@Override
 			public void run() {
 				final TareaSimulada tarea = TareaSimulada.create(duracionDeTareaEnMillis, barreraDeTareas);
 				procesor.process(tarea);
@@ -182,7 +181,7 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 		LOG.debug("[{}]: Tareas recibidas: {}, iniciadas: {}, completadas: {}", new Object[] { nombreDeTest,
 				recibidasPorElProcesador, iniciadasPorElProcesador, completadasPorElProcesador });
 
-		barreraDeTareas.waitForReleaseUpTo(TimeMagnitude.of(5, TimeUnit.MINUTES));
+		barreraDeTareas.waitForReleaseUpTo(TimeMagnitude.of(5 * 60, TimeUnit.SECONDS));
 		final long millisEnTareas = cronometro.getElapsedMillis();
 		final long completadasAlFinal = counterListener.getTasksCompleted().get();
 		LOG.debug("[{}]: {} tareas completadas en {} seg", new Object[] { nombreDeTest, completadasAlFinal,

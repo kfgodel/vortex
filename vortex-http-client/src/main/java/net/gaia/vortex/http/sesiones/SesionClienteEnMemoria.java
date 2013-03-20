@@ -45,7 +45,7 @@ public class SesionClienteEnMemoria implements SesionVortexHttpEnCliente, Handle
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#getIdDeSesion()
 	 */
-	@Override
+	
 	public String getIdDeSesion() {
 		return conexionHttpCliente.getIdDeSesion();
 	}
@@ -53,7 +53,7 @@ public class SesionClienteEnMemoria implements SesionVortexHttpEnCliente, Handle
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#onMensajeDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public void onMensajeDesdeVortex(final MensajeVortex mensaje) {
 		conexionHttpCliente.enviar(mensaje);
 	}
@@ -61,7 +61,7 @@ public class SesionClienteEnMemoria implements SesionVortexHttpEnCliente, Handle
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#getNexoAsociado()
 	 */
-	@Override
+	
 	public NexoHttp getNexoAsociado() {
 		return nexoAsociado;
 	}
@@ -69,7 +69,7 @@ public class SesionClienteEnMemoria implements SesionVortexHttpEnCliente, Handle
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#setNexoAsociado(net.gaia.vortex.http.impl.moleculas.NexoHttp)
 	 */
-	@Override
+	
 	public void setNexoAsociado(final NexoHttp nexoAsociado) {
 		this.nexoAsociado = nexoAsociado;
 	}
@@ -84,7 +84,7 @@ public class SesionClienteEnMemoria implements SesionVortexHttpEnCliente, Handle
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnCliente#iniciarComunicacion()
 	 */
-	@Override
+	
 	public void iniciarComunicacion() throws VortexHttpException {
 		this.conexionHttpCliente.iniciarConexion();
 	}
@@ -92,7 +92,7 @@ public class SesionClienteEnMemoria implements SesionVortexHttpEnCliente, Handle
 	/**
 	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnCliente#detenerComunicacion()
 	 */
-	@Override
+	
 	public void detenerComunicacion() throws VortexHttpException {
 		this.conexionHttpCliente.terminarConexion();
 	}
@@ -100,7 +100,7 @@ public class SesionClienteEnMemoria implements SesionVortexHttpEnCliente, Handle
 	/**
 	 * @see net.gaia.vortex.http.impl.cliente.server.HandlerHttpDeMensajesRecibidos#onMensajesRecibidos(java.util.List)
 	 */
-	@Override
+	
 	public void onMensajesRecibidos(final List<MensajeVortex> mensajesRecibidos) {
 		if (nexoAsociado == null) {
 			LOG.error("Se recibieron mensajes en la sesion[{}] sin nexo asociado. Ignorando mensajes: {}", this,
@@ -115,7 +115,7 @@ public class SesionClienteEnMemoria implements SesionVortexHttpEnCliente, Handle
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(nexoAsociado_FIELD, nexoAsociado)
 				.con(conexionHttpCliente_FIELD, conexionHttpCliente).toString();

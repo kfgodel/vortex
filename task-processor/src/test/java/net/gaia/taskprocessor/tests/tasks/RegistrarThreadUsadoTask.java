@@ -22,7 +22,6 @@ public class RegistrarThreadUsadoTask implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
 	public WorkUnit doWork() throws InterruptedException {
 		final Thread currentThread = Thread.currentThread();
 		final AtomicLong firstCount = new AtomicLong(1);

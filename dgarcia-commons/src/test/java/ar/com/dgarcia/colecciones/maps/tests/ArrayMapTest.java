@@ -51,7 +51,7 @@ public class ArrayMapTest extends AbstractTestMap {
 	 * @see org.apache.commons.collections.map.AbstractTestMap#makeEmptyMap()
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	public Map makeEmptyMap() {
 		return new ArrayMap<Object,Object>(new ParOrdenado[26],EqualsIdentificator.instance,EqualsIdentificator.instance);
 	}

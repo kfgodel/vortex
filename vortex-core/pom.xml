@@ -14,8 +14,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.1</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+			<source>${project.jdk}</source>
+			<target>${project.jdk}</target>
           <debug>true</debug>
         </configuration>
       </plugin>
@@ -129,7 +129,7 @@
   </dependencies>
   
   <properties>
-    <project.jdk>1.6</project.jdk>
+    <project.jdk>1.5</project.jdk>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     
     <sonar.host.url>http://kfgodel.info:9000</sonar.host.url>

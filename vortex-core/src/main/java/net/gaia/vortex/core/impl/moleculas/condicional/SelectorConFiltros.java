@@ -56,7 +56,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	/**
 	 * @see net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void conectarCon(final Receptor destino) {
 		// Si no indica condición, recibe todo
 		conectarCon(destino, SiempreTrue.getInstancia());
@@ -66,7 +66,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	 * @see net.gaia.vortex.core.api.moleculas.condicional.Selector#conectarCon(net.gaia.vortex.core.api.atomos.Receptor,
 	 *      net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
-	@Override
+	
 	public void conectarCon(final Receptor destino, final Condicion condicion) {
 		final NexoFiltro filtroDelDestino = getFiltroPara(destino);
 		if (filtroDelDestino != null) {
@@ -86,7 +86,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	 * @see net.gaia.vortex.core.api.moleculas.condicional.Selector#modificarCondicionPara(net.gaia.vortex.core.api.atomos.Receptor,
 	 *      net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
-	@Override
+	
 	public void modificarCondicionPara(final Receptor destino, final Condicion nuevaCondicion) {
 		final NexoFiltro filtroDelDestino = getFiltroPara(destino);
 		if (filtroDelDestino == null) {
@@ -112,7 +112,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	/**
 	 * @see net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void desconectarDe(final Receptor destino) {
 		final NexoFiltro filtroDelDestino = getFiltroPara(destino);
 		if (filtroDelDestino == null) {

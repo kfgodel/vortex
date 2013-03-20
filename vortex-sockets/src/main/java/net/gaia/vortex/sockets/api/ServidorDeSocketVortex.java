@@ -40,6 +40,6 @@ public interface ServidorDeSocketVortex extends Disposable, GeneradorDeNexos {
 	 * 
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
-	@Override
+	
 	public abstract void closeAndDispose();
 }

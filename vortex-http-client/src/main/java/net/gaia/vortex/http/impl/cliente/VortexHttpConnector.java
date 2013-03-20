@@ -54,7 +54,7 @@ public class VortexHttpConnector implements GeneradorDeNexos {
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
 	 */
-	@Override
+	
 	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
 		return creadorDeNexos.getEstrategia();
 	}
@@ -62,7 +62,7 @@ public class VortexHttpConnector implements GeneradorDeNexos {
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
 	 */
-	@Override
+	
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
 		if (estrategia == null) {
 			throw new IllegalArgumentException("La estrategia no puede ser null para el conector http");

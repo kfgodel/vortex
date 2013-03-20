@@ -52,7 +52,7 @@ public class TimeMagnitude {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		final StringBuilder builder = new StringBuilder(getClass().getSimpleName());
 		builder.append(": ");

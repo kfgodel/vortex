@@ -47,7 +47,7 @@ public class TipoComun implements Tipo {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.Tipo#getLinaje()
 	 */
-	@Override
+	
 	public Linaje getLinaje() {
 		final ArmadorDeLinaje armador = ArmadorDeLinaje.create(this);
 		return armador.armarLinaje();
@@ -56,7 +56,7 @@ public class TipoComun implements Tipo {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.Tipo#getParametrosGenerics()
 	 */
-	@Override
+	
 	public List<Tipo> getParametrosGenerics() {
 		if (parametrosGenerics == null) {
 			parametrosGenerics = deducirParametrosGenerics();
@@ -88,7 +88,7 @@ public class TipoComun implements Tipo {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.Tipo#getClassInstance()
 	 */
-	@Override
+	
 	public Class<?> getClassInstance() {
 		return concreteClass;
 	}
@@ -96,7 +96,7 @@ public class TipoComun implements Tipo {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.Tipo#getSuperTipo()
 	 */
-	@Override
+	
 	public Tipo getSuperTipo() {
 		if (concreteClass == null) {
 			// Este tipo no tiene supertipo o no podemos saberlo
@@ -123,7 +123,7 @@ public class TipoComun implements Tipo {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.Tipo#getTipoDelArray()
 	 */
-	@Override
+	
 	public Tipo getTipoDelArray() {
 		if (genericType instanceof GenericArrayType) {
 			final GenericArrayType genericArrayType = (GenericArrayType) genericType;
@@ -145,7 +145,7 @@ public class TipoComun implements Tipo {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.Tipo#getVariablesGenerics()
 	 */
-	@Override
+	
 	public List<VariableGenerics> getVariablesGenerics() {
 		if (concreteClass == null) {
 			// Este tipo no tiene variables o no podemos saberlas
@@ -179,7 +179,7 @@ public class TipoComun implements Tipo {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.Tipo#reemplazando(java.util.List)
 	 */
-	@Override
+	
 	public Tipo reemplazando(final List<VariableGenerics> variablesReemplazo) {
 		final List<VariableGenerics> variablesDeclaradas = getVariablesGenerics();
 		if (variablesDeclaradas.isEmpty()) {
@@ -221,7 +221,7 @@ public class TipoComun implements Tipo {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.Tipo#representaA(java.lang.Class)
 	 */
-	@Override
+	
 	public boolean representaA(final Class<?> clase) {
 		if (concreteClass == null) {
 			// No representamos ninguna clase, incluso si pasan null
@@ -233,7 +233,7 @@ public class TipoComun implements Tipo {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(genericType_FIELD, genericType).con(concreteClass_FIELD, concreteClass)
 				.con(parametrosGenerics_FIELD, parametrosGenerics).toString();
@@ -242,7 +242,7 @@ public class TipoComun implements Tipo {
 	/**
 	 * @see ar.com.dgarcia.lang.reflection.types.Tipo#getNombreDeVariable()
 	 */
-	@Override
+	
 	public String getNombreDeVariable() {
 		if (genericType instanceof TypeVariable) {
 			final TypeVariable<?> genericVariableType = (TypeVariable<?>) genericType;

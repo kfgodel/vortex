@@ -27,7 +27,7 @@ public class ReceptorEncolador extends ReceptorSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public void recibir(final MensajeVortex mensaje) {
 		mensajes.add(mensaje);
 	}
@@ -61,7 +61,7 @@ public class ReceptorEncolador extends ReceptorSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(mensajes_FIELD, mensajes)
 				.toString();

@@ -36,7 +36,7 @@ public class IntercambiarMensajesCliente implements ComandoClienteHttp {
 	/**
 	 * @see net.gaia.vortex.http.impl.cliente.server.ComandoClienteHttp#crearRequest(java.lang.String)
 	 */
-	@Override
+	
 	public StringRequest crearRequest(final String urlDelSevidor) {
 		final String urlParaIntercambio = urlDelSevidor + HttpMetadata.URL_PREFFIX_INTERCAMBIAR + idDeSesion;
 		final StringRequest requestParaIntercambio = StringRequest.create(urlParaIntercambio);
@@ -49,7 +49,7 @@ public class IntercambiarMensajesCliente implements ComandoClienteHttp {
 	/**
 	 * @see net.gaia.vortex.http.impl.cliente.server.ComandoClienteHttp#procesarRespuesta(ar.dgarcia.http.client.api.StringResponse)
 	 */
-	@Override
+	
 	public void procesarRespuesta(final StringResponse respuestaDelServidor) {
 		mensajesEnJsonRecibidos = respuestaDelServidor.getContent();
 	}
@@ -64,7 +64,7 @@ public class IntercambiarMensajesCliente implements ComandoClienteHttp {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		final ToString helper = ToString.de(this).con(idDeSesion_FIELD, idDeSesion);
 		if (this.mensajesEnJsonRecibidos == null) {

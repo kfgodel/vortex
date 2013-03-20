@@ -80,7 +80,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	@Override
+	
 	public void setDestino(final Receptor destino) {
 		nodoDeSalidaAVortex.setDestino(destino);
 	}
@@ -88,7 +88,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#getDestino()
 	 */
-	@Override
+	
 	public Receptor getDestino() {
 		return nodoDeSalidaAVortex.getDestino();
 	}
@@ -102,7 +102,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(socket_FIELD, socket)
 				.add("destino", getDestino()).toString();
@@ -112,7 +112,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 	 * @see ar.dgarcia.objectsockets.api.ObjectReceptionHandler#onObjectReceived(java.lang.Object,
 	 *      ar.dgarcia.objectsockets.api.ObjectSocket)
 	 */
-	@Override
+	
 	public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 		procesoDesdeSocket.onObjectReceived(received, receivedFrom);
 	}
@@ -120,7 +120,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 	/**
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
-	@Override
+	
 	public void closeAndDispose() {
 		socket.closeAndDispose();
 	}
@@ -146,7 +146,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 	/**
 	 * @see net.gaia.vortex.core.api.memoria.ComponenteConMemoria#yaRecibio(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public boolean yaRecibio(final MensajeVortex mensaje) {
 		return memoriaDeMensajes.tieneRegistroDe(mensaje);
 	}

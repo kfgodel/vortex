@@ -39,7 +39,7 @@ public abstract class HandlerHttpPorComandos extends AbstractHandler {
 	 *      org.eclipse.jetty.server.Request, javax.servlet.http.HttpServletRequest,
 	 *      javax.servlet.http.HttpServletResponse)
 	 */
-	@Override
+	
 	public void handle(final String target, final Request baseRequest, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException, ServletException {
 		LOG.debug("Nuevo request recibido: {} \"{}\" ", baseRequest.getMethod(), baseRequest.getUri());

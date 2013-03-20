@@ -45,7 +45,6 @@ public class ExecutorDelayerProcessor implements TaskDelayerProcessor {
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskDelayerProcessor#detener()
 	 */
-	@Override
 	public void detener() {
 		// El método indica que es seguro el casteo
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -61,7 +60,7 @@ public class ExecutorDelayerProcessor implements TaskDelayerProcessor {
 	 * @see net.gaia.taskprocessor.api.TaskDelayerProcessor#processDelayed(net.gaia.taskprocessor.api.TimeMagnitude,
 	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
-	@Override
+	
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit work) {
 		// Creamos la tarea para el trabajo
 		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, delegateProcessor);
@@ -82,7 +81,7 @@ public class ExecutorDelayerProcessor implements TaskDelayerProcessor {
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskDelayerProcessor#removeTasksMatching(net.gaia.taskprocessor.api.TaskCriteria)
 	 */
-	@Override
+	
 	public void removeTasksMatching(final TaskCriteria criteria) {
 		final Iterator<TaskPlanner> delayedIterator = this.delayedTasks.iterator();
 		while (delayedIterator.hasNext()) {

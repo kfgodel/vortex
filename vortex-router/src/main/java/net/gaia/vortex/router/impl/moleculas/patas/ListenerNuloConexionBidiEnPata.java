@@ -32,7 +32,7 @@ public class ListenerNuloConexionBidiEnPata implements ListenerConexionBidiEnPat
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.patas.ListenerConexionBidiEnPata#onConexionBidiPara(net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
 	 */
-	@Override
+	
 	public void onConexionBidiPara(final PataBidireccional pata) {
 		// No hacemos nada
 	}

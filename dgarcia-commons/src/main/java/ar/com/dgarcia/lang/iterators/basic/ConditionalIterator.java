@@ -71,7 +71,7 @@ public class ConditionalIterator<T> extends AbstractIteratorDecorator<T> {
 	/**
 	 * @see java.util.Iterator#hasNext()
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		if (this.encontrado != null) {
 			return true;
@@ -89,7 +89,7 @@ public class ConditionalIterator<T> extends AbstractIteratorDecorator<T> {
 	/**
 	 * @see java.util.Iterator#next()
 	 */
-	@Override
+	
 	public T next() {
 		if (this.encontrado == null) {
 			if (!this.hasNext()) {
@@ -104,7 +104,7 @@ public class ConditionalIterator<T> extends AbstractIteratorDecorator<T> {
 	/**
 	 * @see java.util.Iterator#remove()
 	 */
-	@Override
+	
 	public void remove() {
 		if (this.encontrado != null) {
 			throw new IllegalStateException();
@@ -115,7 +115,7 @@ public class ConditionalIterator<T> extends AbstractIteratorDecorator<T> {
 	/**
 	 * @see ar.com.dgarcia.lang.iterators.basic.AbstractIteratorDecorator#size()
 	 */
-	@Override
+	
 	public int size() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException("Este iterador no puede anticipar la cantidad de elementos");
 	}

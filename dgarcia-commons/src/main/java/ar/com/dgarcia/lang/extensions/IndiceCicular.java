@@ -40,7 +40,7 @@ public class IndiceCicular implements Iterator<Long> {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(valorActual_FIELD, valorActual).con(minimoInclusivo_FIELD, minimoInclusivo)
 				.con(maximoExclusivo_FIELD, maximoExclusivo).con(proximoValor_FIELD, proximoValor).toString();
@@ -49,7 +49,7 @@ public class IndiceCicular implements Iterator<Long> {
 	/**
 	 * @see java.util.Iterator#hasNext()
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		return true;
 	}
@@ -57,7 +57,7 @@ public class IndiceCicular implements Iterator<Long> {
 	/**
 	 * @see java.util.Iterator#next()
 	 */
-	@Override
+	
 	public Long next() {
 		valorActual = proximoValor;
 		proximoValor++;
@@ -77,7 +77,7 @@ public class IndiceCicular implements Iterator<Long> {
 	/**
 	 * @see java.util.Iterator#remove()
 	 */
-	@Override
+	
 	public void remove() {
 		throw new UnsupportedOperationException("No se puede quitar elementos del LongCircular");
 	}

@@ -36,7 +36,7 @@ public class MultiplexorDePatas extends MultiplexorSupport {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final Collection<PataBidireccional> patas = obtenerPatas();
 		final MultiplexarAPatas multiplexar = MultiplexarAPatas.create(mensaje, patas, getProcessor());

@@ -73,7 +73,7 @@ public class BifurcarMensaje implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	@Override
+	
 	public WorkUnit doWork() throws InterruptedException {
 		Loggers.ATOMOS.trace("Evaluando condicion[{}] en mensaje[{}] para decidir delegado", condicion, mensaje);
 		ResultadoDeCondicion resultadoDeCondicion;
@@ -114,7 +114,7 @@ public class BifurcarMensaje implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(condicion_FIELD, condicion).add(delegadoPorTrue_FIELD, delegadoPorTrue)
 				.add(delegadoPorFalse_FIELD, delegadoPorFalse).add(mensaje_FIELD, mensaje).toString();

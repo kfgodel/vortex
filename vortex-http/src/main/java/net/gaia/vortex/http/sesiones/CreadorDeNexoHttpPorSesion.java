@@ -38,7 +38,7 @@ public class CreadorDeNexoHttpPorSesion implements ListenerDeSesionesHttp {
 	/**
 	 * @see net.gaia.vortex.http.sesiones.ListenerDeSesionesHttp#onSesionCreada(net.gaia.vortex.http.sesiones.SesionVortexHttp)
 	 */
-	@Override
+	
 	public void onSesionCreada(final SesionVortexHttp sesionCreada) {
 		LOG.debug("Creando nexo para la sesion http[{}]", sesionCreada);
 		final NexoHttp nuevoNexo = NexoHttp.create(processor, sesionCreada, ReceptorNulo.getInstancia());
@@ -54,7 +54,7 @@ public class CreadorDeNexoHttpPorSesion implements ListenerDeSesionesHttp {
 	/**
 	 * @see net.gaia.vortex.http.sesiones.ListenerDeSesionesHttp#onSesionDestruida(net.gaia.vortex.http.sesiones.SesionVortexHttp)
 	 */
-	@Override
+	
 	public void onSesionDestruida(final SesionVortexHttp sesionDestruida) {
 		LOG.debug("Cerrando nexo para la sesion http[{}]", sesionDestruida);
 		final NexoHttp nexoCerrado = sesionDestruida.getNexoAsociado();
@@ -81,7 +81,7 @@ public class CreadorDeNexoHttpPorSesion implements ListenerDeSesionesHttp {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(estrategia_FIELD, estrategia).toString();
 	}

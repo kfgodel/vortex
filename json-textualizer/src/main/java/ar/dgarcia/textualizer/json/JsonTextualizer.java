@@ -41,7 +41,7 @@ public class JsonTextualizer implements ObjectTextualizer {
 	/**
 	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertToString(java.lang.Object)
 	 */
-	@Override
+	
 	public String convertToString(final Object value) throws CannotTextSerializeException {
 		try {
 			final String jsonString = mapper.writeValueAsString(value);
@@ -61,7 +61,7 @@ public class JsonTextualizer implements ObjectTextualizer {
 	/**
 	 * @see ar.dgarcia.textualizer.api.ObjectTextualizer#convertFromString(java.lang.String)
 	 */
-	@Override
+	
 	public Object convertFromString(final String value) throws CannotTextUnserializeException {
 		return convertFromStringAs(Object.class, value);
 	}

@@ -95,7 +95,7 @@ public class MensajeModeloParaTests {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(numeroDeSecuencia_FIELD, numeroDeSecuencia)
 				.con(posibleDominio_FIELD, posibleDominio).con(posibleEmisor_FIELD, posibleEmisor)

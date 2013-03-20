@@ -31,7 +31,7 @@ public class TaskWorkerRejectionHandler implements RejectedExecutionHandler {
 	 * @see java.util.concurrent.RejectedExecutionHandler#rejectedExecution(java.lang.Runnable,
 	 *      java.util.concurrent.ThreadPoolExecutor)
 	 */
-	@Override
+	
 	public void rejectedExecution(final Runnable runnable, final ThreadPoolExecutor executor) {
 		final int maximunSize = executor.getMaximumPoolSize();
 		final int poolSize = executor.getPoolSize();

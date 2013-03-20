@@ -96,7 +96,7 @@ public class TestAtomos {
 	public void elTransformadorDeberiaModificarElMensajeEntregado() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
 		final Transformacion transformacion = new Transformacion() {
-			@Override
+			
 			public MensajeVortex transformar(@SuppressWarnings("unused") final MensajeVortex mensaje) {
 				return mensaje2;
 			}

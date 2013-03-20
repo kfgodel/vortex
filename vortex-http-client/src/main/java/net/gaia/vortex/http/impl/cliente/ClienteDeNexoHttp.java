@@ -52,7 +52,7 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
 	 */
-	@Override
+	
 	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
 		return conector.getEstrategiaDeConexion();
 	}
@@ -60,7 +60,7 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
 	 */
-	@Override
+	
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
 		this.conector.setEstrategiaDeConexion(estrategia);
 	}
@@ -68,7 +68,7 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	/**
 	 * @see net.gaia.vortex.http.api.ClienteDeHttpVortex#conectarAlServidorHttp()
 	 */
-	@Override
+	
 	public NexoHttp conectarAlServidorHttp() throws VortexHttpException {
 		if (sesionAbierta == null) {
 			sesionAbierta = conector.abrirNuevaSesion(urlDelServidor);
@@ -83,7 +83,7 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	/**
 	 * @see net.gaia.vortex.http.api.ClienteDeHttpVortex#desconectarDelServidor()
 	 */
-	@Override
+	
 	public void desconectarDelServidor() throws VortexHttpException {
 		if (sesionAbierta == null) {
 			LOG.error("No existe sesión para cerrar en el cliente[{}]", this);
@@ -94,7 +94,7 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).add(urlDelServidor_FIELD, urlDelServidor).toString();
 	}

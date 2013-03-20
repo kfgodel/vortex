@@ -53,7 +53,6 @@ public class TestTaskProcessorApi {
 		private final AtomicBoolean processed = new AtomicBoolean(false);
 		private final WaitBarrier esperaProcesada = WaitBarrier.create(1);
 
-		@Override
 		public WorkUnit doWork() throws InterruptedException {
 			processed.set(true);
 			esperaProcesada.release();
@@ -89,7 +88,7 @@ public class TestTaskProcessorApi {
 
 		final TestWorkUnit tercerTarea = new TestWorkUnit();
 		final TestWorkUnit segundaTarea = new TestWorkUnit() {
-			@Override
+			
 			public WorkUnit doWork() throws InterruptedException {
 				final SubmittedTask tercerTask = taskProcessor.process(tercerTarea);
 				tercerProceso.set(tercerTask);
@@ -97,7 +96,7 @@ public class TestTaskProcessorApi {
 			}
 		};
 		final TestWorkUnit primeraTarea = new TestWorkUnit() {
-			@Override
+			
 			public WorkUnit doWork() throws InterruptedException {
 				final SubmittedTask segundoTask = taskProcessor.process(segundaTarea);
 				segundoProceso.set(segundoTask);
@@ -124,7 +123,6 @@ public class TestTaskProcessorApi {
 		// Ponemos un handler para capturar la tarea fallida
 		final AtomicReference<WorkUnit> failedWork = new AtomicReference<WorkUnit>();
 		this.taskProcessor.setExceptionHandler(new TaskExceptionHandler() {
-			@Override
 			public void onExceptionRaisedWhileProcessing(final SubmittedTask task,
 					@SuppressWarnings("unused") final TaskProcessor processingProcessor) {
 				final WorkUnit work = task.getWork();
@@ -135,7 +133,7 @@ public class TestTaskProcessorApi {
 		Assert.assertTrue("No debería haber tarea fallida aun", failedWork.get() == null);
 
 		final TestWorkUnit tarea = new TestWorkUnit() {
-			@Override
+			
 			public WorkUnit doWork() {
 				throw new RuntimeException("Debe fallar");
 			}
@@ -154,7 +152,7 @@ public class TestTaskProcessorApi {
 			/**
 			 * @see net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit#doWork()
 			 */
-			@Override
+			
 			public WorkUnit doWork() {
 				throw expectedException;
 			}
@@ -185,7 +183,7 @@ public class TestTaskProcessorApi {
 		final AtomicReference<SubmittedTask> canceladaRef = new AtomicReference<SubmittedTask>();
 
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
-			@Override
+			
 			public WorkUnit doWork() throws InterruptedException {
 				lockParaCancelarTodas.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
@@ -255,7 +253,6 @@ public class TestTaskProcessorApi {
 	public void deberiaPermitirEjecutarTareasEncadenadas() {
 		final TestWorkUnit unidadSegunda = new TestWorkUnit();
 		final WorkUnit unidadPrimera = new WorkUnit() {
-			@Override
 			public WorkUnit doWork() throws InterruptedException {
 				// La inicial solo sirve para pasarle la posta a la segunda
 				return unidadSegunda;
@@ -276,7 +273,7 @@ public class TestTaskProcessorApi {
 			/**
 			 * @see net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit#doWork()
 			 */
-			@Override
+			
 			public WorkUnit doWork() throws InterruptedException {
 				if (cantidadEjecuciones.getAndIncrement() == 0) {
 					// Ejecutamos una vez más

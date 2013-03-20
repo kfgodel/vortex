@@ -27,7 +27,7 @@ public abstract class TaskProcessorListenerSupport implements TaskProcessorListe
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskAcceptedAndPending(net.gaia.taskprocessor.api.SubmittedTask,
 	 *      net.gaia.taskprocessor.api.TaskProcessor)
 	 */
-	@Override
+	
 	public void onTaskAcceptedAndPending(final SubmittedTask task, final TaskProcessor processor) {
 	}
 
@@ -35,7 +35,7 @@ public abstract class TaskProcessorListenerSupport implements TaskProcessorListe
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskStartedToProcess(net.gaia.taskprocessor.api.SubmittedTask,
 	 *      net.gaia.taskprocessor.api.TaskProcessor, java.lang.Thread)
 	 */
-	@Override
+	
 	public void onTaskStartedToProcess(final SubmittedTask task, final TaskProcessor processor,
 			final Thread executingThread) {
 	}
@@ -44,7 +44,7 @@ public abstract class TaskProcessorListenerSupport implements TaskProcessorListe
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskCompleted(net.gaia.taskprocessor.api.SubmittedTask,
 	 *      net.gaia.taskprocessor.api.TaskProcessor, java.lang.Thread)
 	 */
-	@Override
+	
 	public void onTaskCompleted(final SubmittedTask task, final TaskProcessor processor, final Thread executingThread) {
 	}
 
@@ -52,7 +52,7 @@ public abstract class TaskProcessorListenerSupport implements TaskProcessorListe
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskFailed(net.gaia.taskprocessor.api.SubmittedTask,
 	 *      net.gaia.taskprocessor.api.TaskProcessor, java.lang.Thread)
 	 */
-	@Override
+	
 	public void onTaskFailed(final SubmittedTask task, final TaskProcessor processor, final Thread executingThread) {
 	}
 
@@ -60,7 +60,7 @@ public abstract class TaskProcessorListenerSupport implements TaskProcessorListe
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskInterrupted(net.gaia.taskprocessor.api.SubmittedTask,
 	 *      net.gaia.taskprocessor.api.TaskProcessor, java.lang.Thread)
 	 */
-	@Override
+	
 	public void onTaskInterrupted(final SubmittedTask task, final TaskProcessor processor, final Thread executingThread) {
 	}
 
@@ -68,7 +68,7 @@ public abstract class TaskProcessorListenerSupport implements TaskProcessorListe
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskCancelled(net.gaia.taskprocessor.api.SubmittedTask,
 	 *      net.gaia.taskprocessor.api.TaskProcessor)
 	 */
-	@Override
+	
 	public void onTaskCancelled(final SubmittedTask task, final TaskProcessor processor) {
 	}
 

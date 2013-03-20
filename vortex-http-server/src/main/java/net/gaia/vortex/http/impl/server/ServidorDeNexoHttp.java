@@ -36,7 +36,7 @@ public class ServidorDeNexoHttp implements ServidorDeHttpVortex {
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
 	 */
-	@Override
+	
 	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
 		return this.vortexHttpHandler.getEstrategiaDeConexion();
 	}
@@ -44,7 +44,7 @@ public class ServidorDeNexoHttp implements ServidorDeHttpVortex {
 	/**
 	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
 	 */
-	@Override
+	
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
 		this.vortexHttpHandler.setEstrategiaDeConexion(estrategia);
 	}
@@ -52,7 +52,7 @@ public class ServidorDeNexoHttp implements ServidorDeHttpVortex {
 	/**
 	 * @see net.gaia.vortex.http.api.ServidorDeHttpVortex#iniciarServidorHttp()
 	 */
-	@Override
+	
 	public void iniciarServidorHttp() throws VortexHttpException {
 		try {
 			internalServer = new Server(listeningPort);
@@ -67,7 +67,7 @@ public class ServidorDeNexoHttp implements ServidorDeHttpVortex {
 	/**
 	 * @see net.gaia.vortex.http.api.ServidorDeHttpVortex#detenerServidor()
 	 */
-	@Override
+	
 	public void detenerServidor() throws VortexHttpException {
 		try {
 			this.internalServer.stop();

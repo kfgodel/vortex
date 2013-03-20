@@ -56,7 +56,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	/**
 	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#registrarNuevo(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public boolean registrarNuevo(final MensajeVortex mensaje) {
 		final IdDeMensaje idNuevo = mensaje.getIdDeMensaje();
 		final boolean yaExistia = comprobarSiYaExiste(idNuevo);
@@ -82,7 +82,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 			throw new FaultyCodeException("Se recibió un mensaje sin ID");
 		}
 		final boolean agregado = concurrentCoordinator.doWriteOperation(new Callable<Boolean>() {
-			@Override
+			
 			public Boolean call() throws Exception {
 				return unsyncIntentarAgregarComoNuevo(idNuevo);
 			}
@@ -126,7 +126,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 			throw new FaultyCodeException("Se recibió un mensaje sin ID");
 		}
 		final Boolean yaExiste = concurrentCoordinator.doReadOperation(new Callable<Boolean>() {
-			@Override
+			
 			public Boolean call() throws Exception {
 				return unsyncComprobarSiYaExiste(idNuevo);
 			}
@@ -151,7 +151,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(idsRegistrados_FIELD, idsRegistrados.size()).toString();
 	}
@@ -159,7 +159,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	/**
 	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#tieneRegistroDe(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	public boolean tieneRegistroDe(final MensajeVortex mensaje) {
 		final IdDeMensaje idDelMensaje = mensaje.getIdDeMensaje();
 		final boolean tieneRegistroPrevio = comprobarSiYaExiste(idDelMensaje);

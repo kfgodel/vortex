@@ -67,7 +67,7 @@ public class PasoDeRuteo {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(origen_FIELD, origen).con(destino_FIELD, destino).con(mensaje_FIELD, mensaje)
 				.toString();

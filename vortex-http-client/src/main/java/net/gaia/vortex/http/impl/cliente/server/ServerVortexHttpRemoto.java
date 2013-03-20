@@ -67,7 +67,7 @@ public class ServerVortexHttpRemoto {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(urlDelServidor_FIELD, urlDelServidor).toString();
 	}

@@ -34,7 +34,7 @@ public class FlujoInmutable implements FlujoVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.moleculas.FlujoVortex#getEntrada()
 	 */
-	@Override
+	
 	public Receptor getEntrada() {
 		return entrada;
 	}
@@ -42,7 +42,7 @@ public class FlujoInmutable implements FlujoVortex {
 	/**
 	 * @see net.gaia.vortex.core.api.moleculas.FlujoVortex#getSalida()
 	 */
-	@Override
+	
 	public Emisor getSalida() {
 		return salida;
 	}
@@ -57,7 +57,7 @@ public class FlujoInmutable implements FlujoVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(entrada_FIELD, entrada).con(salida_FIELD, salida).toString();
 	}

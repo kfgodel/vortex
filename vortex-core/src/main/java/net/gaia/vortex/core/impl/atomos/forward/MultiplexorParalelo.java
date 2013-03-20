@@ -27,7 +27,7 @@ public class MultiplexorParalelo extends MultiplexorSupport {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	@Override
+	
 	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		// Por cada destino derivamos la entrega al procesador interno

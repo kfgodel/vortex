@@ -105,7 +105,7 @@ public class TestRedA01ConPortal {
 	@Test
 	public void el_Receptor_Debería_Poder_Recibir_De_Vortex_Cualquier_Objeto_Serializable() {
 		nodoReceptor.recibirCon(new HandlerTipado<Object>(SiempreTrue.getInstancia()) {
-			@Override
+
 			public void onMensajeRecibido(final Object mensaje) {
 				// Recibimos cualquier cosa que ande dando vueltas
 			}
@@ -138,7 +138,7 @@ public class TestRedA01ConPortal {
 		final WaitBarrier bloqueoDelReceptor = WaitBarrier.create();
 		final AtomicBoolean receptorBloqueado = new AtomicBoolean(false);
 		final HandlerTipado<String> handlerReceptor = new HandlerTipado<String>(SoloInstancias.de(String.class)) {
-			@Override
+
 			public void onMensajeRecibido(final String mensaje) {
 				receptorBloqueado.set(true);
 				// Hacemos que el emisor siga ejecutando si nos estaba esperando
@@ -172,7 +172,7 @@ public class TestRedA01ConPortal {
 		final WaitBarrier threadDeEntregaDefinido = WaitBarrier.create();
 		final AtomicReference<Thread> threadDeEntrega = new AtomicReference<Thread>();
 		final HandlerTipado<String> handlerReceptor = new HandlerTipado<String>(SoloInstancias.de(String.class)) {
-			@Override
+
 			public void onMensajeRecibido(final String mensaje) {
 				final Thread threadActual = Thread.currentThread();
 				threadDeEntrega.set(threadActual);
@@ -300,7 +300,7 @@ public class TestRedA01ConPortal {
 			nodoEmisor.enviar(mensajeCronometro);
 		}
 
-		handlerCronometro.esperarEntregaDeMensajes(TimeMagnitude.of(1, TimeUnit.MINUTES));
+		handlerCronometro.esperarEntregaDeMensajes(TimeMagnitude.of(60, TimeUnit.SECONDS));
 		LOG.debug("Nanos Fin: {}", System.nanoTime());
 		final long endNanos = System.nanoTime();
 		final long elapsedNanos = endNanos - startNanos;

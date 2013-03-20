@@ -45,7 +45,7 @@ public class LRUCache<K, V> extends LinkedHashMap<K, V> {
 		this.cacheSize = cacheSize;
 	}
 
-	@Override
+	
 	protected boolean removeEldestEntry(final Map.Entry<K, V> eldest) {
 		return (size() > cacheSize);
 	}
@@ -59,7 +59,7 @@ public class LRUCache<K, V> extends LinkedHashMap<K, V> {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return ToString.de(this).con(cacheSize_FIELD, cacheSize).con("contenido", super.toString()).toString();
 	}
