@@ -23,12 +23,16 @@ import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
 import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Esta clase representa un controlador remoto de la luz a través de vortex
  * 
  * @author D. García
  */
 public class ControladorRemoto {
+	private static final Logger LOG = LoggerFactory.getLogger(ControladorRemoto.class);
 
 	private Luz luzReal;
 
@@ -54,6 +58,7 @@ public class ControladorRemoto {
 				ConsultarEstadoDeLuz.tipoDeMensaje_FIELD, ConsultarEstadoDeLuz.TIPO)) {
 			@Override
 			public void onMensajeRecibido(ConsultarEstadoDeLuz consulta) {
+				LOG.debug("Recibida consulta de estado desde vortex");
 				onConsultaRecibida(consulta);
 			}
 		});
@@ -62,6 +67,7 @@ public class ControladorRemoto {
 				AtributoPresente.conNombre(CambiarValorDeLuz.nuevoValor_FIELD))) {
 			@Override
 			public void onMensajeRecibido(CambiarValorDeLuz cambio) {
+				LOG.debug("Recibido cambio de estado desde vortex: {}", cambio.getNuevoValor());
 				onCambioRecibida(cambio);
 			}
 		});
@@ -96,6 +102,7 @@ public class ControladorRemoto {
 	 */
 	private void informarValorActual(int valorActual) {
 		InformarEstadoDeLuz informe = InformarEstadoDeLuz.create(valorActual);
+		LOG.debug("Enviando estado nuevo de la luz a vortex: {}", valorActual);
 		portalVortex.enviar(informe);
 	}
 }

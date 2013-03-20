@@ -19,8 +19,12 @@
         </encoder>
 	</appender>
   
-
-	<root level="debug">
+	<logger name="net.gaia.vortex.example.light" level="DEBUG" />
+	
+	<!-- Detalle del ruteo de los mensajes a nivel atomos -->
+	<logger name="net.gaia.vortex.meta.Loggers.ATOMOS" level="INFO" />
+	
+	<root level="info">
 		<appender-ref ref="LOGCAT" />
 	</root>
   
