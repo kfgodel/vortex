@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
+import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
@@ -44,12 +45,13 @@ public class RegistrarRuteo extends ReceptorSupport {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	
+
 	public void recibir(final MensajeVortex mensaje) {
 		final NodoBidireccional nodoOrigen = pataRuteadora.getNodoLocal();
 		final Receptor destino = pataRuteadora.getNodoRemoto();
-		LOG.debug("  Ruteando por[{}] mensaje[{}] desde[{}] hasta[{}]", new Object[] { pataRuteadora.toShortString(),
-				mensaje.toShortString(), nodoOrigen.toShortString(), destino.toShortString() });
+		Loggers.BIDI_MSG.debug("  Ruteando por[{}] mensaje[{}] desde[{}] hasta[{}]",
+				new Object[] { pataRuteadora.toShortString(), mensaje.toShortString(), nodoOrigen.toShortString(),
+						destino.toShortString() });
 		final ListenerDeRuteo listenerActual = listenerDeRuteos.get();
 		try {
 			listenerActual.onMensajeRuteado(nodoOrigen, mensaje, destino);
@@ -69,7 +71,8 @@ public class RegistrarRuteo extends ReceptorSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(listenerDeRuteos_FIELD, listenerDeRuteos).con(pataRuteadora_FIELD, pataRuteadora)
 				.toString();

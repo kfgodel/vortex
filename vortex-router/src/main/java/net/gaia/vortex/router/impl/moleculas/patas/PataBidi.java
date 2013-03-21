@@ -34,6 +34,7 @@ import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
@@ -118,13 +119,15 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 * Este receptor sólo sirve para que al ser invocado se ejecute el método indicado
 	 */
 	private final ReceptorSupport dispararEventoConexionBidi = new ReceptorSupport() {
-		
+
 		public void recibir(final MensajeVortex mensaje) {
 			evento_nevaConexionBidireccional();
 		}
 	};
 
 	private AtomicReference<ListenerDeRuteo> listenerDeRuteo;
+
+	private ReceptorSupport wrapperDelRemotoConLogueo;
 
 	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
 			final TaskProcessor taskProcessor, final ConjuntoDeCondiciones conjuntoDeCondiciones,
@@ -142,7 +145,18 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		pata.nodoRemoto = nodoRemoto;
 		pata.generadorDeIds = generadorDeIds;
 		pata.memoriaDePedidosEnviados = MemoriaDePedidosDeId.create();
-		pata.identificadorDeMetamensajes = NexoTransformador.create(taskProcessor, generadorDeIds, nodoRemoto);
+		// Este wrapper permite loguear el envio del metamensaje antes de su entrega real
+		pata.wrapperDelRemotoConLogueo = new ReceptorSupport() {
+			public void recibir(final MensajeVortex mensaje) {
+				final Receptor nodoRemoto = pata.getNodoRemoto();
+				Loggers.BIDI_MSG.debug("  Enviando por[{}] mensaje[{}] desde[{}] hasta[{}]",
+						new Object[] { pata.toShortString(), mensaje.toShortString(),
+								pata.getNodoLocal().toShortString(), nodoRemoto.toShortString() });
+				nodoRemoto.recibir(mensaje);
+			}
+		};
+		pata.identificadorDeMetamensajes = NexoTransformador.create(taskProcessor, generadorDeIds,
+				pata.wrapperDelRemotoConLogueo);
 		pata.listenerDeRuteo = listenerDeRuteo;
 		pata.inicializarFiltros(conjuntoDeCondiciones, filtroDeEntradaParaPataNueva);
 		pata.initializeWith(taskProcessor);
@@ -262,10 +276,10 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 * @return El componente de entrada para los mensajes
 	 */
 	private Receptor crearProcesoParaRecibirConfirmacionDeIds(final TaskProcessor taskProcessor) {
-		// Registramos id remoto y convertimos la respuesta en confirmación
+		// Registramos id remoto y convertimos la confirmación en re-confirmación
 		final NexoTransformador registradorDeId = NexoTransformador.create(taskProcessor,
 				RegistrarIdRemotoYEnviarReconfirmacion.create(getIdLocal(), idRemoto, mapeador),
-				identificadorDeMetamensajes);
+				ReceptorNulo.getInstancia());
 
 		// Antes de mandar el mensaje disparamos el evento de nueva conexion bidi creada
 		final NexoEjecutor disparadorDeNuevaConexion = NexoEjecutor.create(taskProcessor, dispararEventoConexionBidi,
@@ -349,7 +363,6 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		this.filtroDeEntradaPublicado = FiltroNoPublicado.getInstancia();
 	}
 
-	
 	public NodoBidireccional getNodoLocal() {
 		return nodoLocal;
 	}
@@ -358,7 +371,6 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		this.nodoLocal = nodoLocal;
 	}
 
-	
 	public Receptor getNodoRemoto() {
 		return nodoRemoto;
 	}
@@ -367,7 +379,6 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		this.nodoRemoto = nodoRemoto;
 	}
 
-	
 	public Long getIdLocal() {
 		return idLocal;
 	}
@@ -376,7 +387,6 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		this.idLocal = idLocal;
 	}
 
-	
 	public Long getIdRemoto() {
 		return idRemoto.get();
 	}
@@ -404,13 +414,13 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		final Map<String, Object> idDeMensajeComoMapa = mensajeConId.getContenido().getIdDeMensajeComoMapa();
 		memoriaDePedidosEnviados.registrarPedidoConId(idDeMensajeComoMapa);
 		LOG.debug("Enviando por [{}] pedido de id[{}] ", this.toShortString(), mensajeConId.toShortString());
-		getNodoRemoto().recibir(mensajeConId);
+		wrapperDelRemotoConLogueo.recibir(mensajeConId);
 	}
 
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional#tieneComoNodoRemotoA(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	
+
 	public boolean tieneComoNodoRemotoA(final Receptor nodo) {
 		return getNodoRemoto().equals(nodo);
 	}
@@ -418,7 +428,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional#getParteDeCondicion()
 	 */
-	
+
 	public ParteDeCondiciones getParteDeCondicion() {
 		return this.filtroDeSalida;
 	}
@@ -426,7 +436,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional#actualizarFiltroDeEntrada(net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
-	
+
 	public void actualizarFiltroDeEntrada(final Condicion nuevoFiltro) {
 		this.setFiltroDeEntrada(nuevoFiltro);
 		publicarFiltroDeEntrada();
@@ -487,7 +497,8 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(idLocal_FIELD, idLocal)
 				.con(idRemoto_FIELD, idRemoto).con(nodoLocal_FIELD, nodoLocal.toShortString())

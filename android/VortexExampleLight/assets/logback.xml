@@ -21,8 +21,8 @@
   
 	<logger name="net.gaia.vortex.example.light" level="DEBUG" />
 	
-	<!-- Detalle del ruteo de los mensajes a nivel atomos -->
-	<logger name="net.gaia.vortex.meta.Loggers.ATOMOS" level="INFO" />
+	<!-- Detalle de los envios y recepciones bidi -->
+	<logger name="net.gaia.vortex.meta.Loggers.MENSAJERIA_BIDI" level="DEBUG" />
 	
 	<root level="info">
 		<appender-ref ref="LOGCAT" />

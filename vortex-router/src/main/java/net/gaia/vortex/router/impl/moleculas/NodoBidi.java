@@ -25,6 +25,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
@@ -123,7 +124,8 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	
+
+	@Override
 	public void conectarCon(final Receptor destino) {
 		if (destino == null) {
 			throw new IllegalArgumentException("El destino del nodo no puede ser null");
@@ -155,7 +157,8 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	
+
+	@Override
 	public void desconectarDe(final Receptor destino) {
 		final PataBidireccional pataDesconectada = getPataPorNodo(destino);
 		if (pataDesconectada == null) {
@@ -190,17 +193,18 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	
+
+	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		LOG.debug("Recibido en[{}] el mensaje[{}]: {}", new Object[] { this.toShortString(), mensaje.toShortString(),
-				mensaje.getContenido() });
+		Loggers.BIDI_MSG.debug("Recibido en[{}] el mensaje[{}]: {}",
+				new Object[] { this.toShortString(), mensaje.toShortString(), mensaje.getContenido() });
 		super.recibir(mensaje);
 	}
 
 	/**
 	 * @see net.gaia.vortex.router.api.moleculas.NodoBidireccional#setListenerDeFiltrosRemotos(net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro)
 	 */
-	
+
 	public void setListenerDeFiltrosRemotos(final ListenerDeCambiosDeFiltro listenerDeFiltros) {
 		if (listenerDeFiltros == null) {
 			throw new IllegalArgumentException("El listener de filtros no puede ser null. A lo sumo una instancia de "
@@ -212,7 +216,7 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	/**
 	 * @see net.gaia.vortex.router.api.moleculas.NodoBidireccional#setListenerDeRuteos(net.gaia.vortex.router.api.listeners.ListenerDeRuteo)
 	 */
-	
+
 	public void setListenerDeRuteos(final ListenerDeRuteo listenerDeRuteos) {
 		if (listenerDeRuteos == null) {
 			throw new IllegalArgumentException("El listener de ruteo no puede ser null. A lo sumo una instancia de "
@@ -225,7 +229,7 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	 * @see net.gaia.vortex.router.impl.filtros.ListenerDeConjuntoDeCondiciones#onCambioDeCondicionEn(net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones,
 	 *      net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
-	
+
 	public void onCambioDeCondicionEn(final ConjuntoDeCondiciones conjunto, final Condicion nuevaCondicion) {
 		LOG.debug("El [{}] cambio su estado de filtros remotos a[{}]", this.toShortString(), nuevaCondicion);
 
@@ -291,7 +295,8 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.con(identificador_FIELD, identificador).con(patas_FIELD, patas).toString();
@@ -304,7 +309,7 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.patas.ListenerConexionBidiEnPata#onConexionBidiPara(net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
 	 */
-	
+
 	public void onConexionBidiPara(final PataBidireccional pata) {
 		final NodoBidireccional origen = pata.getNodoLocal();
 		final Receptor destino = pata.getNodoRemoto();

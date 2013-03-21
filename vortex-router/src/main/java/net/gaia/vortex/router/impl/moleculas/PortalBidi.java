@@ -19,6 +19,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
+import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.api.moleculas.Portal;
@@ -56,15 +57,17 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
 	 */
-	
+
 	public void enviar(final Object mensaje) throws ErrorDeMapeoVortexException {
+		Loggers.BIDI_MSG.debug("Ingresado en portal[{}] el objeto[{}] como mensaje a enviar", this.toShortString(),
+				mensaje);
 		portalInterno.enviar(mensaje);
 	}
 
 	/**
 	 * @see net.gaia.vortex.portal.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
 	 */
-	
+
 	public void recibirCon(final HandlerDePortal<?> handlerDeMensajes) {
 		// Registramos la condición para poder unificarlas
 		final Condicion nuevaCondicion = handlerDeMensajes.getCondicionSuficiente();
@@ -81,7 +84,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	
+
 	public void setDestino(final Receptor nuevoDestino) {
 		if (nuevoDestino == null) {
 			throw new IllegalArgumentException("El delegado del portal no puede ser null. A lo sumo un "
@@ -99,7 +102,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#getDestino()
 	 */
-	
+
 	public Receptor getDestino() {
 		final List<Receptor> allDestinos = getDestinos();
 		if (allDestinos.isEmpty()) {
@@ -113,7 +116,8 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	
+
+	@Override
 	public void conectarCon(final Receptor destino) {
 		setDestino(destino);
 	}
@@ -121,7 +125,8 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#calcularFiltroDeEntradaPara(net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
 	 */
-	
+
+	@Override
 	protected Condicion calcularFiltroDeEntradaPara(final PataBidireccional pataConectora) {
 		final Condicion filtroDeEntradaParaEstePortal = getFiltroLocal();
 		return filtroDeEntradaParaEstePortal;
@@ -139,7 +144,8 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.con(identificador_FIELD, getIdentificador()).con("destino", getDestino().toShortString()).toString();

@@ -32,4 +32,9 @@ public class Loggers {
 	 */
 	public static final Logger ATOMOS = LoggerFactory.getLogger("net.gaia.vortex.meta.Loggers.ATOMOS");
 
+	/**
+	 * Logger utilizado para registrar las recepciones y envíos de mensajes en los nodos bidi
+	 */
+	public static final Logger BIDI_MSG = LoggerFactory.getLogger("net.gaia.vortex.meta.Loggers.MENSAJERIA_BIDI");
+
 }
