@@ -22,7 +22,7 @@ import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorJacksonDeContenido;
 import net.gaia.vortex.portal.impl.mensaje.ContenidoVortexLazy;
-import net.gaia.vortex.sockets.external.json.VortexSocketTextualizer;
+import net.gaia.vortex.textualizer.VortexTextualizer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,11 +34,11 @@ import org.junit.Test;
  */
 public class TestVortexTextualizer {
 
-	private VortexSocketTextualizer textualizer;
+	private VortexTextualizer textualizer;
 
 	@Before
 	public void crearTextualizador() {
-		textualizer = VortexSocketTextualizer.create();
+		textualizer = VortexTextualizer.create();
 	}
 
 	@Test

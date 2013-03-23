@@ -86,8 +86,8 @@
   	
   	<!-- Agrega la textualizacion a json para enviar por sockets-->
 	<dependency>
-	  <groupId>ar.dgarcia.textualizer</groupId>
-	  <artifactId>json-textualizer</artifactId>
+	  <groupId>net.gaia.vortex</groupId>
+	  <artifactId>vortex-textualizer</artifactId>
 	  <version>0.1</version>
 	</dependency>
 	

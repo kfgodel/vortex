@@ -14,7 +14,7 @@ package net.gaia.vortex.sockets.external.mina;
 
 import java.net.SocketAddress;
 
-import net.gaia.vortex.sockets.external.json.VortexSocketTextualizer;
+import net.gaia.vortex.textualizer.VortexTextualizer;
 
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 
@@ -33,7 +33,7 @@ public class VortexSocketConfiguration extends ObjectSocketConfiguration {
 
 	public static VortexSocketConfiguration crear(final SocketAddress address, final ListenerDeMetricas metricas) {
 		final VortexSocketConfiguration config = new VortexSocketConfiguration();
-		config.initialize(address, null, VortexSocketTextualizer.create());
+		config.initialize(address, null, VortexTextualizer.create());
 		config.metricas = metricas;
 		return config;
 	}
