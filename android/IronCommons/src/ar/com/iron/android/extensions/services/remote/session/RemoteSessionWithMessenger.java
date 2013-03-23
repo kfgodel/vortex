@@ -42,11 +42,16 @@ public class RemoteSessionWithMessenger implements RemoteSession {
 	private RemoteSessionCloseHandler closeHandler;
 
 	private String idLocal;
+	public static final String idLocal_FIELD = "idLocal";
+
 	private String idRemoto;
+	public static final String idRemoto_FIELD = "idRemoto";
 
 	private boolean closed;
+	public static final String closed_FIELD = "closed";
 
 	private Object userObject;
+	public static final String userObject_FIELD = "userObject";
 
 	/**
 	 * Crea una nueva sesión que utilizará el messenger indicado para los envíos
@@ -137,6 +142,32 @@ public class RemoteSessionWithMessenger implements RemoteSession {
 	@SuppressWarnings("unchecked")
 	public <T> T getUserObject() {
 		return (T) this.userObject;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder(getClass().getSimpleName());
+		builder.append("{");
+		builder.append(idLocal_FIELD);
+		builder.append(": ");
+		builder.append(idLocal);
+		builder.append(", ");
+		builder.append(idRemoto_FIELD);
+		builder.append(": ");
+		builder.append(idRemoto);
+		builder.append(", ");
+		builder.append(closed_FIELD);
+		builder.append(": ");
+		builder.append(closed);
+		builder.append(", ");
+		builder.append(userObject_FIELD);
+		builder.append(": ");
+		builder.append(userObject);
+		builder.append("}");
+		return builder.toString();
 	}
 
 }

@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.android;
+package net.gaia.vortex.android.client;
 
 import java.util.concurrent.atomic.AtomicReference;
 

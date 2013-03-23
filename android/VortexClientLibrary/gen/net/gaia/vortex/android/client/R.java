@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package net.gaia.vortex.vortexclientlibrary;
+package net.gaia.vortex.android.client;
 
 public final class R {
     public static final class attr {

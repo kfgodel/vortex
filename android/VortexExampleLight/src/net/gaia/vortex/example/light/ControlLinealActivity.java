@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.example.light;
 
-import net.gaia.vortex.android.VortexRoot;
+import net.gaia.vortex.android.client.VortexRoot;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.example.light.model.Luz;
 import net.gaia.vortex.example.light.model.impl.LuzRemota;
