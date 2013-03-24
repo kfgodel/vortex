@@ -1,0 +1,45 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.gaia.vortex.android.server"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="4"
+        android:targetSdkVersion="17" />
+    
+    
+    <!-- Declaramos el permiso necesarios para acceder al servicio -->
+    <permission android:name="net.gaia.vortex.android.server.ACCEDER_SERVICIO" 
+        android:protectionLevel="normal" 
+        android:label="@string/nombre_permiso" 
+        android:description="@string/descripcion_permiso" 
+        android:permissionGroup="android.permission-group.NETWORK"/>
+    
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        
+        <activity
+            android:name="net.gaia.vortex.android.server.LoggerActivity"
+            android:label="@string/logger_activity_name" 
+            android:launchMode="singleInstance"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>        
+        
+        <!-- El servicio para nuclear las conexiones -->
+        <service android:name="net.gaia.vortex.android.service.VortexAcceptorService" android:permission="net.gaia.vortex.android.server.ACCEDER_SERVICIO" >
+             <intent-filter>
+                <action android:name="net.gaia.vortex.android.service.VortexAcceptorService" />
+          	</intent-filter>
+        </service>
+        
+    </application>
+
+</manifest>

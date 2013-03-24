@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="app_name">VortexServerApp</string>
+    <string name="descripcion_permiso">Permite acceder al servicio Vortex de mensajería global</string>
+    <string name="nombre_permiso">Permiso de accesso al servicio vortex</string>
+    <string name="logger_activity_name">Logger Vortex</string>
+
+</resources>

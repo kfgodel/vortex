@@ -40,7 +40,7 @@ public class ConversorDefaultDeMensajes implements ConversorDeMensajesVortex {
 	/**
 	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex#convertirAVortex(java.lang.Object)
 	 */
-	
+
 	@SuppressWarnings("unchecked")
 	public MensajeVortex convertirAVortex(final Object objetoOriginal) throws ErrorDeMapeoVortexException {
 		if (objetoOriginal == null) {
@@ -80,13 +80,18 @@ public class ConversorDefaultDeMensajes implements ConversorDeMensajesVortex {
 	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex#convertirDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex,
 	 *      java.lang.Class)
 	 */
-	
+
 	@SuppressWarnings("unchecked")
 	public <T> T convertirDesdeVortex(final MensajeVortex mensajeVortex, final Class<T> tipoEsperado)
 			throws ErrorDeMapeoVortexException {
 		if (mensajeVortex == null) {
 			throw new ErrorDeMapeoVortexException("El mensaje vortex no puede ser null para ser convertido en "
 					+ tipoEsperado);
+		}
+
+		if (tipoEsperado.isAssignableFrom(mensajeVortex.getClass())) {
+			// Estan esperando el mensaje directamente, no hace falta conversion
+			return (T) mensajeVortex;
 		}
 
 		final ContenidoVortex contenidoVortex = mensajeVortex.getContenido();
@@ -127,7 +132,8 @@ public class ConversorDefaultDeMensajes implements ConversorDeMensajesVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).toString();
 	}
