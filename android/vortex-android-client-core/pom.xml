@@ -101,6 +101,13 @@
 	  <version>0.5.0</version>
     </dependency>
     
+    <!-- Permite convertir a texto los mensajes -->
+    <dependency>
+	  <groupId>net.gaia.vortex</groupId>
+	  <artifactId>vortex-textualizer</artifactId>
+	  <version>0.1</version>
+    </dependency>
+    
     
     <!--  Abstrae la herramienta de logueo concreta -->
     <dependency>

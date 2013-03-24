@@ -44,10 +44,12 @@ public class Messageficador extends ReceptorConProcesador {
 		return tarea;
 	}
 
-	public static Messageficador create(final TaskProcessor processor, final RemoteSession sesion) {
+	public static Messageficador create(final TaskProcessor processor, final RemoteSession sesion,
+			ConversorVortexMessage converter) {
 		final Messageficador messageficador = new Messageficador();
 		messageficador.initializeWith(processor);
 		messageficador.sesionRemota = sesion;
+		messageficador.converter = converter;
 		return messageficador;
 	}
 
