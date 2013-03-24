@@ -3,13 +3,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <ToggleButton
+        android:id="@+id/boton_logueo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:checked="false"
+        android:text="@string/logueando" />
+    
+    <TextView
+        android:id="@+id/texto_mensajes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/boton_logueo"
+        android:layout_alignBottom="@id/boton_logueo"
+        android:layout_marginLeft="18dp"
+        android:layout_toRightOf="@id/boton_logueo"
+        android:text="@string/mensajes_logueados_" />
+
+    <TextView
+        android:id="@+id/texto_cantidad_mensajes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/texto_mensajes"
+        android:layout_alignBottom="@id/texto_mensajes"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/texto_mensajes"
+        android:text="--" />
+    
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-		>
+        android:layout_below="@+id/boton_logueo" >
     </ListView>
-
+    
+    
 </RelativeLayout>

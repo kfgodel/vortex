@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration debug="false"> 
+
+	<!--
+		Este archivo define la configuración del logueo de la aplicación y es interpretado por logback,
+		que recibe las llamadas de logueo del resto de las apis (log4j, commons-logging, etc) a través
+		de slf4j que hace de wrapper del resto.
+		La sintaxis para los appenders que se pueden agregar está en: http://logback.qos.ch/manual/appenders.html
+		y la sintaxis para los patrones de formateo en: http://logback.qos.ch/manual/layouts.html#conversionWord 
+	 -->
+
+	<!-- Output normal por consola -->
+	<appender name="LOGCAT" class="ch.qos.logback.classic.android.LogcatAppender">
+	    <tagEncoder>
+            <pattern>%logger{0}</pattern>
+        </tagEncoder>
+        <encoder>
+            <pattern>\(%8r\) [%-5t] %-120m  | at %F:%L</pattern>
+        </encoder>
+	</appender>
+  
+	<logger name="net.gaia.vortex.example.light" level="DEBUG" />
+	
+	<!-- Detalle de los envios y recepciones bidi -->
+	<logger name="net.gaia.vortex.meta.Loggers.MENSAJERIA_BIDI" level="DEBUG" />
+	
+	<root level="info">
+		<appender-ref ref="LOGCAT" />
+	</root>
+  
+	
+	
+</configuration>

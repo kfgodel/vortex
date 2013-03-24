@@ -4,5 +4,7 @@
     <string name="descripcion_permiso">Permite acceder al servicio Vortex de mensajería global</string>
     <string name="nombre_permiso">Permiso de accesso al servicio vortex</string>
     <string name="logger_activity_name">Logger Vortex</string>
+    <string name="logueando">Logueando</string>
+    <string name="mensajes_logueados_">Mensajes logueados:</string>
 
 </resources>

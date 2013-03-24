@@ -11,42 +11,47 @@ public final class R {
     public static final class attr {
     }
     public static final class dimen {
-        public static int date_field_text_size=0x7f040000;
+        public static final int date_field_text_size=0x7f040000;
     }
     public static final class drawable {
-        public static int ic_launcher=0x7f020000;
+        public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static int commons_datefields_container=0x7f070000;
-        public static int datefields_btn_accept=0x7f070011;
-        public static int datefields_btn_cancel=0x7f070010;
-        public static int datefields_btn_day_minus=0x7f070007;
-        public static int datefields_btn_day_plus=0x7f070009;
-        public static int datefields_btn_hour_minus=0x7f07000a;
-        public static int datefields_btn_hour_plus=0x7f07000c;
-        public static int datefields_btn_minute_minus=0x7f07000d;
-        public static int datefields_btn_minute_plus=0x7f07000f;
-        public static int datefields_btn_month_minus=0x7f070004;
-        public static int datefields_btn_month_plus=0x7f070006;
-        public static int datefields_btn_year_minus=0x7f070001;
-        public static int datefields_btn_year_plus=0x7f070003;
-        public static int datefields_txt_day=0x7f070008;
-        public static int datefields_txt_hour=0x7f07000b;
-        public static int datefields_txt_minute=0x7f07000e;
-        public static int datefields_txt_month=0x7f070005;
-        public static int datefields_txt_year=0x7f070002;
-        public static int texto_mensaje=0x7f070012;
+        public static final int boton_logueo=0x7f070012;
+        public static final int commons_datefields_container=0x7f070000;
+        public static final int datefields_btn_accept=0x7f070011;
+        public static final int datefields_btn_cancel=0x7f070010;
+        public static final int datefields_btn_day_minus=0x7f070007;
+        public static final int datefields_btn_day_plus=0x7f070009;
+        public static final int datefields_btn_hour_minus=0x7f07000a;
+        public static final int datefields_btn_hour_plus=0x7f07000c;
+        public static final int datefields_btn_minute_minus=0x7f07000d;
+        public static final int datefields_btn_minute_plus=0x7f07000f;
+        public static final int datefields_btn_month_minus=0x7f070004;
+        public static final int datefields_btn_month_plus=0x7f070006;
+        public static final int datefields_btn_year_minus=0x7f070001;
+        public static final int datefields_btn_year_plus=0x7f070003;
+        public static final int datefields_txt_day=0x7f070008;
+        public static final int datefields_txt_hour=0x7f07000b;
+        public static final int datefields_txt_minute=0x7f07000e;
+        public static final int datefields_txt_month=0x7f070005;
+        public static final int datefields_txt_year=0x7f070002;
+        public static final int texto_cantidad_mensajes=0x7f070014;
+        public static final int texto_mensaje=0x7f070015;
+        public static final int texto_mensajes=0x7f070013;
     }
     public static final class layout {
-        public static int datetime_edition_dialog=0x7f030000;
-        public static int logger_view=0x7f030001;
-        public static int mensaje_view=0x7f030002;
+        public static final int datetime_edition_dialog=0x7f030000;
+        public static final int logger_view=0x7f030001;
+        public static final int mensaje_view=0x7f030002;
     }
     public static final class string {
-        public static int app_name=0x7f060000;
-        public static int descripcion_permiso=0x7f060001;
-        public static int logger_activity_name=0x7f060003;
-        public static int nombre_permiso=0x7f060002;
+        public static final int app_name=0x7f060000;
+        public static final int descripcion_permiso=0x7f060001;
+        public static final int logger_activity_name=0x7f060003;
+        public static final int logueando=0x7f060004;
+        public static final int mensajes_logueados_=0x7f060005;
+        public static final int nombre_permiso=0x7f060002;
     }
     public static final class style {
         /** 
@@ -90,20 +95,20 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static int AppBaseTheme=0x7f050004;
+        public static final int AppBaseTheme=0x7f050004;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static int AppTheme=0x7f050005;
+        public static final int AppTheme=0x7f050005;
         /**  Botones 
          */
-        public static int DateFieldButton=0x7f050001;
-        public static int DateFieldButton_Minus=0x7f050003;
-        public static int DateFieldButton_Plus=0x7f050002;
+        public static final int DateFieldButton=0x7f050001;
+        public static final int DateFieldButton_Minus=0x7f050003;
+        public static final int DateFieldButton_Plus=0x7f050002;
         /**  Textos 
          */
-        public static int DateFieldText=0x7f050000;
+        public static final int DateFieldText=0x7f050000;
     }
 }
