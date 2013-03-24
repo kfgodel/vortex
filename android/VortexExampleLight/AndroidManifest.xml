@@ -8,6 +8,11 @@
         android:minSdkVersion="4"
         android:targetSdkVersion="17" />
 
+    
+    <!-- El permiso requerido para conectarse al servicio remoto -->
+    <uses-permission android:name="net.gaia.vortex.android.server.ACCEDER_SERVICIO"/>
+    
+    
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -53,6 +58,7 @@
             </intent-filter>
         </activity>
 
+        <service android:name="net.gaia.vortex.android.service.VortexConnectorService" />
         
         
     </application>
