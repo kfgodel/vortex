@@ -39,36 +39,36 @@ import ar.com.iron.menues.ContextMenuItem;
  * 
  * @author D. García
  */
-public class LoggerActivity extends CustomListActivity<MensajeVortex> {
+public class LoggerActivity extends CustomListActivity<MensajeLogueado> {
 
 	private Portal portalDeMensajes;
 
-	private List<MensajeVortex> mensajesRecibidos;
+	private List<MensajeLogueado> mensajesRecibidos;
 
 	private TextView textoCantidad;
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableListActivity#getContextMenuItems()
 	 */
-	public ContextMenuItem<? extends CustomableListActivity<MensajeVortex>, MensajeVortex>[] getContextMenuItems() {
+	public ContextMenuItem<? extends CustomableListActivity<MensajeLogueado>, MensajeLogueado>[] getContextMenuItems() {
 		return null;
 	}
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableListActivity#getElementList()
 	 */
-	public List<MensajeVortex> getElementList() {
+	public List<MensajeLogueado> getElementList() {
 		return mensajesRecibidos;
 	}
 
 	/**
 	 * @see ar.com.iron.android.extensions.activities.model.CustomableListActivity#getElementRenderBlock()
 	 */
-	public RenderBlock<MensajeVortex> getElementRenderBlock() {
-		return new RenderBlock<MensajeVortex>() {
-			public void render(View itemView, MensajeVortex item, LayoutInflater inflater) {
+	public RenderBlock<MensajeLogueado> getElementRenderBlock() {
+		return new RenderBlock<MensajeLogueado>() {
+			public void render(View itemView, MensajeLogueado item, LayoutInflater inflater) {
 				TextView textView = ViewHelper.findTextView(R.id.texto_mensaje, itemView);
-				textView.setText(item.toString());
+				textView.setText(item.representarComoTexto());
 			}
 		};
 	}
@@ -101,7 +101,7 @@ public class LoggerActivity extends CustomListActivity<MensajeVortex> {
 	@Override
 	public void setUpComponents() {
 		portalDeMensajes = PortalBidi.create(VortexRoot.getProcessor());
-		mensajesRecibidos = new ArrayList<MensajeVortex>();
+		mensajesRecibidos = new ArrayList<MensajeLogueado>();
 
 		textoCantidad = ViewHelper.findTextView(R.id.texto_cantidad_mensajes, getContentView());
 
@@ -150,7 +150,8 @@ public class LoggerActivity extends CustomListActivity<MensajeVortex> {
 	protected void onMensajeVortexRecibido(final MensajeVortex mensaje) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				mensajesRecibidos.add(mensaje);
+				MensajeLogueado logueado = MensajeLogueado.create(mensaje);
+				mensajesRecibidos.add(logueado);
 				actualizarVista();
 			}
 		});

@@ -49,9 +49,9 @@ public class RegistrarRuteo extends ReceptorSupport {
 	public void recibir(final MensajeVortex mensaje) {
 		final NodoBidireccional nodoOrigen = pataRuteadora.getNodoLocal();
 		final Receptor destino = pataRuteadora.getNodoRemoto();
-		Loggers.BIDI_MSG.debug("  Ruteando por[{}] mensaje[{}] desde[{}] hasta[{}]",
-				new Object[] { pataRuteadora.toShortString(), mensaje.toShortString(), nodoOrigen.toShortString(),
-						destino.toShortString() });
+		Loggers.BIDI_MSG.debug("  Ruteando desde[{}] hasta[{}] por[{}] mensaje[{}] ",
+				new Object[] { nodoOrigen.toShortString(), destino.toShortString(), pataRuteadora.toShortString(),
+						mensaje.toShortString() });
 		final ListenerDeRuteo listenerActual = listenerDeRuteos.get();
 		try {
 			listenerActual.onMensajeRuteado(nodoOrigen, mensaje, destino);

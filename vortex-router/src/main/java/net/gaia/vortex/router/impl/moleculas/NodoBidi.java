@@ -196,8 +196,8 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		Loggers.BIDI_MSG.debug("Recibido en[{}] el mensaje[{}]: {}",
-				new Object[] { this.toShortString(), mensaje.toShortString(), mensaje.getContenido() });
+		Loggers.BIDI_MSG.debug("Recibido en[{}] el mensaje[{}]",
+				new Object[] { this.toShortString(), mensaje.toShortString() });
 		super.recibir(mensaje);
 	}
 
@@ -231,7 +231,8 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	 */
 
 	public void onCambioDeCondicionEn(final ConjuntoDeCondiciones conjunto, final Condicion nuevaCondicion) {
-		LOG.debug("El [{}] cambio su estado de filtros remotos a[{}]", this.toShortString(), nuevaCondicion);
+		Loggers.BIDI_MSG.info("El nodo[{}] cambio su estado de filtros remotos a[{}]", this.toShortString(),
+				nuevaCondicion);
 
 		final ListenerDeCambiosDeFiltro listenerActual = listenerDeFiltros.get();
 		try {

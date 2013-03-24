@@ -149,9 +149,10 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		pata.wrapperDelRemotoConLogueo = new ReceptorSupport() {
 			public void recibir(final MensajeVortex mensaje) {
 				final Receptor nodoRemoto = pata.getNodoRemoto();
-				Loggers.BIDI_MSG.debug("  Enviando por[{}] mensaje[{}] desde[{}] hasta[{}]",
-						new Object[] { pata.toShortString(), mensaje.toShortString(),
-								pata.getNodoLocal().toShortString(), nodoRemoto.toShortString() });
+				Loggers.BIDI_MSG.debug(
+						"  Enviando desde[{}] hasta[{}] por[{}] mensaje[{}]: {}",
+						new Object[] { pata.getNodoLocal().toShortString(), nodoRemoto.toShortString(),
+								pata.toShortString(), mensaje.toShortString(), mensaje.getContenido() });
 				nodoRemoto.recibir(mensaje);
 			}
 		};
