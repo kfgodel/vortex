@@ -28,9 +28,9 @@ public final class R {
 		public static final int datefields_btn_minute_minus = 0x7f080013;
 	}
 	public static final class style {
+		public static final int DateFieldButton_Plus = 0x7f050002;
 		public static final int DateFieldText = 0x7f050000;
 		public static final int DateFieldButton = 0x7f050001;
-		public static final int DateFieldButton_Plus = 0x7f050002;
 		public static final int DateFieldButton_Minus = 0x7f050003;
 	}
 	public static final class layout {
