@@ -64,4 +64,9 @@ public class MedirTicksPorSegundoWorkUnit implements WorkUnit {
 		medir.ultimoValorDeTicks = VALOR_INICIAL_TICKS;
 		return medir;
 	}
+
+	public VariableTicks getVariable() {
+		return variable;
+	}
+
 }

@@ -1,5 +1,5 @@
 /**
- * 07/07/2013 15:13:47 Copyright (C) 2013 Darío L. García
+ * 07/07/2013 19:24:17 Copyright (C) 2013 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,38 +10,38 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.perf.impl;
+package net.gaia.taskprocessor.perf.impl.variables;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.perf.api.VariableTicks;
 
 /**
- * Esta clase implementa la variable de ticks sin tomar en cuenta la concurrencia, ni elementos de
- * sincronización
+ * Esta clase representa la variable de ticks que soporta accesos concurrentes
  * 
  * @author D. García
  */
-public class VariableTicksSinConcurrencia implements VariableTicks {
+public class VariableTicksConcurrente implements VariableTicks {
 
-	private long ticks;
+	private AtomicLong ticks;
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.api.VariableTicks#incrementar()
 	 */
 	public void incrementar() {
-		ticks++;
-	}
-
-	public static VariableTicksSinConcurrencia create() {
-		final VariableTicksSinConcurrencia variable = new VariableTicksSinConcurrencia();
-		variable.ticks = 0;
-		return variable;
+		ticks.incrementAndGet();
 	}
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.api.VariableTicks#getCantidadActual()
 	 */
 	public long getCantidadActual() {
-		return ticks;
+		return ticks.get();
 	}
 
+	public static VariableTicksConcurrente create() {
+		final VariableTicksConcurrente variable = new VariableTicksConcurrente();
+		variable.ticks = new AtomicLong(0);
+		return variable;
+	}
 }

@@ -1,0 +1,66 @@
+Parametros para correr los tests (el ultimo lo necesita visualVm):
+-Xms512M -Xmx512M -XX:PermSize=256M -XX:MaxPermSize=256M -Xshare:off
+
+
+Micro oscilando entre 0% y 3% (con el administrador de windows)
+Primero activo profiling de CPU y arranco el test.
+Lo dejo correr durante 1m y registro los valores.
+Despues lo corro sin profiling (hay bastante diferencia)
+
+
+ - Condiciones de vacio (test con dummy)
+(Con y sin profiler)
+Uso del micro: 0%
+Ticks totales: 0 segs: 60.011 s
+Ticks per milis: 0.0
+
+Metodo	Tiempo propio en ms	Cantidad de ejecucines
+net.gaia.taskprocessor.perf.impl.medidor.ThreadMedidorDeTicks.realizarAccionRepetida()	59.522 ms	60 ejecuciones
+net.gaia.taskprocessor.perf.impl.medidor.MedirTicksPorSegundoWorkUnit.doWork()	0,801 ms	60
+(No tiene tiene más tiempos porque no realiza modificaciones)
+
+
+- UnicoThreadALoBruto (con variable sin concurrencia)
+(Con profiler)
+Uso del micro: 42%
+Tiempo total: 60.200s
+Tiempo ejecutando: 41.668 (69.2%)
+Tiempo esperando: 18.532
+Ticks totales: 33979820 segs: 60.029 s
+Ticks per milis: 566.0567392426993
+
+net.gaia.taskprocessor.perf.impl.medidor.ThreadMedidorDeTicks.realizarAccionRepetida()	56.932 ms	58
+net.gaia.taskprocessor.perf.impl.medidor.MedirTicksPorSegundoWorkUnit.doWork()	1,4 ms	58
+net.gaia.taskprocessor.perf.impl.variables.VariableTicksSinConcurrencia.incrementar()	1.101 ms	33.850.446
+net.gaia.taskprocessor.perf.impl.tests.ThreadIncrementadorBruto.realizarAccionRepetida()	7.012 ms	33.850.446
+
+(Sin profiler)
+Uso del micro: 25%
+Ticks totales: 7538588181 segs: 60.006 s
+Ticks per milis: 125630.57329267073
+
+Notas: Mucha variabilidad en los ticks. De un segundo a otro iba de 4.8000414321737684E-4/s a 19559.516759445694/s.
+Entre un segundo y otro varía mucho la cantidad de ejecuciones.
+
+
+- UnicoThreadALoBruto (con variable con concurrencia)
+Uso del micro: 42%
+Tiempo total: 60.118s (IncrementadorBruto)
+Tiempo ejecutando: 42.613 (70.8%)
+Tiempo esperando: 17.505
+Ticks totales: 33683208 segs: 60.015 s
+Ticks per milis: 561.2464883779055
+
+net.gaia.taskprocessor.perf.impl.medidor.ThreadMedidorDeTicks.realizarAccionRepetida()	59.449 ms	60
+net.gaia.taskprocessor.perf.impl.medidor.MedirTicksPorSegundoWorkUnit.doWork()	1,38 ms	60
+net.gaia.taskprocessor.perf.impl.variables.VariableTicksConcurrente.incrementar()	2.152 ms	33.683.208
+net.gaia.taskprocessor.perf.impl.tests.ThreadIncrementadorBruto.realizarAccionRepetida()	8.111 ms	33.683.208
+
+(Sin profiler)
+Uso del micro: 25%
+Ticks totales: 2352189610 segs: 60.009 s
+Ticks per milis: 39197.28057458048
+
+Notas: Mucha variabilidad en los ticks. De un segundo a otro iba de 4.19514043828567E-4/s a 19353.81111035561/s.
+Entre un segundo y otro varía mucho la cantidad de ejecuciones.
+

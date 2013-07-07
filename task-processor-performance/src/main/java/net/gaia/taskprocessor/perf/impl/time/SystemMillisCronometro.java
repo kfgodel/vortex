@@ -21,6 +21,8 @@ import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
  */
 public class SystemMillisCronometro implements CronometroMilis {
 
+	private long startMilis;
+	private long endMilis;
 	private long ultimosMilis;
 
 	/**
@@ -44,5 +46,26 @@ public class SystemMillisCronometro implements CronometroMilis {
 		final SystemMillisCronometro crono = new SystemMillisCronometro();
 		crono.ultimosMilis = currentMilis();
 		return crono;
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.perf.api.time.CronometroMilis#reset()
+	 */
+	public void reset() {
+		startMilis = currentMilis();
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.perf.api.time.CronometroMilis#stop()
+	 */
+	public void stop() {
+		endMilis = currentMilis();
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.perf.api.time.CronometroMilis#getTotalMilis()
+	 */
+	public long getTotalMilis() {
+		return endMilis - startMilis;
 	}
 }

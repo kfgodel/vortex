@@ -12,8 +12,8 @@
  */
 package net.gaia.taskprocessor.perf.impl.medidor;
 
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.perf.api.VariableTicks;
+import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
 import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
 
 /**
@@ -23,13 +23,16 @@ import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
  */
 public class MedidorDeTicksPerSecond {
 
-	private ThreadMedidorDeTicks threadActivo;
+	private ThreadBucleSupport threadActivo;
 
-	private WorkUnit tareaDeMedicion;
+	private CronometroMilis clock;
+
+	private VariableTicks variable;
 
 	public static MedidorDeTicksPerSecond create(final VariableTicks variable) {
 		final MedidorDeTicksPerSecond medidor = new MedidorDeTicksPerSecond();
-		medidor.tareaDeMedicion = MedirTicksPorSegundoWorkUnit.create(SystemMillisCronometro.create(), variable);
+		medidor.clock = SystemMillisCronometro.create();
+		medidor.variable = variable;
 		return medidor;
 	}
 
@@ -40,7 +43,9 @@ public class MedidorDeTicksPerSecond {
 		if (threadActivo != null) {
 			detenerMediciones();
 		}
-		threadActivo = ThreadMedidorDeTicks.create(tareaDeMedicion);
+		final MedirTicksPorSegundoWorkUnit tarea = MedirTicksPorSegundoWorkUnit.create(clock, variable);
+		threadActivo = ThreadMedidorDeTicks.create(tarea);
+		clock.reset();
 		threadActivo.ejecutar();
 	}
 
@@ -54,6 +59,8 @@ public class MedidorDeTicksPerSecond {
 			return;
 		}
 		threadActivo.detener();
+		threadActivo = null;
+		clock.stop();
 	}
 
 	/**
@@ -62,6 +69,17 @@ public class MedidorDeTicksPerSecond {
 	 * @return Los resultados de este medidor
 	 */
 	public String describirResultados() {
-		return "Sin resultados";
+		final long cantidadDeTicksTotal = variable.getCantidadActual();
+		final double milisTotales = clock.getTotalMilis();
+		final double ticksPerMilis = cantidadDeTicksTotal / milisTotales;
+		final StringBuilder builder = new StringBuilder();
+		builder.append("Ticks totales: ");
+		builder.append(cantidadDeTicksTotal);
+		builder.append(" segs: ");
+		builder.append(milisTotales / 1000d);
+		builder.append(" s\n");
+		builder.append("Ticks per milis: ");
+		builder.append(ticksPerMilis);
+		return builder.toString();
 	}
 }

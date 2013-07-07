@@ -28,4 +28,21 @@ public interface CronometroMilis {
 	 */
 	long getLastLapAndStartNew();
 
+	/**
+	 * Setea el tiempo actual como momento 0 de la ejecución global
+	 */
+	void reset();
+
+	/**
+	 * Detiene el conteo del tiempo para medir el tiempo total
+	 */
+	void stop();
+
+	/**
+	 * Devuelve la cantidad total de milis transcurridos entre el momento de reset() y el de stop()
+	 * 
+	 * @return El tiempo en milis transcurridos
+	 */
+	long getTotalMilis();
+
 }

@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class ThreadMedidorDeTicks extends Thread {
+public class ThreadMedidorDeTicks extends ThreadBucleSupport {
 	private static final Logger LOG = LoggerFactory.getLogger(ThreadMedidorDeTicks.class);
 
 	/**
@@ -32,50 +32,23 @@ public class ThreadMedidorDeTicks extends Thread {
 
 	private WorkUnit tareDeMedicion;
 
-	private boolean running;
-
 	public ThreadMedidorDeTicks() {
-		super("ThreadMedidorDeTicks");
+		super("<> - MedidorDeTicks");
 	}
 
 	/**
-	 * @see java.lang.Thread#run()
+	 * @see net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport#realizarAccionRepetida()
 	 */
 	@Override
-	public void run() {
-		while (running) {
-			try {
-				tareDeMedicion.doWork();
-				Thread.sleep(DEFAULT_SLEEP_PER_MEASURE);
-			} catch (final InterruptedException e) {
-				if (!running) {
-					LOG.trace("Thread medidor detenido mientras esperaba", e);
-				}
-			} catch (final Exception e) {
-				LOG.error("Error en el thread de medicion. Deteniendo mediciones", e);
-				running = false;
+	protected void realizarAccionRepetida() {
+		try {
+			tareDeMedicion.doWork();
+			Thread.sleep(DEFAULT_SLEEP_PER_MEASURE);
+		} catch (final InterruptedException e) {
+			if (!isRunning()) {
+				LOG.trace("Thread medidor detenido mientras esperaba", e);
 			}
 		}
-	}
-
-	/**
-	 * Comienza la ejecución de este thread
-	 */
-	public void ejecutar() {
-		running = true;
-		this.start();
-	}
-
-	/**
-	 * Detiene la ejecución de este thread
-	 */
-	public void detener() {
-		running = false;
-		this.interrupt();
-	}
-
-	public boolean isRunning() {
-		return running;
 	}
 
 	public static ThreadMedidorDeTicks create(final WorkUnit tarea) {

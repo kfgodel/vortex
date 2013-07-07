@@ -22,16 +22,25 @@ import net.gaia.taskprocessor.perf.impl.medidor.MedidorDeTicksPerSecond;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.time.TimeMagnitude;
+
 /**
  * Esta clase implementa el runner de la manera mas simple que se me ocurre
  * 
  * @author D. García
  */
-public class NaiveTicksPerSecondTestRunner implements TicksPerSecondTestRunner {
-	private static final Logger LOG = LoggerFactory.getLogger(NaiveTicksPerSecondTestRunner.class);
+public class LimitedTimeTicksPerSecondTestRunner implements TicksPerSecondTestRunner {
+	private static final Logger LOG = LoggerFactory.getLogger(LimitedTimeTicksPerSecondTestRunner.class);
 
-	public static NaiveTicksPerSecondTestRunner create() {
-		final NaiveTicksPerSecondTestRunner runner = new NaiveTicksPerSecondTestRunner();
+	private VariableTicks variable;
+
+	private TimeMagnitude runningTime;
+
+	public static LimitedTimeTicksPerSecondTestRunner create(final VariableTicks variable,
+			final TimeMagnitude limitedTime) {
+		final LimitedTimeTicksPerSecondTestRunner runner = new LimitedTimeTicksPerSecondTestRunner();
+		runner.variable = variable;
+		runner.runningTime = limitedTime;
 		return runner;
 	}
 
@@ -45,11 +54,14 @@ public class NaiveTicksPerSecondTestRunner implements TicksPerSecondTestRunner {
 		// Describimos las condiciones del test
 		describirTest(processorTest);
 
+		// Esperamos que nos diga cuando empezar
+		esperarParaArrancar();
+
 		// Iniciamos el test
 		final MedidorDeTicksPerSecond medidor = iniciarTest(processorTest, variable);
 
 		// Esperamos que nos paren
-		esperarDetencionDeUsuario();
+		esperarTiempoDefinidoParaDetener();
 
 		// Paramos todo
 		detenerTest(processorTest, medidor);
@@ -80,11 +92,29 @@ public class NaiveTicksPerSecondTestRunner implements TicksPerSecondTestRunner {
 	}
 
 	/**
-	 * Espera input del usuario para proseguir
+	 * Espera input del usuario para detener los threads
 	 */
-	private void esperarDetencionDeUsuario() {
+	private void esperarTiempoDefinidoParaDetener() {
 		try {
-			LOG.info("\n<ENTER> para detener las pruebas\n");
+			Thread.sleep(runningTime.getMillis());
+		} catch (final InterruptedException e) {
+			LOG.error("Interrumpieron el thread principal mientras esperaba la ejecucion", e);
+		}
+	}
+
+	/**
+	 * Espera que el usuario indique cuando comenzar
+	 */
+	private void esperarParaArrancar() {
+		mostrarMensajeYEsperarInput("\n<ENTER> para iniciar las pruebas\n");
+	}
+
+	/**
+	 * @param mensaje
+	 */
+	private void mostrarMensajeYEsperarInput(final String mensaje) {
+		try {
+			LOG.info(mensaje);
 			System.in.read();
 			System.in.skip(1);
 		} catch (final IOException e) {
@@ -123,7 +153,6 @@ public class NaiveTicksPerSecondTestRunner implements TicksPerSecondTestRunner {
 	 * @return La variable creada para mediciones
 	 */
 	private VariableTicks configurarTest(final TicksPerSecondTestUnit processorTest) {
-		final VariableTicks variable = VariableTicksSinConcurrencia.create();
 		final IncrementarVariableWorkUnit workUnit = IncrementarVariableWorkUnit.create(variable);
 		processorTest.incrementTicksWith(workUnit);
 		return variable;
