@@ -9,7 +9,7 @@ package ar.com.dgarcia.lang.time;
 /**
  * @author D. Garcia
  * 
- *         Esta clase permite medir el tiempo con m�todos que ofrecen la funcionalidad de un
+ *         Esta clase permite medir el tiempo con métodos que ofrecen la funcionalidad de un
  *         cronometro. La precision depende de la plataforma pero es ofrecido hasta nanosegundos
  */
 public class Cronometro {
@@ -107,7 +107,8 @@ public class Cronometro {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return Cronometro.niceFormatStr(this.current());
 	}
