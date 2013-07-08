@@ -14,7 +14,7 @@ package net.gaia.taskprocessor.perf.impl.tests;
 
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
 import net.gaia.taskprocessor.perf.api.VariableTicks;
-import net.gaia.taskprocessor.perf.impl.IncrementarVariableWorkUnit;
+import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
 
 /**
  * Esta clase representa el test que incrementa la variable sin parar en un thread exclusivo hasta
@@ -35,7 +35,7 @@ public class UnicoThreadALoBruto implements TicksPerSecondTestUnit {
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.impl.IncrementarVariableWorkUnit)
+	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit)
 	 */
 	public void incrementTicksWith(final IncrementarVariableWorkUnit workUnit) {
 		final VariableTicks variableTicks = workUnit.getVariable();

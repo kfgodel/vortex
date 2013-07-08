@@ -17,7 +17,7 @@ import java.util.List;
 
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
 import net.gaia.taskprocessor.perf.api.VariableTicks;
-import net.gaia.taskprocessor.perf.impl.IncrementarVariableWorkUnit;
+import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
 
 /**
  * Esta clase representa el test que ejecuta varios threads modificando la variable directamente
@@ -39,7 +39,7 @@ public class MultiplesThreadsALoBruto implements TicksPerSecondTestUnit {
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.impl.IncrementarVariableWorkUnit)
+	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit)
 	 */
 	public void incrementTicksWith(final IncrementarVariableWorkUnit workUnit) {
 		for (int i = 0; i < cantidadDeThreads; i++) {

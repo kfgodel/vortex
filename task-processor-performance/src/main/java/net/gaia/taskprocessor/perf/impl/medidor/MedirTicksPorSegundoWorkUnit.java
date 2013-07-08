@@ -12,12 +12,12 @@
  */
 package net.gaia.taskprocessor.perf.impl.medidor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.perf.api.VariableTicks;
 import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase representa la tarea del medido que registra los ticks por segundo transcurridos
@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
  * @author D. García
  */
 public class MedirTicksPorSegundoWorkUnit implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(MedirTicksPorSegundoWorkUnit.class);
+	// private static final Logger LOG =
+	// LoggerFactory.getLogger(MedirTicksPorSegundoWorkUnit.class);
 
 	private static final int VALOR_INICIAL_TICKS = 0;
 
@@ -34,6 +35,8 @@ public class MedirTicksPorSegundoWorkUnit implements WorkUnit {
 	private VariableTicks variable;
 
 	private long ultimoValorDeTicks;
+
+	private List<Double> medicionesRealizadas;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
@@ -52,7 +55,8 @@ public class MedirTicksPorSegundoWorkUnit implements WorkUnit {
 		if (perSecondProportion != 0) {
 			ticksPerSecond = diferenciaDeTicks / perSecondProportion;
 		}
-		LOG.debug("Ticks per second: {}", ticksPerSecond);
+		medicionesRealizadas.add(ticksPerSecond);
+		// LOG.debug("Ticks per second: {}", ticksPerSecond);
 
 		return null;
 	}
@@ -62,11 +66,16 @@ public class MedirTicksPorSegundoWorkUnit implements WorkUnit {
 		medir.clock = clock;
 		medir.variable = variable;
 		medir.ultimoValorDeTicks = VALOR_INICIAL_TICKS;
+		medir.medicionesRealizadas = new ArrayList<Double>();
 		return medir;
 	}
 
 	public VariableTicks getVariable() {
 		return variable;
+	}
+
+	public List<Double> getMedicionesRealizadas() {
+		return medicionesRealizadas;
 	}
 
 }

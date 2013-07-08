@@ -12,6 +12,8 @@
  */
 package net.gaia.taskprocessor.perf.impl.medidor;
 
+import java.util.List;
+
 import net.gaia.taskprocessor.perf.api.VariableTicks;
 import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
 import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
@@ -29,6 +31,8 @@ public class MedidorDeTicksPerSecond {
 
 	private VariableTicks variable;
 
+	private List<Double> medicionesRealizadas;
+
 	public static MedidorDeTicksPerSecond create(final VariableTicks variable) {
 		final MedidorDeTicksPerSecond medidor = new MedidorDeTicksPerSecond();
 		medidor.clock = SystemMillisCronometro.create();
@@ -44,6 +48,7 @@ public class MedidorDeTicksPerSecond {
 			detenerMediciones();
 		}
 		final MedirTicksPorSegundoWorkUnit tarea = MedirTicksPorSegundoWorkUnit.create(clock, variable);
+		medicionesRealizadas = tarea.getMedicionesRealizadas();
 		threadActivo = ThreadMedidorDeTicks.create(tarea);
 		clock.reset();
 		threadActivo.ejecutar();
@@ -69,10 +74,16 @@ public class MedidorDeTicksPerSecond {
 	 * @return Los resultados de este medidor
 	 */
 	public String describirResultados() {
+		final StringBuilder builder = new StringBuilder();
+		for (final Double medicionRealizada : medicionesRealizadas) {
+			builder.append("Ticks per second: ");
+			builder.append(medicionRealizada);
+			builder.append("\n");
+		}
+
 		final long cantidadDeTicksTotal = variable.getCantidadActual();
 		final double milisTotales = clock.getTotalMilis();
 		final double ticksPerMilis = cantidadDeTicksTotal / milisTotales;
-		final StringBuilder builder = new StringBuilder();
 		builder.append("Ticks totales: ");
 		builder.append(cantidadDeTicksTotal);
 		builder.append(" segs: ");

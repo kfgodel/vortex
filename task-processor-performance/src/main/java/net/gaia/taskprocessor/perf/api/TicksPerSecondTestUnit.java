@@ -12,7 +12,7 @@
  */
 package net.gaia.taskprocessor.perf.api;
 
-import net.gaia.taskprocessor.perf.impl.IncrementarVariableWorkUnit;
+import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
 
 /**
  * Esta clase representa una unidad testeable por el {@link TicksPerSecondTestRunner} de procesador
