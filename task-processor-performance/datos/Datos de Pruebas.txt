@@ -38,6 +38,27 @@ Ticks per milis: 217192.3280248995
 Notas: El profiler afecta muchísimo las mediciones. De todas maneras esta es la forma más rápida de procesar donde no
 tenemos mediciones por segundo.
 
+- SimpleLoopMultiThreadTester x 1 - Prueba simple en unico thread pero disparado a parte
+(Con profiler)
+Uso del micro: 44%
+Tiempo total: 111.775s
+Tiempo ejecutando: 74.215 (66.3%)
+Tiempo esperando: 37.560
+Ticks totales: 123456789 segs: 111.811 s                                                                                 
+Ticks Per Milis: 1104.156022216061
+                                                                                       
+net.gaia.taskprocessor.perf.impl.tests.ThreadIteradorBrutoPorCantidad.run()	24.572 ms	1
+net.gaia.taskprocessor.perf.impl.variables.VariableTicksSinConcurrencia.incrementar()	3.001 ms	123456789
+
+(Sin profiler)
+Uso del micro: 26%
+Ticks totales: 16747700414 segs: 105.774 s                                                                               
+Ticks Per Milis: 158334.75536521262
+
+Notas: La carga estaba distribuida entre los cores. No había uno sólo al 100%, aunque sí, dos más activos.
+Por alguna razón abrir el thread aparte reduce la performance respecto de ejecutar en el thread principal.
+
+
 - 4X SimpleLoopTester - Tantas VMs como cores
 (Sin profiler)
 Uso del micro: 100%
@@ -47,6 +68,16 @@ Ticks per milis: 214683.83194677674
 Ticks per milis: 858732
 
 Notas: Pareciera que es el máximo conseguible si no se hace nada
+
+- SimpleLoopMultiThreadTester x 4 - Prueba simple en un thread por core pero disparados a parte
+(Sin profiler)
+Uso del micro: 100%
+Ticks totales: 371315774 segs: 60.507 s                                                                                  
+Ticks Per Milis: 6136.740773794768
+
+Notas: Se produjeron pausas en otras apps mientras ejecutaba (espera para el teclado por ejemplo).
+Ejecutando cada hilo la misma cantidad de iteraciones que si fuera uno sólo, se acabo el tiempo de espera y no había terminado (dentro de los 2min).
+Reduje la cantidad de iteracoines en 1/40 para cada thread con la intención de que termine a tiempo.
 
 
 - 8X SimpleLoopTester - Tantas VMs como cores [-Xms128M -Xmx128M -XX:PermSize=25M -XX:MaxPermSize=25M -Xshare:off]
