@@ -37,9 +37,10 @@ public class ThreadIncrementadorBruto extends ThreadBucleSupport {
 		variable.incrementar();
 	}
 
-	public static ThreadIncrementadorBruto create(final VariableTicks variable) {
+	public static ThreadIncrementadorBruto create(final VariableTicks variable, final int numeroIdentificador) {
 		final ThreadIncrementadorBruto thread = new ThreadIncrementadorBruto();
 		thread.variable = variable;
+		thread.setName(thread.getName() + " " + numeroIdentificador);
 		return thread;
 	}
 }

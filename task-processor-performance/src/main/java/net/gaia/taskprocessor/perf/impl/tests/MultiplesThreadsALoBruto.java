@@ -1,5 +1,5 @@
 /**
- * 07/07/2013 18:34:52 Copyright (C) 2013 Darío L. García
+ * 07/07/2013 20:33:40 Copyright (C) 2013 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,53 +12,65 @@
  */
 package net.gaia.taskprocessor.perf.impl.tests;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
 import net.gaia.taskprocessor.perf.api.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.IncrementarVariableWorkUnit;
 
 /**
- * Esta clase representa el test que incrementa la variable sin parar en un thread exclusivo hasta
- * que se detiene
+ * Esta clase representa el test que ejecuta varios threads modificando la variable directamente
  * 
  * @author D. García
  */
-public class UnicoThreadALoBruto implements TicksPerSecondTestUnit {
+public class MultiplesThreadsALoBruto implements TicksPerSecondTestUnit {
 
-	private ThreadIncrementadorBruto threadActivo;
+	private int cantidadDeThreads;
+
+	private List<ThreadIncrementadorBruto> threadsActivos;
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#getDescripcion()
 	 */
 	public String getDescripcion() {
-		return getClass().getSimpleName()
-				+ " = un solo thread con while(true) incrementando la variable directamente (sin el workunit)";
+		return getClass().getSimpleName() + " = " + cantidadDeThreads
+				+ " threads con while(true) incrementando la variable directamente (sin el workunit)";
 	}
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.impl.IncrementarVariableWorkUnit)
 	 */
 	public void incrementTicksWith(final IncrementarVariableWorkUnit workUnit) {
-		final VariableTicks variableTicks = workUnit.getVariable();
-		threadActivo = ThreadIncrementadorBruto.create(variableTicks, 0);
+		for (int i = 0; i < cantidadDeThreads; i++) {
+			final VariableTicks variableTicks = workUnit.getVariable();
+			final ThreadIncrementadorBruto threadCreado = ThreadIncrementadorBruto.create(variableTicks, i);
+			threadsActivos.add(threadCreado);
+		}
 	}
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#comenzarPruebas()
 	 */
 	public void comenzarPruebas() {
-		threadActivo.ejecutar();
+		for (final ThreadIncrementadorBruto thread : threadsActivos) {
+			thread.ejecutar();
+		}
 	}
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#detenerPruebas()
 	 */
 	public void detenerPruebas() {
-		threadActivo.detener();
-		threadActivo = null;
+		for (final ThreadIncrementadorBruto thread : threadsActivos) {
+			thread.detener();
+		}
 	}
 
-	public static UnicoThreadALoBruto create() {
-		final UnicoThreadALoBruto test = new UnicoThreadALoBruto();
+	public static MultiplesThreadsALoBruto create(final int cantidadDeThreads) {
+		final MultiplesThreadsALoBruto test = new MultiplesThreadsALoBruto();
+		test.cantidadDeThreads = cantidadDeThreads;
+		test.threadsActivos = new ArrayList<ThreadIncrementadorBruto>();
 		return test;
 	}
 }
