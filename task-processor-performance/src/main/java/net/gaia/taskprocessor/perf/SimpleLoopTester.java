@@ -14,9 +14,10 @@ package net.gaia.taskprocessor.perf;
 
 import java.io.IOException;
 
+import net.gaia.taskprocessor.perf.api.VariableTicks;
 import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
 import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
-import net.gaia.taskprocessor.perf.impl.variables.VariableTicksSinConcurrencia;
+import net.gaia.taskprocessor.perf.impl.variables.VariableTicksConcurrente;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class SimpleLoopTester {
 		final CronometroMilis clock = SystemMillisCronometro.create();
 		mostrarMensajeYEsperarInput("<ENTER> Para empezar prueba");
 		clock.reset();
-		final VariableTicksSinConcurrencia variable = VariableTicksSinConcurrencia.create();
+		final VariableTicks variable = VariableTicksConcurrente.create();
 		for (long i = 0; i < TICKS_ESTIMADOS_POR_SEG; i++) {
 			variable.incrementar();
 		}

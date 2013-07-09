@@ -22,5 +22,7 @@ Eso quiere decir que descartando la posibilidad de ejecutar varias vms a la vez,
 y con unidades WorkUnit. El caso 0, debería ser el más rápido en esas condiciones. Olvidando lo del mono-thread. 
 
 
+- En linux pareciera existir cierta afinidad entre las VMs y el uso de los cores (al menos al correr 2 VM hay 2 cores al mango)
+
 Preguntas:
 - En linux tambien hay tanta dif entre vm/proceso y threads?
