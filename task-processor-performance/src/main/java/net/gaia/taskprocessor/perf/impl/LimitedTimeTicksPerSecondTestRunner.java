@@ -117,7 +117,8 @@ public class LimitedTimeTicksPerSecondTestRunner implements TicksPerSecondTestRu
 		try {
 			LOG.info(mensaje);
 			System.in.read();
-			System.in.skip(1);
+			int extraBytesFromEnter = System.lineSeparator().length() - 1;
+			System.in.skip(extraBytesFromEnter);
 		} catch (final IOException e) {
 			LOG.error("Se produjo un error de IO esperando input", e);
 		}
