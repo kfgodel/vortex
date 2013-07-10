@@ -43,7 +43,7 @@ public class SimpleLoopMultiThreadTester {
 	/**
 	 * Cantidad sin profiler y sin conc
 	 */
-	private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L;
+	public static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L;
 
 	/**
 	 * Cantidad sin profiler y conc con 1X

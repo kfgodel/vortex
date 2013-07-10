@@ -71,4 +71,8 @@ public abstract class ThreadBucleSupport extends Thread {
 		return running;
 	}
 
+	public void setRunning(final boolean running) {
+		this.running = running;
+	}
+
 }

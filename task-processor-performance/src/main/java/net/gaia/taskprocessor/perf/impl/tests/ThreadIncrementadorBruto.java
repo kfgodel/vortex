@@ -30,6 +30,21 @@ public class ThreadIncrementadorBruto extends ThreadBucleSupport {
 	private VariableTicks variable;
 
 	/**
+	 * @see net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport#run()
+	 */
+	@Override
+	public void run() {
+		// Sobreescribir el método nos da mayor performance
+		while (running) {
+			try {
+				realizarAccionRepetida();
+			} catch (final Exception e) {
+				running = false;
+			}
+		}
+	}
+
+	/**
 	 * @see net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport#realizarAccionRepetida()
 	 */
 	@Override

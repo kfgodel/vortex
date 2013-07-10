@@ -13,6 +13,7 @@
 package net.gaia.taskprocessor.perf.impl.tests;
 
 import net.gaia.taskprocessor.perf.api.VariableTicks;
+import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
 import ar.com.dgarcia.lang.conc.WaitBarrier;
 
 /**
@@ -20,7 +21,7 @@ import ar.com.dgarcia.lang.conc.WaitBarrier;
  * 
  * @author D. García
  */
-public class ThreadIteradorBrutoPorCantidad extends Thread {
+public class ThreadIteradorBrutoPorCantidad extends ThreadBucleSupport {
 
 	private long cantidadDeVeces;
 	private VariableTicks variable;
@@ -41,6 +42,15 @@ public class ThreadIteradorBrutoPorCantidad extends Thread {
 		lineaDeFin.release();
 	}
 
+	/**
+	 * @see net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport#detener()
+	 */
+	@Override
+	public void detener() {
+		cantidadDeVeces = 0;
+		setRunning(false);
+	}
+
 	public static ThreadIteradorBrutoPorCantidad create(final long cantidadDeIteraciones, final VariableTicks variable,
 			final WaitBarrier avisador, final int numero) {
 		final ThreadIteradorBrutoPorCantidad thread = new ThreadIteradorBrutoPorCantidad(numero);
@@ -48,5 +58,13 @@ public class ThreadIteradorBrutoPorCantidad extends Thread {
 		thread.lineaDeFin = avisador;
 		thread.variable = variable;
 		return thread;
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport#realizarAccionRepetida()
+	 */
+	@Override
+	protected void realizarAccionRepetida() {
+		// No es usado por esta clase
 	}
 }

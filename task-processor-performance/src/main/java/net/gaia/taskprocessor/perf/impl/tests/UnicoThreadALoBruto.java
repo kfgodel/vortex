@@ -14,6 +14,7 @@ package net.gaia.taskprocessor.perf.impl.tests;
 
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
 import net.gaia.taskprocessor.perf.api.VariableTicks;
+import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
 import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
 
 /**
@@ -24,7 +25,7 @@ import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
  */
 public class UnicoThreadALoBruto implements TicksPerSecondTestUnit {
 
-	private ThreadIncrementadorBruto threadActivo;
+	private ThreadBucleSupport threadActivo;
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#getDescripcion()

@@ -1,3 +1,7 @@
+- Ejecutar un template method de una subclase es bastante costoso. Tarda el doble que si la subclase define todo el comportamiento.  125871 ticks/s vs 270241
+- Ejecutar un while(true) es menos costos que un for, porque no requiere actualizar una variable. 270241 ticks/s vs 175457 ticks/s 
+
+
 Al menos en Windows
 - Nada le gana al for infinito (si es una operación de puro cálculo lo mejor es diseñarla mono thread). 217192 ticks/s (25% del procesador)
 - Incluso ejecutar ese for infinito en un thread independiente del main tiene penalizacion de performance. 158334 ticks/s (26% proc.)
