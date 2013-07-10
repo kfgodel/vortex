@@ -12,11 +12,14 @@
  */
 package net.gaia.taskprocessor.perf.impl.variables;
 
-import net.gaia.taskprocessor.perf.api.VariableTicks;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 
 /**
- * Esta clase implementa la variable de ticks sin tomar en cuenta la concurrencia, ni elementos de
- * sincronización
+ * Esta clase implementa la variable de ticks sin tomar en cuenta la
+ * concurrencia, ni elementos de sincronización
  * 
  * @author D. García
  */
@@ -24,8 +27,10 @@ public class VariableTicksSinConcurrencia implements VariableTicks {
 
 	private long ticks;
 
+	private List<VariableTicks> subvariables;
+
 	/**
-	 * @see net.gaia.taskprocessor.perf.api.VariableTicks#incrementar()
+	 * @see net.gaia.taskprocessor.perf.api.variables.VariableTicks#incrementar()
 	 */
 	public void incrementar() {
 		ticks++;
@@ -37,11 +42,29 @@ public class VariableTicksSinConcurrencia implements VariableTicks {
 		return variable;
 	}
 
-	/**
-	 * @see net.gaia.taskprocessor.perf.api.VariableTicks#getCantidadActual()
-	 */
-	public long getCantidadActual() {
-		return ticks;
+	public List<VariableTicks> getSubvariables() {
+		if (subvariables == null) {
+			subvariables = new ArrayList<VariableTicks>(32);
+		}
+		return subvariables;
 	}
 
+	/**
+	 * @see net.gaia.taskprocessor.perf.api.variables.VariableTicks#getCantidadActual()
+	 */
+	public long getCantidadActual() {
+		long valorActual = ticks;
+		if (subvariables != null) {
+			for (VariableTicks subVariable : getSubvariables()) {
+				valorActual += subVariable.getCantidadActual();
+			}
+		}
+		return valorActual;
+	}
+
+	public VariableTicks getVariableParaThread(Thread threadActual) {
+		VariableTicks nuevaVariable = VariableTicksSinConcurrencia.create();
+		getSubvariables().add(nuevaVariable);
+		return nuevaVariable;
+	}
 }

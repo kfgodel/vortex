@@ -14,7 +14,7 @@ package net.gaia.taskprocessor.perf.impl.variables;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.taskprocessor.perf.api.VariableTicks;
+import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 
 /**
  * Esta clase representa la unidad de trabajo procesable por un {@link TaskProcessor} que se

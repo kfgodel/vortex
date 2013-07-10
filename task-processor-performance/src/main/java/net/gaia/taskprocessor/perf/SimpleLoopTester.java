@@ -14,8 +14,8 @@ package net.gaia.taskprocessor.perf;
 
 import java.io.IOException;
 
-import net.gaia.taskprocessor.perf.api.VariableTicks;
 import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
+import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
 import net.gaia.taskprocessor.perf.impl.variables.VariableTicksSinConcurrencia;
 

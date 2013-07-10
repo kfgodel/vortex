@@ -1,13 +1,17 @@
 
 * Respecto del código:
 
+- En el mismo hardware la diferencia entre linux y windows es mínima a favor de linux. En el manejo de varios threads esa diferencia se agranda.   
+
 - Ejecutar un template method de una subclase es bastante costoso. Tarda el doble que si la subclase define todo el comportamiento.  125871 ticks/s vs 270241
 - Ejecutar un while(true) es menos costoso que un for, porque no requiere actualizar una variable. 270241 ticks/s vs 175457 ticks/s
 - Ejecutar el for con la comparación "<" es levemente menos costoso que por "!=". 173061 ticks/s vs 161804 ticks/s
-- En el mismo hardware la diferencia entre linux y windows, sólo se nota en el manejo de muchos threads dentro de la vm a favor de linux 
 
-- Los threads pueden cachear el valor de un flag de corte (tipo while(flag)) y no darse cuenta que otro thread se los modificó.
-- El keyword "volatile" ayuda a evitar ese tipo de cacheos y con muchos threads incluyo ayuda a la performance
+- Un thread puede cachear valores locales (como un flag) y no detectar que otro thread le cambio el valor
+- El keyword "volatile" usado en el flag permite evitar ese cacheo, y por alguna razón le da un pequeño boost de performance. 144442 vs 140058
+- Si volatile se usa en la variable contador, la performance es peor que usando AtomicLong. 2500 vs. 9753 ticks/s
+
+  
 
 * Respecto al manejo de threads y VMs
 
@@ -40,5 +44,3 @@ y con unidades WorkUnit. El caso 0, debería ser el más rápido en esas condici
 Preguntas:
 - Porque hay tanta dif con el UnicoThreadALoBruto
 - Si cada thread tiene su propia memoria también se producen demoras multithread?
-- Efecto de volatile?
-- Porque en las VMs de 64bits los threads en while(true) se quedan colgados?

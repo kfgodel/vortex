@@ -12,7 +12,7 @@
  */
 package net.gaia.taskprocessor.perf.impl.tests;
 
-import net.gaia.taskprocessor.perf.api.VariableTicks;
+import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
 import ar.com.dgarcia.lang.conc.WaitBarrier;
 

@@ -16,7 +16,7 @@ import java.io.IOException;
 
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestRunner;
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
-import net.gaia.taskprocessor.perf.api.VariableTicks;
+import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.medidor.MedidorDeTicksPerSecond;
 import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
 

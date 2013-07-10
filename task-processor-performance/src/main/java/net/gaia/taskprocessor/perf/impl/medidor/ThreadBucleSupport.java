@@ -16,15 +16,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Esta clase define el comportamiento base de un thread que realiza una accion repetida en bucle
- * hasta que se indique lo contrario en un flag
+ * Esta clase define el comportamiento base de un thread que realiza una accion
+ * repetida en bucle hasta que se indique lo contrario en un flag
  * 
  * @author D. García
  */
 public abstract class ThreadBucleSupport extends Thread {
-	private static final Logger LOG = LoggerFactory.getLogger(ThreadBucleSupport.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(ThreadBucleSupport.class);
 
-	protected boolean running;
+	protected volatile boolean running;
 
 	public ThreadBucleSupport(final String threadName) {
 		super(threadName);
@@ -39,15 +40,17 @@ public abstract class ThreadBucleSupport extends Thread {
 			try {
 				realizarAccionRepetida();
 			} catch (final Exception e) {
-				LOG.error("Error en el thread[" + getName() + "]. Deteniendolo", e);
+				LOG.error(
+						"Error en el thread[" + getName() + "]. Deteniendolo",
+						e);
 				running = false;
 			}
 		}
 	}
 
 	/**
-	 * Ejecuta la acción de este thread que será repetida una y otra vez hasta que se cambie el flag
-	 * de running
+	 * Ejecuta la acción de este thread que será repetida una y otra vez hasta
+	 * que se cambie el flag de running
 	 */
 	protected abstract void realizarAccionRepetida();
 

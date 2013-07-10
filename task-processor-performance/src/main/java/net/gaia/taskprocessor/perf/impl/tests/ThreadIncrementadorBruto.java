@@ -12,12 +12,12 @@
  */
 package net.gaia.taskprocessor.perf.impl.tests;
 
-import net.gaia.taskprocessor.perf.api.VariableTicks;
+import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
 
 /**
- * Esta clase representa el thread que incrementa el valor de la variable directamentee en un for
- * infinito
+ * Esta clase representa el thread que incrementa el valor de la variable
+ * directamentee en un for infinito
  * 
  * @author D. García
  */
@@ -34,18 +34,15 @@ public class ThreadIncrementadorBruto extends ThreadBucleSupport {
 	 */
 	@Override
 	public void run() {
-		for (long i = 0; i != 4043908871L; i++) {
-			realizarAccionRepetida();
-		}
-
+		variable = variable.getVariableParaThread(Thread.currentThread());
 		// Sobreescribir el método nos da mayor performance
-		// while (running) {
-		// try {
-		// realizarAccionRepetida();
-		// } catch (final Exception e) {
-		// running = false;
-		// }
-		// }
+		while (running) {
+			try {
+				realizarAccionRepetida();
+			} catch (final Exception e) {
+				running = false;
+			}
+		}
 	}
 
 	/**
@@ -56,7 +53,8 @@ public class ThreadIncrementadorBruto extends ThreadBucleSupport {
 		variable.incrementar();
 	}
 
-	public static ThreadIncrementadorBruto create(final VariableTicks variable, final int numeroIdentificador) {
+	public static ThreadIncrementadorBruto create(final VariableTicks variable,
+			final int numeroIdentificador) {
 		final ThreadIncrementadorBruto thread = new ThreadIncrementadorBruto();
 		thread.variable = variable;
 		thread.setName(thread.getName() + " " + numeroIdentificador);

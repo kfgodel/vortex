@@ -14,8 +14,8 @@ package net.gaia.taskprocessor.perf.impl.medidor;
 
 import java.util.List;
 
-import net.gaia.taskprocessor.perf.api.VariableTicks;
 import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
+import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
 
 /**

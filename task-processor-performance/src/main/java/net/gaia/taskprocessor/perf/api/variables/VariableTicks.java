@@ -10,11 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.perf.api;
+package net.gaia.taskprocessor.perf.api.variables;
+
+import net.gaia.taskprocessor.perf.api.TicksPerSecondTestRunner;
 
 /**
- * Esta interfaz representa la variable que incrementan los procesadores y es medida por el
- * {@link TicksPerSecondTestRunner}
+ * Esta interfaz representa la variable que incrementan los procesadores y es
+ * medida por el {@link TicksPerSecondTestRunner}
  * 
  * @author D. García
  */
@@ -31,4 +33,14 @@ public interface VariableTicks {
 	 * @return El valor resultado de todas las incrementaciones
 	 */
 	long getCantidadActual();
+
+	/**
+	 * Devuelve una versión local al thread de esta variable, para que el thread
+	 * modifique sin pisarse con otros
+	 * 
+	 * @param threadActual
+	 *            Thread que solicita la variable
+	 * @return La variable para el thread
+	 */
+	VariableTicks getVariableParaThread(Thread threadActual);
 }

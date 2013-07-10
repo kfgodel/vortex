@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
-import net.gaia.taskprocessor.perf.api.VariableTicks;
+import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
 
 /**
