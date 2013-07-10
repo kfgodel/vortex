@@ -37,7 +37,7 @@ public class ProcessorPeformanceTester {
 		final VariableTicks variable = VariableTicksSinConcurrencia.create();
 		final TicksPerSecondTestRunner runner = LimitedTimeTicksPerSecondTestRunner.create(variable,
 				TimeMagnitude.of(15, TimeUnit.SECONDS));
-		final TicksPerSecondTestUnit processorTest = UnicoThreadALoBruto.create();
+		final TicksPerSecondTestUnit processorTest = MultiplesThreadsALoBruto.create(32);
 		runner.ejecutarIndefinidamente(processorTest);
 	}
 }
