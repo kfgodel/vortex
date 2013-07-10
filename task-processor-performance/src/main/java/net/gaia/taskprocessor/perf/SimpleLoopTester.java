@@ -32,14 +32,14 @@ public class SimpleLoopTester {
 	private static final Logger LOG = LoggerFactory.getLogger(SimpleLoopTester.class);
 
 	/**
-	 * Cantidad sin profiler
+	 * Cantidad sin profiler y sin concurrencia
 	 */
-	private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L;
+	public static final long CANTIDAD_TICKS_SIN_CONC = 16747700414L / 4;
 
 	/**
 	 * Cantidad sin profiler y conc windows
 	 */
-	// private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L / 10;
+	public static final long CANTIDAD_TICKS_CON_CONC = CANTIDAD_TICKS_SIN_CONC / 10;
 
 	/**
 	 * Cantidad con profiler
@@ -53,7 +53,7 @@ public class SimpleLoopTester {
 		mostrarMensajeYEsperarInput("<ENTER> Para empezar prueba");
 		clock.reset();
 		final VariableTicks variable = VariableTicksSinConcurrencia.create();
-		for (long i = 0; i < TICKS_ESTIMADOS_POR_SEG; i++) {
+		for (long i = 0; i < CANTIDAD_TICKS_SIN_CONC; i++) {
 			variable.incrementar();
 		}
 		clock.stop();

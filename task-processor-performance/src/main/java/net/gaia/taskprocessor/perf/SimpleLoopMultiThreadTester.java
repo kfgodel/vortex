@@ -36,29 +36,39 @@ public class SimpleLoopMultiThreadTester {
 	private static final Logger LOG = LoggerFactory.getLogger(SimpleLoopTester.class);
 
 	/**
-	 * Cantidad de hilos disparados
+	 * Constante para un unico hilo
 	 */
-	private static final int HILOS_EJECUTANTES = 1;
+	public static final int _1_HILO_EJECUTANTE = 1;
 
 	/**
-	 * Cantidad sin profiler y sin conc
+	 * Constante para igual cantidad que cores hilo
 	 */
-	public static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L;
+	public static final int _4HILOS_EJECUTANTES = 4;
 
 	/**
-	 * Cantidad sin profiler y conc con 1X
+	 * Constante para mayor cantidad de hilos que cores
 	 */
-	// private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L / 10;
+	public static final int _32HILOS_EJECUTANTES = 32;
+
+	/**
+	 * Cantidad sin profiler y sin concurrencia
+	 */
+	public static final long CANTIDAD_TICKS_SIN_CONC = SimpleLoopTester.CANTIDAD_TICKS_SIN_CONC;
+
+	/**
+	 * Cantidad sin profiler y conc windows
+	 */
+	public static final long CANTIDAD_TICKS_CON_CONC = SimpleLoopTester.CANTIDAD_TICKS_CON_CONC;
 
 	/**
 	 * Cantidad sin profiler con 4 hilos sin conc
 	 */
-	// private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L / 40;
+	public static final long CANTIDAD_4HILOS_SIN_CONC = SimpleLoopTester.CANTIDAD_TICKS_SIN_CONC / 40;
 
 	/**
 	 * Cantidad sin profiler con 4 hilos con conc
 	 */
-	// private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L / 400;
+	public static final long CANTIDAD_4HILOS_CON_CONC = CANTIDAD_4HILOS_SIN_CONC / 10;
 
 	/**
 	 * Cantidad con profiler
@@ -73,10 +83,11 @@ public class SimpleLoopMultiThreadTester {
 		clock.reset();
 
 		final VariableTicks variable = VariableTicksSinConcurrencia.create();
-		final WaitBarrier esperarThreads = WaitBarrier.create(HILOS_EJECUTANTES);
-		for (int i = 0; i < HILOS_EJECUTANTES; i++) {
+		final int cantidadDeHilos = _1_HILO_EJECUTANTE;
+		final WaitBarrier esperarThreads = WaitBarrier.create(cantidadDeHilos);
+		for (int i = 0; i < _1_HILO_EJECUTANTE; i++) {
 			final ThreadIteradorBrutoPorCantidad hiloDisparado = ThreadIteradorBrutoPorCantidad.create(
-					TICKS_ESTIMADOS_POR_SEG, variable, esperarThreads, i);
+					CANTIDAD_TICKS_SIN_CONC, variable, esperarThreads, i);
 			hiloDisparado.start();
 		}
 
