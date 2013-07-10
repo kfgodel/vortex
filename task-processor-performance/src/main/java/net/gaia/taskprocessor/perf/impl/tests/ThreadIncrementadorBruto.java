@@ -34,14 +34,18 @@ public class ThreadIncrementadorBruto extends ThreadBucleSupport {
 	 */
 	@Override
 	public void run() {
-		// Sobreescribir el método nos da mayor performance
-		while (running) {
-			try {
-				realizarAccionRepetida();
-			} catch (final Exception e) {
-				running = false;
-			}
+		for (long i = 0; i != 4043908871L; i++) {
+			realizarAccionRepetida();
 		}
+
+		// Sobreescribir el método nos da mayor performance
+		// while (running) {
+		// try {
+		// realizarAccionRepetida();
+		// } catch (final Exception e) {
+		// running = false;
+		// }
+		// }
 	}
 
 	/**
