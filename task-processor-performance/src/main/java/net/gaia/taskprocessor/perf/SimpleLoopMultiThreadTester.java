@@ -19,7 +19,6 @@ import net.gaia.taskprocessor.perf.api.VariableTicks;
 import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
 import net.gaia.taskprocessor.perf.impl.tests.ThreadIteradorBrutoPorCantidad;
 import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
-import net.gaia.taskprocessor.perf.impl.variables.VariableTicksConcurrente;
 import net.gaia.taskprocessor.perf.impl.variables.VariableTicksSinConcurrencia;
 
 import org.slf4j.Logger;
@@ -39,32 +38,32 @@ public class SimpleLoopMultiThreadTester {
 	/**
 	 * Cantidad de hilos disparados
 	 */
-	private static final int HILOS_EJECUTANTES = 4;
+	private static final int HILOS_EJECUTANTES = 1;
 
 	/**
 	 * Cantidad sin profiler y sin conc
 	 */
-	//private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L;
-	
+	private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L;
+
 	/**
 	 * Cantidad sin profiler y conc con 1X
 	 */
-	//private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L / 10;
+	// private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L / 10;
 
 	/**
 	 * Cantidad sin profiler con 4 hilos sin conc
 	 */
-	//private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L / 40;
+	// private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L / 40;
 
 	/**
 	 * Cantidad sin profiler con 4 hilos con conc
 	 */
-	private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L / 400;
+	// private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L / 400;
 
 	/**
 	 * Cantidad con profiler
 	 */
-	//private static final long TICKS_ESTIMADOS_POR_SEG = 123456789L;
+	// private static final long TICKS_ESTIMADOS_POR_SEG = 123456789L;
 
 	public static void main(final String[] args) {
 		Thread.currentThread().setName("<> - Principal");
@@ -73,7 +72,7 @@ public class SimpleLoopMultiThreadTester {
 		mostrarMensajeYEsperarInput("<ENTER> Para empezar prueba");
 		clock.reset();
 
-		final VariableTicks variable = VariableTicksConcurrente.create();
+		final VariableTicks variable = VariableTicksSinConcurrencia.create();
 		final WaitBarrier esperarThreads = WaitBarrier.create(HILOS_EJECUTANTES);
 		for (int i = 0; i < HILOS_EJECUTANTES; i++) {
 			final ThreadIteradorBrutoPorCantidad hiloDisparado = ThreadIteradorBrutoPorCantidad.create(
@@ -95,7 +94,7 @@ public class SimpleLoopMultiThreadTester {
 		try {
 			LOG.info(mensaje);
 			System.in.read();
-			int extraBytesFromEnter = System.lineSeparator().length() - 1;
+			final int extraBytesFromEnter = System.lineSeparator().length() - 1;
 			System.in.skip(extraBytesFromEnter);
 		} catch (final IOException e) {
 			LOG.error("Se produjo un error de IO esperando input", e);

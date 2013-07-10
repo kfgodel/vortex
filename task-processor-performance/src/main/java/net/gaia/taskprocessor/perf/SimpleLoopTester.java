@@ -17,7 +17,7 @@ import java.io.IOException;
 import net.gaia.taskprocessor.perf.api.VariableTicks;
 import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
 import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
-import net.gaia.taskprocessor.perf.impl.variables.VariableTicksConcurrente;
+import net.gaia.taskprocessor.perf.impl.variables.VariableTicksSinConcurrencia;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +37,11 @@ public class SimpleLoopTester {
 	private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L;
 
 	/**
+	 * Cantidad sin profiler y conc windows
+	 */
+	// private static final long TICKS_ESTIMADOS_POR_SEG = 16747700414L / 10;
+
+	/**
 	 * Cantidad con profiler
 	 */
 	// private static final long TICKS_ESTIMADOS_POR_SEG = 123456789L;
@@ -47,7 +52,7 @@ public class SimpleLoopTester {
 		final CronometroMilis clock = SystemMillisCronometro.create();
 		mostrarMensajeYEsperarInput("<ENTER> Para empezar prueba");
 		clock.reset();
-		final VariableTicks variable = VariableTicksConcurrente.create();
+		final VariableTicks variable = VariableTicksSinConcurrencia.create();
 		for (long i = 0; i < TICKS_ESTIMADOS_POR_SEG; i++) {
 			variable.incrementar();
 		}
@@ -64,7 +69,7 @@ public class SimpleLoopTester {
 		try {
 			LOG.info(mensaje);
 			System.in.read();
-			int extraBytesFromEnter = System.lineSeparator().length() - 1;
+			final int extraBytesFromEnter = System.lineSeparator().length() - 1;
 			System.in.skip(extraBytesFromEnter);
 		} catch (final IOException e) {
 			LOG.error("Se produjo un error de IO esperando input", e);
