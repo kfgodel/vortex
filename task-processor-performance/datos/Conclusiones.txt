@@ -6,6 +6,8 @@
 - Ejecutar el for con la comparación "<" es levemente menos costoso que por "!=". 173061 ticks/s vs 161804 ticks/s
 - En el mismo hardware la diferencia entre linux y windows, sólo se nota en el manejo de muchos threads dentro de la vm a favor de linux 
 
+- Los threads pueden cachear el valor de un flag de corte (tipo while(flag)) y no darse cuenta que otro thread se los modificó.
+- El keyword "volatile" ayuda a evitar ese tipo de cacheos y con muchos threads incluyo ayuda a la performance
 
 * Respecto al manejo de threads y VMs
 
@@ -39,3 +41,4 @@ Preguntas:
 - Porque hay tanta dif con el UnicoThreadALoBruto
 - Si cada thread tiene su propia memoria también se producen demoras multithread?
 - Efecto de volatile?
+- Porque en las VMs de 64bits los threads en while(true) se quedan colgados?

@@ -34,7 +34,7 @@ public class SimpleLoopTester {
 	/**
 	 * Cantidad sin profiler y sin concurrencia
 	 */
-	public static final long CANTIDAD_TICKS_SIN_CONC = 16747700414L;
+	public static final long CANTIDAD_TICKS_SIN_CONC = 16747700414L / 4;
 
 	/**
 	 * Cantidad sin profiler y conc windows

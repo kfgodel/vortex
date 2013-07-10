@@ -83,11 +83,11 @@ public class SimpleLoopMultiThreadTester {
 		clock.reset();
 
 		final VariableTicks variable = VariableTicksSinConcurrencia.create();
-		final int cantidadDeHilos = _4HILOS_EJECUTANTES;
+		final int cantidadDeHilos = _1_HILO_EJECUTANTE;
 		final WaitBarrier esperarThreads = WaitBarrier.create(cantidadDeHilos);
 		for (int i = 0; i < cantidadDeHilos; i++) {
 			final ThreadIteradorBrutoPorCantidad hiloDisparado = ThreadIteradorBrutoPorCantidad.create(
-					CANTIDAD_4HILOS_SIN_CONC, variable, esperarThreads, i);
+					CANTIDAD_TICKS_SIN_CONC, variable, esperarThreads, i);
 			hiloDisparado.start();
 		}
 
