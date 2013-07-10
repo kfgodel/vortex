@@ -63,7 +63,7 @@ public class SimpleLoopMultiThreadTester {
 	/**
 	 * Cantidad sin profiler con 4 hilos sin conc
 	 */
-	public static final long CANTIDAD_4HILOS_SIN_CONC = SimpleLoopTester.CANTIDAD_TICKS_SIN_CONC / 40;
+	public static final long CANTIDAD_4HILOS_SIN_CONC = SimpleLoopTester.CANTIDAD_TICKS_SIN_CONC;
 
 	/**
 	 * Cantidad sin profiler con 4 hilos con conc
@@ -83,11 +83,11 @@ public class SimpleLoopMultiThreadTester {
 		clock.reset();
 
 		final VariableTicks variable = VariableTicksSinConcurrencia.create();
-		final int cantidadDeHilos = _1_HILO_EJECUTANTE;
+		final int cantidadDeHilos = _4HILOS_EJECUTANTES;
 		final WaitBarrier esperarThreads = WaitBarrier.create(cantidadDeHilos);
-		for (int i = 0; i < _1_HILO_EJECUTANTE; i++) {
+		for (int i = 0; i < cantidadDeHilos; i++) {
 			final ThreadIteradorBrutoPorCantidad hiloDisparado = ThreadIteradorBrutoPorCantidad.create(
-					CANTIDAD_TICKS_SIN_CONC, variable, esperarThreads, i);
+					CANTIDAD_4HILOS_SIN_CONC, variable, esperarThreads, i);
 			hiloDisparado.start();
 		}
 
