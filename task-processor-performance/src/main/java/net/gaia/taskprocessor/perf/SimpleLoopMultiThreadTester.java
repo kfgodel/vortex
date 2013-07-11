@@ -30,12 +30,14 @@ import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
- * Esta clase prueba la ejecución de los threads en un loop muy simple pero en paralelo
+ * Esta clase prueba la ejecución de los threads en un loop muy simple pero en
+ * paralelo
  * 
  * @author D. García
  */
 public class SimpleLoopMultiThreadTester {
-	private static final Logger LOG = LoggerFactory.getLogger(SimpleLoopTester.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(SimpleLoopTester.class);
 
 	/**
 	 * Constante para un unico hilo
@@ -83,25 +85,31 @@ public class SimpleLoopMultiThreadTester {
 		final CronometroMilis clock = SystemMillisCronometro.create();
 		mostrarMensajeYEsperarInput("<ENTER> Para empezar prueba");
 
-		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread.create();
+		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread
+				.create();
 		final int cantidadDeHilos = _4HILOS_EJECUTANTES;
 		final WaitBarrier esperarThreads = WaitBarrier.create(cantidadDeHilos);
 
 		clock.reset();
 		for (int i = 0; i < cantidadDeHilos; i++) {
-			final VariableTicks variableParaNuevoThread = estrategiaDeVariables.getVariableParaNuevoThread();
-			final ThreadIteradorBrutoPorCantidad hiloDisparado = ThreadIteradorBrutoPorCantidad.create(
-					CANTIDAD_4HILOS_SIN_CONC, variableParaNuevoThread, esperarThreads, i);
+			final VariableTicks variableParaNuevoThread = estrategiaDeVariables
+					.getVariableParaNuevoThread();
+			final ThreadIteradorBrutoPorCantidad hiloDisparado = ThreadIteradorBrutoPorCantidad
+					.create(CANTIDAD_4HILOS_SIN_CONC, variableParaNuevoThread,
+							esperarThreads, i);
 			hiloDisparado.start();
 		}
 
-		esperarThreads.waitForReleaseUpTo(TimeMagnitude.of(2, TimeUnit.MINUTES));
+		esperarThreads
+				.waitForReleaseUpTo(TimeMagnitude.of(2, TimeUnit.MINUTES));
 		clock.stop();
 
-		final long cantidadDeTicksTotal = MedidorDeTicksPerSecond.calcularTicksAmculuadosPara(estrategiaDeVariables);
+		final long cantidadDeTicksTotal = MedidorDeTicksPerSecond
+				.calcularTicksAmculuadosPara(estrategiaDeVariables);
 		final double milisTotales = clock.getTotalMilis();
 		final double ticksPerMilis = cantidadDeTicksTotal / milisTotales;
-		LOG.info("Ticks totales: {} segs: {} s", cantidadDeTicksTotal, milisTotales / 1000d);
+		LOG.info("Ticks totales: {} segs: {} s", cantidadDeTicksTotal,
+				milisTotales / 1000d);
 		LOG.info("Ticks Per Milis: {}", ticksPerMilis);
 	}
 

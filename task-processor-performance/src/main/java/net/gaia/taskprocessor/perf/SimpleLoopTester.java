@@ -23,13 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Esta clase prueba la velocidad de ejecucion de un unico thread en un for sin ningun elemento de
- * sync
+ * Esta clase prueba la velocidad de ejecucion de un unico thread en un for sin
+ * ningun elemento de sync
  * 
  * @author D. García
  */
 public class SimpleLoopTester {
-	private static final Logger LOG = LoggerFactory.getLogger(SimpleLoopTester.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(SimpleLoopTester.class);
 
 	/**
 	 * Cantidad sin profiler y sin concurrencia
@@ -61,7 +62,8 @@ public class SimpleLoopTester {
 		final long cantidadDeTicksTotal = variable.getCantidadActual();
 		final double milisTotales = clock.getTotalMilis();
 		final double ticksPerMilis = cantidadDeTicksTotal / milisTotales;
-		LOG.info("Ticks totales: {} segs: {} s", cantidadDeTicksTotal, milisTotales / 1000d);
+		LOG.info("Ticks totales: {} segs: {} s", cantidadDeTicksTotal,
+				milisTotales / 1000d);
 		LOG.info("Ticks Per Milis: {}", ticksPerMilis);
 	}
 
