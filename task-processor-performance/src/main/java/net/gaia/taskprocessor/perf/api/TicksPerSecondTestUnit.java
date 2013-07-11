@@ -12,7 +12,7 @@
  */
 package net.gaia.taskprocessor.perf.api;
 
-import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
+import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread;
 
 /**
  * Esta clase representa una unidad testeable por el {@link TicksPerSecondTestRunner} de procesador
@@ -34,10 +34,10 @@ public interface TicksPerSecondTestUnit {
 	 * usar ese workunit para incrementar el valor.<br>
 	 * La implementación de este test puede elegir ignorar el workUnit
 	 * 
-	 * @param workUnit
-	 *            La unidad de procesamiento para ejecutar en el test
+	 * @param estrategiaDeWorkUnit
+	 *            la estrategia que define que workunit usar para cada thread creado
 	 */
-	void incrementTicksWith(IncrementarVariableWorkUnit workUnit);
+	void incrementTicksWith(EstrategiaDeWorkUnitPorThread estrategiaDeWorkUnit);
 
 	/**
 	 * Comienza la ejecución repetida de este test para que incremente los ticks a la máxima

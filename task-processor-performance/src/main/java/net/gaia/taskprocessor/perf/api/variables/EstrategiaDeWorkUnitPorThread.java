@@ -1,5 +1,5 @@
 /**
- * 07/07/2013 15:05:48 Copyright (C) 2013 Darío L. García
+ * 10/07/2013 20:13:18 Copyright (C) 2013 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -12,26 +12,19 @@
  */
 package net.gaia.taskprocessor.perf.api.variables;
 
-import net.gaia.taskprocessor.perf.api.TicksPerSecondTestRunner;
+import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
 
 /**
- * Esta interfaz representa la variable que incrementan los procesadores y es medida por el
- * {@link TicksPerSecondTestRunner}
+ * Esta interfaz define como se crean los workunits para cada thread dentro de un test
  * 
  * @author D. García
  */
-public interface VariableTicks {
+public interface EstrategiaDeWorkUnitPorThread {
 
 	/**
-	 * Incrementa en 1 el valor de esta variable
-	 */
-	void incrementar();
-
-	/**
-	 * Devuelve el valor actual de esta variable
+	 * Devuelve el workUnit usado para un nuevo thread en forma exclusiva
 	 * 
-	 * @return El valor resultado de todas las incrementaciones
+	 * @return El work unit creado para el nuevo thread
 	 */
-	long getCantidadActual();
-
+	IncrementarVariableWorkUnit getWorkUnitParaNuevoThread();
 }

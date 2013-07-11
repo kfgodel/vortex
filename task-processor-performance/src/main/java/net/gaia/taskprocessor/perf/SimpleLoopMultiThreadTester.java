@@ -16,10 +16,12 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
+import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeVariablesPorThread;
 import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
+import net.gaia.taskprocessor.perf.impl.medidor.MedidorDeTicksPerSecond;
 import net.gaia.taskprocessor.perf.impl.tests.ThreadIteradorBrutoPorCantidad;
 import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
-import net.gaia.taskprocessor.perf.impl.variables.VariableTicksSinConcurrencia;
+import net.gaia.taskprocessor.perf.impl.variables.estrategias.UnaVariableSinConcurrenciaPorThread;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +65,7 @@ public class SimpleLoopMultiThreadTester {
 	/**
 	 * Cantidad sin profiler con 4 hilos sin conc
 	 */
-	public static final long CANTIDAD_4HILOS_SIN_CONC = SimpleLoopTester.CANTIDAD_TICKS_SIN_CONC;
+	public static final long CANTIDAD_4HILOS_SIN_CONC = SimpleLoopTester.CANTIDAD_TICKS_SIN_CONC / 2;
 
 	/**
 	 * Cantidad sin profiler con 4 hilos con conc
@@ -80,21 +82,23 @@ public class SimpleLoopMultiThreadTester {
 
 		final CronometroMilis clock = SystemMillisCronometro.create();
 		mostrarMensajeYEsperarInput("<ENTER> Para empezar prueba");
-		clock.reset();
 
-		final VariableTicks variable = VariableTicksSinConcurrencia.create();
-		final int cantidadDeHilos = _1_HILO_EJECUTANTE;
+		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread.create();
+		final int cantidadDeHilos = _4HILOS_EJECUTANTES;
 		final WaitBarrier esperarThreads = WaitBarrier.create(cantidadDeHilos);
+
+		clock.reset();
 		for (int i = 0; i < cantidadDeHilos; i++) {
+			final VariableTicks variableParaNuevoThread = estrategiaDeVariables.getVariableParaNuevoThread();
 			final ThreadIteradorBrutoPorCantidad hiloDisparado = ThreadIteradorBrutoPorCantidad.create(
-					CANTIDAD_TICKS_SIN_CONC, variable, esperarThreads, i);
+					CANTIDAD_4HILOS_SIN_CONC, variableParaNuevoThread, esperarThreads, i);
 			hiloDisparado.start();
 		}
 
 		esperarThreads.waitForReleaseUpTo(TimeMagnitude.of(2, TimeUnit.MINUTES));
 		clock.stop();
 
-		final long cantidadDeTicksTotal = variable.getCantidadActual();
+		final long cantidadDeTicksTotal = MedidorDeTicksPerSecond.calcularTicksAmculuadosPara(estrategiaDeVariables);
 		final double milisTotales = clock.getTotalMilis();
 		final double ticksPerMilis = cantidadDeTicksTotal / milisTotales;
 		LOG.info("Ticks totales: {} segs: {} s", cantidadDeTicksTotal, milisTotales / 1000d);

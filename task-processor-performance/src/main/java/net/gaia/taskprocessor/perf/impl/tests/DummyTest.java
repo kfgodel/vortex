@@ -13,7 +13,7 @@
 package net.gaia.taskprocessor.perf.impl.tests;
 
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
-import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
+import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread;
 
 /**
  * Esta clase representa el test más simple
@@ -30,31 +30,28 @@ public class DummyTest implements TicksPerSecondTestUnit {
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit)
-	 */
-	public void incrementTicksWith(final IncrementarVariableWorkUnit workUnit) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
 	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#comenzarPruebas()
 	 */
 	public void comenzarPruebas() {
-		// TODO Auto-generated method stub
-
+		// Esta implementacion no requiere comportamiento
 	}
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#detenerPruebas()
 	 */
 	public void detenerPruebas() {
-		// TODO Auto-generated method stub
-
+		// Esta implementacion no requiere comportamiento
 	}
 
 	public static DummyTest create() {
 		final DummyTest test = new DummyTest();
 		return test;
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread)
+	 */
+	public void incrementTicksWith(final EstrategiaDeWorkUnitPorThread estrategiaDeWorkUnit) {
+		// Esta implementacion no requiere comportamiento
 	}
 }

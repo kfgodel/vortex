@@ -16,9 +16,9 @@ import java.io.IOException;
 
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestRunner;
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
-import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
+import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeVariablesPorThread;
 import net.gaia.taskprocessor.perf.impl.medidor.MedidorDeTicksPerSecond;
-import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
+import net.gaia.taskprocessor.perf.impl.variables.estrategias.WorkUnitIndependientePorThread;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,14 +33,14 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class LimitedTimeTicksPerSecondTestRunner implements TicksPerSecondTestRunner {
 	private static final Logger LOG = LoggerFactory.getLogger(LimitedTimeTicksPerSecondTestRunner.class);
 
-	private VariableTicks variable;
+	private EstrategiaDeVariablesPorThread estrategiaDeVariables;
 
 	private TimeMagnitude runningTime;
 
-	public static LimitedTimeTicksPerSecondTestRunner create(final VariableTicks variable,
-			final TimeMagnitude limitedTime) {
+	public static LimitedTimeTicksPerSecondTestRunner create(
+			final EstrategiaDeVariablesPorThread estrategiaDeVariables, final TimeMagnitude limitedTime) {
 		final LimitedTimeTicksPerSecondTestRunner runner = new LimitedTimeTicksPerSecondTestRunner();
-		runner.variable = variable;
+		runner.estrategiaDeVariables = estrategiaDeVariables;
 		runner.runningTime = limitedTime;
 		return runner;
 	}
@@ -50,7 +50,7 @@ public class LimitedTimeTicksPerSecondTestRunner implements TicksPerSecondTestRu
 	 */
 	public void ejecutarIndefinidamente(final TicksPerSecondTestUnit processorTest) {
 		// Configuramos el test
-		final VariableTicks variable = configurarTest(processorTest);
+		configurarTest(processorTest);
 
 		// Describimos las condiciones del test
 		describirTest(processorTest);
@@ -59,7 +59,7 @@ public class LimitedTimeTicksPerSecondTestRunner implements TicksPerSecondTestRu
 		esperarParaArrancar();
 
 		// Iniciamos el test
-		final MedidorDeTicksPerSecond medidor = iniciarTest(processorTest, variable);
+		final MedidorDeTicksPerSecond medidor = iniciarTest(processorTest);
 
 		// Esperamos que nos paren
 		esperarTiempoDefinidoParaDetener();
@@ -127,11 +127,11 @@ public class LimitedTimeTicksPerSecondTestRunner implements TicksPerSecondTestRu
 	/**
 	 * Comienza la ejecución del test y el medido de ticks
 	 */
-	private MedidorDeTicksPerSecond iniciarTest(final TicksPerSecondTestUnit processorTest, final VariableTicks variable) {
+	private MedidorDeTicksPerSecond iniciarTest(final TicksPerSecondTestUnit processorTest) {
 		processorTest.comenzarPruebas();
 
 		// Iniciamos las mediciones
-		final MedidorDeTicksPerSecond medidor = MedidorDeTicksPerSecond.create(variable);
+		final MedidorDeTicksPerSecond medidor = MedidorDeTicksPerSecond.create(estrategiaDeVariables);
 		medidor.iniciarMediciones();
 		return medidor;
 	}
@@ -154,9 +154,9 @@ public class LimitedTimeTicksPerSecondTestRunner implements TicksPerSecondTestRu
 	 *            El test a configurar
 	 * @return La variable creada para mediciones
 	 */
-	private VariableTicks configurarTest(final TicksPerSecondTestUnit processorTest) {
-		final IncrementarVariableWorkUnit workUnit = IncrementarVariableWorkUnit.create(variable);
-		processorTest.incrementTicksWith(workUnit);
-		return variable;
+	private void configurarTest(final TicksPerSecondTestUnit processorTest) {
+		final WorkUnitIndependientePorThread estrategiaDeWorkUnit = WorkUnitIndependientePorThread
+				.create(this.estrategiaDeVariables);
+		processorTest.incrementTicksWith(estrategiaDeWorkUnit);
 	}
 }

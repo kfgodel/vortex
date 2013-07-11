@@ -11,9 +11,10 @@
 - El keyword "volatile" usado en el flag permite evitar ese cacheo, y por alguna razón le da un pequeño boost de performance. 144442 vs 140058
 - Si volatile se usa en la variable contador, la performance es peor que usando AtomicLong. 2500 vs. 9753 ticks/s
 
+- Si los threads tienen que compartir una variable (no atomic) se molestan entre ellos. Es mejor crear un contador para cada uno (dar a cada uno su propir recurso exclusivo)
   
 
-* Respecto al manejo de threads y VMs
+* Respecto a la cantidad de threads y VMs
 
 - Nada le gana al for infinito (si es una operación de puro cálculo lo mejor es diseñarla mono thread). 217192 ticks/s (25% del procesador)
 
@@ -42,5 +43,5 @@ y con unidades WorkUnit. El caso 0, debería ser el más rápido en esas condici
 - En linux pareciera existir cierta afinidad entre las VMs y el uso de los cores (al menos al correr 2 VM hay 2 cores al mango)
 
 Preguntas:
-- Porque hay tanta dif con el UnicoThreadALoBruto
-- Si cada thread tiene su propia memoria también se producen demoras multithread?
+- Por qué los loops simples tienen peor performance? Es porque no tienen JIT?
+

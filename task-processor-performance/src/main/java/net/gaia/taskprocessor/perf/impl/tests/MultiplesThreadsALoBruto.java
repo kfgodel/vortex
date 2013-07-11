@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
+import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread;
 import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
 
@@ -36,17 +37,6 @@ public class MultiplesThreadsALoBruto implements TicksPerSecondTestUnit {
 	public String getDescripcion() {
 		return getClass().getSimpleName() + " = " + cantidadDeThreads
 				+ " threads con while(true) incrementando la variable directamente (sin el workunit)";
-	}
-
-	/**
-	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit)
-	 */
-	public void incrementTicksWith(final IncrementarVariableWorkUnit workUnit) {
-		for (int i = 0; i < cantidadDeThreads; i++) {
-			final VariableTicks variableTicks = workUnit.getVariable();
-			final ThreadIncrementadorBruto threadCreado = ThreadIncrementadorBruto.create(variableTicks, i);
-			threadsActivos.add(threadCreado);
-		}
 	}
 
 	/**
@@ -72,5 +62,18 @@ public class MultiplesThreadsALoBruto implements TicksPerSecondTestUnit {
 		test.cantidadDeThreads = cantidadDeThreads;
 		test.threadsActivos = new ArrayList<ThreadIncrementadorBruto>();
 		return test;
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread)
+	 */
+	public void incrementTicksWith(final EstrategiaDeWorkUnitPorThread estrategiaDeWorkUnit) {
+		for (int i = 0; i < cantidadDeThreads; i++) {
+			final IncrementarVariableWorkUnit workUnitDelThread = estrategiaDeWorkUnit.getWorkUnitParaNuevoThread();
+			// Ignoramos el workunit, usamos directamente la variable en el thread
+			final VariableTicks variableDelThread = workUnitDelThread.getVariable();
+			final ThreadIncrementadorBruto threadCreado = ThreadIncrementadorBruto.create(variableDelThread, i);
+			threadsActivos.add(threadCreado);
+		}
 	}
 }

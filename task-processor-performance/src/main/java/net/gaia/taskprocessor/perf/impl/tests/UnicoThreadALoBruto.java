@@ -13,6 +13,7 @@
 package net.gaia.taskprocessor.perf.impl.tests;
 
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
+import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread;
 import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
 import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
@@ -36,14 +37,6 @@ public class UnicoThreadALoBruto implements TicksPerSecondTestUnit {
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit)
-	 */
-	public void incrementTicksWith(final IncrementarVariableWorkUnit workUnit) {
-		final VariableTicks variableTicks = workUnit.getVariable();
-		threadActivo = ThreadIncrementadorBruto.create(variableTicks, 0);
-	}
-
-	/**
 	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#comenzarPruebas()
 	 */
 	public void comenzarPruebas() {
@@ -61,5 +54,15 @@ public class UnicoThreadALoBruto implements TicksPerSecondTestUnit {
 	public static UnicoThreadALoBruto create() {
 		final UnicoThreadALoBruto test = new UnicoThreadALoBruto();
 		return test;
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread)
+	 */
+	public void incrementTicksWith(final EstrategiaDeWorkUnitPorThread estrategiaDeWorkUnit) {
+		final IncrementarVariableWorkUnit workUnitDelThread = estrategiaDeWorkUnit.getWorkUnitParaNuevoThread();
+		// Ignoramos el workunit, usamos directamente la variable en el thread
+		final VariableTicks variableDelThread = workUnitDelThread.getVariable();
+		threadActivo = ThreadIncrementadorBruto.create(variableDelThread, 0);
 	}
 }
