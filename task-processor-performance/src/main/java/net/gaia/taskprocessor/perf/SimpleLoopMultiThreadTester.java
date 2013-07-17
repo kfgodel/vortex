@@ -87,7 +87,7 @@ public class SimpleLoopMultiThreadTester {
 
 		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread
 				.create();
-		final int cantidadDeHilos = _4HILOS_EJECUTANTES;
+		final int cantidadDeHilos = _1_HILO_EJECUTANTE;
 		final WaitBarrier esperarThreads = WaitBarrier.create(cantidadDeHilos);
 
 		clock.reset();
@@ -95,7 +95,7 @@ public class SimpleLoopMultiThreadTester {
 			final VariableTicks variableParaNuevoThread = estrategiaDeVariables
 					.getVariableParaNuevoThread();
 			final ThreadIteradorBrutoPorCantidad hiloDisparado = ThreadIteradorBrutoPorCantidad
-					.create(CANTIDAD_4HILOS_SIN_CONC, variableParaNuevoThread,
+					.create(CANTIDAD_TICKS_SIN_CONC, variableParaNuevoThread,
 							esperarThreads, i);
 			hiloDisparado.start();
 		}
@@ -111,6 +111,9 @@ public class SimpleLoopMultiThreadTester {
 		LOG.info("Ticks totales: {} segs: {} s", cantidadDeTicksTotal,
 				milisTotales / 1000d);
 		LOG.info("Ticks Per Milis: {}", ticksPerMilis);
+
+		mostrarMensajeYEsperarInput("<ENTER> Para terminar");
+
 	}
 
 	private static void mostrarMensajeYEsperarInput(final String mensaje) {

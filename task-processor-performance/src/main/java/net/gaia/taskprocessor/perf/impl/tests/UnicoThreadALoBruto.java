@@ -19,8 +19,8 @@ import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
 import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
 
 /**
- * Esta clase representa el test que incrementa la variable sin parar en un thread exclusivo hasta
- * que se detiene
+ * Esta clase representa el test que incrementa la variable sin parar en un
+ * thread exclusivo hasta que se detiene
  * 
  * @author D. García
  */
@@ -59,8 +59,10 @@ public class UnicoThreadALoBruto implements TicksPerSecondTestUnit {
 	/**
 	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread)
 	 */
-	public void incrementTicksWith(final EstrategiaDeWorkUnitPorThread estrategiaDeWorkUnit) {
-		final IncrementarVariableWorkUnit workUnitDelThread = estrategiaDeWorkUnit.getWorkUnitParaNuevoThread();
+	public void incrementTicksWith(
+			final EstrategiaDeWorkUnitPorThread estrategiaDeWorkUnit) {
+		final IncrementarVariableWorkUnit workUnitDelThread = estrategiaDeWorkUnit
+				.getWorkUnitParaNuevoThread();
 		// Ignoramos el workunit, usamos directamente la variable en el thread
 		final VariableTicks variableDelThread = workUnitDelThread.getVariable();
 		threadActivo = ThreadIncrementadorBruto.create(variableDelThread, 0);
