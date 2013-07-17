@@ -1,5 +1,5 @@
 Parametros para correr los tests (el ultimo lo necesita visualVm):
--Xms512M -Xmx512M -XX:PermSize=256M -XX:MaxPermSize=256M -Xshare:off
+-Xms512M -Xmx512M -XX:PermSize=256M -XX:MaxPermSize=256M -Xshare:off [ -XX:+PrintCompilation ]
 
 Ikari01 Windows : 7 32bits. 4Gb Ram. Core2 Quad CPU Q6660 2.4Ghz. JDK 7.0.25 32bits
 IkariServ02: Linux: ubuntu 12.04.1 64bits. Kernel 3.2.0-49-generic. 16Gb RAM. AMD FX(tm)-4100 Quad-Core Processor 3.6Ghz. JDK 7.0.25 64bits
