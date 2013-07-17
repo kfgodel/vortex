@@ -33,14 +33,11 @@ public class ProcessorPeformanceTester {
 
 	public static void main(final String[] args) {
 		Thread.currentThread().setName("<> - Principal");
-
-		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread
-				.create();
-		final TicksPerSecondTestRunner runner = LimitedTimeTicksPerSecondTestRunner
-				.create(estrategiaDeVariables,
-						TimeMagnitude.of(15, TimeUnit.SECONDS));
-		final TicksPerSecondTestUnit processorTest = UnicoThreadALoBruto
-				.create();
+		
+		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread.create();
+		final TicksPerSecondTestRunner runner = LimitedTimeTicksPerSecondTestRunner.create(estrategiaDeVariables,
+				TimeMagnitude.of(15, TimeUnit.SECONDS));
+		final TicksPerSecondTestUnit processorTest = UnicoThreadALoBruto.create();
 		runner.ejecutarIndefinidamente(processorTest);
 	}
 }

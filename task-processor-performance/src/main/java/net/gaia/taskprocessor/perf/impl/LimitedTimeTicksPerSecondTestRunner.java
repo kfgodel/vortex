@@ -76,7 +76,7 @@ public class LimitedTimeTicksPerSecondTestRunner implements TicksPerSecondTestRu
 	 */
 	private void mostrarResultadosYEsperar(final MedidorDeTicksPerSecond medidor) {
 		final String resultados = medidor.describirResultados();
-		LOG.info("Resultados del medido:\n{}\n<ENTER> para terminar", resultados);
+		LOG.info("Resultados del medidor:\n{}\n<ENTER> para terminar", resultados);
 		try {
 			System.in.read();
 		} catch (final IOException e) {

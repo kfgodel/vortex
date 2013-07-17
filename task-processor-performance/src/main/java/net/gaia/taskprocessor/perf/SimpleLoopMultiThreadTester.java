@@ -104,16 +104,9 @@ public class SimpleLoopMultiThreadTester {
 				.waitForReleaseUpTo(TimeMagnitude.of(2, TimeUnit.MINUTES));
 		clock.stop();
 
-		final long cantidadDeTicksTotal = MedidorDeTicksPerSecond
-				.calcularTicksAmculuadosPara(estrategiaDeVariables);
-		final double milisTotales = clock.getTotalMilis();
-		final double ticksPerMilis = cantidadDeTicksTotal / milisTotales;
-		LOG.info("Ticks totales: {} segs: {} s", cantidadDeTicksTotal,
-				milisTotales / 1000d);
-		LOG.info("Ticks Per Milis: {}", ticksPerMilis);
+		LOG.info("Resultados:\n{}", MedidorDeTicksPerSecond.describirResultadosCon(clock, estrategiaDeVariables));
 
 		mostrarMensajeYEsperarInput("<ENTER> Para terminar");
-
 	}
 
 	private static void mostrarMensajeYEsperarInput(final String mensaje) {
