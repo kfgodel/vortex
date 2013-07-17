@@ -13,6 +13,9 @@
 package net.gaia.taskprocessor.perf;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
 import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeVariablesPorThread;
@@ -25,13 +28,17 @@ import net.gaia.taskprocessor.perf.impl.variables.estrategias.UnaVariableSinConc
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.conc.WaitBarrier;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
+
 /**
  * En esta clase voy intentando agregar los elementos
  * 
  * @author D. García
  */
 public class PruebaGradualTester {
-	private static final Logger LOG = LoggerFactory.getLogger(PruebaGradualTester.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(PruebaGradualTester.class);
 
 	public static void main(final String[] args) throws InterruptedException {
 		Thread.currentThread().setName("<> - Principal");
@@ -39,19 +46,45 @@ public class PruebaGradualTester {
 		final CronometroMilis clock = SystemMillisCronometro.create();
 		mostrarMensajeYEsperarInput("<ENTER> Para empezar prueba");
 
-		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread.create();
-		final VariableTicks variableDelThread = estrategiaDeVariables.getVariableParaNuevoThread();
+		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread
+				.create();
+		final VariableTicks variableDelThread = estrategiaDeVariables
+				.getVariableParaNuevoThread();
+
+		final ThreadIncrementadorBruto threadEjecutor = ThreadIncrementadorBruto
+				.create(variableDelThread, 0);
+
+		final WaitBarrier esperarThreads = WaitBarrier.create(1);
+
+		// final ThreadIncrementadorBrutoConBarrier threadEjecutor =
+		// ThreadIncrementadorBrutoConBarrier
+		// .create(5943795694L * 4, esperarThreads, variableDelThread, 0);
+
+		// final ThreadIteradorBrutoPorCantidad threadEjecutor =
+		// ThreadIteradorBrutoPorCantidad
+		// .create(5943795694L * 4, variableDelThread, esperarThreads, 0);
+
+		final ScheduledExecutorService timerPool = Executors
+				.newScheduledThreadPool(1);
+
+		timerPool.schedule(new Runnable() {
+			public void run() {
+				threadEjecutor.detener();
+				esperarThreads.release();
+				timerPool.shutdown();
+			}
+		}, 15, TimeUnit.SECONDS);
+
 		clock.reset();
-
-		final ThreadIncrementadorBruto threadEjecutor = ThreadIncrementadorBruto.create(variableDelThread, 0);
 		threadEjecutor.ejecutar();
-		Thread.sleep(15000);
 
-		threadEjecutor.detener();
+		esperarThreads
+				.waitForReleaseUpTo(TimeMagnitude.of(2, TimeUnit.MINUTES));
 
 		clock.stop();
 
-		LOG.info("Resultados:\n{}", MedidorDeTicksPerSecond.describirResultadosCon(clock, estrategiaDeVariables));
+		LOG.info("Resultados:\n{}", MedidorDeTicksPerSecond
+				.describirResultadosCon(clock, estrategiaDeVariables));
 
 		mostrarMensajeYEsperarInput("<ENTER> Para terminar");
 	}

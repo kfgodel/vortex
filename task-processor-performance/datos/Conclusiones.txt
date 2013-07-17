@@ -10,17 +10,16 @@
 - Ejecutar el for con la comparación "<" es levemente menos costoso que por "!=". 173061 ticks/s vs 161804 ticks/s
 
 - Un thread puede cachear valores locales (como un flag) y no reaccionar si otro thread le cambio el valor
-- El keyword "volatile" usado en el flag permite evitar ese cacheo, y por alguna razón le da un pequeño 
-	boost de performance. 144442 vs 140058
-- Si volatile se usa en la variable contador, la performance es peor que usando AtomicLong. 2500 vs. 9753 ticks/s
+- El keyword "volatile" usado en el flag permite evitar ese cacheo.
+- Volatile tiene un costo de performance en lectura que en el bucle principal reduce la performance drásticamente.
+	Si se reduce la cantidad de lecturas, la performance aumenta considerablemente (de 360k a 36M)  
 
 - Si los threads tienen que compartir una variable (no atomic) se molestan entre ellos. 
-	Es mejor crear un contador para cada uno (dar a cada uno su propio recurso exclusivo)
+	Es mejor crear un contador para cada uno (dar a cada uno su propio recurso exclusivo) y evitar todo tipo de contacto,
+	aunque sea memoria.
   
 
 * Respecto a la cantidad de threads y VMs
-
-- Nada le gana al for infinito (si es una operación de puro cálculo lo mejor es diseñarla mono thread). 217192 ticks/s (25% del procesador)
 
 - Una VM en mono thread utiliza sólo una parte de los cores al máximo, dejando margen para el resto (tengo 4 cores, utiliza el 25%)
 - Por lo que lei, la VM le delega el manejo de threads al S.O. que se encarga de asignarle cores. La VM no tiene elección sobre que core se ejecutan las cosas.

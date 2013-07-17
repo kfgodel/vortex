@@ -23,6 +23,12 @@ import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
  */
 public class ThreadIncrementadorBruto extends ThreadBucleSupport {
 
+	/**
+	 * Cantidad de incrementos que hacemos antes de chequear que haya cambiado
+	 * el flag
+	 */
+	private static final int TICKS_PER_BATCH = 10000000;
+
 	public ThreadIncrementadorBruto() {
 		super("<> - IncrementadorBruto");
 	}
@@ -36,10 +42,8 @@ public class ThreadIncrementadorBruto extends ThreadBucleSupport {
 	public void run() {
 		// Sobreescribir el método nos da mayor performance
 		while (running) {
-			try {
+			for (int i = 0; i < TICKS_PER_BATCH; i++) {
 				realizarAccionRepetida();
-			} catch (final Exception e) {
-				running = false;
 			}
 		}
 	}
