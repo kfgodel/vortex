@@ -1,8 +1,14 @@
-
-* Respecto del código:
+* Respecto del S.O.
 
 - En el mismo hardware la diferencia entre linux y windows es mínima a favor de linux. 
   En el manejo de varios threads esa diferencia se agranda.   
+
+- Una VM en mono thread utiliza sólo una parte de los cores al máximo, dejando margen para el resto (tengo 4 cores, utiliza el 25%)
+- La VM le delega el manejo de threads al S.O. que se encarga de asignarle cores. La VM no tiene elección sobre que core se ejecutan las cosas.
+- La carga de un monothread la balancea el S.O. (en windows se distribuye entre los cores, en linux carga un core)
+
+
+* Respecto del código:
 
 - Ejecutar un template method de una subclase es bastante costoso. Tarda el doble que si la subclase 
 	define todo el comportamiento.  125871 ticks/s vs 270241
@@ -14,27 +20,24 @@
 - Volatile tiene un costo de performance en lectura que en el bucle principal reduce la performance drásticamente.
 	Si se reduce la cantidad de lecturas, la performance aumenta considerablemente (de 360k a 36M)  
 
-- Si los threads tienen que compartir una variable (no atomic) se molestan entre ellos. 
+- Si los threads tienen que compartir una variable (no atomic) se molestan entre ellos por esperas. 
 	Es mejor crear un contador para cada uno (dar a cada uno su propio recurso exclusivo) y evitar todo tipo de contacto,
 	aunque sea memoria.
+	
+- Utilizar elementos de sincronización agrega costos de performance bastante caros y tiempos de bloqueo de 
+	threads, aunque sea un único thread el que accede a los recursos. (puede ser menor al 1% de la performance sin sync)
+- Si se utilizan elementos de Sync las esperas son mejor distribuidas entre los threads. 
+	(Todos los threads esperan parecido). Seguramente por la fair policy de los locks.
+	
   
 
 * Respecto a la cantidad de threads y VMs
-
-- Una VM en mono thread utiliza sólo una parte de los cores al máximo, dejando margen para el resto (tengo 4 cores, utiliza el 25%)
-- Por lo que lei, la VM le delega el manejo de threads al S.O. que se encarga de asignarle cores. La VM no tiene elección sobre que core se ejecutan las cosas.
-- La carga de un monothread la balancea el S.O. (en windows se distribuye en linux carga un core)
 
 - Ejecutando Vms en paralelo se logra mejor performance que varios threads en una sóla VM
 - Utilizar varios threads (si no comparten recursos) aprovecha mejor el procesamiento aunque no tanto como 
 	distintas VMs y requiere código más complejo
 - Si se ejecutan más Vms que cores es posible lograr un pico mejor de performance, pero no es proporcional, 
 	es apenas superior (y consume memoria proporcional). 914424 ticks/s (100% proc, 8VMs)
-
-- Utilizar elementos de sincronización agrega costos de performance bastante caros y tiempos de bloqueo de 
-	threads, aunque sea un único thread el que accede a los recursos.
-- Si se utilizan elementos de Sync las esperas son mejor distribuidas entre los threads. 
-	(Todos los threads esperan parecido). Seguramente por la fair policy de los locks.
 
 
 * Respecto de los tests
@@ -46,8 +49,12 @@
 
 	Eso quiere decir que descartando la posibilidad de ejecutar varias vms a la vez, y tomando que se van a 
 	ejecutar con threads y con unidades WorkUnit. El caso 0, debería ser el más rápido en esas condiciones. 
-	Olvidando lo del mono-thread. 
+	Olvidando lo del mono-thread.
+	
+- El caso de mejor performance bajo las condiciones de testeabilidad es el de levantar en una vm tantos threads como cores
+y no compartir estado. Con ellos se obtiene el valor más alto de performance para comparar luego con el resto 
+
 
 Preguntas:
-- Porque el simple thread tiene tanta diferencia con el unico thread?
+
 
