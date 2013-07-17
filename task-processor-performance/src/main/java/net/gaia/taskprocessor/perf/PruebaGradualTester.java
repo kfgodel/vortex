@@ -1,5 +1,5 @@
 /**
- * 08/07/2013 01:46:32 Copyright (C) 2013 Darío L. García
+ * 16/07/2013 21:03:17 Copyright (C) 2013 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -18,6 +18,7 @@ import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
 import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeVariablesPorThread;
 import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.medidor.MedidorDeTicksPerSecond;
+import net.gaia.taskprocessor.perf.impl.tests.ThreadIncrementadorBruto;
 import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
 import net.gaia.taskprocessor.perf.impl.variables.estrategias.UnaVariableSinConcurrenciaPorThread;
 
@@ -25,45 +26,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Esta clase prueba la velocidad de ejecucion de un unico thread en un for sin ningun elemento de
- * sync
+ * En esta clase voy intentando agregar los elementos
  * 
  * @author D. García
  */
-public class SimpleLoopTester {
-	private static final Logger LOG = LoggerFactory.getLogger(SimpleLoopTester.class);
+public class PruebaGradualTester {
+	private static final Logger LOG = LoggerFactory.getLogger(PruebaGradualTester.class);
 
-	/**
-	 * Cantidad sin profiler y sin concurrencia
-	 */
-	public static final long CANTIDAD_TICKS_SIN_CONC = 16747700414L / 4;
-
-	/**
-	 * Cantidad sin profiler y conc windows
-	 */
-	public static final long CANTIDAD_TICKS_CON_CONC = CANTIDAD_TICKS_SIN_CONC / 10;
-
-	/**
-	 * Cantidad con profiler
-	 */
-	// private static final long TICKS_ESTIMADOS_POR_SEG = 123456789L;
-
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws InterruptedException {
 		Thread.currentThread().setName("<> - Principal");
 
 		final CronometroMilis clock = SystemMillisCronometro.create();
 		mostrarMensajeYEsperarInput("<ENTER> Para empezar prueba");
 
 		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread.create();
-		final VariableTicks variable = estrategiaDeVariables.getVariableParaNuevoThread();
-
+		final VariableTicks variableDelThread = estrategiaDeVariables.getVariableParaNuevoThread();
 		clock.reset();
-		for (long i = 0; i < CANTIDAD_TICKS_SIN_CONC; i++) {
-			variable.incrementar();
-		}
+
+		final ThreadIncrementadorBruto threadEjecutor = ThreadIncrementadorBruto.create(variableDelThread, 0);
+		threadEjecutor.ejecutar();
+		Thread.sleep(15000);
+
+		threadEjecutor.detener();
+
 		clock.stop();
 
 		LOG.info("Resultados:\n{}", MedidorDeTicksPerSecond.describirResultadosCon(clock, estrategiaDeVariables));
+
+		mostrarMensajeYEsperarInput("<ENTER> Para terminar");
 	}
 
 	private static void mostrarMensajeYEsperarInput(final String mensaje) {

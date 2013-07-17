@@ -76,16 +76,19 @@ public class MedidorDeTicksPerSecond {
 	 * @return Los resultados de este medidor
 	 */
 	public String describirResultados() {
+		return describirResultadosCon(clock, estrategiaDeVariables);
+	}
+
+	/**
+	 * Genera una cadena como descripción de los resultados para el reloj usado y la estrategia de
+	 * variables indicada
+	 * 
+	 * @return Una cadena con los resultados de las pruebas
+	 */
+	public static String describirResultadosCon(final CronometroMilis clock,
+			final EstrategiaDeVariablesPorThread estrategiaDeVariables) {
 		final StringBuilder builder = new StringBuilder();
-		// for (final Double medicionRealizada : medicionesRealizadas) {
-		// builder.append("Ticks per second: ");
-		// builder.append(medicionRealizada);
-		// builder.append("\n");
-		// }
-
-		// Contamos las modificaciones de todos los threads
 		final long cantidadDeTicksTotal = calcularTicksAmculuadosPara(estrategiaDeVariables);
-
 		final double milisTotales = clock.getTotalMilis();
 		final double ticksPerMilis = cantidadDeTicksTotal / milisTotales;
 		builder.append("Ticks totales: ");
