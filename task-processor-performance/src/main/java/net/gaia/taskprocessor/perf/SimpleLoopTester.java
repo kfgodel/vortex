@@ -19,20 +19,19 @@ import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeVariablesPorThread;
 import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.medidor.MedidorDeTicksPerSecond;
 import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
-import net.gaia.taskprocessor.perf.impl.variables.estrategias.UnaVariableSinConcurrenciaPorThread;
+import net.gaia.taskprocessor.perf.impl.variables.estrategias.UnicaVariableConcurrente;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Esta clase prueba la velocidad de ejecucion de un unico thread en un for sin
- * ningun elemento de sync
+ * Esta clase prueba la velocidad de ejecucion de un unico thread en un for sin ningun elemento de
+ * sync
  * 
  * @author D. García
  */
 public class SimpleLoopTester {
-	private static final Logger LOG = LoggerFactory
-			.getLogger(SimpleLoopTester.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SimpleLoopTester.class);
 
 	/**
 	 * Cantidad sin profiler y sin concurrencia
@@ -57,19 +56,16 @@ public class SimpleLoopTester {
 		final CronometroMilis clock = SystemMillisCronometro.create();
 		mostrarMensajeYEsperarInput("<ENTER> Para empezar prueba");
 
-		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread
-				.create();
-		final VariableTicks variable = estrategiaDeVariables
-				.getVariableParaNuevoThread();
+		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnicaVariableConcurrente.create();
+		final VariableTicks variable = estrategiaDeVariables.getVariableParaNuevoThread();
 
 		clock.reset();
-		for (long i = 0; i < CANTIDAD_TICKS_SIN_CONC; i++) {
+		for (long i = 0; i < CANTIDAD_TICKS_CON_CONC; i++) {
 			variable.incrementar();
 		}
 		clock.stop();
 
-		LOG.info("Resultados:\n{}", MedidorDeTicksPerSecond
-				.describirResultadosCon(clock, estrategiaDeVariables));
+		LOG.info("Resultados:\n{}", MedidorDeTicksPerSecond.describirResultadosCon(clock, estrategiaDeVariables));
 	}
 
 	private static void mostrarMensajeYEsperarInput(final String mensaje) {
