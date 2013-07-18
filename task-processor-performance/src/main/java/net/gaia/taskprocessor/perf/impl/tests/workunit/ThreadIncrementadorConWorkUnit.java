@@ -1,5 +1,5 @@
 /**
- * 07/07/2013 18:49:53 Copyright (C) 2013 Darío L. García
+ * 17/07/2013 21:01:08 Copyright (C) 2013 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,30 +10,33 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.perf.impl.tests;
+package net.gaia.taskprocessor.perf.impl.tests.workunit;
 
-import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
+import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
+import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 
 /**
- * Esta clase representa el thread que incrementa el valor de la variable
- * directamentee en un for infinito
+ * Esta clase representa el thread que incrementa el valor de la variable ticks a través de un
+ * workunit indicado por el tester
  * 
  * @author D. García
  */
-public class ThreadIncrementadorBruto extends ThreadBucleSupport {
+public class ThreadIncrementadorConWorkUnit extends ThreadBucleSupport {
 
 	/**
-	 * Cantidad de incrementos que hacemos antes de chequear que haya cambiado
-	 * el flag
+	 * Cantidad de incrementos que hacemos antes de chequear que haya cambiado el flag
 	 */
 	private static final int TICKS_PER_BATCH = 10000000;
 
-	public ThreadIncrementadorBruto() {
-		super("<> - IncrementadorBruto");
+	public ThreadIncrementadorConWorkUnit() {
+		super("<> - IncrementadorConWorkUnit");
 	}
 
-	private VariableTicks variable;
+	/**
+	 * El workunit con el cual se incrementa indirectamente la variable
+	 */
+	private WorkUnit workUnit;
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport#run()
@@ -53,13 +56,17 @@ public class ThreadIncrementadorBruto extends ThreadBucleSupport {
 	 */
 	@Override
 	protected void realizarAccionRepetida() {
-		variable.incrementar();
+		try {
+			workUnit.doWork();
+		} catch (final InterruptedException e) {
+			throw new UnhandledConditionException("Interrumpieron el thread incrementador mientras incrementaba?", e);
+		}
 	}
 
-	public static ThreadIncrementadorBruto create(final VariableTicks variable,
+	public static ThreadIncrementadorConWorkUnit create(final WorkUnit workUnitIncrementador,
 			final int numeroIdentificador) {
-		final ThreadIncrementadorBruto thread = new ThreadIncrementadorBruto();
-		thread.variable = variable;
+		final ThreadIncrementadorConWorkUnit thread = new ThreadIncrementadorConWorkUnit();
+		thread.workUnit = workUnitIncrementador;
 		thread.setName(thread.getName() + " " + numeroIdentificador);
 		return thread;
 	}

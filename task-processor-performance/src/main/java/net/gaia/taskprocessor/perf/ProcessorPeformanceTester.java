@@ -6,8 +6,8 @@ import net.gaia.taskprocessor.perf.api.TicksPerSecondTestRunner;
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
 import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeVariablesPorThread;
 import net.gaia.taskprocessor.perf.impl.LimitedTimeTicksPerSecondTestRunner;
-import net.gaia.taskprocessor.perf.impl.tests.UnicoThreadALoBruto;
-import net.gaia.taskprocessor.perf.impl.variables.estrategias.UnicaVariableConcurrente;
+import net.gaia.taskprocessor.perf.impl.tests.sinworkunit.MultiplesThreadsALoBruto;
+import net.gaia.taskprocessor.perf.impl.variables.estrategias.UnicaVariableSinConcurrencia;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
@@ -33,10 +33,10 @@ public class ProcessorPeformanceTester {
 	public static void main(final String[] args) {
 		Thread.currentThread().setName("<> - Principal");
 
-		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnicaVariableConcurrente.create();
+		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnicaVariableSinConcurrencia.create();
 		final TicksPerSecondTestRunner runner = LimitedTimeTicksPerSecondTestRunner.create(estrategiaDeVariables,
 				TimeMagnitude.of(15, TimeUnit.SECONDS));
-		final TicksPerSecondTestUnit processorTest = UnicoThreadALoBruto.create();
+		final TicksPerSecondTestUnit processorTest = MultiplesThreadsALoBruto.create(4);
 		runner.ejecutarIndefinidamente(processorTest);
 	}
 }

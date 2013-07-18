@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.perf.impl.tests;
+package net.gaia.taskprocessor.perf.impl.tests.sinworkunit;
 
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
 import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread;
