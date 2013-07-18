@@ -29,6 +29,8 @@
 - Si se utilizan elementos de Sync las esperas son mejor distribuidas entre los threads. 
 	(Todos los threads esperan parecido). Seguramente por la fair policy de los locks.
 	
+- El try/catch agrega un pequeño costo de performance. De 1137386 t/s a 1022338 t/s
+	
   
 
 * Respecto a la cantidad de threads y VMs

@@ -13,7 +13,9 @@
 package net.gaia.taskprocessor.perf.impl.tests.workunit;
 
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
+import net.gaia.taskprocessor.perf.impl.variables.IncrementarVariableWorkUnit;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 
 /**
@@ -37,6 +39,7 @@ public class ThreadIncrementadorConWorkUnit extends ThreadBucleSupport {
 	 * El workunit con el cual se incrementa indirectamente la variable
 	 */
 	private WorkUnit workUnit;
+	private VariableTicks variable;
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport#run()
@@ -58,15 +61,16 @@ public class ThreadIncrementadorConWorkUnit extends ThreadBucleSupport {
 	protected void realizarAccionRepetida() {
 		try {
 			workUnit.doWork();
-		} catch (final InterruptedException e) {
+		} catch (final Exception e) {
 			throw new UnhandledConditionException("Interrumpieron el thread incrementador mientras incrementaba?", e);
 		}
 	}
 
-	public static ThreadIncrementadorConWorkUnit create(final WorkUnit workUnitIncrementador,
+	public static ThreadIncrementadorConWorkUnit create(final IncrementarVariableWorkUnit workUnitIncrementador,
 			final int numeroIdentificador) {
 		final ThreadIncrementadorConWorkUnit thread = new ThreadIncrementadorConWorkUnit();
 		thread.workUnit = workUnitIncrementador;
+		thread.variable = workUnitIncrementador.getVariable();
 		thread.setName(thread.getName() + " " + numeroIdentificador);
 		return thread;
 	}

@@ -1,0 +1,1 @@
+- Cambiar la excepcion chequeada InterruptedException de WorkUnit.doWork() por una no chequeada (permite no tener que catchearla y mejora la performance)

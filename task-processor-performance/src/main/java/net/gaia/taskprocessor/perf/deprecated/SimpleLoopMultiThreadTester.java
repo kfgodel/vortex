@@ -21,7 +21,7 @@ import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 import net.gaia.taskprocessor.perf.impl.medidor.MedidorDeTicksPerSecond;
 import net.gaia.taskprocessor.perf.impl.tests.sinworkunit.ThreadIteradorBrutoPorCantidad;
 import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
-import net.gaia.taskprocessor.perf.impl.variables.estrategias.UnicaVariableConcurrente;
+import net.gaia.taskprocessor.perf.impl.variables.estrategias.UnaVariableSinConcurrenciaPorThread;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +83,7 @@ public class SimpleLoopMultiThreadTester {
 		final CronometroMilis clock = SystemMillisCronometro.create();
 		mostrarMensajeYEsperarInput("<ENTER> Para empezar prueba");
 
-		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnicaVariableConcurrente.create();
+		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread.create();
 		final int cantidadDeHilos = _1_HILO_EJECUTANTE;
 		final WaitBarrier esperarThreads = WaitBarrier.create(cantidadDeHilos);
 
