@@ -26,13 +26,9 @@ import net.gaia.taskprocessor.perf.impl.time.SystemMillisCronometro;
  */
 public class MedidorDeTicksPerSecond {
 
-	private ThreadMedidorDeTicks threadMedidorActivo;
-
 	private CronometroMilis clock;
 
 	private EstrategiaDeVariablesPorThread estrategiaDeVariables;
-
-	private List<Double> medicionesRealizadas;
 
 	public static MedidorDeTicksPerSecond create(final EstrategiaDeVariablesPorThread estrategiaDeVariables) {
 		final MedidorDeTicksPerSecond medidor = new MedidorDeTicksPerSecond();
@@ -45,15 +41,7 @@ public class MedidorDeTicksPerSecond {
 	 * Comienza la ejecución de este medidor en un thread independiente
 	 */
 	public void iniciarMediciones() {
-		// if (threadMedidorActivo != null) {
-		// detenerMediciones();
-		// }
-		// final MedirTicksPorSegundoWorkUnit tarea = MedirTicksPorSegundoWorkUnit.create(clock,
-		// estrategiaDeVariables);
-		// medicionesRealizadas = tarea.getMedicionesRealizadas();
-		// threadMedidorActivo = ThreadMedidorDeTicks.create(tarea);
 		clock.reset();
-		// threadMedidorActivo.ejecutar();
 	}
 
 	/**
@@ -61,12 +49,6 @@ public class MedidorDeTicksPerSecond {
 	 * Debería liberar los recursos utilizados para le ejecución
 	 */
 	public void detenerMediciones() {
-		// if (threadMedidorActivo == null) {
-		// // No hay actividad que detener
-		// return;
-		// }
-		// threadMedidorActivo.detener();
-		// threadMedidorActivo = null;
 		clock.stop();
 	}
 

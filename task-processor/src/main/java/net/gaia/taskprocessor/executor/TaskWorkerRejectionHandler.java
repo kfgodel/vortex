@@ -31,14 +31,19 @@ public class TaskWorkerRejectionHandler implements RejectedExecutionHandler {
 	 * @see java.util.concurrent.RejectedExecutionHandler#rejectedExecution(java.lang.Runnable,
 	 *      java.util.concurrent.ThreadPoolExecutor)
 	 */
-	
+
 	public void rejectedExecution(final Runnable runnable, final ThreadPoolExecutor executor) {
 		final int maximunSize = executor.getMaximumPoolSize();
 		final int poolSize = executor.getPoolSize();
 		final int activeCount = executor.getActiveCount();
-		if (poolSize < maximunSize && activeCount == 0) {
-			LOG.debug("El executor de tareas inmediatas rechazó el runnable: " + runnable
-					+ " y no hay threads activos, ni estamos usando el máximo. Posible exceso de tasks?");
+		final boolean noEstaAlLimiteDeThreads = poolSize < maximunSize;
+		final boolean noEstaProcesandoTareas = activeCount == 0;
+		final boolean noEstaDetenido = !executor.isShutdown() && !executor.isTerminating();
+		final boolean deberiaEstarAceptandoTareas = noEstaDetenido && noEstaAlLimiteDeThreads && noEstaProcesandoTareas;
+		if (deberiaEstarAceptandoTareas) {
+			LOG.debug("El executor de tareas inmediatas rechazó el runnable: "
+					+ runnable
+					+ " y no está detenido, ni hay threads activos, ni estamos usando el máximo. Posible exceso de tasks?");
 		} else {
 			LOG.trace("El executor de tareas inmediatas rechazó el runnable: " + runnable
 					+ ". Probablemente no detectamos que estabamos al limite");

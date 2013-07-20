@@ -116,7 +116,7 @@
 	<dependency>
 	  <groupId>net.gaia</groupId>
 	  <artifactId>task-processor</artifactId>
-	  <version>0.5.0</version>
+	  <version>0.6.0-SNAPSHOT</version>
 	</dependency>
 	
 	<!-- Mediciones de performance -->
