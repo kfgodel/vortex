@@ -12,9 +12,14 @@
  */
 package net.gaia.taskprocessor.perf.impl.tests.processors;
 
+import java.util.concurrent.RejectedExecutionException;
+
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase representa el thread que alimenta de tareas al {@link TaskProcessor} testeado
@@ -22,6 +27,7 @@ import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
  * @author D. García
  */
 public class ThreadAlimentadorDelTaskProcessor extends ThreadBucleSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(ThreadAlimentadorDelTaskProcessor.class);
 
 	private static final int INITIAL_WORKUNIT_INDEX = 0;
 
@@ -47,8 +53,14 @@ public class ThreadAlimentadorDelTaskProcessor extends ThreadBucleSupport {
 	public void run() {
 		// Sobreescribir el método nos da mayor performance
 		while (running) {
-			for (int i = 0; i < TICKS_PER_BATCH; i++) {
-				realizarAccionRepetida();
+			try {
+				for (int i = 0; i < TICKS_PER_BATCH; i++) {
+					realizarAccionRepetida();
+				}
+			} catch (final RejectedExecutionException e) {
+				if (running) {
+					LOG.info("El processor rechazó una tarea mientras estabamos corriendo", e);
+				}
 			}
 		}
 	}

@@ -153,7 +153,7 @@ public class TestTaskListenerApi {
 
 		final TestWorkUnit cancelledWork = new TestWorkUnit();
 		final SubmittedTask cancelledTask = taskProcessor.process(cancelledWork);
-		cancelledTask.cancel(true);
+		cancelledTask.cancelExecution(true);
 		lockParaBloquearPrimera.release();
 		cancelledTask.waitForCompletionUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.assertTrue("Debería estar invocado el listener con la tarea cancelada", cancelled.get());
@@ -190,7 +190,7 @@ public class TestTaskListenerApi {
 		};
 		final SubmittedTask interruptedTask = taskProcessor.process(tarea);
 		lockParaCancelarTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		interruptedTask.cancel(true);
+		interruptedTask.cancelExecution(true);
 
 		lockParaEsperarNotificacionDeInterrupcion.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		// Cuando el método retorna el listener ya debería haber sido invocado

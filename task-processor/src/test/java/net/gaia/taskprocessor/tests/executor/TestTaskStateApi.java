@@ -179,8 +179,8 @@ public class TestTaskStateApi {
 				lockParaCancelar.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 				// Cancelamos a todas durante el procesamiento de la del medio
-				canceladaRef.get().cancel(true);
-				interrumpidaRef.get().cancel(true);
+				canceladaRef.get().cancelExecution(true);
+				interrumpidaRef.get().cancelExecution(true);
 				lockParaTestear.release();
 
 				// Al hacer el sleep permitimos que el thread sea interrumpido

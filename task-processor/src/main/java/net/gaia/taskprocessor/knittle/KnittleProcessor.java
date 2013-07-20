@@ -87,7 +87,7 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 		final boolean added = this.inmediatePendingTasks.add(task);
 		if (!added) {
 			LOG.error("No fue posible agregar la tarea[{}] como pendiente. Cancelando", task.getWork());
-			task.cancel(true);
+			task.cancelExecution(true);
 			return;
 		}
 		metrics.incrementPending();

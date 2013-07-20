@@ -68,6 +68,6 @@ public interface SubmittedTask {
 	 * @param forceInterruption
 	 *            Indica si se puede interrumpir el thread que está ejecutando la tarea
 	 */
-	public void cancel(boolean forceInterruption);
+	public void cancelExecution(boolean forceInterruption);
 
 }

@@ -18,7 +18,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
@@ -47,6 +46,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 
 	private WorkUnit workUnit;
 	public static final String workUnit_FIELD = "workUnit";
+
 	private TaskProcessor processor;
 
 	/**
@@ -58,12 +58,12 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	/**
 	 * Excepción ocurrida en esta tarea
 	 */
-	private AtomicReference<Throwable> failingError;
+	private volatile Throwable failingError;
 
 	/**
 	 * Estado actual de la tarea
 	 */
-	private AtomicReference<SubmittedTaskState> currentState;
+	private volatile SubmittedTaskState currentState;
 	public static final String currentState_FIELD = "currentState";
 
 	/**
@@ -92,10 +92,10 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	public static SubmittedRunnableTask create(final WorkUnit unit, final TaskProcessor processor) {
 		final SubmittedRunnableTask task = new SubmittedRunnableTask();
 		task.workUnit = unit;
-		task.currentState = new AtomicReference<SubmittedTaskState>(SubmittedTaskState.PENDING);
+		task.currentState = SubmittedTaskState.PENDING;
 		task.processor = processor;
 		task.ownFuture = new FutureTask<Void>(task, null);
-		task.failingError = new AtomicReference<Throwable>();
+		task.failingError = null;
 		// Notificamos que la agregamos como pendiente
 		task.notifyListenerAcceptedTask();
 		return task;
@@ -105,18 +105,18 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		currentState.set(SubmittedTaskState.PROCESSING);
+		currentState = SubmittedTaskState.PROCESSING;
 		notifyListenerStartingProcess();
 		try {
 			nextWorkUnit = this.workUnit.doWork();
-			this.currentState.set(SubmittedTaskState.COMPLETED);
+			currentState = SubmittedTaskState.COMPLETED;
 			notifyListenerCompletedTask();
 		} catch (final InterruptedException e) {
-			this.currentState.set(SubmittedTaskState.INTERRUPTED);
+			currentState = SubmittedTaskState.INTERRUPTED;
 			notifyListenerInterruptedTask();
 		} catch (final Throwable e) {
-			this.currentState.set(SubmittedTaskState.FAILED);
-			this.failingError.set(e);
+			currentState = SubmittedTaskState.FAILED;
+			this.failingError = e;
 			notifyListenerFailedTask();
 			invokeExceptionHandler();
 		}
@@ -241,21 +241,21 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * @see net.gaia.taskprocessor.api.SubmittedTask#getCurrentState()
 	 */
 	public SubmittedTaskState getCurrentState() {
-		return currentState.get();
+		return currentState;
 	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.SubmittedTask#getFailingError()
 	 */
 	public Throwable getFailingError() {
-		return failingError.get();
+		return failingError;
 	}
 
 	/**
 	 * Ejecuta esta tarea pendiente a través de su {@link Future} de manera de notificar a los
 	 * threads que puedan estar esperando el resultado
 	 */
-	public void execute() {
+	public void executeWorkUnit() {
 		this.ownFuture.run();
 		if (nextWorkUnit != null) {
 			// Todavía queda otra tarea para continuar
@@ -264,12 +264,12 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.SubmittedTask#cancel(boolean)
+	 * @see net.gaia.taskprocessor.api.SubmittedTask#cancelExecution(boolean)
 	 */
-	public void cancel(final boolean forceInterruption) {
-		final SubmittedTaskState estadoAnterior = currentState.get();
+	public void cancelExecution(final boolean forceInterruption) {
+		final SubmittedTaskState estadoAnterior = currentState;
 		final SubmittedTaskState estadoCancelado = estadoAnterior.getStateWhenCancelled();
-		currentState.set(estadoCancelado);
+		currentState = estadoCancelado;
 		this.ownFuture.cancel(forceInterruption);
 
 		// Si cambiamos al estado cancelado, notificamos
@@ -315,7 +315,8 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(currentState_FIELD, currentState).add(workUnit_FIELD, workUnit).toString();
 	}

@@ -188,9 +188,9 @@ public class TestTaskProcessorApi {
 				lockParaCancelarTodas.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 				// Cancelamos a todas durante el procesamiento de la del medio
-				procesadaRef.get().cancel(true);
-				canceladaRef.get().cancel(true);
-				interrumpidaRef.get().cancel(true);
+				procesadaRef.get().cancelExecution(true);
+				canceladaRef.get().cancelExecution(true);
+				interrumpidaRef.get().cancelExecution(true);
 				lockParaTestear.release();
 
 				// El sleep permite que este thread sea interrumpido despues de cancelar

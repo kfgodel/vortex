@@ -57,7 +57,7 @@ public class KnittleWorker implements Runnable {
 	 */
 	private void perform(final SubmittedRunnableTask nextTask) {
 		try {
-			nextTask.execute();
+			nextTask.executeWorkUnit();
 		} catch (final Exception e) {
 			LOG.error("Se escapo una excepción no controlada de la tarea ejecutada. Omitiendo error", e);
 		}

@@ -170,7 +170,7 @@ public class MinMaxWorkUnit implements WorkUnit {
 	 */
 	private void cancelarPlanificacionesAnteriores() {
 		if (proximaPlanificacion != null) {
-			proximaPlanificacion.cancel(true);
+			proximaPlanificacion.cancelExecution(true);
 		}
 		procesor.removeTasksMatching(new TaskCriteria() {
 			public boolean matches(final WorkUnit workUnit) {

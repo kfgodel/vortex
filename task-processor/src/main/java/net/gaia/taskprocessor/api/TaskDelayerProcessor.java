@@ -15,7 +15,7 @@ package net.gaia.taskprocessor.api;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
- * Esta interfaz define los métodos utilizables en le procesor para postergar ejecución de tareas
+ * Esta interfaz define los métodos utilizables en el procesor para postergar ejecución de tareas
  * 
  * @author D. García
  */
