@@ -12,12 +12,8 @@
  */
 package net.gaia.taskprocessor.perf.impl.tests.processors;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
-import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
-import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread;
 
 /**
  * Esta clase prueba la velocidad de ejecución de las tareas usando un
@@ -25,53 +21,26 @@ import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread;
  * 
  * @author D. García
  */
-public class ExecutorBasedParaLaEjecucion implements TicksPerSecondTestUnit {
-
-	private ThreadAlimentadorDelTaskProcessor threadAlimentador;
-	private TaskProcessor processor;
+public class ExecutorBasedParaLaEjecucion extends ProcessorBasedTestSupport {
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#getDescripcion()
 	 */
 	public String getDescripcion() {
-		return getClass().getSimpleName() + " = ExecutorBased con opciones default ejecutando las tareas";
+		return getClass().getSimpleName() + " = ExecutorBased con opciones default ejecutando " + workUnitCount
+				+ " tareas distintas";
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread)
+	 * Crea la instancia concreta de ejecutor a utilzar con este test
+	 * 
+	 * @param processorConfig
+	 *            La configuracion definida para el procesador
+	 * @return La instancia concreta aprobar
 	 */
-	public void incrementTicksWith(final EstrategiaDeWorkUnitPorThread estrategiaDeWorkUnit) {
-		// Creamos el procesador de tareas
-		final TaskProcessorConfiguration processorConfig = TaskProcessorConfiguration.createOptimun();
-		processor = ExecutorBasedTaskProcesor.create(processorConfig);
-
-		// Creamos una tarea por core disponible
-		final int coreCount = processorConfig.getMinimunThreadPoolSize();
-		final WorkUnit[] workUnits = new WorkUnit[coreCount];
-		for (int i = 0; i < workUnits.length; i++) {
-			workUnits[i] = estrategiaDeWorkUnit.getWorkUnitParaNuevoThread();
-		}
-
-		// Creamos el alimentador del procesador que va a meter tareas
-		threadAlimentador = ThreadAlimentadorDelTaskProcessor.create(processor, workUnits);
-	}
-
-	/**
-	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#comenzarPruebas()
-	 */
-	public void comenzarPruebas() {
-		// Empezamos a meter tareas en el procesador
-		threadAlimentador.ejecutar();
-	}
-
-	/**
-	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#detenerPruebas()
-	 */
-	public void detenerPruebas() {
-		threadAlimentador.detener();
-		threadAlimentador = null;
-		processor.detener();
-		processor = null;
+	@Override
+	protected ExecutorBasedTaskProcesor createConcreteProcessor(final TaskProcessorConfiguration processorConfig) {
+		return ExecutorBasedTaskProcesor.create(processorConfig);
 	}
 
 	public static ExecutorBasedParaLaEjecucion create() {

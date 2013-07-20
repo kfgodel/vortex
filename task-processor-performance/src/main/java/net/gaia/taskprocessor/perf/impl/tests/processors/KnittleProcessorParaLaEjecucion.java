@@ -14,20 +14,14 @@ package net.gaia.taskprocessor.perf.impl.tests.processors;
 
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.knittle.KnittleProcessor;
-import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
-import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread;
 
 /**
  * Esta clase prueba la velocidad de procesamiento del {@link KnittleProcessor}
  * 
  * @author D. García
  */
-public class KnittleProcessorParaLaEjecucion implements TicksPerSecondTestUnit {
-
-	private ThreadAlimentadorDelTaskProcessor threadAlimentador;
-	private TaskProcessor processor;
+public class KnittleProcessorParaLaEjecucion extends ProcessorBasedTestSupport {
 
 	/**
 	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#getDescripcion()
@@ -37,40 +31,11 @@ public class KnittleProcessorParaLaEjecucion implements TicksPerSecondTestUnit {
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#incrementTicksWith(net.gaia.taskprocessor.perf.api.variables.EstrategiaDeWorkUnitPorThread)
+	 * @see net.gaia.taskprocessor.perf.impl.tests.processors.ProcessorBasedTestSupport#createConcreteProcessor(net.gaia.taskprocessor.api.TaskProcessorConfiguration)
 	 */
-	public void incrementTicksWith(final EstrategiaDeWorkUnitPorThread estrategiaDeWorkUnit) {
-		// Creamos el procesador de tareas
-		final TaskProcessorConfiguration processorConfig = TaskProcessorConfiguration.createOptimun();
-		processor = KnittleProcessor.create(processorConfig);
-
-		// Creamos una tarea por core disponible
-		final int coreCount = processorConfig.getMinimunThreadPoolSize();
-		final WorkUnit[] workUnits = new WorkUnit[coreCount];
-		for (int i = 0; i < workUnits.length; i++) {
-			workUnits[i] = estrategiaDeWorkUnit.getWorkUnitParaNuevoThread();
-		}
-
-		// Creamos el alimentador del procesador que va a meter tareas
-		threadAlimentador = ThreadAlimentadorDelTaskProcessor.create(processor, workUnits);
-	}
-
-	/**
-	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#comenzarPruebas()
-	 */
-	public void comenzarPruebas() {
-		// Empezamos a meter tareas en el procesador
-		threadAlimentador.ejecutar();
-	}
-
-	/**
-	 * @see net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit#detenerPruebas()
-	 */
-	public void detenerPruebas() {
-		threadAlimentador.detener();
-		threadAlimentador = null;
-		processor.detener();
-		processor = null;
+	@Override
+	protected TaskProcessor createConcreteProcessor(final TaskProcessorConfiguration processorConfig) {
+		return KnittleProcessor.create(processorConfig);
 	}
 
 	public static KnittleProcessorParaLaEjecucion create() {
