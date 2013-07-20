@@ -16,6 +16,7 @@ import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.knittle.KnittleProcessor;
 
 import org.junit.Before;
+import org.junit.Ignore;
 
 /**
  * Esta clase prueba la performance del procesador ante situaciones de saturación por exceso de
@@ -23,6 +24,7 @@ import org.junit.Before;
  * 
  * @author D. García
  */
+@Ignore("Esto solo son para ser corridos manualmente")
 public class TestDePerformanceEnOptimunKnittle extends TestDePerformanceEnOptimunSupport {
 
 	@Before

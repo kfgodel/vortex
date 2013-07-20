@@ -20,6 +20,7 @@ import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.tests.util.CounterTaskListener;
 import net.gaia.taskprocessor.tests.util.TareaSimulada;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
  * 
  * @author D. García
  */
+@Ignore("Esto solo son para ser corridos manualmente")
 public class TestProcessorPerformanceWithFixedTimebox {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TestProcessorPerformanceWithFixedTaskCount.class);

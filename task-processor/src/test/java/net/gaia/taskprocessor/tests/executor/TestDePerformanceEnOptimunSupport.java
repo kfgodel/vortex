@@ -18,6 +18,7 @@ import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
 
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
  * 
  * @author D. García
  */
+@Ignore("Esto solo son para ser corridos manualmente")
 public abstract class TestDePerformanceEnOptimunSupport {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceEnOptimun.class);

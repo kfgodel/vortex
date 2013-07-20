@@ -12,6 +12,8 @@
  */
 package net.gaia.taskprocessor.tests.knittle;
 
+import org.junit.Ignore;
+
 import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.knittle.KnittleProcessor;
@@ -23,6 +25,7 @@ import net.gaia.taskprocessor.tests.executor.TestProcessorPerformanceWithFixedTi
  * 
  * @author D. García
  */
+@Ignore("Esto solo son para ser corridos manualmente")
 public class TestKnittlePerformanceWithFixedTimebox extends TestProcessorPerformanceWithFixedTimebox {
 	
 	protected TaskProcessor crearProcessor(final TaskProcessorConfiguration config) {

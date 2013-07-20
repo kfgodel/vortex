@@ -6,6 +6,7 @@ import net.gaia.taskprocessor.perf.api.TicksPerSecondTestRunner;
 import net.gaia.taskprocessor.perf.api.TicksPerSecondTestUnit;
 import net.gaia.taskprocessor.perf.api.variables.EstrategiaDeVariablesPorThread;
 import net.gaia.taskprocessor.perf.impl.LimitedTimeTicksPerSecondTestRunner;
+import net.gaia.taskprocessor.perf.impl.tests.processors.ExecutorBasedParaLaEjecucion;
 import net.gaia.taskprocessor.perf.impl.tests.processors.KnittleProcessorParaLaEjecucion;
 import net.gaia.taskprocessor.perf.impl.variables.estrategias.UnaVariableSinConcurrenciaPorThread;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
@@ -36,7 +37,7 @@ public class ProcessorPeformanceTester {
 		final EstrategiaDeVariablesPorThread estrategiaDeVariables = UnaVariableSinConcurrenciaPorThread.create();
 		final TicksPerSecondTestRunner runner = LimitedTimeTicksPerSecondTestRunner.create(estrategiaDeVariables,
 				TimeMagnitude.of(15, TimeUnit.SECONDS));
-		final TicksPerSecondTestUnit processorTest = KnittleProcessorParaLaEjecucion.create();
+		final TicksPerSecondTestUnit processorTest = ExecutorBasedParaLaEjecucion.create();
 		runner.ejecutarIndefinidamente(processorTest);
 	}
 }
