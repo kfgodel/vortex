@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
@@ -70,10 +71,22 @@ public class ParallelProcessor implements TaskProcessor, DelegableProcessor {
 	 */
 	private volatile TaskProcessorListener taskListener;
 
+	private volatile boolean detenido;
+
+	/**
+	 * verifica que no hayan detenido este procesador
+	 */
+	private void checkExecutionStatus() {
+		if (detenido) {
+			throw new RejectedExecutionException("el procesador está detenido. no puede aceptar más tareas");
+		}
+	}
+
 	/**
 	 * @see net.gaia.taskprocessor.api.processor.Detenible#detener()
 	 */
 	public void detener() {
+		detenido = true;
 		// Primero cambiamos el estado de los workers para que terminen
 		for (final ParallelWorker internalWorker : internalWorkers) {
 			internalWorker.stopRunning();
@@ -95,6 +108,7 @@ public class ParallelProcessor implements TaskProcessor, DelegableProcessor {
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask process(final WorkUnit work) {
+		checkExecutionStatus();
 		if (work == null) {
 			throw new IllegalArgumentException("El workUnit no puede ser null");
 		}
@@ -136,6 +150,7 @@ public class ParallelProcessor implements TaskProcessor, DelegableProcessor {
 	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit work) {
+		checkExecutionStatus();
 		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this, getProcessorListener());
 		final TaskDelegation delegation = this.delayedDelegator.delayDelegation(workDelay, task);
 		return delegation;
@@ -208,6 +223,7 @@ public class ParallelProcessor implements TaskProcessor, DelegableProcessor {
 		final ParallelProcessor processor = new ParallelProcessor();
 		processor.delayedDelegator = ScheduledThreadPoolDelegator.create(processor);
 		processor.inicializarWorkers(config.getMinimunThreadPoolSize());
+		processor.detenido = false;
 		return processor;
 	}
 

@@ -15,6 +15,7 @@ package net.gaia.taskprocessor.forkjoin;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.RejectedExecutionException;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskCriteria;
@@ -56,11 +57,23 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	 */
 	private volatile TaskProcessorListener taskListener;
 
+	private volatile boolean detenido;
+
+	/**
+	 * verifica que no hayan detenido este procesador
+	 */
+	private void checkExecutionStatus() {
+		if (detenido) {
+			throw new RejectedExecutionException("el procesador está detenido. no puede aceptar más tareas");
+		}
+	}
+
 	/**
 	 * @see net.gaia.taskprocessor.api.processor.TaskDelayerProcessor#processDelayed(ar.com.dgarcia.lang.time.TimeMagnitude,
 	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit trabajo) {
+		checkExecutionStatus();
 		if (trabajo == null) {
 			throw new IllegalArgumentException("El workUnit no puede ser null");
 		}
@@ -90,6 +103,7 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask process(final WorkUnit tarea) {
+		checkExecutionStatus();
 		if (tarea == null) {
 			throw new IllegalArgumentException("El workUnit no puede ser null");
 		}
@@ -161,6 +175,7 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#detener()
 	 */
 	public void detener() {
+		detenido = true;
 		threadPool.shutdownNow();
 	}
 
@@ -190,6 +205,7 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 		final boolean useAsyncMode = true;
 		processor.threadPool = new ForkJoinPool(parallelThreadCount, threadFactory, exceptionHandler, useAsyncMode);
 		processor.delayedDelegator = ScheduledThreadPoolDelegator.create(processor);
+		processor.detenido = false;
 		return processor;
 	}
 }

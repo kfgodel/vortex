@@ -60,6 +60,8 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 
 	private ThreadBouncer threadBouncer;
 
+	private volatile boolean detenido;
+
 	/**
 	 * Crea un procesador con la configuración por defecto de un thread para todas las tareas
 	 * 
@@ -98,6 +100,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 				processor.inmediatePendingTasks);
 		processor.delayedDelegator = ScheduledThreadPoolDelegator.create(processor);
 		processor.metrics = config.createMetricsFor(processor.inmediatePendingTasks);
+		processor.detenido = false;
 		return processor;
 	}
 
@@ -105,6 +108,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask process(final WorkUnit work) {
+		checkExecutionStatus();
 		// A los threads externos los hacemos esperar si estamos muy saturados
 		threadBouncer.retrasarPedidoExternoSiProcesadorSaturado();
 
@@ -115,10 +119,20 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 	}
 
 	/**
+	 * verifica que no hayan detenido este procesador
+	 */
+	private void checkExecutionStatus() {
+		if (detenido) {
+			throw new RejectedExecutionException("el procesador está detenido. no puede aceptar más tareas");
+		}
+	}
+
+	/**
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#processDelayed(ar.com.dgarcia.lang.time.TimeMagnitude,
 	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit work) {
+		checkExecutionStatus();
 		// Creamos la tarea para el trabajo
 		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this, getProcessorListener());
 		final TaskDelegation delegation = this.delayedDelegator.delayDelegation(workDelay, task);
@@ -218,6 +232,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#detener()
 	 */
 	public void detener() {
+		detenido = true;
 		// Primero detenemos las que tienen delay
 		this.delayedDelegator.detener();
 

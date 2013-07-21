@@ -14,6 +14,7 @@ package net.gaia.taskprocessor.knittle;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
@@ -62,10 +63,13 @@ public class KnittleProcessor implements TaskProcessor, DelegableProcessor {
 	private TaskProcessingMetricsAndListener metrics;
 	private ThreadBouncer threadBouncer;
 
+	private volatile boolean detenido;
+
 	/**
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask process(final WorkUnit tarea) {
+		checkExecutionStatus();
 		// Si estamos muy cargados hace esperar a los threads
 		threadBouncer.retrasarPedidoExternoSiProcesadorSaturado();
 
@@ -75,10 +79,20 @@ public class KnittleProcessor implements TaskProcessor, DelegableProcessor {
 	}
 
 	/**
+	 * verifica que no hayan detenido este procesador
+	 */
+	private void checkExecutionStatus() {
+		if (detenido) {
+			throw new RejectedExecutionException("el procesador está detenido. no puede aceptar más tareas");
+		}
+	}
+
+	/**
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#processDelayed(net.gaia.taskprocessor.api.TimeMagnitude,
 	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit work) {
+		checkExecutionStatus();
 		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this, getProcessorListener());
 		final TaskDelegation delegation = this.delayedDelegator.delayDelegation(workDelay, task);
 		return delegation;
@@ -147,6 +161,7 @@ public class KnittleProcessor implements TaskProcessor, DelegableProcessor {
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#detener()
 	 */
 	public void detener() {
+		detenido = true;
 		// Primero detenemos las que tienen delay
 		this.delayedDelegator.detener();
 
@@ -194,6 +209,7 @@ public class KnittleProcessor implements TaskProcessor, DelegableProcessor {
 	 * Inicia la ejecución de los threads indicados en la configuración
 	 */
 	private void start() {
+		this.detenido = false;
 		final int threadsActivos = config.getMinimunThreadPoolSize();
 		for (int i = 0; i < threadsActivos; i++) {
 			final KnittleWorker worker = KnittleWorker.create(this.inmediatePendingTasks, this.metrics);
