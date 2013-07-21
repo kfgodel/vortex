@@ -10,7 +10,15 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.api;
+package net.gaia.taskprocessor.api.processor;
+
+import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.TaskExceptionHandler;
+import net.gaia.taskprocessor.api.TaskProcessingMetrics;
+import net.gaia.taskprocessor.api.TaskProcessorListener;
+import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.executor.threads.ThreadOwner;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta interfaz define el contrato que ofrece un procesador de las tareas para procesar un conjunto
@@ -20,7 +28,7 @@ package net.gaia.taskprocessor.api;
  * 
  * @author D. García
  */
-public interface TaskProcessor extends TaskDelayerProcessor, ThreadOwner {
+public interface TaskProcessor extends ThreadOwner, Detenible {
 
 	/**
 	 * Agrega la tarea pasada para ser procesada por los hilos disponibles en este procesador apenas
@@ -37,12 +45,18 @@ public interface TaskProcessor extends TaskDelayerProcessor, ThreadOwner {
 	SubmittedTask process(WorkUnit tarea);
 
 	/**
-	 * Define el exception handler que tratará la tareas reemplazando al default
+	 * Agrega la tarea pasada en el scheduler interno, de manera de ser procesada después de que
+	 * pase el tiempo indicado como delay.<br>
+	 * Al momento de cumplirse el delay la tarea será agregada en la cola de pendientes, por lo que
+	 * su ejecución real podrá retrasarse dependiendo de la carga del procesador
 	 * 
-	 * @param taskExceptionHandler
-	 *            El handler de excepciones para cuando falla una tarea
+	 * @param workDelay
+	 *            Espera a realizar antes de procesar el trabajo
+	 * @param trabajo
+	 *            El trabajo a procesar a posteriori por el processor real
+	 * @return El {@link SubmittedTask} para poder controlar el estado de la tarea
 	 */
-	void setExceptionHandler(TaskExceptionHandler taskExceptionHandler);
+	SubmittedTask processDelayed(TimeMagnitude workDelay, WorkUnit trabajo);
 
 	/**
 	 * Devuelve la cantidad de threads que se usan como máximo para procesar las tareas.<br>
@@ -74,6 +88,14 @@ public interface TaskProcessor extends TaskDelayerProcessor, ThreadOwner {
 	TaskProcessorListener getProcessorListener();
 
 	/**
+	 * Define el exception handler que tratará la tareas reemplazando al default
+	 * 
+	 * @param taskExceptionHandler
+	 *            El handler de excepciones para cuando falla una tarea
+	 */
+	void setExceptionHandler(TaskExceptionHandler taskExceptionHandler);
+
+	/**
 	 * Devuelve el handler utilizado por este procesador para el tratamiento con tareas fallidas
 	 * 
 	 * @return El handler a utilizar
@@ -81,21 +103,10 @@ public interface TaskProcessor extends TaskDelayerProcessor, ThreadOwner {
 	TaskExceptionHandler getExceptionHandler();
 
 	/**
-	 * Elimina de este procesador, las tareas pendientes que cumplen con el criterio pasado.<br>
-	 * Las tareas que se estén ejecutando no podrán ser eliminadas
-	 */
-	void removeTasksMatching(TaskCriteria criteria);
-
-	/**
-	 * Detiene la ejecución de tareas en este procesador.<br>
-	 * El procesador no es utilizable a partir de este método
-	 */
-	void detener();
-
-	/**
 	 * Devuelve la cantidad de tareas pendientes para ser procesadas por este procesador
 	 * 
 	 * @return La cantidad de tareas a procesar
 	 */
 	int getPendingTaskCount();
+
 }

@@ -10,12 +10,12 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.api;
+package net.gaia.taskprocessor.api.processor;
 
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
+import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.meta.Decision;
 import net.gaia.taskprocessor.metrics.NullProcessingMetrics;
 import net.gaia.taskprocessor.metrics.TaskProcessingMetricsAndListener;
@@ -128,7 +128,7 @@ public class TaskProcessorConfiguration {
 	 *            La cola de tareas pendientes usada por el procesador
 	 * @return El registro para las métricas
 	 */
-	public TaskProcessingMetricsAndListener createMetricsFor(final Queue<SubmittedRunnableTask> inmediatePendingTasks) {
+	public TaskProcessingMetricsAndListener createMetricsFor(final Queue<SubmittedTask> inmediatePendingTasks) {
 		if (isRegisterTaskMetrics()) {
 			return TaskProcessingMetricsImpl.create(inmediatePendingTasks);
 		}

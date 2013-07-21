@@ -12,8 +12,8 @@
  */
 package net.gaia.taskprocessor.perf.impl.variables;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
 
 /**

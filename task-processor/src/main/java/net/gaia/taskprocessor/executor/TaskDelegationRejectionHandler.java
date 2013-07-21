@@ -23,21 +23,26 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class TaskPlannerRejectionHandler implements RejectedExecutionHandler {
-	private static final Logger LOG = LoggerFactory.getLogger(TaskPlannerRejectionHandler.class);
+public class TaskDelegationRejectionHandler implements RejectedExecutionHandler {
+	private static final Logger LOG = LoggerFactory.getLogger(TaskDelegationRejectionHandler.class);
 
 	/**
 	 * @see java.util.concurrent.RejectedExecutionHandler#rejectedExecution(java.lang.Runnable,
 	 *      java.util.concurrent.ThreadPoolExecutor)
 	 */
-	
+
 	public void rejectedExecution(final Runnable runnable, final ThreadPoolExecutor executor) {
+		if (executor.isShutdown() || executor.isTerminated() || executor.isTerminating()) {
+			// Es normal que rechace la tarea, logueamos en debug
+			LOG.debug("El delayer de tareas rechazó el runnable: " + runnable + " después de ser detenido");
+			return;
+		}
 		LOG.error("El executor de tareas con retraso rechazó el runnable: " + runnable
 				+ ". Posible saturación del executor?");
 	}
 
-	public static TaskPlannerRejectionHandler create() {
-		final TaskPlannerRejectionHandler handler = new TaskPlannerRejectionHandler();
+	public static TaskDelegationRejectionHandler create() {
+		final TaskDelegationRejectionHandler handler = new TaskDelegationRejectionHandler();
 		return handler;
 	}
 }

@@ -15,7 +15,7 @@ package net.gaia.taskprocessor.executor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import net.gaia.taskprocessor.api.ThreadOwner;
+import net.gaia.taskprocessor.executor.threads.ThreadOwner;
 
 /**
  * Esta clase representa la factory de thread para el procesador de tareas.<br>

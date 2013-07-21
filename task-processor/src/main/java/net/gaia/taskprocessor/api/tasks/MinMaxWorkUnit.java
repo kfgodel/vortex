@@ -16,15 +16,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
-import net.gaia.taskprocessor.api.TaskCriteria;
-import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
-import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
@@ -73,27 +71,6 @@ public class MinMaxWorkUnit implements WorkUnit {
 		final MinMaxWorkUnit minmax = new MinMaxWorkUnit();
 		minmax.initialize(processor, delegada, esperaMinima, esperaMaxima);
 		return minmax;
-	}
-
-	/**
-	 * La tarea se autoprograma para comenzar inmediatamente utilizando el procesador indicado
-	 */
-	public void iniciarEjecucion() {
-		boolean acquired;
-		try {
-			acquired = lockDeEjecucion.tryLock(MAXIMO_PERMITIDO_PARA_ADQUIRIR_LOCK, TimeUnit.MILLISECONDS);
-		} catch (final InterruptedException e) {
-			throw new UnhandledConditionException("Fuimos interrumpidos antes de empezar?!", e);
-		}
-		if (!acquired) {
-			throw new UnhandledConditionException("No fue posible adquirir el lock para ejecutar la tarea[" + this
-					+ "]. Hay un thread bloqueado?");
-		}
-		try {
-			proximaPlanificacion = procesor.process(this);
-		} finally {
-			lockDeEjecucion.unlock();
-		}
 	}
 
 	/**
@@ -149,8 +126,8 @@ public class MinMaxWorkUnit implements WorkUnit {
 			replanificarEjecucionParaDentroDe(milisFaltantesParaEjecucion);
 			return null;
 		}
-		LOG.debug("Ejecucion aceptada. Ya pasaron {} de [{},{}] milis desde ultima ejecucion de [{}]", new Object[] {
-				transcurridoDesdeUltimaEjecucion, esperaMinima, esperaMaxima, this });
+		LOG.debug("Ejecucion aceptada. Ya pasaron {} milis desde ultima ejecucion de [{}]", new Object[] {
+				transcurridoDesdeUltimaEjecucion, this });
 		WorkUnit resultado;
 		try {
 			resultado = ejecutarTarea();
@@ -171,12 +148,8 @@ public class MinMaxWorkUnit implements WorkUnit {
 	private void cancelarPlanificacionesAnteriores() {
 		if (proximaPlanificacion != null) {
 			proximaPlanificacion.cancelExecution(true);
+			LOG.debug("Ejecución previa cancelada para min-max[{}]", this);
 		}
-		procesor.removeTasksMatching(new TaskCriteria() {
-			public boolean matches(final WorkUnit workUnit) {
-				return equals(workUnit);
-			}
-		});
 	}
 
 	/**
@@ -211,7 +184,7 @@ public class MinMaxWorkUnit implements WorkUnit {
 			return;
 		}
 		momentoDeProximaEjecucion = momentoParaEjecutar;
-		LOG.debug("Proxima ejecucion en dentro de {} milis para [{}]", esperaEnMilis, this);
+		LOG.debug("Proxima ejecucion dentro de {} milis para [{}]", esperaEnMilis, this);
 		proximaPlanificacion = procesor.processDelayed(TimeMagnitude.of(esperaEnMilis, TimeUnit.MILLISECONDS), this);
 	}
 
@@ -263,11 +236,22 @@ public class MinMaxWorkUnit implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
-		return ToString.de(this).con(esperaMinima_FIELD, esperaMinima).con(esperaMaxima_FIELD, esperaMaxima)
-				.con(momentoDeUltimaEjecucion_FIELD, momentoDeUltimaEjecucion)
-				.con(tareaEjecutable_FIELD, tareaEjecutable).toString();
+		final StringBuilder builder = new StringBuilder();
+		builder.append(getClass().getSimpleName());
+		builder.append("#");
+		builder.append(Long.toHexString(hashCode()));
+		builder.append("[");
+		builder.append(esperaMinima);
+		builder.append(",");
+		builder.append(esperaMaxima);
+		builder.append("]");
+		builder.append("{ultima: ");
+		builder.append(momentoDeUltimaEjecucion);
+		builder.append("}");
+		return builder.toString();
 	}
 
 }

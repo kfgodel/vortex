@@ -15,8 +15,8 @@ package net.gaia.taskprocessor.metrics;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
+import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import ar.com.dgarcia.lang.metrics.MetricasDeCarga;
 import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 
@@ -28,10 +28,10 @@ import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 public class TaskProcessingMetricsImpl implements TaskProcessingMetricsAndListener {
 
 	private AtomicLong processedCount;
-	private Queue<SubmittedRunnableTask> pendingTasks;
+	private Queue<SubmittedTask> pendingTasks;
 	private MetricasDeCargaImpl metricasDeCarga;
 
-	public static TaskProcessingMetricsImpl create(final Queue<SubmittedRunnableTask> pendingTasks) {
+	public static TaskProcessingMetricsImpl create(final Queue<SubmittedTask> pendingTasks) {
 		final TaskProcessingMetricsImpl metrics = new TaskProcessingMetricsImpl();
 		metrics.processedCount = new AtomicLong(0);
 		metrics.pendingTasks = pendingTasks;
@@ -42,7 +42,7 @@ public class TaskProcessingMetricsImpl implements TaskProcessingMetricsAndListen
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getProcessedTaskCount()
 	 */
-	
+
 	public int getProcessedTaskCount() {
 		return (int) processedCount.get();
 	}
@@ -50,7 +50,7 @@ public class TaskProcessingMetricsImpl implements TaskProcessingMetricsAndListen
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getPendingTaskCount()
 	 */
-	
+
 	public int getPendingTaskCount() {
 		return pendingTasks.size();
 	}
@@ -58,7 +58,7 @@ public class TaskProcessingMetricsImpl implements TaskProcessingMetricsAndListen
 	/**
 	 * Incrementa el contador de tareas procesadas
 	 */
-	
+
 	public void incrementProcessed() {
 		processedCount.incrementAndGet();
 		metricasDeCarga.registrarOutput();
@@ -67,7 +67,7 @@ public class TaskProcessingMetricsImpl implements TaskProcessingMetricsAndListen
 	/**
 	 * Notifica a esta instancia que entró una nueva tarea como pendiente de procesar
 	 */
-	
+
 	public void incrementPending() {
 		metricasDeCarga.registrarInput();
 	}
@@ -75,7 +75,7 @@ public class TaskProcessingMetricsImpl implements TaskProcessingMetricsAndListen
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getMetricasDeCarga()
 	 */
-	
+
 	public MetricasDeCarga getMetricasDeCarga() {
 		return metricasDeCarga;
 	}

@@ -14,8 +14,8 @@ package net.gaia.taskprocessor.tests.executor;
 
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 
 import org.junit.After;
 import org.junit.Ignore;

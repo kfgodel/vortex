@@ -12,6 +12,8 @@
  */
 package net.gaia.taskprocessor.api;
 
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+
 /**
  * Esta interfaz representa una tarea que puede ser procesada por el procesador
  * {@link TaskProcessor} en hilos independientes.<br>

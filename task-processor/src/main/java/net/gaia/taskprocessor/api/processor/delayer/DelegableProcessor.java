@@ -1,5 +1,5 @@
 /**
- * 04/07/2012 16:16:08 Copyright (C) 2011 Darío L. García
+ * 25/05/2012 15:38:37 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,13 +10,25 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.api;
+package net.gaia.taskprocessor.api.processor.delayer;
+
+import net.gaia.taskprocessor.api.SubmittedTask;
 
 /**
- * Esta interfaz es una marca para los procesadores que pueden apropiarse de los threads
+ * Esta interfaz representa un procesador que puede aceptar tareas delegadas de otra entidad
  * 
  * @author D. García
  */
-public interface ThreadOwner {
+public interface DelegableProcessor {
+
+	/**
+	 * Este método ejecuta la tarea pasada usando el mecanismo interno para procesarla en el
+	 * momento.<br>
+	 * La tarea será agregada a la cola de tareas pendientes en el momento
+	 * 
+	 * @param task
+	 *            La tarea a procesar
+	 */
+	void processDelegatedTask(final SubmittedTask task);
 
 }

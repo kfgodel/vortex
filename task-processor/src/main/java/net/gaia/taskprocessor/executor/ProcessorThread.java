@@ -14,7 +14,7 @@ package net.gaia.taskprocessor.executor;
 
 import java.lang.ref.WeakReference;
 
-import net.gaia.taskprocessor.api.ThreadOwner;
+import net.gaia.taskprocessor.executor.threads.ThreadOwner;
 
 /**
  * Esta clase es una extensión de un thread común sólo para poder distinguir los threads propios de

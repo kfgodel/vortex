@@ -14,8 +14,8 @@ package net.gaia.taskprocessor.executor;
 
 import java.util.Collection;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.knittle.KnittleProcessor;
 
 import org.slf4j.Logger;

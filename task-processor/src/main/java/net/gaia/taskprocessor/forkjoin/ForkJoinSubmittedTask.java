@@ -21,8 +21,9 @@ import java.util.concurrent.TimeoutException;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.TaskProcessorListener;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +65,11 @@ public class ForkJoinSubmittedTask extends RecursiveAction implements SubmittedT
 	private ForkJoinTaskProcessor processor;
 
 	/**
+	 * Listener para notificar los eventos de la tarea
+	 */
+	private TaskProcessorListener listener;
+
+	/**
 	 * @see java.util.concurrent.RecursiveAction#compute()
 	 */
 	@Override
@@ -77,15 +83,19 @@ public class ForkJoinSubmittedTask extends RecursiveAction implements SubmittedT
 	 */
 	private void executeWorkUnit() {
 		currentState = SubmittedTaskState.PROCESSING;
+		notifyListenerStartingProcess();
 		try {
 			final WorkUnit nextWorkUnit = this.workUnit.doWork();
 			currentState = SubmittedTaskState.COMPLETED;
+			notifyListenerCompletedTask();
 			scheduleNext(nextWorkUnit);
 		} catch (final InterruptedException e) {
 			currentState = SubmittedTaskState.INTERRUPTED;
+			notifyListenerInterruptedTask();
 		} catch (final Throwable e) {
 			currentState = SubmittedTaskState.FAILED;
 			failingError = e;
+			notifyListenerFailedTask();
 			invokeExceptionHandler();
 		}
 	}
@@ -164,11 +174,15 @@ public class ForkJoinSubmittedTask extends RecursiveAction implements SubmittedT
 		return failingError;
 	}
 
-	public static ForkJoinSubmittedTask create(final WorkUnit workUnit, final ForkJoinTaskProcessor taskProcessor) {
+	public static ForkJoinSubmittedTask create(final WorkUnit workUnit, final ForkJoinTaskProcessor taskProcessor,
+			final TaskProcessorListener listener) {
 		final ForkJoinSubmittedTask task = new ForkJoinSubmittedTask();
 		task.workUnit = workUnit;
 		task.processor = taskProcessor;
 		task.currentState = SubmittedTaskState.PENDING;
+		task.listener = listener;
+		// Notificamos que la agregamos como pendiente
+		task.notifyListenerAcceptedTask();
 		return task;
 	}
 
@@ -183,7 +197,104 @@ public class ForkJoinSubmittedTask extends RecursiveAction implements SubmittedT
 
 		// Si cambiamos al estado cancelado, notificamos
 		if (SubmittedTaskState.CANCELLED.equals(estadoCancelado) && !estadoCancelado.equals(estadoAnterior)) {
-			// Pendiente
+			notifyListenerCancelledTask();
+		}
+	}
+
+	/**
+	 * Notifica al listener del {@link TaskProcessor} si hay uno, del comienzo de procesamiento de
+	 * esta tarea
+	 */
+	private void notifyListenerStartingProcess() {
+		if (listener == null) {
+			return;
+		}
+		try {
+			final Thread currentThread = Thread.currentThread();
+			listener.onTaskStartedToProcess(this, processor, currentThread);
+		} catch (final Throwable e) {
+			LOG.error("Se produjo un error en el listener al notificarlo del inicio de tarea. Ignorando error", e);
+		}
+	}
+
+	/**
+	 * Notifica al listener del procesor si existe alguno que la tarea se completó
+	 */
+	private void notifyListenerCompletedTask() {
+		if (listener == null) {
+			return;
+		}
+		try {
+			final Thread currentThread = Thread.currentThread();
+			listener.onTaskCompleted(this, processor, currentThread);
+		} catch (final Throwable e) {
+			LOG.error(
+					"Se produjo un error en el listener al notificarlo de la compleción de la tarea. Ignorando error",
+					e);
+		}
+	}
+
+	/**
+	 * Notifica al listener del procesador de la interrupción de la tarea
+	 */
+	private void notifyListenerInterruptedTask() {
+		if (listener == null) {
+			return;
+		}
+		try {
+			final Thread currentThread = Thread.currentThread();
+			listener.onTaskInterrupted(this, processor, currentThread);
+		} catch (final Throwable e) {
+			LOG.error(
+					"Se produjo un error en el listener al notificarlo de la interrupción de la tarea. Ignorando error",
+					e);
+		}
+	}
+
+	/**
+	 * Notifica al listener del procesador que una tarea falló
+	 */
+	private void notifyListenerFailedTask() {
+		if (listener == null) {
+			return;
+		}
+		try {
+			final Thread currentThread = Thread.currentThread();
+			listener.onTaskFailed(this, processor, currentThread);
+		} catch (final Throwable e) {
+			LOG.error("Se produjo un error en el listener al notificarlo del fallo de la tarea. Ignorando error", e);
+		}
+	}
+
+	/**
+	 * Notifica al listener del procesor si existe alguno que la tarea se completó
+	 */
+	private void notifyListenerAcceptedTask() {
+		if (listener == null) {
+			return;
+		}
+		try {
+			listener.onTaskAcceptedAndPending(this, processor);
+		} catch (final Throwable e) {
+			LOG.error(
+					"Se produjo un error en el listener al notificarlo de la aceptación de la tarea. Ignorando error",
+					e);
+		}
+	}
+
+	/**
+	 * Notifica al listener del procesor si existe alguno que la tarea se completó
+	 */
+	private void notifyListenerCancelledTask() {
+		if (listener == null) {
+			return;
+		}
+		try {
+			listener.onTaskCancelled(this, processor);
+		} catch (final Throwable e) {
+			LOG.error(
+					"Se produjo un error en el listener al notificarlo de la cancelación de la tarea. Ignorando error",
+					e);
 		}
 	}
 }

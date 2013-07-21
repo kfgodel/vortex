@@ -12,8 +12,8 @@
  */
 package net.gaia.taskprocessor.perf.impl.tests.processors;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 
 /**
@@ -32,7 +32,7 @@ public class ForkJoinBasedParaLaEjecucion extends ProcessorBasedTestSupport {
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.perf.impl.tests.processors.ProcessorBasedTestSupport#createConcreteProcessor(net.gaia.taskprocessor.api.TaskProcessorConfiguration)
+	 * @see net.gaia.taskprocessor.perf.impl.tests.processors.ProcessorBasedTestSupport#createConcreteProcessor(net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration)
 	 */
 	@Override
 	protected TaskProcessor createConcreteProcessor(final TaskProcessorConfiguration processorConfig) {

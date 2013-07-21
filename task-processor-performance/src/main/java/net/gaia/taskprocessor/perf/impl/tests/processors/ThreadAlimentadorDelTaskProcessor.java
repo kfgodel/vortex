@@ -14,8 +14,8 @@ package net.gaia.taskprocessor.perf.impl.tests.processors;
 
 import java.util.concurrent.RejectedExecutionException;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.perf.impl.medidor.ThreadBucleSupport;
 
 import org.slf4j.Logger;

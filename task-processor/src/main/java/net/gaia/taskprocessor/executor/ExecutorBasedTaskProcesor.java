@@ -12,7 +12,6 @@
  */
 package net.gaia.taskprocessor.executor;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -23,14 +22,15 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
-import net.gaia.taskprocessor.api.TaskCriteria;
-import net.gaia.taskprocessor.api.TaskDelayerProcessor;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.processor.delayer.DelayedDelegator;
+import net.gaia.taskprocessor.api.processor.delayer.DelegableProcessor;
+import net.gaia.taskprocessor.delayer.ScheduledThreadPoolDelegator;
 import net.gaia.taskprocessor.metrics.TaskProcessingMetricsAndListener;
 
 import org.slf4j.Logger;
@@ -45,7 +45,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProcessor, DelegateProcessor {
+public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProcessor {
 	private static final Logger LOG = LoggerFactory.getLogger(ExecutorBasedTaskProcesor.class);
 
 	private TaskProcessorListener processorListener;
@@ -54,9 +54,9 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	private TaskProcessingMetricsAndListener metrics;
 
 	private ThreadPoolExecutor inmediateExecutor;
-	private ConcurrentLinkedQueue<SubmittedRunnableTask> inmediatePendingTasks;
+	private ConcurrentLinkedQueue<SubmittedTask> inmediatePendingTasks;
 
-	private ExecutorDelayerProcessor delayerProcessor;
+	private DelayedDelegator delayedDelegator;
 
 	private ThreadBouncer threadBouncer;
 
@@ -93,40 +93,42 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 		processor.inmediateExecutor = new ThreadPoolExecutor(minimunPoolSize, maximunPoolSize,
 				maxIdleTimePerThread.getQuantity(), maxIdleTimePerThread.getTimeUnit(), executorTaskQueue,
 				ProcessorThreadFactory.create("TaskProcessor", processor), TaskWorkerRejectionHandler.create());
-		processor.inmediatePendingTasks = new ConcurrentLinkedQueue<SubmittedRunnableTask>();
+		processor.inmediatePendingTasks = new ConcurrentLinkedQueue<SubmittedTask>();
 		processor.threadBouncer = ThreadBouncer.createForExecutorBased(processor, config,
 				processor.inmediatePendingTasks);
-		processor.delayerProcessor = ExecutorDelayerProcessor.create(processor);
+		processor.delayedDelegator = ScheduledThreadPoolDelegator.create(processor);
 		processor.metrics = config.createMetricsFor(processor.inmediatePendingTasks);
 		return processor;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask process(final WorkUnit work) {
 		// A los threads externos los hacemos esperar si estamos muy saturados
 		threadBouncer.retrasarPedidoExternoSiProcesadorSaturado();
 
 		// Creamos la tarea y la ejecutamos inmediatamente
-		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
-		processImmediately(task);
+		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this, getProcessorListener());
+		processDelegatedTask(task);
 		return task;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#processDelayed(net.gaia.taskprocessor.api.TimeMagnitude,
-	 *      net.gaia.taskprocessor.tests.TestTaskProcessorApi.TestWorkUnit)
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#processDelayed(ar.com.dgarcia.lang.time.TimeMagnitude,
+	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit work) {
-		final SubmittedTask delayedTask = this.delayerProcessor.processDelayed(workDelay, work);
-		return delayedTask;
+		// Creamos la tarea para el trabajo
+		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this, getProcessorListener());
+		final TaskDelegation delegation = this.delayedDelegator.delayDelegation(workDelay, task);
+		return delegation;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.executor.DelegateProcessor#processImmediately(net.gaia.taskprocessor.executor.SubmittedRunnableTask)
+	 * @see net.gaia.taskprocessor.api.processor.delayer.DelegableProcessor#processDelegatedTask(SubmittedTask)
 	 */
-	public void processImmediately(final SubmittedRunnableTask task) {
+	public void processDelegatedTask(final SubmittedTask task) {
 		final boolean added = this.inmediatePendingTasks.add(task);
 		if (!added) {
 			LOG.error("No fue posible agregar la tarea[{}] como pendiente. Cancelando", task.getWork());
@@ -158,87 +160,66 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#setExceptionHandler(net.gaia.taskprocessor.api.TaskExceptionHandler)
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#setExceptionHandler(net.gaia.taskprocessor.api.TaskExceptionHandler)
 	 */
-	
+
 	public void setExceptionHandler(final TaskExceptionHandler taskExceptionHandler) {
 		this.exceptionHandler = taskExceptionHandler;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getThreadPoolSize()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getThreadPoolSize()
 	 */
-	
+
 	public int getThreadPoolSize() {
 		return inmediateExecutor.getMaximumPoolSize();
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getMetrics()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getMetrics()
 	 */
-	
+
 	public TaskProcessingMetrics getMetrics() {
 		return metrics;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#setProcessorListener(net.gaia.taskprocessor.api.TaskProcessorListener)
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#setProcessorListener(net.gaia.taskprocessor.api.TaskProcessorListener)
 	 */
-	
+
 	public void setProcessorListener(final TaskProcessorListener listener) {
 		this.processorListener = listener;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getProcessorListener()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getProcessorListener()
 	 */
-	
+
 	public TaskProcessorListener getProcessorListener() {
 		return processorListener;
 	}
 
-	
 	public TaskExceptionHandler getExceptionHandler() {
 		return exceptionHandler;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#removeTasksMatching(net.gaia.taskprocessor.api.TaskCriteria)
-	 */
-	
-	public void removeTasksMatching(final TaskCriteria criteria) {
-		// Quitamos las tareas con delay primero
-		this.delayerProcessor.removeTasksMatching(criteria);
-
-		// Luego las de ejecución inmediata
-		final Iterator<SubmittedRunnableTask> inmediateIterator = this.inmediatePendingTasks.iterator();
-		while (inmediateIterator.hasNext()) {
-			final SubmittedRunnableTask inmediateTask = inmediateIterator.next();
-			final WorkUnit workUnit = inmediateTask.getWork();
-			if (criteria.matches(workUnit)) {
-				LOG.debug("Quitando tarea inmediata[{}] según criteria[{}]", workUnit, criteria);
-				inmediateIterator.remove();
-			}
-		}
-	}
-
-	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+	@Override
 	public String toString() {
 		return ToString.de(this).add("Concurrentes", this.inmediateExecutor.getMaximumPoolSize())
 				.add("Activas", this.inmediateExecutor.getActiveCount())
 				.add("Pendientes", this.inmediatePendingTasks.size())
-				.add("Postergadas", this.delayerProcessor.getPendingCount()).toString();
+				.add("Postergadas", this.delayedDelegator.getPendingCount()).toString();
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#detener()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#detener()
 	 */
 	public void detener() {
 		// Primero detenemos las que tienen delay
-		this.delayerProcessor.detener();
+		this.delayedDelegator.detener();
 
 		// Asumo que siempre son future por lo que vi en debug
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -279,7 +260,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, TaskDelayerProc
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getPendingTaskCount()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getPendingTaskCount()
 	 */
 	public int getPendingTaskCount() {
 		return this.inmediatePendingTasks.size();

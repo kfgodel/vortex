@@ -1,5 +1,5 @@
 /**
- * 19/11/2011 20:01:45 Copyright (C) 2011 Darío L. García
+ * 04/07/2012 16:16:08 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,23 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.tests.knittle;
-
-import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.knittle.KnittleProcessor;
-import net.gaia.taskprocessor.tests.executor.TestTaskStateApi;
-
-import org.junit.Before;
+package net.gaia.taskprocessor.executor.threads;
 
 /**
- * Esta clase prueba el contrato definido por el estado de una tarea
+ * Esta interfaz es una marca para los procesadores que pueden apropiarse de los threads
  * 
  * @author D. García
  */
-public class TestKnittleStateApi extends TestTaskStateApi {
-	
-	@Before
-	public void crearProcesador() {
-		taskProcessor = KnittleProcessor.create(TaskProcessorConfiguration.create());
-	}
+public interface ThreadOwner {
+
 }

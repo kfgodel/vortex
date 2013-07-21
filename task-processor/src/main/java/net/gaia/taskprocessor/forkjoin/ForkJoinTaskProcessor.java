@@ -13,7 +13,6 @@
 package net.gaia.taskprocessor.forkjoin;
 
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 
@@ -21,14 +20,12 @@ import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
 import net.gaia.taskprocessor.api.WorkUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.processor.delayer.DelegableProcessor;
+import net.gaia.taskprocessor.delayer.ScheduledThreadPoolDelegator;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
@@ -37,13 +34,17 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class ForkJoinTaskProcessor implements TaskProcessor {
-	private static final Logger LOG = LoggerFactory.getLogger(ForkJoinTaskProcessor.class);
+public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor {
 
 	/**
-	 * Pool que ejecuta las tareas realmente
+	 * Pool de threads que ejecuta las tareas realmente
 	 */
 	private ForkJoinPool threadPool;
+
+	/**
+	 * Scheduler que nos permite retrasar las ejecuciones de tareas en el tiempo
+	 */
+	private ScheduledThreadPoolDelegator delayedDelegator;
 
 	/**
 	 * Handler para notificar los errores en las tareas
@@ -51,7 +52,12 @@ public class ForkJoinTaskProcessor implements TaskProcessor {
 	private volatile TaskExceptionHandler taskExceptionHandler;
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskDelayerProcessor#processDelayed(ar.com.dgarcia.lang.time.TimeMagnitude,
+	 * Listener de los eventos de las tareas
+	 */
+	private volatile TaskProcessorListener taskListener;
+
+	/**
+	 * @see net.gaia.taskprocessor.api.processor.TaskDelayerProcessor#processDelayed(ar.com.dgarcia.lang.time.TimeMagnitude,
 	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit trabajo) {
@@ -61,81 +67,105 @@ public class ForkJoinTaskProcessor implements TaskProcessor {
 		if (workDelay == null) {
 			throw new IllegalArgumentException("El delay no puede ser null");
 		}
-		throw new UnsupportedOperationException("Por ahora no se pueden diferir ejecuciones en este procesador");
+		final ForkJoinSubmittedTask submittedTask = ForkJoinSubmittedTask.create(trabajo, this, getProcessorListener());
+		final SubmittedTask delayedTask = this.delayedDelegator.delayDelegation(workDelay, submittedTask);
+		return delayedTask;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
+	 * @see net.gaia.taskprocessor.api.processor.delayer.DelegableProcessor#processDelegatedTask(net.gaia.taskprocessor.api.SubmittedTask)
+	 */
+	public void processDelegatedTask(final SubmittedTask task) {
+		ForkJoinSubmittedTask forkJoinTask;
+		try {
+			forkJoinTask = (ForkJoinSubmittedTask) task;
+		} catch (final ClassCastException e) {
+			throw new IllegalArgumentException("La tarea pasada debe ser una instancia de "
+					+ ForkJoinSubmittedTask.class.getName());
+		}
+		executeNow(forkJoinTask);
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask process(final WorkUnit tarea) {
 		if (tarea == null) {
 			throw new IllegalArgumentException("El workUnit no puede ser null");
 		}
-		final ForkJoinSubmittedTask submittedTask = ForkJoinSubmittedTask.create(tarea, this);
-		threadPool.execute(submittedTask);
+		final ForkJoinSubmittedTask submittedTask = ForkJoinSubmittedTask.create(tarea, this, getProcessorListener());
+		executeNow(submittedTask);
 		return submittedTask;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#setExceptionHandler(net.gaia.taskprocessor.api.TaskExceptionHandler)
+	 * Pasa la tarea pasada al pool para ser ejecutada inmediatamente
+	 * 
+	 * @param submittedTask
+	 *            La tarea a ejecutar
+	 */
+	private void executeNow(final ForkJoinSubmittedTask submittedTask) {
+		threadPool.execute(submittedTask);
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#setExceptionHandler(net.gaia.taskprocessor.api.TaskExceptionHandler)
 	 */
 	public void setExceptionHandler(final TaskExceptionHandler taskExceptionHandler) {
 		this.taskExceptionHandler = taskExceptionHandler;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getThreadPoolSize()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getThreadPoolSize()
 	 */
 	public int getThreadPoolSize() {
 		return threadPool.getPoolSize();
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getMetrics()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getMetrics()
 	 */
 	public TaskProcessingMetrics getMetrics() {
 		throw new UnsupportedOperationException("Por ahora no existen metricas para este procesador");
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#setProcessorListener(net.gaia.taskprocessor.api.TaskProcessorListener)
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#setProcessorListener(net.gaia.taskprocessor.api.TaskProcessorListener)
 	 */
 	public void setProcessorListener(final TaskProcessorListener listener) {
-		throw new UnsupportedOperationException("Por ahora no existe processor listener para este procesador");
+		this.taskListener = listener;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getProcessorListener()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getProcessorListener()
 	 */
 	public TaskProcessorListener getProcessorListener() {
-		// Por ahora no soportamos listeners
-		return null;
+		return taskListener;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getExceptionHandler()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getExceptionHandler()
 	 */
 	public TaskExceptionHandler getExceptionHandler() {
 		return taskExceptionHandler;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#removeTasksMatching(net.gaia.taskprocessor.api.TaskCriteria)
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#removeTasksMatching(net.gaia.taskprocessor.api.TaskCriteria)
 	 */
 	public void removeTasksMatching(final TaskCriteria criteria) {
 		throw new UnsupportedOperationException("Por ahora no se pueden eliminar tareas de este procesador");
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#detener()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#detener()
 	 */
 	public void detener() {
-		final List<Runnable> cancelledTasks = threadPool.shutdownNow();
-		LOG.debug("Deteniendo con {} tareas canceladas", cancelledTasks.size());
+		threadPool.shutdownNow();
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getPendingTaskCount()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getPendingTaskCount()
 	 */
 	public int getPendingTaskCount() {
 		return threadPool.getQueuedSubmissionCount();
@@ -159,6 +189,7 @@ public class ForkJoinTaskProcessor implements TaskProcessor {
 		final UncaughtExceptionHandler exceptionHandler = null;
 		final boolean useAsyncMode = true;
 		processor.threadPool = new ForkJoinPool(parallelThreadCount, threadFactory, exceptionHandler, useAsyncMode);
+		processor.delayedDelegator = ScheduledThreadPoolDelegator.create(processor);
 		return processor;
 	}
 }

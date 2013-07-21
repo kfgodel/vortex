@@ -12,24 +12,22 @@
  */
 package net.gaia.taskprocessor.knittle;
 
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
-import net.gaia.taskprocessor.api.TaskCriteria;
-import net.gaia.taskprocessor.api.TaskDelayerProcessor;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.taskprocessor.executor.DelegateProcessor;
-import net.gaia.taskprocessor.executor.ExecutorDelayerProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.processor.delayer.DelegableProcessor;
+import net.gaia.taskprocessor.delayer.ScheduledThreadPoolDelegator;
 import net.gaia.taskprocessor.executor.ProcessorThreadFactory;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
+import net.gaia.taskprocessor.executor.TaskDelegation;
 import net.gaia.taskprocessor.executor.ThreadBouncer;
 import net.gaia.taskprocessor.metrics.TaskProcessingMetricsAndListener;
 
@@ -45,10 +43,10 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, DelegateProcessor {
+public class KnittleProcessor implements TaskProcessor, DelegableProcessor {
 	private static final Logger LOG = LoggerFactory.getLogger(KnittleProcessor.class);
 
-	private LinkedBlockingQueue<SubmittedRunnableTask> inmediatePendingTasks;
+	private LinkedBlockingQueue<SubmittedTask> inmediatePendingTasks;
 
 	private ConcurrentLinkedQueue<Thread> threads;
 	private ConcurrentLinkedQueue<KnittleWorker> workers;
@@ -59,21 +57,31 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	private AtomicReference<TaskExceptionHandler> exceptionHandler;
 	private AtomicReference<TaskProcessorListener> processorListener;
 
-	private ExecutorDelayerProcessor delayerProcessor;
+	private ScheduledThreadPoolDelegator delayedDelegator;
 
 	private TaskProcessingMetricsAndListener metrics;
 	private ThreadBouncer threadBouncer;
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask process(final WorkUnit tarea) {
 		// Si estamos muy cargados hace esperar a los threads
 		threadBouncer.retrasarPedidoExternoSiProcesadorSaturado();
 
-		final SubmittedRunnableTask task = SubmittedRunnableTask.create(tarea, this);
-		processImmediately(task);
+		final SubmittedRunnableTask task = SubmittedRunnableTask.create(tarea, this, getProcessorListener());
+		processDelegatedTask(task);
 		return task;
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#processDelayed(net.gaia.taskprocessor.api.TimeMagnitude,
+	 *      net.gaia.taskprocessor.api.WorkUnit)
+	 */
+	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit work) {
+		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this, getProcessorListener());
+		final TaskDelegation delegation = this.delayedDelegator.delayDelegation(workDelay, task);
+		return delegation;
 	}
 
 	/**
@@ -83,7 +91,7 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	 * @param task
 	 *            La tarea a ejecutar
 	 */
-	public void processImmediately(final SubmittedRunnableTask task) {
+	public void processDelegatedTask(final SubmittedTask task) {
 		final boolean added = this.inmediatePendingTasks.add(task);
 		if (!added) {
 			LOG.error("No fue posible agregar la tarea[{}] como pendiente. Cancelando", task.getWork());
@@ -94,80 +102,53 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#setExceptionHandler(net.gaia.taskprocessor.api.TaskExceptionHandler)
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#setExceptionHandler(net.gaia.taskprocessor.api.TaskExceptionHandler)
 	 */
 	public void setExceptionHandler(final TaskExceptionHandler taskExceptionHandler) {
 		this.exceptionHandler.set(taskExceptionHandler);
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getThreadPoolSize()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getThreadPoolSize()
 	 */
 	public int getThreadPoolSize() {
 		return this.threads.size();
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getMetrics()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getMetrics()
 	 */
 	public TaskProcessingMetrics getMetrics() {
 		return metrics;
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#setProcessorListener(net.gaia.taskprocessor.api.TaskProcessorListener)
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#setProcessorListener(net.gaia.taskprocessor.api.TaskProcessorListener)
 	 */
 	public void setProcessorListener(final TaskProcessorListener listener) {
 		this.processorListener.set(listener);
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getProcessorListener()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getProcessorListener()
 	 */
 	public TaskProcessorListener getProcessorListener() {
 		return this.processorListener.get();
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getExceptionHandler()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getExceptionHandler()
 	 */
 	public TaskExceptionHandler getExceptionHandler() {
 		return this.exceptionHandler.get();
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#processDelayed(net.gaia.taskprocessor.api.TimeMagnitude,
-	 *      net.gaia.taskprocessor.api.WorkUnit)
-	 */
-	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit trabajo) {
-		final SubmittedTask delayedTask = this.delayerProcessor.processDelayed(workDelay, trabajo);
-		return delayedTask;
-	}
-
-	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#removeTasksMatching(net.gaia.taskprocessor.api.TaskCriteria)
-	 */
-	public void removeTasksMatching(final TaskCriteria criteria) {
-		// Quitamos las tareas con delay primero
-		this.delayerProcessor.removeTasksMatching(criteria);
-
-		// Luego las de ejecución inmediata
-		final Iterator<SubmittedRunnableTask> inmediateIterator = this.inmediatePendingTasks.iterator();
-		while (inmediateIterator.hasNext()) {
-			final SubmittedRunnableTask inmediateTask = inmediateIterator.next();
-			final WorkUnit workUnit = inmediateTask.getWork();
-			if (criteria.matches(workUnit)) {
-				inmediateIterator.remove();
-			}
-		}
-	}
-
-	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#detener()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#detener()
 	 */
 	public void detener() {
 		// Primero detenemos las que tienen delay
-		this.delayerProcessor.detener();
+		this.delayedDelegator.detener();
 
 		// Primero detenemos los workers de la manera normal
 		for (final KnittleWorker activeWorkers : workers) {
@@ -196,7 +177,7 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	public static KnittleProcessor create(final TaskProcessorConfiguration config) {
 		final KnittleProcessor procesor = new KnittleProcessor();
 		procesor.config = config;
-		procesor.inmediatePendingTasks = new LinkedBlockingQueue<SubmittedRunnableTask>();
+		procesor.inmediatePendingTasks = new LinkedBlockingQueue<SubmittedTask>();
 		procesor.threadFactory = ProcessorThreadFactory.create("knittle", procesor);
 		procesor.workers = new ConcurrentLinkedQueue<KnittleWorker>();
 		procesor.threads = new ConcurrentLinkedQueue<Thread>();
@@ -204,7 +185,7 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 		procesor.processorListener = new AtomicReference<TaskProcessorListener>();
 		procesor.metrics = config.createMetricsFor(procesor.inmediatePendingTasks);
 		procesor.threadBouncer = ThreadBouncer.createForKnittle(procesor, config, procesor.inmediatePendingTasks);
-		procesor.delayerProcessor = ExecutorDelayerProcessor.create(procesor);
+		procesor.delayedDelegator = ScheduledThreadPoolDelegator.create(procesor);
 		procesor.start();
 		return procesor;
 	}
@@ -226,15 +207,16 @@ public class KnittleProcessor implements TaskProcessor, TaskDelayerProcessor, De
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add("Concurrentes", this.getThreadPoolSize()).add("Activas", this.getThreadPoolSize())
 				.add("Pendientes", this.inmediatePendingTasks.size())
-				.add("Postergadas", this.delayerProcessor.getPendingCount()).toString();
+				.add("Postergadas", this.delayedDelegator.getPendingCount()).toString();
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.TaskProcessor#getPendingTaskCount()
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getPendingTaskCount()
 	 */
 	public int getPendingTaskCount() {
 		return inmediatePendingTasks.size();

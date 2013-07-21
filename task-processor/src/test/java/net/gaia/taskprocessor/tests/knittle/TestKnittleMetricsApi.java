@@ -12,7 +12,7 @@
  */
 package net.gaia.taskprocessor.tests.knittle;
 
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.knittle.KnittleProcessor;
 import net.gaia.taskprocessor.tests.executor.TestTaskMetricsApi;
 

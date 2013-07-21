@@ -14,8 +14,8 @@ package net.gaia.taskprocessor.tests.knittle;
 
 import org.junit.Ignore;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.knittle.KnittleProcessor;
 import net.gaia.taskprocessor.tests.executor.TestProcessorPerformanceWithFixedTimebox;
 

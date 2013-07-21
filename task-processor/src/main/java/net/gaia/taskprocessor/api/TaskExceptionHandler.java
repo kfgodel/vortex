@@ -12,6 +12,8 @@
  */
 package net.gaia.taskprocessor.api;
 
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+
 /**
  * Esta interrfaz define el contrato que debe utilizar el handler de excpeciones de las tareas
  * 

@@ -1,5 +1,5 @@
 /**
- * 25/05/2012 15:38:37 Copyright (C) 2011 Darío L. García
+ * 20/07/2013 20:50:53 Copyright (C) 2013 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,25 +10,20 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.taskprocessor.executor;
-
-import net.gaia.taskprocessor.api.TaskProcessor;
+package net.gaia.taskprocessor.api.processor;
 
 /**
- * Esta interfaz permite que un procesador delegue en otro la ejecución de tareas
+ * Esta interfaz representa un procesador de tareas que es detenible. Una vez detenido, no puede ser
+ * utilizado
  * 
  * @author D. García
  */
-public interface DelegateProcessor extends TaskProcessor {
+public interface Detenible {
 
 	/**
-	 * Este método ejecuta la tarea pasada usando el mecanismo interno para procesarla en el
-	 * momento.<br>
-	 * La tarea será agregada a la cola de tareas pendientes en el momento
-	 * 
-	 * @param task
-	 *            La tarea a procesar
+	 * Detiene la ejecución de tareas en este procesador.<br>
+	 * El procesador no es utilizable a partir de este método
 	 */
-	void processImmediately(final SubmittedRunnableTask task);
+	void detener();
 
 }

@@ -33,13 +33,19 @@ public class TaskWorkerRejectionHandler implements RejectedExecutionHandler {
 	 */
 
 	public void rejectedExecution(final Runnable runnable, final ThreadPoolExecutor executor) {
+		if (executor.isShutdown() || executor.isTerminated() || executor.isTerminating()) {
+			LOG.trace("El executor de tareas rechazó el runnable: " + runnable + " después de ser detenido");
+			return;
+		}
+
 		final int maximunSize = executor.getMaximumPoolSize();
 		final int poolSize = executor.getPoolSize();
-		final int activeCount = executor.getActiveCount();
 		final boolean noEstaAlLimiteDeThreads = poolSize < maximunSize;
+
+		final int activeCount = executor.getActiveCount();
 		final boolean noEstaProcesandoTareas = activeCount == 0;
-		final boolean noEstaDetenido = !executor.isShutdown() && !executor.isTerminating();
-		final boolean deberiaEstarAceptandoTareas = noEstaDetenido && noEstaAlLimiteDeThreads && noEstaProcesandoTareas;
+
+		final boolean deberiaEstarAceptandoTareas = noEstaAlLimiteDeThreads && noEstaProcesandoTareas;
 		if (deberiaEstarAceptandoTareas) {
 			LOG.debug("El executor de tareas inmediatas rechazó el runnable: "
 					+ runnable

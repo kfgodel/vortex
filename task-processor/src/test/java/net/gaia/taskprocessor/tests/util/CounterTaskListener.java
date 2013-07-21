@@ -6,8 +6,8 @@ package net.gaia.taskprocessor.tests.util;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
-import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 
 /**
  * Esta clase actua como listener contabilizando las ocurrencias de cada evento
@@ -26,7 +26,7 @@ public class CounterTaskListener implements TaskProcessorListener {
 
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskAcceptedAndPending(net.gaia.taskprocessor.api.SubmittedTask,
-	 *      net.gaia.taskprocessor.api.TaskProcessor)
+	 *      net.gaia.taskprocessor.api.processor.TaskProcessor)
 	 */
 
 	public void onTaskAcceptedAndPending(final SubmittedTask task, final TaskProcessor processor) {
@@ -35,7 +35,7 @@ public class CounterTaskListener implements TaskProcessorListener {
 
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskStartedToProcess(net.gaia.taskprocessor.api.SubmittedTask,
-	 *      net.gaia.taskprocessor.api.TaskProcessor, java.lang.Thread)
+	 *      net.gaia.taskprocessor.api.processor.TaskProcessor, java.lang.Thread)
 	 */
 
 	public void onTaskStartedToProcess(final SubmittedTask task, final TaskProcessor processor,
@@ -45,7 +45,7 @@ public class CounterTaskListener implements TaskProcessorListener {
 
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskCompleted(net.gaia.taskprocessor.api.SubmittedTask,
-	 *      net.gaia.taskprocessor.api.TaskProcessor, java.lang.Thread)
+	 *      net.gaia.taskprocessor.api.processor.TaskProcessor, java.lang.Thread)
 	 */
 
 	public void onTaskCompleted(final SubmittedTask task, final TaskProcessor processor, final Thread executingThread) {
@@ -54,7 +54,7 @@ public class CounterTaskListener implements TaskProcessorListener {
 
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskFailed(net.gaia.taskprocessor.api.SubmittedTask,
-	 *      net.gaia.taskprocessor.api.TaskProcessor, java.lang.Thread)
+	 *      net.gaia.taskprocessor.api.processor.TaskProcessor, java.lang.Thread)
 	 */
 
 	public void onTaskFailed(final SubmittedTask task, final TaskProcessor processor, final Thread executingThread) {
@@ -63,7 +63,7 @@ public class CounterTaskListener implements TaskProcessorListener {
 
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskInterrupted(net.gaia.taskprocessor.api.SubmittedTask,
-	 *      net.gaia.taskprocessor.api.TaskProcessor, java.lang.Thread)
+	 *      net.gaia.taskprocessor.api.processor.TaskProcessor, java.lang.Thread)
 	 */
 
 	public void onTaskInterrupted(final SubmittedTask task, final TaskProcessor processor, final Thread executingThread) {
@@ -72,7 +72,7 @@ public class CounterTaskListener implements TaskProcessorListener {
 
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessorListener#onTaskCancelled(net.gaia.taskprocessor.api.SubmittedTask,
-	 *      net.gaia.taskprocessor.api.TaskProcessor)
+	 *      net.gaia.taskprocessor.api.processor.TaskProcessor)
 	 */
 
 	public void onTaskCancelled(final SubmittedTask task, final TaskProcessor processor) {

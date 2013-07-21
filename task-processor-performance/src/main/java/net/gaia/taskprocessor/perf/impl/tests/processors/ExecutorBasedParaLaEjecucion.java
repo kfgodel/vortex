@@ -12,7 +12,7 @@
  */
 package net.gaia.taskprocessor.perf.impl.tests.processors;
 
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 
 /**

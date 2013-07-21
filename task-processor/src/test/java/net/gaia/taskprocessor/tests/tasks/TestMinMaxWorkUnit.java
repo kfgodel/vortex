@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.tasks.MinMaxWorkUnit;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 
@@ -187,20 +187,24 @@ public class TestMinMaxWorkUnit {
 	@Test
 	public void alEjecutarseManualmenteDeberiaEsperarElMaximoParaEjecutarseNuevamente() throws InterruptedException {
 		final TestWorkUnit testWorkUnit = new TestWorkUnit();
-		final MinMaxWorkUnit minmax = MinMaxWorkUnit.crearWrapperDe(testWorkUnit, procesor, 1000, 3000);
+		final MinMaxWorkUnit minmax = MinMaxWorkUnit.crearWrapperDe(testWorkUnit, procesor, 500, 1000);
 		// Ejecuta ahora
 		procesor.process(minmax);
 
-		// Esperamos que pase el mínimo
-		Thread.sleep(1500);
+		// Esperamos que pase el mínimo y ejecutamos manual
+		Thread.sleep(600);
 		procesor.process(minmax);
 
-		// Esperamos que un poco menos del máximo
-		Thread.sleep(2500);
+		// Esperamos un poco menos del máximo
+		Thread.sleep(800);
 
 		// Verificamos que aun no se ejecuto automaticamente porque se reseteo la espera
 		Assert.assertEquals(2, testWorkUnit.ejecuciones.size());
 
+		// Esperamos que se ejecute solo por auto planificacion
+		Thread.sleep(300);
+		// Verificamos que aun no se ejecuto automaticamente porque se reseteo la espera
+		Assert.assertEquals(3, testWorkUnit.ejecuciones.size());
 	}
 
 }

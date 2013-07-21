@@ -14,8 +14,8 @@ package net.gaia.taskprocessor.tests.executor;
 
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.tests.util.CounterTaskListener;
 import net.gaia.taskprocessor.tests.util.TareaSimulada;

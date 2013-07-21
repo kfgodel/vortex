@@ -12,6 +12,8 @@
  */
 package net.gaia.taskprocessor.api;
 
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+
 /**
  * Esta enum representa uno de los posibles estados de una {@link SubmittedTask} mientras está en un
  * {@link TaskProcessor}.<br>

@@ -14,7 +14,8 @@ package net.gaia.taskprocessor.executor;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.metrics.TaskProcessingListener;
 
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public class TaskWorker implements Runnable {
 	private static final Logger LOG = LoggerFactory.getLogger(TaskWorker.class);
 
-	private ConcurrentLinkedQueue<SubmittedRunnableTask> pendingTasks;
+	private ConcurrentLinkedQueue<SubmittedTask> pendingTasks;
 
 	private TaskProcessingListener metrics;
 
@@ -42,9 +43,9 @@ public class TaskWorker implements Runnable {
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
-	
+
 	public void run() {
-		SubmittedRunnableTask nextTask;
+		SubmittedTask nextTask;
 		// Sacamos la siguiente tarea pendiente
 		while ((nextTask = pendingTasks.poll()) != null) {
 			perform(nextTask);
@@ -55,16 +56,24 @@ public class TaskWorker implements Runnable {
 	/**
 	 * @param nextTask
 	 */
-	private void perform(final SubmittedRunnableTask nextTask) {
+	private void perform(final SubmittedTask nextTask) {
+		SubmittedRunnableTask nextRunnableTask;
 		try {
-			nextTask.executeWorkUnit();
+			nextRunnableTask = (SubmittedRunnableTask) nextTask;
+		} catch (final ClassCastException e) {
+			LOG.error("Se intentó ejecutar una tarea[" + nextTask + "] no compatible con este worker[" + this
+					+ "]. Se mezclaron los workers?");
+			return;
+		}
+		try {
+			nextRunnableTask.executeWorkUnit();
 		} catch (final Exception e) {
 			LOG.error("Se escapo una excepción no controlada de la tarea ejecutada. Omitiendo error", e);
 		}
 		metrics.incrementProcessed();
 	}
 
-	public static TaskWorker create(final ConcurrentLinkedQueue<SubmittedRunnableTask> inmediatePendingTasks,
+	public static TaskWorker create(final ConcurrentLinkedQueue<SubmittedTask> inmediatePendingTasks,
 			final TaskProcessingListener metrics) {
 		final TaskWorker worker = new TaskWorker();
 		worker.pendingTasks = inmediatePendingTasks;

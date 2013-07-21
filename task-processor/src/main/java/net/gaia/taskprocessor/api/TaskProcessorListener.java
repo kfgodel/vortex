@@ -12,6 +12,8 @@
  */
 package net.gaia.taskprocessor.api;
 
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+
 /**
  * Esta interfaz representa un listener del procesamiento de las tareas que permite agregar lógica
  * accesoria cuando las tareas son ejecutadas.<br>

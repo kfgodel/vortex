@@ -22,9 +22,9 @@ import java.util.concurrent.TimeoutException;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
-import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +67,11 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	public static final String currentState_FIELD = "currentState";
 
 	/**
+	 * Listener de los evetos de la tarea
+	 */
+	private TaskProcessorListener listener;
+
+	/**
 	 * Unidad ejecutable para continuar el procesamiento
 	 */
 	private WorkUnit nextWorkUnit;
@@ -89,13 +94,15 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 *            listener y handler para notificaciones
 	 * @return La tarea creada
 	 */
-	public static SubmittedRunnableTask create(final WorkUnit unit, final TaskProcessor processor) {
+	public static SubmittedRunnableTask create(final WorkUnit unit, final TaskProcessor processor,
+			final TaskProcessorListener listener) {
 		final SubmittedRunnableTask task = new SubmittedRunnableTask();
 		task.workUnit = unit;
 		task.currentState = SubmittedTaskState.PENDING;
 		task.processor = processor;
 		task.ownFuture = new FutureTask<Void>(task, null);
 		task.failingError = null;
+		task.listener = listener;
 		// Notificamos que la agregamos como pendiente
 		task.notifyListenerAcceptedTask();
 		return task;

@@ -21,9 +21,9 @@ import junit.framework.Assert;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
-import net.gaia.taskprocessor.api.TaskProcessor;
-import net.gaia.taskprocessor.api.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.meta.Decision;
 
@@ -88,7 +88,8 @@ public class TestTaskProcessorApi {
 
 		final TestWorkUnit tercerTarea = new TestWorkUnit();
 		final TestWorkUnit segundaTarea = new TestWorkUnit() {
-			
+
+			@Override
 			public WorkUnit doWork() throws InterruptedException {
 				final SubmittedTask tercerTask = taskProcessor.process(tercerTarea);
 				tercerProceso.set(tercerTask);
@@ -96,7 +97,8 @@ public class TestTaskProcessorApi {
 			}
 		};
 		final TestWorkUnit primeraTarea = new TestWorkUnit() {
-			
+
+			@Override
 			public WorkUnit doWork() throws InterruptedException {
 				final SubmittedTask segundoTask = taskProcessor.process(segundaTarea);
 				segundoProceso.set(segundoTask);
@@ -133,7 +135,8 @@ public class TestTaskProcessorApi {
 		Assert.assertTrue("No debería haber tarea fallida aun", failedWork.get() == null);
 
 		final TestWorkUnit tarea = new TestWorkUnit() {
-			
+
+			@Override
 			public WorkUnit doWork() {
 				throw new RuntimeException("Debe fallar");
 			}
@@ -152,7 +155,8 @@ public class TestTaskProcessorApi {
 			/**
 			 * @see net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit#doWork()
 			 */
-			
+
+			@Override
 			public WorkUnit doWork() {
 				throw expectedException;
 			}
@@ -183,7 +187,8 @@ public class TestTaskProcessorApi {
 		final AtomicReference<SubmittedTask> canceladaRef = new AtomicReference<SubmittedTask>();
 
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
-			
+
+			@Override
 			public WorkUnit doWork() throws InterruptedException {
 				lockParaCancelarTodas.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
@@ -273,7 +278,8 @@ public class TestTaskProcessorApi {
 			/**
 			 * @see net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit#doWork()
 			 */
-			
+
+			@Override
 			public WorkUnit doWork() throws InterruptedException {
 				if (cantidadEjecuciones.getAndIncrement() == 0) {
 					// Ejecutamos una vez más

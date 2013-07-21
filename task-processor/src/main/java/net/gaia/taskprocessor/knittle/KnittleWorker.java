@@ -15,6 +15,7 @@ package net.gaia.taskprocessor.knittle;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
 import net.gaia.taskprocessor.metrics.TaskProcessingListener;
 
@@ -29,18 +30,18 @@ import org.slf4j.LoggerFactory;
 public class KnittleWorker implements Runnable {
 	private static final Logger LOG = LoggerFactory.getLogger(KnittleWorker.class);
 
-	private LinkedBlockingQueue<SubmittedRunnableTask> sharedPendingTasks;
+	private LinkedBlockingQueue<SubmittedTask> sharedPendingTasks;
 	private AtomicBoolean running;
 	private TaskProcessingListener metrics;
 
 	/**
 	 * @see java.lang.Runnable#run()
 	 */
-	
+
 	public void run() {
 		while (running.get()) {
 			try {
-				final SubmittedRunnableTask nextTask = sharedPendingTasks.take();
+				final SubmittedTask nextTask = sharedPendingTasks.take();
 				perform(nextTask);
 			} catch (final InterruptedException e) {
 				final Thread currentThread = Thread.currentThread();
@@ -55,16 +56,24 @@ public class KnittleWorker implements Runnable {
 	 * @param nextTask
 	 *            La tarea a ejecutar
 	 */
-	private void perform(final SubmittedRunnableTask nextTask) {
+	private void perform(final SubmittedTask nextTask) {
+		SubmittedRunnableTask runnableTask;
 		try {
-			nextTask.executeWorkUnit();
+			runnableTask = (SubmittedRunnableTask) nextTask;
+		} catch (final ClassCastException e) {
+			LOG.error("Se intentó ejecutar una tarea[" + nextTask + "] no compatible con este worker[" + this
+					+ "]. Se mezclaron los workers?");
+			return;
+		}
+		try {
+			runnableTask.executeWorkUnit();
 		} catch (final Exception e) {
 			LOG.error("Se escapo una excepción no controlada de la tarea ejecutada. Omitiendo error", e);
 		}
 		metrics.incrementProcessed();
 	}
 
-	public static KnittleWorker create(final LinkedBlockingQueue<SubmittedRunnableTask> pendingTasks,
+	public static KnittleWorker create(final LinkedBlockingQueue<SubmittedTask> pendingTasks,
 			final TaskProcessingListener metrics) {
 		final KnittleWorker worker = new KnittleWorker();
 		worker.sharedPendingTasks = pendingTasks;
