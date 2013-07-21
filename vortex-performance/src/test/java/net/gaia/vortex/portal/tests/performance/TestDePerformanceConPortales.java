@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.portal.tests.performance;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.external.VortexProcessorFactory;

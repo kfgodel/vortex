@@ -161,11 +161,16 @@ public class KnittleProcessor implements TaskProcessor, DelegableProcessor {
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#detener()
 	 */
 	public void detener() {
-		detenido = true;
 		// Primero detenemos las que tienen delay
 		this.delayedDelegator.detener();
 
-		// Primero detenemos los workers de la manera normal
+		// Cancelamos todas las tareas pendientes
+		SubmittedTask pendingTask;
+		while ((pendingTask = inmediatePendingTasks.poll()) != null) {
+			pendingTask.cancelExecution(true);
+		}
+
+		// Detenemos los workers de la manera normal
 		for (final KnittleWorker activeWorkers : workers) {
 			activeWorkers.stopRunning();
 		}
@@ -176,8 +181,7 @@ public class KnittleProcessor implements TaskProcessor, DelegableProcessor {
 			activeThread.interrupt();
 		}
 
-		// Finalmente vaciamos los pendientes
-		this.inmediatePendingTasks.clear();
+		detenido = true;
 	}
 
 	/**
@@ -245,5 +249,12 @@ public class KnittleProcessor implements TaskProcessor, DelegableProcessor {
 	 */
 	public static KnittleProcessor createOptimun() {
 		return create(TaskProcessorConfiguration.createOptimun());
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#isDetenido()
+	 */
+	public boolean isDetenido() {
+		return detenido;
 	}
 }

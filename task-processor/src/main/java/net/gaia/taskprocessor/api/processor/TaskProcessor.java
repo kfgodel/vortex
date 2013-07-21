@@ -111,4 +111,10 @@ public interface TaskProcessor extends ThreadOwner, Detenible {
 	 */
 	int getPendingTaskCount();
 
+	/**
+	 * Indica si este procesador está detenido y no acepta tareas nuevas
+	 * 
+	 * @return false si este procesador acepta tareas
+	 */
+	boolean isDetenido();
 }

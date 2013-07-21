@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.http.sesiones;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;

@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
@@ -266,7 +267,15 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 		this.ownFuture.run();
 		if (nextWorkUnit != null) {
 			// Todavía queda otra tarea para continuar
-			processor.process(nextWorkUnit);
+			try {
+				processor.process(nextWorkUnit);
+			} catch (final RejectedExecutionException e) {
+				if (processor.isDetenido()) {
+					LOG.debug("El procesador esta detenido y rechazo la tarea para continuar[{}]", nextWorkUnit);
+				} else {
+					LOG.error("El procesador rechazó la tarea siguiente[" + nextWorkUnit + "]", e);
+				}
+			}
 		}
 	}
 

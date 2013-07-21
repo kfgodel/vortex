@@ -3,9 +3,14 @@
  */
 package net.gaia.vortex.core.impl.atomos.support.procesador;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import java.util.concurrent.RejectedExecutionException;
+
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.impl.atomos.support.basicos.ComponenteSupport;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase define comportamiento base para los componentes que requieren procesar tareas en
@@ -14,6 +19,7 @@ import net.gaia.vortex.core.impl.atomos.support.basicos.ComponenteSupport;
  * @author D. García
  */
 public abstract class ComponenteConProcesadorSupport extends ComponenteSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(ComponenteConProcesadorSupport.class);
 
 	private TaskProcessor processor;
 
@@ -29,7 +35,15 @@ public abstract class ComponenteConProcesadorSupport extends ComponenteSupport {
 		if (tarea == null) {
 			throw new IllegalArgumentException("La tarea pasada a procesar no puede ser null");
 		}
-		processor.process(tarea);
+		try {
+			processor.process(tarea);
+		} catch (final RejectedExecutionException e) {
+			if (processor.isDetenido()) {
+				LOG.debug("El procesador esta detenido. No podemos procesar la tarea[{}]", tarea);
+			} else {
+				LOG.error("El procesador rechazó la tarea[" + tarea + "]", e);
+			}
+		}
 	}
 
 	protected void initializeWith(final TaskProcessor processor) {

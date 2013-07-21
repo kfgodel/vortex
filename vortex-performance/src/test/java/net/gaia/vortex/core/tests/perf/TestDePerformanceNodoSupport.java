@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;

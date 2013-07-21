@@ -15,7 +15,7 @@ package net.gaia.vortex.sockets.tests.performance;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 

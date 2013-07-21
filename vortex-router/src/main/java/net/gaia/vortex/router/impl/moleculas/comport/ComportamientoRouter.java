@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.impl.moleculas.comport;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.moleculas.FlujoVortex;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;

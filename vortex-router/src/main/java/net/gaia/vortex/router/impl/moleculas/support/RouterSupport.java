@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.impl.moleculas.support;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.router.api.moleculas.Router;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;

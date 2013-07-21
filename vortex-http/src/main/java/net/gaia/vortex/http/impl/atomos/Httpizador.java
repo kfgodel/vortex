@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.http.impl.atomos;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.http.impl.tasks.AcumularEnSesion;

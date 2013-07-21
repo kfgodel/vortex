@@ -232,9 +232,14 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#detener()
 	 */
 	public void detener() {
-		detenido = true;
 		// Primero detenemos las que tienen delay
 		this.delayedDelegator.detener();
+
+		// Cancelamos todas las tareas pendientes
+		SubmittedTask pendingTask;
+		while ((pendingTask = inmediatePendingTasks.poll()) != null) {
+			pendingTask.cancelExecution(true);
+		}
 
 		// Asumo que siempre son future por lo que vi en debug
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -243,8 +248,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 			pendingInmediate.cancel(true);
 		}
 
-		// Quitamos las tareas de pendientes porque si hay hilos activos no paran hasta terminarlas
-		this.inmediatePendingTasks.clear();
+		detenido = true;
 	}
 
 	/**
@@ -279,6 +283,13 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 	 */
 	public int getPendingTaskCount() {
 		return this.inmediatePendingTasks.size();
+	}
+
+	/**
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#isDetenido()
+	 */
+	public boolean isDetenido() {
+		return detenido;
 	}
 
 }

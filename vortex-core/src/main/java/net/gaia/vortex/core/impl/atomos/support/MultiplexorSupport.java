@@ -15,7 +15,7 @@ package net.gaia.vortex.core.impl.atomos.support;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
@@ -41,7 +41,7 @@ public abstract class MultiplexorSupport extends ReceptorConProcesador implement
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Multiplexor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	
+
 	public void conectarCon(final Receptor destino) {
 		if (destino == null) {
 			throw new IllegalArgumentException("El destino del multiplexor no puede ser null");
@@ -52,7 +52,7 @@ public abstract class MultiplexorSupport extends ReceptorConProcesador implement
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.forward.Multiplexor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
 	 */
-	
+
 	public void desconectarDe(final Receptor destino) {
 		destinos.remove(destino);
 	}
@@ -60,7 +60,8 @@ public abstract class MultiplexorSupport extends ReceptorConProcesador implement
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
-	
+
+	@Override
 	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)
 	protected void initializeWith(final TaskProcessor processor) {
 		super.initializeWith(processor);
@@ -70,7 +71,8 @@ public abstract class MultiplexorSupport extends ReceptorConProcesador implement
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(destinos_FIELD, destinos)
 				.toString();

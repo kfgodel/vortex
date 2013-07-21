@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.impl.atomos.memoria;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
@@ -51,7 +51,7 @@ public class NexoSinDuplicados extends NexoFiltroSupport implements ComponenteCo
 	/**
 	 * @see net.gaia.vortex.core.api.memoria.ComponenteConMemoria#yaRecibio(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	
+
 	public boolean yaRecibio(final MensajeVortex mensaje) {
 		final boolean yaRecibido = memoria.tieneRegistroDe(mensaje);
 		return yaRecibido;

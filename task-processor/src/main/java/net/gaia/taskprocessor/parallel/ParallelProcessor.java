@@ -268,4 +268,10 @@ public class ParallelProcessor implements TaskProcessor, DelegableProcessor {
 		}
 	}
 
+	/**
+	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#isDetenido()
+	 */
+	public boolean isDetenido() {
+		return detenido;
+	}
 }

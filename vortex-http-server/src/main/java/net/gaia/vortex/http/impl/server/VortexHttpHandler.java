@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.http.impl.server;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.http.api.HttpMetadata;
 import net.gaia.vortex.http.external.jetty.ComandoHttp;
 import net.gaia.vortex.http.external.jetty.HandlerHttpPorComandos;

@@ -15,7 +15,7 @@ package net.gaia.vortex.core.tests;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;

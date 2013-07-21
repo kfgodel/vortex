@@ -14,7 +14,7 @@ package net.gaia.vortex.sockets.impl.moleculas;
 
 import java.net.SocketAddress;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;

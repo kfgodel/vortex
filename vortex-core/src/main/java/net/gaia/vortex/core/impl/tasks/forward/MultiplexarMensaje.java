@@ -13,13 +13,18 @@
 package net.gaia.vortex.core.impl.tasks.forward;
 
 import java.util.Collection;
+import java.util.concurrent.RejectedExecutionException;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.tasks.metricas.RegistrarRuteoRealizado;
 import net.gaia.vortex.core.prog.Loggers;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -30,6 +35,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class MultiplexarMensaje implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(MultiplexarMensaje.class);
 
 	private MensajeVortex mensaje;
 	public static final String mensaje_FIELD = "mensaje";
@@ -46,13 +52,22 @@ public class MultiplexarMensaje implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	
+
 	public WorkUnit doWork() throws InterruptedException {
 		Loggers.ATOMOS.debug("Multiplexando mensaje[{}] a {} destinos{}", new Object[] { mensaje, destinos.size(),
 				destinos });
 		for (final Receptor destino : destinos) {
 			final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, destino);
-			processor.process(entregaEnBackground);
+			try {
+				processor.process(entregaEnBackground);
+			} catch (final RejectedExecutionException e) {
+				if (processor.isDetenido()) {
+					LOG.debug("El procesador esta detenido y rechazo una tarea de entrega. Abortando Multiplexion");
+					return null;
+				} else {
+					LOG.debug("El procesador rechazo una tarea de entrega", e);
+				}
+			}
 		}
 		if (listenerDeMetricas == null) {
 			// Nada más que hacer
@@ -76,7 +91,8 @@ public class MultiplexarMensaje implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(destinos_FIELD, destinos).add(mensaje_FIELD, mensaje)
 				.add(processor_FIELD, processor).toString();

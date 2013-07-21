@@ -97,7 +97,8 @@ public class ThreadBouncer {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(cantidadDeTareasSinEspera_FIELD, cantidadDeTareasSinEspera).toString();
 	}
@@ -133,8 +134,14 @@ public class ThreadBouncer {
 		try {
 			Thread.sleep(esperaForzadaEnMilis);
 		} catch (final InterruptedException e) {
-			LOG.error("Se interrumpió la espera forzada de [{}ms] en un thread antes de enviar la tarea a procesar",
-					esperaForzadaEnMilis);
+			if (processor.isDetenido()) {
+				LOG.debug("Se interrumpió la espera forzada de [{}ms] en un thread porque el procesador esta detenido",
+						esperaForzadaEnMilis);
+			} else {
+				LOG.error(
+						"Se interrumpió la espera forzada de [{}ms] en un thread antes de enviar la tarea a procesar",
+						esperaForzadaEnMilis);
+			}
 		}
 	}
 }

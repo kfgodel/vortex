@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.http.impl.moleculas;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSupport;
 import net.gaia.vortex.http.api.ClienteDeHttpVortex;
 import net.gaia.vortex.http.impl.VortexHttpException;

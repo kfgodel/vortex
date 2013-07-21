@@ -15,7 +15,7 @@ package net.gaia.vortex.router.impl.moleculas;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;

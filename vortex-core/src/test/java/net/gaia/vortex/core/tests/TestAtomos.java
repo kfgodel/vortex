@@ -5,7 +5,7 @@ package net.gaia.vortex.core.tests;
 
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
@@ -96,7 +96,7 @@ public class TestAtomos {
 	public void elTransformadorDeberiaModificarElMensajeEntregado() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
 		final Transformacion transformacion = new Transformacion() {
-			
+
 			public MensajeVortex transformar(@SuppressWarnings("unused") final MensajeVortex mensaje) {
 				return mensaje2;
 			}

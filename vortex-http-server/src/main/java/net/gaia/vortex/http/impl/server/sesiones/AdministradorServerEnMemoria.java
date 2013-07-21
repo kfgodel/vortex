@@ -17,9 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.taskprocessor.api.TaskCriteria;
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 import net.gaia.vortex.http.sesiones.ListenerDeSesionesHttp;
@@ -47,11 +47,12 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	private AtomicLong proximoId;
 	private ListenerDeSesionesHttp listener;
 	private VortexHttpTextualizer textualizer;
-	private boolean detenido = false;
+	private volatile boolean detenido = false;
 
 	private TaskProcessor processor;
 	private final WorkUnit tareaDeLimpiezaDeSesiones = new WorkUnit() {
-		
+
+		@Override
 		public WorkUnit doWork() throws InterruptedException {
 			if (detenido) {
 				// No hacemos nada si está detenido el administrador
@@ -62,10 +63,13 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 		}
 	};
 
+	private SubmittedTask controlDeTareaDeLimpieza;
+
 	/**
 	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#getSesion(java.lang.String)
 	 */
-	
+
+	@Override
 	public SesionVortexHttpEnServer getSesion(final String sessionId) {
 		final SesionVortexHttpEnServer sesion = sesionesPorId.get(sessionId);
 		return sesion;
@@ -74,7 +78,8 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	/**
 	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#crearNuevaSesion()
 	 */
-	
+
+	@Override
 	public SesionVortexHttpEnServer crearNuevaSesion() {
 		final long nuevoId = proximoId.getAndIncrement();
 		final String nuevoIdDeSesion = String.format("%1$04d", nuevoId);
@@ -87,7 +92,8 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	/**
 	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#eliminarSesion(net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer)
 	 */
-	
+
+	@Override
 	public void eliminarSesion(final SesionVortexHttpEnServer sesion) {
 		listener.onSesionDestruida(sesion);
 		final String idDeSesion = sesion.getIdDeSesion();
@@ -114,7 +120,7 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	 * Planifica a futuro la limpieza de sesiones viejas
 	 */
 	private void planificarProximaLimpieza() {
-		this.processor.processDelayed(ESPERA_ENTRE_LIMPIEZAS, tareaDeLimpiezaDeSesiones);
+		controlDeTareaDeLimpieza = this.processor.processDelayed(ESPERA_ENTRE_LIMPIEZAS, tareaDeLimpiezaDeSesiones);
 	}
 
 	/**
@@ -143,15 +149,11 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	/**
 	 * @see net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer#cerrarYLiberarRecursos()
 	 */
-	
+
+	@Override
 	public void cerrarYLiberarRecursos() {
 		detenido = true;
 		// Detiene la tarea de limpieza de sesiones
-		this.processor.removeTasksMatching(new TaskCriteria() {
-			
-			public boolean matches(final WorkUnit workUnit) {
-				return tareaDeLimpiezaDeSesiones.equals(workUnit);
-			}
-		});
+		controlDeTareaDeLimpieza.cancelExecution(true);
 	}
 }

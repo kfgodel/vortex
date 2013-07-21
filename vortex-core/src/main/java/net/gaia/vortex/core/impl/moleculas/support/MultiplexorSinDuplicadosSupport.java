@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.impl.moleculas.support;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -45,7 +45,8 @@ public abstract class MultiplexorSinDuplicadosSupport extends NodoMoleculaSuppor
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).toString();
 	}
@@ -53,7 +54,7 @@ public abstract class MultiplexorSinDuplicadosSupport extends NodoMoleculaSuppor
 	/**
 	 * @see net.gaia.vortex.core.api.memoria.ComponenteConMemoria#yaRecibio(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	
+
 	public boolean yaRecibio(final MensajeVortex mensaje) {
 		final boolean yaRecibido = procesoDeEntrada.yaRecibio(mensaje);
 		return yaRecibido;

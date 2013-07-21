@@ -16,7 +16,12 @@ import java.util.concurrent.Callable;
 
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
+import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
 import ar.com.dgarcia.colecciones.maps.LRUCache;
 import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -28,6 +33,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
+	private static final Logger LOG = LoggerFactory.getLogger(MemoriaLimitadaDeMensajes.class);
 
 	/**
 	 * Mapa utilizado como registro limitado LRU
@@ -56,15 +62,27 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	/**
 	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#registrarNuevo(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	
+
 	public boolean registrarNuevo(final MensajeVortex mensaje) {
 		final IdDeMensaje idNuevo = mensaje.getIdDeMensaje();
-		final boolean yaExistia = comprobarSiYaExiste(idNuevo);
+		boolean yaExistia;
+		try {
+			yaExistia = comprobarSiYaExiste(idNuevo);
+		} catch (final UnsuccessfulWaitException e) {
+			LOG.debug("Mensaje no comprobado para registrarlo por ser interrumpida la espera", e);
+			return false;
+		}
 		if (yaExistia) {
 			// Ya sabemos que no es nuevo
 			return false;
 		}
-		final boolean agregadoComoNuevo = intentarAgregarComoNuevo(idNuevo);
+		boolean agregadoComoNuevo;
+		try {
+			agregadoComoNuevo = intentarAgregarComoNuevo(idNuevo);
+		} catch (final UnsuccessfulWaitException e) {
+			LOG.debug("Mensaje no registrado por ser interrumpida la espera", e);
+			return false;
+		}
 		return agregadoComoNuevo;
 	}
 
@@ -77,12 +95,12 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	 * @return true si fue posible agregarlo, false si al intentar agregarlo el estado actual de la
 	 *         memoria ya lo tiene registrado
 	 */
-	private boolean intentarAgregarComoNuevo(final IdDeMensaje idNuevo) {
+	private boolean intentarAgregarComoNuevo(final IdDeMensaje idNuevo) throws UnsuccessfulWaitException {
 		if (idNuevo == null) {
 			throw new FaultyCodeException("Se recibió un mensaje sin ID");
 		}
 		final boolean agregado = concurrentCoordinator.doWriteOperation(new Callable<Boolean>() {
-			
+
 			public Boolean call() throws Exception {
 				return unsyncIntentarAgregarComoNuevo(idNuevo);
 			}
@@ -121,12 +139,12 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	 *            El id a verificar como nuevo
 	 * @return true si el ID ya estaba registrado, false si es realmente nuevo
 	 */
-	private boolean comprobarSiYaExiste(final IdDeMensaje idNuevo) {
+	private boolean comprobarSiYaExiste(final IdDeMensaje idNuevo) throws UnsuccessfulWaitException {
 		if (idNuevo == null) {
 			throw new FaultyCodeException("Se recibió un mensaje sin ID");
 		}
 		final Boolean yaExiste = concurrentCoordinator.doReadOperation(new Callable<Boolean>() {
-			
+
 			public Boolean call() throws Exception {
 				return unsyncComprobarSiYaExiste(idNuevo);
 			}
@@ -151,7 +169,8 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(idsRegistrados_FIELD, idsRegistrados.size()).toString();
 	}
@@ -159,7 +178,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	/**
 	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#tieneRegistroDe(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	
+
 	public boolean tieneRegistroDe(final MensajeVortex mensaje) {
 		final IdDeMensaje idDelMensaje = mensaje.getIdDeMensaje();
 		final boolean tieneRegistroPrevio = comprobarSiYaExiste(idDelMensaje);

@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.sockets.impl.sockets;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 import net.gaia.vortex.server.api.GeneradorDeNexos;

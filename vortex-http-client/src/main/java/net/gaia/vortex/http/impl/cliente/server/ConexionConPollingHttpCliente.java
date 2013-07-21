@@ -17,9 +17,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import net.gaia.taskprocessor.api.TaskCriteria;
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.tasks.MinMaxWorkUnit;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
@@ -48,6 +48,8 @@ public class ConexionConPollingHttpCliente {
 
 	private MinMaxWorkUnit tareaDeIntercambioDeMensajes;
 
+	private SubmittedTask controlDeTareaDeIntercambio;
+
 	public static ConexionConPollingHttpCliente create(final TaskProcessor procesor,
 			final ServerVortexHttpRemoto serverRemoto, final VortexHttpTextualizer textualizer,
 			final HandlerHttpDeMensajesRecibidos handler) {
@@ -57,7 +59,8 @@ public class ConexionConPollingHttpCliente {
 		conexion.handlerDeMensajes = handler;
 		conexion.processor = procesor;
 		conexion.tareaDeIntercambioDeMensajes = MinMaxWorkUnit.crearWrapperDe(new WorkUnit() {
-			
+
+			@Override
 			public WorkUnit doWork() throws InterruptedException {
 				conexion.intercambiarMensajesConServer();
 				return null;
@@ -116,16 +119,11 @@ public class ConexionConPollingHttpCliente {
 	public void iniciarConexion() throws VortexHttpException {
 		conexionInterna.setEsperaMaxima(POLLING_INICIAL_EN_MILLIS * 2);
 		conexionInterna.conectarAlServer();
-		processor.process(tareaDeIntercambioDeMensajes);
+		controlDeTareaDeIntercambio = processor.process(tareaDeIntercambioDeMensajes);
 	}
 
 	public void terminarConexion() throws VortexHttpException {
-		processor.removeTasksMatching(new TaskCriteria() {
-			
-			public boolean matches(final WorkUnit workUnit) {
-				return tareaDeIntercambioDeMensajes.equals(workUnit);
-			}
-		});
+		controlDeTareaDeIntercambio.cancelExecution(true);
 		conexionInterna.desconectarDelServer();
 	}
 
@@ -138,7 +136,7 @@ public class ConexionConPollingHttpCliente {
 	 * Si no es demasiado teprano ejecutar la tarea de envío de mensajes, procesando los recibidos
 	 */
 	private void intentarEnviarMensajesPendientes() {
-		processor.process(tareaDeIntercambioDeMensajes);
+		controlDeTareaDeIntercambio = processor.process(tareaDeIntercambioDeMensajes);
 	}
 
 	public ConexionHttpCliente getConexionInterna() {
@@ -157,7 +155,8 @@ public class ConexionConPollingHttpCliente {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con("sesion", conexionInterna.getIdDeSesion())
 				.con("minimo", this.conexionInterna.getEsperaMinima())

@@ -14,7 +14,7 @@ package net.gaia.vortex.sockets.impl;
 
 import java.net.SocketAddress;
 
-import net.gaia.taskprocessor.api.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 import net.gaia.vortex.sockets.api.ServidorDeSocketVortex;
 import net.gaia.vortex.sockets.external.mina.VortexSocketConfiguration;
