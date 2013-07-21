@@ -103,9 +103,11 @@ public interface TaskProcessor extends ThreadOwner, Detenible {
 	TaskExceptionHandler getExceptionHandler();
 
 	/**
-	 * Devuelve la cantidad de tareas pendientes para ser procesadas por este procesador
+	 * Devuelve un estimado de la cantidad de tareas pendientes para ser procesadas por este
+	 * procesador.<br>
+	 * Dependiendo de la implementación de este processor, el número será más preciso o no.
 	 * 
-	 * @return La cantidad de tareas a procesar
+	 * @return La cantidad de tareas pendientes de ser procesadas
 	 */
 	int getPendingTaskCount();
 

@@ -42,6 +42,8 @@ public class ThreadAlimentadorDelTaskProcessor extends ThreadBucleSupport {
 
 	private int unitIndex;
 
+	private long cantidadDeTareasAgregadas;
+
 	public ThreadAlimentadorDelTaskProcessor() {
 		super("<> - AlimentadorDeTasks");
 	}
@@ -63,6 +65,7 @@ public class ThreadAlimentadorDelTaskProcessor extends ThreadBucleSupport {
 				}
 			}
 		}
+		LOG.info("Cantidad de tareas agregadas al processor: {}", cantidadDeTareasAgregadas);
 	}
 
 	/**
@@ -72,6 +75,7 @@ public class ThreadAlimentadorDelTaskProcessor extends ThreadBucleSupport {
 	protected void realizarAccionRepetida() {
 		final WorkUnit nextUnit = workUnits[unitIndex];
 		processor.process(nextUnit);
+		cantidadDeTareasAgregadas++;
 		// Pasamos al siguiente workunit
 		unitIndex++;
 		if (unitIndex >= workUnits.length) {
@@ -84,7 +88,7 @@ public class ThreadAlimentadorDelTaskProcessor extends ThreadBucleSupport {
 		thread.processor = processor;
 		thread.workUnits = workunits;
 		thread.unitIndex = INITIAL_WORKUNIT_INDEX;
+		thread.cantidadDeTareasAgregadas = 0;
 		return thread;
 	}
-
 }
