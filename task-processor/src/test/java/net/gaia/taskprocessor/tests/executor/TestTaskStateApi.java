@@ -70,7 +70,8 @@ public class TestTaskStateApi {
 		final WaitBarrier lockToTestTaskCompletion = WaitBarrier.create();
 
 		final TestWorkUnit tarea = new TestWorkUnit() {
-			
+
+			@Override
 			public WorkUnit doWork() throws InterruptedException {
 				lockToTestTaskCompletion.release();
 				super.doWork();
@@ -82,10 +83,11 @@ public class TestTaskStateApi {
 		// Esperamos que nos autoricen testear el estado
 		lockToTestTaskCompletion.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
-		final boolean isProcessing = pendiente.getCurrentState().isBeingProcessed();
+		final SubmittedTaskState currentState = pendiente.getCurrentState();
+		final boolean isProcessing = currentState.isBeingProcessed();
+		Assert.assertTrue("Debería indicar que está siendo procesada", isProcessing);
 		Assert.assertTrue("Debería indicar que termino aunque este en proceso porque el estado es externo a la tarea",
 				tarea.isProcessed());
-		Assert.assertTrue("Debería indicar que está siendo procesada", isProcessing);
 		// Dejamos que termine
 		lockToCompleteTask.release();
 	}
@@ -102,7 +104,8 @@ public class TestTaskStateApi {
 		final WaitBarrier lockParaCompletarAnterior = WaitBarrier.create();
 		final WaitBarrier lockParaTestearEstado = WaitBarrier.create();
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
-			
+
+			@Override
 			public WorkUnit doWork() throws InterruptedException {
 				super.doWork();
 				lockParaTestearEstado.release();
@@ -135,7 +138,8 @@ public class TestTaskStateApi {
 			/**
 			 * @see net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit#doWork()
 			 */
-			
+
+			@Override
 			public WorkUnit doWork() {
 				throw expectedException;
 			}
@@ -143,7 +147,8 @@ public class TestTaskStateApi {
 
 		final WaitBarrier lockParaTestearEstado = WaitBarrier.create();
 		final TestWorkUnit tareaPosterior = new TestWorkUnit() {
-			
+
+			@Override
 			public WorkUnit doWork() {
 				lockParaTestearEstado.release();
 				return null;
@@ -174,7 +179,8 @@ public class TestTaskStateApi {
 		final AtomicReference<SubmittedTask> canceladaRef = new AtomicReference<SubmittedTask>();
 
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
-			
+
+			@Override
 			public WorkUnit doWork() throws InterruptedException {
 				lockParaCancelar.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
