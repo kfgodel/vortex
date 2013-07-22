@@ -20,6 +20,14 @@
   
   	<dependencies>
   	
+  	
+  		<!-- Port de ForkJoin para java 5 -->
+		<dependency>
+		  <groupId>net.gaia.vortex</groupId>
+		  <artifactId>fork-join-java5</artifactId>
+		  <version>1.0</version>
+		</dependency>  		
+  	
 		<!-- Algunas clases comunes -->
 		<dependency>
 		  <groupId>ar.com.dgarcia</groupId>
