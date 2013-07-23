@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.gaia.vortex</groupId>
   <artifactId>vortex-sets</artifactId>
-  <version>0.5.0</version>
+  <version>0.5.1-SNAPSHOT</version>
   <name>Vortex[Sets]</name>
   <description>Extensión a vortex que permite definir conjuntos para filtrar los mensajes</description>
   
@@ -79,7 +79,7 @@
   	<dependency>
 	  <groupId>net.gaia.vortex</groupId>
 	  <artifactId>vortex-core</artifactId>
-	  <version>0.5.0</version>
+	  <version>0.5.1-SNAPSHOT</version>
   	</dependency>
   
 	<!--  Abstrae la herramienta de logueo concreta -->
