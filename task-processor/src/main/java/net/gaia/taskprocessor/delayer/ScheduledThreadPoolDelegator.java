@@ -24,10 +24,6 @@ import net.gaia.taskprocessor.executor.ProcessorThreadFactory;
 import net.gaia.taskprocessor.executor.TaskDelegation;
 import net.gaia.taskprocessor.executor.TaskDelegationRejectionHandler;
 import net.gaia.taskprocessor.executor.threads.ThreadOwner;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
@@ -37,7 +33,6 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * @author D. García
  */
 public class ScheduledThreadPoolDelegator implements DelayedDelegator, ThreadOwner {
-	private static final Logger LOG = LoggerFactory.getLogger(ScheduledThreadPoolDelegator.class);
 
 	/**
 	 * Cantidad de threads usados para el scheduler
@@ -75,13 +70,23 @@ public class ScheduledThreadPoolDelegator implements DelayedDelegator, ThreadOwn
 
 	public static ScheduledThreadPoolDelegator create(final DelegableProcessor otherProcessor) {
 		final ScheduledThreadPoolDelegator processor = new ScheduledThreadPoolDelegator();
+		processor.scheduledExecutor = createExecutor(processor);
+		processor.delegateProcessor = otherProcessor;
+		return processor;
+	}
+
+	/**
+	 * Crea el executor que se utilizará para retrasar la delegacion de tareas
+	 * 
+	 * @param processor
+	 *            El procesador para el que se crea el ejecutor
+	 * @return El executor que permite planificar ejecuciones en el tiempo
+	 */
+	private static ScheduledThreadPoolExecutor createExecutor(final ScheduledThreadPoolDelegator processor) {
 		final ProcessorThreadFactory threadFactory = ProcessorThreadFactory.create(DELAYED_DELEGATOR_THREAD_NAME,
 				processor);
 		final TaskDelegationRejectionHandler rejectionHandler = TaskDelegationRejectionHandler.create();
-		processor.scheduledExecutor = new ScheduledThreadPoolExecutor(DELEGATOR_THREAD_COUNT, threadFactory,
-				rejectionHandler);
-		processor.delegateProcessor = otherProcessor;
-		return processor;
+		return new ScheduledThreadPoolExecutor(DELEGATOR_THREAD_COUNT, threadFactory, rejectionHandler);
 	}
 
 	/**

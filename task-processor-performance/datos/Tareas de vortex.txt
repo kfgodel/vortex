@@ -1,0 +1,43 @@
+- AcumularEnSesion
+  - Genera espera I/O al invocar ConexionConPollingHttpCliente
+
+- BifurcarMensaje
+ => DelegarMensaje
+ 
+- DelegarMensaje
+ - tiene sync en MemoriaDeMensajes para evitar mandar mensaje
+ - Puede tener espera al invocar a recibir()
+ 	=> DelegarMensaje
+
+- DesvortificarEInvocarHandler
+ => InvocarHandler
+ 
+- EjecutarYDelegar
+ - Puede tener espera al invocar recibir()
+ => DelegarMensaje
+ 
+- EnviarPorSocket
+
+- FiltrarMensaje
+ => DelegarMensaje
+ 
+- InvocarHandler
+ - Puede tener espera al invocar onMensajeRecibido()
+ 
+- MinMaxWorkUnit
+ => Devuelve lo que devuelva la tarea invocada
+ 
+- MultiplexarAPatas
+ => DelegarMensaje
+
+- MultiplexarMensaje
+ => DelegarMensaje
+ => RegistrarRuteoRealizado
+ 
+- RegistrarRuteoRealizado
+
+- RegistrarThreadUsadoTask
+ - Tiene sync en AtomicLong y ConcurrentMap
+ 
+- TransformarYDelegar
+ => DelegarMensaje

@@ -215,4 +215,21 @@ public class TestTaskStateApi {
 		Assert.assertTrue(cancelada.getCurrentState().equals(SubmittedTaskState.CANCELLED));
 
 	}
+
+	@Test
+	public void dosTareasPlanificadasParaEjecutarseJuntasNoDeberianInterferirse() throws InterruptedException {
+		final TestWorkUnit firstWork = new TestWorkUnit();
+		final TestWorkUnit secondWork = new TestWorkUnit();
+		final SubmittedTask firstTask = taskProcessor.processDelayed(TimeMagnitude.of(200, TimeUnit.MILLISECONDS),
+				firstWork);
+		final SubmittedTask secondTask = taskProcessor.processDelayed(TimeMagnitude.of(200, TimeUnit.MILLISECONDS),
+				secondWork);
+
+		Assert.assertEquals("Deberían estar pendientes", SubmittedTaskState.PENDING, firstTask.getCurrentState());
+		Assert.assertEquals("Deberían estar pendientes", SubmittedTaskState.PENDING, secondTask.getCurrentState());
+		Thread.sleep(300);
+
+		Assert.assertEquals("Deberían estar pendientes", SubmittedTaskState.COMPLETED, firstTask.getCurrentState());
+		Assert.assertEquals("Deberían estar pendientes", SubmittedTaskState.COMPLETED, secondTask.getCurrentState());
+	}
 }

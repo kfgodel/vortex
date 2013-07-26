@@ -48,6 +48,12 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProcessor {
 	private static final Logger LOG = LoggerFactory.getLogger(ExecutorBasedTaskProcesor.class);
 
+	/**
+	 * Cantidad de tareas por el maximo de threads del pool usado para limitar la cola de tareas que
+	 * permite crear nuevos threads on-demand
+	 */
+	private static final int QUEUE_MULTIPLIER_PER_MAXIMUN_POOL_SIZE = 3;
+
 	private TaskProcessorListener processorListener;
 	private TaskExceptionHandler exceptionHandler;
 
@@ -87,7 +93,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 		if (maximunPoolSize == Integer.MAX_VALUE) {
 			executorTaskQueue = new SynchronousQueue<Runnable>();
 		} else {
-			final int executorQueueSize = maximunPoolSize * 3;
+			final int executorQueueSize = maximunPoolSize * QUEUE_MULTIPLIER_PER_MAXIMUN_POOL_SIZE;
 			executorTaskQueue = new LinkedBlockingQueue<Runnable>(executorQueueSize);
 		}
 
