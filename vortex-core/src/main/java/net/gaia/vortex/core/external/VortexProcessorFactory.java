@@ -13,7 +13,8 @@
 package net.gaia.vortex.core.external;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.taskprocessor.knittle.KnittleProcessor;
 
 /**
@@ -32,7 +33,7 @@ public class VortexProcessorFactory {
 	 * @return El procesador de tareas para compartir entre todos los nodos
 	 */
 	public static TaskProcessor createProcessor() {
-		return ExecutorBasedTaskProcesor.createOptimun();
+		return ForkJoinTaskProcessor.create(TaskProcessorConfiguration.createOptimun());
 	}
 
 	/**
