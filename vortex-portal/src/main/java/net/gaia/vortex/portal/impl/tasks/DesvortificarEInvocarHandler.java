@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.portal.impl.tasks;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -49,7 +50,7 @@ public class DesvortificarEInvocarHandler<T> implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 
-	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		T desvortificado;
 		try {
 			desvortificado = mapeador.convertirDesdeVortex(mensaje, tipoEsperado);

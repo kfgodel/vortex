@@ -15,6 +15,7 @@ package net.gaia.taskprocessor.perf.impl.medidor;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.perf.api.time.CronometroMilis;
@@ -42,7 +43,7 @@ public class MedirTicksPorSegundoWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		// Actualizamos el delta de ticks
 		final long valorActual = variable.getCantidadActual();
 		final long diferenciaDeTicks = valorActual - ultimoValorDeTicks;

@@ -3,6 +3,7 @@
  */
 package net.gaia.vortex.core.impl.tasks.forward;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
@@ -34,7 +35,7 @@ public class DelegarMensaje implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 
-	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		Loggers.ATOMOS.debug("Delegando a nodo[{}] el mensaje[{}]", delegado.toShortString(), mensaje);
 		// Intentamos optimizar la entrega de mensaje no mandando a uno que ya lo recibió
 		if (delegado instanceof ComponenteConMemoria) {

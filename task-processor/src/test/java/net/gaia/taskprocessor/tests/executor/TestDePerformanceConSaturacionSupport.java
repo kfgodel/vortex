@@ -14,6 +14,7 @@ package net.gaia.taskprocessor.tests.executor;
 
 import java.util.concurrent.TimeUnit;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
@@ -117,7 +118,7 @@ public abstract class TestDePerformanceConSaturacionSupport {
 
 		// Cada tarea incrementa el contador de salidas
 		final WorkUnit tareaDelProcesador = new WorkUnit() {
-			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				// Simulamos una tarea costosa en proceso
 				Thread.currentThread().getStackTrace();
 

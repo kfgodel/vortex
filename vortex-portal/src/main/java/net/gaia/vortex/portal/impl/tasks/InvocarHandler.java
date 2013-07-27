@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.portal.impl.tasks;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.portal.api.mensaje.HandlerDeMensaje;
@@ -40,7 +41,7 @@ public class InvocarHandler<T> implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 
-	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		try {
 			handler.onMensajeRecibido(mensajeRecibido);
 		} catch (final Exception e) {

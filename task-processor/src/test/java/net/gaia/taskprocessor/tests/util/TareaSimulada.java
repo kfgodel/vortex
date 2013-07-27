@@ -3,6 +3,7 @@
  */
 package net.gaia.taskprocessor.tests.util;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import ar.com.dgarcia.lang.conc.WaitBarrier;
@@ -20,8 +21,12 @@ public class TareaSimulada implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
-		Thread.sleep(duracionDeTarea);
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
+		try {
+			Thread.sleep(duracionDeTarea);
+		} catch (final InterruptedException e) {
+			throw new InterruptedThreadException("Se interrumpió el thread de la tarea simulada", e);
+		}
 		if (barreraDeTareas != null) {
 			barreraDeTareas.release();
 		}

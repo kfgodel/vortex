@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.sockets.impl.tasks;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 
@@ -40,7 +41,7 @@ public class EnviarPorSocket implements WorkUnit {
 	 */
 
 	@Override
-	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		try {
 			socket.send(datos);
 		} catch (final Exception e) {

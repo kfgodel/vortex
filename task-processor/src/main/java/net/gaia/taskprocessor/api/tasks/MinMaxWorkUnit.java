@@ -15,6 +15,7 @@ package net.gaia.taskprocessor.api.tasks;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
@@ -129,7 +130,6 @@ public class MinMaxWorkUnit implements WorkUnit {
 		}
 		LOG.debug("Ejecucion aceptada. Ya pasaron {} milis desde ultima ejecucion de [{}]", new Object[] {
 				transcurridoDesdeUltimaEjecucion, this });
-		final WorkUnit resultado;
 		try {
 			ejecutarTarea(parallelizer);
 		} catch (final Exception e) {
@@ -163,7 +163,7 @@ public class MinMaxWorkUnit implements WorkUnit {
 	 * @throws InterruptedException
 	 *             Si este thread es interrumpido esperando
 	 */
-	protected void ejecutarTarea(final WorkParallelizer parallelizer) throws InterruptedException {
+	protected void ejecutarTarea(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		tareaEjecutable.doWork(parallelizer);
 	}
 

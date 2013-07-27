@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.parallel.ParallelProcessor;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.vortex.core.api.Nodo;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
@@ -58,7 +58,7 @@ public class TestRedA01ConPortal {
 
 	@Before
 	public void crearNodos() {
-		processor = ParallelProcessor.create(TaskProcessorConfiguration.createOptimun());
+		processor = ForkJoinTaskProcessor.create(TaskProcessorConfiguration.createOptimun());
 		// Creamos un nodo central
 		nodoRuteador = MultiplexorSinDuplicados.create(processor);
 		// Le agregamos las interconexiones en los extremos

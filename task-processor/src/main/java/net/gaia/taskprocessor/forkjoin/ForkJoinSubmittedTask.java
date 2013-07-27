@@ -18,6 +18,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.TimeoutException;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
@@ -90,7 +91,7 @@ public class ForkJoinSubmittedTask extends RecursiveAction implements SubmittedT
 			this.workUnit.doWork(parallelizer);
 			currentState = SubmittedTaskState.COMPLETED;
 			notifyListenerCompletedTask();
-		} catch (final InterruptedException e) {
+		} catch (final InterruptedThreadException e) {
 			currentState = SubmittedTaskState.INTERRUPTED;
 			notifyListenerInterruptedTask();
 		} catch (final Throwable e) {

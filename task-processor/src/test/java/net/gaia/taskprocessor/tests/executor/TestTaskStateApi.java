@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.WorkParallelizer;
@@ -72,7 +73,7 @@ public class TestTaskStateApi {
 		final TestWorkUnit tarea = new TestWorkUnit() {
 
 			@Override
-			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				lockToTestTaskCompletion.release();
 				super.doWork(parallelizer);
 				lockToCompleteTask.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -105,7 +106,7 @@ public class TestTaskStateApi {
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
 
 			@Override
-			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				super.doWork(parallelizer);
 				lockParaTestearEstado.release();
 				lockParaCompletarAnterior.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -178,7 +179,7 @@ public class TestTaskStateApi {
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
 
 			@Override
-			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				lockParaCancelar.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 				// Cancelamos a todas durante el procesamiento de la del medio
@@ -187,7 +188,11 @@ public class TestTaskStateApi {
 				lockParaTestear.release();
 
 				// Al hacer el sleep permitimos que el thread sea interrumpido
-				Thread.sleep(1000);
+				try {
+					Thread.sleep(1000);
+				} catch (final InterruptedException e) {
+					throw new InterruptedThreadException("Se interrumpio la espera de la tarea cancelada", e);
+				}
 				super.doWork(parallelizer);
 			}
 		};

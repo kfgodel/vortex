@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
@@ -54,7 +55,7 @@ public class TestTaskProcessorApi {
 		private final AtomicBoolean processed = new AtomicBoolean(false);
 		private final WaitBarrier esperaProcesada = WaitBarrier.create(1);
 
-		public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+		public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 			processed.set(true);
 			esperaProcesada.release();
 		}
@@ -90,7 +91,7 @@ public class TestTaskProcessorApi {
 		final TestWorkUnit segundaTarea = new TestWorkUnit() {
 
 			@Override
-			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				final SubmittedTask tercerTask = taskProcessor.process(tercerTarea);
 				tercerProceso.set(tercerTask);
 				super.doWork(parallelizer);
@@ -99,7 +100,7 @@ public class TestTaskProcessorApi {
 		final TestWorkUnit primeraTarea = new TestWorkUnit() {
 
 			@Override
-			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				final SubmittedTask segundoTask = taskProcessor.process(segundaTarea);
 				segundoProceso.set(segundoTask);
 				super.doWork(parallelizer);
@@ -189,7 +190,7 @@ public class TestTaskProcessorApi {
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
 
 			@Override
-			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				lockParaCancelarTodas.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 				// Cancelamos a todas durante el procesamiento de la del medio
@@ -199,7 +200,11 @@ public class TestTaskProcessorApi {
 				lockParaTestear.release();
 
 				// El sleep permite que este thread sea interrumpido despues de cancelar
-				Thread.sleep(1000);
+				try {
+					Thread.sleep(1000);
+				} catch (final InterruptedException e) {
+					throw new InterruptedThreadException("Se interrumpio la espera de la tarea cancelada", e);
+				}
 
 				// Esta línea nunca llega a ejecutarse
 				super.doWork(parallelizer);
@@ -258,7 +263,7 @@ public class TestTaskProcessorApi {
 	public void deberiaPermitirEjecutarTareasEncadenadas() {
 		final TestWorkUnit unidadSegunda = new TestWorkUnit();
 		final WorkUnit unidadPrimera = new WorkUnit() {
-			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				// La inicial solo sirve para pasarle la posta a la segunda
 				parallelizer.submitAndForget(unidadSegunda);
 			}
@@ -280,7 +285,7 @@ public class TestTaskProcessorApi {
 			 */
 
 			@Override
-			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				if (cantidadEjecuciones.getAndIncrement() == 0) {
 					// Ejecutamos una vez más
 					parallelizer.submitAndForget(this);

@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.core.impl.tasks;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
@@ -46,7 +47,7 @@ public class EjecutarYDelegar implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 
-	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		Loggers.ATOMOS.trace("Ejecutando atomo[{}] con el mensaje[{}]", ejecutante.toShortString(), mensaje);
 		try {
 			ejecutante.recibir(mensaje);

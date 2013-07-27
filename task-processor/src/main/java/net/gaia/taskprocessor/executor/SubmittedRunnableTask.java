@@ -19,6 +19,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeoutException;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
@@ -130,7 +131,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 			this.workUnit.doWork(temporalParallelizer);
 			currentState = SubmittedTaskState.COMPLETED;
 			notifyListenerCompletedTask();
-		} catch (final InterruptedException e) {
+		} catch (final InterruptedThreadException e) {
 			currentState = SubmittedTaskState.INTERRUPTED;
 			notifyListenerInterruptedTask();
 		} catch (final Throwable e) {

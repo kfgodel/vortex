@@ -15,6 +15,7 @@ package net.gaia.taskprocessor.tests.executor;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.WorkParallelizer;
@@ -80,7 +81,7 @@ public class TestTaskMetricsApi {
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
 
 			@Override
-			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				super.doWork(parallelizer);
 				lockTestearEstado.release();
 				lockParaBloquearLaPrimerTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));

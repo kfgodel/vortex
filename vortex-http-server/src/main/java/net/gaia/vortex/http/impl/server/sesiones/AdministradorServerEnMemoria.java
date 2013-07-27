@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
@@ -54,7 +55,7 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	private final WorkUnit tareaDeLimpiezaDeSesiones = new WorkUnit() {
 
 		@Override
-		public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+		public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 			if (detenido) {
 				// No hacemos nada si está detenido el administrador
 				return;

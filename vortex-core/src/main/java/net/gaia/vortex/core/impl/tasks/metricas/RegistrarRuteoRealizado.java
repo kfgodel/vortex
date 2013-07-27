@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.core.impl.tasks.metricas;
 
+import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
@@ -30,7 +31,7 @@ public class RegistrarRuteoRealizado implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 
-	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		metricas.registrarOutput();
 	}
 

@@ -30,10 +30,12 @@ public interface WorkUnit {
 	 * Al terminar el método se considera terminada esta tarea, pero puede continuar en otra tarea.<br>
 	 * La tarea devuelta será encolada para se procesada apenas se disponga de hilos de ejecución.
 	 * 
-	 * @return
-	 * @throws InterruptedException
+	 * @param parallelizer
+	 *            El paralelizador que representa un punto de entrada al procesador para tareas
+	 *            adicionales disparadas al ejecutar esta
+	 * @throws InterruptedThreadException
 	 *             Si el thread procesante es interrumpido y por lo tanto la tarea no puede
 	 *             considerarse completa
 	 */
-	public void doWork(WorkParallelizer parallelizer) throws InterruptedException;
+	public void doWork(WorkParallelizer parallelizer) throws InterruptedThreadException;
 }

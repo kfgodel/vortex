@@ -293,7 +293,7 @@ public class ParallelWorker implements Runnable {
 	private void procesarDesprendidaDe(final SubmittedTask tareaEjecutada, final WorkUnit tareaDesprendida) {
 		try {
 			tareaDesprendida.doWork(parallelizer);
-		} catch (final Throwable e) {
+		} catch (final Exception e) {
 			LOG.error("Error en tarea desprendida que no será handleadlo", e);
 		}
 	}
