@@ -58,7 +58,7 @@ public class ThreadIncrementadorConWorkUnit extends ThreadBucleSupport {
 	@Override
 	protected void realizarAccionRepetida() {
 		try {
-			workUnit.doWork();
+			workUnit.doWork(null);
 		} catch (final Exception e) {
 			throw new UnhandledConditionException("Interrumpieron el thread incrementador mientras incrementaba?", e);
 		}

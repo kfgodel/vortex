@@ -12,6 +12,7 @@
  */
 package net.gaia.taskprocessor.perf.impl.variables;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.perf.api.variables.VariableTicks;
@@ -38,9 +39,8 @@ public class IncrementarVariableWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	public WorkUnit doWork() throws InterruptedException {
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		variable.incrementar();
-		return null;
 	}
 
 	public static IncrementarVariableWorkUnit create(final VariableTicks variable) {

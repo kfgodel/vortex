@@ -42,7 +42,7 @@ public class ThreadMedidorDeTicks extends ThreadBucleSupport {
 	@Override
 	protected void realizarAccionRepetida() {
 		try {
-			tareDeMedicion.doWork();
+			tareDeMedicion.doWork(null);
 			Thread.sleep(DEFAULT_SLEEP_PER_MEASURE);
 		} catch (final InterruptedException e) {
 			if (!isRunning()) {
