@@ -30,11 +30,13 @@ import net.gaia.taskprocessor.executor.ProcessorThreadFactory;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
 import net.gaia.taskprocessor.executor.TaskDelegation;
 import net.gaia.taskprocessor.executor.ThreadBouncer;
+import net.gaia.taskprocessor.meta.Decision;
 import net.gaia.taskprocessor.metrics.TaskProcessingMetricsAndListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
@@ -68,12 +70,13 @@ public class KnittleProcessor implements TaskProcessor, DelegableProcessor {
 	/**
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
+	@HasDependencyOn(Decision.AL_CREAR_LA_TAREA_SE_DEFINE_LISTENER_Y_HANDLER)
 	public SubmittedTask process(final WorkUnit tarea) {
 		checkExecutionStatus();
 		// Si estamos muy cargados hace esperar a los threads
 		threadBouncer.retrasarPedidoExternoSiProcesadorSaturado();
 
-		final SubmittedRunnableTask task = SubmittedRunnableTask.create(tarea, this, getProcessorListener());
+		final SubmittedRunnableTask task = SubmittedRunnableTask.create(tarea, this);
 		processDelegatedTask(task);
 		return task;
 	}
@@ -91,9 +94,10 @@ public class KnittleProcessor implements TaskProcessor, DelegableProcessor {
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#processDelayed(net.gaia.taskprocessor.api.TimeMagnitude,
 	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
+	@HasDependencyOn(Decision.AL_CREAR_LA_TAREA_SE_DEFINE_LISTENER_Y_HANDLER)
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit work) {
 		checkExecutionStatus();
-		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this, getProcessorListener());
+		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
 		final TaskDelegation delegation = this.delayedDelegator.delayDelegation(workDelay, task);
 		return delegation;
 	}
@@ -216,7 +220,7 @@ public class KnittleProcessor implements TaskProcessor, DelegableProcessor {
 		this.detenido = false;
 		final int threadsActivos = config.getMinimunThreadPoolSize();
 		for (int i = 0; i < threadsActivos; i++) {
-			final KnittleWorker worker = KnittleWorker.create(this.inmediatePendingTasks, this.metrics);
+			final KnittleWorker worker = KnittleWorker.create(this.inmediatePendingTasks, this.metrics, this);
 			this.workers.add(worker);
 			final Thread createdThread = threadFactory.newThread(worker);
 			this.threads.add(createdThread);

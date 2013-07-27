@@ -17,19 +17,21 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.taskprocessor.meta.Decision;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
@@ -47,8 +49,6 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 
 	private WorkUnit workUnit;
 	public static final String workUnit_FIELD = "workUnit";
-
-	private TaskProcessor processor;
 
 	/**
 	 * Sincronizador de la ejecución que permite a otros threads esperar por la ejecución de esta
@@ -73,9 +73,19 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	private TaskProcessorListener listener;
 
 	/**
-	 * Unidad ejecutable para continuar el procesamiento
+	 * Handler para notificar errores de ejecucion de esta tarea
 	 */
-	private WorkUnit nextWorkUnit;
+	private TaskExceptionHandler exceptionHandler;
+
+	/**
+	 * Paralelizador de tareas pasado durante la ejecucion de esta tarea
+	 */
+	private WorkParallelizer temporalParallelizer;
+
+	/**
+	 * Procesador que ejecuta las tareas
+	 */
+	private TaskProcessor taskProcessor;
 
 	public WorkUnit getWorkUnit() {
 		return workUnit;
@@ -95,15 +105,16 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 *            listener y handler para notificaciones
 	 * @return La tarea creada
 	 */
-	public static SubmittedRunnableTask create(final WorkUnit unit, final TaskProcessor processor,
-			final TaskProcessorListener listener) {
+	@HasDependencyOn(Decision.AL_CREAR_LA_TAREA_SE_DEFINE_LISTENER_Y_HANDLER)
+	public static SubmittedRunnableTask create(final WorkUnit unit, final TaskProcessor processor) {
 		final SubmittedRunnableTask task = new SubmittedRunnableTask();
 		task.workUnit = unit;
 		task.currentState = SubmittedTaskState.PENDING;
-		task.processor = processor;
 		task.ownFuture = new FutureTask<Void>(task, null);
 		task.failingError = null;
-		task.listener = listener;
+		task.listener = processor.getProcessorListener();
+		task.exceptionHandler = processor.getExceptionHandler();
+		task.taskProcessor = processor;
 		// Notificamos que la agregamos como pendiente
 		task.notifyListenerAcceptedTask();
 		return task;
@@ -116,7 +127,7 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 		currentState = SubmittedTaskState.PROCESSING;
 		notifyListenerStartingProcess();
 		try {
-			nextWorkUnit = this.workUnit.doWork();
+			this.workUnit.doWork(temporalParallelizer);
 			currentState = SubmittedTaskState.COMPLETED;
 			notifyListenerCompletedTask();
 		} catch (final InterruptedException e) {
@@ -135,15 +146,14 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * recuperada
 	 */
 	private void invokeExceptionHandler() {
-		final TaskExceptionHandler exceptionHandler = processor.getExceptionHandler();
 		if (exceptionHandler == null) {
 			final Throwable exception = this.getFailingError();
-			LOG.error("No existe handler para la excepción en la tarea[" + this + "] del procesador[" + processor
-					+ "]: " + exception, exception);
+			LOG.error("No existe handler para la excepción en la tarea[" + this + "], ignorando error: " + exception,
+					exception);
 			return;
 		}
 		try {
-			exceptionHandler.onExceptionRaisedWhileProcessing(this, processor);
+			exceptionHandler.onExceptionRaisedWhileProcessing(this, taskProcessor);
 		} catch (final Throwable e) {
 			LOG.error("Se produjo una excepción en el handler de excepciones para tareas", e);
 		}
@@ -153,13 +163,12 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * Notifica al listener del procesador que una tarea falló
 	 */
 	private void notifyListenerFailedTask() {
-		final TaskProcessorListener listener = processor.getProcessorListener();
 		if (listener == null) {
 			return;
 		}
 		try {
 			final Thread currentThread = Thread.currentThread();
-			listener.onTaskFailed(this, processor, currentThread);
+			listener.onTaskFailed(this, taskProcessor, currentThread);
 		} catch (final Throwable e) {
 			LOG.error("Se produjo un error en el listener al notificarlo del fallo de la tarea. Ignorando error", e);
 		}
@@ -169,13 +178,12 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * Notifica al listener del procesador de la interrupción de la tarea
 	 */
 	private void notifyListenerInterruptedTask() {
-		final TaskProcessorListener listener = processor.getProcessorListener();
 		if (listener == null) {
 			return;
 		}
 		try {
 			final Thread currentThread = Thread.currentThread();
-			listener.onTaskInterrupted(this, processor, currentThread);
+			listener.onTaskInterrupted(this, taskProcessor, currentThread);
 		} catch (final Throwable e) {
 			LOG.error(
 					"Se produjo un error en el listener al notificarlo de la interrupción de la tarea. Ignorando error",
@@ -187,13 +195,12 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * Notifica al listener del procesor si existe alguno que la tarea se completó
 	 */
 	private void notifyListenerCompletedTask() {
-		final TaskProcessorListener listener = processor.getProcessorListener();
 		if (listener == null) {
 			return;
 		}
 		try {
 			final Thread currentThread = Thread.currentThread();
-			listener.onTaskCompleted(this, processor, currentThread);
+			listener.onTaskCompleted(this, taskProcessor, currentThread);
 		} catch (final Throwable e) {
 			LOG.error(
 					"Se produjo un error en el listener al notificarlo de la compleción de la tarea. Ignorando error",
@@ -206,13 +213,12 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * esta tarea
 	 */
 	private void notifyListenerStartingProcess() {
-		final TaskProcessorListener listener = processor.getProcessorListener();
 		if (listener == null) {
 			return;
 		}
 		try {
 			final Thread currentThread = Thread.currentThread();
-			listener.onTaskStartedToProcess(this, processor, currentThread);
+			listener.onTaskStartedToProcess(this, taskProcessor, currentThread);
 		} catch (final Throwable e) {
 			LOG.error("Se produjo un error en el listener al notificarlo del inicio de tarea. Ignorando error", e);
 		}
@@ -263,19 +269,12 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * Ejecuta esta tarea pendiente a través de su {@link Future} de manera de notificar a los
 	 * threads que puedan estar esperando el resultado
 	 */
-	public void executeWorkUnit() {
-		this.ownFuture.run();
-		if (nextWorkUnit != null) {
-			// Todavía queda otra tarea para continuar
-			try {
-				processor.process(nextWorkUnit);
-			} catch (final RejectedExecutionException e) {
-				if (processor.isDetenido()) {
-					LOG.debug("El procesador esta detenido y rechazo la tarea para continuar[{}]", nextWorkUnit);
-				} else {
-					LOG.error("El procesador rechazó la tarea siguiente[" + nextWorkUnit + "]", e);
-				}
-			}
+	public void executeWorkUnit(final WorkParallelizer parallelizer) {
+		this.temporalParallelizer = parallelizer;
+		try {
+			this.ownFuture.run();
+		} finally {
+			this.temporalParallelizer = null;
 		}
 	}
 
@@ -298,12 +297,11 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * Notifica al listener del procesor si existe alguno que la tarea se completó
 	 */
 	private void notifyListenerCancelledTask() {
-		final TaskProcessorListener listener = processor.getProcessorListener();
 		if (listener == null) {
 			return;
 		}
 		try {
-			listener.onTaskCancelled(this, processor);
+			listener.onTaskCancelled(this, taskProcessor);
 		} catch (final Throwable e) {
 			LOG.error(
 					"Se produjo un error en el listener al notificarlo de la cancelación de la tarea. Ignorando error",
@@ -315,12 +313,11 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * Notifica al listener del procesor si existe alguno que la tarea se completó
 	 */
 	private void notifyListenerAcceptedTask() {
-		final TaskProcessorListener listener = processor.getProcessorListener();
 		if (listener == null) {
 			return;
 		}
 		try {
-			listener.onTaskAcceptedAndPending(this, processor);
+			listener.onTaskAcceptedAndPending(this, taskProcessor);
 		} catch (final Throwable e) {
 			LOG.error(
 					"Se produjo un error en el listener al notificarlo de la aceptación de la tarea. Ignorando error",

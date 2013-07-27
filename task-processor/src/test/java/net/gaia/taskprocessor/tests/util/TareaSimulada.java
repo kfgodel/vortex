@@ -3,6 +3,7 @@
  */
 package net.gaia.taskprocessor.tests.util;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import ar.com.dgarcia.lang.conc.WaitBarrier;
 
@@ -19,12 +20,11 @@ public class TareaSimulada implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	public WorkUnit doWork() throws InterruptedException {
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		Thread.sleep(duracionDeTarea);
 		if (barreraDeTareas != null) {
 			barreraDeTareas.release();
 		}
-		return null;
 	}
 
 	public static TareaSimulada create(final long milisEnCompletarTarea, final WaitBarrier barreraDeTareas) {

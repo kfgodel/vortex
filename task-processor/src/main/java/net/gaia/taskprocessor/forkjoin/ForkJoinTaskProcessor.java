@@ -22,6 +22,7 @@ import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
@@ -58,6 +59,11 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	private volatile TaskProcessorListener taskListener;
 
 	private volatile boolean detenido;
+
+	/**
+	 * Paralelizador de las tareas para este processor
+	 */
+	private WorkParallelizer parallelizer;
 
 	/**
 	 * verifica que no hayan detenido este procesador
@@ -206,6 +212,7 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 		processor.threadPool = new ForkJoinPool(parallelThreadCount, threadFactory, exceptionHandler, useAsyncMode);
 		processor.delayedDelegator = ScheduledThreadPoolDelegator.create(processor);
 		processor.detenido = false;
+		processor.parallelizer = ForkJoinParallelizer.create(processor);
 		return processor;
 	}
 
@@ -215,4 +222,9 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	public boolean isDetenido() {
 		return detenido;
 	}
+
+	public WorkParallelizer getParallelizer() {
+		return parallelizer;
+	}
+
 }

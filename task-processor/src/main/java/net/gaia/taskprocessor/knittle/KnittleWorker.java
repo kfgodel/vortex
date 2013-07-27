@@ -15,8 +15,10 @@ package net.gaia.taskprocessor.knittle;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
 import net.gaia.taskprocessor.metrics.TaskProcessingListener;
+import net.gaia.taskprocessor.parallelizer.ProcessorDelegatorParallelizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,8 @@ public class KnittleWorker implements Runnable {
 	private LinkedBlockingQueue<SubmittedTask> sharedPendingTasks;
 	private volatile boolean running;
 	private TaskProcessingListener metrics;
+
+	private ProcessorDelegatorParallelizer parallelizer;
 
 	/**
 	 * @see java.lang.Runnable#run()
@@ -65,7 +69,7 @@ public class KnittleWorker implements Runnable {
 			return;
 		}
 		try {
-			runnableTask.executeWorkUnit();
+			runnableTask.executeWorkUnit(this.parallelizer);
 		} catch (final Exception e) {
 			LOG.error("Se escapo una excepción no controlada de la tarea ejecutada. Omitiendo error", e);
 		}
@@ -73,11 +77,12 @@ public class KnittleWorker implements Runnable {
 	}
 
 	public static KnittleWorker create(final LinkedBlockingQueue<SubmittedTask> pendingTasks,
-			final TaskProcessingListener metrics) {
+			final TaskProcessingListener metrics, final TaskProcessor processor) {
 		final KnittleWorker worker = new KnittleWorker();
 		worker.sharedPendingTasks = pendingTasks;
 		worker.running = true;
 		worker.metrics = metrics;
+		worker.parallelizer = ProcessorDelegatorParallelizer.create(processor);
 		return worker;
 	}
 

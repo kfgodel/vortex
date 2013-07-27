@@ -14,6 +14,7 @@ package net.gaia.taskprocessor.tests.executor;
 
 import java.util.concurrent.TimeUnit;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 
@@ -116,15 +117,14 @@ public abstract class TestDePerformanceEnOptimunSupport {
 
 		// Cada tarea incrementa el contador de salidas
 		final WorkUnit tareaDelProcesador = new WorkUnit() {
-			public WorkUnit doWork() throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 				metricas.registrarOutput();
-				return null;
 			}
 		};
 
 		// Por cada ejecución genera el mensaje y lo entrega al handler
 		stress.setEjecutable(new Runnable() {
-			
+
 			public void run() {
 				metricas.registrarInput();
 				processor.process(tareaDelProcesador);

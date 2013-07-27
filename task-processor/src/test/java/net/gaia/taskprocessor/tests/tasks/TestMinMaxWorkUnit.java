@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.tasks.MinMaxWorkUnit;
@@ -49,12 +50,11 @@ public class TestMinMaxWorkUnit {
 		/**
 		 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 		 */
-		public WorkUnit doWork() throws InterruptedException {
+		public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 			final long currentMillis = System.currentTimeMillis();
 			ejecuciones.add(currentMillis);
 			LOG.debug("Tarea de test ejecutada por {}º vez: {}", ejecuciones.size(), currentMillis);
 			ejecutada.release();
-			return null;
 		}
 
 	}

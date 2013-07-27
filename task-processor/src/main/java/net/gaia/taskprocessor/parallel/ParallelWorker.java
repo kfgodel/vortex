@@ -16,10 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
+import net.gaia.taskprocessor.parallelizer.ListCollectorParallelizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +51,12 @@ public class ParallelWorker implements Runnable {
 	private static final int OWN_TASK_TIMEOUT_MILLIS = 2 * 1000;
 
 	/**
+	 * Cantidad máxima de tareas que se ejecutan como desprendidas de otra. Superado este valor, las
+	 * tareas se agregan al procesador como cualquier otra
+	 */
+	private static final int CANTIDAD_MAXIMA_DE_TAREAS_DESPRENDIDAS = 100;
+
+	/**
 	 * Array de colas compartidas entre todos los workers
 	 */
 	private BlockingDeque<SubmittedTask>[] sharedQueues;
@@ -66,6 +76,17 @@ public class ParallelWorker implements Runnable {
 	 * Flag para saber cuándo nos detuvieron
 	 */
 	private volatile boolean running;
+
+	/**
+	 * Paralelizar usado por este worker para procesar las tareas desprendidas de otras
+	 */
+	private ListCollectorParallelizer parallelizer;
+
+	/**
+	 * Procesador de tareas al que se delegan las tareas desprendidas no procesables directamente
+	 * por este thread
+	 */
+	private TaskProcessor ownerProcessor;
 
 	/**
 	 * @see java.lang.Runnable#run()
@@ -193,10 +214,15 @@ public class ParallelWorker implements Runnable {
 		if (cantidadPendiente == 0) {
 			return;
 		}
-		for (int i = 0; i < cantidadPendiente; i++) {
-			final SubmittedTask tarea = exclusiveQueue.get(i);
-			perform(tarea);
+		for (int i = 0; i < cantidadPendiente && running; i++) {
+			final SubmittedTask tareaExclusiva = exclusiveQueue.get(i);
+			procesarTarea(tareaExclusiva);
 		}
+		// Si todavía quedan tareas es porque nos detuvieron antes
+		if (!exclusiveQueue.isEmpty()) {
+			cancelarTareasExclusivas();
+		}
+
 		// La vaciamos para evitar referencias
 		exclusiveQueue.clear();
 	}
@@ -207,7 +233,7 @@ public class ParallelWorker implements Runnable {
 	 * @param nextTask
 	 *            La tarea a ejecutar
 	 */
-	private void perform(final SubmittedTask nextTask) {
+	private void procesarTarea(final SubmittedTask nextTask) {
 		SubmittedRunnableTask runnableTask;
 		try {
 			runnableTask = (SubmittedRunnableTask) nextTask;
@@ -217,9 +243,77 @@ public class ParallelWorker implements Runnable {
 			return;
 		}
 		try {
-			runnableTask.executeWorkUnit();
+			runnableTask.executeWorkUnit(parallelizer);
 		} catch (final Exception e) {
 			LOG.error("Se escapo una excepción no controlada de la tarea ejecutada. Omitiendo error", e);
+		}
+		procesarTareasDesprendidasDe(nextTask);
+	}
+
+	/**
+	 * Intentamos ejecutar las tareas adicionales a indicada recolectadas por el paralelizador.<br>
+	 * El criterio es que las tareas desprendidas pueden ser ejecutadas en forma más liviana, sin
+	 * pasar por el procesador utilizando la misma configuración que la tarea original.<br>
+	 * Después de cierta cantidad
+	 * 
+	 * @param tareaEjecutada
+	 *            Tarea ya ejecutada de la cual se obtiene la configuracion de handlers y listeners
+	 */
+	private void procesarTareasDesprendidasDe(final SubmittedTask tareaEjecutada) {
+		// Mientras hayan tareas desprendidas y estemos corriendo y estemos dentro del limite de
+		// veces que lo podemos hacer
+		for (int i = 0; i < CANTIDAD_MAXIMA_DE_TAREAS_DESPRENDIDAS && running && parallelizer.tieneTareasDesprendidas(); i++) {
+			final WorkUnit tareaDesprendida = parallelizer.tomarTareaDesprendida();
+			procesarDesprendidaDe(tareaEjecutada, tareaDesprendida);
+		}
+		// Aún quedan tareas desprendidas y estamos corriendo, pero ya no podemos seguir
+		// ejecutándolas en este thread, las delegamos al procesador
+		while (running && parallelizer.tieneTareasDesprendidas()) {
+			final WorkUnit tareaDeOtroThread = parallelizer.tomarTareaDesprendida();
+			delegarAProcesador(tareaDeOtroThread);
+		}
+		// Aún quedan tareas, pero ya no estamos corriendo y nadie puede ser notificado.
+		// Simplemente las descartamos
+		if (parallelizer.tieneTareasDesprendidas()) {
+			LOG.debug("Al detener este worker, quedaban {} tareas desprendidas por ejecutar que seran ignoradas",
+					parallelizer.getCantidadDeTareasDesprendidas());
+			parallelizer.eliminarTareasDesprendidas();
+		}
+	}
+
+	/**
+	 * Procesamos la tarea desprendida de una manera más liviana que una {@link SubmittedTask}
+	 * utilizando la configuracion de la tareaEjecutada
+	 * 
+	 * @param tareaEjecutada
+	 *            La tarea que define los listeners y handlers a utilizar
+	 * @param tareaDesprendida
+	 *            La tarea a ejecutar en este thread
+	 */
+	private void procesarDesprendidaDe(final SubmittedTask tareaEjecutada, final WorkUnit tareaDesprendida) {
+		try {
+			tareaDesprendida.doWork(parallelizer);
+		} catch (final Throwable e) {
+			LOG.error("Error en tarea desprendida que no será handleadlo", e);
+		}
+	}
+
+	/**
+	 * Intentamos delegarle la tarea al procesador de este worker para que redistribuya el trabajo
+	 * con otros threads
+	 * 
+	 * @param tareaDeOtroThread
+	 *            La tarea a ejecutar
+	 */
+	private void delegarAProcesador(final WorkUnit tareaDeOtroThread) {
+		try {
+			this.ownerProcessor.process(tareaDeOtroThread);
+		} catch (final RejectedExecutionException e) {
+			if (ownerProcessor.isDetenido()) {
+				LOG.debug("El procesador esta detenido y rechazo la tarea paralela[{}]", tareaDeOtroThread);
+			} else {
+				LOG.error("El procesador rechazó la tarea siguiente[" + tareaDeOtroThread + "]", e);
+			}
 		}
 	}
 
@@ -239,6 +333,7 @@ public class ParallelWorker implements Runnable {
 		worker.workerIndex = workerIndex;
 		worker.sharedQueues = sharedQueues;
 		worker.running = true;
+		worker.parallelizer = ListCollectorParallelizer.create();
 		// Creamos la cola compartida en el array
 		sharedQueues[workerIndex] = new LinkedBlockingDeque<SubmittedTask>();
 		return worker;

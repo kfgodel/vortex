@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 
@@ -91,21 +92,21 @@ public class MinMaxWorkUnit implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	public WorkUnit doWork() {
+	public void doWork(final WorkParallelizer parallelizer) {
 		LOG.debug("Iniciando ejecucion min-max[{}]", this);
 		boolean acquired;
 		try {
 			acquired = lockDeEjecucion.tryLock(MAXIMO_PERMITIDO_PARA_ADQUIRIR_LOCK, TimeUnit.MILLISECONDS);
 		} catch (final InterruptedException e) {
 			LOG.debug("Interrupción mientras esperabamos lock para ejecutar. Nos cancelaron?", e);
-			return null;
+			return;
 		}
 		if (!acquired) {
 			throw new UnhandledConditionException("No fue posible adquirir el lock para ejecutar la tarea[" + this
 					+ "]. Hay un thread bloqueado?");
 		}
 		try {
-			return ejecutarSincronizado();
+			ejecutarSincronizado(parallelizer);
 		} finally {
 			lockDeEjecucion.unlock();
 		}
@@ -116,7 +117,7 @@ public class MinMaxWorkUnit implements WorkUnit {
 	 * 
 	 * @return El resultado de la ejecución
 	 */
-	private WorkUnit ejecutarSincronizado() {
+	private void ejecutarSincronizado(final WorkParallelizer parallelizer) {
 		final long transcurridoDesdeUltimaEjecucion = getCurrentMillis() - momentoDeUltimaEjecucion;
 		final long milisFaltantesParaEjecucion = esperaMinima - transcurridoDesdeUltimaEjecucion;
 		if (milisFaltantesParaEjecucion > 0) {
@@ -124,22 +125,21 @@ public class MinMaxWorkUnit implements WorkUnit {
 					milisFaltantesParaEjecucion, this);
 			// Todavía es necesario esperar para ejecutar esta tarea
 			replanificarEjecucionParaDentroDe(milisFaltantesParaEjecucion);
-			return null;
+			return;
 		}
 		LOG.debug("Ejecucion aceptada. Ya pasaron {} milis desde ultima ejecucion de [{}]", new Object[] {
 				transcurridoDesdeUltimaEjecucion, this });
-		WorkUnit resultado;
+		final WorkUnit resultado;
 		try {
-			resultado = ejecutarTarea();
+			ejecutarTarea(parallelizer);
 		} catch (final Exception e) {
 			LOG.error("Se produjo un error ejecutando la tarea repetitiva[" + this
 					+ "]. Abortando ejecuciones posteriores", e);
 			cancelarPlanificacionesAnteriores();
-			return null;
+			return;
 		}
 		momentoDeUltimaEjecucion = getCurrentMillis();
 		replanificarEjecucionParaDentroDe(esperaMaxima);
-		return resultado;
 	}
 
 	/**
@@ -163,9 +163,8 @@ public class MinMaxWorkUnit implements WorkUnit {
 	 * @throws InterruptedException
 	 *             Si este thread es interrumpido esperando
 	 */
-	protected WorkUnit ejecutarTarea() throws InterruptedException {
-		final WorkUnit resultado = tareaEjecutable.doWork();
-		return resultado;
+	protected void ejecutarTarea(final WorkParallelizer parallelizer) throws InterruptedException {
+		tareaEjecutable.doWork(parallelizer);
 	}
 
 	/**

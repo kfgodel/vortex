@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
-import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
@@ -72,11 +72,10 @@ public class TestTaskStateApi {
 		final TestWorkUnit tarea = new TestWorkUnit() {
 
 			@Override
-			public WorkUnit doWork() throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 				lockToTestTaskCompletion.release();
-				super.doWork();
+				super.doWork(parallelizer);
 				lockToCompleteTask.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-				return null;
 			}
 		};
 		final SubmittedTask pendiente = this.taskProcessor.process(tarea);
@@ -106,11 +105,10 @@ public class TestTaskStateApi {
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
 
 			@Override
-			public WorkUnit doWork() throws InterruptedException {
-				super.doWork();
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+				super.doWork(parallelizer);
 				lockParaTestearEstado.release();
 				lockParaCompletarAnterior.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-				return null;
 			}
 		};
 		this.taskProcessor.process(blockingTask);
@@ -140,7 +138,7 @@ public class TestTaskStateApi {
 			 */
 
 			@Override
-			public WorkUnit doWork() {
+			public void doWork(final WorkParallelizer parallelizer) {
 				throw expectedException;
 			}
 		};
@@ -149,9 +147,8 @@ public class TestTaskStateApi {
 		final TestWorkUnit tareaPosterior = new TestWorkUnit() {
 
 			@Override
-			public WorkUnit doWork() {
+			public void doWork(final WorkParallelizer parallelizer) {
 				lockParaTestearEstado.release();
-				return null;
 			}
 		};
 
@@ -181,7 +178,7 @@ public class TestTaskStateApi {
 		final TestWorkUnit canceladaDuranteElProcesamiento = new TestWorkUnit() {
 
 			@Override
-			public WorkUnit doWork() throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 				lockParaCancelar.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 
 				// Cancelamos a todas durante el procesamiento de la del medio
@@ -191,7 +188,7 @@ public class TestTaskStateApi {
 
 				// Al hacer el sleep permitimos que el thread sea interrumpido
 				Thread.sleep(1000);
-				return super.doWork();
+				super.doWork(parallelizer);
 			}
 		};
 

@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
-import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
@@ -78,12 +78,12 @@ public class TestTaskMetricsApi {
 		final WaitBarrier lockParaBloquearLaPrimerTarea = WaitBarrier.create();
 		final WaitBarrier lockTestearEstado = WaitBarrier.create();
 		final TestWorkUnit blockingTask = new TestWorkUnit() {
-			
-			public WorkUnit doWork() throws InterruptedException {
-				super.doWork();
+
+			@Override
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
+				super.doWork(parallelizer);
 				lockTestearEstado.release();
 				lockParaBloquearLaPrimerTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-				return null;
 			}
 		};
 		taskProcessor.process(blockingTask);

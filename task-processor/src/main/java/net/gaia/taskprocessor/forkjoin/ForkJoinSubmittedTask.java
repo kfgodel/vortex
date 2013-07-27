@@ -22,6 +22,7 @@ import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 
@@ -85,10 +86,10 @@ public class ForkJoinSubmittedTask extends RecursiveAction implements SubmittedT
 		currentState = SubmittedTaskState.PROCESSING;
 		notifyListenerStartingProcess();
 		try {
-			final WorkUnit nextWorkUnit = this.workUnit.doWork();
+			final WorkParallelizer parallelizer = this.processor.getParallelizer();
+			this.workUnit.doWork(parallelizer);
 			currentState = SubmittedTaskState.COMPLETED;
 			notifyListenerCompletedTask();
-			scheduleNext(nextWorkUnit);
 		} catch (final InterruptedException e) {
 			currentState = SubmittedTaskState.INTERRUPTED;
 			notifyListenerInterruptedTask();
@@ -117,20 +118,6 @@ public class ForkJoinSubmittedTask extends RecursiveAction implements SubmittedT
 		} catch (final Throwable e) {
 			LOG.error("Se produjo una excepción en el handler de excepciones para tareas", e);
 		}
-	}
-
-	/**
-	 * Si existe una tarea posterior al terminar la previa, la agregamos al pool
-	 * 
-	 * @param nextWorkUnit
-	 *            La próxima unidad a procesar
-	 */
-	private void scheduleNext(final WorkUnit nextWorkUnit) {
-		if (nextWorkUnit == null) {
-			// Nada para procesar
-			return;
-		}
-		processor.process(nextWorkUnit);
 	}
 
 	/**

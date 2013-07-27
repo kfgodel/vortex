@@ -31,6 +31,8 @@ import net.gaia.taskprocessor.delayer.ScheduledThreadPoolDelegator;
 import net.gaia.taskprocessor.executor.ProcessorThreadFactory;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
 import net.gaia.taskprocessor.executor.TaskDelegation;
+import net.gaia.taskprocessor.meta.Decision;
+import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
@@ -107,12 +109,13 @@ public class ParallelProcessor implements TaskProcessor, DelegableProcessor {
 	/**
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
+	@HasDependencyOn(Decision.AL_CREAR_LA_TAREA_SE_DEFINE_LISTENER_Y_HANDLER)
 	public SubmittedTask process(final WorkUnit work) {
 		checkExecutionStatus();
 		if (work == null) {
 			throw new IllegalArgumentException("El workUnit no puede ser null");
 		}
-		final SubmittedRunnableTask submittedTask = SubmittedRunnableTask.create(work, this, getProcessorListener());
+		final SubmittedRunnableTask submittedTask = SubmittedRunnableTask.create(work, this);
 		executeNow(submittedTask);
 		return submittedTask;
 	}
@@ -149,9 +152,10 @@ public class ParallelProcessor implements TaskProcessor, DelegableProcessor {
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#processDelayed(ar.com.dgarcia.lang.time.TimeMagnitude,
 	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
+	@HasDependencyOn(Decision.AL_CREAR_LA_TAREA_SE_DEFINE_LISTENER_Y_HANDLER)
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit work) {
 		checkExecutionStatus();
-		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this, getProcessorListener());
+		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
 		final TaskDelegation delegation = this.delayedDelegator.delayDelegation(workDelay, task);
 		return delegation;
 	}

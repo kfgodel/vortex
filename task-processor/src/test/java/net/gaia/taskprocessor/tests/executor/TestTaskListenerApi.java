@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.SubmittedTask;
-import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
@@ -80,10 +80,10 @@ public class TestTaskListenerApi {
 		final TestWorkUnit tarea = new TestWorkUnit() {
 
 			@Override
-			public WorkUnit doWork() throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 				lockParaTestearTarea.release();
 				lockParaBloquearTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-				return super.doWork();
+				super.doWork(parallelizer);
 			}
 		};
 		taskProcessor.process(tarea);
@@ -126,7 +126,7 @@ public class TestTaskListenerApi {
 		final TestWorkUnit tarea = new TestWorkUnit() {
 
 			@Override
-			public WorkUnit doWork() {
+			public void doWork(final WorkParallelizer parallelizer) {
 				throw new RuntimeException("Fallando!");
 			}
 		};
@@ -152,9 +152,9 @@ public class TestTaskListenerApi {
 		final TestWorkUnit blockingWork = new TestWorkUnit() {
 
 			@Override
-			public WorkUnit doWork() throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 				lockParaBloquearPrimera.waitForReleaseUpTo(TimeMagnitude.of(10, TimeUnit.SECONDS));
-				return super.doWork();
+				super.doWork(parallelizer);
 			}
 		};
 		taskProcessor.process(blockingWork);
@@ -186,7 +186,7 @@ public class TestTaskListenerApi {
 		final TestWorkUnit tarea = new TestWorkUnit() {
 
 			@Override
-			public WorkUnit doWork() throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 				// Permitimos que el thread principal nos cancele
 				lockParaCancelarTarea.release();
 				// Nos deberían interrumpir mientras esperamos el lock
@@ -195,7 +195,7 @@ public class TestTaskListenerApi {
 				} catch (final InterruptedWaitException e) {
 					throw new InterruptedException("Interrumpieron el thread");
 				}
-				return super.doWork();
+				super.doWork(parallelizer);
 			}
 		};
 		final SubmittedTask interruptedTask = taskProcessor.process(tarea);

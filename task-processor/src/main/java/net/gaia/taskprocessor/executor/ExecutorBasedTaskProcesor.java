@@ -31,11 +31,13 @@ import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.processor.delayer.DelayedDelegator;
 import net.gaia.taskprocessor.api.processor.delayer.DelegableProcessor;
 import net.gaia.taskprocessor.delayer.ScheduledThreadPoolDelegator;
+import net.gaia.taskprocessor.meta.Decision;
 import net.gaia.taskprocessor.metrics.TaskProcessingMetricsAndListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
@@ -113,13 +115,14 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 	/**
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
+	@HasDependencyOn(Decision.AL_CREAR_LA_TAREA_SE_DEFINE_LISTENER_Y_HANDLER)
 	public SubmittedTask process(final WorkUnit work) {
 		checkExecutionStatus();
 		// A los threads externos los hacemos esperar si estamos muy saturados
 		threadBouncer.retrasarPedidoExternoSiProcesadorSaturado();
 
 		// Creamos la tarea y la ejecutamos inmediatamente
-		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this, getProcessorListener());
+		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
 		processDelegatedTask(task);
 		return task;
 	}
@@ -137,10 +140,11 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#processDelayed(ar.com.dgarcia.lang.time.TimeMagnitude,
 	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
+	@HasDependencyOn(Decision.AL_CREAR_LA_TAREA_SE_DEFINE_LISTENER_Y_HANDLER)
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit work) {
 		checkExecutionStatus();
 		// Creamos la tarea para el trabajo
-		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this, getProcessorListener());
+		final SubmittedRunnableTask task = SubmittedRunnableTask.create(work, this);
 		final TaskDelegation delegation = this.delayedDelegator.delayDelegation(workDelay, task);
 		return delegation;
 	}
@@ -170,7 +174,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 		}
 
 		// Agregamos un worker más para resolver las tareas pendientes
-		final TaskWorker extraWorker = TaskWorker.create(inmediatePendingTasks, this.metrics);
+		final TaskWorker extraWorker = TaskWorker.create(inmediatePendingTasks, this.metrics, this);
 		try {
 			inmediateExecutor.submit(extraWorker);
 		} catch (final RejectedExecutionException e) {

@@ -35,5 +35,5 @@ public interface WorkUnit {
 	 *             Si el thread procesante es interrumpido y por lo tanto la tarea no puede
 	 *             considerarse completa
 	 */
-	public WorkUnit doWork() throws InterruptedException;
+	public void doWork(WorkParallelizer parallelizer) throws InterruptedException;
 }

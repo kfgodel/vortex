@@ -34,7 +34,11 @@ public interface TaskProcessor extends ThreadOwner, Detenible {
 	 * Agrega la tarea pasada para ser procesada por los hilos disponibles en este procesador apenas
 	 * se liberen.<br>
 	 * La tarea es agregada a una cola de procesamiento, que los hilos consumen. Si la cola está
-	 * vacía la tarea es realizada inmediatamente
+	 * vacía la tarea es realizada inmediatamente.<br>
+	 * <br>
+	 * La mayoria de las implementaciones utilizan el listener y handler de errores actuales para la
+	 * tarea al momento de invocar este método. Por mas que se modifiquen a posteriori, las tareas
+	 * ya encoladas utilizaran el anterior
 	 * 
 	 * @param tarea
 	 *            Tarea a realizar
@@ -48,7 +52,11 @@ public interface TaskProcessor extends ThreadOwner, Detenible {
 	 * Agrega la tarea pasada en el scheduler interno, de manera de ser procesada después de que
 	 * pase el tiempo indicado como delay.<br>
 	 * Al momento de cumplirse el delay la tarea será agregada en la cola de pendientes, por lo que
-	 * su ejecución real podrá retrasarse dependiendo de la carga del procesador
+	 * su ejecución real podrá retrasarse dependiendo de la carga del procesador.<br>
+	 * <br>
+	 * La mayoria de las implementaciones utilizan el listener y handler de errores actuales para la
+	 * tarea al momento de invocar este método. Por mas que se modifiquen a posteriori, las tareas
+	 * ya encoladas utilizaran el anterior
 	 * 
 	 * @param workDelay
 	 *            Espera a realizar antes de procesar el trabajo

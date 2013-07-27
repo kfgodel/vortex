@@ -15,8 +15,10 @@ package net.gaia.taskprocessor.executor;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.metrics.TaskProcessingListener;
+import net.gaia.taskprocessor.parallelizer.ProcessorDelegatorParallelizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +39,8 @@ public class TaskWorker implements Runnable {
 	private ConcurrentLinkedQueue<SubmittedTask> pendingTasks;
 
 	private TaskProcessingListener metrics;
+
+	private WorkParallelizer workParalellizer;
 
 	/**
 	 * Quita tareas pendientes de la cola de tareas, hasta que no quede nada
@@ -66,7 +70,7 @@ public class TaskWorker implements Runnable {
 			return;
 		}
 		try {
-			nextRunnableTask.executeWorkUnit();
+			nextRunnableTask.executeWorkUnit(workParalellizer);
 		} catch (final Exception e) {
 			LOG.error("Se escapo una excepción no controlada de la tarea ejecutada. Omitiendo error", e);
 		}
@@ -74,10 +78,11 @@ public class TaskWorker implements Runnable {
 	}
 
 	public static TaskWorker create(final ConcurrentLinkedQueue<SubmittedTask> inmediatePendingTasks,
-			final TaskProcessingListener metrics) {
+			final TaskProcessingListener metrics, final TaskProcessor taskProcessor) {
 		final TaskWorker worker = new TaskWorker();
 		worker.pendingTasks = inmediatePendingTasks;
 		worker.metrics = metrics;
+		worker.workParalellizer = ProcessorDelegatorParallelizer.create(taskProcessor);
 		return worker;
 	}
 }

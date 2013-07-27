@@ -20,5 +20,6 @@ package net.gaia.taskprocessor.meta;
 public class Decision {
 
 	public static final String SE_USA_UN_SOLO_THREAD_POR_DEFAULT = "Al crear el taskprocessor solo tiene un thread si no se especifica distinto en la config";
+	public static final String AL_CREAR_LA_TAREA_SE_DEFINE_LISTENER_Y_HANDLER = "Aunque se modifique el handler de errores o el listener de tareas para un procesador, las tareas creadas previamente usaran el previo";
 
 }
