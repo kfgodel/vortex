@@ -12,8 +12,6 @@
  */
 package net.gaia.taskprocessor.parallel;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.RejectedExecutionException;
@@ -23,6 +21,7 @@ import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
+import net.gaia.taskprocessor.parallel.array.LimitedArrayCollection;
 import net.gaia.taskprocessor.parallelizer.ListCollectorParallelizer;
 
 import org.slf4j.Logger;
@@ -70,7 +69,7 @@ public class ParallelWorker implements Runnable {
 	/**
 	 * Cola exclusiva para procesar las tareas
 	 */
-	private List<SubmittedTask> exclusiveQueue;
+	private LimitedArrayCollection<SubmittedTask> exclusiveQueue;
 
 	/**
 	 * Flag para saber cuándo nos detuvieron
@@ -145,7 +144,8 @@ public class ParallelWorker implements Runnable {
 	 * Cancela todas las tareas exclusivas que estén pendientes
 	 */
 	private void cancelarTareasExclusivas() {
-		for (final SubmittedTask tareaPendiente : exclusiveQueue) {
+		for (int i = 0; i < exclusiveQueue.size(); i++) {
+			final SubmittedTask tareaPendiente = exclusiveQueue.getItemAt(i);
 			tareaPendiente.cancelExecution(true);
 		}
 		exclusiveQueue.clear();
@@ -214,13 +214,14 @@ public class ParallelWorker implements Runnable {
 		if (cantidadPendiente == 0) {
 			return;
 		}
-		for (int i = 0; i < cantidadPendiente && running; i++) {
-			final SubmittedTask tareaExclusiva = exclusiveQueue.get(i);
-			procesarTarea(tareaExclusiva);
-		}
-		// Si todavía quedan tareas es porque nos detuvieron antes
-		if (!exclusiveQueue.isEmpty()) {
-			cancelarTareasExclusivas();
+		for (int i = 0; i < cantidadPendiente; i++) {
+			final SubmittedTask tareaExclusiva = exclusiveQueue.getItemAt(i);
+			if (running) {
+				procesarTarea(tareaExclusiva);
+			} else {
+				// Si nos detuvieron, cancelamos lo que teníamos como exclusivo
+				tareaExclusiva.cancelExecution(true);
+			}
 		}
 
 		// La vaciamos para evitar referencias
@@ -329,7 +330,7 @@ public class ParallelWorker implements Runnable {
 	 */
 	public static ParallelWorker create(final int workerIndex, final BlockingDeque<SubmittedTask>[] sharedQueues) {
 		final ParallelWorker worker = new ParallelWorker();
-		worker.exclusiveQueue = new ArrayList<SubmittedTask>(TAMANIO_COLA_EXCLUSIVA);
+		worker.exclusiveQueue = LimitedArrayCollection.create(TAMANIO_COLA_EXCLUSIVA);
 		worker.workerIndex = workerIndex;
 		worker.sharedQueues = sharedQueues;
 		worker.running = true;
