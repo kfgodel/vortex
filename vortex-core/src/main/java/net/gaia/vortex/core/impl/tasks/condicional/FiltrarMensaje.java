@@ -3,6 +3,7 @@
  */
 package net.gaia.vortex.core.impl.tasks.condicional;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
@@ -62,8 +63,8 @@ public class FiltrarMensaje implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	
-	public WorkUnit doWork() throws InterruptedException {
+
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		Loggers.ATOMOS.trace("Evaluando condicion[{}] en mensaje[{}] para decidir delegado", condicion, mensaje);
 		ResultadoDeCondicion resultadoDeCondicion;
 		try {
@@ -71,16 +72,17 @@ public class FiltrarMensaje implements WorkUnit {
 		} catch (final Exception e) {
 			LOG.error("Se produjo un error al evaluar la condicion[" + condicion + "] sobre el mensaje[" + mensaje
 					+ "] para bifurcar. Descartando mensaje", e);
-			return null;
+			return;
 		}
 		if (resultadoDeCondicion.esBooleano() && resultadoDeCondicion.esFalse()) {
 			Loggers.ATOMOS.debug("Evaluo[{}] la condición[{}] descartando mensaje[{}]. No llegará a nodo[{}]",
 					new Object[] { resultadoDeCondicion, condicion, mensaje, delegadoPorTrue.toShortString() });
-			return null;
+			return;
 		}
 		Loggers.ATOMOS.debug("Evaluo[{}] la condición[{}] delegando mensaje[{}] a nodo[{}]", new Object[] {
 				resultadoDeCondicion, condicion, mensaje, delegadoPorTrue.toShortString() });
-		return DelegarMensaje.create(mensaje, delegadoPorTrue);
+		final DelegarMensaje delegacion = DelegarMensaje.create(mensaje, delegadoPorTrue);
+		parallelizer.submitAndForget(delegacion);
 	}
 
 	/**
@@ -101,7 +103,8 @@ public class FiltrarMensaje implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(condicion_FIELD, getCondicion()).add(delegadoPorTrue_FIELD, getDelegadoPorTrue())
 				.add(mensaje_FIELD, getMensaje()).toString();

@@ -3,6 +3,7 @@
  */
 package net.gaia.vortex.core.impl.tasks.condicional;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
@@ -73,8 +74,8 @@ public class BifurcarMensaje implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	
-	public WorkUnit doWork() throws InterruptedException {
+
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		Loggers.ATOMOS.trace("Evaluando condicion[{}] en mensaje[{}] para decidir delegado", condicion, mensaje);
 		ResultadoDeCondicion resultadoDeCondicion;
 		try {
@@ -82,12 +83,12 @@ public class BifurcarMensaje implements WorkUnit {
 		} catch (final Exception e) {
 			LOG.error("Se produjo un error al evaluar la condicion[" + condicion + "] sobre el mensaje[" + mensaje
 					+ "] al bifurcar. Descartando mensaje", e);
-			return null;
+			return;
 		}
 		if (!resultadoDeCondicion.esBooleano()) {
 			LOG.error("No es posible bifurcar el mensaje porque la condicion[" + condicion + "] sobre el mensaje["
 					+ mensaje + "] es indecidible. Descartando mensaje");
-			return null;
+			return;
 		}
 		Receptor delegadoElegido;
 		if (resultadoDeCondicion.esTrue()) {
@@ -97,7 +98,8 @@ public class BifurcarMensaje implements WorkUnit {
 		}
 		Loggers.ATOMOS.debug("Evaluo[{}] la condición[{}] delegando mensaje[{}] a nodo[{}]", new Object[] {
 				resultadoDeCondicion, condicion, mensaje, delegadoElegido.toShortString() });
-		return DelegarMensaje.create(mensaje, delegadoElegido);
+		DelegarMensaje delegacion = DelegarMensaje.create(mensaje, delegadoElegido);
+		parallelizer.submitAndForget(delegacion);
 	}
 
 	/**
@@ -114,7 +116,8 @@ public class BifurcarMensaje implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(condicion_FIELD, condicion).add(delegadoPorTrue_FIELD, delegadoPorTrue)
 				.add(delegadoPorFalse_FIELD, delegadoPorFalse).add(mensaje_FIELD, mensaje).toString();

@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.portal.impl.tasks;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.portal.api.mensaje.HandlerDeMensaje;
 
@@ -38,15 +39,14 @@ public class InvocarHandler<T> implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	
-	public WorkUnit doWork() throws InterruptedException {
+
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		try {
 			handler.onMensajeRecibido(mensajeRecibido);
 		} catch (final Exception e) {
 			LOG.error("Se produjo un error en el handler[" + handler + "] al recibir el mensaje[" + mensajeRecibido
 					+ "]", e);
 		}
-		return null;
 	}
 
 	public static <T> InvocarHandler<T> create(final T mensajeRecibido, final HandlerDeMensaje<? super T> handler) {
@@ -59,7 +59,8 @@ public class InvocarHandler<T> implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(mensajeRecibido_FIELD, mensajeRecibido).add(handler_FIELD, handler).toString();
 	}

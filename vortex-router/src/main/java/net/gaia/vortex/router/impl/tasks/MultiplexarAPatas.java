@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
-import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensaje;
 import net.gaia.vortex.helpers.VortexEquals;
 import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import net.gaia.vortex.router.impl.condiciones.EsMetaMensaje;
@@ -59,25 +59,28 @@ public class MultiplexarAPatas implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	
-	public WorkUnit doWork() throws InterruptedException {
+
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		if (patas.isEmpty()) {
 			LOG.debug("El mensaje[{}] es decartado porque no existen patas para recibirlo", mensaje.toShortString());
-			return null;
+			return;
 		}
 		final Collection<PataBidireccional> destinos = determinarDestinosDeAcuerdoAlMensaje();
 		if (destinos.isEmpty()) {
-			return null;
+			return;
 		}
 
-		Loggers.ATOMOS.debug("Multiplexando mensaje[{}] a {} patas{}", new Object[] { mensaje, destinos.size(),
-				destinos });
-		for (final PataBidireccional destino : destinos) {
-			LOG.debug("Delegando mensaje[{}] a [{}]", mensaje.toShortString(), destino.toShortString());
-			final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, destino);
-			processor.process(entregaEnBackground);
-		}
-		return null;
+		// Loggers.ATOMOS.debug("Multiplexando mensaje[{}] a {} patas{}", new Object[] { mensaje,
+		// destinos.size(),
+		// destinos });
+		final MultiplexarMensaje multiplexarMensaje = MultiplexarMensaje.create(mensaje, destinos, null);
+		multiplexarMensaje.doWork(parallelizer);
+		// for (final PataBidireccional destino : destinos) {
+		// LOG.debug("Delegando mensaje[{}] a [{}]", mensaje.toShortString(),
+		// destino.toShortString());
+		// final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, destino);
+		// processor.process(entregaEnBackground);
+		// }
 	}
 
 	/**
@@ -125,7 +128,8 @@ public class MultiplexarAPatas implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(patas_FIELD, patas).add(mensaje_FIELD, mensaje.toShortString()).toString();
 	}

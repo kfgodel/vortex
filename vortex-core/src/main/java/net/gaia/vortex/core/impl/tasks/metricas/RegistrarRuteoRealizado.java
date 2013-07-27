@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.core.impl.tasks.metricas;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -28,10 +29,9 @@ public class RegistrarRuteoRealizado implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	
-	public WorkUnit doWork() throws InterruptedException {
+
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		metricas.registrarOutput();
-		return null;
 	}
 
 	public static RegistrarRuteoRealizado create(final ListenerDeMetricas metricas) {
@@ -43,7 +43,8 @@ public class RegistrarRuteoRealizado implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).toString();
 	}

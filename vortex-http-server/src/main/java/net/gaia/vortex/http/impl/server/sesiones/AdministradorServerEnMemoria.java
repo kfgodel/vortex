@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
@@ -53,13 +54,12 @@ public class AdministradorServerEnMemoria implements AdministradorDeSesionesServ
 	private final WorkUnit tareaDeLimpiezaDeSesiones = new WorkUnit() {
 
 		@Override
-		public WorkUnit doWork() throws InterruptedException {
+		public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 			if (detenido) {
 				// No hacemos nada si está detenido el administrador
-				return null;
+				return;
 			}
 			onLimpiezaDeSesiones();
-			return null;
 		}
 	};
 

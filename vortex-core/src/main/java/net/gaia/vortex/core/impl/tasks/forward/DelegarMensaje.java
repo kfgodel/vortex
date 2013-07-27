@@ -3,6 +3,7 @@
  */
 package net.gaia.vortex.core.impl.tasks.forward;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
@@ -32,8 +33,8 @@ public class DelegarMensaje implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	
-	public WorkUnit doWork() throws InterruptedException {
+
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		Loggers.ATOMOS.debug("Delegando a nodo[{}] el mensaje[{}]", delegado.toShortString(), mensaje);
 		// Intentamos optimizar la entrega de mensaje no mandando a uno que ya lo recibió
 		if (delegado instanceof ComponenteConMemoria) {
@@ -42,7 +43,7 @@ public class DelegarMensaje implements WorkUnit {
 				Loggers.ATOMOS.debug("Evitando delegación duplicada a nodo[{}] del mensaje[{}]",
 						delegado.toShortString(), mensaje);
 				// Evitamos mandarlo a un componente que ya pasó para optimizar
-				return null;
+				return;
 			}
 		}
 		// No paso por el delegado, o no podemos saberlo, en cualquier caso lo entregamos
@@ -53,7 +54,6 @@ public class DelegarMensaje implements WorkUnit {
 					+ "]. Ignorando", e);
 		}
 		// Nada más que hacer
-		return null;
 	}
 
 	public static DelegarMensaje create(final MensajeVortex mensaje, final Receptor delegado) {
@@ -66,7 +66,8 @@ public class DelegarMensaje implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(mensaje_FIELD, mensaje).add(delegado_FIELD, delegado).toString();
 	}

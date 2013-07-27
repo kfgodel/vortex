@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.portal.impl.tasks;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.portal.api.mensaje.HandlerDeMensaje;
@@ -47,17 +48,18 @@ public class DesvortificarEInvocarHandler<T> implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	
-	public WorkUnit doWork() throws InterruptedException {
+
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		T desvortificado;
 		try {
 			desvortificado = mapeador.convertirDesdeVortex(mensaje, tipoEsperado);
 		} catch (final ErrorDeMapeoVortexException e) {
 			LOG.error("Se produjo un error al desvortificar un mensaje[" + mensaje + "] con el mapeador[" + mapeador
 					+ "]. El mensaje no llegará al handler[" + handlerDeMensajes + "]", e);
-			return null;
+			return;
 		}
-		return InvocarHandler.create(desvortificado, handlerDeMensajes);
+		final InvocarHandler<T> invocacion = InvocarHandler.create(desvortificado, handlerDeMensajes);
+		parallelizer.submitAndForget(invocacion);
 	}
 
 	public static <T> DesvortificarEInvocarHandler<T> create(final MensajeVortex mensaje,
@@ -74,7 +76,8 @@ public class DesvortificarEInvocarHandler<T> implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(tipoEsperado_FIELD, tipoEsperado).add(mensaje_FIELD, mensaje)
 				.add(mapeador_FIELD, mapeador).add(handlerDeMensajes_FIELD, handlerDeMensajes).toString();

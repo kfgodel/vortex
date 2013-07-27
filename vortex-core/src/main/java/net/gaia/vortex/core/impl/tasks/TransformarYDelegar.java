@@ -3,6 +3,7 @@
  */
 package net.gaia.vortex.core.impl.tasks;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -36,8 +37,8 @@ public class TransformarYDelegar implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	
-	public WorkUnit doWork() throws InterruptedException {
+
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		Loggers.ATOMOS.trace("Transformando con [{}] el mensaje[{}]", transformacion, mensajeOriginal);
 		MensajeVortex mensajeTransformado;
 		try {
@@ -47,11 +48,12 @@ public class TransformarYDelegar implements WorkUnit {
 					+ mensajeOriginal + "] antes de delegarlo al delegado[" + delegado
 					+ "]. Descartando mensajeOriginal", e);
 			// Nada más para hacer
-			return null;
+			return;
 		}
 		Loggers.ATOMOS.debug("Transformado mensaje original[{}] en [{}]", mensajeOriginal, mensajeTransformado);
 		// La delegacion es una tarea posterior
-		return DelegarMensaje.create(mensajeTransformado, delegado);
+		final DelegarMensaje delegacion = DelegarMensaje.create(mensajeTransformado, delegado);
+		parallelizer.submitAndForget(delegacion);
 	}
 
 	public static TransformarYDelegar create(final MensajeVortex mensajeOriginal, final Transformacion transformacion,
@@ -66,7 +68,8 @@ public class TransformarYDelegar implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(transformacion_FIELD, transformacion).add(delegado_FIELD, delegado)
 				.add(mensaje_FIELD, mensajeOriginal).toString();

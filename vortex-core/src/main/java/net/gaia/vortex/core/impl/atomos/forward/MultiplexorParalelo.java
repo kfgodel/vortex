@@ -32,8 +32,7 @@ public class MultiplexorParalelo extends MultiplexorSupport {
 	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		// Por cada destino derivamos la entrega al procesador interno
-		final MultiplexarMensaje multiplexion = MultiplexarMensaje.create(mensaje, getDestinos(), getProcessor(),
-				listenerMetricas);
+		final MultiplexarMensaje multiplexion = MultiplexarMensaje.create(mensaje, getDestinos(), listenerMetricas);
 		return multiplexion;
 	}
 

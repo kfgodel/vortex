@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.http.impl.tasks;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
@@ -31,10 +32,10 @@ public class AcumularEnSesion implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	
-	public WorkUnit doWork() throws InterruptedException {
+
+	@Override
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		sesion.onMensajeDesdeVortex(mensaje);
-		return null;
 	}
 
 	public static AcumularEnSesion create(final MensajeVortex mensaje, final SesionVortexHttp sesion) {

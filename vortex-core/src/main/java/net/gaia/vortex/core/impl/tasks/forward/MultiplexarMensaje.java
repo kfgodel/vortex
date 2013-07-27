@@ -13,18 +13,13 @@
 package net.gaia.vortex.core.impl.tasks.forward;
 
 import java.util.Collection;
-import java.util.concurrent.RejectedExecutionException;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.tasks.metricas.RegistrarRuteoRealizado;
 import net.gaia.vortex.core.prog.Loggers;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -35,16 +30,12 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 public class MultiplexarMensaje implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(MultiplexarMensaje.class);
 
 	private MensajeVortex mensaje;
 	public static final String mensaje_FIELD = "mensaje";
 
 	private Collection<? extends Receptor> destinos;
 	public static final String destinos_FIELD = "destinos";
-
-	private TaskProcessor processor;
-	public static final String processor_FIELD = "processor";
 
 	private ListenerDeMetricas listenerDeMetricas;
 	public static final String listenerDeMetricas_FIELD = "listenerDeMetricas";
@@ -53,37 +44,28 @@ public class MultiplexarMensaje implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 
-	public WorkUnit doWork() throws InterruptedException {
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		Loggers.ATOMOS.debug("Multiplexando mensaje[{}] a {} destinos{}", new Object[] { mensaje, destinos.size(),
 				destinos });
 		for (final Receptor destino : destinos) {
 			final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, destino);
-			try {
-				processor.process(entregaEnBackground);
-			} catch (final RejectedExecutionException e) {
-				if (processor.isDetenido()) {
-					LOG.debug("El procesador esta detenido y rechazo una tarea de entrega. Abortando Multiplexion");
-					return null;
-				} else {
-					LOG.debug("El procesador rechazo una tarea de entrega", e);
-				}
-			}
+			parallelizer.submitAndForget(entregaEnBackground);
 		}
 		if (listenerDeMetricas == null) {
 			// Nada más que hacer
-			return null;
+			return;
 		}
 		Loggers.ATOMOS.debug("Registrando output en metricas del mensaje[{}]", mensaje);
 		// Si tenemos listener registramos que ya ruteamos cuando podamos
-		return RegistrarRuteoRealizado.create(listenerDeMetricas);
+		final RegistrarRuteoRealizado registro = RegistrarRuteoRealizado.create(listenerDeMetricas);
+		parallelizer.submitAndForget(registro);
 	}
 
 	public static MultiplexarMensaje create(final MensajeVortex mensaje, final Collection<? extends Receptor> destinos,
-			final TaskProcessor processor, final ListenerDeMetricas listenerMetricas) {
+			final ListenerDeMetricas listenerMetricas) {
 		final MultiplexarMensaje multiplexion = new MultiplexarMensaje();
 		multiplexion.destinos = destinos;
 		multiplexion.mensaje = mensaje;
-		multiplexion.processor = processor;
 		multiplexion.listenerDeMetricas = listenerMetricas;
 		return multiplexion;
 	}
@@ -94,7 +76,6 @@ public class MultiplexarMensaje implements WorkUnit {
 
 	@Override
 	public String toString() {
-		return ToString.de(this).add(destinos_FIELD, destinos).add(mensaje_FIELD, mensaje)
-				.add(processor_FIELD, processor).toString();
+		return ToString.de(this).add(destinos_FIELD, destinos).add(mensaje_FIELD, mensaje).toString();
 	}
 }

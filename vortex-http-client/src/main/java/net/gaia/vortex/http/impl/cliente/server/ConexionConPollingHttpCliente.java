@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.tasks.MinMaxWorkUnit;
@@ -61,9 +62,8 @@ public class ConexionConPollingHttpCliente {
 		conexion.tareaDeIntercambioDeMensajes = MinMaxWorkUnit.crearWrapperDe(new WorkUnit() {
 
 			@Override
-			public WorkUnit doWork() throws InterruptedException {
+			public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 				conexion.intercambiarMensajesConServer();
-				return null;
 			}
 		}, procesor, 0, POLLING_INICIAL_EN_MILLIS);
 		return conexion;

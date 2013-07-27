@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.sockets.impl.tasks;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 
 import org.slf4j.Logger;
@@ -37,15 +38,15 @@ public class EnviarPorSocket implements WorkUnit {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-	
-	public WorkUnit doWork() throws InterruptedException {
+
+	@Override
+	public void doWork(final WorkParallelizer parallelizer) throws InterruptedException {
 		try {
 			socket.send(datos);
 		} catch (final Exception e) {
 			LOG.error("Se produjo un error enviado los datos[" + datos + "] por el socket[" + socket
 					+ "]. Ignorando error", e);
 		}
-		return null;
 	}
 
 	public static EnviarPorSocket create(final ObjectSocket socket, final Object datos) {
@@ -58,7 +59,8 @@ public class EnviarPorSocket implements WorkUnit {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(socket_FIELD, socket).add(datos_FIELD, datos).toString();
 	}
