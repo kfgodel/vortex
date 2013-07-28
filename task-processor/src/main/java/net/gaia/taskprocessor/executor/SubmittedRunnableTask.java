@@ -125,6 +125,13 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
+		processWorkunit();
+	}
+
+	/**
+	 * Ejecuta el workUnit de esta tarea
+	 */
+	private void processWorkunit() {
 		currentState = SubmittedTaskState.PROCESSING;
 		notifyListenerStartingProcess();
 		try {
@@ -270,13 +277,21 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * Ejecuta esta tarea pendiente a través de su {@link Future} de manera de notificar a los
 	 * threads que puedan estar esperando el resultado
 	 */
-	public void executeWorkUnit(final WorkParallelizer parallelizer) {
+	public void executeWithCurrentThread(final WorkParallelizer parallelizer) {
 		this.temporalParallelizer = parallelizer;
 		try {
 			this.ownFuture.run();
 		} finally {
 			this.temporalParallelizer = null;
 		}
+	}
+
+	public WorkParallelizer getTemporalParallelizer() {
+		return temporalParallelizer;
+	}
+
+	public void setTemporalParallelizer(final WorkParallelizer temporalParallelizer) {
+		this.temporalParallelizer = temporalParallelizer;
 	}
 
 	/**
@@ -333,6 +348,14 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	@Override
 	public String toString() {
 		return ToString.de(this).add(currentState_FIELD, currentState).add(workUnit_FIELD, workUnit).toString();
+	}
+
+	public FutureTask<?> getOwnFuture() {
+		return ownFuture;
+	}
+
+	public void setOwnFuture(final FutureTask<?> ownFuture) {
+		this.ownFuture = ownFuture;
 	}
 
 }

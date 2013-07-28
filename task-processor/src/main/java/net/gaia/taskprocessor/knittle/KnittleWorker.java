@@ -69,7 +69,7 @@ public class KnittleWorker implements Runnable {
 			return;
 		}
 		try {
-			runnableTask.executeWorkUnit(this.parallelizer);
+			runnableTask.executeWithCurrentThread(this.parallelizer);
 		} catch (final Exception e) {
 			LOG.error("Se escapo una excepción no controlada de la tarea ejecutada. Omitiendo error", e);
 		}

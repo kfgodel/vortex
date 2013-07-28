@@ -70,7 +70,7 @@ public class TaskWorker implements Runnable {
 			return;
 		}
 		try {
-			nextRunnableTask.executeWorkUnit(workParalellizer);
+			nextRunnableTask.executeWithCurrentThread(workParalellizer);
 		} catch (final Exception e) {
 			LOG.error("Se escapo una excepción no controlada de la tarea ejecutada. Omitiendo error", e);
 		}

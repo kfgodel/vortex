@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
+import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
@@ -50,11 +51,13 @@ public class ForkJoinSubmittedTask extends RecursiveAction implements SubmittedT
 	 * Tarea interna a ejecutar
 	 */
 	private WorkUnit workUnit;
+	public static final String workUnit_FIELD = "workUnit";
 
 	/**
 	 * Estado de esta tarea
 	 */
 	private volatile SubmittedTaskState currentState;
+	public static final String currentState_FIELD = "currentState";
 
 	/**
 	 * Excepción producida al ejecutar esta tarea
@@ -285,4 +288,13 @@ public class ForkJoinSubmittedTask extends RecursiveAction implements SubmittedT
 					e);
 		}
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(currentState_FIELD, currentState).con(workUnit_FIELD, workUnit).toString();
+	}
+
 }

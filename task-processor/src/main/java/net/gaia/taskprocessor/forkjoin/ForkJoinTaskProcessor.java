@@ -18,16 +18,19 @@ import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.RejectedExecutionException;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
-import net.gaia.taskprocessor.api.TaskCriteria;
 import net.gaia.taskprocessor.api.TaskExceptionHandler;
 import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.TaskProcessorListener;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.WorkUnitWithExternalWait;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.api.processor.WaitingTaskProcessor;
+import net.gaia.taskprocessor.api.processor.delayer.DelayedDelegator;
 import net.gaia.taskprocessor.api.processor.delayer.DelegableProcessor;
 import net.gaia.taskprocessor.delayer.ScheduledThreadPoolDelegator;
+import net.gaia.taskprocessor.waiting.CachedThreadWitingProcessor;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
@@ -46,7 +49,17 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	/**
 	 * Scheduler que nos permite retrasar las ejecuciones de tareas en el tiempo
 	 */
-	private ScheduledThreadPoolDelegator delayedDelegator;
+	private DelayedDelegator delayedDelegator;
+
+	/**
+	 * El procesador para tareas con espera
+	 */
+	private WaitingTaskProcessor waitingProcessor;
+
+	/**
+	 * Paralelizador de las tareas para este processor
+	 */
+	private WorkParallelizer parallelizer;
 
 	/**
 	 * Handler para notificar los errores en las tareas
@@ -58,12 +71,10 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	 */
 	private volatile TaskProcessorListener taskListener;
 
-	private volatile boolean detenido;
-
 	/**
-	 * Paralelizador de las tareas para este processor
+	 * Flag que indica el estado de este procesador para rechazar tareas nuevas
 	 */
-	private WorkParallelizer parallelizer;
+	private volatile boolean detenido;
 
 	/**
 	 * verifica que no hayan detenido este procesador
@@ -108,12 +119,18 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	/**
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
-	public SubmittedTask process(final WorkUnit tarea) {
+	public SubmittedTask process(final WorkUnit work) {
 		checkExecutionStatus();
-		if (tarea == null) {
+		if (work == null) {
 			throw new IllegalArgumentException("El workUnit no puede ser null");
 		}
-		final ForkJoinSubmittedTask submittedTask = ForkJoinSubmittedTask.create(tarea, this, getProcessorListener());
+
+		if (work instanceof WorkUnitWithExternalWait) {
+			// Es una tarea que puede que podría bloquear nuestro threads. Derivamos al
+			// Procesador para tareas con espera
+			return waitingProcessor.process(work);
+		}
+		final ForkJoinSubmittedTask submittedTask = ForkJoinSubmittedTask.create(work, this, getProcessorListener());
 		executeNow(submittedTask);
 		return submittedTask;
 	}
@@ -136,10 +153,13 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	}
 
 	/**
+	 * Indica la cantidad de threads usados en el executor principal. Ignorando la cantidad de
+	 * threads adicionales
+	 * 
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getThreadPoolSize()
 	 */
 	public int getThreadPoolSize() {
-		return threadPool.getPoolSize();
+		return threadPool.getParallelism();
 	}
 
 	/**
@@ -171,25 +191,19 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	}
 
 	/**
-	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#removeTasksMatching(net.gaia.taskprocessor.api.TaskCriteria)
-	 */
-	public void removeTasksMatching(final TaskCriteria criteria) {
-		throw new UnsupportedOperationException("Por ahora no se pueden eliminar tareas de este procesador");
-	}
-
-	/**
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#detener()
 	 */
 	public void detener() {
-		detenido = true;
+		waitingProcessor.detener();
 		threadPool.shutdownNow();
+		detenido = true;
 	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#getPendingTaskCount()
 	 */
 	public int getPendingTaskCount() {
-		return threadPool.getQueuedSubmissionCount();
+		return threadPool.getQueuedSubmissionCount() + this.waitingProcessor.getPendingTaskCount();
 	}
 
 	/**
@@ -213,6 +227,7 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 		processor.delayedDelegator = ScheduledThreadPoolDelegator.create(processor);
 		processor.detenido = false;
 		processor.parallelizer = ForkJoinParallelizer.create(processor);
+		processor.waitingProcessor = CachedThreadWitingProcessor.create(processor, processor.parallelizer);
 		return processor;
 	}
 

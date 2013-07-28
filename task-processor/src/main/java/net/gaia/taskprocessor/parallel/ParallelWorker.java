@@ -243,7 +243,7 @@ public class ParallelWorker implements Runnable {
 			return;
 		}
 		try {
-			runnableTask.executeWorkUnit(parallelizer);
+			runnableTask.executeWithCurrentThread(parallelizer);
 		} catch (final Exception e) {
 			LOG.error("Se escapo una excepción no controlada de la tarea ejecutada. Omitiendo error", e);
 		}

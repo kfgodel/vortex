@@ -102,7 +102,7 @@ public class ExecutorBasedTaskProcesor implements TaskProcessor, DelegableProces
 		final TimeMagnitude maxIdleTimePerThread = config.getMaxIdleTimePerThread();
 		processor.inmediateExecutor = new ThreadPoolExecutor(minimunPoolSize, maximunPoolSize,
 				maxIdleTimePerThread.getQuantity(), maxIdleTimePerThread.getTimeUnit(), executorTaskQueue,
-				ProcessorThreadFactory.create("TaskProcessor", processor), TaskWorkerRejectionHandler.create());
+				ProcessorThreadFactory.create("ExecutorProcessor", processor), TaskWorkerRejectionHandler.create());
 		processor.inmediatePendingTasks = new ConcurrentLinkedQueue<SubmittedTask>();
 		processor.threadBouncer = ThreadBouncer.createForExecutorBased(processor, config,
 				processor.inmediatePendingTasks);
