@@ -165,13 +165,12 @@ public class ForkJoinSubmittedTask extends RecursiveAction implements SubmittedT
 		return failingError;
 	}
 
-	public static ForkJoinSubmittedTask create(final WorkUnit workUnit, final ForkJoinTaskProcessor taskProcessor,
-			final TaskProcessorListener listener) {
+	public static ForkJoinSubmittedTask create(final WorkUnit workUnit, final ForkJoinTaskProcessor taskProcessor) {
 		final ForkJoinSubmittedTask task = new ForkJoinSubmittedTask();
 		task.workUnit = workUnit;
 		task.processor = taskProcessor;
+		task.listener = taskProcessor.getProcessorListener();
 		task.currentState = SubmittedTaskState.PENDING;
-		task.listener = listener;
 		// Notificamos que la agregamos como pendiente
 		task.notifyListenerAcceptedTask();
 		return task;

@@ -12,9 +12,10 @@
  */
 package net.gaia.taskprocessor.forkjoin;
 
-import net.gaia.taskprocessor.api.TaskProcessorListener;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.WorkUnitWithExternalWait;
+import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
 
 /**
  * Esta clase implementa el paralelizador de tareas de un {@link ForkJoinTaskProcessor}
@@ -23,15 +24,34 @@ import net.gaia.taskprocessor.api.WorkUnit;
  */
 public class ForkJoinParallelizer implements WorkParallelizer {
 
+	/**
+	 * Procesador de las tareas
+	 */
 	private ForkJoinTaskProcessor taskProcessor;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkParallelizer#submitAndForget(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public void submitAndForget(final WorkUnit otherWorkUnit) {
-		final TaskProcessorListener listener = taskProcessor.getProcessorListener();
-		final ForkJoinSubmittedTask extraTask = ForkJoinSubmittedTask.create(otherWorkUnit, taskProcessor, listener);
+		if (otherWorkUnit instanceof WorkUnitWithExternalWait) {
+			// Requiere procesamiento especial porque puede bloquearse
+			procesarTrabajoBloqueable((WorkUnitWithExternalWait) otherWorkUnit);
+			return;
+		}
+		// Es una tarea normal, la procesamos normalmente
+		final ForkJoinSubmittedTask extraTask = ForkJoinSubmittedTask.create(otherWorkUnit, taskProcessor);
 		extraTask.fork();
+	}
+
+	/**
+	 * Procesa la tarea pasada usando el componente del procesador principal que puede bloquearse
+	 * 
+	 * @param otherWorkUnit
+	 *            La unidad a procesar
+	 */
+	private void procesarTrabajoBloqueable(final WorkUnitWithExternalWait otherWorkUnit) {
+		final SubmittedRunnableTask tareaBloqueable = SubmittedRunnableTask.create(otherWorkUnit, taskProcessor);
+		taskProcessor.getWaitingProcessor().executeWithOwnThread(tareaBloqueable);
 	}
 
 	public static ForkJoinParallelizer create(final ForkJoinTaskProcessor taskProcessor) {

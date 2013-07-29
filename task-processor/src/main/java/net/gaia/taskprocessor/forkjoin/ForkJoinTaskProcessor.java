@@ -150,7 +150,7 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 			final SubmittedRunnableTask taskWithWait = SubmittedRunnableTask.create(work, this);
 			return taskWithWait;
 		}
-		final ForkJoinSubmittedTask taskWihoutWait = ForkJoinSubmittedTask.create(work, this, getProcessorListener());
+		final ForkJoinSubmittedTask taskWihoutWait = ForkJoinSubmittedTask.create(work, this);
 		return taskWihoutWait;
 	}
 
@@ -259,6 +259,10 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 
 	public WorkParallelizer getParallelizer() {
 		return parallelizer;
+	}
+
+	public WaitingTaskProcessor getWaitingProcessor() {
+		return waitingProcessor;
 	}
 
 }
