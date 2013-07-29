@@ -15,7 +15,8 @@ package net.gaia.vortex.http.impl.cliente.server;
 import java.util.List;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
 
@@ -41,7 +42,7 @@ public class TestConexionConPolling {
 
 	@Before
 	public void crearProcesador() {
-		procesador = ExecutorBasedTaskProcesor.createOptimun();
+		procesador = ForkJoinTaskProcessor.create(TaskProcessorConfiguration.createOptimun());
 	}
 
 	@After
@@ -55,7 +56,8 @@ public class TestConexionConPolling {
 				ApacheResponseProvider.create());
 		final ConexionConPollingHttpCliente conexion = ConexionConPollingHttpCliente.create(procesador, servidor,
 				JacksonHttpTextualizer.create(), new HandlerHttpDeMensajesRecibidos() {
-					
+
+					@Override
 					public void onMensajesRecibidos(final List<MensajeVortex> mensajesRecibidos) {
 						LOG.info("Recibidos del server: {}", mensajesRecibidos);
 					}

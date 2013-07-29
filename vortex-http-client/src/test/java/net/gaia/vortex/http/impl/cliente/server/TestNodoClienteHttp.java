@@ -13,7 +13,8 @@
 package net.gaia.vortex.http.impl.cliente.server;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import net.gaia.vortex.http.impl.moleculas.NodoClienteHttp;
@@ -40,7 +41,7 @@ public class TestNodoClienteHttp {
 
 	@Before
 	public void crearProcesador() {
-		procesador = ExecutorBasedTaskProcesor.createOptimun();
+		procesador = ForkJoinTaskProcessor.create(TaskProcessorConfiguration.createOptimun());
 	}
 
 	@After
@@ -53,7 +54,8 @@ public class TestNodoClienteHttp {
 		final NodoClienteHttp nodoCliente = NodoClienteHttp.createAndConnectTo("http://kfgodel.info:62626", procesador,
 				ApacheResponseProvider.create());
 		nodoCliente.conectarCon(new ReceptorSupport() {
-			
+
+			@Override
 			public void recibir(final MensajeVortex mensaje) {
 				LOG.info("Recibido en nexo http: {}", mensaje);
 			}
