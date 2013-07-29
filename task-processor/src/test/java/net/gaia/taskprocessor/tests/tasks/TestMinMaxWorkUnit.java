@@ -21,8 +21,9 @@ import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.api.tasks.MinMaxWorkUnit;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 
 import org.junit.After;
 import org.junit.Before;
@@ -62,7 +63,7 @@ public class TestMinMaxWorkUnit {
 
 	@Before
 	public void crearProcesador() {
-		procesor = ExecutorBasedTaskProcesor.create(4);
+		procesor = ForkJoinTaskProcessor.create(TaskProcessorConfiguration.createOptimun());
 	}
 
 	@After

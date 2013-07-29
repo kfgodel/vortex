@@ -12,7 +12,8 @@
  */
 package net.gaia.taskprocessor.tests.executor;
 
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -28,7 +29,7 @@ public class TestDePerformanceEnOptimunConSaturacion extends TestDePerformanceCo
 
 	@Before
 	public void crearProcesador() {
-		processor = ExecutorBasedTaskProcesor.createOptimun();
+		processor = ForkJoinTaskProcessor.create(TaskProcessorConfiguration.createOptimun());
 	}
 
 }

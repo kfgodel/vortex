@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.taskprocessor.tests.util.CounterTaskListener;
 import net.gaia.taskprocessor.tests.util.TareaSimulada;
 
@@ -199,7 +199,7 @@ public class TestProcessorPerformanceWithFixedTaskCount {
 	 * @return El procesador creado
 	 */
 	protected TaskProcessor crearProcessor(final TaskProcessorConfiguration config) {
-		final ExecutorBasedTaskProcesor procesor = ExecutorBasedTaskProcesor.create(config);
+		final ForkJoinTaskProcessor procesor = ForkJoinTaskProcessor.create(config);
 		return procesor;
 	}
 }

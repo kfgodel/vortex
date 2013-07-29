@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.taskprocessor.tests.util.CounterTaskListener;
 import net.gaia.taskprocessor.tests.util.TareaSimulada;
 
@@ -155,7 +155,7 @@ public class TestProcessorPerformanceWithFixedTimebox {
 		stressGenerator.setEsperaEntreEjecucionesEnMilis(esperaEntreEjecucionesEnMilis);
 
 		stressGenerator.setEjecutable(new Runnable() {
-			
+
 			public void run() {
 				final TareaSimulada tarea = TareaSimulada.create(duracionDeTareaEnMillis, null);
 				procesor.process(tarea);
@@ -196,7 +196,7 @@ public class TestProcessorPerformanceWithFixedTimebox {
 	 * @return El procesador creado
 	 */
 	protected TaskProcessor crearProcessor(final TaskProcessorConfiguration config) {
-		final ExecutorBasedTaskProcesor procesor = ExecutorBasedTaskProcesor.create(config);
+		final ForkJoinTaskProcessor procesor = ForkJoinTaskProcessor.create(config);
 		return procesor;
 	}
 

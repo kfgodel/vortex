@@ -22,7 +22,7 @@ import net.gaia.taskprocessor.api.SubmittedTaskState;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.taskprocessor.meta.Decision;
 import net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit;
 
@@ -43,7 +43,7 @@ public class TestTaskStateApi {
 
 	@Before
 	public void crearProcesador() {
-		taskProcessor = ExecutorBasedTaskProcesor.create(TaskProcessorConfiguration.create());
+		taskProcessor = ForkJoinTaskProcessor.create(TaskProcessorConfiguration.create());
 	}
 
 	/**

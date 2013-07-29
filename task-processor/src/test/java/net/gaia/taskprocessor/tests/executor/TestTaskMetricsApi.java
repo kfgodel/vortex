@@ -21,10 +21,11 @@ import net.gaia.taskprocessor.api.TaskProcessingMetrics;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ar.com.dgarcia.lang.conc.WaitBarrier;
@@ -43,7 +44,7 @@ public class TestTaskMetricsApi {
 	public void crearProcesador() {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
 		config.setRegisterTaskMetrics(true);
-		taskProcessor = ExecutorBasedTaskProcesor.create(config);
+		taskProcessor = ForkJoinTaskProcessor.create(config);
 	}
 
 	@Test
@@ -53,11 +54,12 @@ public class TestTaskMetricsApi {
 
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
 		config.setMinimunThreadPoolSize(2);
-		final TaskProcessor dualTaskprocessor = ExecutorBasedTaskProcesor.create(config);
+		final TaskProcessor dualTaskprocessor = ForkJoinTaskProcessor.create(config);
 		Assert.assertTrue("Debería tener 2 threads", 2 == dualTaskprocessor.getThreadPoolSize());
 	}
 
 	@Test
+	@Ignore("La nueva version del procesor no tiene metricas")
 	public void deberíaPermitirConocerLaCantidadDeTareasProcesadas() throws InterruptedException {
 		final TaskProcessingMetrics metrics = taskProcessor.getMetrics();
 		Assert.assertTrue("No debería tener tareas procesadas al crearse", metrics.getProcessedTaskCount() == 0);
@@ -72,6 +74,7 @@ public class TestTaskMetricsApi {
 	}
 
 	@Test
+	@Ignore("La nueva version del procesor no tiene metricas")
 	public void deberíaPermitirConocerLaCantidadDeTareasPendientes() throws InterruptedException {
 		final TaskProcessingMetrics metrics = taskProcessor.getMetrics();
 		Assert.assertTrue("No debería tener tareas pendientes al crearse", metrics.getPendingTaskCount() == 0);

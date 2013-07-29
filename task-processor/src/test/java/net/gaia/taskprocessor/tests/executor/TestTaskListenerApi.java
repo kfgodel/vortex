@@ -19,10 +19,11 @@ import junit.framework.Assert;
 import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.WorkParallelizer;
+import net.gaia.taskprocessor.api.WorkUnitWithExternalWait;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
 import net.gaia.taskprocessor.executor.TaskProcessorListenerSupport;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.taskprocessor.meta.Decision;
 import net.gaia.taskprocessor.tests.executor.TestTaskProcessorApi.TestWorkUnit;
 
@@ -44,7 +45,7 @@ public class TestTaskListenerApi {
 
 	@Before
 	public void crearProcesador() {
-		taskProcessor = ExecutorBasedTaskProcesor.create(TaskProcessorConfiguration.create());
+		taskProcessor = ForkJoinTaskProcessor.create(TaskProcessorConfiguration.create());
 	}
 
 	@Test
@@ -184,29 +185,28 @@ public class TestTaskListenerApi {
 
 		final WaitBarrier lockParaBloquearTarea = WaitBarrier.create();
 		final WaitBarrier lockParaCancelarTarea = WaitBarrier.create();
-		final TestWorkUnit tarea = new TestWorkUnit() {
 
-			@Override
+		// Tiene que ser una instancia de WorkUnitWithExternalWait porque con ForkJoin las tareas no
+		// son interrumpibles
+		final WorkUnitWithExternalWait tarea = new WorkUnitWithExternalWait() {
 			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				// Permitimos que el thread principal nos cancele
 				lockParaCancelarTarea.release();
 				// Nos deberían interrumpir mientras esperamos el lock
 				try {
-					lockParaBloquearTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+					lockParaBloquearTarea.waitForReleaseUpTo(TimeMagnitude.of(60, TimeUnit.SECONDS));
 				} catch (final InterruptedWaitException e) {
 					throw new InterruptedThreadException("Interrumpieron el thread", e);
 				}
-				super.doWork(parallelizer);
 			}
 		};
 		final SubmittedTask interruptedTask = taskProcessor.process(tarea);
-		lockParaCancelarTarea.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		lockParaCancelarTarea.waitForReleaseUpTo(TimeMagnitude.of(3, TimeUnit.SECONDS));
 		interruptedTask.cancelExecution(true);
 
-		lockParaEsperarNotificacionDeInterrupcion.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		lockParaEsperarNotificacionDeInterrupcion.waitForReleaseUpTo(TimeMagnitude.of(3, TimeUnit.SECONDS));
 		// Cuando el método retorna el listener ya debería haber sido invocado
 		Assert.assertTrue("Debería estar marcado como interrumpida", interrupted.get());
-		Assert.assertTrue("No debería estar procesada si está interrumpida", !tarea.isProcessed());
 	}
 
 }

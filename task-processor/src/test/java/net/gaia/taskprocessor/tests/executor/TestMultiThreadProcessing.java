@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.executor.ExecutorBasedTaskProcesor;
+import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.taskprocessor.tests.tasks.RegistrarThreadUsadoTask;
 
 import org.junit.Test;
@@ -110,7 +110,7 @@ public class TestMultiThreadProcessing {
 	protected TaskProcessor crearProcesorCon(final int cantidadDeThreads) {
 		final TaskProcessorConfiguration config = TaskProcessorConfiguration.create();
 		config.setMinimunThreadPoolSize(cantidadDeThreads);
-		final TaskProcessor processor = ExecutorBasedTaskProcesor.create(config);
+		final TaskProcessor processor = ForkJoinTaskProcessor.create(config);
 		return processor;
 	}
 }
