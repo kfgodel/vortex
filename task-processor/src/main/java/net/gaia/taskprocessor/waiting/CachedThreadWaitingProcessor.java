@@ -14,11 +14,11 @@ package net.gaia.taskprocessor.waiting;
 
 import java.util.List;
 import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.processor.WaitingTaskProcessor;
 import net.gaia.taskprocessor.executor.ProcessorThreadFactory;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
@@ -38,13 +38,17 @@ public class CachedThreadWaitingProcessor implements WaitingTaskProcessor, Threa
 	 * Ejecutor real de las tareas que maneja el pool de threads
 	 */
 	private ThreadPoolExecutor executor;
+	/**
+	 * Paralelizador usado para procesar las tareas
+	 */
+	private WorkParallelizer parallelizer;
 
 	/**
 	 * @see net.gaia.taskprocessor.api.processor.WaitingTaskProcessor#executeWithOwnThread(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public void executeWithOwnThread(final SubmittedRunnableTask tarea) {
-		final Future<?> taskFurure = executor.submit(tarea);
-		tarea.setOwnFuture((FutureTask<?>) taskFurure);
+		final WaitingWorker worker = WaitingWorker.create(tarea, parallelizer);
+		executor.submit(worker);
 	}
 
 	/**
@@ -54,12 +58,13 @@ public class CachedThreadWaitingProcessor implements WaitingTaskProcessor, Threa
 		return executor.getQueue().size();
 	}
 
-	public static CachedThreadWaitingProcessor create() {
+	public static CachedThreadWaitingProcessor create(final WorkParallelizer parallelizer) {
 		final CachedThreadWaitingProcessor processor = new CachedThreadWaitingProcessor();
 		final ProcessorThreadFactory threadFactory = ProcessorThreadFactory.create(WAITING_PROCESSOR_THREAD_NAMES,
 				processor);
 		processor.executor = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS,
 				new SynchronousQueue<Runnable>(), threadFactory);
+		processor.parallelizer = parallelizer;
 		return processor;
 	}
 

@@ -290,14 +290,6 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 		}
 	}
 
-	public WorkParallelizer getTemporalParallelizer() {
-		return temporalParallelizer;
-	}
-
-	public void setTemporalParallelizer(final WorkParallelizer temporalParallelizer) {
-		this.temporalParallelizer = temporalParallelizer;
-	}
-
 	/**
 	 * @see net.gaia.taskprocessor.api.SubmittedTask#cancelExecution(boolean)
 	 */

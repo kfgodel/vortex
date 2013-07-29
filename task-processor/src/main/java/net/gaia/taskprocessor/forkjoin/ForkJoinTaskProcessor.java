@@ -148,7 +148,6 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 			// Es una tarea que puede que podría bloquear nuestros threads. Tenemos que derivarlas
 			// al waitingProcessor
 			final SubmittedRunnableTask taskWithWait = SubmittedRunnableTask.create(work, this);
-			taskWithWait.setTemporalParallelizer(parallelizer);
 			return taskWithWait;
 		}
 		final ForkJoinSubmittedTask taskWihoutWait = ForkJoinSubmittedTask.create(work, this, getProcessorListener());
@@ -247,7 +246,7 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 		processor.delayedDelegator = ScheduledThreadPoolDelegator.create(processor);
 		processor.detenido = false;
 		processor.parallelizer = ForkJoinParallelizer.create(processor);
-		processor.waitingProcessor = CachedThreadWaitingProcessor.create();
+		processor.waitingProcessor = CachedThreadWaitingProcessor.create(processor.parallelizer);
 		return processor;
 	}
 
