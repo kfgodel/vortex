@@ -19,18 +19,14 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.taskprocessor.api.SubmittedTask;
-import net.gaia.taskprocessor.api.WorkParallelizer;
-import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.WaitingTaskProcessor;
 import net.gaia.taskprocessor.executor.ProcessorThreadFactory;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
 import net.gaia.taskprocessor.executor.threads.ThreadOwner;
 
 /**
- * Esta clase implementa el procesador de tareas con espera utilizando un executor de threads
- * cacheables y reutilizables
+ * Esta clase implementa el procesador de tareas con espera, utilizando un executor de threads
+ * cacheables y reutilizables, que son descartados después de un tiempo de no uso.
  * 
  * @author D. García
  */
@@ -44,24 +40,11 @@ public class CachedThreadWitingProcessor implements WaitingTaskProcessor, Thread
 	private ThreadPoolExecutor executor;
 
 	/**
-	 * Procesador del que somos parte como componente
-	 */
-	private TaskProcessor ownerProcessor;
-
-	/**
-	 * Paralelizador de las tareas para ser utilizado por las tareas ejecutadas
-	 */
-	private WorkParallelizer parallelizer;
-
-	/**
 	 * @see net.gaia.taskprocessor.api.processor.WaitingTaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
-	public SubmittedTask process(final WorkUnit work) {
-		final SubmittedRunnableTask tarea = SubmittedRunnableTask.create(work, ownerProcessor);
-		tarea.setTemporalParallelizer(parallelizer);
+	public void process(final SubmittedRunnableTask tarea) {
 		final Future<?> taskFurure = executor.submit(tarea);
 		tarea.setOwnFuture((FutureTask<?>) taskFurure);
-		return tarea;
 	}
 
 	/**
@@ -71,14 +54,12 @@ public class CachedThreadWitingProcessor implements WaitingTaskProcessor, Thread
 		return executor.getQueue().size();
 	}
 
-	public static CachedThreadWitingProcessor create(final TaskProcessor owner, final WorkParallelizer parallelizer) {
+	public static CachedThreadWitingProcessor create() {
 		final CachedThreadWitingProcessor processor = new CachedThreadWitingProcessor();
 		final ProcessorThreadFactory threadFactory = ProcessorThreadFactory.create(WAITING_PROCESSOR_THREAD_NAMES,
 				processor);
 		processor.executor = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS,
 				new SynchronousQueue<Runnable>(), threadFactory);
-		processor.ownerProcessor = owner;
-		processor.parallelizer = parallelizer;
 		return processor;
 	}
 

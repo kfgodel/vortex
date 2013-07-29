@@ -13,7 +13,7 @@
 package net.gaia.taskprocessor.api.processor;
 
 import net.gaia.taskprocessor.api.SubmittedTask;
-import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
 
 /**
  * Esta interfaz representa un componente del {@link TaskProcessor} que permite ejecutar tareas que
@@ -28,6 +28,7 @@ public interface WaitingTaskProcessor extends Detenible {
 	/**
 	 * Agrega la tarea pasada para ser procesada por este procesador.<br>
 	 * Normalmente se reutilizará o creará un thread que la procese para soportar esperas externas
+	 * mientras se ejecuta la tarea
 	 * 
 	 * @param tarea
 	 *            Tarea a realizar
@@ -35,7 +36,7 @@ public interface WaitingTaskProcessor extends Detenible {
 	 * @return Un {@link SubmittedTask} que permite conocer el estado de la tarea dentro del
 	 *         procesador
 	 */
-	SubmittedTask process(WorkUnit tarea);
+	void process(SubmittedRunnableTask tarea);
 
 	/**
 	 * Devuelve un estimado de la cantidad de tareas pendientes para ser procesadas por este

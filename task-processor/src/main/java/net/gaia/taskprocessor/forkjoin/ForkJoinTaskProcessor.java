@@ -30,6 +30,7 @@ import net.gaia.taskprocessor.api.processor.WaitingTaskProcessor;
 import net.gaia.taskprocessor.api.processor.delayer.DelayedDelegator;
 import net.gaia.taskprocessor.api.processor.delayer.DelegableProcessor;
 import net.gaia.taskprocessor.delayer.ScheduledThreadPoolDelegator;
+import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
 import net.gaia.taskprocessor.waiting.CachedThreadWitingProcessor;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
@@ -90,15 +91,15 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	 *      net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask processDelayed(final TimeMagnitude workDelay, final WorkUnit trabajo) {
-		checkExecutionStatus();
 		if (trabajo == null) {
 			throw new IllegalArgumentException("El workUnit no puede ser null");
 		}
 		if (workDelay == null) {
 			throw new IllegalArgumentException("El delay no puede ser null");
 		}
-		final ForkJoinSubmittedTask submittedTask = ForkJoinSubmittedTask.create(trabajo, this, getProcessorListener());
-		final SubmittedTask delayedTask = this.delayedDelegator.delayDelegation(workDelay, submittedTask);
+		checkExecutionStatus();
+		final SubmittedTask createdTask = crearTareaPara(trabajo);
+		final SubmittedTask delayedTask = this.delayedDelegator.delayDelegation(workDelay, createdTask);
 		return delayedTask;
 	}
 
@@ -106,33 +107,52 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 	 * @see net.gaia.taskprocessor.api.processor.delayer.DelegableProcessor#processDelegatedTask(net.gaia.taskprocessor.api.SubmittedTask)
 	 */
 	public void processDelegatedTask(final SubmittedTask task) {
-		ForkJoinSubmittedTask forkJoinTask;
-		try {
-			forkJoinTask = (ForkJoinSubmittedTask) task;
-		} catch (final ClassCastException e) {
-			throw new IllegalArgumentException("La tarea pasada debe ser una instancia de "
-					+ ForkJoinSubmittedTask.class.getName());
+		if (task instanceof ForkJoinSubmittedTask) {
+			// Es una tarea para ser ejecutada por nuestro pool
+			final ForkJoinSubmittedTask forkJoinTask = (ForkJoinSubmittedTask) task;
+			executeNow(forkJoinTask);
+		} else if (task instanceof SubmittedRunnableTask) {
+			// Es una tarea que requiere esperas
+			final SubmittedRunnableTask runnableTask = (SubmittedRunnableTask) task;
+			waitingProcessor.process(runnableTask);
+		} else {
+			throw new IllegalArgumentException("La tarea delegada es de un tipo desconocido: " + task);
 		}
-		executeNow(forkJoinTask);
 	}
 
 	/**
 	 * @see net.gaia.taskprocessor.api.processor.TaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
 	 */
 	public SubmittedTask process(final WorkUnit work) {
-		checkExecutionStatus();
 		if (work == null) {
 			throw new IllegalArgumentException("El workUnit no puede ser null");
 		}
 
+		checkExecutionStatus();
+		final SubmittedTask createdTask = crearTareaPara(work);
+		processDelegatedTask(createdTask);
+		return createdTask;
+	}
+
+	/**
+	 * Crea la tarea que permite procesar el trabajo indicado según el tipo de trabajo.<br>
+	 * Los {@link WorkUnitWithExternalWait} necesitan threads que puedan esperar y se procesan a
+	 * parte
+	 * 
+	 * @param work
+	 *            El trabajo a procesar
+	 * @return La tarea creada
+	 */
+	private SubmittedTask crearTareaPara(final WorkUnit work) {
 		if (work instanceof WorkUnitWithExternalWait) {
-			// Es una tarea que puede que podría bloquear nuestro threads. Derivamos al
-			// Procesador para tareas con espera
-			return waitingProcessor.process(work);
+			// Es una tarea que puede que podría bloquear nuestros threads. Tenemos que derivarlas
+			// al waitingProcessor
+			final SubmittedRunnableTask taskWithWait = SubmittedRunnableTask.create(work, this);
+			taskWithWait.setTemporalParallelizer(parallelizer);
+			return taskWithWait;
 		}
-		final ForkJoinSubmittedTask submittedTask = ForkJoinSubmittedTask.create(work, this, getProcessorListener());
-		executeNow(submittedTask);
-		return submittedTask;
+		final ForkJoinSubmittedTask taskWihoutWait = ForkJoinSubmittedTask.create(work, this, getProcessorListener());
+		return taskWihoutWait;
 	}
 
 	/**
@@ -227,7 +247,7 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 		processor.delayedDelegator = ScheduledThreadPoolDelegator.create(processor);
 		processor.detenido = false;
 		processor.parallelizer = ForkJoinParallelizer.create(processor);
-		processor.waitingProcessor = CachedThreadWitingProcessor.create(processor, processor.parallelizer);
+		processor.waitingProcessor = CachedThreadWitingProcessor.create();
 		return processor;
 	}
 
