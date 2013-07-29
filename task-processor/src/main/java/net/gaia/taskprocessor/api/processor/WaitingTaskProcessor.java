@@ -36,7 +36,7 @@ public interface WaitingTaskProcessor extends Detenible {
 	 * @return Un {@link SubmittedTask} que permite conocer el estado de la tarea dentro del
 	 *         procesador
 	 */
-	void process(SubmittedRunnableTask tarea);
+	void executeWithOwnThread(SubmittedRunnableTask tarea);
 
 	/**
 	 * Devuelve un estimado de la cantidad de tareas pendientes para ser procesadas por este

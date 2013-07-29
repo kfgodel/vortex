@@ -30,7 +30,7 @@ import net.gaia.taskprocessor.executor.threads.ThreadOwner;
  * 
  * @author D. García
  */
-public class CachedThreadWitingProcessor implements WaitingTaskProcessor, ThreadOwner {
+public class CachedThreadWaitingProcessor implements WaitingTaskProcessor, ThreadOwner {
 
 	private static final String WAITING_PROCESSOR_THREAD_NAMES = "WaitingProcessor";
 
@@ -40,9 +40,9 @@ public class CachedThreadWitingProcessor implements WaitingTaskProcessor, Thread
 	private ThreadPoolExecutor executor;
 
 	/**
-	 * @see net.gaia.taskprocessor.api.processor.WaitingTaskProcessor#process(net.gaia.taskprocessor.api.WorkUnit)
+	 * @see net.gaia.taskprocessor.api.processor.WaitingTaskProcessor#executeWithOwnThread(net.gaia.taskprocessor.api.WorkUnit)
 	 */
-	public void process(final SubmittedRunnableTask tarea) {
+	public void executeWithOwnThread(final SubmittedRunnableTask tarea) {
 		final Future<?> taskFurure = executor.submit(tarea);
 		tarea.setOwnFuture((FutureTask<?>) taskFurure);
 	}
@@ -54,8 +54,8 @@ public class CachedThreadWitingProcessor implements WaitingTaskProcessor, Thread
 		return executor.getQueue().size();
 	}
 
-	public static CachedThreadWitingProcessor create() {
-		final CachedThreadWitingProcessor processor = new CachedThreadWitingProcessor();
+	public static CachedThreadWaitingProcessor create() {
+		final CachedThreadWaitingProcessor processor = new CachedThreadWaitingProcessor();
 		final ProcessorThreadFactory threadFactory = ProcessorThreadFactory.create(WAITING_PROCESSOR_THREAD_NAMES,
 				processor);
 		processor.executor = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS,

@@ -31,7 +31,7 @@ import net.gaia.taskprocessor.api.processor.delayer.DelayedDelegator;
 import net.gaia.taskprocessor.api.processor.delayer.DelegableProcessor;
 import net.gaia.taskprocessor.delayer.ScheduledThreadPoolDelegator;
 import net.gaia.taskprocessor.executor.SubmittedRunnableTask;
-import net.gaia.taskprocessor.waiting.CachedThreadWitingProcessor;
+import net.gaia.taskprocessor.waiting.CachedThreadWaitingProcessor;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
@@ -114,7 +114,7 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 		} else if (task instanceof SubmittedRunnableTask) {
 			// Es una tarea que requiere esperas
 			final SubmittedRunnableTask runnableTask = (SubmittedRunnableTask) task;
-			waitingProcessor.process(runnableTask);
+			waitingProcessor.executeWithOwnThread(runnableTask);
 		} else {
 			throw new IllegalArgumentException("La tarea delegada es de un tipo desconocido: " + task);
 		}
@@ -247,7 +247,7 @@ public class ForkJoinTaskProcessor implements TaskProcessor, DelegableProcessor 
 		processor.delayedDelegator = ScheduledThreadPoolDelegator.create(processor);
 		processor.detenido = false;
 		processor.parallelizer = ForkJoinParallelizer.create(processor);
-		processor.waitingProcessor = CachedThreadWitingProcessor.create();
+		processor.waitingProcessor = CachedThreadWaitingProcessor.create();
 		return processor;
 	}
 

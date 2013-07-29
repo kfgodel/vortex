@@ -14,7 +14,7 @@ package net.gaia.vortex.http.impl.tasks;
 
 import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
-import net.gaia.taskprocessor.api.WorkUnit;
+import net.gaia.taskprocessor.api.WorkUnitWithExternalWait;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 
@@ -24,7 +24,7 @@ import net.gaia.vortex.http.sesiones.SesionVortexHttp;
  * 
  * @author D. García
  */
-public class AcumularEnSesion implements WorkUnit {
+public class AcumularEnSesion implements WorkUnitWithExternalWait {
 
 	private SesionVortexHttp sesion;
 

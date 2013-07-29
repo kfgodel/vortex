@@ -132,6 +132,10 @@ public class SubmittedRunnableTask implements SubmittedTask, Runnable {
 	 * Ejecuta el workUnit de esta tarea
 	 */
 	private void processWorkunit() {
+		if (currentState.wasProcessed()) {
+			// No deberíamos volver a ejecutar. Esto puede pasar si no se cancela a tiempo
+			return;
+		}
 		currentState = SubmittedTaskState.PROCESSING;
 		notifyListenerStartingProcess();
 		try {
