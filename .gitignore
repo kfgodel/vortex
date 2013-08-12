@@ -3,3 +3,7 @@
 .settings/
 target
 bin
+*.class
+*.jar
+*.war
+*.ear
