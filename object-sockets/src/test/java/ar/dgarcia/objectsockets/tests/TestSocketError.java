@@ -18,7 +18,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
@@ -36,6 +40,28 @@ import ar.dgarcia.textualizer.json.JsonTextualizer;
  * @author D. García
  */
 public class TestSocketError {
+	private static final Logger LOG = LoggerFactory.getLogger(TestSocketError.class);
+	private InetSocketAddress testAddress;
+	private ObjectSocketAcceptor listeningAcceptor;
+	private ObjectSocketConnector connector;
+
+	@Before
+	public void buscarPuertoLibre() {
+		final int freePort = FreePortFinder.getFreePort();
+		testAddress = new InetSocketAddress(freePort);
+		LOG.debug("Puerto libre encontrado para el test: {}", freePort);
+	}
+
+	@After
+	public void liberarPuerto() {
+		if (listeningAcceptor != null) {
+			listeningAcceptor.closeAndDispose();
+		}
+		if (connector != null) {
+			connector.closeAndDispose();
+		}
+	}
+
 	@Test
 	public void deberiaDetectarLaDesconexion() {
 		// El que escucha va a desconectarse al recibir el primer mensaje
@@ -43,14 +69,15 @@ public class TestSocketError {
 		final QueueReceptionHandler handlerReceptor = QueueReceptionHandler.create();
 		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress,
 				new ObjectReceptionHandler() {
-					
+
+					@Override
 					public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 						handlerReceptor.onObjectReceived(received, receivedFrom);
 						receivedFrom.closeAndDispose();
 					}
 				}, JsonTextualizer.createWithTypeMetadata());
 		// Empezamos a escuchar en el puerto
-		final ObjectSocketAcceptor acceptor = ObjectSocketAcceptor.create(receptionConfig);
+		listeningAcceptor = ObjectSocketAcceptor.create(receptionConfig);
 
 		// Conectamos el cliente al puerto compartido
 		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress,
@@ -58,17 +85,18 @@ public class TestSocketError {
 		final WaitBarrier esperarNotificacionDeCierre = WaitBarrier.create();
 		final AtomicBoolean notificacionRecibida = new AtomicBoolean(false);
 		senderConfig.setEventHandler(new SocketEventHandler() {
-			
+
+			@Override
 			public void onSocketOpened(final ObjectSocket nuevoSocket) {
 			}
 
-			
+			@Override
 			public void onSocketClosed(final ObjectSocket socketCerrado) {
 				notificacionRecibida.set(true);
 				esperarNotificacionDeCierre.release();
 			}
 		});
-		final ObjectSocketConnector connector = ObjectSocketConnector.create(senderConfig);
+		connector = ObjectSocketConnector.create(senderConfig);
 
 		// Enviamos un objeto cualquiera a traves del socket
 		final Object objetoEnviado = "Hola manola";
@@ -78,10 +106,6 @@ public class TestSocketError {
 		// Esperamos que llegue la notificacion de socket cerrado
 		esperarNotificacionDeCierre.waitForReleaseUpTo(TimeMagnitude.of(5, TimeUnit.SECONDS));
 		Assert.assertEquals("Deberíamos haber recibido la notificacion", true, notificacionRecibida.get());
-
-		// Cerramos los sockets
-		acceptor.closeAndDispose();
-		connector.closeAndDispose();
 	}
 
 }

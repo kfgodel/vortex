@@ -18,7 +18,11 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
@@ -34,14 +38,34 @@ import ar.dgarcia.textualizer.json.JsonTextualizer;
  * @author D. García
  */
 public class TestObjectSocket {
+	private static final Logger LOG = LoggerFactory.getLogger(TestObjectSocket.class);
+
+	private InetSocketAddress sharedAddress;
+	private ObjectSocketAcceptor listeningAcceptor;
+	private ObjectSocketConnector connector;
+
+	@Before
+	public void buscarPuertoLibre() {
+		final int freePort = FreePortFinder.getFreePort();
+		sharedAddress = new InetSocketAddress(freePort);
+		LOG.debug("Puerto libre encontrado para el test: {}", freePort);
+	}
+
+	@After
+	public void liberarPuerto() {
+		if (listeningAcceptor != null) {
+			listeningAcceptor.closeAndDispose();
+		}
+		if (connector != null) {
+			connector.closeAndDispose();
+		}
+	}
 
 	/**
 	 * Prueba como falla el conector cuando no se puede conectar
 	 */
 	@Test
 	public void deberiaFallarAlConectarCuandoNoHaySocketEscuchando() {
-		// Creamos el socket cliente para conectarlo a un puerto no usado
-		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
 		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress,
 				JsonTextualizer.createWithTypeMetadata());
 		try {
@@ -58,10 +82,9 @@ public class TestObjectSocket {
 	@Test
 	public void deberiaFallarAlEscucharSiElPuertoEstaUsado() {
 		// Creamos el socket de escucha
-		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
 		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress,
 				JsonTextualizer.createWithTypeMetadata());
-		final ObjectSocketAcceptor primerAcceptor = ObjectSocketAcceptor.create(receptionConfig);
+		listeningAcceptor = ObjectSocketAcceptor.create(receptionConfig);
 		try {
 			ObjectSocketAcceptor.create(receptionConfig);
 			Assert.fail("Debería tirar una excepción por el puerto ocupado");
@@ -69,8 +92,6 @@ public class TestObjectSocket {
 			// Excepción correcta
 			Assert.assertTrue("Debería ser un error de binding de puerto", e.getCause() instanceof BindException);
 		}
-		// Liberamos el puerto
-		primerAcceptor.closeAndDispose();
 	}
 
 	/**
@@ -80,16 +101,15 @@ public class TestObjectSocket {
 	public void deberiaSerPosibleEnviarUnObjetoCualquierEntreDosSocketsLocales() {
 		// Levantamos el socket de escucha para recibir los mensajes en una cola
 		final QueueReceptionHandler handlerReceptor = QueueReceptionHandler.create();
-		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
 		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress,
 				handlerReceptor, JsonTextualizer.createWithTypeMetadata());
 		// Empezamos a escuchar en el puerto
-		final ObjectSocketAcceptor acceptor = ObjectSocketAcceptor.create(receptionConfig);
+		listeningAcceptor = ObjectSocketAcceptor.create(receptionConfig);
 
 		// Conectamos el cliente al puerto compartido
 		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress,
 				JsonTextualizer.createWithTypeMetadata());
-		final ObjectSocketConnector connector = ObjectSocketConnector.create(senderConfig);
+		connector = ObjectSocketConnector.create(senderConfig);
 
 		// Enviamos un objeto cualquiera a traves del socket
 		final ObjectSocket clientSocket = connector.getObjectSocket();
@@ -100,10 +120,6 @@ public class TestObjectSocket {
 		final Object recibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(10, TimeUnit.SECONDS));
 		Assert.assertEquals("Deberían ser iguales", objetoEnviado, recibido);
 		Assert.assertNotSame("No debería ser la misma instancia por la serializacion", objetoEnviado, recibido);
-
-		// Cerramos los sockets
-		acceptor.closeAndDispose();
-		connector.closeAndDispose();
 	}
 
 }

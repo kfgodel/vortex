@@ -36,7 +36,11 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase prueba el funcionamiento de mina a través de sockets TCP
@@ -44,32 +48,45 @@ import org.junit.Test;
  * @author D. Garcia
  */
 public class MinaTests {
+	private static final Logger LOG = LoggerFactory.getLogger(MinaTests.class);
 
-	/**
-	 * 
-	 */
-	private static final int TEST_PORT = 46660;
+	private InetSocketAddress testAddress;
+	private NioSocketAcceptor nioSocketAcceptor;
+	private NioSocketConnector nioSocketConnector;
+
+	@Before
+	public void encontrarPuertoLibre() {
+		final int freePort = FreePortFinder.getFreePort();
+		testAddress = new InetSocketAddress(freePort);
+		LOG.debug("Puerto libre encontrado para el test: {}", freePort);
+	}
+
+	@After
+	public void cerrarPuertosUsados() {
+		if (nioSocketAcceptor != null) {
+			nioSocketAcceptor.dispose(true);
+		}
+		if (nioSocketConnector != null) {
+			nioSocketConnector.dispose(true);
+		}
+	}
 
 	/**
 	 * Prueba el código mínimo para establecer una conexion
 	 */
 	@Test
 	public void testSocketConnection() throws IOException, InterruptedException {
-		final NioSocketAcceptor nioSocketAcceptor = new NioSocketAcceptor();
+		nioSocketAcceptor = new NioSocketAcceptor();
 		final IoHandlerAdapter dummyHandler = new IoHandlerAdapter() {
 		};
 		nioSocketAcceptor.setHandler(dummyHandler);
-		final InetSocketAddress testAddress = new InetSocketAddress(TEST_PORT);
 		nioSocketAcceptor.bind(testAddress);
 
-		final NioSocketConnector nioSocketConnector = new NioSocketConnector();
+		nioSocketConnector = new NioSocketConnector();
 		nioSocketConnector.setHandler(dummyHandler);
 		final ConnectFuture connectTask = nioSocketConnector.connect(testAddress);
 		final boolean connected = connectTask.await(5, TimeUnit.SECONDS);
 		Assert.assertTrue("Debería estar conectado", connected);
-
-		nioSocketConnector.dispose(true);
-		nioSocketAcceptor.dispose(true);
 	}
 
 	public static class CounterHandler extends IoHandlerAdapter {
@@ -89,17 +106,17 @@ public class MinaTests {
 			return createdSessions;
 		}
 
-		
+		@Override
 		public void sessionOpened(final IoSession session) throws Exception {
 			openedSessions++;
 		}
 
-		
+		@Override
 		public void sessionClosed(final IoSession session) throws Exception {
 			closedSessions++;
 		}
 
-		
+		@Override
 		public void sessionCreated(final IoSession session) throws Exception {
 			createdSessions++;
 		}
@@ -107,8 +124,7 @@ public class MinaTests {
 
 	@Test
 	public void testHandlerEvents() throws IOException, InterruptedException {
-		final NioSocketAcceptor nioSocketAcceptor = new NioSocketAcceptor();
-		final InetSocketAddress testAddress = new InetSocketAddress(TEST_PORT);
+		nioSocketAcceptor = new NioSocketAcceptor();
 		final CounterHandler counterHandler = new CounterHandler();
 		nioSocketAcceptor.setHandler(counterHandler);
 
@@ -118,7 +134,7 @@ public class MinaTests {
 
 		nioSocketAcceptor.bind(testAddress);
 
-		final NioSocketConnector nioSocketConnector = new NioSocketConnector();
+		nioSocketConnector = new NioSocketConnector();
 		nioSocketConnector.setHandler(counterHandler);
 		final ConnectFuture connectTask = nioSocketConnector.connect(testAddress);
 		final boolean connected = connectTask.await(5, TimeUnit.SECONDS);
@@ -137,15 +153,15 @@ public class MinaTests {
 		final Semaphore semaphore = new Semaphore(0);
 		final AtomicReference<Object> received = new AtomicReference<Object>(null);
 		final IoHandlerAdapter dummyHandler = new IoHandlerAdapter() {
-			
+
+			@Override
 			public void messageReceived(final IoSession session, final Object message) throws Exception {
 				received.set(message);
 				semaphore.release();
 			}
 		};
 
-		final NioSocketAcceptor nioSocketAcceptor = new NioSocketAcceptor();
-		final InetSocketAddress testAddress = new InetSocketAddress(TEST_PORT);
+		nioSocketAcceptor = new NioSocketAcceptor();
 		nioSocketAcceptor.setHandler(dummyHandler);
 
 		// Agregamos el transformador a serializado
@@ -154,7 +170,7 @@ public class MinaTests {
 
 		nioSocketAcceptor.bind(testAddress);
 
-		final NioSocketConnector nioSocketConnector = new NioSocketConnector();
+		nioSocketConnector = new NioSocketConnector();
 		nioSocketConnector.setHandler(dummyHandler);
 
 		// Agregamos el transformador a serializado
@@ -174,28 +190,24 @@ public class MinaTests {
 		Assert.assertTrue("Debería haber llegado el mensaje", acquired);
 		final Object receivedMessage = received.get();
 		Assert.assertEquals("Debería ser el mismo mensaje", sendedMessage, receivedMessage);
-
-		nioSocketConnector.dispose(true);
-		nioSocketAcceptor.dispose(true);
-
 	}
 
 	@Test
 	public void testDisconnectionWhileConnecting() throws IOException, InterruptedException {
-		final NioSocketAcceptor nioSocketAcceptor = new NioSocketAcceptor();
-		final InetSocketAddress testAddress = new InetSocketAddress(TEST_PORT);
+		nioSocketAcceptor = new NioSocketAcceptor();
 
 		final Semaphore openBlockingSemaphore = new Semaphore(0);
 		final AtomicBoolean sessionOpenProcessed = new AtomicBoolean(false);
 		final AtomicBoolean sessionCloseProcessedBeforeOpen = new AtomicBoolean(false);
 		final IoHandlerAdapter blockedHandler = new IoHandlerAdapter() {
-			
+
+			@Override
 			public void sessionOpened(final IoSession session) throws Exception {
 				openBlockingSemaphore.tryAcquire(3, TimeUnit.MINUTES);
 				sessionOpenProcessed.set(true);
 			}
 
-			
+			@Override
 			public void sessionClosed(final IoSession session) throws Exception {
 				final boolean alreadyOpened = sessionOpenProcessed.get();
 				if (!alreadyOpened) {
@@ -206,7 +218,7 @@ public class MinaTests {
 		nioSocketAcceptor.setHandler(blockedHandler);
 		nioSocketAcceptor.bind(testAddress);
 
-		final NioSocketConnector nioSocketConnector = new NioSocketConnector();
+		nioSocketConnector = new NioSocketConnector();
 		nioSocketConnector.setHandler(new IoHandlerAdapter() {
 		});
 		final ConnectFuture connectTask = nioSocketConnector.connect(testAddress);
@@ -226,21 +238,21 @@ public class MinaTests {
 
 	@Test
 	public void testConnectionSuccessListener() throws IOException, InterruptedException {
-		final NioSocketAcceptor nioSocketAcceptor = new NioSocketAcceptor();
-		final InetSocketAddress testAddress = new InetSocketAddress(TEST_PORT);
+		nioSocketAcceptor = new NioSocketAcceptor();
 		final IoHandlerAdapter dummyHandler = new IoHandlerAdapter() {
 		};
 		nioSocketAcceptor.setHandler(dummyHandler);
 		nioSocketAcceptor.bind(testAddress);
 
-		final NioSocketConnector nioSocketConnector = new NioSocketConnector();
+		nioSocketConnector = new NioSocketConnector();
 		nioSocketConnector.setHandler(dummyHandler);
 		final ConnectFuture connectTask = nioSocketConnector.connect(testAddress);
 
 		final AtomicBoolean connectSuccessful = new AtomicBoolean(false);
 		final Semaphore semaphore = new Semaphore(0);
 		connectTask.addListener(new IoFutureListener<IoFuture>() {
-			
+
+			@Override
 			public void operationComplete(final IoFuture future) {
 				final ConnectFuture connectionTask = (ConnectFuture) future;
 				connectSuccessful.set(connectionTask.isConnected());
@@ -250,26 +262,23 @@ public class MinaTests {
 
 		semaphore.acquire();
 		Assert.assertTrue("Debería estar conectado", connectSuccessful.get());
-
-		nioSocketConnector.dispose(true);
-		nioSocketAcceptor.dispose(true);
 	}
 
 	@Test
 	public void testConnectionFailureListener() throws IOException, InterruptedException {
-		final NioSocketConnector nioSocketConnector = new NioSocketConnector();
+		nioSocketConnector = new NioSocketConnector();
 		final IoHandlerAdapter dummyHandler = new IoHandlerAdapter() {
 		};
 		nioSocketConnector.setHandler(dummyHandler);
 
 		// Dirección sin nadie que escuche
-		final InetSocketAddress testAddress = new InetSocketAddress(TEST_PORT);
 		final ConnectFuture connectTask = nioSocketConnector.connect(testAddress);
 
 		final AtomicBoolean connectSuccessful = new AtomicBoolean(false);
 		final Semaphore semaphore = new Semaphore(0);
 		connectTask.addListener(new IoFutureListener<IoFuture>() {
-			
+
+			@Override
 			public void operationComplete(final IoFuture future) {
 				final ConnectFuture connectionTask = (ConnectFuture) future;
 				connectSuccessful.set(connectionTask.isConnected());
@@ -299,12 +308,12 @@ public class MinaTests {
 		final String secondResponse = "FOUR";
 
 		// Creamos el server que nos envia las respuestas a los mensajes
-		final NioSocketAcceptor nioSocketAcceptor = new NioSocketAcceptor();
-		final InetSocketAddress testAddress = new InetSocketAddress(TEST_PORT);
+		nioSocketAcceptor = new NioSocketAcceptor();
 
 		final Semaphore secondResponseSent = new Semaphore(0);
 		final IoHandlerAdapter responseHandler = new IoHandlerAdapter() {
-			
+
+			@Override
 			public void messageReceived(final IoSession session, final Object message) throws Exception {
 				if (firstMessage.equals(message)) {
 					session.write(firstResponse);
@@ -314,11 +323,7 @@ public class MinaTests {
 				}
 			}
 
-			/**
-			 * @see org.apache.mina.core.service.IoHandlerAdapter#messageSent(org.apache.mina.core.session.IoSession,
-			 *      java.lang.Object)
-			 */
-			
+			@Override
 			public void messageSent(final IoSession session, final Object message) throws Exception {
 				if (secondResponse.equals(message)) {
 					secondResponseSent.release();
@@ -338,7 +343,8 @@ public class MinaTests {
 
 		// Creamos el emisor que se bloquea despues de
 		final IoHandler testHandler = new IoHandlerAdapter() {
-			
+
+			@Override
 			public void messageReceived(final IoSession session, final Object message) throws Exception {
 				if (firstResponse.equals(message)) {
 					session.write(secondMessage);
@@ -357,7 +363,7 @@ public class MinaTests {
 				}
 			}
 		};
-		final NioSocketConnector nioSocketConnector = new NioSocketConnector();
+		nioSocketConnector = new NioSocketConnector();
 		nioSocketConnector.setHandler(testHandler);
 		nioSocketConnector.getFilterChain().addLast("binary2string",
 				new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));
@@ -380,8 +386,5 @@ public class MinaTests {
 
 		Assert.assertFalse("La primera respuesta debería procesar antes que el segundo",
 				secondResponseProcessedBeforeFirst.get());
-
-		nioSocketConnector.dispose(true);
-		nioSocketAcceptor.dispose(true);
 	}
 }

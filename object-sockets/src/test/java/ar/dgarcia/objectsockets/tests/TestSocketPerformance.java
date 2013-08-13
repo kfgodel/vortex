@@ -58,7 +58,9 @@ public abstract class TestSocketPerformance {
 
 	@Before
 	public void definirPuerto() {
-		sharedAddress = new InetSocketAddress(12345);
+		final int freePort = FreePortFinder.getFreePort();
+		sharedAddress = new InetSocketAddress(freePort);
+		LOG.debug("Puerto libre encontrado para el test: {}", freePort);
 	}
 
 	@Test
