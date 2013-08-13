@@ -50,7 +50,6 @@ public abstract class ComponenteNodo extends ComponenteNombreable implements Nod
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.NodoSimulacion#simularConexionCon(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
-	@Override
 	public void simularConexionCon(final NodoSimulacion otro) {
 		procesar(ConectarUni.create(this, otro));
 	}
@@ -58,7 +57,6 @@ public abstract class ComponenteNodo extends ComponenteNombreable implements Nod
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.NodoSimulacion#simularConexionBidi(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
-	@Override
 	public void simularConexionBidi(final NodoSimulacion otro) {
 		procesar(ConectarBidi.create(this, otro));
 	}
@@ -66,7 +64,6 @@ public abstract class ComponenteNodo extends ComponenteNombreable implements Nod
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.NodoSimulacion#simularDesconexionUniDe(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
-	@Override
 	public void simularDesconexionUniDe(final NodoSimulacion otro) {
 		procesar(DesconectarUni.create(this, otro));
 	}
@@ -74,7 +71,6 @@ public abstract class ComponenteNodo extends ComponenteNombreable implements Nod
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.NodoSimulacion#simularDesconexionBidiDe(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
-	@Override
 	public void simularDesconexionBidiDe(final NodoSimulacion otroConectado) {
 		procesar(DesconectarBidi.create(this, otroConectado));
 	}
@@ -82,7 +78,6 @@ public abstract class ComponenteNodo extends ComponenteNombreable implements Nod
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.Nodo#recibirMensaje(net.gaia.vortex.tests.router2.api.Mensaje)
 	 */
-	@Override
 	public void recibirMensaje(final Mensaje mensaje) {
 		if (getRecibidos().contains(mensaje)) {
 			LOG.debug("  Rechazando mensaje[{}] recibido en [{}] por figurar como ya recibido",

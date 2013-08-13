@@ -61,7 +61,6 @@ public class DesconectarUni extends PasoSupport {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
-	@Override
 	public void ejecutar() {
 		getNodoLocal().desconectarDe(getNodoDestino());
 	}

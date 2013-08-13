@@ -127,7 +127,6 @@ public abstract class TestDePerformanceNodoSupport {
 
 		// Generamos tantos portales como receptores tengamos
 		nodoVortex.conectarCon(new ReceptorSupport() {
-			@Override
 			public void recibir(@SuppressWarnings("unused") final MensajeVortex mensaje) {
 				metricas.registrarOutput();
 			}
@@ -161,10 +160,8 @@ public abstract class TestDePerformanceNodoSupport {
 
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
-			@Override
 			public Runnable getOrCreateRunnable() {
 				return new Runnable() {
-					@Override
 					public void run() {
 						final MensajeConContenido mensaje = MensajeConContenido.crearVacio();
 						final IdDeMensaje idDeMensaje = generadorIds.generarId();

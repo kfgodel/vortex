@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+	<groupId>net.gaia</groupId>
+	<artifactId>gaia-parent</artifactId>
+	<version>1.0</version>
+	<relativePath>../gaia-parent</relativePath>
+  </parent>
+
+    <groupId>net.gaia.vortex</groupId>
+    <artifactId>vortex-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>0.5.1-SNAPSHOT</version>
+	<name>Vortex Parent Pom</name>
+	<description>Proyecto que define parametros comunes para ser heredados por los proyectos de vortex</description>
+
+	<!-- Dependencias obligatorias heredadas por todos los subproyectos -->
+    <dependencies>
+    
+    </dependencies>
+    
+    <!-- Dependencias usables por los proyectos hijos pero no obligatorias -->
+    <dependencyManagement>
+    	<dependencies>
+    	
+			<!-- Procesador de tareas paralelizables -->
+			<dependency>
+				<groupId>net.gaia</groupId>
+				<artifactId>task-processor</artifactId>
+				<version>0.6.0-SNAPSHOT</version>
+			</dependency>
+			
+			<!-- Permite implementar los mapeadores con json -->
+			<dependency>
+			  <groupId>ar.dgarcia.textualizer</groupId>
+			  <artifactId>json-textualizer</artifactId>
+			  <version>0.1</version>
+			</dependency>
+						
+    	</dependencies>
+    </dependencyManagement>
+
+    
+</project>

@@ -33,8 +33,6 @@ public class AcumularEnSesion implements WorkUnitWithExternalWait {
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
-
-	@Override
 	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		sesion.onMensajeDesdeVortex(mensaje);
 	}

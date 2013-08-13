@@ -51,7 +51,6 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.Nodo#conectarCon(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
-	@Override
 	public void conectarCon(final Nodo otro) {
 		final PataBidireccional nuevaPata = PataBidireccional.create(this, (NodoSimulacion) otro, getSimulador());
 		nuevaPata.setListener(this);
@@ -83,7 +82,6 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.Nodo#desconectarDe(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
-	@Override
 	public void desconectarDe(final Nodo destino) {
 		final PataBidireccional pataDesconectada = getPataPorNodo(destino);
 		if (pataDesconectada == null) {
@@ -224,7 +222,6 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.ListenerDeFiltros#onCambioDeFiltro(net.gaia.vortex.tests.router2.impl.filtros.Filtro)
 	 */
-	@Override
 	public void onCambioDeFiltro(final Filtro nuevoFiltro) {
 		// Cuando cambia una pata es un cambio de filtro remoto
 		evento_cambioEstadoFiltrosRemotos();
@@ -233,7 +230,6 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.NodoSimulacion#tieneComoDestinoA(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
-	@Override
 	public boolean tieneComoDestinoA(final Nodo otro) {
 		final PataBidireccional pataConectora = getPataPorNodo(otro);
 		final boolean tieneConexionConDestino = pataConectora != null;
@@ -252,7 +248,6 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	 * @see net.gaia.vortex.tests.router2.simulador.NodoSimulacion#usaFiltrosCon(net.gaia.vortex.tests.router2.api.Nodo,
 	 *      java.lang.String[])
 	 */
-	@Override
 	public boolean usaFiltrosCon(final Nodo nodo, final String... filtros) {
 		final Filtro filtroDelNodo = getFiltroDeSalidaPara(nodo);
 		if (filtroDelNodo == null) {
@@ -266,7 +261,6 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.NodoSimulacion#getFiltroDeSalidaPara(net.gaia.vortex.tests.router2.api.Nodo)
 	 */
-	@Override
 	public Filtro getFiltroDeSalidaPara(final Nodo nodo) {
 		final PataBidireccional pataSalida = getPataPorNodo(nodo);
 		if (pataSalida == null) {
@@ -278,7 +272,6 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.NodoSimulacion#yaProceso(net.gaia.vortex.tests.router2.mensajes.MensajeNormal)
 	 */
-	@Override
 	public boolean yaProceso(final MensajeNormal mensaje) {
 		final boolean yaSeProceso = getRecibidos().contains(mensaje);
 		return yaSeProceso;
@@ -287,7 +280,6 @@ public abstract class NodoBidireccional extends ComponenteNodo implements Listen
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.Nodo#setListenerDeFiltrosExternos(net.gaia.vortex.tests.router2.api.ListenerDeFiltros)
 	 */
-	@Override
 	public void setListenerDeFiltrosExternos(final ListenerDeFiltros listenerDeExternos) {
 		this.listenerDeFiltros = listenerDeExternos;
 	}

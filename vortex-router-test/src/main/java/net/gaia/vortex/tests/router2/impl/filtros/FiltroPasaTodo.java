@@ -26,7 +26,6 @@ public class FiltroPasaTodo implements Filtro {
 	/**
 	 * @see net.gaia.vortex.tests.router2.impl.filtros.Filtro#aceptaA(net.gaia.vortex.tests.router2.api.Mensaje)
 	 */
-	@Override
 	public boolean aceptaA(final Mensaje mensaje) {
 		// Se deja pasar todo
 		return true;
@@ -40,7 +39,6 @@ public class FiltroPasaTodo implements Filtro {
 	/**
 	 * @see net.gaia.vortex.tests.router2.impl.filtros.Filtro#usaA(java.util.Collection)
 	 */
-	@Override
 	public boolean usaA(final Collection<String> filtros) {
 		return false;
 	}
@@ -59,7 +57,6 @@ public class FiltroPasaTodo implements Filtro {
 	/**
 	 * @see net.gaia.vortex.tests.router2.impl.filtros.Filtro#mergearCon(net.gaia.vortex.tests.router2.impl.filtros.Filtro)
 	 */
-	@Override
 	public Filtro mergearCon(final Filtro otroFiltro) {
 		return this;
 	}

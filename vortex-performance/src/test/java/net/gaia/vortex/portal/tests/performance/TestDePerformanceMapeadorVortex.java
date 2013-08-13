@@ -88,7 +88,6 @@ public class TestDePerformanceMapeadorVortex {
 		final Class<? extends Object> tipoDelObjeto = objeto.getClass();
 		// Por cada ejecucion convertimos y desconvertimos el objeto
 		stress.setEjecutable(new Runnable() {
-			@Override
 			public void run() {
 				final MensajeVortex mensaje = mapeador.convertirAVortex(objeto);
 				metricas.registrarInput();

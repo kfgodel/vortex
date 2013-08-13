@@ -30,7 +30,6 @@ public class PedirIdRemoto extends PasoSupport {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
-	@Override
 	public void ejecutar() {
 		final NodoSimulacion nodoRemoto = pata.getNodoRemoto();
 		nodoRemoto.recibirMensaje(pedido);

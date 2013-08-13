@@ -136,7 +136,6 @@ public class TestDePerformanceConPortales {
 		// Generamos tantos portales como receptores tengamos
 		final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(processorRuteo, nodoVortex);
 		portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
-			@Override
 			public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
 				metricas.registrarOutput();
 			}
@@ -168,12 +167,10 @@ public class TestDePerformanceConPortales {
 		final PortalMapeador portalDeEnvio = PortalMapeador.createForOutputWith(processorRuteo, nodoVortex);
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
-			@Override
 			public Runnable getOrCreateRunnable() {
 				return new Runnable() {
 					private final BooleanEstocastico booleano = BooleanEstocastico.create(0.0);
 
-					@Override
 					public void run() {
 						// Vemos si tenemos que esperar
 						if (booleano.nextValue()) {

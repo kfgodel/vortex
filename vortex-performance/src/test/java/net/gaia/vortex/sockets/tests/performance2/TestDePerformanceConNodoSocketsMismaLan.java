@@ -41,7 +41,7 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
  * 
  * @author D. García
  */
- @Ignore("Solo correr este test manualmente con conectividad asegurada")
+@Ignore("Solo correr este test manualmente con conectividad asegurada")
 public class TestDePerformanceConNodoSocketsMismaLan {
 	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceConNodoSocketsMismaLan.class);
 
@@ -126,7 +126,6 @@ public class TestDePerformanceConNodoSocketsMismaLan {
 			final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(processorRecepcion,
 					nodoClienteReceptor);
 			portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
-				@Override
 				public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
 					metricas.registrarOutput();
 				}
@@ -162,10 +161,8 @@ public class TestDePerformanceConNodoSocketsMismaLan {
 		final PortalMapeador portalDeEnvio = PortalMapeador.createForOutputWith(processorEnvios, nodoVortex);
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
-			@Override
 			public Runnable getOrCreateRunnable() {
 				return new Runnable() {
-					@Override
 					public void run() {
 						final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
 						portalDeEnvio.enviar(mensaje);

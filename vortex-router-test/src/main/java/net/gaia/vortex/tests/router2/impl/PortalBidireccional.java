@@ -71,7 +71,6 @@ public class PortalBidireccional extends NodoBidireccional implements Portal {
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.Portal#setFiltros(java.lang.String[])
 	 */
-	@Override
 	public void setFiltros(final String... filtros) {
 		Filtro filtroPedido;
 		if (filtros.length == 0) {
@@ -92,7 +91,6 @@ public class PortalBidireccional extends NodoBidireccional implements Portal {
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.Portal#enviar(net.gaia.vortex.tests.router2.mensajes.MensajeNormal)
 	 */
-	@Override
 	public void enviar(final MensajeNormal mensaje) {
 		final List<PataBidireccional> allPatas = getPatas();
 		for (final PataBidireccional pataConectora : allPatas) {

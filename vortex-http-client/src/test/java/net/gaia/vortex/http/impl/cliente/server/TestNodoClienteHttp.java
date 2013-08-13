@@ -55,7 +55,6 @@ public class TestNodoClienteHttp {
 				ApacheResponseProvider.create());
 		nodoCliente.conectarCon(new ReceptorSupport() {
 
-			@Override
 			public void recibir(final MensajeVortex mensaje) {
 				LOG.info("Recibido en nexo http: {}", mensaje);
 			}

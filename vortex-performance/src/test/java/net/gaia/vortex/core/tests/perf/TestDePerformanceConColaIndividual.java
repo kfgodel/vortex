@@ -127,12 +127,10 @@ public class TestDePerformanceConColaIndividual {
 		final StressGenerator receptores = StressGenerator.create();
 		receptores.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeRecepcion);
 		receptores.setFactoryDeRunnable(new FactoryDeRunnable() {
-			@Override
 			public Runnable getOrCreateRunnable() {
 				return new Runnable() {
 					private BlockingQueue<MensajeModeloParaTests> colaPropia;
 
-					@Override
 					public void run() {
 						if (colaPropia == null) {
 							colaPropia = new LinkedBlockingQueue<MensajeModeloParaTests>();
@@ -187,14 +185,12 @@ public class TestDePerformanceConColaIndividual {
 
 		// Por cada ejecucion genera el mensaje y lo entrega al handler
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
-			@Override
 			public Runnable getOrCreateRunnable() {
 				return new Runnable() {
 					// Agregamos en todas las colas
 					private final IndiceCicular indicePropio = IndiceCicular.desdeCeroExcluyendoA(colasReceptoras
 							.size());
 
-					@Override
 					public void run() {
 						final int colaAUsar = indicePropio.nextInt();
 						final BlockingQueue<MensajeModeloParaTests> colaReceptora = colasReceptoras.get(colaAUsar);

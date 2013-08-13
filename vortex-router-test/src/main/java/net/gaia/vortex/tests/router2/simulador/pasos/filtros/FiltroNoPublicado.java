@@ -28,7 +28,6 @@ public class FiltroNoPublicado implements Filtro {
 	/**
 	 * @see net.gaia.vortex.tests.router2.impl.filtros.Filtro#aceptaA(net.gaia.vortex.tests.router2.api.Mensaje)
 	 */
-	@Override
 	public boolean aceptaA(final Mensaje mensaje) {
 		throw new UnhandledConditionException(
 				"Este filtro no debería ser usado como filtro, solo para registrar el estado de publicacion");
@@ -37,7 +36,6 @@ public class FiltroNoPublicado implements Filtro {
 	/**
 	 * @see net.gaia.vortex.tests.router2.impl.filtros.Filtro#usaA(java.util.Collection)
 	 */
-	@Override
 	public boolean usaA(final Collection<String> filtros) {
 		throw new UnhandledConditionException(
 				"Este filtro no debería ser usado como filtro, solo para registrar el estado de publicacion");
@@ -46,7 +44,6 @@ public class FiltroNoPublicado implements Filtro {
 	/**
 	 * @see net.gaia.vortex.tests.router2.impl.filtros.Filtro#mergearCon(net.gaia.vortex.tests.router2.impl.filtros.Filtro)
 	 */
-	@Override
 	public Filtro mergearCon(final Filtro otroFiltro) {
 		throw new UnhandledConditionException(
 				"Este filtro no debería ser usado como filtro, solo para registrar el estado de publicacion");

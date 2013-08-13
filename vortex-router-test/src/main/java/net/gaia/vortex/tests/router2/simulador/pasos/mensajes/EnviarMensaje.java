@@ -33,7 +33,6 @@ public class EnviarMensaje extends PasoSupport {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
-	@Override
 	public void ejecutar() {
 		portal.enviar(mensaje);
 	}

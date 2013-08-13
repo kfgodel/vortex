@@ -21,7 +21,6 @@ public class ConfirmarIdRemoto extends PasoSupport {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
-	@Override
 	public void ejecutar() {
 		final Nodo nodoRemoto = pataSalida.getNodoRemoto();
 		nodoRemoto.recibirMensaje(confirmacion);

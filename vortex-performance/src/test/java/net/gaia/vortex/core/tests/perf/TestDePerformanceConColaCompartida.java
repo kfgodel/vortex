@@ -120,7 +120,6 @@ public class TestDePerformanceConColaCompartida {
 		final StressGenerator receptores = StressGenerator.create();
 		receptores.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeRecepcion);
 		receptores.setEjecutable(new Runnable() {
-			@Override
 			public void run() {
 				// Quitamos de la cola con timeout para poder terminar los threads en algun momento
 				try {
@@ -166,7 +165,6 @@ public class TestDePerformanceConColaCompartida {
 
 		// Por cada ejecucion genera el mensaje y lo entrega al handler
 		stress.setEjecutable(new Runnable() {
-			@Override
 			public void run() {
 				final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
 				final boolean added = colaCompartida.add(mensaje);

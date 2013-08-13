@@ -40,7 +40,6 @@ public class EnviarPorSocket implements WorkUnit {
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
 
-	@Override
 	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		try {
 			socket.send(datos);

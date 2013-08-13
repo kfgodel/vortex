@@ -35,7 +35,6 @@ public class ConectarBidi extends PasoSupport {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
-	@Override
 	public void ejecutar() {
 		getNodoLocal().conectarCon(getNodoDestino());
 		getNodoDestino().conectarCon(getNodoLocal());

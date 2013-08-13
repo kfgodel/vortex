@@ -35,7 +35,6 @@ public class DesconectarBidi extends PasoSupport {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
-	@Override
 	public void ejecutar() {
 		getNodoDestino().desconectarDe(getNodoLocal());
 		getNodoLocal().desconectarDe(getNodoDestino());

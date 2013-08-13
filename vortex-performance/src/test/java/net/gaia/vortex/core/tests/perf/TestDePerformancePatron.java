@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-
 import net.gaia.vortex.core.tests.HandlerDelMensajeDeTest;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
@@ -102,7 +101,6 @@ public class TestDePerformancePatron {
 
 		// Creamos el handler que al recibir contabiliza en las métricas
 		final HandlerDelMensajeDeTest receptorFinal = new HandlerDelMensajeDeTest() {
-			@Override
 			public void recibir(final MensajeModeloParaTests mensaje) {
 				metricas.registrarOutput();
 			}
@@ -110,7 +108,6 @@ public class TestDePerformancePatron {
 
 		// Por cada ejecucion genera el mensaje y lo entrega al handler
 		stress.setEjecutable(new Runnable() {
-			@Override
 			public void run() {
 				final MensajeModeloParaTests mensaje = MensajeModeloParaTests.create();
 				metricas.registrarInput();

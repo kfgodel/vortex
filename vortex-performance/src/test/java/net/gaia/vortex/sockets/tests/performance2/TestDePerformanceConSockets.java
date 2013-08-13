@@ -127,7 +127,6 @@ public class TestDePerformanceConSockets {
 		// Generamos tantos sockets conectados como receptores
 		final JsonTextualizer textualizer = JsonTextualizer.createWithTypeMetadata();
 		final SocketErrorHandler handlerDeErrores = new SocketErrorHandler() {
-			@Override
 			public void onSocketError(final Throwable cause, final ObjectSocket socket) {
 				LOG.error("Se produjo un error " + cause.getClass() + ": " + cause.getMessage());
 				socket.closeAndDispose();
@@ -138,7 +137,6 @@ public class TestDePerformanceConSockets {
 			// Creamos el socket de escucha
 			final ObjectSocketConfiguration configServer = ObjectSocketConfiguration.create(direccion,
 					new ObjectReceptionHandler() {
-						@Override
 						public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 							// Cada vez que recibimos registramos el mensaje
 							metricas.registrarOutput();
@@ -191,13 +189,11 @@ public class TestDePerformanceConSockets {
 
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
-			@Override
 			public Runnable getOrCreateRunnable() {
 				return new Runnable() {
 					// Agregamos en todas las colas
 					private final IndiceCicular indicePropio = IndiceCicular.desdeCeroExcluyendoA(clientes.size());
 
-					@Override
 					public void run() {
 						final int socketAUsar = indicePropio.nextInt();
 						final ObjectSocketConnector cliente = clientes.get(socketAUsar);

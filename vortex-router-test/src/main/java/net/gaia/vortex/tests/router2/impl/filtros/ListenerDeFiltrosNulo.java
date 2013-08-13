@@ -24,7 +24,6 @@ public class ListenerDeFiltrosNulo implements ListenerDeFiltros {
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.ListenerDeFiltros#onCambioDeFiltro(net.gaia.vortex.tests.router2.impl.filtros.Filtro)
 	 */
-	@Override
 	public void onCambioDeFiltro(final Filtro nuevoFiltro) {
 		// No hacemos nada
 	}

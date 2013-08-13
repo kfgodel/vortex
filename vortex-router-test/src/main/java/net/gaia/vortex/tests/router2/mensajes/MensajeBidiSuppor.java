@@ -34,7 +34,6 @@ public class MensajeBidiSuppor extends MensajeSupport {
 		this.idLocalAlEmisor = idDePataLocalAlEmisor;
 	}
 
-	@Override
 	public Long getIdLocalAlReceptor() {
 		return idLocalAlReceptor;
 	}
@@ -46,7 +45,6 @@ public class MensajeBidiSuppor extends MensajeSupport {
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.Mensaje#getTag()
 	 */
-	@Override
 	public String getTag() {
 		return FiltroPorStrings.META_MENSAJE;
 	}

@@ -38,7 +38,6 @@ public class FiltroPorStrings implements Filtro {
 	/**
 	 * @see net.gaia.vortex.tests.router2.impl.filtros.Filtro#aceptaA(net.gaia.vortex.tests.router2.api.Mensaje)
 	 */
-	@Override
 	public boolean aceptaA(final Mensaje mensaje) {
 		final String tagDelMensaje = mensaje.getTag();
 		if (META_MENSAJE.equals(tagDelMensaje)) {
@@ -59,7 +58,6 @@ public class FiltroPorStrings implements Filtro {
 	/**
 	 * @see net.gaia.vortex.tests.router2.impl.filtros.Filtro#usaA(java.util.Collection)
 	 */
-	@Override
 	public boolean usaA(final Collection<String> filtros) {
 		for (final String filtro : filtros) {
 			if (!getPermitidos().contains(filtro)) {
@@ -88,7 +86,6 @@ public class FiltroPorStrings implements Filtro {
 	/**
 	 * @see net.gaia.vortex.tests.router2.impl.filtros.Filtro#mergearCon(net.gaia.vortex.tests.router2.impl.filtros.Filtro)
 	 */
-	@Override
 	public Filtro mergearCon(final Filtro otroFiltro) {
 		if (otroFiltro instanceof FiltroPasaTodo) {
 			return otroFiltro;

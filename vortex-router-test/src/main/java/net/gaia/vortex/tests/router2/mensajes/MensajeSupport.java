@@ -34,7 +34,6 @@ public abstract class MensajeSupport implements Mensaje {
 		this.idDeMensaje = idDeMensajes.getAndIncrement();
 	}
 
-	@Override
 	public Long getIdDeMensaje() {
 		return idDeMensaje;
 	}

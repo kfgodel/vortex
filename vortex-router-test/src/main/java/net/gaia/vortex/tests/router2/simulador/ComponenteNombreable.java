@@ -24,7 +24,6 @@ public class ComponenteNombreable extends ComponenteSimulable implements Nombrab
 	private String nombre;
 	public static final String nombre_FIELD = "nombre";
 
-	@Override
 	public String getNombre() {
 		return nombre;
 	}

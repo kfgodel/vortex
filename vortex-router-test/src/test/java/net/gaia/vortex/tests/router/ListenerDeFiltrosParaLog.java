@@ -33,7 +33,6 @@ public class ListenerDeFiltrosParaLog implements ListenerDeFiltros {
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.ListenerDeFiltros#onCambioDeFiltro(net.gaia.vortex.tests.router2.impl.filtros.Filtro)
 	 */
-	@Override
 	public void onCambioDeFiltro(final Filtro nuevoFiltro) {
 		LOG.info("  El listener del nodo [{}] fue notificado del cambio de filtros remotos a: {}",
 				portalCambiado.getNombre(), nuevoFiltro);

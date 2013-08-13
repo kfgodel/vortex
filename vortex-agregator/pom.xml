@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+	<groupId>net.gaia.vortex</groupId>
+	<artifactId>vortex-parent</artifactId>
+	<version>0.5.1-SNAPSHOT</version>
+	<relativePath>../vortex-parent</relativePath>
+  </parent>
+    <artifactId>vortex-aggregator</artifactId>
+    <packaging>pom</packaging>
+    
+	<name>Vortex Aggregator Pom</name>
+	<description>Aggregator project to build everything</description>
+
+    <modules>
+        <module>../gaia-parent</module>
+        <module>../vortex-parent</module>
+        <module>../task-processor</module>
+        <module>../object-sockets</module>
+        <module>../forkjoin-java5</module>
+        <module>../dgarcia-commons</module>
+        <module>../json-textualizer</module>
+        <module>../vortex-core</module>
+        <module>../vortex-http</module>
+        <module>../vortex-http-client</module>
+        <module>../vortex-http-server</module>
+        <module>../vortex-json</module>
+        <module>../vortex-portal</module>
+        <module>../vortex-router</module>
+        <module>../vortex-sets</module>
+        <module>../vortex-sockets</module>
+        <module>../vortex-textualizer</module>
+    </modules>
+    
+</project>

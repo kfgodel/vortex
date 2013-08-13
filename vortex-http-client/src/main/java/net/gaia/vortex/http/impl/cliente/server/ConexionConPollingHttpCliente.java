@@ -62,7 +62,6 @@ public class ConexionConPollingHttpCliente {
 		conexion.processor = procesor;
 		conexion.tareaDeIntercambioDeMensajes = MinMaxWorkUnit.crearWrapperDe(new WorkUnit() {
 
-			@Override
 			public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 				conexion.intercambiarMensajesConServer();
 			}

@@ -45,7 +45,6 @@ public class RespuestaDeIdRemoto extends MensajeSupport {
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.Mensaje#getTag()
 	 */
-	@Override
 	public String getTag() {
 		return FiltroPorStrings.META_MENSAJE;
 	}
@@ -61,7 +60,6 @@ public class RespuestaDeIdRemoto extends MensajeSupport {
 	/**
 	 * @see net.gaia.vortex.tests.router2.api.Mensaje#getIdLocalAlReceptor()
 	 */
-	@Override
 	public Long getIdLocalAlReceptor() {
 		// No lo sabemos aun
 		return null;

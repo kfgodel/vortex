@@ -30,7 +30,6 @@ public class PublicarFiltros extends PasoSupport {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.PasoSimulacion#ejecutar()
 	 */
-	@Override
 	public void ejecutar() {
 		final Nodo nodoVecino = pata.getNodoRemoto();
 		nodoVecino.recibirMensaje(mensaje);

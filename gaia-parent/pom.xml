@@ -1,0 +1,160 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+	<groupId>net.gaia</groupId>
+	<artifactId>gaia-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0</version>
+    
+	<name>Gaia Parent Pom</name>
+	<description>Parent project to group build parameters</description>
+
+    <properties>
+	  <project.jdk>1.5</project.jdk>
+	  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+    
+    <build>
+    	<!-- Plugins heredados obligatoriamente -->
+    	<plugins>
+			<!-- Plugin para compilar las clases -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.1</version>
+				<configuration>
+					<source>${project.jdk}</source>
+					<target>${project.jdk}</target>
+					<debug>true</debug>
+				</configuration>
+			</plugin>
+			
+			<!-- Genera el jar de cada proyecto -->
+			<plugin>
+			  <artifactId>maven-jar-plugin</artifactId>
+			  <version>2.3.1</version>
+			  <configuration>
+		          <archive>
+			      	<index>true</index>
+		            <manifest>
+		              <addClasspath>true</addClasspath>
+		            </manifest>
+		          </archive>
+		          <manifestEntries>
+		            <Build-JVM>${java.vm.name} - ${java.vm.vendor}</Build-JVM>
+		            <Build-OS>${os.name} - Version: ${os.version}</Build-OS>
+		            <Application-GroupId>${project.groupId}</Application-GroupId>
+		            <Application-Artifact>${project.artifactId}</Application-Artifact>
+		            <Application-Version>${project.version}</Application-Version>
+		          </manifestEntries>
+			  </configuration>
+			</plugin>
+			
+			<!-- Attachea los fuentes como jar -->
+			<plugin>
+			  <artifactId>maven-source-plugin</artifactId>
+			  <version>2.1.2</version>
+			  <executions>
+			    <execution>
+			      <id>attach-source</id>
+			      <phase>verify</phase>
+			      <goals>
+			        <goal>jar-no-fork</goal>
+			      </goals>
+			    </execution>
+			  </executions>
+			</plugin>
+			
+			<!-- Configura el .project para el eclipse -->
+			<plugin>
+			  <artifactId>maven-eclipse-plugin</artifactId>
+			  <version>2.8</version>
+			  <configuration>
+			    <downloadSources>true</downloadSources>
+			    <wtpversion>2.0</wtpversion>
+			  </configuration>
+			</plugin>
+    	</plugins>
+    
+    
+    	<!-- Plugins opcionales -->
+        <pluginManagement>
+            <plugins>
+            	
+				
+            </plugins>
+        </pluginManagement>
+    </build>
+
+	<!-- Dependencias obligatorias heredadas por todos los subproyectos -->
+    <dependencies>
+    
+		<!-- Clases base que tienen cosas comunes como el ToString o reflection -->
+	    <dependency>
+		  <groupId>ar.com.dgarcia</groupId>
+		  <artifactId>dgarcia-commons</artifactId>
+		  <version>1.0.5</version>
+	    </dependency>
+	  
+		<!--  Abstrae la herramienta de logueo concreta -->
+	    <dependency>
+	      <groupId>org.slf4j</groupId>
+	      <artifactId>slf4j-api</artifactId>
+	      <version>1.6.4</version>
+	      <scope>provided</scope>
+	    </dependency>
+	    
+	    <!-- Implementación del logueo, necesario para los tests-->
+	    <dependency>
+	      <groupId>ch.qos.logback</groupId>
+	      <artifactId>logback-core</artifactId>
+	      <version>1.0.3</version>
+	      <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>ch.qos.logback</groupId>
+	      <artifactId>logback-classic</artifactId>
+	      <version>1.0.3</version>
+	      <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.slf4j</groupId>
+	      <artifactId>jcl-over-slf4j</artifactId>
+	      <version>1.6.4</version>
+	      <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.slf4j</groupId>
+	      <artifactId>log4j-over-slf4j</artifactId>
+	      <version>1.6.4</version>
+	      <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>junit</groupId>
+	      <artifactId>junit</artifactId>
+	      <version>4.8.1</version>
+	      <scope>test</scope>
+	    </dependency>	    
+	    
+    </dependencies>
+    
+	<!-- Repositorio para dependencias del proyecto -->
+	<repositories>
+	  <repository>
+	    <id>kfgodel_mosquito</id>
+	    <name>Repo Mosquito</name>
+	    <url>http://kfgodel.info:8081/nexus/content/groups/public/</url>
+	  </repository>
+	</repositories>
+	<pluginRepositories>
+	  <pluginRepository>
+	    <id>kfgodel_mosquito</id>
+	    <name>Repo Mosquito</name>
+	    <url>http://kfgodel.info:8081/nexus/content/groups/public/</url>
+	  </pluginRepository>
+	</pluginRepositories>
+    
+</project>
+

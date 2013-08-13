@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +65,6 @@ public class SimuladorImpl implements Simulador {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.Simulador#agregar(net.gaia.vortex.tests.router.impl.pasos.ConectarUni)
 	 */
-	@Override
 	public void agregar(final PasoSimulacion nuevoPaso) {
 		getProximos().add(nuevoPaso);
 	}
@@ -74,7 +72,6 @@ public class SimuladorImpl implements Simulador {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.Simulador#getCantidadDePasosPendientes()
 	 */
-	@Override
 	public int getCantidadDePasosPendientes() {
 		return getProximos().size();
 	}
@@ -82,7 +79,6 @@ public class SimuladorImpl implements Simulador {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.Simulador#ejecutarSiguiente()
 	 */
-	@Override
 	public <T extends PasoSimulacion> T ejecutarSiguiente() {
 		if (getProximos().isEmpty()) {
 			return null;
@@ -103,7 +99,6 @@ public class SimuladorImpl implements Simulador {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.Simulador#ejecutarTodos(ar.com.dgarcia.lang.time.TimeMagnitude)
 	 */
-	@Override
 	public void ejecutarTodos(final TimeMagnitude esperaMaxima) throws TimeoutExceededException {
 		ejecutarConLimites(esperaMaxima, Integer.MAX_VALUE);
 	}
@@ -144,7 +139,6 @@ public class SimuladorImpl implements Simulador {
 	/**
 	 * @see net.gaia.vortex.tests.router2.simulador.Simulador#ejecutarPasos(int)
 	 */
-	@Override
 	public void ejecutarPasos(final int cantidadDePasosMaxima) {
 		ejecutarConLimites(TimeMagnitude.of(10, TimeUnit.MINUTES), cantidadDePasosMaxima);
 	}

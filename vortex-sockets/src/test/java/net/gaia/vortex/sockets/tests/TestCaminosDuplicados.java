@@ -113,7 +113,6 @@ public class TestCaminosDuplicados {
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 		portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
 
-			@Override
 			public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
 				esperarPrimerMensaje.release();
 				metricas.registrarOutput();
@@ -146,7 +145,6 @@ public class TestCaminosDuplicados {
 		final WaitBarrier esperarPrimerMensaje = WaitBarrier.create();
 		portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
 
-			@Override
 			public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
 				esperarPrimerMensaje.release();
 			}
@@ -156,7 +154,6 @@ public class TestCaminosDuplicados {
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 		portalEmisor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
 
-			@Override
 			public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
 				metricas.registrarOutput();
 			}
@@ -226,7 +223,6 @@ public class TestCaminosDuplicados {
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 		portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
 
-			@Override
 			public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
 				esperarPrimerMensaje.release();
 				metricas.registrarOutput();
