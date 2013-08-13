@@ -16,6 +16,8 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,12 +43,23 @@ import ar.dgarcia.textualizer.json.JsonTextualizer;
 public abstract class TestSocketPerformance {
 	private static final Logger LOG = LoggerFactory.getLogger(TestSocketPerformance.class);
 
+	private InetSocketAddress sharedAddress;
+
+	private ObjectSocketAcceptor acceptor;
+
+	private ObjectSocketConnector connector;
+
 	/**
 	 * Crea el textualizador para usar en los tests
 	 * 
 	 * @return
 	 */
 	protected abstract ObjectTextualizer createTextualizer();
+
+	@Before
+	public void definirPuerto() {
+		sharedAddress = new InetSocketAddress(12345);
+	}
 
 	@Test
 	public void conObjetosMinimos() {
@@ -69,26 +82,26 @@ public abstract class TestSocketPerformance {
 	private void runTest(final String nombreDelTest, final Object objetoEnviado, final int cantidadDeMensajesEnviados) {
 		final WaitBarrier esperarRecibidos = WaitBarrier.create(cantidadDeMensajesEnviados);
 		final ObjectReceptionHandler handlerReceptor = new ObjectReceptionHandler() {
-			
+
+			@Override
 			public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 				esperarRecibidos.release();
 			}
 		};
 
 		// Levantamos el socket de escucha para recibir los mensajes en una cola
-		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
 		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress,
 				handlerReceptor, JsonTextualizer.createWithTypeMetadata());
 		final ObjectTextualizer currentTextualizer = createTextualizer();
 		receptionConfig.setSerializer(currentTextualizer);
 		// Empezamos a escuchar en el puerto
-		final ObjectSocketAcceptor acceptor = ObjectSocketAcceptor.create(receptionConfig);
+		acceptor = ObjectSocketAcceptor.create(receptionConfig);
 
 		// Conectamos el cliente al puerto compartido
 		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress,
 				JsonTextualizer.createWithTypeMetadata());
 		senderConfig.setSerializer(currentTextualizer);
-		final ObjectSocketConnector connector = ObjectSocketConnector.create(senderConfig);
+		connector = ObjectSocketConnector.create(senderConfig);
 
 		// Enviamos un objeto cualquiera a traves del socket
 		final ObjectSocket clientSocket = connector.getObjectSocket();
@@ -98,7 +111,8 @@ public abstract class TestSocketPerformance {
 		generator.setCantidadDeThreadsEnEjecucion(1);
 		generator.setEsperaEntreEjecucionesEnMilis(0);
 		generator.setEjecutable(new Runnable() {
-			
+
+			@Override
 			public void run() {
 				clientSocket.send(objetoEnviado);
 			}
@@ -110,10 +124,16 @@ public abstract class TestSocketPerformance {
 		final long elapsedMillis = crono.getElapsedMillis();
 		LOG.info("[{}] - Llevó {} ms transmitir {} objetos: {} objs/ms", new Object[] { nombreDelTest, elapsedMillis,
 				cantidadDeMensajesEnviados, ((double) cantidadDeMensajesEnviados) / elapsedMillis });
+	}
 
-		// Cerramos los sockets
-		acceptor.closeAndDispose();
-		connector.closeAndDispose();
+	@After
+	public void cerramosLosPuertos() {
+		if (acceptor != null) {
+			acceptor.closeAndDispose();
+		}
+		if (connector != null) {
+			connector.closeAndDispose();
+		}
 	}
 
 	@Test
