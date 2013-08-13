@@ -66,7 +66,7 @@ public abstract class TestTextualizerSupport {
 	public void deberiaPoderConvertirUnObjetoEnTexto() {
 		final String convertedValue = textualizer.convertToString(textualized);
 		Assert.assertNotNull(convertedValue);
-		Assert.assertEquals(0, convertedValue.length());
+		Assert.assertTrue("Debería ser una cadena de un par de ", convertedValue.length() > 10);
 	}
 
 	/**
