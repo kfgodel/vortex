@@ -28,9 +28,12 @@ import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
+import ar.com.dgarcia.testing.FreePortFinder;
 import ar.dgarcia.http.simple.impl.ApacheResponseProvider;
 
 /**
@@ -39,8 +42,7 @@ import ar.dgarcia.http.simple.impl.ApacheResponseProvider;
  * @author D. García
  */
 public class TestRouterHttp {
-
-	public static final int PUERTO_BASE_TESTS = 21113;
+	private static final Logger LOG = LoggerFactory.getLogger(TestRouterHttp.class);
 
 	private TaskProcessor processor;
 
@@ -55,8 +57,11 @@ public class TestRouterHttp {
 	@Before
 	public void crearComponentes() {
 		processor = VortexProcessorFactory.createProcessor();
-		routerServidor = RouterServerHttp.createAndAcceptRequestsOnPort(PUERTO_BASE_TESTS, processor);
-		routerCliente = RouterClienteHttp.createAndConnectTo("http://localhost:" + PUERTO_BASE_TESTS + "/", processor,
+
+		final int freePort = FreePortFinder.getFreePort();
+		LOG.debug("Puerto libre para tests: {}", freePort);
+		routerServidor = RouterServerHttp.createAndAcceptRequestsOnPort(freePort, processor);
+		routerCliente = RouterClienteHttp.createAndConnectTo("http://localhost:" + freePort + "/", processor,
 				ApacheResponseProvider.create());
 		emisor = PortalBidi.create(processor);
 		receptor = PortalBidi.create(processor);
@@ -73,7 +78,8 @@ public class TestRouterHttp {
 	public void elMensajeDeberiaLlegarAlOtroLadoDelSocketSiHayInteresado() throws InterruptedException {
 		// El receptor quiere mensajes con atributo="hola"
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
-			
+
+			@Override
 			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, "hola");
 			}
@@ -101,7 +107,8 @@ public class TestRouterHttp {
 	public void noDeberiaLlegarUnMensajeQueNoInteresa() throws InterruptedException {
 		// El receptor quiere mensajes con atributo="chau"
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
-			
+
+			@Override
 			public Condicion getCondicionSuficiente() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, "chau");
 			}

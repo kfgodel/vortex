@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package ar.dgarcia.objectsockets.tests;
+package ar.com.dgarcia.testing;
 
 import java.io.IOException;
 import java.net.ServerSocket;

@@ -34,8 +34,11 @@ import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.time.TimeMagnitude;
+import ar.com.dgarcia.testing.FreePortFinder;
 
 /**
  * Esta clase prueba el uso básico del nodo socket
@@ -43,8 +46,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * @author D. García
  */
 public class TestRedDeSocketsConHubs {
-
-	private final static InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
+	private static final Logger LOG = LoggerFactory.getLogger(TestRedDeSocketsConHubs.class);
 
 	private Portal nodoEmisor;
 	private Portal nodoReceptor;
@@ -58,9 +60,14 @@ public class TestRedDeSocketsConHubs {
 	private TaskProcessor processor;
 
 	private ClienteDeNexoSocket segundoCliente;
+	private InetSocketAddress sharedTestAddress;
 
 	@Before
 	public void crearNodos() {
+		final int freePort = FreePortFinder.getFreePort();
+		sharedTestAddress = new InetSocketAddress(freePort);
+		LOG.debug("Puerto libre para el test: {}", freePort);
+
 		processor = VortexProcessorFactory.createProcessor();
 
 		// Creamos el hub al que se conectan los nexos del servidor

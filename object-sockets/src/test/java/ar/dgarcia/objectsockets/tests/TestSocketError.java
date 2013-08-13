@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
+import ar.com.dgarcia.testing.FreePortFinder;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.api.SocketEventHandler;
@@ -65,9 +66,8 @@ public class TestSocketError {
 	@Test
 	public void deberiaDetectarLaDesconexion() {
 		// El que escucha va a desconectarse al recibir el primer mensaje
-		final InetSocketAddress sharedAddress = new InetSocketAddress(10448);
 		final QueueReceptionHandler handlerReceptor = QueueReceptionHandler.create();
-		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(sharedAddress,
+		final ObjectSocketConfiguration receptionConfig = ObjectSocketConfiguration.create(testAddress,
 				new ObjectReceptionHandler() {
 
 					@Override
@@ -80,7 +80,7 @@ public class TestSocketError {
 		listeningAcceptor = ObjectSocketAcceptor.create(receptionConfig);
 
 		// Conectamos el cliente al puerto compartido
-		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(sharedAddress,
+		final ObjectSocketConfiguration senderConfig = ObjectSocketConfiguration.create(testAddress,
 				JsonTextualizer.createWithTypeMetadata());
 		final WaitBarrier esperarNotificacionDeCierre = WaitBarrier.create();
 		final AtomicBoolean notificacionRecibida = new AtomicBoolean(false);

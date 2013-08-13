@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.lang.time.TimeMagnitude;
+import ar.com.dgarcia.testing.FreePortFinder;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 import ar.dgarcia.objectsockets.impl.ObjectSocketAcceptor;
 import ar.dgarcia.objectsockets.impl.ObjectSocketConfiguration;

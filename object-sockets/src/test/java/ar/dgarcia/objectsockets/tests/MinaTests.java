@@ -42,6 +42,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.testing.FreePortFinder;
+
 /**
  * Esta clase prueba el funcionamiento de mina a través de sockets TCP
  * 

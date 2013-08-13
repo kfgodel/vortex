@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.SystemChronometer;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
+import ar.com.dgarcia.testing.FreePortFinder;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
