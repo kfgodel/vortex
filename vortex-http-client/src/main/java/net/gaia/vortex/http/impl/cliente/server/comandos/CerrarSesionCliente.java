@@ -30,7 +30,7 @@ public class CerrarSesionCliente implements ComandoClienteHttp {
 	/**
 	 * @see net.gaia.vortex.http.impl.cliente.server.ComandoClienteHttp#crearRequest(java.lang.String)
 	 */
-	
+
 	public StringRequest crearRequest(final String urlDelSevidor) {
 		final String urlParaEliminar = urlDelSevidor + HttpMetadata.URL_PREFFIX_ELIMINAR + idDeSesionAEliminar;
 		final StringRequest requestParaEliminar = StringRequest.create(urlParaEliminar);
@@ -40,9 +40,10 @@ public class CerrarSesionCliente implements ComandoClienteHttp {
 	/**
 	 * @see net.gaia.vortex.http.impl.cliente.server.ComandoClienteHttp#procesarRespuesta(ar.dgarcia.http.client.api.StringResponse)
 	 */
-	
+
 	public void procesarRespuesta(final StringResponse respuestaDelServidor) {
 		// No hay acción después de la eliminación
+
 	}
 
 	public static CerrarSesionCliente create(final String idDeSesionATerminar) {
@@ -54,7 +55,8 @@ public class CerrarSesionCliente implements ComandoClienteHttp {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(idDeSesionAEliminar_FIELD, idDeSesionAEliminar).toString();
 	}
