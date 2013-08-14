@@ -99,7 +99,7 @@ public class TestRouterHttp {
 		emisor.enviar(mensajeEnviado);
 
 		// Verificamos que haya llegado
-		final Object mensajeRecibidoPor1 = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		final Object mensajeRecibidoPor1 = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(3, TimeUnit.SECONDS));
 		Assert.assertEquals("El receptor debería haber recibido el mensaje", mensajeEnviado, mensajeRecibidoPor1);
 	}
 
@@ -129,7 +129,7 @@ public class TestRouterHttp {
 
 		// Verificamos que haya llegado
 		try {
-			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(3, TimeUnit.SECONDS));
 			Assert.fail("No deberíamos recibir el mensaje");
 		} catch (final UnsuccessfulWaitException e) {
 			// Es la excepcion esperada
