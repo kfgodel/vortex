@@ -6,10 +6,13 @@
   <parent>
 	<groupId>net.gaia.vortex</groupId>
 	<artifactId>vortex-parent</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<relativePath>../vortex-parent</relativePath>
   </parent>
+  
   <artifactId>vortex-sockets</artifactId>
+  <version>${version.vortex}</version>
+  
   <name>Vortex[Sockets]</name>
   <description>Proyecto que implementa sockets como nodos para utilizarlos en vortex</description>
   
@@ -17,23 +20,22 @@
   
   	<!-- Componentes para ruteo bidi y core-->
 	<dependency>
-	  <groupId>${project.groupId}</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-router</artifactId>
-	  <version>${project.version}</version>
+	  <version>${version.vortex}</version>
 	</dependency>  	
   	
   	<!-- Agrega los sockets de objetos -->
   	<dependency>
-	  <groupId>ar.dgarcia</groupId>
+	  <groupId>${dgarcia.project.group}</groupId>
 	  <artifactId>object-sockets</artifactId>
-	  <version>0.1</version>
   	</dependency>
   	
   	<!-- Agrega la textualizacion a json para enviar por sockets-->
 	<dependency>
-	  <groupId>${project.groupId}</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-textualizer</artifactId>
-	  <version>0.1</version>
+	  <version>${version.vortex}</version>
 	</dependency>
 	
   </dependencies>

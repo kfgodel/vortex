@@ -6,10 +6,13 @@
   <parent>
 	<groupId>net.gaia.vortex</groupId>
 	<artifactId>vortex-parent</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<relativePath>../vortex-parent</relativePath>
   </parent>
+  
   <artifactId>vortex-portal</artifactId>
+  <version>${version.vortex}</version>
+  
   <name>Vortex[Portal]</name>
   <description>Clases de vortex que permiten utilizar la red a código cliente</description>
   
@@ -17,14 +20,14 @@
   
   	<!-- Dependencias basicas de vortex -->
 	<dependency>
-	  <groupId>${project.groupId}</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-core</artifactId>
-	  <version>${project.version}</version>
+	  <version>${version.vortex}</version>
 	</dependency>  	
 	
 	<!-- Permite implementar los mapeadores con json -->
 	<dependency>
-	  <groupId>ar.dgarcia.textualizer</groupId>
+	  <groupId>${dgarcia.project.group}</groupId>
 	  <artifactId>json-textualizer</artifactId>
 	</dependency>
     

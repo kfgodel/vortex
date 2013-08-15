@@ -6,12 +6,13 @@
   <parent>
 	<groupId>net.gaia.vortex</groupId>
 	<artifactId>vortex-parent</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<relativePath>../vortex-parent</relativePath>
   </parent>
   
   <artifactId>vortex-textualizer</artifactId>
-  <version>0.1</version>
+  <version>${version.vortex}</version>
+  
   <name>Vortex Textualizer</name>
   <description>Convierte mensajes vortex ida y vuelta</description>
   
@@ -19,7 +20,7 @@
   
   	<!-- Permite convertir objetos en JSON y viceversa -->
 	<dependency>
-	  <groupId>ar.dgarcia.textualizer</groupId>
+	  <groupId>${dgarcia.project.group}</groupId>
 	  <artifactId>json-textualizer</artifactId>
 	</dependency>
   
@@ -27,7 +28,7 @@
   	<dependency>
 	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-core</artifactId>
-	  <version>${project.parent.version}</version>
+	  <version>${version.vortex}</version>
   	</dependency>
   
   </dependencies>

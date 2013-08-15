@@ -6,11 +6,13 @@
   <parent>
 	<groupId>net.gaia.vortex</groupId>
 	<artifactId>vortex-parent</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<relativePath>../vortex-parent</relativePath>
   </parent>
   
+  <version>${version.vortex}</version>
   <artifactId>vortex-router</artifactId>
+  
   <name>Vortex[Router]</name>
   <description>Proyecto para definir el comportamiento de ruteo de mensajes de vortex</description>
   
@@ -18,23 +20,23 @@
   
   	<!-- Dependencias básicas de vortex -->
 	<dependency>
-	  <groupId>${project.groupId}</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-core</artifactId>
-	  <version>${project.version}</version>
+	  <version>${version.vortex}</version>
 	</dependency>
 
 	<!-- Operaciones sobre las condiciones para calcular filtros -->	
 	<dependency>
-	  <groupId>${project.groupId}</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-sets</artifactId>
-	  <version>${project.version}</version>
+	  <version>${version.vortex}</version>
 	</dependency>
 	
 	<!-- Definicion de portales -->
 	<dependency>
-	  <groupId>${project.groupId}</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-portal</artifactId>
-	  <version>${project.version}</version>
+	  <version>${version.vortex}</version>
 	</dependency>
 
   </dependencies>

@@ -6,12 +6,13 @@
   <parent>
 	<groupId>net.gaia.vortex</groupId>
 	<artifactId>vortex-parent</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<relativePath>../vortex-parent</relativePath>
   </parent>
   
   <artifactId>vortex-mosquito-server</artifactId>
-  <version>0.5.0</version>
+  <version>${version.vortex}</version>
+  
   <name>Vortex[Mosquito]</name>
   <description>Aplicación servidor en mosquito que actúa como hub de sockets</description>
   
@@ -65,16 +66,16 @@
 
 	<!-- Permite la conexión mediante http a la red vortex -->
 	<dependency>
-	  <groupId>net.gaia.vortex.http</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-http-server</artifactId>
-	  <version>${project.parent.version}</version>
+	  <version>${version.vortex}</version>
 	</dependency>
 
 	<!-- Permite la conexión mediante sockets a la red vortex -->  
   	<dependency>
 	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-sockets</artifactId>
-	  <version>${project.parent.version}</version>
+	  <version>${version.vortex}</version>
   	</dependency>
   	
 	<!-- Agrega la posibilidad de detectar el ambiente automáticamente -->
@@ -87,27 +88,22 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.6.4</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <version>1.0.3</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.0.3</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
-      <version>1.6.4</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
-      <version>1.6.4</version>
     </dependency>
     
   </dependencies>

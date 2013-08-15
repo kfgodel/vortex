@@ -6,10 +6,13 @@
   <parent>
 	<groupId>net.gaia.vortex</groupId>
 	<artifactId>vortex-parent</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<relativePath>../vortex-parent</relativePath>
   </parent>
+  
   <artifactId>vortex-core</artifactId>
+  <version>${version.vortex}</version>
+  
   <name>Vortex[Core]</name>
   <description>Proyecto que implementa vortex en su versión mínima y más performante</description>
   

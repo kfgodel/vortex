@@ -6,12 +6,13 @@
   <parent>
 	<groupId>net.gaia.vortex</groupId>
 	<artifactId>vortex-parent</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<relativePath>../vortex-parent</relativePath>
   </parent>
   
-  <groupId>net.gaia.vortex.http</groupId>
   <artifactId>vortex-http</artifactId>
+  <version>${version.vortex}</version>
+  
   <name>Vortex[Http-common]</name>
   <description>Proyecto comun para el cliente y servidor http</description>
   
@@ -21,12 +22,12 @@
 	<dependency>
 	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-router</artifactId>
-	  <version>${project.parent.version}</version>
+	  <version>${version.vortex}</version>
 	</dependency>  	
     
     <!-- Conversion a json -->
 	<dependency>
-	  <groupId>ar.dgarcia.textualizer</groupId>
+	  <groupId>${dgarcia.project.group}</groupId>
 	  <artifactId>json-textualizer</artifactId>
 	</dependency>    
     

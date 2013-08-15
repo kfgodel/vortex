@@ -14,9 +14,16 @@
     <groupId>net.gaia.vortex</groupId>
     <artifactId>vortex-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.5.1-SNAPSHOT</version>
+    <version>1.0</version>
+    
 	<name>Vortex Parent Pom</name>
 	<description>Proyecto que define parametros comunes para ser heredados por los proyectos de vortex</description>
+	
+	<properties>
+		<version.vortex>0.5.1-SNAPSHOT</version.vortex>
+		<dgarcia.project.group>ar.com.dgarcia</dgarcia.project.group>
+	</properties>
+	
 
 	<!-- Dependencias obligatorias heredadas por todos los subproyectos -->
     <dependencies>
@@ -34,12 +41,40 @@
 				<version>0.6.0-SNAPSHOT</version>
 			</dependency>
 			
+			<!-- Transferencia de objetos a través de sockets con facilidad -->
+			<dependency>
+			  <groupId>${dgarcia.project.group}</groupId>
+			  <artifactId>object-sockets</artifactId>
+			  <version>0.1</version>
+			</dependency>
+			
 			<!-- Permite implementar los mapeadores con json -->
 			<dependency>
-			  <groupId>ar.dgarcia.textualizer</groupId>
+			  <groupId>${dgarcia.project.group}</groupId>
+			  <artifactId>dgarcia-textualizer</artifactId>
+			  <version>0.1</version>
+			</dependency>
+			<!-- Permite implementar los mapeadores con json -->
+			<dependency>
+			  <groupId>${dgarcia.project.group}</groupId>
 			  <artifactId>json-textualizer</artifactId>
 			  <version>0.1</version>
 			</dependency>
+			
+			
+		  	<!-- Definicion abstracta del cliente http (se debe agregar el proveedor concreto segun el ambiente) -->
+		  	<dependency>
+			  <groupId>${dgarcia.project.group}</groupId>
+			  <artifactId>dgarcia-http-client</artifactId>
+			  <version>0.1</version>
+		  	</dependency>
+		  	
+		  	<!-- Cliente http para tests -->
+		  	<dependency>
+			  <groupId>${dgarcia.project.group}</groupId>
+			  <artifactId>dgarcia-http-client-apache</artifactId>
+			  <version>1.0</version>
+		  	</dependency>
 						
     	</dependencies>
     </dependencyManagement>

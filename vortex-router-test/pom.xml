@@ -6,11 +6,13 @@
   <parent>
 	<groupId>net.gaia.vortex</groupId>
 	<artifactId>vortex-parent</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<relativePath>../vortex-parent</relativePath>
   </parent>
   
   <artifactId>vortex-router-test</artifactId>
+  <version>${version.vortex}</version>
+  
   <name>Vortex router test</name>
   <description>Clases que simulan el comportamiento de router de vortex para verificar la validez de su algoritmo</description>
   

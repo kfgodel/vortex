@@ -6,20 +6,22 @@
   <parent>
 	<groupId>net.gaia.vortex</groupId>
 	<artifactId>vortex-parent</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<relativePath>../vortex-parent</relativePath>
   </parent>
   
   <artifactId>vortex-sets</artifactId>
+  <version>${version.vortex}</version>
+  
   <name>Vortex[Sets]</name>
   <description>Extensión a vortex que permite definir conjuntos para filtrar los mensajes</description>
   
   <dependencies>
   	<!-- Agrega la base para los nodos de vortex -->
   	<dependency>
-	  <groupId>${project.groupId}</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-core</artifactId>
-	  <version>${project.version}</version>
+	  <version>${version.vortex}</version>
   	</dependency>
   
   </dependencies>

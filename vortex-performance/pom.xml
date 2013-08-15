@@ -6,11 +6,13 @@
   <parent>
 	<groupId>net.gaia.vortex</groupId>
 	<artifactId>vortex-parent</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<relativePath>../vortex-parent</relativePath>
   </parent>
   
   <artifactId>vortex-performance</artifactId>
+  <version>${version.vortex}</version>
+  
   <name>Vortex Performance Test</name>
   <description>Tests varios de performance sobre los componentes de vortex</description>
   
@@ -18,28 +20,28 @@
 
 	<!-- Tests sobre portales -->  	
   	<dependency>
-	  <groupId>${project.groupId}</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-portal</artifactId>
-	  <version>${project.version}</version>
+	  <version>${version.vortex}</version>
   	</dependency>
   	
   	<!-- Tests sobre sockets -->
   	<dependency>
-	  <groupId>${project.groupId}</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-sockets</artifactId>
-	  <version>${project.version}</version>
+	  <version>${version.vortex}</version>
   	</dependency>
 
   	<!-- Tests sobre http -->
   	<dependency>
-		  <groupId>net.gaia.vortex.http</groupId>
+		  <groupId>${project.parent.groupId}</groupId>
 		  <artifactId>vortex-http-client</artifactId>
-		  <version>${project.version}</version>
+		  <version>${version.vortex}</version>
   	</dependency>
   	<dependency>
-		  <groupId>net.gaia.vortex.http</groupId>
+		  <groupId>${project.parent.groupId}</groupId>
 		  <artifactId>vortex-http-server</artifactId>
-		  <version>${project.version}</version>
+		  <version>${version.vortex}</version>
   	</dependency>
 
   </dependencies>

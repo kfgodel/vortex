@@ -6,12 +6,13 @@
   <parent>
 	<groupId>net.gaia.vortex</groupId>
 	<artifactId>vortex-parent</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<relativePath>../vortex-parent</relativePath>
   </parent>
   
-  <groupId>net.gaia.vortex.http</groupId>
   <artifactId>vortex-http-server</artifactId>
+  <version>${version.vortex}</version>
+  
   <name>Vortex[Http-server]</name>
   <description>Proyecto servidor de vortex http</description>
   
@@ -19,9 +20,9 @@
 
 	<!-- Dependencias comunes de http -->  
   	<dependency>
-	  <groupId>${project.groupId}</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>vortex-http</artifactId>
-	  <version>${project.version}</version>
+	  <version>${version.vortex}</version>
   	</dependency>
   	
    	<!-- Servidor http embebido -->

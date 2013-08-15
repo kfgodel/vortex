@@ -9,6 +9,7 @@
 	<version>1.0</version>
 	<relativePath>../gaia-parent</relativePath>
   </parent>
+  
   <artifactId>task-processor-performance</artifactId>
   <version>0.1-SNAPSHOT</version>
   
@@ -20,7 +21,7 @@
 
 	<!-- Procesador de las tareas -->
 	<dependency>
-	  <groupId>${project.groupId}</groupId>
+	  <groupId>${project.parent.groupId}</groupId>
 	  <artifactId>task-processor</artifactId>
 	  <version>0.6.0-SNAPSHOT</version>
 	</dependency>
