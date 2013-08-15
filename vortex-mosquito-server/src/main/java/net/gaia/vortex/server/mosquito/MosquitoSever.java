@@ -16,7 +16,7 @@ import java.net.SocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.InterruptedThreadException;
-import net.gaia.taskprocessor.api.TaskCriteria;
+import net.gaia.taskprocessor.api.SubmittedTask;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
@@ -68,6 +68,14 @@ public class MosquitoSever {
 		return server;
 	}
 
+	/**
+	 * Controlador de la tarea para detenerla
+	 */
+	private SubmittedTask controlDeTareDeLog;
+
+	/**
+	 * Tarea para registrar velocidades en log
+	 */
 	private final WorkUnit tareaDeLogDeTransfer = new WorkUnit() {
 		public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 			registrarTransferEnLog();
@@ -155,7 +163,7 @@ public class MosquitoSever {
 	 * Comienza el registro por log separado de las tazas de transferencia
 	 */
 	private void planificarProximoLogDeTransfer() {
-		processor.processDelayed(PERIODO_ENTRE_LOGS_DE_TRANSFER, tareaDeLogDeTransfer);
+		controlDeTareDeLog = processor.processDelayed(PERIODO_ENTRE_LOGS_DE_TRANSFER, tareaDeLogDeTransfer);
 	}
 
 	/**
@@ -180,11 +188,8 @@ public class MosquitoSever {
 	 * Detiene la ejecución de la tarea para loguear la transferencia
 	 */
 	private void detenerLogDeTransfer() {
-		processor.removeTasksMatching(new TaskCriteria() {
-
-			public boolean matches(final WorkUnit workUnit) {
-				return tareaDeLogDeTransfer.equals(workUnit);
-			}
-		});
+		if (controlDeTareDeLog != null) {
+			controlDeTareDeLog.cancelExecution(true);
+		}
 	}
 }
