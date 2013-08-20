@@ -1,5 +1,5 @@
 /**
- * 19/08/2013 19:56:06 Copyright (C) 2013 Darío L. García
+ * 20/08/2013 00:28:27 Copyright (C) 2013 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,25 +10,22 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.api.basic.emisores;
+package net.gaia.vortex.api.mensajes;
 
-import net.gaia.vortex.api.basic.Emisor;
-import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 
 /**
- * Esta interfaz representa un emisor de mensajes que sólo puede ser conectado a un receptor,
- * teniendo entonces una única salida para sus mensajes
+ * Esta interfaz representa un listener al que se le notifican los mensajes recibidos
  * 
  * @author D. García
  */
-public interface MonoEmisor extends Emisor {
+public interface ListenerDeMensajes {
 
 	/**
-	 * Permite obtener el único conector de salida de este emisor, el cual puede utilizarse para
-	 * conectar al receptor que recibirá los mensajes salientes de esta instancia
+	 * Invocado al recibir un nuevo mensaje de la red
 	 * 
-	 * @return El conector que sirve de contacto con el receptor
+	 * @param mensaje
+	 *            El mensaje vortex recibido
 	 */
-	public Conector getConectorUnico();
-
+	void onMensajeRecibido(MensajeVortex mensaje);
 }

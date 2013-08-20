@@ -13,7 +13,7 @@
 package net.gaia.vortex.router.impl.moleculas.comport;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
+import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
@@ -44,7 +44,7 @@ public class ComportamientoRouter implements ComportamientoBidi {
 		final NexoSinDuplicados filtroDeDuplicados = NexoSinDuplicados.create(processor, ReceptorNulo.getInstancia());
 
 		// Todo lo que entra en el router va a parar a las patas
-		final Multiplexor multiplexorDePatas = MultiplexorDePatas.create(processor);
+		final MultiplexorViejo multiplexorDePatas = MultiplexorDePatas.create(processor);
 		filtroDeDuplicados.setDestino(multiplexorDePatas);
 
 		final FlujoVortexViejo flujoDeMensajes = FlujoInmutableViejo.create(filtroDeDuplicados, multiplexorDePatas);

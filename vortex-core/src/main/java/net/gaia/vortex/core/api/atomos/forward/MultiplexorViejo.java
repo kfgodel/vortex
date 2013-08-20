@@ -14,25 +14,26 @@ import net.gaia.vortex.core.api.annotations.Atomo;
  * 
  * @author D. García
  */
+@Deprecated
 @Atomo
-public interface Multiplexor extends NodoViejo {
+public interface MultiplexorViejo extends NodoViejo {
 
 	/**
-	 * En un {@link Multiplexor} al conectar con un receptor este es agregado al conjunto de
+	 * En un {@link MultiplexorViejo} al conectar con un receptor este es agregado al conjunto de
 	 * destinos conocidos por este componente
 	 * 
 	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
-	
+
 	public void conectarCon(Receptor destino);
 
 	/**
-	 * En un {@link Multiplexor} al desconectar un receptor se quita del conjunto de destinos
+	 * En un {@link MultiplexorViejo} al desconectar un receptor se quita del conjunto de destinos
 	 * conocidos. Al quitar todos los destinos es normal que los mensajes recibidos se descarten
 	 * 
 	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
-	
+
 	public void desconectarDe(Receptor destino);
 
 }

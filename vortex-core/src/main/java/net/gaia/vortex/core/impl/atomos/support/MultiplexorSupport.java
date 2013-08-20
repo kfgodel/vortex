@@ -17,19 +17,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
+import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.core.prog.Decision;
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase define comportamiento base para las subclases de {@link Multiplexor} que utiliza un
+ * Esta clase define comportamiento base para las subclases de {@link MultiplexorViejo} que utiliza un
  * procesador de tareas para procesar sus mensajes
  * 
  * @author D. García
  */
-public abstract class MultiplexorSupport extends ReceptorConProcesador implements Multiplexor {
+public abstract class MultiplexorSupport extends ReceptorConProcesador implements MultiplexorViejo {
 
 	/**
 	 * La lista de destinos, implementada con un {@link CopyOnWriteArrayList} porque esperamos más
@@ -39,7 +39,7 @@ public abstract class MultiplexorSupport extends ReceptorConProcesador implement
 	public static final String destinos_FIELD = "destinos";
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Multiplexor#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void conectarCon(final Receptor destino) {
@@ -50,7 +50,7 @@ public abstract class MultiplexorSupport extends ReceptorConProcesador implement
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Multiplexor#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void desconectarDe(final Receptor destino) {

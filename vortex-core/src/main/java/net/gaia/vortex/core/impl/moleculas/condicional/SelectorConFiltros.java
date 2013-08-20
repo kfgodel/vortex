@@ -18,7 +18,7 @@ import java.util.Map;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.annotations.Molecula;
-import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
+import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
@@ -51,7 +51,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	/**
 	 * El multiplexor al que conectamos cada filtro de salida
 	 */
-	private Multiplexor multiplexorDeEntrada;
+	private MultiplexorViejo multiplexorDeEntrada;
 
 	/**
 	 * @see net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport#conectarCon(net.gaia.vortex.api.basic.Receptor)

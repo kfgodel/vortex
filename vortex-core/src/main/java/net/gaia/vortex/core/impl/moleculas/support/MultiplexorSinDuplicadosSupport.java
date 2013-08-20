@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.impl.moleculas.support;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
+import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
@@ -28,7 +28,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public abstract class MultiplexorSinDuplicadosSupport extends NodoMoleculaSupport implements Multiplexor,
+public abstract class MultiplexorSinDuplicadosSupport extends NodoMoleculaSupport implements MultiplexorViejo,
 		ComponenteConMemoria {
 
 	private NexoSinDuplicados procesoDeEntrada;

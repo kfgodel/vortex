@@ -36,6 +36,10 @@ public class ComponenteConector extends ComponenteSupport implements Conector {
 	private Receptor conectado;
 	public static final String conectado_FIELD = "conectado";
 
+	public Receptor getConectado() {
+		return conectado;
+	}
+
 	/**
 	 * @see net.gaia.vortex.api.proto.Conector#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */

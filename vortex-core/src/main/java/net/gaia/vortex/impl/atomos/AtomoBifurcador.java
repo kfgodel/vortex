@@ -31,7 +31,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * Esta clase representa la implementación básica del bifurcador de mensajes basado en una condición
  * para elegir destino.<br>
  * Esta clase procesa los mensajes recibidos en el mismo thread que se los entrega, no teniendo
- * threads propios
+ * thread propio
  * 
  * @author D. García
  */

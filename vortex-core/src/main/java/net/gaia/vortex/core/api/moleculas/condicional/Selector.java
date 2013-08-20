@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.api.moleculas.condicional;
 
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
+import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 
 /**
@@ -22,7 +22,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
  * 
  * @author D. García
  */
-public interface Selector extends Multiplexor {
+public interface Selector extends MultiplexorViejo {
 
 	/**
 	 * En un {@link Selector} al conectar con un receptor sin indicar condición se asume siempre

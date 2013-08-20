@@ -13,7 +13,7 @@
 package net.gaia.vortex.router.impl.moleculas.comport;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
+import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcador;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
@@ -60,7 +60,7 @@ public class ComportamientoPortal implements ComportamientoBidi {
 		filtroDeDuplicados.setDestino(bifurcador);
 
 		// Los metamensajes se los mandamos directo a las patas
-		final Multiplexor multiplexorDePatas = MultiplexorDePatas.create(processor);
+		final MultiplexorViejo multiplexorDePatas = MultiplexorDePatas.create(processor);
 		bifurcador.setReceptorPorTrue(multiplexorDePatas);
 
 		// El portal interno recibe los mensaje normales

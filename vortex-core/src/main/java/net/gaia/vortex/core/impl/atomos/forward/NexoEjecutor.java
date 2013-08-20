@@ -17,7 +17,7 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.proto.ComponenteVortex;
 import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.atomos.forward.Ejecutor;
+import net.gaia.vortex.core.api.atomos.forward.EjecutorViejo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.tasks.EjecutarYDelegar;
@@ -31,7 +31,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class NexoEjecutor extends NexoSupport implements Ejecutor {
+public class NexoEjecutor extends NexoSupport implements EjecutorViejo {
 
 	private Receptor ejecutante;
 	public static final String ejecutante_FIELD = "ejecutante";
@@ -66,7 +66,7 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Ejecutor#setEjecutante(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.EjecutorViejo#setEjecutante(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void setEjecutante(final Receptor escucha) {
@@ -77,7 +77,7 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Ejecutor#getEjecutante()
+	 * @see net.gaia.vortex.core.api.atomos.forward.EjecutorViejo#getEjecutante()
 	 */
 
 	public Receptor getEjecutante() {
