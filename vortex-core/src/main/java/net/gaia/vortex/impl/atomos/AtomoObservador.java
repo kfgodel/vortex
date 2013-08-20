@@ -21,6 +21,8 @@ import net.gaia.vortex.impl.support.MonoEmisorSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.strings.ToString;
+
 /**
  * Esta clase implementa el observador permitiendo pasar los mensajes recibidos a un receptor antes
  * de enviarlos a la salida.<br>
@@ -34,6 +36,7 @@ public class AtomoObservador extends MonoEmisorSupport implements Observador {
 	private static final Logger LOG = LoggerFactory.getLogger(AtomoObservador.class);
 
 	private Receptor observador;
+	public static final String observador_FIELD = "observador";
 
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
@@ -69,6 +72,15 @@ public class AtomoObservador extends MonoEmisorSupport implements Observador {
 		atomo.inicializar();
 		atomo.setObservador(observador);
 		return atomo;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(observador_FIELD, observador).con(conectorUnico_FIELD, getConectorUnico())
+				.toString();
 	}
 
 }

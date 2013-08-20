@@ -21,6 +21,8 @@ import net.gaia.vortex.impl.support.ReceptorSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.lang.strings.ToString;
+
 /**
  * Esta clase representa un atomo consumidor que utilizar un listener al cual le delega el mensaje
  * conumido.<br>
@@ -32,6 +34,7 @@ public class AtomoConsumidor extends ReceptorSupport implements Consumidor {
 	private static final Logger LOG = LoggerFactory.getLogger(AtomoConsumidor.class);
 
 	private ListenerDeMensajes listener;
+	public static final String listener_FIELD = "listener";
 
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
@@ -70,4 +73,13 @@ public class AtomoConsumidor extends ReceptorSupport implements Consumidor {
 		final RunnableListenerAdapter asListener = RunnableListenerAdapter.create(runnable);
 		return create(asListener);
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(listener_FIELD, listener).toString();
+	}
+
 }

@@ -16,6 +16,7 @@ import net.gaia.vortex.api.basic.productores.MensajeFactory;
 import net.gaia.vortex.api.basic.productores.Productor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.impl.support.MonoEmisorSupport;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa un productor de mensajes que utiliza una {@link MensajeFactory} para
@@ -28,6 +29,7 @@ import net.gaia.vortex.impl.support.MonoEmisorSupport;
 public class ProductorConFactory extends MonoEmisorSupport implements Productor {
 
 	private MensajeFactory factory;
+	public static final String factory_FIELD = "factory";
 
 	/**
 	 * Genera un nuevo mensaje con el {@link MensajeFactory} interno y lo envía a la red por el
@@ -44,4 +46,13 @@ public class ProductorConFactory extends MonoEmisorSupport implements Productor 
 		prodcutor.factory = factory;
 		return prodcutor;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(factory_FIELD, factory).con(conectorUnico_FIELD, getConectorUnico()).toString();
+	}
+
 }

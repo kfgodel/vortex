@@ -15,6 +15,7 @@ package net.gaia.vortex.impl.support;
 import net.gaia.vortex.api.basic.emisores.MonoEmisor;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.proto.ComponenteConector;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase sirve de base para los componentes que solo tienen un conector de salida
@@ -24,6 +25,7 @@ import net.gaia.vortex.impl.proto.ComponenteConector;
 public class MonoEmisorSupport extends EmisorSupport implements MonoEmisor {
 
 	private Conector conectorUnico;
+	public static final String conectorUnico_FIELD = "conectorUnico";
 
 	/**
 	 * @see net.gaia.vortex.api.basic.emisores.MonoEmisor#getConectorUnico()
@@ -35,4 +37,13 @@ public class MonoEmisorSupport extends EmisorSupport implements MonoEmisor {
 	protected void inicializar() {
 		this.conectorUnico = ComponenteConector.create();
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(conectorUnico_FIELD, conectorUnico).toString();
+	}
+
 }
