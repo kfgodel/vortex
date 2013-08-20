@@ -15,15 +15,15 @@ package net.gaia.vortex.sockets.impl.moleculas;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.annotations.Molecula;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
+import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.sockets.impl.atomos.Desocketizador;
 import net.gaia.vortex.sockets.impl.atomos.Socketizador;
@@ -73,12 +73,12 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 		procesoDesdeSocket = Desocketizador.create(processor, nodoDeSalidaAVortex);
 
 		// Definimos cual es el flujo de entrada y salida de esta molecula
-		final FlujoVortex flujoInterno = FlujoInmutable.create(procesoDesdeVortex, procesoDesdeSocket);
+		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(procesoDesdeVortex, procesoDesdeSocket);
 		initializeWith(flujoInterno);
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void setDestino(final Receptor destino) {

@@ -5,14 +5,14 @@ package net.gaia.vortex.core.impl.atomos.condicional;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.atomos.condicional.Bifurcador;
+import net.gaia.vortex.core.api.atomos.condicional.BifurcadorViejo;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.core.impl.tasks.condicional.BifurcarMensaje;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador {
+public class NexoBifurcador extends ReceptorConProcesador implements BifurcadorViejo {
 	private static final Logger LOG = LoggerFactory.getLogger(NexoBifurcador.class);
 
 	private Condicion condicion;
@@ -71,7 +71,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void conectarCon(final Receptor destino) {
@@ -79,7 +79,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void desconectarDe(final Receptor destino) {
@@ -87,7 +87,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.condicional.Bifurcador#setReceptorPorTrue(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.condicional.BifurcadorViejo#setReceptorPorTrue(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void setReceptorPorTrue(final Receptor receptorPorTrue) {
@@ -99,7 +99,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.condicional.Bifurcador#getReceptorPorTrue()
+	 * @see net.gaia.vortex.core.api.atomos.condicional.BifurcadorViejo#getReceptorPorTrue()
 	 */
 
 	public Receptor getReceptorPorTrue() {
@@ -107,7 +107,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.condicional.Bifurcador#setReceptorPorFalse(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.condicional.BifurcadorViejo#setReceptorPorFalse(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void setReceptorPorFalse(final Receptor receptorPorFalse) {
@@ -119,7 +119,7 @@ public class NexoBifurcador extends ReceptorConProcesador implements Bifurcador 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.condicional.Bifurcador#getReceptorPorFalse()
+	 * @see net.gaia.vortex.core.api.atomos.condicional.BifurcadorViejo#getReceptorPorFalse()
 	 */
 
 	public Receptor getReceptorPorFalse() {

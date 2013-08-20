@@ -14,9 +14,9 @@ package net.gaia.vortex.core.impl.atomos.forward;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.proto.ComponenteVortex;
 import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.atomos.ComponenteVortex;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Ejecutor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
@@ -66,7 +66,7 @@ public class NexoEjecutor extends NexoSupport implements Ejecutor {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Ejecutor#setEjecutante(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.Ejecutor#setEjecutante(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void setEjecutante(final Receptor escucha) {

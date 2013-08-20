@@ -108,7 +108,7 @@ public class MensajeConContenido implements MensajeVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.ShortStringable#toShortString()
+	 * @see net.gaia.vortex.api.proto.ShortStringable#toShortString()
 	 */
 	
 	public String toShortString() {

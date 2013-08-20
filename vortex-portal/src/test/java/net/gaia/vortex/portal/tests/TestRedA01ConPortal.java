@@ -22,7 +22,7 @@ import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
 import net.gaia.vortex.portal.api.moleculas.Portal;
@@ -50,7 +50,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestRedA01ConPortal {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConPortal.class);
 
-	private Nodo nodoRuteador;
+	private NodoViejo nodoRuteador;
 
 	private Portal nodoEmisor;
 	private Portal nodoReceptor;
@@ -234,8 +234,8 @@ public class TestRedA01ConPortal {
 	@Test
 	public void elMensajeDeberiaLlegarSiHayDosNodosEnElMedio() {
 		// Creamos los nodos centrales interconectados
-		final Nodo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
-		final Nodo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
+		final NodoViejo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
+		final NodoViejo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
@@ -258,8 +258,8 @@ public class TestRedA01ConPortal {
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosHubsEnElMedioInterconectados() {
 		// Creamos los nodos centrales interconectados
-		final Nodo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
-		final Nodo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
+		final NodoViejo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
+		final NodoViejo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
@@ -340,7 +340,7 @@ public class TestRedA01ConPortal {
 	/**
 	 * Crea una conexión bidireccional entre los nodos pasados
 	 */
-	public void interconectar(final Nodo origen, final Nodo destino) {
+	public void interconectar(final NodoViejo origen, final NodoViejo destino) {
 		origen.conectarCon(destino);
 		destino.conectarCon(origen);
 	}

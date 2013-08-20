@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
 
 /**
@@ -12,14 +12,14 @@ import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
  * 
  * @author D. García
  */
-public class TestDePerformanceMultiplexorIdentificador extends TestDePerformanceNodoSupport {
+public class TestDePerformanceMultiplexorIdentificador extends TestDePerformanceNodoSupportViejo {
 	/**
 	 * Crea el nodo que cuya performance se evaluará en este tests
 	 * 
 	 * @return El nodo a probar
 	 */
 	@Override
-	protected Nodo crearNodoATestear() {
+	protected NodoViejo crearNodoATestear() {
 		return MultiplexorSinDuplicados.create(getProcessor());
 	}
 

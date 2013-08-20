@@ -10,12 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.atomos;
+package net.gaia.vortex.api.proto;
+
 
 /**
  * Esta interfaz define los métodos que tiene cualquier componente vortex.<br>
- * Las subclases de esta interfaz representan componentes vortex que pueden usarse para armar una
- * red de comunicación entre módulos, aplicaciones y sistemas
+ * Las subclases de esta interfaz representan componentes básicos o nodos de vortex que pueden
+ * usarse para armar una red de comunicación entre módulos, aplicaciones y sistemas
  * 
  * @author D. García
  */

@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.impl.atomos.support.procesador;
 
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.prog.Loggers;
 
@@ -26,9 +26,9 @@ import net.gaia.vortex.core.prog.Loggers;
 public abstract class ReceptorConProcesador extends ComponenteConProcesadorSupport implements Receptor {
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	
+
 	public void recibir(final MensajeVortex mensaje) {
 		Loggers.ATOMOS.trace("Recibido en[{}] el mensaje[{}]", this.toShortString(), mensaje);
 		final WorkUnit tareaDelMensaje = crearTareaAlRecibir(mensaje);

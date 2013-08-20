@@ -1,5 +1,5 @@
 /**
- * 13/01/2013 19:49:41 Copyright (C) 2011 Darío L. García
+ * 19/08/2013 19:56:06 Copyright (C) 2013 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,16 +10,25 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos.support.basicos;
+package net.gaia.vortex.api.basic.emisores;
 
-import net.gaia.vortex.core.api.atomos.Emisor;
+import net.gaia.vortex.api.basic.Emisor;
+import net.gaia.vortex.api.proto.Conector;
 
 /**
- * Esta clase define comportamiento base para los emisores que no utilizan necesariamente un
- * procesador
+ * Esta interfaz representa un emisor de mensajes que sólo puede ser conectado a un receptor,
+ * teniendo entonces una única salida para sus mensajes
  * 
  * @author D. García
  */
-public abstract class EmisorSupport extends ComponenteSupport implements Emisor {
+public interface MonoEmisor extends Emisor {
+
+	/**
+	 * Permite obtener el único conector de este emisor, el cual puede utilizarse para conectar este
+	 * emisor a otro receptor
+	 * 
+	 * @return El conector que sirve de contacto con el receptor
+	 */
+	public Conector getConector();
 
 }

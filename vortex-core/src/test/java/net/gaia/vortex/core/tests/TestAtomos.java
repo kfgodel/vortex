@@ -6,14 +6,13 @@ package net.gaia.vortex.core.tests;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcador;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
@@ -25,6 +24,7 @@ import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaCompo
 import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
+import net.gaia.vortex.impl.atomos.AtomoBifurcador;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -109,8 +109,9 @@ public class TestAtomos {
 	public void elBifurcadorDeberiaElegirElDelegadoPorTrueSiLaCondicionEsCumplida() {
 		final ReceptorEncolador receptorPorTrue = ReceptorEncolador.create();
 		final ReceptorEncolador receptorPorFalse = ReceptorEncolador.create();
-		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreTrue.getInstancia(), receptorPorTrue,
-				receptorPorFalse);
+		final AtomoBifurcador bifurcador = AtomoBifurcador.create(SiempreTrue.getInstancia());
+		bifurcador.getConectorPorTrue().conectarCon(receptorPorTrue);
+		bifurcador.getConectorPorFalse().conectarCon(receptorPorFalse);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorTrue);
 		verificarMensajeNoRecibido(0, receptorPorFalse);
 	}
@@ -119,8 +120,9 @@ public class TestAtomos {
 	public void elBifurcadorDeberiaElegirElDelegadoPorFalseSiLaCondicionNoEsCumplida() {
 		final ReceptorEncolador receptorPorTrue = ReceptorEncolador.create();
 		final ReceptorEncolador receptorPorFalse = ReceptorEncolador.create();
-		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, SiempreFalse.getInstancia(),
-				receptorPorTrue, receptorPorFalse);
+		final AtomoBifurcador bifurcador = AtomoBifurcador.create(SiempreFalse.getInstancia());
+		bifurcador.getConectorPorTrue().conectarCon(receptorPorTrue);
+		bifurcador.getConectorPorFalse().conectarCon(receptorPorFalse);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorFalse);
 		verificarMensajeNoRecibido(0, receptorPorTrue);
 	}

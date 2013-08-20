@@ -14,10 +14,10 @@ package net.gaia.vortex.core.impl.atomos.receptores;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.impl.support.ReceptorSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -31,7 +31,7 @@ public class ReceptorVariable<R extends Receptor> extends ReceptorSupport {
 	private AtomicReference<R> referenciaAlReceptorActual;
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	
 	public void recibir(final MensajeVortex mensaje) {

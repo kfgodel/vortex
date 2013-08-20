@@ -6,7 +6,7 @@ package net.gaia.vortex.core.impl.tasks.forward;
 import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.prog.Loggers;

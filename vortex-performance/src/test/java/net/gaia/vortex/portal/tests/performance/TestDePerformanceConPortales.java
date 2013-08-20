@@ -13,8 +13,8 @@
 package net.gaia.vortex.portal.tests.performance;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
@@ -128,7 +128,7 @@ public class TestDePerformanceConPortales {
 			throws InterruptedException {
 		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->V->" + cantidadDeThreadsDeRecepcion + "R";
 
-		final Nodo nodoVortex = MultiplexorSinDuplicados.create(processorRuteo);
+		final NodoViejo nodoVortex = MultiplexorSinDuplicados.create(processorRuteo);
 
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();

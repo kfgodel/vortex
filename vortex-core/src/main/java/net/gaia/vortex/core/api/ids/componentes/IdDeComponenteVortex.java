@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.api.ids.componentes;
 
-import net.gaia.vortex.core.api.atomos.ShortStringable;
+import net.gaia.vortex.api.proto.ShortStringable;
 
 /**
  * Esta interfaz representa un identificador dentro de la red vortex para una molécula

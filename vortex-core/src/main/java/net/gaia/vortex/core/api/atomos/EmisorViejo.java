@@ -3,6 +3,8 @@
  */
 package net.gaia.vortex.core.api.atomos;
 
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.proto.ComponenteVortex;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
 
@@ -19,7 +21,8 @@ import net.gaia.vortex.core.api.atomos.forward.Nexo;
  * 
  * @author D. García
  */
-public interface Emisor extends ComponenteVortex {
+@Deprecated
+public interface EmisorViejo extends ComponenteVortex {
 
 	/**
 	 * Realiza una conexión desde este componente al componente destino de manera que el destino

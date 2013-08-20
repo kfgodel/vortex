@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.server.impl;
 
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
@@ -26,7 +26,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 
-	private Nodo nodoConocido;
+	private NodoViejo nodoConocido;
 	public static final String hubConocido_FIELD = "nodoConocido";
 
 	/**
@@ -49,7 +49,7 @@ public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 		nexoCerrado.desconectarDe(nodoConocido);
 	}
 
-	public static RealizarConexiones con(final Nodo nodo) {
+	public static RealizarConexiones con(final NodoViejo nodo) {
 		final RealizarConexiones conector = new RealizarConexiones();
 		conector.nodoConocido = nodo;
 		return conector;

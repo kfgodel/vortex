@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.impl.moleculas.patas;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;

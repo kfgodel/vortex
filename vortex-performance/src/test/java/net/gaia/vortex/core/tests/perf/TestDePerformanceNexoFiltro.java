@@ -3,10 +3,10 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
+import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.impl.atomos.AtomoBifurcador;
+import net.gaia.vortex.impl.flujos.FlujoInmutable;
 
 /**
  * Esta clase prueba las velocidades de procesamiento de cada uno de los componentes bajo estrés de
@@ -15,16 +15,15 @@ import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
  * @author D. García
  */
 public class TestDePerformanceNexoFiltro extends TestDePerformanceNodoSupport {
+
 	/**
-	 * Crea el nodo que cuya performance se evaluará en este tests
-	 * 
-	 * @return El nodo a probar
+	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearFlujoATestear()
 	 */
 	@Override
-	protected Nodo crearNodoATestear() {
-		final NexoFiltro nexoFiltro = NexoFiltro.create(getProcessor(), SiempreTrue.getInstancia(),
-				ReceptorNulo.getInstancia());
-		return nexoFiltro;
+	protected FlujoVortex crearFlujoATestear() {
+		final AtomoBifurcador filtro = AtomoBifurcador.create(SiempreTrue.getInstancia());
+		final FlujoInmutable flujoATestear = FlujoInmutable.create(filtro, filtro.getConectorPorTrue());
+		return flujoATestear;
 	}
 
 }

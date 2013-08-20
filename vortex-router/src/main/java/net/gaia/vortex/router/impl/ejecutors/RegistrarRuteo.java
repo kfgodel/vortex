@@ -14,10 +14,10 @@ package net.gaia.vortex.router.impl.ejecutors;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.impl.support.ReceptorSupport;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
@@ -43,7 +43,7 @@ public class RegistrarRuteo extends ReceptorSupport {
 	public static final String pataRuteadora_FIELD = "pataRuteadora";
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 
 	public void recibir(final MensajeVortex mensaje) {

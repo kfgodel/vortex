@@ -15,8 +15,8 @@
  */
 package net.gaia.vortex.core.api;
 
-import net.gaia.vortex.core.api.atomos.Emisor;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.core.api.atomos.EmisorViejo;
 
 /**
  * Esta interfaz representa el componente protagónico de la red vortex que es tanto un receptor como
@@ -28,6 +28,7 @@ import net.gaia.vortex.core.api.atomos.Receptor;
  * 
  * @author D. García
  */
-public interface Nodo extends Emisor, Receptor {
+@Deprecated
+public interface NodoViejo extends EmisorViejo, Receptor {
 
 }

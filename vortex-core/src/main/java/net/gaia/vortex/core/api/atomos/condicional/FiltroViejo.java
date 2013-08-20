@@ -24,8 +24,9 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
  * 
  * @author D. García
  */
+@Deprecated
 @Atomo
-public interface Filtro extends Nexo {
+public interface FiltroViejo extends Nexo {
 
 	/**
 	 * Devuelve la condición utilizada por este componente para evaluar y descartar los mensajes

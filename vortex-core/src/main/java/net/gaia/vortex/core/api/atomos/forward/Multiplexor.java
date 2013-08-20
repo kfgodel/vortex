@@ -3,9 +3,9 @@
  */
 package net.gaia.vortex.core.api.atomos.forward;
 
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.atomos.Receptor;
 
 /**
  * Esta interfaz representa un componente vortex que al recibir un mensaje lo envía a todos los
@@ -15,13 +15,13 @@ import net.gaia.vortex.core.api.atomos.Receptor;
  * @author D. García
  */
 @Atomo
-public interface Multiplexor extends Nodo {
+public interface Multiplexor extends NodoViejo {
 
 	/**
 	 * En un {@link Multiplexor} al conectar con un receptor este es agregado al conjunto de
 	 * destinos conocidos por este componente
 	 * 
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void conectarCon(Receptor destino);
@@ -30,7 +30,7 @@ public interface Multiplexor extends Nodo {
 	 * En un {@link Multiplexor} al desconectar un receptor se quita del conjunto de destinos
 	 * conocidos. Al quitar todos los destinos es normal que los mensajes recibidos se descarten
 	 * 
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void desconectarDe(Receptor destino);

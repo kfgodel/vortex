@@ -12,20 +12,21 @@
  */
 package net.gaia.vortex.core.api.moleculas;
 
-import net.gaia.vortex.core.api.atomos.Emisor;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.core.api.atomos.EmisorViejo;
 
 /**
- * Esta interfaz define representa una secuencia de componentes que procesa los mensajes que recibe
- * en una entrada, y los envía en una salida. El flujo es utilizado por las moléculas para definir
- * su red interna de atomos.<br>
+ * Esta interfaz representa una secuencia de componentes que procesa los mensajes que recibe en una
+ * entrada, y los envía en una salida. El flujo es utilizado por las moléculas para definir su red
+ * interna de atomos.<br>
  * <br>
  * A través de los flujos se pueden crear procesos de transformación de mensajes o definir
  * comportamiento como composición de componentes vortex
  * 
  * @author D. García
  */
-public interface FlujoVortex {
+@Deprecated
+public interface FlujoVortexViejo {
 
 	/**
 	 * Devuelve el componente que sirve como punto de entrada de los mensajes en este flujo.<br>
@@ -41,5 +42,5 @@ public interface FlujoVortex {
 	 * @return El emisor para los mensajes de salidad. Puede ser el emisor nulo si el flujo no está
 	 *         inicializado
 	 */
-	Emisor getSalida();
+	EmisorViejo getSalida();
 }

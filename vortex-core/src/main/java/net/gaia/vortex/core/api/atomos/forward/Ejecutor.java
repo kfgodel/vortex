@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.api.atomos.forward;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
 
 /**
  * Esta interfaz representa un componente vortex que al recibir un mensaje ejecuta el código de un

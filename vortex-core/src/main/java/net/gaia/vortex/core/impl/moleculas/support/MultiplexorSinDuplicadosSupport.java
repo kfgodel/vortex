@@ -16,10 +16,10 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
+import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -38,7 +38,7 @@ public abstract class MultiplexorSinDuplicadosSupport extends NodoMoleculaSuppor
 		final MultiplexorParalelo multiplexorDeSalida = MultiplexorParalelo.create(processor);
 		// A la entrada evitamos los duplicados
 		procesoDeEntrada = NexoSinDuplicados.create(processor, multiplexorDeSalida);
-		final FlujoVortex flujo = FlujoInmutable.create(procesoDeEntrada, multiplexorDeSalida);
+		final FlujoVortexViejo flujo = FlujoInmutableViejo.create(procesoDeEntrada, multiplexorDeSalida);
 		initializeWith(flujo);
 	}
 

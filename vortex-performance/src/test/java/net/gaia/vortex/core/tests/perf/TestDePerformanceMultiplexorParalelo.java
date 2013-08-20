@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 
 /**
@@ -12,14 +12,14 @@ import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
  * 
  * @author D. García
  */
-public class TestDePerformanceMultiplexorParalelo extends TestDePerformanceNodoSupport {
+public class TestDePerformanceMultiplexorParalelo extends TestDePerformanceNodoSupportViejo {
 	/**
 	 * Crea el nodo que cuya performance se evaluará en este tests
 	 * 
 	 * @return El nodo a probar
 	 */
 	@Override
-	protected Nodo crearNodoATestear() {
+	protected NodoViejo crearNodoATestear() {
 		return MultiplexorParalelo.create(getProcessor());
 	}
 

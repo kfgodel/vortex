@@ -10,9 +10,9 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos.support.basicos;
+package net.gaia.vortex.impl.support;
 
-import net.gaia.vortex.core.api.atomos.ComponenteVortex;
+import net.gaia.vortex.api.proto.ComponenteVortex;
 import net.gaia.vortex.core.impl.atomos.helpers.SecuenciadorDeInstancias;
 import net.gaia.vortex.core.impl.atomos.helpers.ToShortString;
 
@@ -32,7 +32,7 @@ public abstract class ComponenteSupport implements ComponenteVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#getNumeroDeInstancia()
+	 * @see net.gaia.vortex.api.proto.ComponenteVortex#getNumeroDeInstancia()
 	 */
 	
 	public long getNumeroDeInstancia() {
@@ -40,7 +40,7 @@ public abstract class ComponenteSupport implements ComponenteVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.ComponenteVortex#toShortString()
+	 * @see net.gaia.vortex.api.proto.ComponenteVortex#toShortString()
 	 */
 	
 	public String toShortString() {

@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.impl.moleculas.support;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.moleculas.listeners.ListenerDeConexionesBidiEnNodo;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
@@ -35,7 +35,7 @@ public class ListenerNuloDeConexionBidiEnNodo implements ListenerDeConexionesBid
 
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.listeners.ListenerDeConexionesBidiEnNodo#onConexionBidiDe(net.gaia.vortex.router.api.moleculas.NodoBidireccional,
-	 *      net.gaia.vortex.core.api.atomos.Receptor,
+	 *      net.gaia.vortex.api.basic.Receptor,
 	 *      net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
 	 */
 	

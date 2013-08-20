@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.router.impl.moleculas.listeners;
 
-import net.gaia.vortex.core.api.atomos.Emisor;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.core.api.atomos.EmisorViejo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 
@@ -70,7 +70,7 @@ public class ConexionBidi {
 	 *            El nodo destino
 	 * @return true si esta conexion es entre el origen y destino indicados
 	 */
-	public boolean uneA(final Emisor emisor, final Receptor receptor) {
+	public boolean uneA(final EmisorViejo emisor, final Receptor receptor) {
 		final boolean mismoOrigen = origen.equals(emisor);
 		final boolean mismoDestino = destino.equals(receptor);
 		return mismoOrigen && mismoDestino;

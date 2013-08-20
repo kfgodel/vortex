@@ -1,5 +1,5 @@
 /**
- * 06/07/2012 00:23:57 Copyright (C) 2011 Darío L. García
+ * 19/08/2013 19:49:01 Copyright (C) 2013 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,16 +10,16 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos.support.basicos;
-
-import net.gaia.vortex.core.api.atomos.Receptor;
+package net.gaia.vortex.api.basic;
 
 /**
- * Esta clase define el comportamiento base para definir un receptor. Las subclases sólo deben
- * definir el método {@link Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)}
+ * Esta interfaz representa el concepto central de vortex como elemento que puede participar de una
+ * red de mensajería siendo emisor y receptor. <br>
+ * A través de instancias de esta clase se podrá formar una topología de red para dar comportamiento
+ * a los sistemas.
  * 
  * @author D. García
  */
-public abstract class ReceptorSupport extends ComponenteSupport implements Receptor {
+public interface Nodo extends Emisor, Receptor {
 
 }

@@ -12,7 +12,8 @@
  */
 package net.gaia.vortex.core.impl.atomos.support.basicos;
 
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.NodoViejo;
+import net.gaia.vortex.impl.support.ComponenteSupport;
 
 /**
  * Esta clase define comportamiento base para nodos que no requieren un procesador de tareas
@@ -20,6 +21,6 @@ import net.gaia.vortex.core.api.Nodo;
  * 
  * @author D. García
  */
-public abstract class NodoSupport extends ComponenteSupport implements Nodo {
+public abstract class NodoSupport extends ComponenteSupport implements NodoViejo {
 
 }

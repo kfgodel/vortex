@@ -3,8 +3,8 @@
  */
 package net.gaia.vortex.core.api.atomos.forward;
 
-import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.core.api.NodoViejo;
 
 /**
  * Esta interfaz representa un componente de vortex que permite una única conexión saliente, por lo
@@ -15,13 +15,13 @@ import net.gaia.vortex.core.api.atomos.Receptor;
  * 
  * @author D. García
  */
-public interface Nexo extends Nodo {
+public interface Nexo extends NodoViejo {
 
 	/**
 	 * En un {@link Nexo} al conectar con un nuevo receptor la conexion previa se pierde, pudiendo
 	 * tener sólo una conexión a la vez
 	 * 
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void conectarCon(Receptor destino);
@@ -31,7 +31,7 @@ public interface Nexo extends Nodo {
 	 * destino. Si el nexo se queda sin destino (si admite esa posibilidad) al recibir un mensaje lo
 	 * esperado es que no haga ningún acción de salida (equivalente a un {@link Receptor} puro)
 	 * 
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void desconectarDe(Receptor destino);

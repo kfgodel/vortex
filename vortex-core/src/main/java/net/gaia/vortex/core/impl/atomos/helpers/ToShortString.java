@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.impl.atomos.helpers;
 
-import net.gaia.vortex.core.api.atomos.ComponenteVortex;
+import net.gaia.vortex.api.proto.ComponenteVortex;
 
 /**
  * Esta clase permite implementar el método {@link ComponenteVortex#toShortString()} de cualquier

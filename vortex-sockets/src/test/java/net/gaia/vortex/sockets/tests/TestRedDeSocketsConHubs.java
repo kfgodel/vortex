@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
 import net.gaia.vortex.portal.api.moleculas.Portal;
@@ -54,8 +54,8 @@ public class TestRedDeSocketsConHubs {
 	private ClienteDeSocketVortex socketConnector;
 	private ServidorDeSocketVortex socketAcceptor;
 
-	private Nodo hubServidor;
-	private Nodo hubCliente;
+	private NodoViejo hubServidor;
+	private NodoViejo hubCliente;
 
 	private TaskProcessor processor;
 

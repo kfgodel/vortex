@@ -16,16 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.annotations.Molecula;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
+import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 
@@ -54,7 +54,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	private Multiplexor multiplexorDeEntrada;
 
 	/**
-	 * @see net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	@Override
@@ -64,7 +64,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.moleculas.condicional.Selector#conectarCon(net.gaia.vortex.core.api.atomos.Receptor,
+	 * @see net.gaia.vortex.core.api.moleculas.condicional.Selector#conectarCon(net.gaia.vortex.api.basic.Receptor,
 	 *      net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
 
@@ -84,7 +84,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.moleculas.condicional.Selector#modificarCondicionPara(net.gaia.vortex.core.api.atomos.Receptor,
+	 * @see net.gaia.vortex.core.api.moleculas.condicional.Selector#modificarCondicionPara(net.gaia.vortex.api.basic.Receptor,
 	 *      net.gaia.vortex.core.api.condiciones.Condicion)
 	 */
 
@@ -111,7 +111,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	@Override
@@ -142,7 +142,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 		filtrosPorDestino = new HashMap<Receptor, NexoFiltro>();
 
 		multiplexorDeEntrada = MultiplexorParalelo.create(processor);
-		final FlujoVortex flujoInterno = FlujoInmutable.create(multiplexorDeEntrada, this);
+		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(multiplexorDeEntrada, this);
 		initializeWith(flujoInterno);
 	}
 }

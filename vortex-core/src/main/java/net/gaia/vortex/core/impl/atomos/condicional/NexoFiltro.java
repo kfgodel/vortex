@@ -13,14 +13,14 @@
 package net.gaia.vortex.core.impl.atomos.condicional;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.atomos.condicional.Filtro;
+import net.gaia.vortex.core.api.atomos.condicional.FiltroViejo;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.atomos.support.NexoFiltroSupport;
 
 /**
- * Esta clase es la implementación del {@link Filtro} utilizando threads independientes para el
+ * Esta clase es la implementación del {@link FiltroViejo} utilizando threads independientes para el
  * filtrado
  * 
  * @author D. García

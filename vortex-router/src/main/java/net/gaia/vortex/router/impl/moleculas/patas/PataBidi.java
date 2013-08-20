@@ -18,23 +18,23 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.annotations.Molecula;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
+import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.emisores.EmisorNulo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
-import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
+import net.gaia.vortex.impl.support.ReceptorSupport;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
@@ -207,7 +207,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		final Receptor procesoAlRecibirPublicacionDeFiltros = crearProcesoParaRecibirPublicacionDeFiltros(taskProcessor);
 		selectorDeEntrada.conectarCon(procesoAlRecibirPublicacionDeFiltros, EsPublicacionDeFiltros.create());
 
-		final FlujoVortex flujo = FlujoInmutable.create(selectorDeEntrada, EmisorNulo.getInstancia());
+		final FlujoVortexViejo flujo = FlujoInmutableViejo.create(selectorDeEntrada, EmisorNulo.getInstancia());
 		initializeWith(flujo);
 	}
 
@@ -419,7 +419,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	}
 
 	/**
-	 * @see net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional#tieneComoNodoRemotoA(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional#tieneComoNodoRemotoA(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public boolean tieneComoNodoRemotoA(final Receptor nodo) {

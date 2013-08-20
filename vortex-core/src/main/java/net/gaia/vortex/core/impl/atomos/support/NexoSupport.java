@@ -13,10 +13,10 @@
 package net.gaia.vortex.core.impl.atomos.support;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Nexo;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +60,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void conectarCon(final Receptor destino) {
@@ -70,7 +70,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	/**
 	 * En esta implementación el nexo queda conectado al {@link ReceptorNulo}
 	 * 
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void desconectarDe(final Receptor destino) {
@@ -83,7 +83,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#setDestino(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void setDestino(final Receptor destino) {

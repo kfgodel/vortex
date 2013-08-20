@@ -12,9 +12,9 @@
  */
 package net.gaia.vortex.core.api.atomos.condicional;
 
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 
 /**
@@ -23,8 +23,9 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
  * 
  * @author D. García
  */
+@Deprecated
 @Atomo
-public interface Bifurcador extends Nodo {
+public interface BifurcadorViejo extends NodoViejo {
 
 	/**
 	 * Devuelve la condición utilizada por este bifurcador para elegir el camino del mensaje

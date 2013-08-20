@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.api.mensaje;
 
-import net.gaia.vortex.core.api.atomos.ShortStringable;
+import net.gaia.vortex.api.proto.ShortStringable;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 
 /**

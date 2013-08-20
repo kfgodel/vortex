@@ -13,22 +13,22 @@
 package net.gaia.vortex.portal.impl.moleculas;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.api.annotations.Molecula;
-import net.gaia.vortex.core.api.atomos.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
+import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.atomos.Desobjetivizador;
@@ -72,7 +72,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor,
-	 *      net.gaia.vortex.core.api.atomos.Receptor)
+	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado) {
 		final GenerarIdEnMensaje generador = GenerarIdEnMensaje.create(GeneradorDeIdsGlobalesParaComponentes
@@ -82,7 +82,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor,
-	 *      net.gaia.vortex.core.api.atomos.Receptor)
+	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado,
 			final GenerarIdEnMensaje generadorDeIdsCompartido) {
@@ -101,12 +101,12 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 		final EsMensajeExterno siEsMensajeExterno = EsMensajeExterno.create(identificador);
 		procesoDesdeVortex = NexoFiltro.create(processor, siEsMensajeExterno, filtroDescartaDuplicados);
 
-		final FlujoVortex flujoInterno = FlujoInmutable.create(procesoDesdeVortex, nodoDeSalidaAVortex);
+		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(procesoDesdeVortex, nodoDeSalidaAVortex);
 		initializeWith(flujoInterno);
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void setDestino(final Receptor destino) {
@@ -153,7 +153,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 	 *            El nodo con el cual este portal accede a la red vortex
 	 * @return El portal creado
 	 */
-	public static PortalMapeador createForIOWith(final TaskProcessor processor, final Nodo nexoConLaRed) {
+	public static PortalMapeador createForIOWith(final TaskProcessor processor, final NodoViejo nexoConLaRed) {
 		final PortalMapeador portal = createForOutputWith(processor, nexoConLaRed);
 		nexoConLaRed.conectarCon(portal);
 		return portal;

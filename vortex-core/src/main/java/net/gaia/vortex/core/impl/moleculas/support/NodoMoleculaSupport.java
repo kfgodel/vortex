@@ -12,11 +12,11 @@
  */
 package net.gaia.vortex.core.impl.moleculas.support;
 
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.annotations.Molecula;
-import net.gaia.vortex.core.api.atomos.Emisor;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.core.api.atomos.EmisorViejo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
+import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.support.basicos.NodoSupport;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -30,29 +30,29 @@ import ar.com.dgarcia.lang.strings.ToString;
 @Molecula
 public class NodoMoleculaSupport extends NodoSupport {
 
-	private FlujoVortex flujoInterno;
+	private FlujoVortexViejo flujoInterno;
 	public static final String flujoInterno_FIELD = "flujoInterno";
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void conectarCon(final Receptor destino) {
-		final Emisor componenteSalida = flujoInterno.getSalida();
+		final EmisorViejo componenteSalida = flujoInterno.getSalida();
 		componenteSalida.conectarCon(destino);
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void desconectarDe(final Receptor destino) {
-		final Emisor componenteSalida = flujoInterno.getSalida();
+		final EmisorViejo componenteSalida = flujoInterno.getSalida();
 		componenteSalida.desconectarDe(destino);
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	
 	public void recibir(final MensajeVortex mensaje) {
@@ -69,7 +69,7 @@ public class NodoMoleculaSupport extends NodoSupport {
 	 * @param flujoInterno
 	 *            El flujo con los componentes del proceso
 	 */
-	protected void initializeWith(final FlujoVortex flujoInterno) {
+	protected void initializeWith(final FlujoVortexViejo flujoInterno) {
 		this.flujoInterno = flujoInterno;
 	}
 
@@ -96,7 +96,7 @@ public class NodoMoleculaSupport extends NodoSupport {
 	 * 
 	 * @return El componente de salida de los mensajes de este nodo
 	 */
-	protected Emisor getSalida() {
+	protected EmisorViejo getSalida() {
 		return flujoInterno.getSalida();
 	}
 

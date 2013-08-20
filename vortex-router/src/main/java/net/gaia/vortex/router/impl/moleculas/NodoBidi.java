@@ -18,12 +18,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
@@ -72,7 +72,7 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 	private ConversorDeMensajesVortex mapeador;
 
-	private FlujoVortex flujoDeMensajesRecibidos;
+	private FlujoVortexViejo flujoDeMensajesRecibidos;
 
 	private IdDeComponenteVortex identificador;
 	public static final String identificador_FIELD = "identificador";
@@ -117,12 +117,12 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 		// La entrada es lo que haya definido el comportamiento y como salida usamos esta propio
 		// componente
-		final FlujoVortex flujoInterno = FlujoInmutable.create(flujoDeMensajesRecibidos.getEntrada(), this);
+		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(flujoDeMensajesRecibidos.getEntrada(), this);
 		initializeWith(flujoInterno);
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	@Override
@@ -155,7 +155,7 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	@Override
@@ -191,7 +191,7 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 
 	@Override

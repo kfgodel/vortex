@@ -1,20 +1,29 @@
 /**
- * 06/07/2012 19:10:23 Copyright (C) 2011 10Pines S.R.L.
+ * 19/08/2013 21:02:03 Copyright (C) 2013 Darío L. García
+ * 
+ * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
+ * alt="Creative Commons License" style="border-width:0"
+ * src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a><br />
+ * <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
+ * property="dct:title" rel="dct:type">Software</span> by <span
+ * xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Darío García</span> is
+ * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
+ * Commons Attribution 3.0 Unported License</a>.
  */
 package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
+import net.gaia.vortex.impl.support.ReceptorSupport;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,13 +37,14 @@ import ar.com.dgarcia.testing.stress.FactoryDeRunnable;
 import ar.com.dgarcia.testing.stress.StressGenerator;
 
 /**
- * Esta clase sirve de base para los tests de performance de nodos
+ * Esta clase sirve de base para pruebas de performance de componentes vortex en distintos
+ * escenarios de threads usandolos
  * 
  * @author D. García
  */
 public abstract class TestDePerformanceNodoSupport {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceNexoFiltro.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceNodoSupport.class);
 
 	private TaskProcessor processor;
 
@@ -43,11 +53,9 @@ public abstract class TestDePerformanceNodoSupport {
 	}
 
 	/**
-	 * Responsabilidad de la subclase que crea le tipo de nodo a testear
-	 * 
-	 * @return El nodo a crear cuyo receptor será definido por el test
+	 * Responsabilidad de la subclase que crea la red a testear
 	 */
-	protected abstract Nodo crearNodoATestear();
+	protected abstract FlujoVortex crearFlujoATestear();
 
 	@Before
 	public void crearProcesador() {
@@ -61,51 +69,46 @@ public abstract class TestDePerformanceNodoSupport {
 
 	@Test
 	public void medirPerformanceCon1ThreadDedicadoATodoElProceso() throws InterruptedException {
-		final int cantidadDeThreads = 1;
-		final Nodo nexoFiltro = crearNodoATestear();
-		testearAtomo(cantidadDeThreads, nexoFiltro);
+		testearParaThreads(1);
 	}
 
 	@Test
 	public void medirPerformanceCon2ThreadDedicadoATodoElProceso() throws InterruptedException {
-		final int cantidadDeThreads = 2;
-		final Nodo nexoFiltro = crearNodoATestear();
-		testearAtomo(cantidadDeThreads, nexoFiltro);
+		testearParaThreads(2);
 	}
 
 	@Test
 	public void medirPerformanceCon4ThreadDedicadoATodoElProceso() throws InterruptedException {
-		final int cantidadDeThreads = 4;
-		final Nodo nexoFiltro = crearNodoATestear();
-		testearAtomo(cantidadDeThreads, nexoFiltro);
+		testearParaThreads(4);
 	}
 
 	@Test
 	public void medirPerformanceCon8ThreadDedicadoATodoElProceso() throws InterruptedException {
-		final int cantidadDeThreads = 8;
-		final Nodo nexoFiltro = crearNodoATestear();
-		testearAtomo(cantidadDeThreads, nexoFiltro);
+		testearParaThreads(8);
 	}
 
 	@Test
 	public void medirPerformanceCon16ThreadDedicadoATodoElProceso() throws InterruptedException {
-		final int cantidadDeThreads = 16;
-		final Nodo nexoFiltro = crearNodoATestear();
-		testearAtomo(cantidadDeThreads, nexoFiltro);
+		testearParaThreads(16);
 	}
 
 	@Test
 	public void medirPerformanceCon32ThreadDedicadoATodoElProceso() throws InterruptedException {
-		final int cantidadDeThreads = 32;
-		final Nodo nexoFiltro = crearNodoATestear();
-		testearAtomo(cantidadDeThreads, nexoFiltro);
+		testearParaThreads(32);
 	}
 
 	@Test
 	public void medirPerformanceCon200ThreadDedicadoATodoElProceso() throws InterruptedException {
-		final int cantidadDeThreads = 200;
-		final Nodo nexoFiltro = crearNodoATestear();
-		testearAtomo(cantidadDeThreads, nexoFiltro);
+		testearParaThreads(200);
+	}
+
+	/**
+	 * Crea el flujo interno y testea el envio de mensajes usando la cantidad de threads externos
+	 * indicados
+	 */
+	private void testearParaThreads(final int cantidadDeThreads) throws InterruptedException {
+		final FlujoVortex flujo = crearFlujoATestear();
+		testearFlujo(cantidadDeThreads, flujo);
 	}
 
 	/**
@@ -115,24 +118,26 @@ public abstract class TestDePerformanceNodoSupport {
 	 *            El nombre para el log
 	 * @param cantidadDeThreadsDeEnvio
 	 *            La cantidad de threads en paralelo
-	 * @param nodoVortex
+	 * @param flujoVortex
 	 * @throws InterruptedException
 	 *             Si vuela todo
 	 */
-	private void testearAtomo(final int cantidadDeThreadsDeEnvio, final Nodo nodoVortex) throws InterruptedException {
-		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->" + nodoVortex.getClass().getSimpleName() + "->R";
+	private void testearFlujo(final int cantidadDeThreadsDeEnvio, final FlujoVortex flujoVortex)
+			throws InterruptedException {
+		final Receptor entrada = flujoVortex.getEntrada();
+		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->" + entrada.getClass().getSimpleName() + "->R";
 
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
 		// Generamos tantos portales como receptores tengamos
-		nodoVortex.conectarCon(new ReceptorSupport() {
+		flujoVortex.getSalida().conectarCon(new ReceptorSupport() {
 			public void recibir(@SuppressWarnings("unused") final MensajeVortex mensaje) {
 				metricas.registrarOutput();
 			}
 		});
 
-		correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, nodoVortex);
+		correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, entrada);
 	}
 
 	/**

@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.core.impl.atomos.emisores;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.impl.atomos.support.basicos.EmisorSupport;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.core.impl.atomos.support.basicos.EmisorSupportViejo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ import ar.com.dgarcia.coding.caching.WeakSingleton;
  * 
  * @author D. García
  */
-public class EmisorNulo extends EmisorSupport {
+public class EmisorNulo extends EmisorSupportViejo {
 	private static final Logger LOG = LoggerFactory.getLogger(EmisorNulo.class);
 
 	private static final WeakSingleton<EmisorNulo> ultimaReferencia = new WeakSingleton<EmisorNulo>(
@@ -38,7 +38,7 @@ public class EmisorNulo extends EmisorSupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void conectarCon(final Receptor destino) {
@@ -46,7 +46,7 @@ public class EmisorNulo extends EmisorSupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void desconectarDe(final Receptor destino) {

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.core.prog.Decision;
@@ -39,7 +39,7 @@ public abstract class MultiplexorSupport extends ReceptorConProcesador implement
 	public static final String destinos_FIELD = "destinos";
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Multiplexor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.Multiplexor#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void conectarCon(final Receptor destino) {
@@ -50,7 +50,7 @@ public abstract class MultiplexorSupport extends ReceptorConProcesador implement
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Multiplexor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.Multiplexor#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void desconectarDe(final Receptor destino) {

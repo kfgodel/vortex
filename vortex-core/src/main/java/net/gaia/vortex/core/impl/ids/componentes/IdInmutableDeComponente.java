@@ -78,7 +78,7 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.ShortStringable#toShortString()
+	 * @see net.gaia.vortex.api.proto.ShortStringable#toShortString()
 	 */
 	
 	public String toShortString() {

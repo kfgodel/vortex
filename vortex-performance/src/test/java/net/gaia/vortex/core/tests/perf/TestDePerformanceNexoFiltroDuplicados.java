@@ -3,22 +3,22 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 /**
  * Esta clase prueba la performance del nexo identificador
  * 
  * @author D. García
  */
-public class TestDePerformanceNexoFiltroDuplicados extends TestDePerformanceNodoSupport {
+public class TestDePerformanceNexoFiltroDuplicados extends TestDePerformanceNodoSupportViejo {
 
 	/**
-	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearNodoATestear()
+	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupportViejo#crearNodoATestear()
 	 */
 	@Override
-	protected Nodo crearNodoATestear() {
+	protected NodoViejo crearNodoATestear() {
 		return NexoSinDuplicados.create(getProcessor(), ReceptorNulo.getInstancia());
 	}
 

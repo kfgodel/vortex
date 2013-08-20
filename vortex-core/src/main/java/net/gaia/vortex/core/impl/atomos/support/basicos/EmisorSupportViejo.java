@@ -1,5 +1,5 @@
 /**
- * 25/01/2013 14:14:32 Copyright (C) 2011 Darío L. García
+ * 13/01/2013 19:49:41 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,21 +10,18 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.atomos;
+package net.gaia.vortex.core.impl.atomos.support.basicos;
+
+import net.gaia.vortex.core.api.atomos.EmisorViejo;
+import net.gaia.vortex.impl.support.ComponenteSupport;
 
 /**
- * Esta interfaz es aplicable a los objetos que tienen una versión corta de su método toString()
+ * Esta clase define comportamiento base para los emisores que no utilizan necesariamente un
+ * procesador
  * 
  * @author D. García
  */
-public interface ShortStringable {
-
-	/**
-	 * Devuelve una cadena corta con la descripción de esta instancia para ser usada de referencia
-	 * en otra
-	 * 
-	 * @return La cadena que permite identificar este componente
-	 */
-	public abstract String toShortString();
+@Deprecated
+public abstract class EmisorSupportViejo extends ComponenteSupport implements EmisorViejo {
 
 }

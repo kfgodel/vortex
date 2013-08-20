@@ -12,11 +12,11 @@
  */
 package net.gaia.vortex.core.impl.moleculas;
 
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.annotations.Molecula;
-import net.gaia.vortex.core.api.atomos.Emisor;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
+import net.gaia.vortex.core.api.atomos.EmisorViejo;
+import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 
 /**
@@ -28,7 +28,7 @@ import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 @Molecula
 public class NodoMolecula extends NodoMoleculaSupport {
 
-	public static NodoMolecula create(final FlujoVortex flujo) {
+	public static NodoMolecula create(final FlujoVortexViejo flujo) {
 		final NodoMolecula molecula = new NodoMolecula();
 		molecula.initializeWith(flujo);
 		return molecula;
@@ -44,8 +44,8 @@ public class NodoMolecula extends NodoMoleculaSupport {
 	 *            El componente que enviará los mensajes a la salida
 	 * @return El nodo creado
 	 */
-	public static NodoMolecula create(final Receptor componenteDeEntrada, final Emisor componenteDeSalida) {
-		final FlujoInmutable flujo = FlujoInmutable.create(componenteDeEntrada, componenteDeSalida);
+	public static NodoMolecula create(final Receptor componenteDeEntrada, final EmisorViejo componenteDeSalida) {
+		final FlujoInmutableViejo flujo = FlujoInmutableViejo.create(componenteDeEntrada, componenteDeSalida);
 		return create(flujo);
 	}
 }

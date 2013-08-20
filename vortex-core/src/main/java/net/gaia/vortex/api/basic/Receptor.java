@@ -1,8 +1,9 @@
 /**
  * 14/06/2012 19:59:14 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.core.api.atomos;
+package net.gaia.vortex.api.basic;
 
+import net.gaia.vortex.api.proto.ComponenteVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 
 /**
@@ -17,7 +18,8 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 public interface Receptor extends ComponenteVortex {
 
 	/**
-	 * Invocado al recibir un mensaje de la red
+	 * Invocado al recibir un mensaje de la red. Dependiendo del tipo concreto de esta instancia
+	 * cuál será el comportamiento adoptado al recibir el mensaje
 	 * 
 	 * @param mensaje
 	 *            El mensaje recibido por este componente

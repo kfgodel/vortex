@@ -7,7 +7,7 @@ import java.util.concurrent.RejectedExecutionException;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.impl.atomos.support.basicos.ComponenteSupport;
+import net.gaia.vortex.impl.support.ComponenteSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -12,43 +12,44 @@
  */
 package net.gaia.vortex.core.impl.moleculas.flujos;
 
-import net.gaia.vortex.core.api.atomos.Emisor;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.core.api.atomos.EmisorViejo;
+import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase es la implementación del {@link FlujoVortex} que se crea con los componentes de
+ * Esta clase es la implementación del {@link FlujoVortexViejo} que se crea con los componentes de
  * entrada y salida ya definidos y no pueden ser cambiados
  * 
  * @author D. García
  */
-public class FlujoInmutable implements FlujoVortex {
+@Deprecated
+public class FlujoInmutableViejo implements FlujoVortexViejo {
 
 	private Receptor entrada;
 	public static final String entrada_FIELD = "entrada";
 
-	private Emisor salida;
+	private EmisorViejo salida;
 	public static final String salida_FIELD = "salida";
 
 	/**
-	 * @see net.gaia.vortex.core.api.moleculas.FlujoVortex#getEntrada()
+	 * @see net.gaia.vortex.core.api.moleculas.FlujoVortexViejo#getEntrada()
 	 */
-	
+
 	public Receptor getEntrada() {
 		return entrada;
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.moleculas.FlujoVortex#getSalida()
+	 * @see net.gaia.vortex.core.api.moleculas.FlujoVortexViejo#getSalida()
 	 */
-	
-	public Emisor getSalida() {
+
+	public EmisorViejo getSalida() {
 		return salida;
 	}
 
-	public static FlujoInmutable create(final Receptor componenteDeEntrada, final Emisor componenteDeSalida) {
-		final FlujoInmutable flujo = new FlujoInmutable();
+	public static FlujoInmutableViejo create(final Receptor componenteDeEntrada, final EmisorViejo componenteDeSalida) {
+		final FlujoInmutableViejo flujo = new FlujoInmutableViejo();
 		flujo.entrada = componenteDeEntrada;
 		flujo.salida = componenteDeSalida;
 		return flujo;
@@ -57,7 +58,8 @@ public class FlujoInmutable implements FlujoVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(entrada_FIELD, entrada).con(salida_FIELD, salida).toString();
 	}
