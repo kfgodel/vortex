@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.impl.atomos;
 
-import net.gaia.vortex.api.atomos.Observador;
+import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -32,45 +32,45 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class AtomoObservador extends MonoEmisorSupport implements Observador {
-	private static final Logger LOG = LoggerFactory.getLogger(AtomoObservador.class);
+public class AtomoSecuenciador extends MonoEmisorSupport implements Secuenciador {
+	private static final Logger LOG = LoggerFactory.getLogger(AtomoSecuenciador.class);
 
-	private Receptor observador;
-	public static final String observador_FIELD = "observador";
+	private Receptor delegado;
+	public static final String delegado_FIELD = "delegado";
 
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
 		try {
-			observador.recibir(mensaje);
+			delegado.recibir(mensaje);
 		} catch (final Exception e) {
-			LOG.error("Se produjo un error en el observador. Continuando camino del mensaje", e);
+			LOG.error("Se produjo un error en el delegado. Continuando camino del mensaje", e);
 		}
 		getConectorUnico().recibir(mensaje);
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.atomos.Observador#getObservador()
+	 * @see net.gaia.vortex.api.atomos.Secuenciador#getDelegado()
 	 */
-	public Receptor getObservador() {
-		return observador;
+	public Receptor getDelegado() {
+		return delegado;
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.atomos.Observador#setObservador(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.api.atomos.Secuenciador#setDelegado(net.gaia.vortex.api.basic.Receptor)
 	 */
-	public void setObservador(final Receptor observador) {
-		if (observador == null) {
-			throw new IllegalArgumentException("El observador no puede ser null");
+	public void setDelegado(final Receptor nuevoDelegado) {
+		if (nuevoDelegado == null) {
+			throw new IllegalArgumentException("El delegado no puede ser null");
 		}
-		this.observador = observador;
+		this.delegado = nuevoDelegado;
 	}
 
-	public static AtomoObservador create(final Receptor observador) {
-		final AtomoObservador atomo = new AtomoObservador();
+	public static AtomoSecuenciador create(final Receptor delegado) {
+		final AtomoSecuenciador atomo = new AtomoSecuenciador();
 		atomo.inicializar();
-		atomo.setObservador(observador);
+		atomo.setDelegado(delegado);
 		return atomo;
 	}
 
@@ -79,8 +79,7 @@ public class AtomoObservador extends MonoEmisorSupport implements Observador {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(observador_FIELD, observador).con(conectorUnico_FIELD, getConectorUnico())
-				.toString();
+		return ToString.de(this).con(delegado_FIELD, delegado).con(conectorUnico_FIELD, getConectorUnico()).toString();
 	}
 
 }

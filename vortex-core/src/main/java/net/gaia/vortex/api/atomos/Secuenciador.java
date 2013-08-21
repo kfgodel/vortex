@@ -17,20 +17,20 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.MonoEmisor;
 
 /**
- * Esta interfaz representa el componente que permite observar los mensajes recibidos antes de
- * enviarlos al siguiente componentes.<br>
- * Para observar los mensajes se utilizar un receptor que hace las veces de observador
+ * Esta interfaz representa el componente que permite secuenciar los mensajes recibidos
+ * estableciendo un orden de entrega. Primero se le pasa el mensaje al delegado y cuando este
+ * termina se continúa por el conector de salida.<br>
  * 
  * @author D. García
  */
-public interface Observador extends Nodo, MonoEmisor {
+public interface Secuenciador extends Nodo, MonoEmisor {
 
 	/**
 	 * Devuelve el componente que será utilizado como observador de los mensajes recibidos
 	 * 
 	 * @return El componente que recibirá todos los mensajes antes que la salida
 	 */
-	Receptor getObservador();
+	Receptor getDelegado();
 
 	/**
 	 * Establece el componente que hará de observador de los mensajes.<br>
@@ -39,5 +39,5 @@ public interface Observador extends Nodo, MonoEmisor {
 	 * @param el
 	 *            componente observador
 	 */
-	void setObservador(Receptor observador);
+	void setDelegado(Receptor observador);
 }
