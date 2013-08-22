@@ -42,6 +42,16 @@ public interface VortexCore {
 	Secuenciador secuenciar(Receptor delegado, Receptor salida);
 
 	/**
+	 * Crea un atomo secuenciador que entregará los mensajes recibidos primero al receptor indicado
+	 * y luego al que se conecte a la salida
+	 * 
+	 * @param delegado
+	 *            El receptor que recibirá los mensajes primero
+	 * @return El secuenciador creado
+	 */
+	Secuenciador secuenciadorDe(Receptor delegado);
+
+	/**
 	 * Crea un atomo multiplexor con los receptores indicados ya conectados como salidas.<br>
 	 * Si no se indican receptores, el multiplexor deberá ser conectado después
 	 * 
@@ -79,6 +89,17 @@ public interface VortexCore {
 	Bifurcador filtrarCon(Condicion condicion, Receptor receptor);
 
 	/**
+	 * Crea un atomo bifurcador configurado con la condicion pasada como decisor del receptor
+	 * destino de salida.<br>
+	 * Se deberá conectar receptores en los conectores que correspondan
+	 * 
+	 * @param condicion
+	 *            La condicion para bifurcar el camino de los mensajes
+	 * @return El atomo creado
+	 */
+	Bifurcador filtroDe(Condicion condicion);
+
+	/**
 	 * Crea un atomo transformador que utilizará la transformación indicada para modificar los
 	 * mensajes antes de entregarlos al receptor pasado
 	 * 
@@ -101,5 +122,23 @@ public interface VortexCore {
 	 * @return El atomo creado y conectado
 	 */
 	Bifurcador sinDuplicadosPara(Receptor receptor);
+
+	/**
+	 * Crea el bifurcador que descarta los mensajes duplicados, permitiendo recibir los mensajes
+	 * sólo una vez en el conector de salida por true
+	 * 
+	 * @return El atomo creado
+	 */
+	Bifurcador filtroSinDuplicados();
+
+	/**
+	 * Crea un atomo transformador que modificará los mensajes recibidos con la transformación
+	 * pasada antes de entregarselos al receptor que se indique en su conector
+	 * 
+	 * @param transformacion
+	 *            La transformación para el transformador creado
+	 * @return El atomo creado
+	 */
+	Transformador transformadorPara(Transformacion transformacion);
 
 }

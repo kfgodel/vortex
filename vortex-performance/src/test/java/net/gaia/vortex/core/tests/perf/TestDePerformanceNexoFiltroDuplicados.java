@@ -3,23 +3,24 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.impl.nulos.ReceptorNulo;
+import net.gaia.vortex.api.atomos.Bifurcador;
+import net.gaia.vortex.api.flujos.FlujoVortex;
+import net.gaia.vortex.impl.flujos.FlujoInmutable;
 
 /**
  * Esta clase prueba la performance del nexo identificador
  * 
  * @author D. García
  */
-public class TestDePerformanceNexoFiltroDuplicados extends TestDePerformanceNodoSupportViejo {
+public class TestDePerformanceNexoFiltroDuplicados extends TestDePerformanceNodoSupport {
 
 	/**
-	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupportViejo#crearNodoATestear()
+	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearFlujoATestear()
 	 */
 	@Override
-	protected NodoViejo crearNodoATestear() {
-		return NexoSinDuplicados.create(getProcessor(), ReceptorNulo.getInstancia());
+	protected FlujoVortex crearFlujoATestear() {
+		final Bifurcador filtrador = getBuilder().filtroSinDuplicados();
+		return FlujoInmutable.create(filtrador, filtrador.getConectorPorTrue());
 	}
 
 }

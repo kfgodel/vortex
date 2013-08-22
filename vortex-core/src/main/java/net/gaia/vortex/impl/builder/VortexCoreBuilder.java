@@ -59,8 +59,16 @@ public class VortexCoreBuilder implements VortexCore {
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	public Secuenciador secuenciar(final Receptor delegado, final Receptor salida) {
-		final AtomoSecuenciador secuenciador = AtomoSecuenciador.create(delegado);
+		final Secuenciador secuenciador = secuenciadorDe(delegado);
 		secuenciador.getConectorUnico().conectarCon(salida);
+		return secuenciador;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#secuenciadorDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public Secuenciador secuenciadorDe(final Receptor delegado) {
+		final AtomoSecuenciador secuenciador = AtomoSecuenciador.create(delegado);
 		return secuenciador;
 	}
 
@@ -92,8 +100,16 @@ public class VortexCoreBuilder implements VortexCore {
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	public Bifurcador filtrarCon(final Condicion condicion, final Receptor receptor) {
-		final AtomoBifurcador filtro = AtomoBifurcador.create(condicion);
+		final Bifurcador filtro = filtroDe(condicion);
 		filtro.getConectorPorTrue().conectarCon(receptor);
+		return filtro;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#filtroDe(net.gaia.vortex.core.api.condiciones.Condicion)
+	 */
+	public Bifurcador filtroDe(final Condicion condicion) {
+		final AtomoBifurcador filtro = AtomoBifurcador.create(condicion);
 		return filtro;
 	}
 
@@ -102,8 +118,16 @@ public class VortexCoreBuilder implements VortexCore {
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	public Transformador transformarCon(final Transformacion transformacion, final Receptor receptor) {
-		final AtomoTransformador transformador = AtomoTransformador.create(transformacion);
+		final Transformador transformador = transformadorPara(transformacion);
 		transformador.getConectorUnico().conectarCon(receptor);
+		return transformador;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#transformadorPara(net.gaia.vortex.core.api.transformaciones.Transformacion)
+	 */
+	public Transformador transformadorPara(final Transformacion transformacion) {
+		final AtomoTransformador transformador = AtomoTransformador.create(transformacion);
 		return transformador;
 	}
 
@@ -111,9 +135,19 @@ public class VortexCoreBuilder implements VortexCore {
 	 * @see net.gaia.vortex.api.builder.VortexCore#sinDuplicadosPara(net.gaia.vortex.api.basic.Receptor)
 	 */
 	public Bifurcador sinDuplicadosPara(final Receptor receptor) {
+		final Bifurcador filtro = filtroSinDuplicados();
+		filtro.getConectorPorTrue().conectarCon(receptor);
+		return filtro;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#filtroSinDuplicados()
+	 */
+	public Bifurcador filtroSinDuplicados() {
 		final MemoriaDeMensajes memoriaDelFiltro = MemoriaLimitadaDeMensajes.create(CANTIDAD_MENSAJES_RECORDADOS);
 		final EsMensajeNuevo condicion = EsMensajeNuevo.create(memoriaDelFiltro);
-		final Bifurcador filtroCreado = filtrarCon(condicion, receptor);
+		final Bifurcador filtroCreado = filtroDe(condicion);
 		return filtroCreado;
 	}
+
 }

@@ -14,6 +14,7 @@ package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
@@ -23,6 +24,7 @@ import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaCompo
 import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
+import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 
 import org.junit.After;
@@ -48,6 +50,12 @@ public abstract class TestDePerformanceNodoSupport {
 
 	private TaskProcessor processor;
 
+	private VortexCore builder;
+
+	public VortexCore getBuilder() {
+		return builder;
+	}
+
 	public TaskProcessor getProcessor() {
 		return processor;
 	}
@@ -60,6 +68,7 @@ public abstract class TestDePerformanceNodoSupport {
 	@Before
 	public void crearProcesador() {
 		processor = VortexProcessorFactory.createProcessor();
+		builder = VortexCoreBuilder.create();
 	}
 
 	@After

@@ -31,6 +31,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
+@Deprecated
 public class NexoTransformador extends NexoSupport implements TransformadorViejo {
 
 	private Transformacion transformacion;

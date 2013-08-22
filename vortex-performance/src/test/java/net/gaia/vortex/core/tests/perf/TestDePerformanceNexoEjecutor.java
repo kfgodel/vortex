@@ -3,9 +3,10 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
+import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
+import net.gaia.vortex.api.flujos.FlujoVortex;
+import net.gaia.vortex.impl.flujos.FlujoInmutable;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 /**
@@ -13,15 +14,16 @@ import net.gaia.vortex.impl.nulos.ReceptorNulo;
  * 
  * @author D. García
  */
-public class TestDePerformanceNexoEjecutor extends TestDePerformanceNodoSupportViejo {
+public class TestDePerformanceNexoEjecutor extends TestDePerformanceNodoSupport {
 
 	/**
-	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupportViejo#crearNodoATestear()
+	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearFlujoATestear()
 	 */
 	@Override
-	protected NodoViejo crearNodoATestear() {
+	protected FlujoVortex crearFlujoATestear() {
 		final Receptor ejecutable = ReceptorNulo.getInstancia();
-		return NexoEjecutor.create(getProcessor(), ejecutable, ReceptorNulo.getInstancia());
+		final Secuenciador secuenciador = getBuilder().secuenciadorDe(ejecutable);
+		return FlujoInmutable.create(secuenciador, secuenciador.getConectorUnico());
 	}
 
 }

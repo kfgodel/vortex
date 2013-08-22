@@ -3,26 +3,27 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.vortex.core.api.NodoViejo;
+import net.gaia.vortex.api.atomos.Transformador;
+import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
-import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.transformaciones.TransformacionNula;
-import net.gaia.vortex.impl.nulos.ReceptorNulo;
+import net.gaia.vortex.impl.flujos.FlujoInmutable;
 
 /**
  * Esta clase prueba la performance del nexo transformador
  * 
  * @author D. García
  */
-public class TestDePerformanceNexoTransformador extends TestDePerformanceNodoSupportViejo {
+public class TestDePerformanceNexoTransformador extends TestDePerformanceNodoSupport {
 
 	/**
-	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupportViejo#crearNodoATestear()
+	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearFlujoATestear()
 	 */
 	@Override
-	protected NodoViejo crearNodoATestear() {
+	protected FlujoVortex crearFlujoATestear() {
 		final Transformacion transformacion = TransformacionNula.getInstancia();
-		return NexoTransformador.create(getProcessor(), transformacion, ReceptorNulo.getInstancia());
+		final Transformador transformador = getBuilder().transformadorPara(transformacion);
+		return FlujoInmutable.create(transformador, transformador.getConectorUnico());
 	}
 
 }

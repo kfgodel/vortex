@@ -3,8 +3,9 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
+import net.gaia.vortex.api.atomos.Multiplexor;
+import net.gaia.vortex.api.flujos.FlujoVortex;
+import net.gaia.vortex.impl.flujos.FlujoInmutable;
 
 /**
  * Esta clase prueba las velocidades de procesamiento de cada uno de los componentes bajo estrés de
@@ -12,15 +13,15 @@ import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
  * 
  * @author D. García
  */
-public class TestDePerformanceMultiplexorParalelo extends TestDePerformanceNodoSupportViejo {
+public class TestDePerformanceMultiplexorParalelo extends TestDePerformanceNodoSupport {
+
 	/**
-	 * Crea el nodo que cuya performance se evaluará en este tests
-	 * 
-	 * @return El nodo a probar
+	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearFlujoATestear()
 	 */
 	@Override
-	protected NodoViejo crearNodoATestear() {
-		return MultiplexorParalelo.create(getProcessor());
+	protected FlujoVortex crearFlujoATestear() {
+		final Multiplexor multiplexor = getBuilder().multiplexar();
+		return FlujoInmutable.create(multiplexor, multiplexor.crearConector());
 	}
 
 }

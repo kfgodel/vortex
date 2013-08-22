@@ -3,9 +3,9 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
+import net.gaia.vortex.api.atomos.Bifurcador;
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.impl.atomos.AtomoBifurcador;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
 
 /**
@@ -21,7 +21,7 @@ public class TestDePerformanceNexoFiltro extends TestDePerformanceNodoSupport {
 	 */
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
-		final AtomoBifurcador filtro = AtomoBifurcador.create(SiempreTrue.getInstancia());
+		final Bifurcador filtro = getBuilder().filtroDe(SiempreTrue.getInstancia());
 		final FlujoInmutable flujoATestear = FlujoInmutable.create(filtro, filtro.getConectorPorTrue());
 		return flujoATestear;
 	}
