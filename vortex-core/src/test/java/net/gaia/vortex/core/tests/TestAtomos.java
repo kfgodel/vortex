@@ -6,24 +6,25 @@ package net.gaia.vortex.core.tests;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.atomos.Bifurcador;
+import net.gaia.vortex.api.atomos.Multiplexor;
+import net.gaia.vortex.api.atomos.Secuenciador;
+import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
-import net.gaia.vortex.impl.atomos.AtomoBifurcador;
-import net.gaia.vortex.impl.atomos.AtomoMultiplexor;
-import net.gaia.vortex.impl.atomos.AtomoSecuenciador;
-import net.gaia.vortex.impl.atomos.AtomoTransformador;
+import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -46,11 +47,14 @@ public class TestAtomos {
 
 	private TaskProcessor processor;
 
+	private VortexCore builder;
+
 	@Before
 	public void crearProcesadorYNodos() {
 		mensaje1 = MensajeConContenido.crearVacio();
 		mensaje2 = MensajeConContenido.crearVacio();
 		processor = VortexProcessorFactory.createProcessor();
+		builder = VortexCoreBuilder.create();
 	}
 
 	@After
@@ -62,8 +66,7 @@ public class TestAtomos {
 	public void elEjecutorDeberiaInvocarElComponenteIndicadoAlRecibirUnMensaje() {
 		final ReceptorEncolador ejecutante = ReceptorEncolador.create();
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final AtomoSecuenciador secuenciador = AtomoSecuenciador.create(ejecutante);
-		secuenciador.getConectorUnico().conectarCon(receptor);
+		final Secuenciador secuenciador = builder.secuenciar(ejecutante, receptor);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, secuenciador, ejecutante, receptor);
 	}
 
@@ -71,26 +74,21 @@ public class TestAtomos {
 	public void elMultiplexorDeberiaEntregarAVariosDestinosAlRecibirUnMensaje() {
 		final ReceptorEncolador receptor1 = ReceptorEncolador.create();
 		final ReceptorEncolador receptor2 = ReceptorEncolador.create();
-		final AtomoMultiplexor multiplexor = AtomoMultiplexor.create();
-		multiplexor.crearConector().conectarCon(receptor1);
-		multiplexor.crearConector().conectarCon(receptor2);
-
+		final Multiplexor multiplexor = builder.multiplexar(receptor1, receptor2);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, multiplexor, receptor1, receptor2);
 	}
 
 	@Test
 	public void elCondicionalDeberiaEntregarElMensajeSiCumpleLaCondicion() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final AtomoBifurcador filtro = AtomoBifurcador.create(SiempreTrue.getInstancia());
-		filtro.getConectorPorTrue().conectarCon(receptor);
+		final Bifurcador filtro = builder.filtrarCon(SiempreTrue.getInstancia(), receptor);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, filtro, receptor);
 	}
 
 	@Test
 	public void elCondicionalNoDeberiaEntregarElMensajeSiNoCumpleLaCondicion() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final AtomoBifurcador filtro = AtomoBifurcador.create(SiempreFalse.getInstancia());
-		filtro.getConectorPorTrue().conectarCon(receptor);
+		final Bifurcador filtro = builder.filtrarCon(SiempreFalse.getInstancia(), receptor);
 		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, filtro, receptor);
 	}
 
@@ -103,8 +101,7 @@ public class TestAtomos {
 				return mensaje2;
 			}
 		};
-		final AtomoTransformador transformador = AtomoTransformador.create(transformacion);
-		transformador.getConectorUnico().conectarCon(receptor);
+		final Transformador transformador = builder.transformarCon(transformacion, receptor);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje2, transformador, receptor);
 	}
 
@@ -112,9 +109,7 @@ public class TestAtomos {
 	public void elBifurcadorDeberiaElegirElDelegadoPorTrueSiLaCondicionEsCumplida() {
 		final ReceptorEncolador receptorPorTrue = ReceptorEncolador.create();
 		final ReceptorEncolador receptorPorFalse = ReceptorEncolador.create();
-		final AtomoBifurcador bifurcador = AtomoBifurcador.create(SiempreTrue.getInstancia());
-		bifurcador.getConectorPorTrue().conectarCon(receptorPorTrue);
-		bifurcador.getConectorPorFalse().conectarCon(receptorPorFalse);
+		final Bifurcador bifurcador = builder.bifurcarSi(SiempreTrue.getInstancia(), receptorPorTrue, receptorPorFalse);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorTrue);
 		verificarMensajeNoRecibido(0, receptorPorFalse);
 	}
@@ -123,9 +118,8 @@ public class TestAtomos {
 	public void elBifurcadorDeberiaElegirElDelegadoPorFalseSiLaCondicionNoEsCumplida() {
 		final ReceptorEncolador receptorPorTrue = ReceptorEncolador.create();
 		final ReceptorEncolador receptorPorFalse = ReceptorEncolador.create();
-		final AtomoBifurcador bifurcador = AtomoBifurcador.create(SiempreFalse.getInstancia());
-		bifurcador.getConectorPorTrue().conectarCon(receptorPorTrue);
-		bifurcador.getConectorPorFalse().conectarCon(receptorPorFalse);
+		final Bifurcador bifurcador = builder
+				.bifurcarSi(SiempreFalse.getInstancia(), receptorPorTrue, receptorPorFalse);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, bifurcador, receptorPorFalse);
 		verificarMensajeNoRecibido(0, receptorPorTrue);
 	}
@@ -140,7 +134,8 @@ public class TestAtomos {
 		mensaje.asignarId(idDelMensaje);
 
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final NexoSinDuplicados filtro = NexoSinDuplicados.create(processor, receptor);
+		final Bifurcador filtro = builder.sinDuplicadosPara(receptor);
+
 		// La primera vez debería llegar
 		checkMensajeEnviadoYRecibido(mensaje, mensaje, filtro, receptor);
 
@@ -151,7 +146,7 @@ public class TestAtomos {
 	@Test
 	public void elFiltroDeMensajesConocidosDeberiaGenerarUnErrorSiElMensajeNoTieneId() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final NexoSinDuplicados filtro = NexoSinDuplicados.create(processor, receptor);
+		final Bifurcador filtro = builder.sinDuplicadosPara(receptor);
 		// La primera vez debería llegar
 		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, filtro, receptor);
 	}

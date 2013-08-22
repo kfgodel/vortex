@@ -28,6 +28,7 @@ import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
  * 
  * @author D. García
  */
+@Deprecated
 public class NexoSinDuplicados extends NexoFiltroSupport implements ComponenteConMemoria {
 
 	public static final int CANTIDAD_MENSAJES_RECORDADOS = 1000;
