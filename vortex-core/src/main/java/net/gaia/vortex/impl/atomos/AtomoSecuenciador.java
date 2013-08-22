@@ -79,7 +79,8 @@ public class AtomoSecuenciador extends MonoEmisorSupport implements Secuenciador
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(delegado_FIELD, delegado).con(conectorUnico_FIELD, getConectorUnico()).toString();
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(delegado_FIELD, delegado)
+				.con(conectorUnico_FIELD, getConectorUnico()).toString();
 	}
 
 }

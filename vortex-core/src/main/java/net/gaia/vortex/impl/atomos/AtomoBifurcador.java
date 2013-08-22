@@ -122,8 +122,8 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(condicion_FIELD, condicion).con(conectorPorTrue_FIELD, conectorPorTrue)
-				.con(conectorPorFalse_FIELD, conectorPorFalse).toString();
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(condicion_FIELD, condicion)
+				.con(conectorPorTrue_FIELD, conectorPorTrue).con(conectorPorFalse_FIELD, conectorPorFalse).toString();
 	}
 
 }

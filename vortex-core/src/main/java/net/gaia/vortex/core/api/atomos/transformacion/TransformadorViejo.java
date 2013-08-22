@@ -14,8 +14,9 @@ import net.gaia.vortex.core.api.transformaciones.Transformacion;
  * 
  * @author D. García
  */
+@Deprecated
 @Atomo
-public interface Transformador extends Nexo {
+public interface TransformadorViejo extends Nexo {
 
 	/**
 	 * Establece la transformación utilizada por esta instancia para modificar los mensajes

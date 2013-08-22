@@ -19,7 +19,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 
 /**
  * Esta interfaz representa un atomo vortex que bifurca el camino del mensaje en función de una
- * condición aplicada sobre él.<br>
+ * {@link Condicion} aplicada sobre él.<br>
  * Si la condición es verdadera seguirá un camino, y si es falsa otro. Es descartado si la
  * evaluación de la condición falla
  * 
