@@ -12,7 +12,11 @@
  */
 package net.gaia.vortex.core.impl.memoria;
 
-import java.util.concurrent.Callable;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
@@ -20,11 +24,9 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
-import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
-import ar.com.dgarcia.colecciones.maps.LRUCache;
-import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
+import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
+import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase implementa la memoria de mensajes limitando la cantidad a un valor prefijado y
@@ -36,153 +38,97 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	private static final Logger LOG = LoggerFactory.getLogger(MemoriaLimitadaDeMensajes.class);
 
 	/**
-	 * Mapa utilizado como registro limitado LRU
+	 * Tiempo máximo que se espera antes de considerar que no fue posible lockear.<br>
+	 * Esta magnitud debiera ser suficientemente grande para emular una espera infinita, pero no
+	 * tanto como para que un programa se bloquee infinitamente
 	 */
-	private LRUCache<IdDeMensaje, IdDeMensaje> idsRegistrados;
-	public static final String idsRegistrados_FIELD = "idsRegistrados";
+	public static final TimeMagnitude MAX_WAIT_FOR_LOCKS = TimeMagnitude.of(10 * 60, TimeUnit.SECONDS);
 
-	private ReadWriteCoordinator concurrentCoordinator;
+	private Set<IdDeMensaje> idsPorHash;
 
-	/**
-	 * Crea una nueva memoria limitada a la cantidad de mensajes indicados.<br>
-	 * Los mensajes más accedidos serán conservados y los menos descartados al superar el tamaño
-	 * máximo
-	 * 
-	 * @param cantidadMaximaRegistrada
-	 *            El tamaño que esta memoria puede tener como máximo de mensajes registrados
-	 * @return La memoria creada
-	 */
-	public static MemoriaLimitadaDeMensajes create(final int cantidadMaximaRegistrada) {
-		final MemoriaLimitadaDeMensajes memoria = new MemoriaLimitadaDeMensajes();
-		memoria.concurrentCoordinator = ReadWriteCoordinator.create();
-		memoria.idsRegistrados = new LRUCache<IdDeMensaje, IdDeMensaje>(cantidadMaximaRegistrada);
-		return memoria;
-	}
+	private LinkedList<IdDeMensaje> idsPorOrden;
+	public static final String idsPorOrden_FIELD = "idsPorOrden";
+
+	private int cantidadMaxima;
+	public static final String cantidadMaxima_FIELD = "cantidadMaxima";
+
+	private ReentrantLock writeLock;
 
 	/**
 	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#registrarNuevo(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-
 	public boolean registrarNuevo(final MensajeVortex mensaje) {
-		final IdDeMensaje idNuevo = mensaje.getIdDeMensaje();
-		boolean yaExistia;
+		final boolean yaExistia = tieneRegistroDe(mensaje);
+		if (yaExistia) {
+			return false;
+		}
+		boolean locked;
 		try {
-			yaExistia = comprobarSiYaExiste(idNuevo);
-		} catch (final UnsuccessfulWaitException e) {
+			locked = writeLock.tryLock(MAX_WAIT_FOR_LOCKS.getQuantity(), MAX_WAIT_FOR_LOCKS.getTimeUnit());
+		}
+		catch (final InterruptedException e) {
 			LOG.debug("Mensaje no comprobado para registrarlo por ser interrumpida la espera", e);
 			return false;
 		}
-		if (yaExistia) {
-			// Ya sabemos que no es nuevo
-			return false;
+		if (!locked) {
+			throw new UnhandledConditionException(
+					"Se acabó el tiempo de espera y no se pudo lockear la memoria para registrar mensaje: " + mensaje);
 		}
-		boolean agregadoComoNuevo;
 		try {
-			agregadoComoNuevo = intentarAgregarComoNuevo(idNuevo);
-		} catch (final UnsuccessfulWaitException e) {
-			LOG.debug("Mensaje no registrado por ser interrumpida la espera", e);
-			return false;
+			return intentarRegistrarNuevo(mensaje);
 		}
-		return agregadoComoNuevo;
+		finally {
+			writeLock.unlock();
+		}
 	}
 
 	/**
-	 * Intenta modificar esta memoria para registrar el ID como nuevo. Falla si otro thread nos gana
-	 * de mano
+	 * Intenta agregar un nuevo id a los registrados en esta memoria
 	 * 
-	 * @param idNuevo
-	 *            El ID para registrar como nuevo
-	 * @return true si fue posible agregarlo, false si al intentar agregarlo el estado actual de la
-	 *         memoria ya lo tiene registrado
+	 * @param mensaje
+	 * @return false si no pudo agregarse o ya existía
 	 */
-	private boolean intentarAgregarComoNuevo(final IdDeMensaje idNuevo) throws UnsuccessfulWaitException {
-		if (idNuevo == null) {
-			throw new FaultyCodeException("Se recibió un mensaje sin ID");
-		}
-		final boolean agregado = concurrentCoordinator.doWriteOperation(new Callable<Boolean>() {
-
-			public Boolean call() throws Exception {
-				return unsyncIntentarAgregarComoNuevo(idNuevo);
-			}
-		});
-		return agregado;
-	}
-
-	/**
-	 * Intenta agregar el ID como nuevo al mapa interno. Esta operación no está sincronizada
-	 * 
-	 * @param idNuevo
-	 *            El Id a agregar
-	 * @return false si al intentar agregarlo, ya existia. True si fue posible agregarlo
-	 */
-	protected Boolean unsyncIntentarAgregarComoNuevo(final IdDeMensaje idNuevo) {
-		// Tenemos que comprobar nuevamente porque ahora tenemos acceso exclusivo
-		final Boolean yaExiste = unsyncComprobarSiYaExiste(idNuevo);
-		if (yaExiste) {
-			// Alguien nos ganó de mano entre que comprobamos antes y que pudimos acceder
-			// exclusivamente
+	private boolean intentarRegistrarNuevo(final MensajeVortex mensaje) {
+		final IdDeMensaje idAgregado = mensaje.getIdDeMensaje();
+		final boolean agregado = idsPorHash.add(idAgregado);
+		if (!agregado) {
+			// Otro thread se adelantó y puso el mismo ID
 			return false;
 		}
-		final IdDeMensaje idPrevio = idsRegistrados.put(idNuevo, idNuevo);
-		if (idPrevio != null) {
-			// Por alguna extraña razón la comprobación previa dio false pero algo había
-			return false;
+		idsPorOrden.addLast(idAgregado);
+		if (idsPorOrden.size() > cantidadMaxima) {
+			// Si superamos la cantidad maxima quitamos el mas viejo
+			final IdDeMensaje idQuitado = idsPorOrden.removeFirst();
+			idsPorHash.remove(idQuitado);
 		}
 		return true;
 	}
 
 	/**
-	 * Accede a esta memoria para verificar si el ID pasado como nuevo existía previamente, en cuyo
-	 * caso devuelve true
-	 * 
-	 * @param idNuevo
-	 *            El id a verificar como nuevo
-	 * @return true si el ID ya estaba registrado, false si es realmente nuevo
+	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#tieneRegistroDe(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	private boolean comprobarSiYaExiste(final IdDeMensaje idNuevo) throws UnsuccessfulWaitException {
-		if (idNuevo == null) {
-			throw new FaultyCodeException("Se recibió un mensaje sin ID");
-		}
-		final Boolean yaExiste = concurrentCoordinator.doReadOperation(new Callable<Boolean>() {
-
-			public Boolean call() throws Exception {
-				return unsyncComprobarSiYaExiste(idNuevo);
-			}
-		});
-		return yaExiste;
+	public boolean tieneRegistroDe(final MensajeVortex mensaje) {
+		final IdDeMensaje idDeMensaje = mensaje.getIdDeMensaje();
+		final boolean yaRegistrado = idsPorHash.contains(idDeMensaje);
+		return yaRegistrado;
 	}
 
-	/**
-	 * Verifica en el mapa interno si el id ya está registrado.<br>
-	 * Esta operación no está sincronizada con otros threads
-	 * 
-	 * @param idNuevo
-	 *            El id a comprobar
-	 * @return true si ya existía en el mapa, false si es nuevo
-	 */
-	protected Boolean unsyncComprobarSiYaExiste(final IdDeMensaje idNuevo) {
-		final IdDeMensaje idRegistrado = this.idsRegistrados.get(idNuevo);
-		final boolean yaExistia = idRegistrado != null;
-		return yaExistia;
+	public static MemoriaLimitadaDeMensajes create(final int cantidadMaximaDeRegistros) {
+		final MemoriaLimitadaDeMensajes memoria = new MemoriaLimitadaDeMensajes();
+		memoria.cantidadMaxima = cantidadMaximaDeRegistros;
+		memoria.writeLock = new ReentrantLock();
+		memoria.idsPorHash = new HashSet<IdDeMensaje>();
+		memoria.idsPorOrden = new LinkedList<IdDeMensaje>();
+		return memoria;
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-
 	@Override
 	public String toString() {
-		return ToString.de(this).con(idsRegistrados_FIELD, idsRegistrados.size()).toString();
-	}
-
-	/**
-	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#tieneRegistroDe(net.gaia.vortex.core.api.mensaje.MensajeVortex)
-	 */
-
-	public boolean tieneRegistroDe(final MensajeVortex mensaje) {
-		final IdDeMensaje idDelMensaje = mensaje.getIdDeMensaje();
-		final boolean tieneRegistroPrevio = comprobarSiYaExiste(idDelMensaje);
-		return tieneRegistroPrevio;
+		return ToString.de(this).con(idsPorOrden_FIELD, idsPorOrden.size()).con(cantidadMaxima_FIELD, cantidadMaxima)
+				.toString();
 	}
 
 }
