@@ -28,8 +28,9 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class NexoBifurcador extends ReceptorConProcesador implements BifurcadorViejo {
-	private static final Logger LOG = LoggerFactory.getLogger(NexoBifurcador.class);
+@Deprecated
+public class NexoBifurcadorViejo extends ReceptorConProcesador implements BifurcadorViejo {
+	private static final Logger LOG = LoggerFactory.getLogger(NexoBifurcadorViejo.class);
 
 	private Condicion condicion;
 	public static final String condicion_FIELD = "condicion";
@@ -60,9 +61,9 @@ public class NexoBifurcador extends ReceptorConProcesador implements BifurcadorV
 		return elegirDelegado;
 	}
 
-	public static NexoBifurcador create(final TaskProcessor processor, final Condicion condicion,
+	public static NexoBifurcadorViejo create(final TaskProcessor processor, final Condicion condicion,
 			final Receptor delegadoPorTrue, final Receptor delegadoPorFalse) {
-		final NexoBifurcador nexo = new NexoBifurcador();
+		final NexoBifurcadorViejo nexo = new NexoBifurcadorViejo();
 		nexo.initializeWith(processor);
 		nexo.setCondicion(condicion);
 		nexo.setReceptorPorFalse(delegadoPorFalse);
