@@ -22,7 +22,7 @@ import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
 import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
+import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
@@ -30,7 +30,7 @@ import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 
 /**
- * Esta clase implementa el selector utilizando {@link NexoFiltro} en cada salida para evaluar los
+ * Esta clase implementa el selector utilizando {@link NexoFiltroViejo} en cada salida para evaluar los
  * mensajes antes de entregarlos a destino
  * 
  * @author D. García
@@ -41,7 +41,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	/**
 	 * Mapa con el que registramos que filtro usamos con cada destino
 	 */
-	private Map<Receptor, NexoFiltro> filtrosPorDestino;
+	private Map<Receptor, NexoFiltroViejo> filtrosPorDestino;
 
 	/**
 	 * El procesador para los nuevos filtros
@@ -69,14 +69,14 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	 */
 
 	public void conectarCon(final Receptor destino, final Condicion condicion) {
-		final NexoFiltro filtroDelDestino = getFiltroPara(destino);
+		final NexoFiltroViejo filtroDelDestino = getFiltroPara(destino);
 		if (filtroDelDestino != null) {
 			// Ya estamos conectado al destino
 			throw new FaultyCodeException("Ya existe una conexion con el destino[" + destino
 					+ "]. No es posibel crear otra");
 		}
 		// Creamos el nexo con un filtro de la condicion
-		final NexoFiltro nuevoFiltro = NexoFiltro.create(processor, condicion, destino);
+		final NexoFiltroViejo nuevoFiltro = NexoFiltroViejo.create(processor, condicion, destino);
 		filtrosPorDestino.put(destino, nuevoFiltro);
 
 		// Conectamos a la entrada
@@ -89,7 +89,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	 */
 
 	public void modificarCondicionPara(final Receptor destino, final Condicion nuevaCondicion) {
-		final NexoFiltro filtroDelDestino = getFiltroPara(destino);
+		final NexoFiltroViejo filtroDelDestino = getFiltroPara(destino);
 		if (filtroDelDestino == null) {
 			// No estamos conectado al destino
 			return;
@@ -102,11 +102,11 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	 * Devuelve el nexoFiltro correspondiente al destino indicado
 	 * 
 	 * @param destino
-	 *            El destino para el que se solicita el {@link NexoFiltro}
+	 *            El destino para el que se solicita el {@link NexoFiltroViejo}
 	 * @return El filtro que corresponde al destino indicado
 	 */
-	protected NexoFiltro getFiltroPara(final Receptor destino) {
-		final NexoFiltro nexoFiltro = filtrosPorDestino.get(destino);
+	protected NexoFiltroViejo getFiltroPara(final Receptor destino) {
+		final NexoFiltroViejo nexoFiltro = filtrosPorDestino.get(destino);
 		return nexoFiltro;
 	}
 
@@ -116,7 +116,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 
 	@Override
 	public void desconectarDe(final Receptor destino) {
-		final NexoFiltro filtroDelDestino = getFiltroPara(destino);
+		final NexoFiltroViejo filtroDelDestino = getFiltroPara(destino);
 		if (filtroDelDestino == null) {
 			// No estamos conectados
 			return;
@@ -139,7 +139,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	 */
 	private void initializeWithProcessor(final TaskProcessor processor) {
 		this.processor = processor;
-		filtrosPorDestino = new HashMap<Receptor, NexoFiltro>();
+		filtrosPorDestino = new HashMap<Receptor, NexoFiltroViejo>();
 
 		multiplexorDeEntrada = MultiplexorParalelo.create(processor);
 		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(multiplexorDeEntrada, this);

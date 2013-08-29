@@ -26,10 +26,11 @@ import net.gaia.vortex.core.impl.atomos.support.NexoFiltroSupport;
  * @author D. García
  */
 @Atomo
-public class NexoFiltro extends NexoFiltroSupport {
+@Deprecated
+public class NexoFiltroViejo extends NexoFiltroSupport {
 
-	public static NexoFiltro create(final TaskProcessor processor, final Condicion condicion, final Receptor delegado) {
-		final NexoFiltro condicional = new NexoFiltro();
+	public static NexoFiltroViejo create(final TaskProcessor processor, final Condicion condicion, final Receptor delegado) {
+		final NexoFiltroViejo condicional = new NexoFiltroViejo();
 		condicional.initializeWith(processor, delegado, condicion);
 		return condicional;
 	}

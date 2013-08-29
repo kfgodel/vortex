@@ -24,7 +24,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
+import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.emisores.EmisorNulo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
@@ -237,11 +237,11 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 */
 	private Receptor crearProcesoParaRecibirMensajesNormales(final TaskProcessor taskProcessor) {
 		// Descartamos los mensajes que vinieron de esta pata (evitando rebote de mensajes)
-		final NexoFiltro descartarMensajesPropios = NexoFiltro.create(taskProcessor, VinoPorOtraPata.create(this),
+		final NexoFiltroViejo descartarMensajesPropios = NexoFiltroViejo.create(taskProcessor, VinoPorOtraPata.create(this),
 				ReceptorNulo.getInstancia());
 
 		// Verificamos si el nodo remoto acepta el mensaje según los filtros que nos dijo
-		final NexoFiltro descartarMensajesQueNoLeInteresan = NexoFiltro.create(taskProcessor,
+		final NexoFiltroViejo descartarMensajesQueNoLeInteresan = NexoFiltroViejo.create(taskProcessor,
 				LeInteresaElMensaje.create(filtroDeSalida, this), ReceptorNulo.getInstancia());
 		descartarMensajesPropios.conectarCon(descartarMensajesQueNoLeInteresan);
 
@@ -314,7 +314,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 */
 	private Receptor crearProcesoParaRecibirRespuestaDeIds(final TaskProcessor taskProcessor) {
 		// Primero descartamos las respuestas que son para otras patas
-		final NexoFiltro descartadorDeRespuestasAjenas = NexoFiltro.create(taskProcessor,
+		final NexoFiltroViejo descartadorDeRespuestasAjenas = NexoFiltroViejo.create(taskProcessor,
 				EsRespuestaParaEstaPata.create(memoriaDePedidosEnviados), ReceptorNulo.getInstancia());
 
 		// Finalmente registramos id remoto y convertimos la respuesta en confirmación

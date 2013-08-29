@@ -5,7 +5,7 @@ package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
+import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.NodoMolecula;
@@ -29,7 +29,7 @@ public class TestDePerformanceNodoPorComposicion extends TestDePerformanceNodoSu
 	protected NodoViejo crearNodoATestear() {
 		final NodoViejo nexoTransformador = NexoTransformador.create(getProcessor(), TransformacionNula.getInstancia(),
 				ReceptorNulo.getInstancia());
-		final Receptor nexoFiltro = NexoFiltro.create(getProcessor(), SiempreTrue.getInstancia(), nexoTransformador);
+		final Receptor nexoFiltro = NexoFiltroViejo.create(getProcessor(), SiempreTrue.getInstancia(), nexoTransformador);
 		return NodoMolecula.create(nexoFiltro, nexoTransformador);
 	}
 }

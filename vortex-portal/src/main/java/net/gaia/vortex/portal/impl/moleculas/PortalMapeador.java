@@ -20,7 +20,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltro;
+import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
@@ -99,7 +99,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 
 		// Primero descartamos los mensajes propios y luego los duplicados externos
 		final EsMensajeExterno siEsMensajeExterno = EsMensajeExterno.create(identificador);
-		procesoDesdeVortex = NexoFiltro.create(processor, siEsMensajeExterno, filtroDescartaDuplicados);
+		procesoDesdeVortex = NexoFiltroViejo.create(processor, siEsMensajeExterno, filtroDescartaDuplicados);
 
 		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(procesoDesdeVortex, nodoDeSalidaAVortex);
 		initializeWith(flujoInterno);
