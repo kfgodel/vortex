@@ -32,7 +32,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 @Atomo
 @Deprecated
-public class NexoTransformador extends NexoSupport implements TransformadorViejo {
+public class NexoTransformadorViejo extends NexoSupport implements TransformadorViejo {
 
 	private Transformacion transformacion;
 	public static final String transformacion_FIELD = "transformacion";
@@ -50,9 +50,9 @@ public class NexoTransformador extends NexoSupport implements TransformadorViejo
 		this.transformacion = transformacion;
 	}
 
-	public static NexoTransformador create(final TaskProcessor processor, final Transformacion transformacion,
+	public static NexoTransformadorViejo create(final TaskProcessor processor, final Transformacion transformacion,
 			final Receptor delegado) {
-		final NexoTransformador transformador = new NexoTransformador();
+		final NexoTransformadorViejo transformador = new NexoTransformadorViejo();
 		transformador.initializeWith(processor, delegado, transformacion);
 		return transformador;
 	}

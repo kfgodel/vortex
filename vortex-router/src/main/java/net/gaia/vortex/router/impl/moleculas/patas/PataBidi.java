@@ -26,8 +26,8 @@ import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.emisores.EmisorNulo;
-import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutor;
-import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
+import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutorViejo;
+import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
@@ -111,7 +111,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	/**
 	 * Asigna ID a los metamensajes que son generados en esta pata
 	 */
-	private NexoTransformador identificadorDeMetamensajes;
+	private NexoTransformadorViejo identificadorDeMetamensajes;
 
 	private SerializadorDeCondiciones serializador;
 
@@ -156,7 +156,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 				nodoRemoto.recibir(mensaje);
 			}
 		};
-		pata.identificadorDeMetamensajes = NexoTransformador.create(taskProcessor, generadorDeIds,
+		pata.identificadorDeMetamensajes = NexoTransformadorViejo.create(taskProcessor, generadorDeIds,
 				pata.wrapperDelRemotoConLogueo);
 		pata.listenerDeRuteo = listenerDeRuteo;
 		pata.inicializarFiltros(conjuntoDeCondiciones, filtroDeEntradaParaPataNueva);
@@ -246,12 +246,12 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		descartarMensajesPropios.conectarCon(descartarMensajesQueNoLeInteresan);
 
 		// Le registramos nuestro ID de pata para evitar rebotes
-		final NexoTransformador asignadoDeIdRemoto = NexoTransformador.create(taskProcessor,
+		final NexoTransformadorViejo asignadoDeIdRemoto = NexoTransformadorViejo.create(taskProcessor,
 				AsignarIdLocalAlReceptor.create(idRemoto), ReceptorNulo.getInstancia());
 		descartarMensajesQueNoLeInteresan.conectarCon(asignadoDeIdRemoto);
 
 		// Registramos el ruteo que estamos haciendo del mensaje
-		final NexoEjecutor registradorDeRuteo = NexoEjecutor.create(taskProcessor,
+		final NexoEjecutorViejo registradorDeRuteo = NexoEjecutorViejo.create(taskProcessor,
 				RegistrarRuteo.create(listenerDeRuteo, this), getNodoRemoto());
 		asignadoDeIdRemoto.conectarCon(registradorDeRuteo);
 
@@ -278,12 +278,12 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 */
 	private Receptor crearProcesoParaRecibirConfirmacionDeIds(final TaskProcessor taskProcessor) {
 		// Registramos id remoto y convertimos la confirmación en re-confirmación
-		final NexoTransformador registradorDeId = NexoTransformador.create(taskProcessor,
+		final NexoTransformadorViejo registradorDeId = NexoTransformadorViejo.create(taskProcessor,
 				RegistrarIdRemotoYEnviarReconfirmacion.create(getIdLocal(), idRemoto, mapeador),
 				ReceptorNulo.getInstancia());
 
 		// Antes de mandar el mensaje disparamos el evento de nueva conexion bidi creada
-		final NexoEjecutor disparadorDeNuevaConexion = NexoEjecutor.create(taskProcessor, dispararEventoConexionBidi,
+		final NexoEjecutorViejo disparadorDeNuevaConexion = NexoEjecutorViejo.create(taskProcessor, dispararEventoConexionBidi,
 				identificadorDeMetamensajes);
 		registradorDeId.conectarCon(disparadorDeNuevaConexion);
 
@@ -318,7 +318,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 				EsRespuestaParaEstaPata.create(memoriaDePedidosEnviados), ReceptorNulo.getInstancia());
 
 		// Finalmente registramos id remoto y convertimos la respuesta en confirmación
-		final NexoTransformador registradorDeId = NexoTransformador.create(taskProcessor,
+		final NexoTransformadorViejo registradorDeId = NexoTransformadorViejo.create(taskProcessor,
 				RegistrarIdRemotoYEnviarConfirmacion.create(getIdLocal(), idRemoto, mapeador),
 				identificadorDeMetamensajes);
 		descartadorDeRespuestasAjenas.conectarCon(registradorDeId);
@@ -336,7 +336,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	private Receptor crearProcesoParaRecibirPedidoDeIds(final TaskProcessor taskProcessor) {
 
 		// Convertimos el pedido recibido en una respuesta con nuestro id de pata
-		final NexoTransformador convertidorEnRespuesta = NexoTransformador.create(taskProcessor,
+		final NexoTransformadorViejo convertidorEnRespuesta = NexoTransformadorViejo.create(taskProcessor,
 				ConvertirPedidoEnRespuestaDeId.create(getIdLocal(), mapeador), identificadorDeMetamensajes);
 
 		return convertidorEnRespuesta;

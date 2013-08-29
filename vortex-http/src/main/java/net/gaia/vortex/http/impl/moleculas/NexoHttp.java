@@ -19,7 +19,7 @@ import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
@@ -52,21 +52,21 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 	public static final String procesoDesdeHttp_FIELD = "procesoDesdeHttp";
 
 	private MemoriaDeMensajes memoriaDeMensajes;
-	private NexoSinDuplicados nodoDeSalidaAVortex;
+	private NexoSinDuplicadosViejo nodoDeSalidaAVortex;
 
 	private void initializeWith(final TaskProcessor processor, final Receptor delegado, final SesionVortexHttp sesion) {
 		// Guardamos la referencia para saber cual es nuestra sesión
 		this.sesion = sesion;
 
 		// Esta memoria nos permite descartar los mensajes que mandamos al nodo y vienen de vuelta
-		this.memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
+		this.memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicadosViejo.CANTIDAD_MENSAJES_RECORDADOS);
 
 		// Al recibir de vortex, descartamos duplicados y mandamos por http
-		procesoDesdeVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes,
+		procesoDesdeVortex = NexoSinDuplicadosViejo.create(processor, memoriaDeMensajes,
 				Httpizador.create(processor, sesion));
 
 		// Al recibir de http, descartamos duplicados y mandamos por vortex
-		nodoDeSalidaAVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes, delegado);
+		nodoDeSalidaAVortex = NexoSinDuplicadosViejo.create(processor, memoriaDeMensajes, delegado);
 		procesoDesdeHttp = Deshttpizador.create(processor, nodoDeSalidaAVortex);
 
 		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(procesoDesdeVortex, nodoDeSalidaAVortex);

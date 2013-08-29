@@ -21,8 +21,8 @@ import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformador;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
+import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
 import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
@@ -58,7 +58,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 	private IdDeComponenteVortex identificador;
 	public static final String identificador_FIELD = "identificador";
 
-	private NexoTransformador nodoDeSalidaAVortex;
+	private NexoTransformadorViejo nodoDeSalidaAVortex;
 
 	private TaskProcessor procesador;
 
@@ -89,12 +89,12 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 		this.procesador = processor;
 		identificador = generadorDeIdsCompartido.getIdDeComponente();
 
-		nodoDeSalidaAVortex = NexoTransformador.create(processor, generadorDeIdsCompartido, delegado);
+		nodoDeSalidaAVortex = NexoTransformadorViejo.create(processor, generadorDeIdsCompartido, delegado);
 		procesoDesdeUsuario = Desobjetivizador.create(processor, mapeadorVortex, nodoDeSalidaAVortex);
 
 		// El selector enviará el mensaje según la condición que indique el usuario
 		selectorDeMensajesEntrantes = SelectorConFiltros.create(processor);
-		final NexoSinDuplicados filtroDescartaDuplicados = NexoSinDuplicados.create(processor,
+		final NexoSinDuplicadosViejo filtroDescartaDuplicados = NexoSinDuplicadosViejo.create(processor,
 				selectorDeMensajesEntrantes);
 
 		// Primero descartamos los mensajes propios y luego los duplicados externos

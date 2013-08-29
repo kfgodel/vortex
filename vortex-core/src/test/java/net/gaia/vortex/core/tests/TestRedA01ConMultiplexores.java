@@ -13,7 +13,7 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
+import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParaleloViejo;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 
@@ -47,8 +47,8 @@ public class TestRedA01ConMultiplexores {
 	public void crearNodos() {
 		processor = VortexProcessorFactory.createProcessor();
 		mensaje1 = MensajeConContenido.crearVacio();
-		nodoEmisor = MultiplexorParalelo.create(processor);
-		nodoReceptor = MultiplexorParalelo.create(processor);
+		nodoEmisor = MultiplexorParaleloViejo.create(processor);
+		nodoReceptor = MultiplexorParaleloViejo.create(processor);
 
 		nodoEmisor.conectarCon(nodoReceptor);
 	}
@@ -193,10 +193,10 @@ public class TestRedA01ConMultiplexores {
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayUnNodoEnElMedio() {
-		final NodoViejo nodoEmisor = MultiplexorParalelo.create(processor);
-		final NodoViejo nodoIntermedio1 = MultiplexorParalelo.create(processor);
-		final NodoViejo nodoIntermedio2 = MultiplexorParalelo.create(processor);
-		final NodoViejo nodoReceptor = MultiplexorParalelo.create(processor);
+		final NodoViejo nodoEmisor = MultiplexorParaleloViejo.create(processor);
+		final NodoViejo nodoIntermedio1 = MultiplexorParaleloViejo.create(processor);
+		final NodoViejo nodoIntermedio2 = MultiplexorParaleloViejo.create(processor);
+		final NodoViejo nodoReceptor = MultiplexorParaleloViejo.create(processor);
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		nodoReceptor.conectarCon(handlerReceptor);
@@ -220,7 +220,7 @@ public class TestRedA01ConMultiplexores {
 		nodoReceptor.conectarCon(handlerReceptor1);
 
 		final ReceptorEncolador handlerReceptor2 = ReceptorEncolador.create();
-		final NodoViejo nodoReceptor2 = MultiplexorParalelo.create(processor);
+		final NodoViejo nodoReceptor2 = MultiplexorParaleloViejo.create(processor);
 		nodoReceptor2.conectarCon(handlerReceptor2);
 		nodoEmisor.conectarCon(nodoReceptor2);
 

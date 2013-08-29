@@ -20,13 +20,13 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
+import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParaleloViejo;
 import net.gaia.vortex.core.impl.atomos.support.MultiplexorSupport;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 import net.gaia.vortex.router.impl.tasks.MultiplexarAPatas;
 
 /**
- * Esta clase representa un multiplexor que a diferencia del {@link MultiplexorParalelo} puede
+ * Esta clase representa un multiplexor que a diferencia del {@link MultiplexorParaleloViejo} puede
  * discriminar si un mensaje va hacia una pata y sólo se lo entrega a esa
  * 
  * @author D. García
@@ -34,7 +34,7 @@ import net.gaia.vortex.router.impl.tasks.MultiplexarAPatas;
 public class MultiplexorDePatas extends MultiplexorSupport {
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.forward.MultiplexorParaleloViejo#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {

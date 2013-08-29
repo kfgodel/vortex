@@ -20,7 +20,8 @@ import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
  * @author D. García
  */
 @Atomo
-public class MultiplexorParalelo extends MultiplexorSupport {
+@Deprecated
+public class MultiplexorParaleloViejo extends MultiplexorSupport {
 
 	private ListenerDeMetricas listenerMetricas;
 
@@ -44,8 +45,8 @@ public class MultiplexorParalelo extends MultiplexorSupport {
 		this.listenerMetricas = listenerMetricas;
 	}
 
-	public static MultiplexorParalelo create(final TaskProcessor processor) {
-		final MultiplexorParalelo multiplexor = new MultiplexorParalelo();
+	public static MultiplexorParaleloViejo create(final TaskProcessor processor) {
+		final MultiplexorParaleloViejo multiplexor = new MultiplexorParaleloViejo();
 		multiplexor.initializeWith(processor);
 		return multiplexor;
 	}

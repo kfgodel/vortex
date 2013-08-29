@@ -31,13 +31,14 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class NexoEjecutor extends NexoSupport implements EjecutorViejo {
+@Deprecated
+public class NexoEjecutorViejo extends NexoSupport implements EjecutorViejo {
 
 	private Receptor ejecutante;
 	public static final String ejecutante_FIELD = "ejecutante";
 
-	public static NexoEjecutor create(final TaskProcessor processor, final Receptor escucha, final Receptor delegado) {
-		final NexoEjecutor ejecutor = new NexoEjecutor();
+	public static NexoEjecutorViejo create(final TaskProcessor processor, final Receptor escucha, final Receptor delegado) {
+		final NexoEjecutorViejo ejecutor = new NexoEjecutorViejo();
 		ejecutor.initializeWith(processor, delegado);
 		ejecutor.setEjecutante(escucha);
 		return ejecutor;

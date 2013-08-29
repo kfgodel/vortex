@@ -23,7 +23,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
-import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
+import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParaleloViejo;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
@@ -141,7 +141,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 		this.processor = processor;
 		filtrosPorDestino = new HashMap<Receptor, NexoFiltroViejo>();
 
-		multiplexorDeEntrada = MultiplexorParalelo.create(processor);
+		multiplexorDeEntrada = MultiplexorParaleloViejo.create(processor);
 		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(multiplexorDeEntrada, this);
 		initializeWith(flujoInterno);
 	}

@@ -21,7 +21,7 @@ import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
+import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
@@ -53,7 +53,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 
 	private Desocketizador procesoDesdeSocket;
 	private MemoriaLimitadaDeMensajes memoriaDeMensajes;
-	private NexoSinDuplicados nodoDeSalidaAVortex;
+	private NexoSinDuplicadosViejo nodoDeSalidaAVortex;
 	public static final String procesoDesdeSocket_FIELD = "procesoDesdeSocket";
 
 	private void initializeWith(final TaskProcessor processor, final Receptor delegado, final ObjectSocket socket) {
@@ -61,15 +61,15 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 		this.socket = socket;
 
 		// Con esta memoria evitamos recibir mensajes que el NodoSocket nos reenvíe siendo nuestros
-		memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
+		memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicadosViejo.CANTIDAD_MENSAJES_RECORDADOS);
 
 		// Al recibir un mensaje desde vortex, descartamos duplicados y lo mandamos por el socket
-		procesoDesdeVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes,
+		procesoDesdeVortex = NexoSinDuplicadosViejo.create(processor, memoriaDeMensajes,
 				Socketizador.create(processor, socket));
 
 		// Al recibir un mensaje desde el socket, descartamos duplicados y lo mandamos a la salida
 		// (a quien estemos conectados en ese momento)
-		nodoDeSalidaAVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes, delegado);
+		nodoDeSalidaAVortex = NexoSinDuplicadosViejo.create(processor, memoriaDeMensajes, delegado);
 		procesoDesdeSocket = Desocketizador.create(processor, nodoDeSalidaAVortex);
 
 		// Definimos cual es el flujo de entrada y salida de esta molecula
