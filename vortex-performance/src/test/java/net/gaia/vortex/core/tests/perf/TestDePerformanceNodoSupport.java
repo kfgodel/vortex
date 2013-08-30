@@ -72,8 +72,9 @@ public abstract class TestDePerformanceNodoSupport {
 	}
 
 	@After
-	public void liberarRecursos() {
+	public void liberarRecursos() throws InterruptedException {
 		processor.detener();
+		Thread.sleep(1000);
 	}
 
 	@Test

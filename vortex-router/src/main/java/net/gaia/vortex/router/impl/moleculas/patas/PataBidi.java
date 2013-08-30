@@ -149,10 +149,12 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		pata.wrapperDelRemotoConLogueo = new ReceptorSupport() {
 			public void recibir(final MensajeVortex mensaje) {
 				final Receptor nodoRemoto = pata.getNodoRemoto();
-				Loggers.BIDI_MSG.debug(
-						"  Enviando desde[{}] hasta[{}] por[{}] mensaje[{}]: {}",
-						new Object[] { pata.getNodoLocal().toShortString(), nodoRemoto.toShortString(),
-								pata.toShortString(), mensaje.toShortString(), mensaje.getContenido() });
+				// Chequeo por debug para evitar el costo de toShortString()
+				if (Loggers.BIDI_MSG.isDebugEnabled()) {
+					Loggers.BIDI_MSG.debug("  Enviando desde[{}] hasta[{}] por[{}] mensaje[{}]: {}", new Object[] {
+							pata.getNodoLocal().toShortString(), nodoRemoto.toShortString(), pata.toShortString(),
+							mensaje.toShortString(), mensaje.getContenido() });
+				}
 				nodoRemoto.recibir(mensaje);
 			}
 		};
@@ -237,8 +239,8 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 */
 	private Receptor crearProcesoParaRecibirMensajesNormales(final TaskProcessor taskProcessor) {
 		// Descartamos los mensajes que vinieron de esta pata (evitando rebote de mensajes)
-		final NexoFiltroViejo descartarMensajesPropios = NexoFiltroViejo.create(taskProcessor, VinoPorOtraPata.create(this),
-				ReceptorNulo.getInstancia());
+		final NexoFiltroViejo descartarMensajesPropios = NexoFiltroViejo.create(taskProcessor,
+				VinoPorOtraPata.create(this), ReceptorNulo.getInstancia());
 
 		// Verificamos si el nodo remoto acepta el mensaje según los filtros que nos dijo
 		final NexoFiltroViejo descartarMensajesQueNoLeInteresan = NexoFiltroViejo.create(taskProcessor,
@@ -283,8 +285,8 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 				ReceptorNulo.getInstancia());
 
 		// Antes de mandar el mensaje disparamos el evento de nueva conexion bidi creada
-		final NexoEjecutorViejo disparadorDeNuevaConexion = NexoEjecutorViejo.create(taskProcessor, dispararEventoConexionBidi,
-				identificadorDeMetamensajes);
+		final NexoEjecutorViejo disparadorDeNuevaConexion = NexoEjecutorViejo.create(taskProcessor,
+				dispararEventoConexionBidi, identificadorDeMetamensajes);
 		registradorDeId.conectarCon(disparadorDeNuevaConexion);
 
 		return registradorDeId;
@@ -298,8 +300,11 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 			// Ya estaba habilitada como bidi anteriormente
 			return;
 		}
-		LOG.debug("En [{},{}] se estableció un conexion bidireccional", new Object[] {
-				this.getNodoLocal().toShortString(), this.toShortString() });
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("En [{},{}] se estableció un conexion bidireccional", new Object[] {
+					this.getNodoLocal().toShortString(), this.toShortString() });
+		}
 		publicarFiltroDeEntrada();
 		// Notificamos al listener de la nueva conexion
 		this.listenerConexionBidi.onConexionBidiPara(this);
@@ -414,7 +419,11 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		final MensajeVortex mensajeConId = generadorDeIds.transformar(mensajeDelPedido);
 		final Map<String, Object> idDeMensajeComoMapa = mensajeConId.getContenido().getIdDeMensajeComoMapa();
 		memoriaDePedidosEnviados.registrarPedidoConId(idDeMensajeComoMapa);
-		LOG.debug("Enviando por [{}] pedido de id[{}] ", this.toShortString(), mensajeConId.toShortString());
+
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Enviando por [{}] pedido de id[{}] ", this.toShortString(), mensajeConId.toShortString());
+		}
 		wrapperDelRemotoConLogueo.recibir(mensajeConId);
 	}
 
@@ -457,27 +466,39 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	private void publicarFiltroDeEntrada() {
 		final Condicion filtroAPublicar = this.getFiltroDeEntrada();
 		if (!habilitadaComoBidi.get()) {
-			LOG.debug("  En [{},{}] no se publica filtro {} porque la pata aun no es bidi", new Object[] {
-					this.getNodoLocal().toShortString(), this.toShortString(), filtroAPublicar });
+			// Chequeo por debug para evitar el costo de toShortString()
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("  En [{},{}] no se publica filtro {} porque la pata aun no es bidi", new Object[] {
+						this.getNodoLocal().toShortString(), this.toShortString(), filtroAPublicar });
+			}
 			// El otro nodo no está preparado para recibir la publicacion
 			return;
 		}
 
 		final Long idRemotoDeEstaPata = getIdRemoto();
 		if (idRemotoDeEstaPata == null) {
-			LOG.debug("  En [{},{}] no se publica filtro {} porque no tenemos ID remoto", new Object[] {
-					this.getNodoLocal().toShortString(), this.toShortString(), filtroAPublicar });
+			// Chequeo por debug para evitar el costo de toShortString()
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("  En [{},{}] no se publica filtro {} porque no tenemos ID remoto", new Object[] {
+						this.getNodoLocal().toShortString(), this.toShortString(), filtroAPublicar });
+			}
 			// Aún no tenemos un ID remoto con el cual publicar los filtros
 			return;
 		}
 		if (filtroAPublicar.equals(this.getFiltroDeEntradaPublicado())) {
-			LOG.debug("  En [{},{}] no se re-publica porque no hubo cambio de filtro local: {}", new Object[] {
-					this.getNodoLocal().toShortString(), this.toShortString(), filtroAPublicar });
+			// Chequeo por debug para evitar el costo de toShortString()
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("  En [{},{}] no se re-publica porque no hubo cambio de filtro local: {}", new Object[] {
+						this.getNodoLocal().toShortString(), this.toShortString(), filtroAPublicar });
+			}
 			return;
 		}
-		LOG.debug("  En [{},{}] se publicará filtro local de {} a: {}", new Object[] {
-				this.getNodoLocal().toShortString(), this.toShortString(), getFiltroDeEntradaPublicado(),
-				filtroAPublicar });
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("  En [{},{}] se publicará filtro local de {} a: {}", new Object[] {
+					this.getNodoLocal().toShortString(), this.toShortString(), getFiltroDeEntradaPublicado(),
+					filtroAPublicar });
+		}
 
 		setFiltroDeEntradaPublicado(filtroAPublicar);
 		final Map<String, Object> filtroSerializado = serializador.serializar(filtroAPublicar);

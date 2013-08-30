@@ -59,8 +59,11 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	 */
 
 	public void enviar(final Object mensaje) throws ErrorDeMapeoVortexException {
-		Loggers.BIDI_MSG.debug("Ingresado en portal[{}] el objeto[{}] como mensaje a enviar", this.toShortString(),
-				mensaje);
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (Loggers.BIDI_MSG.isDebugEnabled()) {
+			Loggers.BIDI_MSG.debug("Ingresado en portal[{}] el objeto[{}] como mensaje a enviar", this.toShortString(),
+					mensaje);
+		}
 		portalInterno.enviar(mensaje);
 	}
 
@@ -76,7 +79,11 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 		// Le pasamos el handler al portal real
 		portalInterno.recibirCon(handlerDeMensajes);
 
-		LOG.debug(" En [{}] se modificó el estado de los filtros locales: {}", this.toShortString(), getFiltroLocal());
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(" En [{}] se modificó el estado de los filtros locales: {}", this.toShortString(),
+					getFiltroLocal());
+		}
 		// Notificamos del cambio interno
 		evento_cambioEstadoFiltrosLocales();
 	}

@@ -63,7 +63,10 @@ public class MultiplexarAPatas implements WorkUnit {
 
 	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		if (patas.isEmpty()) {
-			LOG.debug("El mensaje[{}] es decartado porque no existen patas para recibirlo", mensaje.toShortString());
+			// Chequeo por debug para evitar el costo de toShortString()
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("El mensaje[{}] es decartado porque no existen patas para recibirlo", mensaje.toShortString());
+			}
 			return;
 		}
 		final Collection<PataBidireccional> destinos = determinarDestinosDeAcuerdoAlMensaje();
@@ -111,8 +114,12 @@ public class MultiplexarAPatas implements WorkUnit {
 				return destinos;
 			}
 		}
-		LOG.debug("El mensaje[{}] es decartado porque el id de pata[{}] no coincide con ninguna de las existentes{}",
-				new Object[] { mensaje.toShortString(), posibleIdentificador, patas });
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(
+					"El mensaje[{}] es decartado porque el id de pata[{}] no coincide con ninguna de las existentes{}",
+					new Object[] { mensaje.toShortString(), posibleIdentificador, patas });
+		}
 		return Collections.emptyList();
 	}
 

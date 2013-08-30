@@ -46,7 +46,7 @@ public class CambiarFiltroDeSalida extends ReceptorSupport {
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	
+
 	public void recibir(final MensajeVortex mensaje) {
 		final PublicacionDeFiltros publicacion = conversor.convertirDesdeVortex(mensaje, PublicacionDeFiltros.class);
 		final Map<String, Object> nuevoFiltro = publicacion.getFiltro();
@@ -54,15 +54,20 @@ public class CambiarFiltroDeSalida extends ReceptorSupport {
 			throw new UnhandledConditionException("Recibimos un filtro nulo como publicación en el mensaje: " + mensaje);
 		}
 		final Condicion nuevaCondicion = serializador.deserializar(nuevoFiltro);
-		LOG.debug(" En [{}] cambiando filtro remoto a[{}] segun publicacion recibida[{}]",
-				new Object[] { pata.toShortString(), nuevaCondicion, mensaje.toShortString() });
+
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(" En [{}] cambiando filtro remoto a[{}] segun publicacion recibida[{}]",
+					new Object[] { pata.toShortString(), nuevaCondicion, mensaje.toShortString() });
+		}
 		filtroDeLaPata.cambiarA(nuevaCondicion);
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).toString();
 	}

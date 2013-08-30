@@ -51,10 +51,12 @@ public class VinoPorOtraPata extends CondicionTipadaSupport {
 	/**
 	 * @see net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	
+
+	@Override
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final ResultadoDeCondicion resultado = super.esCumplidaPor(mensaje);
-		if (ResultadoDeCondicion.FALSE.equals(resultado)) {
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (ResultadoDeCondicion.FALSE.equals(resultado) && LOG.isDebugEnabled()) {
 			LOG.debug("  En [{}] evitando rebote del mensaje[{}] porque proviene de ahí", pata.toShortString(),
 					mensaje.toShortString());
 		}
@@ -64,7 +66,8 @@ public class VinoPorOtraPata extends CondicionTipadaSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(pata_FIELD, pata).toString();
 	}

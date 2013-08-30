@@ -77,11 +77,15 @@ public class ComponenteConector extends ComponenteSupport implements Conector {
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
-		Loggers.ATOMOS.debug("Delegando a nodo[{}] el mensaje[{}]", conectado.toShortString(), mensaje);
+		// Chequeo para evitar el toShortString() si no es necesario
+		if (Loggers.ATOMOS.isDebugEnabled()) {
+			Loggers.ATOMOS.debug("Delegando a nodo[{}] el mensaje[{}]", conectado.toShortString(), mensaje);
+		}
 		// No paso por el delegado, o no podemos saberlo, en cualquier caso lo entregamos
 		try {
 			conectado.recibir(mensaje);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error al entregar un mensaje[" + mensaje + "] a un delegado[" + conectado
 					+ "]. Descartando", e);
 			ReceptorNulo.getInstancia().recibir(mensaje);

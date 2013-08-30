@@ -139,7 +139,10 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 		// Creamos la parte que nos permite conocer el filtro de cada pata
 		final Condicion filtroDeEntradaParaPataNueva = calcularFiltroDeEntradaPara(null);
 
-		LOG.debug("Conectando bidi desde[{}] a [{}]", this.toShortString(), destino.toShortString());
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Conectando bidi desde[{}] a [{}]", this.toShortString(), destino.toShortString());
+		}
 		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), conjuntoDeCondiciones,
 				filtroDeEntradaParaPataNueva, mapeador, generadorDeIds, serializador, listenerDeRuteo);
 		nuevaPata.setListenerConexionBidi(this);
@@ -147,8 +150,11 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 		// Agregamos la pata al conjunto que puede recibir mensajes
 		flujoDeMensajesRecibidos.getSalida().conectarCon(nuevaPata);
-		LOG.debug("Pata[{}] creada en [{}] para conectar con [{}]",
-				new Object[] { nuevaPata.toShortString(), this.toShortString(), destino.toShortString() });
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Pata[{}] creada en [{}] para conectar con [{}]",
+					new Object[] { nuevaPata.toShortString(), this.toShortString(), destino.toShortString() });
+		}
 
 		// Iniciamos el proceso de identificación bidireccional de la pata
 		nuevaPata.conseguirIdRemoto();
@@ -196,8 +202,10 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		Loggers.BIDI_MSG.debug("Recibido en[{}] el mensaje[{}]",
-				new Object[] { this.toShortString(), mensaje.toShortString() });
+		if (Loggers.BIDI_MSG.isDebugEnabled()) {
+			Loggers.BIDI_MSG.debug("Recibido en[{}] el mensaje[{}]",
+					new Object[] { this.toShortString(), mensaje.toShortString() });
+		}
 		super.recibir(mensaje);
 	}
 
@@ -231,13 +239,17 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	 */
 
 	public void onCambioDeCondicionEn(final ConjuntoDeCondiciones conjunto, final Condicion nuevaCondicion) {
-		Loggers.BIDI_MSG.info("El nodo[{}] cambio su estado de filtros remotos a[{}]", this.toShortString(),
-				nuevaCondicion);
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (Loggers.BIDI_MSG.isInfoEnabled()) {
+			Loggers.BIDI_MSG.info("El nodo[{}] cambio su estado de filtros remotos a[{}]", this.toShortString(),
+					nuevaCondicion);
+		}
 
 		final ListenerDeCambiosDeFiltro listenerActual = listenerDeFiltros.get();
 		try {
 			listenerActual.onCambioDeFiltros(this, nuevaCondicion);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error en el listener[" + listenerActual + "] de cambios de filtros de este nodo["
 					+ this + "]", e);
 		}
@@ -316,7 +328,8 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 		final Receptor destino = pata.getNodoRemoto();
 		try {
 			this.listenerDeConexiones.onConexionBidiDe(origen, destino, pata);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error en el listener de conexiones bidi del nodo[" + this.toShortString() + "]", e);
 		}
 	}

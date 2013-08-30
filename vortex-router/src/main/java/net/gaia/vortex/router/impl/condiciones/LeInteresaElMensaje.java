@@ -45,11 +45,12 @@ public class LeInteresaElMensaje implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	
+
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final Condicion condicionActual = filtroDeSalida.getCondicion();
 		final ResultadoDeCondicion resultado = condicionActual.esCumplidaPor(mensaje);
-		if (ResultadoDeCondicion.FALSE.equals(resultado)) {
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (ResultadoDeCondicion.FALSE.equals(resultado) && LOG.isDebugEnabled()) {
 			LOG.debug("El mensaje[{}] es descartado en[{}] porque no interesa al destino[{}] segun condicion[{}]",
 					new Object[] { mensaje.toShortString(), pata.toShortString(), pata.getNodoRemoto().toShortString(),
 							condicionActual });
@@ -60,7 +61,7 @@ public class LeInteresaElMensaje implements Condicion {
 	/**
 	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	
+
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}
@@ -68,7 +69,8 @@ public class LeInteresaElMensaje implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(filtroDeSalida_FIELD, filtroDeSalida).toString();
 	}

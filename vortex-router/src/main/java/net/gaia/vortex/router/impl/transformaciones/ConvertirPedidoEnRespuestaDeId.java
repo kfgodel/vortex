@@ -45,7 +45,7 @@ public class ConvertirPedidoEnRespuestaDeId implements Transformacion {
 	/**
 	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
-	
+
 	public MensajeVortex transformar(final MensajeVortex pedido) {
 		final ContenidoVortex contenidoDelPedido = pedido.getContenido();
 		final Object valorDelId = contenidoDelPedido.get(ContenidoVortex.ID_DE_MENSAJE_KEY);
@@ -57,7 +57,11 @@ public class ConvertirPedidoEnRespuestaDeId implements Transformacion {
 		final Map<String, Object> idDePedidoOriginal = (Map<String, Object>) valorDelId;
 		final RespuestaDeIdRemoto respuesta = RespuestaDeIdRemoto.create(idDePedidoOriginal, idLocalDePata);
 		final MensajeVortex respuestaEnviable = mapeador.convertirAVortex(respuesta);
-		LOG.debug("Enviando respuesta[{}] al pedido[{}] recibido", respuesta, pedido.toShortString());
+
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Enviando respuesta[{}] al pedido[{}] recibido", respuesta, pedido.toShortString());
+		}
 		return respuestaEnviable;
 	}
 
@@ -71,7 +75,8 @@ public class ConvertirPedidoEnRespuestaDeId implements Transformacion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(idLocalDePata_FIELD, idLocalDePata).toString();
 	}
