@@ -12,12 +12,12 @@
  */
 package net.gaia.vortex.core.impl.moleculas.support;
 
+import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.annotations.Molecula;
 import net.gaia.vortex.core.api.atomos.EmisorViejo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
-import net.gaia.vortex.core.impl.atomos.support.basicos.NodoSupport;
+import net.gaia.vortex.core.impl.atomos.support.basicos.NodoSupportViejo;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -28,7 +28,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class NodoMoleculaSupport extends NodoSupport {
+public class NodoMoleculaSupport extends NodoSupportViejo {
 
 	private FlujoVortexViejo flujoInterno;
 	public static final String flujoInterno_FIELD = "flujoInterno";

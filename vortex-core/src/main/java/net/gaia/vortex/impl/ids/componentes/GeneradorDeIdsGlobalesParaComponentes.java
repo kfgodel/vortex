@@ -10,13 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.ids.componentes;
+package net.gaia.vortex.impl.ids.componentes;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.vortex.core.api.ids.componentes.GeneradorDeIdsComponentes;
-import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.ids.componentes.GeneradorDeIdsComponentes;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 
 /**
  * Esta clase es la implementación default del generador de ids que intenta asignar IDs distintos
@@ -30,7 +30,7 @@ import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
 public class GeneradorDeIdsGlobalesParaComponentes implements GeneradorDeIdsComponentes {
 
 	public static final String PART_SEPARATOR = "-";
-	public static final int LONGITUD_INCIAL_SECUENCIA = 1;
+	public static final int LONGITUD_INICIAL_SECUENCIA = 1;
 	public static final int LONGITUD_INICIAL_GENERADOR_TIMESTAMP = 1;
 	public static final int LONGITUD_INICIAL_RANDOM_PART = 4;
 	public static final int LONGITUD_INICIAL_VORTEX_TIMESTAMP = 4;
@@ -43,7 +43,8 @@ public class GeneradorDeIdsGlobalesParaComponentes implements GeneradorDeIdsComp
 	}
 
 	/**
-	 * Timestamp tomado como momento 0 en la cronología de vortex para la asignación de IDs
+	 * Timestamp tomado como momento 0 en la cronología de vortex para la asignación de IDs. Es
+	 * aproximadamente: Sat 04 Aug 2012 08:06:49 PM ART
 	 */
 	public static final long MOMENTO_CERO_VORTEX = 1344121609204L;
 
@@ -117,9 +118,9 @@ public class GeneradorDeIdsGlobalesParaComponentes implements GeneradorDeIdsComp
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.ids.componentes.GeneradorDeIdsComponentes#generarId()
+	 * @see net.gaia.vortex.api.ids.componentes.GeneradorDeIdsComponentes#generarId()
 	 */
-	
+
 	public IdDeComponenteVortex generarId() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append(identificadorDelGenerador);
@@ -139,7 +140,7 @@ public class GeneradorDeIdsGlobalesParaComponentes implements GeneradorDeIdsComp
 	 */
 	private String getSecuenciaString() {
 		final long valorDeSecuencia = idsGenerados.getAndIncrement();
-		final String secuencia = asString(valorDeSecuencia, LONGITUD_INCIAL_SECUENCIA);
+		final String secuencia = asString(valorDeSecuencia, LONGITUD_INICIAL_SECUENCIA);
 		return secuencia;
 	}
 

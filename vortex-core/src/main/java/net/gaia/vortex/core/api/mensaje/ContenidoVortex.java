@@ -14,7 +14,7 @@ package net.gaia.vortex.core.api.mensaje;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
+import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 
 /**
  * Esta interfaz define la representación del estado de un mensaje vortex como un mapa de primitivas

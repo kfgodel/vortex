@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.server.mosquito.listeners;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 
@@ -39,7 +39,7 @@ public class LoguearCambiosDeFiltrosRemotos implements ListenerDeCambiosDeFiltro
 
 	/**
 	 * @see net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro#onCambioDeFiltros(net.gaia.vortex.router.api.moleculas.NodoBidireccional,
-	 *      net.gaia.vortex.core.api.condiciones.Condicion)
+	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
 	
 	public void onCambioDeFiltros(final NodoBidireccional nodo, final Condicion nuevoFiltro) {

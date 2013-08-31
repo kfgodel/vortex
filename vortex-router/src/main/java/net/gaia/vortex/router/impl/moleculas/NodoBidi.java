@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
@@ -235,7 +235,7 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 	/**
 	 * @see net.gaia.vortex.router.impl.filtros.ListenerDeConjuntoDeCondiciones#onCambioDeCondicionEn(net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones,
-	 *      net.gaia.vortex.core.api.condiciones.Condicion)
+	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
 
 	public void onCambioDeCondicionEn(final ConjuntoDeCondiciones conjunto, final Condicion nuevaCondicion) {

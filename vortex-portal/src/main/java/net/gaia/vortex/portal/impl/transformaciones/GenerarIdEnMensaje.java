@@ -12,13 +12,13 @@
  */
 package net.gaia.vortex.portal.impl.transformaciones;
 
-import net.gaia.vortex.core.api.annotations.NoParalelizable;
-import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.ids.mensajes.GeneradorDeIdsDeMensajes;
-import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
+import net.gaia.vortex.api.annotations.paralelizable.NoParalelizable;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.ids.mensajes.GeneradorDeIdsDeMensajes;
+import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
-import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
+import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**

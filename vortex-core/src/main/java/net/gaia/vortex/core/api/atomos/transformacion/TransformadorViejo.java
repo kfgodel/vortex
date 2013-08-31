@@ -3,8 +3,8 @@
  */
 package net.gaia.vortex.core.api.atomos.transformacion;
 
-import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
+import net.gaia.vortex.api.annotations.clases.Atomo;
+import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 
 /**
@@ -16,7 +16,7 @@ import net.gaia.vortex.core.api.transformaciones.Transformacion;
  */
 @Deprecated
 @Atomo
-public interface TransformadorViejo extends Nexo {
+public interface TransformadorViejo extends NexoViejo {
 
 	/**
 	 * Establece la transformación utilizada por esta instancia para modificar los mensajes

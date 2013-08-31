@@ -13,7 +13,7 @@
 package net.gaia.vortex.sets.tests;
 
 import junit.framework.Assert;
-import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;

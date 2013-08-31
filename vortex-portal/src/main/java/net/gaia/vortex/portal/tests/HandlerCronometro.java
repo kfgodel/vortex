@@ -16,7 +16,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
 import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;

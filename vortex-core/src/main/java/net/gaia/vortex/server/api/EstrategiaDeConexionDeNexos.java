@@ -3,11 +3,11 @@
  */
 package net.gaia.vortex.server.api;
 
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
+import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 
 /**
  * Esta interfaz representa una estrategia brindada externamente a una entidad creadora/destructora
- * de {@link Nexo}s.<br>
+ * de {@link NexoViejo}s.<br>
  * A través de instancias de esta interfaz un tercero puede indicar a la entidad creadora (sockets,
  * http) como conectar los nexos nuevos creados a una parte de la red existente.<br>
  * <br>
@@ -28,7 +28,7 @@ public interface EstrategiaDeConexionDeNexos {
 	 *            El nexo que se está abriendo y que debería ser conectado a la red para compartir
 	 *            los mensajes recibidos
 	 */
-	public void onNexoCreado(Nexo nuevoNexo);
+	public void onNexoCreado(NexoViejo nuevoNexo);
 
 	/**
 	 * Invocado por el administrador de sockets durante el cierre del socket asociado al nexo
@@ -39,5 +39,5 @@ public interface EstrategiaDeConexionDeNexos {
 	 * @param nexoCerrado
 	 *            El nexo que se está cerrando
 	 */
-	public void onNexoCerrado(Nexo nexoCerrado);
+	public void onNexoCerrado(NexoViejo nexoCerrado);
 }

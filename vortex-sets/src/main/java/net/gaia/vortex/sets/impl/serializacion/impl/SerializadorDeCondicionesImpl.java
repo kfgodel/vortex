@@ -15,7 +15,7 @@ package net.gaia.vortex.sets.impl.serializacion.impl;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.sets.impl.serializacion.ConfiguracionDeSerializacionDeCondiciones;
 import net.gaia.vortex.sets.impl.serializacion.ProblemaDeSerializacionException;
 import net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones;
@@ -35,7 +35,7 @@ public class SerializadorDeCondicionesImpl implements SerializadorDeCondiciones 
 	private ConfiguracionDeSerializacionDeCondiciones config;
 
 	/**
-	 * @see net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones#serializar(net.gaia.vortex.core.api.condiciones.Condicion)
+	 * @see net.gaia.vortex.sets.impl.serializacion.SerializadorDeCondiciones#serializar(net.gaia.vortex.api.condiciones.Condicion)
 	 */
 	
 	public Map<String, Object> serializar(final Condicion condicionRaiz) throws ProblemaDeSerializacionException {

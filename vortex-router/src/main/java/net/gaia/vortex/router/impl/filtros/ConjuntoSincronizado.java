@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.sets.impl.condiciones.OrCompuesto;
 import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
@@ -144,7 +144,7 @@ public class ConjuntoSincronizado implements ConjuntoDeCondiciones, ListenerDePa
 	}
 
 	/**
-	 * @see net.gaia.vortex.router.impl.filtros.ListenerDeParteDeCondicion#onCambioDeCondicion(net.gaia.vortex.core.api.condiciones.Condicion,
+	 * @see net.gaia.vortex.router.impl.filtros.ListenerDeParteDeCondicion#onCambioDeCondicion(net.gaia.vortex.api.condiciones.Condicion,
 	 *      net.gaia.vortex.router.impl.filtros.ParteDeCondiciones)
 	 */
 	

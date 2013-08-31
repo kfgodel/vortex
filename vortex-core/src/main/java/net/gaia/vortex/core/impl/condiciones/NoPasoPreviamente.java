@@ -15,9 +15,9 @@ package net.gaia.vortex.core.impl.condiciones;
 import java.util.Collections;
 import java.util.List;
 
-import net.gaia.vortex.core.api.annotations.Paralelizable;
-import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -36,7 +36,7 @@ public class NoPasoPreviamente implements Condicion {
 	public static final String componente_FIELD = "componente";
 
 	/**
-	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
@@ -59,7 +59,7 @@ public class NoPasoPreviamente implements Condicion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 * @see net.gaia.vortex.api.condiciones.Condicion#getSubCondiciones()
 	 */
 	
 	public List<Condicion> getSubCondiciones() {

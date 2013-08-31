@@ -15,9 +15,9 @@ package net.gaia.vortex.sockets.impl.moleculas;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.annotations.Molecula;
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
+import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
@@ -42,7 +42,7 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * @author D. García
  */
 @Molecula
-public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHandler, Disposable, Nexo,
+public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHandler, Disposable, NexoViejo,
 		ComponenteConMemoria {
 
 	private ObjectSocket socket;

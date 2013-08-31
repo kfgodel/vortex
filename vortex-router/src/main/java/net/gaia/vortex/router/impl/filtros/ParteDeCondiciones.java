@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.impl.filtros;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 
 /**
  * Esta interfaz representa una vista parcial del conjunto de condiciones en la que sólo se ve una

@@ -14,7 +14,7 @@ package net.gaia.vortex.sets.impl.serializacion;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 
 /**
  * Esta interfaz define los métodos disponibles para serializar las condiciones y deserializarlas

@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.impl.nulos;
 
-import net.gaia.vortex.core.api.annotations.Atomo;
+import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 

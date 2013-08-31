@@ -10,9 +10,10 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.ids.componentes;
+package net.gaia.vortex.impl.ids.componentes;
 
-import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
+import ar.com.dgarcia.lang.strings.Strings;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -26,9 +27,9 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	public static final String valor_FIELD = "valor";
 
 	/**
-	 * @see net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex#getValorActual()
+	 * @see net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex#getValorActual()
 	 */
-	
+
 	public String getValorActual() {
 		return valor;
 	}
@@ -36,7 +37,8 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(valor_FIELD, valor).toString();
 	}
@@ -50,20 +52,22 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	
+
+	@Override
 	public boolean equals(final Object obj) {
 		if (!(obj instanceof IdDeComponenteVortex)) {
 			return false;
 		}
 		final IdDeComponenteVortex that = (IdDeComponenteVortex) obj;
-		final boolean mismoValor = this.getValorActual().equals(that.getValorActual());
+		final boolean mismoValor = Strings.fastEquals(this.getValorActual(), that.getValorActual(), false);
 		return mismoValor;
 	}
 
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	
+
+	@Override
 	public int hashCode() {
 		return getValorActual().hashCode();
 	}
@@ -71,7 +75,7 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	/**
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	
+
 	public int compareTo(final IdDeComponenteVortex o) {
 		final int orden = this.getValorActual().compareTo(o.getValorActual());
 		return orden;
@@ -80,7 +84,7 @@ public class IdInmutableDeComponente implements IdDeComponenteVortex {
 	/**
 	 * @see net.gaia.vortex.api.proto.ShortStringable#toShortString()
 	 */
-	
+
 	public String toShortString() {
 		return getValorActual();
 	}

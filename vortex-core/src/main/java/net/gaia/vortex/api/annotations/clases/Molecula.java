@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.annotations;
+package net.gaia.vortex.api.annotations.clases;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -22,10 +22,11 @@ import java.lang.annotation.Target;
  * Este annotation es aplicable a los componentes de vortex que representan un segundo nivel de
  * complejidad en comportamiento.<br>
  * <br>
- * Las moléculas usan a los {@link Atomo}s internamente para definir su comportamiento mediante
- * conexiones. A diferencia de los atomos, las moléculas pueden alterar las conexiones internas de
- * sus átomos para modificar su comportamiento en runtime. Esto les permite mayor flexibilidad, a la
- * vez que implica mayor complejidad.<br>
+ * Normalmente las moléculas estan compuestas de {@link Atomo}s (por eso su nombre) para definir su
+ * comportamiento mediante conexiones de componentes internos.<br>
+ * A diferencia de los atomos, las moleculas pueden cambiar su comportamiento en runtime si se
+ * modifican sus conexiones internas. Esto les permite mayor flexibilidad de comportamiento, a la
+ * vez que implica mayor complejidad de conexiones.<br>
  * <br>
  * Las moléculas pueden ser utilizadas por {@link Organismo}s como elementos base para
  * comportamiento más complejo.<br>

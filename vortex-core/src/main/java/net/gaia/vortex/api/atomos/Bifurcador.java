@@ -12,10 +12,10 @@
  */
 package net.gaia.vortex.api.atomos;
 
+import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.basic.Nodo;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.condiciones.Condicion;
 
 /**
  * Esta interfaz representa un atomo vortex que bifurca el camino del mensaje en función de una

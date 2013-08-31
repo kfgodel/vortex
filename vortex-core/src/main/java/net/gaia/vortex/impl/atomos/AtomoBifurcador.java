@@ -12,11 +12,11 @@
  */
 package net.gaia.vortex.impl.atomos;
 
+import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.atomos.Bifurcador;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.proto.ComponenteConector;
@@ -100,7 +100,7 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.atomos.Bifurcador#setCondicion(net.gaia.vortex.core.api.condiciones.Condicion)
+	 * @see net.gaia.vortex.api.atomos.Bifurcador#setCondicion(net.gaia.vortex.api.condiciones.Condicion)
 	 */
 	public void setCondicion(final Condicion condicion) {
 		if (condicion == null) {

@@ -13,7 +13,7 @@
 package net.gaia.vortex.core.impl.moleculas.memoria;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.annotations.Molecula;
+import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSupport;
 
 /**

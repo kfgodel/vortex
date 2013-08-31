@@ -12,10 +12,9 @@
  */
 package net.gaia.vortex.router.impl.condiciones;
 
-import net.gaia.vortex.core.api.annotations.Paralelizable;
-import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
+import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport;
 import net.gaia.vortex.router.impl.messages.MetadataDeMensajes;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 import net.gaia.vortex.sets.impl.condiciones.Negacion;
@@ -49,7 +48,7 @@ public class VinoPorOtraPata extends CondicionTipadaSupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.condiciones.support.CondicionTipadaSupport#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.router.impl.condiciones.CondicionTipadaSupport#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
 	 */
 
 	@Override

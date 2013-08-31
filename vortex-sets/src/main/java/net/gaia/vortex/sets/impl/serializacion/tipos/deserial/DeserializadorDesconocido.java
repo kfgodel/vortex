@@ -14,7 +14,7 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.deserial;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.sets.impl.condiciones.CondicionDesconocida;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo;

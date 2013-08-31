@@ -12,9 +12,9 @@
  */
 package net.gaia.vortex.impl.atomos;
 
+import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.impl.support.MonoEmisorSupport;
 

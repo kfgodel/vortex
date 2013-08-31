@@ -14,7 +14,7 @@ package net.gaia.vortex.core.impl.atomos.support;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
+import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
@@ -24,13 +24,14 @@ import org.slf4j.LoggerFactory;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase implementa comportamiento base para las sub clases de {@link Nexo} utilizando un
+ * Esta clase implementa comportamiento base para las sub clases de {@link NexoViejo} utilizando un
  * procesador de tareas interno para realizar las tareas, y teniendo un destino único al cual
  * pasarle los mensajes
  * 
  * @author D. García
  */
-public abstract class NexoSupport extends ReceptorConProcesador implements Nexo {
+@Deprecated
+public abstract class NexoSupport extends ReceptorConProcesador implements NexoViejo {
 	private static final Logger LOG = LoggerFactory.getLogger(NexoSupport.class);
 
 	private Receptor destino;
@@ -60,7 +61,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.NexoViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void conectarCon(final Receptor destino) {
@@ -70,7 +71,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	/**
 	 * En esta implementación el nexo queda conectado al {@link ReceptorNulo}
 	 * 
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.NexoViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void desconectarDe(final Receptor destino) {
@@ -83,7 +84,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#setDestino(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.NexoViejo#setDestino(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void setDestino(final Receptor destino) {
@@ -95,7 +96,7 @@ public abstract class NexoSupport extends ReceptorConProcesador implements Nexo 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#getDestino()
+	 * @see net.gaia.vortex.core.api.atomos.forward.NexoViejo#getDestino()
 	 */
 
 	public Receptor getDestino() {

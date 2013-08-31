@@ -13,9 +13,9 @@
 package net.gaia.vortex.http.impl.moleculas;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.annotations.Molecula;
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
+import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
@@ -40,7 +40,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemoria, Nexo {
+public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemoria, NexoViejo {
 
 	private SesionVortexHttp sesion;
 	public static final String sesion_FIELD = "sesion";

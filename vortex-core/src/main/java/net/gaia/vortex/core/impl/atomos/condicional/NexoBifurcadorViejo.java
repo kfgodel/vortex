@@ -5,10 +5,10 @@ package net.gaia.vortex.core.impl.atomos.condicional;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.annotations.Atomo;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.atomos.condicional.BifurcadorViejo;
-import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.core.impl.tasks.condicional.BifurcarMensaje;

@@ -17,7 +17,7 @@ import java.util.List;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
@@ -89,7 +89,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#setDestino(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.core.api.atomos.forward.NexoViejo#setDestino(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void setDestino(final Receptor nuevoDestino) {
@@ -107,7 +107,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#getDestino()
+	 * @see net.gaia.vortex.core.api.atomos.forward.NexoViejo#getDestino()
 	 */
 
 	public Receptor getDestino() {

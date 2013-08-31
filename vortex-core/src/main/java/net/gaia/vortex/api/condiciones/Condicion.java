@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.condiciones;
+package net.gaia.vortex.api.condiciones;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 public interface Condicion {
 
 	/**
-	 * Indica si el mensaje pasado cumple la condición o no representada por esta instancia
+	 * Indica si el mensaje pasado cumple o no la condición representada por esta instancia
 	 * 
 	 * @param mensaje
 	 *            El mensaje a evaluar
@@ -36,7 +36,8 @@ public interface Condicion {
 	public ResultadoDeCondicion esCumplidaPor(MensajeVortex mensaje);
 
 	/**
-	 * Devuelve una lista de las subcondiciones que forman esta condición
+	 * Devuelve una lista de las subcondiciones que forman esta condición en caso de que esta sea
+	 * una condicion compuesta por otras
 	 * 
 	 * @return Una lista vacia para aquellas condiciones que no son compuestas por otras
 	 */

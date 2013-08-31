@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.impl.transformaciones;
 
-import net.gaia.vortex.core.api.annotations.Paralelizable;
+import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;

@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.portal.api.mensaje;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 
 /**

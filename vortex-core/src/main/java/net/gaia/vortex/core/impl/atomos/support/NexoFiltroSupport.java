@@ -15,8 +15,8 @@ package net.gaia.vortex.core.impl.atomos.support;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.atomos.condicional.FiltroViejo;
-import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
@@ -28,6 +28,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
+@Deprecated
 public abstract class NexoFiltroSupport extends NexoSupport implements FiltroViejo {
 
 	private Condicion condicion;

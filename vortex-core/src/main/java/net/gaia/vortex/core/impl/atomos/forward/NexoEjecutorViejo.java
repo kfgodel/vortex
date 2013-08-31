@@ -14,9 +14,9 @@ package net.gaia.vortex.core.impl.atomos.forward;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.proto.ComponenteVortex;
-import net.gaia.vortex.core.api.annotations.Atomo;
 import net.gaia.vortex.core.api.atomos.forward.EjecutorViejo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;

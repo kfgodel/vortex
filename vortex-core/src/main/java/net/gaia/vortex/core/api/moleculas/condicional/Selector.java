@@ -13,8 +13,8 @@
 package net.gaia.vortex.core.api.moleculas.condicional;
 
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
-import net.gaia.vortex.core.api.condiciones.Condicion;
 
 /**
  * Esta interfaz representa un componente vortex de muchas salidas que permite asociar una condición

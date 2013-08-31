@@ -18,7 +18,7 @@ import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.builder.VortexCore;
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeNuevo;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
@@ -84,7 +84,7 @@ public class VortexCoreBuilder implements VortexCore {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.builder.VortexCore#bifurcarSi(net.gaia.vortex.core.api.condiciones.Condicion,
+	 * @see net.gaia.vortex.api.builder.VortexCore#bifurcarSi(net.gaia.vortex.api.condiciones.Condicion,
 	 *      net.gaia.vortex.api.basic.Receptor, net.gaia.vortex.api.basic.Receptor)
 	 */
 	public Bifurcador bifurcarSi(final Condicion condicion, final Receptor receptorPorTrue,
@@ -96,7 +96,7 @@ public class VortexCoreBuilder implements VortexCore {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarCon(net.gaia.vortex.core.api.condiciones.Condicion,
+	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarCon(net.gaia.vortex.api.condiciones.Condicion,
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	public Bifurcador filtrarCon(final Condicion condicion, final Receptor receptor) {
@@ -106,7 +106,7 @@ public class VortexCoreBuilder implements VortexCore {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.builder.VortexCore#filtroDe(net.gaia.vortex.core.api.condiciones.Condicion)
+	 * @see net.gaia.vortex.api.builder.VortexCore#filtroDe(net.gaia.vortex.api.condiciones.Condicion)
 	 */
 	public Bifurcador filtroDe(final Condicion condicion) {
 		final AtomoBifurcador filtro = AtomoBifurcador.create(condicion);

@@ -17,7 +17,7 @@ import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 
 /**

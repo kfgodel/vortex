@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.annotations;
+package net.gaia.vortex.api.annotations.paralelizable;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -19,7 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Este annotation es una marca a las operaciones de mensaje que pueden ser ejecutadas
+ * Este annotation es una marca para las operaciones de mensaje que pueden ser ejecutadas
  * concurrentemente por varios threads. Generalmente se genera una copia del mensaje que es
  * modificado para no afectar otros threads.<br>
  * <br>

@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.core.api.mensaje;
 
+import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.proto.ShortStringable;
-import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
 
 /**
  * Esta interfaz representa un mensaje vortex que es información que circula dentro de la red y

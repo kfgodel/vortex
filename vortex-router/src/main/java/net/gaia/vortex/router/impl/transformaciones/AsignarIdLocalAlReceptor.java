@@ -14,7 +14,7 @@ package net.gaia.vortex.router.impl.transformaciones;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.gaia.vortex.core.api.annotations.Paralelizable;
+import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;

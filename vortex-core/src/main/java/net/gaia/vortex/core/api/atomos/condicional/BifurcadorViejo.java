@@ -12,10 +12,10 @@
  */
 package net.gaia.vortex.core.api.atomos.condicional;
 
+import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.condiciones.Condicion;
 
 /**
  * Esta interfaz representa un componente vortex que elige uno entre dos caminos para el mensaje

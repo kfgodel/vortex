@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.server.impl;
 
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
+import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ public class RealizarConexionesPorFuera implements EstrategiaDeConexionDeNexos {
 	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 	
-	public void onNexoCreado(final Nexo nuevoNexo) {
+	public void onNexoCreado(final NexoViejo nuevoNexo) {
 		LOG.debug("No se realizara accion interna de conexion del nexo creado[{}]", nuevoNexo);
 	}
 
@@ -51,7 +51,7 @@ public class RealizarConexionesPorFuera implements EstrategiaDeConexionDeNexos {
 	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 	
-	public void onNexoCerrado(final Nexo nexoCerrado) {
+	public void onNexoCerrado(final NexoViejo nexoCerrado) {
 		LOG.debug("No se realizara accion interna de desconexion del nexo cerrado[{}]", nexoCerrado);
 	}
 

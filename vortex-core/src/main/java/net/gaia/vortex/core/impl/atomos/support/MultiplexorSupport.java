@@ -24,11 +24,12 @@ import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase define comportamiento base para las subclases de {@link MultiplexorViejo} que utiliza un
- * procesador de tareas para procesar sus mensajes
+ * Esta clase define comportamiento base para las subclases de {@link MultiplexorViejo} que utiliza
+ * un procesador de tareas para procesar sus mensajes
  * 
  * @author D. García
  */
+@Deprecated
 public abstract class MultiplexorSupport extends ReceptorConProcesador implements MultiplexorViejo {
 
 	/**

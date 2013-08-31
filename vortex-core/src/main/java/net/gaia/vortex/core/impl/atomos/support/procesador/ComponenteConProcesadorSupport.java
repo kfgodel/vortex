@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
+
+@Deprecated
 public abstract class ComponenteConProcesadorSupport extends ComponenteSupport {
 	private static final Logger LOG = LoggerFactory.getLogger(ComponenteConProcesadorSupport.class);
 
@@ -37,10 +39,12 @@ public abstract class ComponenteConProcesadorSupport extends ComponenteSupport {
 		}
 		try {
 			processor.process(tarea);
-		} catch (final RejectedExecutionException e) {
+		}
+		catch (final RejectedExecutionException e) {
 			if (processor.isDetenido()) {
 				LOG.debug("El procesador esta detenido. No podemos procesar la tarea[{}]", tarea);
-			} else {
+			}
+			else {
 				LOG.error("El procesador rechazó la tarea[" + tarea + "]", e);
 			}
 		}

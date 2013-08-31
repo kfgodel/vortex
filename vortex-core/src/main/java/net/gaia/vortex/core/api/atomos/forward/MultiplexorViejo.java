@@ -3,14 +3,14 @@
  */
 package net.gaia.vortex.core.api.atomos.forward;
 
+import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.api.annotations.Atomo;
 
 /**
  * Esta interfaz representa un componente vortex que al recibir un mensaje lo envía a todos los
  * multiples destinos que conoce.<br>
- * A diferencia de un {@link Nexo} esta interfaz posee multiples conexiones posibles de salida
+ * A diferencia de un {@link NexoViejo} esta interfaz posee multiples conexiones posibles de salida
  * 
  * @author D. García
  */

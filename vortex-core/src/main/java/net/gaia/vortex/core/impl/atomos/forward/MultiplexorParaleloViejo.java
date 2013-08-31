@@ -5,7 +5,7 @@ package net.gaia.vortex.core.impl.atomos.forward;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.annotations.Atomo;
+import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.MultiplexorSupport;
 import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensaje;

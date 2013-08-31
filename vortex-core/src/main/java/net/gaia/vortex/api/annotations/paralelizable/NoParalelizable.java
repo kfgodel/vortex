@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.annotations;
+package net.gaia.vortex.api.annotations.paralelizable;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -19,21 +19,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Este annotation es una marca a las operaciones de mensaje que NO son ejecutables por varios
- * threads a la vez. Normalmente todas las que modifican la instancia de mensaje directamente sin
- * hacer copia.<br>
- * <br>
- * Básicamente este annotation indica que si se ejecuta en paralelo una rama afecta a la otra,
- * pudiendo generar resultados no deterministicos por el orden en que se ejecuta cada rama.<br>
+ * Este annotation es una marca para las operaciones sobre mensajes que NO son ejecutables por
+ * varios threads a la vez.<br>
+ * Normalmente todas las operaciones que modifican la instancia del mensaje directamente sin hacer
+ * copia son no paralelizables porque un thread obstruye a otro.<br>
  * <br>
  * A diferencia de las transformaciones "normales" estas deben usarse con cuidado porque pueden
  * tener comportamiento errático si la red no está bien armada y el orden de las transformaciones
  * puede ser alterado según el orden en que procesen los mensajes las partes.<br>
  * <br>
- * Este tipo de transformaciones tienen más sentido en el origen del mensaje porque sirven para
- * asignar ID o algunas tareas comunes, pero no deberían usarse como parte de código cliente en el
- * que existe multiplexación de mensajes o modificación concurrente. En tales casos es mejor
- * utilizar las transformaciones por copia
+ * Este tipo de transformaciones tiene más sentido en el origen del mensaje cuando todavía se está
+ * formando porque sirven para asignar ID o atributos especiales, pero no son aconsejables para
+ * nodos en el medio de la circulación
  * 
  * @author D. García
  */

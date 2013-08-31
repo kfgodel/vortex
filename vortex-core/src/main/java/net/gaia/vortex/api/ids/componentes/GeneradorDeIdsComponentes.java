@@ -1,5 +1,5 @@
 /**
- * 20/01/2013 14:09:25 Copyright (C) 2011 Darío L. García
+ * 27/06/2012 14:03:35 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,27 +10,20 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.condiciones;
+package net.gaia.vortex.api.ids.componentes;
 
 /**
- * Esta clase representa la excepción obtenida al intentar evaluar como booleano un valor de
- * resultado indecidible
+ * Esta interfaz representa un generador de identificadores vortex para las nuevas moléculas
  * 
  * @author D. García
  */
-public class IndecidibleException extends RuntimeException {
-	private static final long serialVersionUID = 27946286035278066L;
+public interface GeneradorDeIdsComponentes {
 
-	public IndecidibleException(final String message, final Throwable cause) {
-		super(message, cause);
-	}
-
-	public IndecidibleException(final String message) {
-		super(message);
-	}
-
-	public IndecidibleException(final Throwable cause) {
-		super(cause);
-	}
+	/**
+	 * Genera un nuevo identificador para la molécula
+	 * 
+	 * @return El identificador generado
+	 */
+	public IdDeComponenteVortex generarId();
 
 }

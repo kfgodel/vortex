@@ -10,7 +10,8 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.condiciones;
+package net.gaia.vortex.api.condiciones;
+
 
 /**
  * Este enum representa los tres valores que una condición puede devolver al ser evaluada.<br>

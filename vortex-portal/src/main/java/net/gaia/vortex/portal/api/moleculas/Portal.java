@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.portal.api.moleculas;
 
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
+import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 
@@ -23,7 +23,7 @@ import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
  * 
  * @author D. García
  */
-public interface Portal extends Nexo {
+public interface Portal extends NexoViejo {
 
 	/**
 	 * Envía el mensaje a la red utilizando las conexiones de este portal para hacer circular el

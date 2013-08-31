@@ -15,10 +15,11 @@ import net.gaia.vortex.core.api.NodoViejo;
  * 
  * @author D. García
  */
-public interface Nexo extends NodoViejo {
+@Deprecated
+public interface NexoViejo extends NodoViejo {
 
 	/**
-	 * En un {@link Nexo} al conectar con un nuevo receptor la conexion previa se pierde, pudiendo
+	 * En un {@link NexoViejo} al conectar con un nuevo receptor la conexion previa se pierde, pudiendo
 	 * tener sólo una conexión a la vez
 	 * 
 	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
@@ -27,7 +28,7 @@ public interface Nexo extends NodoViejo {
 	public void conectarCon(Receptor destino);
 
 	/**
-	 * En un {@link Nexo} la desconexión puede ser ignorada, o puede dejar a este componente sin
+	 * En un {@link NexoViejo} la desconexión puede ser ignorada, o puede dejar a este componente sin
 	 * destino. Si el nexo se queda sin destino (si admite esa posibilidad) al recibir un mensaje lo
 	 * esperado es que no haga ningún acción de salida (equivalente a un {@link Receptor} puro)
 	 * 

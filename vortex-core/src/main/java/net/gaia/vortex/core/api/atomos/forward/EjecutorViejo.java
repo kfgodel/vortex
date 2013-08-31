@@ -22,7 +22,7 @@ import net.gaia.vortex.api.basic.Receptor;
  * @author D. García
  */
 @Deprecated
-public interface EjecutorViejo extends Nexo {
+public interface EjecutorViejo extends NexoViejo {
 
 	/**
 	 * Establece el receptor utilizado para escuchar los mensajes que pasan en este nexo

@@ -1,5 +1,5 @@
 /**
- * 13/01/2013 22:06:18 Copyright (C) 2011 Darío L. García
+ * 20/01/2013 14:09:25 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,17 +10,27 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.atomos.support.basicos;
-
-import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.impl.support.ComponenteSupport;
+package net.gaia.vortex.api.condiciones;
 
 /**
- * Esta clase define comportamiento base para nodos que no requieren un procesador de tareas
- * necesariamente
+ * Esta clase representa la excepción obtenida al intentar evaluar como booleano un valor de
+ * resultado indecidible
  * 
  * @author D. García
  */
-public abstract class NodoSupport extends ComponenteSupport implements NodoViejo {
+public class IndecidibleException extends RuntimeException {
+	private static final long serialVersionUID = 27946286035278066L;
+
+	public IndecidibleException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
+
+	public IndecidibleException(final String message) {
+		super(message);
+	}
+
+	public IndecidibleException(final Throwable cause) {
+		super(cause);
+	}
 
 }

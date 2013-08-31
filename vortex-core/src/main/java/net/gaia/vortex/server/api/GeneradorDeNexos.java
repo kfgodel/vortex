@@ -12,11 +12,11 @@
  */
 package net.gaia.vortex.server.api;
 
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
+import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 
 /**
  * Esta interfaz es aplicable a componentes vortex que por su naturaleza pueden generar nuevos
- * {@link Nexo}s. Por ejemplo un servidor de sockets, o un servidor http.<br>
+ * {@link NexoViejo}s. Por ejemplo un servidor de sockets, o un servidor http.<br>
  * Este generador tiene asociada una {@link EstrategiaDeConexionDeNexos} que le indica cómo debe
  * conectar los nuevos nexos generados a la red existente, y como desconectarlos antes de
  * eliminarlos.<br>

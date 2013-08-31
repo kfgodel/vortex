@@ -14,12 +14,12 @@ package net.gaia.vortex.core.impl.mensaje.support;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
+import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
-import net.gaia.vortex.core.impl.ids.mensajes.IdSecuencialDeMensaje;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.copia.CopiarMapaVortex;
 import net.gaia.vortex.helpers.VortexMap;
+import net.gaia.vortex.impl.ids.mensajes.IdInmutableDeMensaje;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,7 +147,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 			return null;
 		}
 		try {
-			final IdDeMensaje idRegenerado = IdSecuencialDeMensaje.regenerarDesde(idComoMapa);
+			final IdDeMensaje idRegenerado = IdInmutableDeMensaje.regenerarDesde(idComoMapa);
 			return idRegenerado;
 		} catch (final UnhandledConditionException e) {
 			LOG.error("Algo fallo en la regeneracion del ID para el contenido[" + this + "]. Asumiendo sin ID", e);
@@ -156,7 +156,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setIdDeMensaje(net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje)
+	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setIdDeMensaje(net.gaia.vortex.api.ids.mensajes.IdDeMensaje)
 	 */
 	
 	public void setIdDeMensaje(final IdDeMensaje idDelMensaje) {

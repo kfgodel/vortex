@@ -16,8 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import junit.framework.Assert;
-import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ public class TestIdsDeIds {
 		final IdDeComponenteVortex nuevoId = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
 		final String idComoString = nuevoId.getValorActual();
 		LOG.debug("ID generado: {}", idComoString);
-		Assert.assertTrue("El largo debería ser mayor al minimo", GeneradorDeIdsGlobalesParaComponentes.LONGITUD_INCIAL_SECUENCIA
+		Assert.assertTrue("El largo debería ser mayor al minimo", GeneradorDeIdsGlobalesParaComponentes.LONGITUD_INICIAL_SECUENCIA
 				+ GeneradorDeIdsGlobalesParaComponentes.LONGITUD_INICIAL_GENERADOR_TIMESTAMP
 				+ GeneradorDeIdsGlobalesParaComponentes.LONGITUD_INICIAL_RANDOM_PART
 				+ GeneradorDeIdsGlobalesParaComponentes.LONGITUD_INICIAL_VORTEX_TIMESTAMP < idComoString.length());
@@ -50,7 +50,7 @@ public class TestIdsDeIds {
 				"[A-F0-9]{" + GeneradorDeIdsGlobalesParaComponentes.LONGITUD_INICIAL_RANDOM_PART + "}-[A-F0-9]{"
 						+ GeneradorDeIdsGlobalesParaComponentes.LONGITUD_INICIAL_VORTEX_TIMESTAMP + ",}-[A-F0-9]{"
 						+ GeneradorDeIdsGlobalesParaComponentes.LONGITUD_INICIAL_GENERADOR_TIMESTAMP + ",}-[A-F0-9]{"
-						+ GeneradorDeIdsGlobalesParaComponentes.LONGITUD_INCIAL_SECUENCIA + ",}").matcher(idComoString);
+						+ GeneradorDeIdsGlobalesParaComponentes.LONGITUD_INICIAL_SECUENCIA + ",}").matcher(idComoString);
 		LOG.debug("ID generado: {}", idComoString);
 		Assert.assertTrue("El id debería matchear la expresion regular", matcher.matches());
 	}

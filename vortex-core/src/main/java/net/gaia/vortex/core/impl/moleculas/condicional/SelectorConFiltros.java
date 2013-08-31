@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.annotations.Molecula;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
-import net.gaia.vortex.core.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
@@ -65,7 +65,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 
 	/**
 	 * @see net.gaia.vortex.core.api.moleculas.condicional.Selector#conectarCon(net.gaia.vortex.api.basic.Receptor,
-	 *      net.gaia.vortex.core.api.condiciones.Condicion)
+	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
 
 	public void conectarCon(final Receptor destino, final Condicion condicion) {
@@ -85,7 +85,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 
 	/**
 	 * @see net.gaia.vortex.core.api.moleculas.condicional.Selector#modificarCondicionPara(net.gaia.vortex.api.basic.Receptor,
-	 *      net.gaia.vortex.core.api.condiciones.Condicion)
+	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
 
 	public void modificarCondicionPara(final Receptor destino, final Condicion nuevaCondicion) {

@@ -10,14 +10,14 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.ids.mensajes;
+package net.gaia.vortex.impl.ids.mensajes;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
-import net.gaia.vortex.core.impl.ids.componentes.IdInmutableDeComponente;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.helpers.VortexMap;
+import net.gaia.vortex.impl.ids.componentes.IdInmutableDeComponente;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -27,7 +27,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class IdSecuencialDeMensaje implements IdDeMensaje {
+public class IdInmutableDeMensaje implements IdDeMensaje {
 
 	private IdDeComponenteVortex idDelEmisor;
 	public static final String idDelEmisor_FIELD = "idDelEmisor";
@@ -35,23 +35,30 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	private Long numeroDeSecuencia;
 	public static final String numeroDeSecuencia_FIELD = "numeroDeSecuencia";
 
-	public static IdSecuencialDeMensaje create(final IdDeComponenteVortex emisor, final Long secuencia) {
-		final IdSecuencialDeMensaje identificador = new IdSecuencialDeMensaje();
+	/**
+	 * Como esta instancia es inmutable se puede cachear el hash para optimizar las operaciones en
+	 * colecciones
+	 */
+	private int cachedHashcode;
+
+	public static IdInmutableDeMensaje create(final IdDeComponenteVortex emisor, final Long secuencia) {
+		final IdInmutableDeMensaje identificador = new IdInmutableDeMensaje();
 		identificador.idDelEmisor = emisor;
 		identificador.numeroDeSecuencia = secuencia;
+		identificador.cachedHashcode = calcularHashcode(emisor, secuencia);
 		return identificador;
 	}
 
 	/**
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	
+
 	public int compareTo(final IdDeMensaje o) {
-		if (!(o instanceof IdSecuencialDeMensaje)) {
+		if (!(o instanceof IdInmutableDeMensaje)) {
 			throw new UnhandledConditionException(
 					"No se como comparar un ID basado en nodo con uno que no es. Falta definir algo!");
 		}
-		final IdSecuencialDeMensaje that = (IdSecuencialDeMensaje) o;
+		final IdInmutableDeMensaje that = (IdInmutableDeMensaje) o;
 		// El orden viene dado por el ID de emisor primero y luego la secuencia
 		final int comparacionDeEmisor = this.idDelEmisor.compareTo(that.idDelEmisor);
 		if (comparacionDeEmisor != 0) {
@@ -65,12 +72,13 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	
+
+	@Override
 	public boolean equals(final Object obj) {
-		if (!(obj instanceof IdSecuencialDeMensaje)) {
+		if (!(obj instanceof IdInmutableDeMensaje)) {
 			return false;
 		}
-		final IdSecuencialDeMensaje that = (IdSecuencialDeMensaje) obj;
+		final IdInmutableDeMensaje that = (IdInmutableDeMensaje) obj;
 		// Comparo primero la secuencia porque requiere menos procesamiento
 		if (!this.numeroDeSecuencia.equals(that.numeroDeSecuencia)) {
 			// Las secuencias ya no coinciden
@@ -83,19 +91,34 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	
+
+	@Override
 	public int hashCode() {
+		return cachedHashcode;
+	}
+
+	/**
+	 * Calcula el hashcode que le corresponde al id de mensaje segun el emisor y el numero de
+	 * secuencia indicados
+	 * 
+	 * @param idDelEmisor
+	 *            El identificador del emisor
+	 * @param numeroDeSecuencia
+	 *            El numero de secuencia del mensaje
+	 * @return El hash que corresponde al mensaje
+	 */
+	private static int calcularHashcode(final IdDeComponenteVortex idDelEmisor, final Long numeroDeSecuencia) {
 		// Basado en el hash de arrays y colecciones
 		int result = 1;
-		result = 31 * result + this.idDelEmisor.hashCode();
-		result = 31 * result + this.numeroDeSecuencia.hashCode();
+		result = 31 * result + idDelEmisor.hashCode();
+		result = 31 * result + numeroDeSecuencia.hashCode();
 		return result;
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#esOriginadoEn(net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex)
+	 * @see net.gaia.vortex.api.ids.mensajes.IdDeMensaje#esOriginadoEn(net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex)
 	 */
-	
+
 	public boolean esOriginadoEn(final IdDeComponenteVortex idDelNodo) {
 		final boolean mismoEmisor = this.idDelEmisor.equals(idDelNodo);
 		return mismoEmisor;
@@ -104,32 +127,33 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeSecuencia_FIELD, numeroDeSecuencia).con(idDelEmisor_FIELD, idDelEmisor)
 				.toString();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#getIdDelEmisor()
+	 * @see net.gaia.vortex.api.ids.mensajes.IdDeMensaje#getIdDelEmisor()
 	 */
-	
+
 	public IdDeComponenteVortex getIdDelEmisor() {
 		return this.idDelEmisor;
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#getNumeroDeSecuencia()
+	 * @see net.gaia.vortex.api.ids.mensajes.IdDeMensaje#getNumeroDeSecuencia()
 	 */
-	
+
 	public Long getNumeroDeSecuencia() {
 		return this.numeroDeSecuencia;
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje#getAsMap()
+	 * @see net.gaia.vortex.api.ids.mensajes.IdDeMensaje#getAsMap()
 	 */
-	
+
 	public Map<String, Object> getAsMap() {
 		final Map<String, Object> mapa = new VortexMap();
 
@@ -158,7 +182,8 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 		String valorDelIdDelEmisor;
 		try {
 			valorDelIdDelEmisor = (String) emisorEnMensaje;
-		} catch (final ClassCastException e) {
+		}
+		catch (final ClassCastException e) {
 			throw new UnhandledConditionException("La parte del ID correspondiente al emisor no es String: "
 					+ emisorEnMensaje + " mapa[" + idComoMapa + "]", e);
 		}
@@ -170,20 +195,21 @@ public class IdSecuencialDeMensaje implements IdDeMensaje {
 		Number numeroDeSecuencia;
 		try {
 			numeroDeSecuencia = (Number) secuenciaDeMensaje;
-		} catch (final ClassCastException e) {
+		}
+		catch (final ClassCastException e) {
 			throw new UnhandledConditionException("El mapa tiene una secuencia que no es Number: " + emisorEnMensaje
 					+ " mensaje[" + idComoMapa + "]", e);
 		}
 
 		final IdDeComponenteVortex idDelEmisor = IdInmutableDeComponente.create(valorDelIdDelEmisor);
-		final IdDeMensaje idGenerado = IdSecuencialDeMensaje.create(idDelEmisor, numeroDeSecuencia.longValue());
+		final IdDeMensaje idGenerado = IdInmutableDeMensaje.create(idDelEmisor, numeroDeSecuencia.longValue());
 		return idGenerado;
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.proto.ShortStringable#toShortString()
 	 */
-	
+
 	public String toShortString() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append(numeroDeSecuencia);

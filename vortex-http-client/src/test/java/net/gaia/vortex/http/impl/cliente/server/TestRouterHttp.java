@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.http.impl.moleculas.RouterClienteHttp;
 import net.gaia.vortex.http.impl.moleculas.RouterServerHttp;

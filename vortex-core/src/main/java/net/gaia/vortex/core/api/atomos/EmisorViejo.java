@@ -6,7 +6,7 @@ package net.gaia.vortex.core.api.atomos;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.proto.ComponenteVortex;
 import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
+import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 
 /**
  * Esta interfaz representa un componente de la red vortex que tiene la capacidad de enviar mensajes
@@ -17,7 +17,7 @@ import net.gaia.vortex.core.api.atomos.forward.Nexo;
  * <br>
  * Las implementaciones de esta interfaz pueden estar limitadas a 1 o N receptores. Depende de la
  * implementación concreta qué pasa cuando se conecta estando ya conectado. Se puede perder la
- * conexión previa ({@link Nexo}), o se pueden agregar nuevas ({@link MultiplexorViejo})
+ * conexión previa ({@link NexoViejo}), o se pueden agregar nuevas ({@link MultiplexorViejo})
  * 
  * @author D. García
  */

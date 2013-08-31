@@ -10,13 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.ids.mensajes;
+package net.gaia.vortex.impl.ids.mensajes;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.ids.mensajes.GeneradorDeIdsDeMensajes;
-import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.ids.mensajes.GeneradorDeIdsDeMensajes;
+import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -36,12 +36,12 @@ public class GeneradorSecuencialDeIdDeMensaje implements GeneradorDeIdsDeMensaje
 	public static final String proximaSecuencia_FIELD = "proximaSecuencia";
 
 	/**
-	 * @see net.gaia.vortex.core.api.ids.mensajes.GeneradorDeIdsDeMensajes#generarId()
+	 * @see net.gaia.vortex.api.ids.mensajes.GeneradorDeIdsDeMensajes#generarId()
 	 */
 	
 	public IdDeMensaje generarId() {
 		final Long nuevaSecuencia = proximaSecuencia.getAndIncrement();
-		final IdSecuencialDeMensaje nuevoId = IdSecuencialDeMensaje.create(identificadorBase, nuevaSecuencia);
+		final IdInmutableDeMensaje nuevoId = IdInmutableDeMensaje.create(identificadorBase, nuevaSecuencia);
 		return nuevoId;
 	}
 

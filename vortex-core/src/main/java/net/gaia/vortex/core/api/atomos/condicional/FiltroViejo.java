@@ -12,9 +12,9 @@
  */
 package net.gaia.vortex.core.api.atomos.condicional;
 
-import net.gaia.vortex.core.api.annotations.Atomo;
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.annotations.clases.Atomo;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 
 /**
  * Esta interfaz representa un componente vortex que permite filtrar los mensajes pasados a otro
@@ -26,7 +26,7 @@ import net.gaia.vortex.core.api.condiciones.Condicion;
  */
 @Deprecated
 @Atomo
-public interface FiltroViejo extends Nexo {
+public interface FiltroViejo extends NexoViejo {
 
 	/**
 	 * Devuelve la condición utilizada por este componente para evaluar y descartar los mensajes

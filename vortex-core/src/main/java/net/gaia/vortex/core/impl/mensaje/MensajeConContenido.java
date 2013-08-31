@@ -14,7 +14,7 @@ package net.gaia.vortex.core.impl.mensaje;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
+import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
 import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -99,7 +99,7 @@ public class MensajeConContenido implements MensajeVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#asignarId(net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje)
+	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#asignarId(net.gaia.vortex.api.ids.mensajes.IdDeMensaje)
 	 */
 	
 	public void asignarId(final IdDeMensaje idNuevo) {

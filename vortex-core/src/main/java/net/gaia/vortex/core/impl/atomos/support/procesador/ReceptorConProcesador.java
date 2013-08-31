@@ -23,6 +23,7 @@ import net.gaia.vortex.core.prog.Loggers;
  * 
  * @author D. García
  */
+@Deprecated
 public abstract class ReceptorConProcesador extends ComponenteConProcesadorSupport implements Receptor {
 
 	/**
