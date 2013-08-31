@@ -25,7 +25,7 @@ import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
-import net.gaia.vortex.core.impl.atomos.emisores.EmisorNulo;
+import net.gaia.vortex.core.impl.atomos.emisores.EmisorNuloViejo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutorViejo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
@@ -209,7 +209,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 		final Receptor procesoAlRecibirPublicacionDeFiltros = crearProcesoParaRecibirPublicacionDeFiltros(taskProcessor);
 		selectorDeEntrada.conectarCon(procesoAlRecibirPublicacionDeFiltros, EsPublicacionDeFiltros.create());
 
-		final FlujoVortexViejo flujo = FlujoInmutableViejo.create(selectorDeEntrada, EmisorNulo.getInstancia());
+		final FlujoVortexViejo flujo = FlujoInmutableViejo.create(selectorDeEntrada, EmisorNuloViejo.getInstancia());
 		initializeWith(flujo);
 	}
 

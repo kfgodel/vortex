@@ -27,20 +27,21 @@ import ar.com.dgarcia.coding.caching.WeakSingleton;
  * 
  * @author D. García
  */
-public class EmisorNulo extends EmisorSupportViejo {
-	private static final Logger LOG = LoggerFactory.getLogger(EmisorNulo.class);
+@Deprecated
+public class EmisorNuloViejo extends EmisorSupportViejo {
+	private static final Logger LOG = LoggerFactory.getLogger(EmisorNuloViejo.class);
 
-	private static final WeakSingleton<EmisorNulo> ultimaReferencia = new WeakSingleton<EmisorNulo>(
-			DefaultInstantiator.create(EmisorNulo.class));
+	private static final WeakSingleton<EmisorNuloViejo> ultimaReferencia = new WeakSingleton<EmisorNuloViejo>(
+			DefaultInstantiator.create(EmisorNuloViejo.class));
 
-	public static EmisorNulo getInstancia() {
+	public static EmisorNuloViejo getInstancia() {
 		return ultimaReferencia.get();
 	}
 
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
-	
+
 	public void conectarCon(final Receptor destino) {
 		LOG.trace("Se intento conectar el destino[{}] en el emisor nulo", destino);
 	}
@@ -48,7 +49,7 @@ public class EmisorNulo extends EmisorSupportViejo {
 	/**
 	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
-	
+
 	public void desconectarDe(final Receptor destino) {
 		LOG.trace("Se intento desconectar el destino[{}] en el emisor nulo", destino);
 	}
