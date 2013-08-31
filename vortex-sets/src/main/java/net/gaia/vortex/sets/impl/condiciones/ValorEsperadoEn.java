@@ -19,8 +19,8 @@ import java.util.TreeMap;
 import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.helpers.VortexEquals;
 import net.gaia.vortex.sets.reflection.HashHelper;
 import net.gaia.vortex.sets.reflection.ValueAccessor;
@@ -43,7 +43,7 @@ public class ValorEsperadoEn implements Condicion {
 	public static final String valorEsperado_FIELD = "valorEsperado";
 
 	/**
-	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {

@@ -14,7 +14,7 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;

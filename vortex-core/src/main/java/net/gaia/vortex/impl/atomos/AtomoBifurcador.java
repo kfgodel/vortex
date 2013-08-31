@@ -16,8 +16,8 @@ import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.atomos.Bifurcador;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.proto.ComponenteConector;
 import net.gaia.vortex.impl.support.EmisorSupport;
@@ -49,7 +49,7 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 	public static final String conectorPorFalse_FIELD = "conectorPorFalse";
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
 		Loggers.ATOMOS.trace("Evaluando condicion[{}] en mensaje[{}] para decidir delegado", condicion, mensaje);

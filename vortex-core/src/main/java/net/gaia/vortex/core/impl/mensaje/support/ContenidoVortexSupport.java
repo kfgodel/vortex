@@ -15,7 +15,7 @@ package net.gaia.vortex.core.impl.mensaje.support;
 import java.util.Map;
 
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.copia.CopiarMapaVortex;
 import net.gaia.vortex.helpers.VortexMap;
@@ -67,7 +67,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getValorComoPrimitiva()
+	 * @see net.gaia.vortex.api.mensajes.MensajeVortex#getValorComoPrimitiva()
 	 */
 	
 	public Object getValorComoPrimitiva() {
@@ -75,7 +75,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#setValorComoPrimitiva(java.lang.Object)
+	 * @see net.gaia.vortex.api.mensajes.MensajeVortex#setValorComoPrimitiva(java.lang.Object)
 	 */
 	
 	public void setValorComoPrimitiva(final Object valor) {
@@ -86,7 +86,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#tieneValorComoPrimitiva()
+	 * @see net.gaia.vortex.api.mensajes.MensajeVortex#tieneValorComoPrimitiva()
 	 */
 	
 	public boolean tieneValorComoPrimitiva() {
@@ -94,7 +94,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#setNombreDelTipoOriginal(java.lang.String)
+	 * @see net.gaia.vortex.api.mensajes.MensajeVortex#setNombreDelTipoOriginal(java.lang.String)
 	 */
 	
 	public void setNombreDelTipoOriginal(final String nombreDeClaseCompleto) {
@@ -102,7 +102,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getNombreDelTipoOriginal()
+	 * @see net.gaia.vortex.api.mensajes.MensajeVortex#getNombreDelTipoOriginal()
 	 */
 	
 	public String getNombreDelTipoOriginal() {
@@ -127,7 +127,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getIdDeMensaje()
+	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#getIdDeMensaje()
 	 */
 	
 	@SuppressWarnings("unchecked")
@@ -156,7 +156,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setIdDeMensaje(net.gaia.vortex.api.ids.mensajes.IdDeMensaje)
+	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#setIdDeMensaje(net.gaia.vortex.api.ids.mensajes.IdDeMensaje)
 	 */
 	
 	public void setIdDeMensaje(final IdDeMensaje idDelMensaje) {
@@ -168,7 +168,7 @@ public class ContenidoVortexSupport extends VortexMap implements ContenidoVortex
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getIdDeMensajeComoMapa()
+	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#getIdDeMensajeComoMapa()
 	 */
 	
 	public Map<String, Object> getIdDeMensajeComoMapa() {

@@ -13,7 +13,7 @@
 package net.gaia.vortex.impl.atomos.productores;
 
 import net.gaia.vortex.api.basic.productores.Productor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.support.MonoEmisorSupport;
 
 /**

@@ -13,8 +13,8 @@
 package net.gaia.vortex.impl.nulos;
 
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.impl.support.ComponenteSupport;
 
 import org.slf4j.Logger;
@@ -53,7 +53,7 @@ public class ConectorNulo extends ComponenteSupport implements Conector {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
 		ReceptorNulo.getInstancia().recibir(mensaje);

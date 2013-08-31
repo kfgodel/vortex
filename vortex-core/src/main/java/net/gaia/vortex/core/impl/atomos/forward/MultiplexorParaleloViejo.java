@@ -6,7 +6,7 @@ package net.gaia.vortex.core.impl.atomos.forward;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Atomo;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.MultiplexorSupport;
 import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensaje;
 import net.gaia.vortex.core.prog.Decision;
@@ -26,7 +26,7 @@ public class MultiplexorParaleloViejo extends MultiplexorSupport {
 	private ListenerDeMetricas listenerMetricas;
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	@Override

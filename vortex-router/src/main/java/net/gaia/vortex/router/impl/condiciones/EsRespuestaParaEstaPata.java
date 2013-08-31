@@ -19,7 +19,7 @@ import java.util.Map;
 import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.router.impl.messages.bidi.RespuestaDeIdRemoto;
 import net.gaia.vortex.router.impl.moleculas.memoria.MemoriaDePedidosDeId;
 
@@ -41,7 +41,7 @@ public class EsRespuestaParaEstaPata implements Condicion {
 	private MemoriaDePedidosDeId memoria;
 
 	/**
-	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {

@@ -14,7 +14,7 @@ package net.gaia.vortex.impl.atomos.consumidores;
 
 import net.gaia.vortex.api.basic.consumidores.Consumidor;
 import net.gaia.vortex.api.mensajes.ListenerDeMensajes;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 
@@ -37,7 +37,7 @@ public class AtomoConsumidor extends ReceptorSupport implements Consumidor {
 	public static final String listener_FIELD = "listener";
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
 		try {

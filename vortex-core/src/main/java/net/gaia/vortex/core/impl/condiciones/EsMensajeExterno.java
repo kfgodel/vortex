@@ -20,7 +20,7 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -36,7 +36,7 @@ public class EsMensajeExterno implements Condicion {
 	public static final String idDelNodo_FIELD = "idDelNodo";
 
 	/**
-	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {

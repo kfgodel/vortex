@@ -19,8 +19,8 @@ import java.util.Set;
 
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.impl.mensaje.copia.ClonadorDeMensajes;

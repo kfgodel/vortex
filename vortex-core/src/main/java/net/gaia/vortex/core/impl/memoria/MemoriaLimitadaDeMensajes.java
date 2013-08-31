@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	private ReentrantLock writeLock;
 
 	/**
-	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#registrarNuevo(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#registrarNuevo(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public boolean registrarNuevo(final MensajeVortex mensaje) {
 		final boolean yaExistia = tieneRegistroDe(mensaje);
@@ -105,7 +105,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#tieneRegistroDe(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#tieneRegistroDe(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public boolean tieneRegistroDe(final MensajeVortex mensaje) {
 		final IdDeMensaje idDeMensaje = mensaje.getIdDeMensaje();

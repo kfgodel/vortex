@@ -15,7 +15,7 @@ package net.gaia.vortex.router.impl.ejecutors;
 import java.util.Map;
 
 import net.gaia.vortex.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
@@ -44,7 +44,7 @@ public class CambiarFiltroDeSalida extends ReceptorSupport {
 	private ParteDeCondiciones filtroDeLaPata;
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	public void recibir(final MensajeVortex mensaje) {

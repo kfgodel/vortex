@@ -18,7 +18,7 @@ import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.tasks.metricas.RegistrarRuteoRealizado;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;

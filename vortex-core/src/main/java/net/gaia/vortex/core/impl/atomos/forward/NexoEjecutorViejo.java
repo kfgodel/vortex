@@ -16,9 +16,9 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.proto.ComponenteVortex;
 import net.gaia.vortex.core.api.atomos.forward.EjecutorViejo;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
 import net.gaia.vortex.core.impl.tasks.EjecutarYDelegar;
 import net.gaia.vortex.core.prog.Loggers;
@@ -55,7 +55,7 @@ public class NexoEjecutorViejo extends NexoSupport implements EjecutorViejo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	@Override

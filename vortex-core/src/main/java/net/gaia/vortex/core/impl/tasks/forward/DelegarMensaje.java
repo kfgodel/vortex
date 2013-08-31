@@ -7,8 +7,8 @@ import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;

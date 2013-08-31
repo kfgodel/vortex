@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.impl.memoria;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 
 /**
  * Esta interfaz representa un registro de mensajes que permite indicar si un mensaje es duplicado

@@ -15,8 +15,8 @@ package net.gaia.vortex.impl.atomos;
 import java.util.List;
 
 import net.gaia.vortex.api.atomos.Multiplexor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.impl.support.MultiEmisorSupport;
 
 /**
@@ -28,7 +28,7 @@ import net.gaia.vortex.impl.support.MultiEmisorSupport;
 public class AtomoMultiplexor extends MultiEmisorSupport implements Multiplexor {
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
 		final List<Conector> allConectores = getConectores();

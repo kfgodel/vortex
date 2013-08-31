@@ -19,7 +19,7 @@ import java.util.List;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParaleloViejo;
 import net.gaia.vortex.core.impl.atomos.support.MultiplexorSupport;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
@@ -34,7 +34,7 @@ import net.gaia.vortex.router.impl.tasks.MultiplexarAPatas;
 public class MultiplexorDePatas extends MultiplexorSupport {
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.MultiplexorParaleloViejo#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.forward.MultiplexorParaleloViejo#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {

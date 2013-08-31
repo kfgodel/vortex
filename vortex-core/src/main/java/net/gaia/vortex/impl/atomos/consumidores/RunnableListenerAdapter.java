@@ -13,7 +13,7 @@
 package net.gaia.vortex.impl.atomos.consumidores;
 
 import net.gaia.vortex.api.mensajes.ListenerDeMensajes;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 
 /**
  * Esta clase sirve de adapter para invocar un runnable al recibir un mensaje como listener
@@ -25,7 +25,7 @@ public class RunnableListenerAdapter implements ListenerDeMensajes {
 	private Runnable runnable;
 
 	/**
-	 * @see net.gaia.vortex.api.mensajes.ListenerDeMensajes#onMensajeRecibido(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.mensajes.ListenerDeMensajes#onMensajeRecibido(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void onMensajeRecibido(final MensajeVortex mensaje) {
 		runnable.run();

@@ -21,7 +21,7 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;

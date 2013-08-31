@@ -18,7 +18,7 @@ import java.util.List;
 import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -35,7 +35,7 @@ public class Negacion implements Condicion, Simplificable {
 	public static final String condicionNegada_FIELD = "condicionNegada";
 
 	/**
-	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {

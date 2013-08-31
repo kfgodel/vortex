@@ -14,8 +14,8 @@ package net.gaia.vortex.core.impl.moleculas.support;
 
 import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.atomos.EmisorViejo;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.support.basicos.NodoSupportViejo;
 import net.gaia.vortex.core.prog.Loggers;
@@ -52,7 +52,7 @@ public class NodoMoleculaSupport extends NodoSupportViejo {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public void recibir(final MensajeVortex mensaje) {

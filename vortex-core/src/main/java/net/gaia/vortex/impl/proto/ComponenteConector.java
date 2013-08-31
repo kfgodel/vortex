@@ -13,8 +13,8 @@
 package net.gaia.vortex.impl.proto;
 
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.impl.support.ComponenteSupport;
@@ -74,7 +74,7 @@ public class ComponenteConector extends ComponenteSupport implements Conector {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
 		// Chequeo para evitar el toShortString() si no es necesario

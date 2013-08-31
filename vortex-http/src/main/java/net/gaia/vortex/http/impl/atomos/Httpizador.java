@@ -14,7 +14,7 @@ package net.gaia.vortex.http.impl.atomos;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.http.impl.tasks.AcumularEnSesion;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
@@ -32,7 +32,7 @@ public class Httpizador extends ReceptorConProcesador {
 	public static final String sesion_FIELD = "sesion";
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {

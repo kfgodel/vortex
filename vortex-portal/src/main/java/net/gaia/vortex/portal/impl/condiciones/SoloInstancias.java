@@ -18,8 +18,8 @@ import java.util.List;
 import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,7 @@ public class SoloInstancias implements Condicion {
 	public static final String tipoEsperado_FIELD = "tipoEsperado";
 
 	/**
-	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {

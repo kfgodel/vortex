@@ -15,8 +15,8 @@ package net.gaia.vortex.core.impl.mensaje;
 import java.util.Map;
 
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -34,7 +34,7 @@ public class MensajeConContenido implements MensajeVortex {
 	public static final String contenido_FIELD = "contenido";
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getContenido()
+	 * @see net.gaia.vortex.api.mensajes.MensajeVortex#getContenido()
 	 */
 	
 	public ContenidoVortex getContenido() {
@@ -91,7 +91,7 @@ public class MensajeConContenido implements MensajeVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#getIdDeMensaje()
+	 * @see net.gaia.vortex.api.mensajes.MensajeVortex#getIdDeMensaje()
 	 */
 	
 	public IdDeMensaje getIdDeMensaje() {
@@ -99,7 +99,7 @@ public class MensajeConContenido implements MensajeVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.MensajeVortex#asignarId(net.gaia.vortex.api.ids.mensajes.IdDeMensaje)
+	 * @see net.gaia.vortex.api.mensajes.MensajeVortex#asignarId(net.gaia.vortex.api.ids.mensajes.IdDeMensaje)
 	 */
 	
 	public void asignarId(final IdDeMensaje idNuevo) {

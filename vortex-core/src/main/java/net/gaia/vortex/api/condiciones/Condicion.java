@@ -14,7 +14,7 @@ package net.gaia.vortex.api.condiciones;
 
 import java.util.List;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 
 /**
  * Esta interfaz representa una condición que puede ser evaluada sobre un mensaje para determinar si

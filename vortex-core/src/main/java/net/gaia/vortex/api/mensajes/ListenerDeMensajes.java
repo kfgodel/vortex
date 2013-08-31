@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.api.mensajes;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 
 /**
  * Esta interfaz representa un listener al que se le notifican los mensajes recibidos

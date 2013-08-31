@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.core.impl.mensaje.copia;
 
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 

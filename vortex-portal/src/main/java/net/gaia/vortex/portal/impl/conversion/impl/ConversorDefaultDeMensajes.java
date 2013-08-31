@@ -14,8 +14,8 @@ package net.gaia.vortex.portal.impl.conversion.impl;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
@@ -77,7 +77,7 @@ public class ConversorDefaultDeMensajes implements ConversorDeMensajesVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex#convertirDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex,
+	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex#convertirDesdeVortex(net.gaia.vortex.api.mensajes.MensajeVortex,
 	 *      java.lang.Class)
 	 */
 

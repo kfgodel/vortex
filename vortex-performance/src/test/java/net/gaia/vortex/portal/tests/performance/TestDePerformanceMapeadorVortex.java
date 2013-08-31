@@ -14,7 +14,7 @@ package net.gaia.vortex.portal.tests.performance;
 
 import java.util.Arrays;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;

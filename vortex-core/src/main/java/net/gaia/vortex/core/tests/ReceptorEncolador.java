@@ -6,7 +6,7 @@ package net.gaia.vortex.core.tests;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
@@ -25,7 +25,7 @@ public class ReceptorEncolador extends ReceptorSupport {
 	public static final String mensajes_FIELD = "mensajes";
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public void recibir(final MensajeVortex mensaje) {

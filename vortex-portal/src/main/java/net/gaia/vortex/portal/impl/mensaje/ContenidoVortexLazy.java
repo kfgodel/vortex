@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
 import net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport;
 import net.gaia.vortex.impl.ids.mensajes.IdInmutableDeMensaje;
@@ -256,7 +256,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setNombreDelTipoOriginal(java.lang.String)
+	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#setNombreDelTipoOriginal(java.lang.String)
 	 */
 	
 	public void setNombreDelTipoOriginal(final String nombreDeClaseCompleto) {
@@ -264,7 +264,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getNombreDelTipoOriginal()
+	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#getNombreDelTipoOriginal()
 	 */
 	
 	public String getNombreDelTipoOriginal() {
@@ -272,7 +272,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getValorComoPrimitiva()
+	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#getValorComoPrimitiva()
 	 */
 	
 	public Object getValorComoPrimitiva() {
@@ -280,7 +280,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setValorComoPrimitiva(java.lang.Object)
+	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#setValorComoPrimitiva(java.lang.Object)
 	 */
 	
 	public void setValorComoPrimitiva(final Object valor) {
@@ -288,7 +288,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#tieneValorComoPrimitiva()
+	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#tieneValorComoPrimitiva()
 	 */
 	
 	public boolean tieneValorComoPrimitiva() {
@@ -296,7 +296,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getIdDeMensaje()
+	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#getIdDeMensaje()
 	 */
 	
 	@SuppressWarnings("unchecked")
@@ -325,7 +325,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#setIdDeMensaje(net.gaia.vortex.api.ids.mensajes.IdDeMensaje)
+	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#setIdDeMensaje(net.gaia.vortex.api.ids.mensajes.IdDeMensaje)
 	 */
 	
 	public void setIdDeMensaje(final IdDeMensaje idDelMensaje) {
@@ -337,7 +337,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.mensaje.ContenidoVortex#getIdDeMensajeComoMapa()
+	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#getIdDeMensajeComoMapa()
 	 */
 	@SuppressWarnings("unchecked")
 	

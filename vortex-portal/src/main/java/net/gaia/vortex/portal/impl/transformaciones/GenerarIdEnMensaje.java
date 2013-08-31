@@ -16,7 +16,7 @@ import net.gaia.vortex.api.annotations.paralelizable.NoParalelizable;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.GeneradorDeIdsDeMensajes;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -36,7 +36,7 @@ public class GenerarIdEnMensaje implements Transformacion {
 	private IdDeComponenteVortex idDeComponente;
 
 	/**
-	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public MensajeVortex transformar(final MensajeVortex mensaje) {

@@ -13,7 +13,7 @@
 package net.gaia.vortex.impl.atomos;
 
 import net.gaia.vortex.api.atomos.Transformador;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.support.MonoEmisorSupport;
@@ -40,7 +40,7 @@ public class AtomoTransformador extends MonoEmisorSupport implements Transformad
 	public static final String transformacion_FIELD = "transformacion";
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensajeOriginal) {
 		Loggers.ATOMOS.trace("Transformando con [{}] el mensaje[{}]", transformacion, mensajeOriginal);

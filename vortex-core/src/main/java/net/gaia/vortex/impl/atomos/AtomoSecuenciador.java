@@ -15,7 +15,7 @@ package net.gaia.vortex.impl.atomos;
 import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.support.MonoEmisorSupport;
 
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class AtomoSecuenciador extends MonoEmisorSupport implements Secuenciador
 	public static final String delegado_FIELD = "delegado";
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
 		try {

@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.api.basic.productores;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 
 /**
  * Esta interfaz representa una fuente de mensajes que es invocada cada vez que se requiere un nuevo

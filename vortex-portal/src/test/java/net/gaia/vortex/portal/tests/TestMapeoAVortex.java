@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.portal.tests;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 

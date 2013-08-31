@@ -16,8 +16,8 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.atomos.condicional.FiltroViejo;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.tasks.condicional.FiltrarMensaje;
@@ -62,7 +62,7 @@ public abstract class NexoFiltroSupport extends NexoSupport implements FiltroVie
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	@Override

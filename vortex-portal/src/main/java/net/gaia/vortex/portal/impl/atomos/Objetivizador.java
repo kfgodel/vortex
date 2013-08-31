@@ -15,7 +15,7 @@ package net.gaia.vortex.portal.impl.atomos;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Atomo;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.portal.api.mensaje.HandlerDeMensaje;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
@@ -55,7 +55,7 @@ public class Objetivizador<T> extends ReceptorConProcesador {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {

@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
 

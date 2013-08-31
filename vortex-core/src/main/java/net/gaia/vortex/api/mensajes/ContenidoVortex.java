@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.mensaje;
+package net.gaia.vortex.api.mensajes;
 
 import java.util.Map;
 
@@ -27,13 +27,13 @@ public interface ContenidoVortex extends Map<String, Object> {
 	/**
 	 * Key utilizada para guardar el valor de una primitiva como mapa en este mensaje
 	 */
-	public static final String PRIMITIVA_VORTEX_KEY = "PRIMITIVA_VORTEX_KEY";
+	public static final String PRIMITIVA_VORTEX_KEY = "primitiva_vortex_key";
 
 	/**
 	 * Clave usada para agregar como dato el nombre completo de la clase a partir de la cual se
 	 * origina este mensaje
 	 */
-	public static final String CLASSNAME_KEY = "CLASSNAME_KEY";
+	public static final String CLASSNAME_KEY = "classname_key";
 
 	/**
 	 * Clave usada para almacenar el ID del mensaje dentro del contenido

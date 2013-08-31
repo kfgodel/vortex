@@ -23,7 +23,7 @@ import java.util.concurrent.RecursiveAction;
 
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.flujos.FlujoVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
 import net.gaia.vortex.impl.proto.ComponenteConector;
 import net.gaia.vortex.impl.support.ReceptorSupport;

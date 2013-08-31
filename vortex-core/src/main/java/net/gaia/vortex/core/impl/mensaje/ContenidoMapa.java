@@ -15,7 +15,7 @@ package net.gaia.vortex.core.impl.mensaje;
 import java.util.Collections;
 import java.util.Map;
 
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport;
 
 /**

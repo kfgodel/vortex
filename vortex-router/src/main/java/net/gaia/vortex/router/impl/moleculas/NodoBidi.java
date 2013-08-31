@@ -21,7 +21,7 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
@@ -197,7 +197,7 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	@Override

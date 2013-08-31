@@ -15,9 +15,9 @@ package net.gaia.vortex.http.impl.moleculas;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
@@ -110,7 +110,7 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.memoria.ComponenteConMemoria#yaRecibio(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.api.memoria.ComponenteConMemoria#yaRecibio(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public boolean yaRecibio(final MensajeVortex mensaje) {

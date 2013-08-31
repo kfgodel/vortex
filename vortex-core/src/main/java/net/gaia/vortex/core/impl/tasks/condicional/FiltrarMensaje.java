@@ -9,7 +9,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
 import net.gaia.vortex.core.prog.Loggers;
 

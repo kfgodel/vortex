@@ -17,8 +17,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.atomos.EmisorViejo;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
@@ -36,7 +36,7 @@ public class ListenerDeRuteoEnPasos implements ListenerDeRuteo {
 
 	/**
 	 * @see net.gaia.vortex.router.api.listeners.ListenerDeRuteo#onMensajeRuteado(net.gaia.vortex.router.api.moleculas.NodoBidireccional,
-	 *      net.gaia.vortex.core.api.mensaje.MensajeVortex,
+	 *      net.gaia.vortex.api.mensajes.MensajeVortex,
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	

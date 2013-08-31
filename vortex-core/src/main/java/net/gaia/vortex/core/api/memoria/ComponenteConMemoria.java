@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.core.api.memoria;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 
 /**
  * Esta interfaz es aplicable a componentes que tiene un registro interno de los mensajes que

@@ -13,7 +13,7 @@
 package net.gaia.vortex.impl.nulos;
 
 import net.gaia.vortex.api.annotations.clases.Atomo;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class ReceptorNulo extends ReceptorSupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public void recibir(final MensajeVortex mensaje) {

@@ -8,8 +8,8 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.atomos.condicional.BifurcadorViejo;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
 import net.gaia.vortex.core.impl.tasks.condicional.BifurcarMensaje;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
@@ -51,7 +51,7 @@ public class NexoBifurcadorViejo extends ReceptorConProcesador implements Bifurc
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	@Override

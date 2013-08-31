@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
@@ -171,7 +171,7 @@ public class SesionServerEnMemoria implements SesionVortexHttpEnServer {
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#onMensajeDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer#onMensajeDesdeVortex(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public void onMensajeDesdeVortex(final MensajeVortex mensaje) {
