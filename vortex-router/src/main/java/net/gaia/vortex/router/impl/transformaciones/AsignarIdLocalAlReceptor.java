@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.api.transformaciones.Transformacion;
+import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.impl.mensaje.copia.ClonadorDeMensajes;
 import net.gaia.vortex.router.impl.messages.MetadataDeMensajes;
 
@@ -40,7 +40,7 @@ public class AsignarIdLocalAlReceptor implements Transformacion {
 	public static final String idLocalAlReceptor_FIELD = "idLocalAlReceptor";
 
 	/**
-	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 * @see net.gaia.vortex.api.transformaciones.Transformacion#transformar(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	public MensajeVortex transformar(final MensajeVortex mensaje) {

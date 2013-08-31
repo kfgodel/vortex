@@ -19,7 +19,7 @@ import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.transformaciones.Transformacion;
+import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeNuevo;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
@@ -114,7 +114,7 @@ public class VortexCoreBuilder implements VortexCore {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.builder.VortexCore#transformarCon(net.gaia.vortex.core.api.transformaciones.Transformacion,
+	 * @see net.gaia.vortex.api.builder.VortexCore#transformarCon(net.gaia.vortex.api.transformaciones.Transformacion,
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	public Transformador transformarCon(final Transformacion transformacion, final Receptor receptor) {
@@ -124,7 +124,7 @@ public class VortexCoreBuilder implements VortexCore {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.builder.VortexCore#transformadorPara(net.gaia.vortex.core.api.transformaciones.Transformacion)
+	 * @see net.gaia.vortex.api.builder.VortexCore#transformadorPara(net.gaia.vortex.api.transformaciones.Transformacion)
 	 */
 	public Transformador transformadorPara(final Transformacion transformacion) {
 		final AtomoTransformador transformador = AtomoTransformador.create(transformacion);

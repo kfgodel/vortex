@@ -14,7 +14,7 @@ package net.gaia.vortex.api.atomos;
 
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.emisores.MonoEmisor;
-import net.gaia.vortex.core.api.transformaciones.Transformacion;
+import net.gaia.vortex.api.transformaciones.Transformacion;
 
 /**
  * Esta interfaz representa un atomo vortex que modifica el mensaje recibido utilizando una

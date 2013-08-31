@@ -14,7 +14,7 @@ package net.gaia.vortex.impl.atomos;
 
 import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.api.transformaciones.Transformacion;
+import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.support.MonoEmisorSupport;
 
@@ -59,7 +59,7 @@ public class AtomoTransformador extends MonoEmisorSupport implements Transformad
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.atomos.Transformador#setTransformacion(net.gaia.vortex.core.api.transformaciones.Transformacion)
+	 * @see net.gaia.vortex.api.atomos.Transformador#setTransformacion(net.gaia.vortex.api.transformaciones.Transformacion)
 	 */
 	public void setTransformacion(final Transformacion transformacion) {
 		this.transformacion = transformacion;

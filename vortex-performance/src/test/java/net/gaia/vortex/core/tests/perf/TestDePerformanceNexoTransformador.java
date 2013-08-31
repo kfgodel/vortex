@@ -5,7 +5,7 @@ package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.flujos.FlujoVortex;
-import net.gaia.vortex.core.api.transformaciones.Transformacion;
+import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.impl.transformaciones.TransformacionNula;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
 

@@ -4,8 +4,8 @@
 package net.gaia.vortex.core.api.atomos.transformacion;
 
 import net.gaia.vortex.api.annotations.clases.Atomo;
+import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
-import net.gaia.vortex.core.api.transformaciones.Transformacion;
 
 /**
  * Esta interfaz representa un componente vortex que realiza un transformación de los mensajes

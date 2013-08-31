@@ -17,7 +17,7 @@ import java.util.Map;
 import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.api.transformaciones.Transformacion;
+import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.router.impl.messages.bidi.RespuestaDeIdRemoto;
 
@@ -43,7 +43,7 @@ public class ConvertirPedidoEnRespuestaDeId implements Transformacion {
 	private ConversorDeMensajesVortex mapeador;
 
 	/**
-	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 * @see net.gaia.vortex.api.transformaciones.Transformacion#transformar(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	public MensajeVortex transformar(final MensajeVortex pedido) {

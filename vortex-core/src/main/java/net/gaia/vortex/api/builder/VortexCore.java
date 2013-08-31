@@ -18,7 +18,7 @@ import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.transformaciones.Transformacion;
+import net.gaia.vortex.api.transformaciones.Transformacion;
 
 /**
  * Esta interfaz define el contrato esperable de un builder de nodos vortex, el cual permite obtener

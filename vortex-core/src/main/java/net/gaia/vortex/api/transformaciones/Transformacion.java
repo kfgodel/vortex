@@ -10,14 +10,19 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.api.transformaciones;
+package net.gaia.vortex.api.transformaciones;
 
+import net.gaia.vortex.api.annotations.paralelizable.NoParalelizable;
+import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 
 /**
  * Esta interfaz representa una transformación realizada a un mensaje vortex en la red.<br>
  * Normalmente las transformaciones deben ser thread-safe lo que permite la ejecución de multiples
- * thread en paralelo con el mismo objeto
+ * thread en paralelo con el mismo objeto. Ese tipo de transformaciones se marcan con el annotation
+ * {@link Paralelizable}.<br>
+ * Si no son ejecutables en paralelo por varios threads deberían tener el annotation
+ * {@link NoParalelizable}
  * 
  * @author D. García
  */
