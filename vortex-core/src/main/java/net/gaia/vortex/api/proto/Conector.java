@@ -13,7 +13,7 @@
 package net.gaia.vortex.api.proto;
 
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.impl.nulos.ReceptorNulo;
+import net.gaia.vortex.api.basic.emisores.ProtoConectable;
 
 /**
  * Esta interfaz representa el componente vortex que permite conectar con otros receptores para
@@ -22,23 +22,7 @@ import net.gaia.vortex.impl.nulos.ReceptorNulo;
  * 
  * @author D. García
  */
-public interface Conector extends Receptor {
-
-	/**
-	 * Realiza una conexión desde este componente al componente destino de manera que el destino
-	 * reciba los mensajes emitidos desde este componente.<br>
-	 * Si ya existía una conexión previa con otro receptor, esta será deshecha y reemplazada
-	 * 
-	 * @param destino
-	 *            El único receptor de los mensajes enviados por este conector
-	 */
-	public void conectarCon(Receptor destino);
-
-	/**
-	 * Se desconecta del receptor actual.<br>
-	 * Al desconectar este conector, los mensajes serán entregados al {@link ReceptorNulo}
-	 */
-	public void desconectar();
+public interface Conector extends Receptor, ProtoConectable {
 
 	/**
 	 * Devuelve el receptor al que este conector está conectado

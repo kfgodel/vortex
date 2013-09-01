@@ -18,10 +18,9 @@
 package net.gaia.vortex.impl.moleculas;
 
 import net.gaia.vortex.api.basic.Emisor;
-import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.basic.emisores.ConectableIndirectamente;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 
 /**
@@ -32,7 +31,7 @@ import net.gaia.vortex.impl.support.ReceptorSupport;
  * @author dgarcia
  * @param <E>
  */
-public class MoleculaCompuesta<E extends Emisor> extends ReceptorSupport implements Nodo, ConectableIndirectamente<E> {
+public class MoleculaCompuesta<E extends Emisor> extends ReceptorSupport implements Compuesto<E> {
 
 	private Receptor entrada;
 	private E salida;

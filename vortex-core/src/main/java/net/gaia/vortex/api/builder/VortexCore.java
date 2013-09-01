@@ -17,9 +17,11 @@ import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
+import net.gaia.vortex.api.basic.Emisor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
@@ -178,5 +180,20 @@ public interface VortexCore {
 	 * @return El selector creado
 	 */
 	Selector selector();
+
+	/**
+	 * Crea un {@link MoleculaCompuesta} con la composición de los componentes pasados.<br>
+	 * Los componentes deben ser conectados entre sí (antes o despues de esta creación) para que la
+	 * molecula se comporte correctamente al recibir mensajes.<br>
+	 * La molecula representara a los componentes pasados como una unidad, derivandole a la entrada
+	 * los mensajes recibidos y conectando a la salida los componentes conectados
+	 * 
+	 * @param entrada
+	 *            El componente al que se enviarán todos los mensajes recibids
+	 * @param salida
+	 *            El componente utilizado para conectar todas las salidas
+	 * @return La molecula creada
+	 */
+	public <E extends Emisor> Compuesto<E> componer(final Receptor entrada, final E salida);
 
 }

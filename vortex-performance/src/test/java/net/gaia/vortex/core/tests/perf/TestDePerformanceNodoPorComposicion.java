@@ -3,16 +3,15 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
-import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
-import net.gaia.vortex.core.impl.moleculas.NodoMolecula;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
+import net.gaia.vortex.api.atomos.Filtro;
+import net.gaia.vortex.api.atomos.Transformador;
+import net.gaia.vortex.api.basic.emisores.MonoConectable;
+import net.gaia.vortex.api.flujos.FlujoVortex;
+import net.gaia.vortex.api.moleculas.Compuesto;
+import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.core.impl.transformaciones.TransformacionNula;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.impl.nulos.ReceptorNulo;
+import net.gaia.vortex.impl.flujos.FlujoInmutable;
 
 /**
  * Esta clase prueba las velocidades de procesamiento de un {@link NodoPorComposicion} con distintos
@@ -20,7 +19,7 @@ import net.gaia.vortex.impl.nulos.ReceptorNulo;
  * 
  * @author D. García
  */
-public class TestDePerformanceNodoPorComposicion extends TestDePerformanceNodoSupportViejo {
+public class TestDePerformanceNodoPorComposicion extends TestDePerformanceNodoSupport {
 
 	/**
 	 * Crea el nodo que cuya performance se evaluará en este tests
@@ -28,13 +27,12 @@ public class TestDePerformanceNodoPorComposicion extends TestDePerformanceNodoSu
 	 * @return El nodo a probar
 	 */
 	@Override
-	protected FlujoVortexViejo crearFlujoATestear() {
-		final NodoViejo nexoTransformador = NexoTransformadorViejo.create(getProcessor(),
-				TransformacionNula.getInstancia(), ReceptorNulo.getInstancia());
-		final Receptor nexoFiltro = NexoFiltroViejo.create(getProcessor(), SiempreTrue.getInstancia(),
-				nexoTransformador);
-		final NodoMolecula nodo = NodoMolecula.create(nexoFiltro, nexoTransformador);
-		return FlujoInmutableViejo.create(nodo, nodo);
-
+	protected FlujoVortex crearFlujoATestear() {
+		final Transformador transformador = getBuilder().transformadorPara(TransformacionNula.getInstancia());
+		final Filtro filtro = getBuilder().filtrarEntradaCon(SiempreTrue.getInstancia(), transformador);
+		final Compuesto<MonoConectable> compuesta = getBuilder().<MonoConectable> componer(filtro, transformador);
+		final Conector conectorDeSalida = compuesta.getSalida().getConectorUnico();
+		final FlujoVortex flujo = FlujoInmutable.create(compuesta, conectorDeSalida);
+		return flujo;
 	}
 }

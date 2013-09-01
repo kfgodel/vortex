@@ -101,18 +101,10 @@ public class VortexCoreBuilder implements VortexCore {
 	}
 
 	/**
-	 * Crea un molecula con la composición de los componentes pasados.<br>
-	 * Los componentes deben ser conectados entre sí (antes o despues de esta creación) para que la
-	 * molecula se comporte correctamente.<br>
-	 * La molecula representara a los componentes pasados como una unidad
-	 * 
-	 * @param entrada
-	 *            El componente al que se enviarán todos los mensajes recibids
-	 * @param salida
-	 *            El componente utilizado para conectar todas las salidas
-	 * @return La molecula creada
+	 * @see net.gaia.vortex.api.builder.VortexCore#componer(net.gaia.vortex.api.basic.Receptor,
+	 *      net.gaia.vortex.api.basic.Emisor)
 	 */
-	private <E extends Emisor> MoleculaCompuesta<E> componer(final Receptor entrada, final E salida) {
+	public <E extends Emisor> MoleculaCompuesta<E> componer(final Receptor entrada, final E salida) {
 		final MoleculaCompuesta<E> molecula = MoleculaCompuesta.<E> create(entrada, salida);
 		return molecula;
 	}
