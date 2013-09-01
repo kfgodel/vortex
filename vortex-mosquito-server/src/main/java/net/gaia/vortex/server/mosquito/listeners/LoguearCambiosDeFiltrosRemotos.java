@@ -21,13 +21,14 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase representa el listener de filtros remotos que registra por log sus cambios en un nodo
  * 
  * @author D. García
  */
-public class LoguearCambiosDeFiltrosRemotos implements ListenerDeCambiosDeFiltro {
+public class LoguearCambiosDeFiltrosRemotos extends WeakSingletonSupport implements ListenerDeCambiosDeFiltro {
 	private static final Logger LOG = LoggerFactory.getLogger(LoguearCambiosDeFiltrosRemotos.class);
 
 	private static final WeakSingleton<LoguearCambiosDeFiltrosRemotos> ultimaReferencia = new WeakSingleton<LoguearCambiosDeFiltrosRemotos>(
@@ -41,7 +42,7 @@ public class LoguearCambiosDeFiltrosRemotos implements ListenerDeCambiosDeFiltro
 	 * @see net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro#onCambioDeFiltros(net.gaia.vortex.router.api.moleculas.NodoBidireccional,
 	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
-	
+
 	public void onCambioDeFiltros(final NodoBidireccional nodo, final Condicion nuevoFiltro) {
 		LOG.debug("Cambió el estado de los filtros remotos de[{}] a: {}", nodo.toShortString(), nuevoFiltro);
 	}

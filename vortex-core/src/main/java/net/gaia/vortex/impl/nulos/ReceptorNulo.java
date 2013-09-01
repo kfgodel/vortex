@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -43,7 +44,7 @@ public class ReceptorNulo extends ReceptorSupport {
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
 	public void recibir(final MensajeVortex mensaje) {
 		LOG.trace("Se recibió un mensaje[{}] en el receptor nulo", mensaje);
 	}
@@ -56,9 +57,28 @@ public class ReceptorNulo extends ReceptorSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).toString();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		// No tengo herencia multiple, tengo que usar metodos esstaticos compartidos
+		return WeakSingletonSupport.singletonEquals(obj, this);
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		// No tengo herencia multiple, tengo que usar metodos esstaticos compartidos
+		return WeakSingletonSupport.singletonHashFor(this);
 	}
 
 }

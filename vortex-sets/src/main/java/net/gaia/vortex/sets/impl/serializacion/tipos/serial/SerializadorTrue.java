@@ -21,13 +21,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el serializado para condiciones true
  * 
  * @author D. García
  */
-public class SerializadorTrue implements SerializadorDeTipo<SiempreTrue> {
+public class SerializadorTrue extends WeakSingletonSupport implements SerializadorDeTipo<SiempreTrue> {
 	private static final WeakSingleton<SerializadorTrue> ultimaReferencia = new WeakSingleton<SerializadorTrue>(
 			DefaultInstantiator.create(SerializadorTrue.class));
 
@@ -39,7 +40,7 @@ public class SerializadorTrue implements SerializadorDeTipo<SiempreTrue> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo#serializarDesde(java.lang.Object,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public Map<String, Object> serializarDesde(final SiempreTrue origen, final ContextoDeSerializacion contexto) {
 		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_TRUE);

@@ -21,6 +21,7 @@ import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -29,7 +30,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Paralelizable
-public class SiempreTrue implements Condicion {
+public class SiempreTrue extends WeakSingletonSupport implements Condicion {
 
 	private static final WeakSingleton<SiempreTrue> ultimaReferencia = new WeakSingleton<SiempreTrue>(
 			DefaultInstantiator.create(SiempreTrue.class));
@@ -41,7 +42,7 @@ public class SiempreTrue implements Condicion {
 	/**
 	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
 	public ResultadoDeCondicion esCumplidaPor(@SuppressWarnings("unused") final MensajeVortex mensaje) {
 		return ResultadoDeCondicion.TRUE;
 	}
@@ -49,7 +50,8 @@ public class SiempreTrue implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).toString();
 	}
@@ -57,9 +59,25 @@ public class SiempreTrue implements Condicion {
 	/**
 	 * @see net.gaia.vortex.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	
+
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		final boolean esSiempreTrue = obj instanceof SiempreTrue;
+		return esSiempreTrue;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
+	}
 }

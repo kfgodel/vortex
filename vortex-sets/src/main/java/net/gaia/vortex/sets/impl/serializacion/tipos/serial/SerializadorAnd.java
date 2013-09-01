@@ -23,13 +23,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el serializador para condiciones por AND
  * 
  * @author D. García
  */
-public class SerializadorAnd implements SerializadorDeTipo<AndCompuesto> {
+public class SerializadorAnd extends WeakSingletonSupport implements SerializadorDeTipo<AndCompuesto> {
 
 	private static final WeakSingleton<SerializadorAnd> ultimaReferencia = new WeakSingleton<SerializadorAnd>(
 			DefaultInstantiator.create(SerializadorAnd.class));
@@ -42,7 +43,7 @@ public class SerializadorAnd implements SerializadorDeTipo<AndCompuesto> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo#serializarDesde(java.lang.Object,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public Map<String, Object> serializarDesde(final AndCompuesto origen, final ContextoDeSerializacion contexto) {
 		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_AND);

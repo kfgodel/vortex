@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 import ar.com.dgarcia.lang.metrics.MetricasDeCarga;
 
 /**
@@ -24,7 +25,7 @@ import ar.com.dgarcia.lang.metrics.MetricasDeCarga;
  * 
  * @author D. García
  */
-public class NullProcessingMetrics implements TaskProcessingMetricsAndListener {
+public class NullProcessingMetrics extends WeakSingletonSupport implements TaskProcessingMetricsAndListener {
 	private static final Logger LOG = LoggerFactory.getLogger(NullProcessingMetrics.class);
 
 	private static final WeakSingleton<NullProcessingMetrics> ultimaReferencia = new WeakSingleton<NullProcessingMetrics>(
@@ -37,7 +38,7 @@ public class NullProcessingMetrics implements TaskProcessingMetricsAndListener {
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getProcessedTaskCount()
 	 */
-	
+
 	public int getProcessedTaskCount() {
 		LOG.warn("Se solicitaron métricas de tareas procesadas a la instancia nula. Devolviendo 0");
 		return 0;
@@ -46,7 +47,7 @@ public class NullProcessingMetrics implements TaskProcessingMetricsAndListener {
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getPendingTaskCount()
 	 */
-	
+
 	public int getPendingTaskCount() {
 		LOG.warn("Se solicitaron métricas de tareas pendientes a la instancia nula. Devolviendo 0");
 		return 0;
@@ -55,7 +56,7 @@ public class NullProcessingMetrics implements TaskProcessingMetricsAndListener {
 	/**
 	 * @see net.gaia.taskprocessor.api.TaskProcessingMetrics#getMetricasDeCarga()
 	 */
-	
+
 	public MetricasDeCarga getMetricasDeCarga() {
 		LOG.warn("Se solicitaron métricas de carga a la instancia nula. Devolviendo null");
 		return null;
@@ -64,7 +65,7 @@ public class NullProcessingMetrics implements TaskProcessingMetricsAndListener {
 	/**
 	 * @see net.gaia.taskprocessor.metrics.TaskProcessingListener#incrementPending()
 	 */
-	
+
 	public void incrementPending() {
 		// No llevamos registro en esta instancia
 	}
@@ -72,7 +73,7 @@ public class NullProcessingMetrics implements TaskProcessingMetricsAndListener {
 	/**
 	 * @see net.gaia.taskprocessor.metrics.TaskProcessingListener#incrementProcessed()
 	 */
-	
+
 	public void incrementProcessed() {
 		// No llevamos registro en esta instancia
 	}

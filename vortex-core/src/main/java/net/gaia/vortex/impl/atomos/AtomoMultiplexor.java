@@ -17,7 +17,7 @@ import java.util.List;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.impl.support.MultiEmisorSupport;
+import net.gaia.vortex.impl.support.MultiConectableSupport;
 
 /**
  * Esta clase representa el atomo básico que permite multiplexar los mensajes recibidos enviándolos
@@ -25,7 +25,7 @@ import net.gaia.vortex.impl.support.MultiEmisorSupport;
  * 
  * @author D. García
  */
-public class AtomoMultiplexor extends MultiEmisorSupport implements Multiplexor {
+public class AtomoMultiplexor extends MultiConectableSupport implements Multiplexor {
 
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)

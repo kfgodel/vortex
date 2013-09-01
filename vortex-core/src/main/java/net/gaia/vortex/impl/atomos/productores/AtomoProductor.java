@@ -14,7 +14,7 @@ package net.gaia.vortex.impl.atomos.productores;
 
 import net.gaia.vortex.api.basic.productores.Productor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.impl.support.MonoEmisorSupport;
+import net.gaia.vortex.impl.support.MonoConectableSupport;
 
 /**
  * Esta clase representa el átomo que permite introducir nuevos mensajes bien formados a la red
@@ -22,7 +22,7 @@ import net.gaia.vortex.impl.support.MonoEmisorSupport;
  * 
  * @author D. García
  */
-public class AtomoProductor extends MonoEmisorSupport implements Productor {
+public class AtomoProductor extends MonoConectableSupport implements Productor {
 
 	/**
 	 * Toma el mensaje pasado y lo introduce en la red a través del conector de salida como si se

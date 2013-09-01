@@ -18,7 +18,10 @@ import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.moleculas.Selector;
+import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
+import net.gaia.vortex.impl.moleculas.MoleculaSelector;
 
 /**
  * Esta interfaz define el contrato esperable de un builder de nodos vortex, el cual permite obtener
@@ -86,7 +89,21 @@ public interface VortexCore {
 	 *            El receptor que recibirá los mensajes que pasaron con true
 	 * @return El atomo creado y conectado
 	 */
-	Bifurcador filtrarCon(Condicion condicion, Receptor receptor);
+	Bifurcador filtrarEntradaCon(Condicion condicion, Receptor receptor);
+
+	/**
+	 * Crea un {@link Bifurcador} conectado al conector pasado y configurado para filtrar los
+	 * mensajes que recibe de manera que al conector devuelto por este método sólo lleguen los
+	 * mensajes que evalúan a true en la condición pasada.<br>
+	 * Dicho de otra manera, devuelve un conector que filtrará los mensajes con la condicion pasada
+	 * 
+	 * @param conector
+	 *            El conector que sera tomado como entrada para el filtro
+	 * @param condicion
+	 *            La condicion para filtrar los mensajes
+	 * @return El conector
+	 */
+	Conector filtrarSalidaDe(Conector conector, Condicion condicion);
 
 	/**
 	 * Crea un atomo bifurcador configurado con la condicion pasada como decisor del receptor
@@ -140,5 +157,13 @@ public interface VortexCore {
 	 * @return El atomo creado
 	 */
 	Transformador transformadorPara(Transformacion transformacion);
+
+	/**
+	 * Crea una {@link MoleculaSelector} que permite entregar mensajes a conjuntos de receptores
+	 * segun las condiciones usadas al conectarlos
+	 * 
+	 * @return El selector creado
+	 */
+	Selector selector();
 
 }

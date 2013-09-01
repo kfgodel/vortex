@@ -14,7 +14,7 @@ package net.gaia.vortex.api.atomos;
 
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.basic.emisores.MonoEmisor;
+import net.gaia.vortex.api.basic.emisores.MonoConectable;
 
 /**
  * Esta interfaz representa el componente que permite secuenciar los mensajes recibidos
@@ -23,7 +23,7 @@ import net.gaia.vortex.api.basic.emisores.MonoEmisor;
  * 
  * @author D. García
  */
-public interface Secuenciador extends Nodo, MonoEmisor {
+public interface Secuenciador extends Nodo, MonoConectable {
 
 	/**
 	 * Devuelve el componente que será utilizado como observador de los mensajes recibidos

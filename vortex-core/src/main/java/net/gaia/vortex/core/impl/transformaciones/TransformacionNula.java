@@ -17,6 +17,7 @@ import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.transformaciones.Transformacion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -25,7 +26,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Paralelizable
-public class TransformacionNula implements Transformacion {
+public class TransformacionNula extends WeakSingletonSupport implements Transformacion {
 
 	private static final WeakSingleton<TransformacionNula> ultimaReferencia = new WeakSingleton<TransformacionNula>(
 			DefaultInstantiator.create(TransformacionNula.class));
@@ -37,7 +38,7 @@ public class TransformacionNula implements Transformacion {
 	/**
 	 * @see net.gaia.vortex.api.transformaciones.Transformacion#transformar(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
 	public MensajeVortex transformar(final MensajeVortex mensaje) {
 		return mensaje;
 	}
@@ -50,8 +51,26 @@ public class TransformacionNula implements Transformacion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).toString();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		final boolean esTransfNula = obj instanceof TransformacionNula;
+		return esTransfNula;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
 	}
 }

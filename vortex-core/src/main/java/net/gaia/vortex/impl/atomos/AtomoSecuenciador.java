@@ -16,7 +16,7 @@ import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.impl.support.MonoEmisorSupport;
+import net.gaia.vortex.impl.support.MonoConectableSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class AtomoSecuenciador extends MonoEmisorSupport implements Secuenciador {
+public class AtomoSecuenciador extends MonoConectableSupport implements Secuenciador {
 	private static final Logger LOG = LoggerFactory.getLogger(AtomoSecuenciador.class);
 
 	private Receptor delegado;

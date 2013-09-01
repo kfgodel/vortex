@@ -24,13 +24,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo;
 import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase es la implementación del deserializador de condiciones AND
  * 
  * @author D. García
  */
-public class DeserializadorAnd implements DeserializadorDeTipo<AndCompuesto> {
+public class DeserializadorAnd extends WeakSingletonSupport implements DeserializadorDeTipo<AndCompuesto> {
 	private static final WeakSingleton<DeserializadorAnd> ultimaReferencia = new WeakSingleton<DeserializadorAnd>(
 			DefaultInstantiator.create(DeserializadorAnd.class));
 
@@ -42,7 +43,7 @@ public class DeserializadorAnd implements DeserializadorDeTipo<AndCompuesto> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public AndCompuesto deserializarDesde(final Map<String, Object> mapaOrigen, final ContextoDeSerializacion contexto) {
 		final Object valor = mapaOrigen.get(MetadataDeSerializacion.TIPO_AND_FILTROS);
 		if (!(valor instanceof Iterable)) {

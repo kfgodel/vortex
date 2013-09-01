@@ -7,7 +7,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.MultiplexorSupport;
+import net.gaia.vortex.core.impl.atomos.support.MultiplexorSupportViejo;
 import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensaje;
 import net.gaia.vortex.core.prog.Decision;
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
@@ -21,7 +21,7 @@ import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
  */
 @Atomo
 @Deprecated
-public class MultiplexorParaleloViejo extends MultiplexorSupport {
+public class MultiplexorParaleloViejo extends MultiplexorSupportViejo {
 
 	private ListenerDeMetricas listenerMetricas;
 

@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.impl.support;
 
-import net.gaia.vortex.api.basic.emisores.MonoEmisor;
+import net.gaia.vortex.api.basic.emisores.MonoConectable;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.proto.ComponenteConector;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -22,7 +22,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class MonoEmisorSupport extends EmisorSupport implements MonoEmisor {
+public class MonoConectableSupport extends EmisorSupport implements MonoConectable {
 
 	private Conector conectorUnico;
 	public static final String conectorUnico_FIELD = "conectorUnico";

@@ -19,7 +19,7 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
-import net.gaia.vortex.core.api.moleculas.condicional.Selector;
+import net.gaia.vortex.core.api.moleculas.condicional.SelectorViejo;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
@@ -53,7 +53,7 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 
 	private Desobjetivizador procesoDesdeUsuario;
 
-	private Selector selectorDeMensajesEntrantes;
+	private SelectorViejo selectorDeMensajesEntrantes;
 
 	private IdDeComponenteVortex identificador;
 	public static final String identificador_FIELD = "identificador";

@@ -22,13 +22,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el deserializador de condiciones por prefijo
  * 
  * @author D. García
  */
-public class DeserializadorEmpieza implements DeserializadorDeTipo<AtributoEmpieza> {
+public class DeserializadorEmpieza extends WeakSingletonSupport implements DeserializadorDeTipo<AtributoEmpieza> {
 	private static final WeakSingleton<DeserializadorEmpieza> ultimaReferencia = new WeakSingleton<DeserializadorEmpieza>(
 			DefaultInstantiator.create(DeserializadorEmpieza.class));
 
@@ -40,7 +41,7 @@ public class DeserializadorEmpieza implements DeserializadorDeTipo<AtributoEmpie
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public AtributoEmpieza deserializarDesde(final Map<String, Object> mapaOrigen,
 			final ContextoDeSerializacion contexto) {
 		final Object clave = mapaOrigen.get(MetadataDeSerializacion.TIPO_EMPIEZA_CLAVE);

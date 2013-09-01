@@ -15,13 +15,12 @@ import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
-import net.gaia.vortex.core.api.moleculas.condicional.Selector;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
@@ -81,14 +80,14 @@ public class TestAtomos {
 	@Test
 	public void elCondicionalDeberiaEntregarElMensajeSiCumpleLaCondicion() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final Bifurcador filtro = builder.filtrarCon(SiempreTrue.getInstancia(), receptor);
+		final Bifurcador filtro = builder.filtrarEntradaCon(SiempreTrue.getInstancia(), receptor);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, filtro, receptor);
 	}
 
 	@Test
 	public void elCondicionalNoDeberiaEntregarElMensajeSiNoCumpleLaCondicion() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final Bifurcador filtro = builder.filtrarCon(SiempreFalse.getInstancia(), receptor);
+		final Bifurcador filtro = builder.filtrarEntradaCon(SiempreFalse.getInstancia(), receptor);
 		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, filtro, receptor);
 	}
 
@@ -149,6 +148,22 @@ public class TestAtomos {
 		final Bifurcador filtro = builder.sinDuplicadosPara(receptor);
 		// La primera vez debería llegar
 		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, filtro, receptor);
+	}
+
+	/**
+	 * Verifica que el selector deriva bien los mensajes
+	 */
+	@Test
+	public void elSelectorDeberiaEntregarElMensajeAlQueCumpleLaCondicion() {
+		final ReceptorEncolador receptorSiempreTrue = ReceptorEncolador.create();
+		final ReceptorEncolador receptorSiempreFalse = ReceptorEncolador.create();
+
+		final Selector selector = builder.selector();
+		selector.crearConector(SiempreTrue.getInstancia()).conectarCon(receptorSiempreTrue);
+		selector.crearConector(SiempreFalse.getInstancia()).conectarCon(receptorSiempreFalse);
+
+		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, selector, receptorSiempreTrue);
+		verificarMensajeNoRecibido(1, receptorSiempreFalse);
 	}
 
 	/**
@@ -215,24 +230,10 @@ public class TestAtomos {
 		try {
 			receptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("El mensaje no debería haber llegado al receptor " + i);
-		} catch (final TimeoutExceededException e) {
+		}
+		catch (final TimeoutExceededException e) {
 			// Es la excepción esperada
 		}
 	}
 
-	/**
-	 * Verifica que el selector deriva bien los mensajes
-	 */
-	@Test
-	public void elSelectorDeberiaEntregarElMensajeAlQueCumpleLaCondicion() {
-		final ReceptorEncolador receptorSiempreTrue = ReceptorEncolador.create();
-		final ReceptorEncolador receptorSiempreFalse = ReceptorEncolador.create();
-
-		final Selector selector = SelectorConFiltros.create(processor);
-		selector.conectarCon(receptorSiempreTrue, SiempreTrue.getInstancia());
-		selector.conectarCon(receptorSiempreFalse, SiempreFalse.getInstancia());
-
-		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, selector, receptorSiempreTrue);
-		verificarMensajeNoRecibido(1, receptorSiempreFalse);
-	}
 }

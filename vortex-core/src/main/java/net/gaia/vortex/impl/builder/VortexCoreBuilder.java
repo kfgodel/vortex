@@ -19,6 +19,8 @@ import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.moleculas.Selector;
+import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.impl.condiciones.EsMensajeNuevo;
 import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
@@ -27,6 +29,7 @@ import net.gaia.vortex.impl.atomos.AtomoBifurcador;
 import net.gaia.vortex.impl.atomos.AtomoMultiplexor;
 import net.gaia.vortex.impl.atomos.AtomoSecuenciador;
 import net.gaia.vortex.impl.atomos.AtomoTransformador;
+import net.gaia.vortex.impl.moleculas.MoleculaSelector;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -96,10 +99,10 @@ public class VortexCoreBuilder implements VortexCore {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarCon(net.gaia.vortex.api.condiciones.Condicion,
+	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarEntradaCon(net.gaia.vortex.api.condiciones.Condicion,
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
-	public Bifurcador filtrarCon(final Condicion condicion, final Receptor receptor) {
+	public Bifurcador filtrarEntradaCon(final Condicion condicion, final Receptor receptor) {
 		final Bifurcador filtro = filtroDe(condicion);
 		filtro.getConectorPorTrue().conectarCon(receptor);
 		return filtro;
@@ -148,6 +151,25 @@ public class VortexCoreBuilder implements VortexCore {
 		final EsMensajeNuevo condicion = EsMensajeNuevo.create(memoriaDelFiltro);
 		final Bifurcador filtroCreado = filtroDe(condicion);
 		return filtroCreado;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarSalidaDe(net.gaia.vortex.api.proto.Conector,
+	 *      net.gaia.vortex.api.condiciones.Condicion)
+	 */
+	public Conector filtrarSalidaDe(final Conector conector, final Condicion condicion) {
+		final Bifurcador filtro = filtroDe(condicion);
+		conector.conectarCon(filtro);
+		final Conector conectorConFiltro = filtro.getConectorPorTrue();
+		return conectorConFiltro;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#selector()
+	 */
+	public Selector selector() {
+		final MoleculaSelector selector = MoleculaSelector.create(this);
+		return selector;
 	}
 
 }

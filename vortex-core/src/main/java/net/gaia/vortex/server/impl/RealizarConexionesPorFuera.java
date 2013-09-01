@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase representa la estrategia de conexión utilizable por clientes socket para conectar el
@@ -29,7 +30,7 @@ import ar.com.dgarcia.coding.caching.WeakSingleton;
  * 
  * @author D. García
  */
-public class RealizarConexionesPorFuera implements EstrategiaDeConexionDeNexos {
+public class RealizarConexionesPorFuera extends WeakSingletonSupport implements EstrategiaDeConexionDeNexos {
 	private static final Logger LOG = LoggerFactory.getLogger(RealizarConexionesPorFuera.class);
 
 	private static final WeakSingleton<RealizarConexionesPorFuera> ultimaReferencia = new WeakSingleton<RealizarConexionesPorFuera>(
@@ -42,7 +43,7 @@ public class RealizarConexionesPorFuera implements EstrategiaDeConexionDeNexos {
 	/**
 	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
-	
+
 	public void onNexoCreado(final NexoViejo nuevoNexo) {
 		LOG.debug("No se realizara accion interna de conexion del nexo creado[{}]", nuevoNexo);
 	}
@@ -50,7 +51,7 @@ public class RealizarConexionesPorFuera implements EstrategiaDeConexionDeNexos {
 	/**
 	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
-	
+
 	public void onNexoCerrado(final NexoViejo nexoCerrado) {
 		LOG.debug("No se realizara accion interna de desconexion del nexo cerrado[{}]", nexoCerrado);
 	}

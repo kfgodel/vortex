@@ -21,13 +21,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el serializador de condiciones regex
  * 
  * @author D. García
  */
-public class SerializadorRegex implements SerializadorDeTipo<TextoRegexMatchea> {
+public class SerializadorRegex extends WeakSingletonSupport implements SerializadorDeTipo<TextoRegexMatchea> {
 	private static final WeakSingleton<SerializadorRegex> ultimaReferencia = new WeakSingleton<SerializadorRegex>(
 			DefaultInstantiator.create(SerializadorRegex.class));
 
@@ -39,7 +40,7 @@ public class SerializadorRegex implements SerializadorDeTipo<TextoRegexMatchea> 
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo#serializarDesde(java.lang.Object,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public Map<String, Object> serializarDesde(final TextoRegexMatchea origen, final ContextoDeSerializacion contexto) {
 		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_REGEX);

@@ -30,7 +30,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Deprecated
-public abstract class MultiplexorSupport extends ReceptorConProcesador implements MultiplexorViejo {
+public abstract class MultiplexorSupportViejo extends ReceptorConProcesador implements MultiplexorViejo {
 
 	/**
 	 * La lista de destinos, implementada con un {@link CopyOnWriteArrayList} porque esperamos más

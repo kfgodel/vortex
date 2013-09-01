@@ -5,10 +5,12 @@ package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.NodoViejo;
+import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.NodoMolecula;
+import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.transformaciones.TransformacionNula;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
@@ -26,10 +28,13 @@ public class TestDePerformanceNodoPorComposicion extends TestDePerformanceNodoSu
 	 * @return El nodo a probar
 	 */
 	@Override
-	protected NodoViejo crearNodoATestear() {
-		final NodoViejo nexoTransformador = NexoTransformadorViejo.create(getProcessor(), TransformacionNula.getInstancia(),
-				ReceptorNulo.getInstancia());
-		final Receptor nexoFiltro = NexoFiltroViejo.create(getProcessor(), SiempreTrue.getInstancia(), nexoTransformador);
-		return NodoMolecula.create(nexoFiltro, nexoTransformador);
+	protected FlujoVortexViejo crearFlujoATestear() {
+		final NodoViejo nexoTransformador = NexoTransformadorViejo.create(getProcessor(),
+				TransformacionNula.getInstancia(), ReceptorNulo.getInstancia());
+		final Receptor nexoFiltro = NexoFiltroViejo.create(getProcessor(), SiempreTrue.getInstancia(),
+				nexoTransformador);
+		final NodoMolecula nodo = NodoMolecula.create(nexoFiltro, nexoTransformador);
+		return FlujoInmutableViejo.create(nodo, nodo);
+
 	}
 }

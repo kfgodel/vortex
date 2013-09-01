@@ -23,13 +23,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el serializador de condiciones OR
  * 
  * @author D. García
  */
-public class SerializadorOr implements SerializadorDeTipo<OrCompuesto> {
+public class SerializadorOr extends WeakSingletonSupport implements SerializadorDeTipo<OrCompuesto> {
 	private static final WeakSingleton<SerializadorOr> ultimaReferencia = new WeakSingleton<SerializadorOr>(
 			DefaultInstantiator.create(SerializadorOr.class));
 
@@ -41,7 +42,7 @@ public class SerializadorOr implements SerializadorDeTipo<OrCompuesto> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo#serializarDesde(java.lang.Object,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public Map<String, Object> serializarDesde(final OrCompuesto origen, final ContextoDeSerializacion contexto) {
 		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_OR);

@@ -19,6 +19,7 @@ import java.util.List;
 import net.gaia.vortex.api.condiciones.Condicion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 import ar.com.dgarcia.lang.iterators.tree.NodeExploder;
 
 /**
@@ -26,7 +27,7 @@ import ar.com.dgarcia.lang.iterators.tree.NodeExploder;
  * 
  * @author D. García
  */
-public class ObtenerSubCondiciones implements NodeExploder<Condicion> {
+public class ObtenerSubCondiciones extends WeakSingletonSupport implements NodeExploder<Condicion> {
 
 	private static final WeakSingleton<ObtenerSubCondiciones> ultimaReferencia = new WeakSingleton<ObtenerSubCondiciones>(
 			DefaultInstantiator.create(ObtenerSubCondiciones.class));
@@ -39,7 +40,6 @@ public class ObtenerSubCondiciones implements NodeExploder<Condicion> {
 	 * @see ar.com.dgarcia.lang.iterators.tree.NodeExploder#evaluateOn(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	
 	public Iterator<Condicion> evaluateOn(final Condicion node) {
 		final List<Condicion> subcondiciones = node.getSubCondiciones();
 		if (subcondiciones == null) {

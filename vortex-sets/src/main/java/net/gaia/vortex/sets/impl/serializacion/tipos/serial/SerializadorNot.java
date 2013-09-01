@@ -22,13 +22,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el serializador de condiciones NOT
  * 
  * @author D. García
  */
-public class SerializadorNot implements SerializadorDeTipo<Negacion> {
+public class SerializadorNot extends WeakSingletonSupport implements SerializadorDeTipo<Negacion> {
 	private static final WeakSingleton<SerializadorNot> ultimaReferencia = new WeakSingleton<SerializadorNot>(
 			DefaultInstantiator.create(SerializadorNot.class));
 
@@ -40,7 +41,7 @@ public class SerializadorNot implements SerializadorDeTipo<Negacion> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo#serializarDesde(java.lang.Object,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public Map<String, Object> serializarDesde(final Negacion origen, final ContextoDeSerializacion contexto) {
 		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_NOT);

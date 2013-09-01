@@ -13,22 +13,14 @@
 package net.gaia.vortex.api.basic.emisores;
 
 import net.gaia.vortex.api.basic.Emisor;
-import net.gaia.vortex.api.proto.Conector;
 
 /**
  * Esta interfaz representa un emisor de mensajes que sólo puede ser conectado a un receptor,
- * teniendo entonces una única salida para sus mensajes
+ * teniendo entonces una única salida para sus mensajes.<br>
+ * Esta interfaz sirve mayormente como marca, opuesto a {@link MultiEmisor}
  * 
  * @author D. García
  */
 public interface MonoEmisor extends Emisor {
-
-	/**
-	 * Permite obtener el único conector de salida de este emisor, el cual puede utilizarse para
-	 * conectar al receptor que recibirá los mensajes salientes de esta instancia
-	 * 
-	 * @return El conector que sirve de contacto con el receptor
-	 */
-	public Conector getConectorUnico();
 
 }

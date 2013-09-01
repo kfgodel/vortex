@@ -16,7 +16,7 @@ import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.prog.Loggers;
-import net.gaia.vortex.impl.support.MonoEmisorSupport;
+import net.gaia.vortex.impl.support.MonoConectableSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class AtomoTransformador extends MonoEmisorSupport implements Transformador {
+public class AtomoTransformador extends MonoConectableSupport implements Transformador {
 	private static final Logger LOG = LoggerFactory.getLogger(AtomoTransformador.class);
 
 	private Transformacion transformacion;

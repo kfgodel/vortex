@@ -39,4 +39,11 @@ public interface Conector extends Receptor {
 	 * Al desconectar este conector, los mensajes serán entregados al {@link ReceptorNulo}
 	 */
 	public void desconectar();
+
+	/**
+	 * Devuelve el receptor al que este conector está conectado
+	 * 
+	 * @return Una instancia receptora de los mensajes de este conector
+	 */
+	public Receptor getDestino();
 }

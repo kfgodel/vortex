@@ -13,7 +13,7 @@
 package net.gaia.vortex.api.atomos;
 
 import net.gaia.vortex.api.basic.Nodo;
-import net.gaia.vortex.api.basic.emisores.MultiEmisor;
+import net.gaia.vortex.api.basic.emisores.MultiConectable;
 
 /**
  * Esta interfaz representa un componente vortex que entrega cada mensaje recibido a sus multiples
@@ -21,6 +21,6 @@ import net.gaia.vortex.api.basic.emisores.MultiEmisor;
  * 
  * @author D. García
  */
-public interface Multiplexor extends Nodo, MultiEmisor {
+public interface Multiplexor extends Nodo, MultiConectable {
 
 }

@@ -19,13 +19,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa la deserialización de condiciones false
  * 
  * @author D. García
  */
-public class DeserializadorFalse implements DeserializadorDeTipo<SiempreFalse> {
+public class DeserializadorFalse extends WeakSingletonSupport implements DeserializadorDeTipo<SiempreFalse> {
 	private static final WeakSingleton<DeserializadorFalse> ultimaReferencia = new WeakSingleton<DeserializadorFalse>(
 			DefaultInstantiator.create(DeserializadorFalse.class));
 
@@ -37,7 +38,7 @@ public class DeserializadorFalse implements DeserializadorDeTipo<SiempreFalse> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public SiempreFalse deserializarDesde(final Map<String, Object> mapaOrigen, final ContextoDeSerializacion contexto) {
 		return SiempreFalse.getInstancia();
 	}

@@ -21,7 +21,7 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
-import net.gaia.vortex.core.api.moleculas.condicional.Selector;
+import net.gaia.vortex.core.api.moleculas.condicional.SelectorViejo;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParaleloViejo;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
@@ -36,7 +36,7 @@ import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
  * @author D. García
  */
 @Molecula
-public class SelectorConFiltros extends NodoMoleculaSupport implements Selector {
+public class SelectorConFiltros extends NodoMoleculaSupport implements SelectorViejo {
 
 	/**
 	 * Mapa con el que registramos que filtro usamos con cada destino
@@ -64,7 +64,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.moleculas.condicional.Selector#conectarCon(net.gaia.vortex.api.basic.Receptor,
+	 * @see net.gaia.vortex.core.api.moleculas.condicional.SelectorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor,
 	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
 
@@ -84,7 +84,7 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements Selector 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.moleculas.condicional.Selector#modificarCondicionPara(net.gaia.vortex.api.basic.Receptor,
+	 * @see net.gaia.vortex.core.api.moleculas.condicional.SelectorViejo#modificarCondicionPara(net.gaia.vortex.api.basic.Receptor,
 	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
 

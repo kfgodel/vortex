@@ -92,4 +92,11 @@ public class ComponenteConector extends ComponenteSupport implements Conector {
 		}
 		// Nada más que hacer
 	}
+
+	/**
+	 * @see net.gaia.vortex.api.proto.Conector#getDestino()
+	 */
+	public Receptor getDestino() {
+		return conectado;
+	}
 }

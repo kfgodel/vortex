@@ -17,11 +17,12 @@
  */
 package net.gaia.vortex.impl.nulos;
 
-import net.gaia.vortex.api.basic.emisores.MonoEmisor;
+import net.gaia.vortex.api.basic.emisores.MonoConectable;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.support.EmisorSupport;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase representa el componente emisor nulo que puede ser usado cuando se requiere un emisor
@@ -30,7 +31,7 @@ import ar.com.dgarcia.coding.caching.WeakSingleton;
  * 
  * @author dgarcia
  */
-public class EmisorNulo extends EmisorSupport implements MonoEmisor {
+public class EmisorNulo extends EmisorSupport implements MonoConectable {
 
 	private static final WeakSingleton<EmisorNulo> ultimaReferencia = new WeakSingleton<EmisorNulo>(
 			DefaultInstantiator.create(EmisorNulo.class));
@@ -44,6 +45,24 @@ public class EmisorNulo extends EmisorSupport implements MonoEmisor {
 	 */
 	public Conector getConectorUnico() {
 		return ConectorNulo.getInstancia();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		// No tengo herencia multiple, tengo que usar metodos esstaticos compartidos
+		return WeakSingletonSupport.singletonEquals(obj, this);
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		// No tengo herencia multiple, tengo que usar metodos esstaticos compartidos
+		return WeakSingletonSupport.singletonHashFor(this);
 	}
 
 }

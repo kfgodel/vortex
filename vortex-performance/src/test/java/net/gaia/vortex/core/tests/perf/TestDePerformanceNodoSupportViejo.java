@@ -8,7 +8,7 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.api.NodoViejo;
+import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
@@ -32,6 +32,7 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
  * 
  * @author D. García
  */
+@Deprecated
 public abstract class TestDePerformanceNodoSupportViejo {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceNexoFiltro.class);
@@ -47,7 +48,7 @@ public abstract class TestDePerformanceNodoSupportViejo {
 	 * 
 	 * @return El nodo a crear cuyo receptor será definido por el test
 	 */
-	protected abstract NodoViejo crearNodoATestear();
+	protected abstract FlujoVortexViejo crearFlujoATestear();
 
 	@Before
 	public void crearProcesador() {
@@ -62,49 +63,49 @@ public abstract class TestDePerformanceNodoSupportViejo {
 	@Test
 	public void medirPerformanceCon1ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 1;
-		final NodoViejo nexoFiltro = crearNodoATestear();
+		final FlujoVortexViejo nexoFiltro = crearFlujoATestear();
 		testearAtomo(cantidadDeThreads, nexoFiltro);
 	}
 
 	@Test
 	public void medirPerformanceCon2ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 2;
-		final NodoViejo nexoFiltro = crearNodoATestear();
+		final FlujoVortexViejo nexoFiltro = crearFlujoATestear();
 		testearAtomo(cantidadDeThreads, nexoFiltro);
 	}
 
 	@Test
 	public void medirPerformanceCon4ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 4;
-		final NodoViejo nexoFiltro = crearNodoATestear();
+		final FlujoVortexViejo nexoFiltro = crearFlujoATestear();
 		testearAtomo(cantidadDeThreads, nexoFiltro);
 	}
 
 	@Test
 	public void medirPerformanceCon8ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 8;
-		final NodoViejo nexoFiltro = crearNodoATestear();
+		final FlujoVortexViejo nexoFiltro = crearFlujoATestear();
 		testearAtomo(cantidadDeThreads, nexoFiltro);
 	}
 
 	@Test
 	public void medirPerformanceCon16ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 16;
-		final NodoViejo nexoFiltro = crearNodoATestear();
+		final FlujoVortexViejo nexoFiltro = crearFlujoATestear();
 		testearAtomo(cantidadDeThreads, nexoFiltro);
 	}
 
 	@Test
 	public void medirPerformanceCon32ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 32;
-		final NodoViejo nexoFiltro = crearNodoATestear();
+		final FlujoVortexViejo nexoFiltro = crearFlujoATestear();
 		testearAtomo(cantidadDeThreads, nexoFiltro);
 	}
 
 	@Test
 	public void medirPerformanceCon200ThreadDedicadoATodoElProceso() throws InterruptedException {
 		final int cantidadDeThreads = 200;
-		final NodoViejo nexoFiltro = crearNodoATestear();
+		final FlujoVortexViejo nexoFiltro = crearFlujoATestear();
 		testearAtomo(cantidadDeThreads, nexoFiltro);
 	}
 
@@ -115,24 +116,26 @@ public abstract class TestDePerformanceNodoSupportViejo {
 	 *            El nombre para el log
 	 * @param cantidadDeThreadsDeEnvio
 	 *            La cantidad de threads en paralelo
-	 * @param nodoVortex
+	 * @param flujoVortex
 	 * @throws InterruptedException
 	 *             Si vuela todo
 	 */
-	private void testearAtomo(final int cantidadDeThreadsDeEnvio, final NodoViejo nodoVortex) throws InterruptedException {
-		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->" + nodoVortex.getClass().getSimpleName() + "->R";
+	private void testearAtomo(final int cantidadDeThreadsDeEnvio, final FlujoVortexViejo flujoVortex)
+			throws InterruptedException {
+		final Receptor entrada = flujoVortex.getEntrada();
+		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->" + entrada.getClass().getSimpleName() + "->R";
 
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
 		// Generamos tantos portales como receptores tengamos
-		nodoVortex.conectarCon(new ReceptorSupport() {
+		flujoVortex.getSalida().conectarCon(new ReceptorSupport() {
 			public void recibir(@SuppressWarnings("unused") final MensajeVortex mensaje) {
 				metricas.registrarOutput();
 			}
 		});
 
-		correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, nodoVortex);
+		correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, entrada);
 	}
 
 	/**

@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 
@@ -27,7 +28,7 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * 
  * @author D. García
  */
-public class ReceptionHandlerNulo implements ObjectReceptionHandler {
+public class ReceptionHandlerNulo extends WeakSingletonSupport implements ObjectReceptionHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(ReceptionHandlerNulo.class);
 
 	private static final WeakSingleton<ReceptionHandlerNulo> ultimaReferencia = new WeakSingleton<ReceptionHandlerNulo>(
@@ -41,7 +42,7 @@ public class ReceptionHandlerNulo implements ObjectReceptionHandler {
 	 * @see ar.dgarcia.objectsockets.api.ObjectReceptionHandler#onObjectReceived(java.lang.Object,
 	 *      ar.dgarcia.objectsockets.api.ObjectSocket)
 	 */
-	
+
 	public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 		LOG.error("Se recibio un mensaje[" + received + "] en el receptor nulo para el socket[" + receivedFrom
 				+ "]. Falta inicializarlo?");

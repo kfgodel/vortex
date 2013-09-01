@@ -15,7 +15,7 @@ package net.gaia.vortex.impl.atomos.productores;
 import net.gaia.vortex.api.basic.productores.MensajeFactory;
 import net.gaia.vortex.api.basic.productores.Productor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.impl.support.MonoEmisorSupport;
+import net.gaia.vortex.impl.support.MonoConectableSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -26,7 +26,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class ProductorConFactory extends MonoEmisorSupport implements Productor {
+public class ProductorConFactory extends MonoConectableSupport implements Productor {
 
 	private MensajeFactory factory;
 	public static final String factory_FIELD = "factory";

@@ -15,13 +15,14 @@ package net.gaia.vortex.impl.support;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.basic.emisores.MultiEmisor;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.impl.proto.ComponenteConector;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase sirve de base para los emisores de multiples conectores
+ * Esta clase sirve de base para los emisores de multiples conectores destino que no son
+ * {@link MultiConectable}
  * 
  * @author D. García
  */
@@ -35,26 +36,10 @@ public class MultiEmisorSupport extends EmisorSupport implements MultiEmisor {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#crearConector()
-	 */
-	public Conector crearConector() {
-		final ComponenteConector conectorCreado = ComponenteConector.create();
-		getConectores().add(conectorCreado);
-		return conectorCreado;
-	}
-
-	/**
 	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#getConectores()
 	 */
 	public List<Conector> getConectores() {
 		return conectores;
-	}
-
-	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#eliminarConector(net.gaia.vortex.api.proto.Conector)
-	 */
-	public void eliminarConector(final Conector conector) {
-		getConectores().remove(conector);
 	}
 
 	/**

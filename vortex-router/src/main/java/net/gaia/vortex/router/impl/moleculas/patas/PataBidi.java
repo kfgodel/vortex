@@ -23,7 +23,7 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
-import net.gaia.vortex.core.api.moleculas.condicional.Selector;
+import net.gaia.vortex.core.api.moleculas.condicional.SelectorViejo;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.emisores.EmisorNuloViejo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutorViejo;
@@ -182,7 +182,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 */
 	private void initializeWith(final TaskProcessor taskProcessor) {
 		// Creamos un selector para tomar un camino según el tipo de mensaje
-		final Selector selectorDeEntrada = SelectorConFiltros.create(taskProcessor);
+		final SelectorViejo selectorDeEntrada = SelectorConFiltros.create(taskProcessor);
 
 		// Al recibir un mensaje normal (no meta)
 		final Receptor procesoAlRecibirMensajeNormal = crearProcesoParaRecibirMensajesNormales(taskProcessor);

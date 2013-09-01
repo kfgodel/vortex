@@ -21,6 +21,7 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el serializador de condiciones que verifica si una coleccion contiene un
@@ -28,7 +29,7 @@ import ar.com.dgarcia.coding.caching.WeakSingleton;
  * 
  * @author D. García
  */
-public class SerializadorContiene implements SerializadorDeTipo<ColeccionContiene> {
+public class SerializadorContiene extends WeakSingletonSupport implements SerializadorDeTipo<ColeccionContiene> {
 	private static final WeakSingleton<SerializadorContiene> ultimaReferencia = new WeakSingleton<SerializadorContiene>(
 			DefaultInstantiator.create(SerializadorContiene.class));
 
@@ -40,7 +41,7 @@ public class SerializadorContiene implements SerializadorDeTipo<ColeccionContien
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo#serializarDesde(java.lang.Object,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public Map<String, Object> serializarDesde(final ColeccionContiene origen, final ContextoDeSerializacion contexto) {
 		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_CONTIENE);

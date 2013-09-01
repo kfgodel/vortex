@@ -22,10 +22,11 @@ import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
  * 
  * @author D. García
  */
-public interface Selector extends MultiplexorViejo {
+@Deprecated
+public interface SelectorViejo extends MultiplexorViejo {
 
 	/**
-	 * En un {@link Selector} al conectar con un receptor sin indicar condición se asume siempre
+	 * En un {@link SelectorViejo} al conectar con un receptor sin indicar condición se asume siempre
 	 * true para esa salida (equivalente al multiplexor)
 	 * 
 	 * @see net.gaia.vortex.core.api.atomos.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)

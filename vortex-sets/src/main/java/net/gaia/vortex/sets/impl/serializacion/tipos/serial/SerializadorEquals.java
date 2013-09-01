@@ -21,13 +21,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el serializador de las condiciones por equals
  * 
  * @author D. García
  */
-public class SerializadorEquals implements SerializadorDeTipo<ValorEsperadoEn> {
+public class SerializadorEquals extends WeakSingletonSupport implements SerializadorDeTipo<ValorEsperadoEn> {
 	private static final WeakSingleton<SerializadorEquals> ultimaReferencia = new WeakSingleton<SerializadorEquals>(
 			DefaultInstantiator.create(SerializadorEquals.class));
 
@@ -39,7 +40,7 @@ public class SerializadorEquals implements SerializadorDeTipo<ValorEsperadoEn> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo#serializarDesde(java.lang.Object,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public Map<String, Object> serializarDesde(final ValorEsperadoEn origen, final ContextoDeSerializacion contexto) {
 		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_EQUALS);

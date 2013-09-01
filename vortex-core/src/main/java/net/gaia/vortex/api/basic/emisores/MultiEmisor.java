@@ -19,19 +19,11 @@ import net.gaia.vortex.api.proto.Conector;
 
 /**
  * Esta interfaz representa un emisor multiple de mensajes, permitiendo conectar multiples
- * receptores a sus salidas para que reciban los mensajes emitidos
+ * receptores a sus salidas para que reciban los mensajes emitidos.
  * 
  * @author D. García
  */
 public interface MultiEmisor extends Emisor {
-
-	/**
-	 * Crea un nuevo conector para utilizar con un receptor al que se le enviarán los mensajes
-	 * emitidos por esta instancia
-	 * 
-	 * @return El conector para la nueva conexión
-	 */
-	Conector crearConector();
 
 	/**
 	 * Devuelve la lista de conectores existentes en este emisor
@@ -39,14 +31,5 @@ public interface MultiEmisor extends Emisor {
 	 * @return La lista de los conectores creados
 	 */
 	List<Conector> getConectores();
-
-	/**
-	 * Elimina de este emisor el conector indicado.<br>
-	 * Si el conector pasado no es parte de este emisor, es ignorado.
-	 * 
-	 * @param conector
-	 *            El conector a eliminar
-	 */
-	void eliminarConector(Conector conector);
 
 }

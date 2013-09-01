@@ -18,13 +18,14 @@ import net.gaia.vortex.router.impl.moleculas.listeners.ListenerDeConexionesBidiE
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el listener nulo de conexiones bidi para evitar nulls
  * 
  * @author D. García
  */
-public class ListenerNuloDeConexionBidiEnNodo implements ListenerDeConexionesBidiEnNodo {
+public class ListenerNuloDeConexionBidiEnNodo extends WeakSingletonSupport implements ListenerDeConexionesBidiEnNodo {
 
 	private static final WeakSingleton<ListenerNuloDeConexionBidiEnNodo> ultimaReferencia = new WeakSingleton<ListenerNuloDeConexionBidiEnNodo>(
 			DefaultInstantiator.create(ListenerNuloDeConexionBidiEnNodo.class));
@@ -38,7 +39,7 @@ public class ListenerNuloDeConexionBidiEnNodo implements ListenerDeConexionesBid
 	 *      net.gaia.vortex.api.basic.Receptor,
 	 *      net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
 	 */
-	
+
 	public void onConexionBidiDe(final NodoBidireccional origen, final Receptor destino,
 			final PataBidireccional pataConectada) {
 		// No hacemos nada

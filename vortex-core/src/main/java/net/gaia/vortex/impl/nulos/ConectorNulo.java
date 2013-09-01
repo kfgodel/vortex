@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Este conector envía todos los mensajes al {@link ReceptorNulo} para ser descartados
@@ -56,7 +57,31 @@ public class ConectorNulo extends ComponenteSupport implements Conector {
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
-		ReceptorNulo.getInstancia().recibir(mensaje);
+		getDestino().recibir(mensaje);
 	}
 
+	/**
+	 * @see net.gaia.vortex.api.proto.Conector#getDestino()
+	 */
+	public Receptor getDestino() {
+		return ReceptorNulo.getInstancia();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		// No tengo herencia multiple, tengo que usar metodos esstaticos compartidos
+		return WeakSingletonSupport.singletonEquals(obj, this);
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		// No tengo herencia multiple, tengo que usar metodos esstaticos compartidos
+		return WeakSingletonSupport.singletonHashFor(this);
+	}
 }
