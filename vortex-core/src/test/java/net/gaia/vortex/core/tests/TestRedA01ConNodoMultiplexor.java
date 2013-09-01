@@ -18,7 +18,6 @@ import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
@@ -38,7 +37,8 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase realiza las pruebas básicas de vortex definidas en A01 de la documentación utilizando
- * un {@link MultiplexorSinDuplicadosViejo}. Verificamos que es posible armar una red básica con
+ * un multiplexor sin duplicados desde {@link VortexCore#multiplexarSinDuplicados(Receptor...)} como
+ * forma más básica de red con atomos. Verificamos que es posible armar una red básica con
  * conexiones unidireccionales
  * 
  * @author D. García

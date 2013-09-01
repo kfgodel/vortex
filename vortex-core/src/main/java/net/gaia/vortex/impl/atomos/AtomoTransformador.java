@@ -43,18 +43,23 @@ public class AtomoTransformador extends MonoConectableSupport implements Transfo
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensajeOriginal) {
-		Loggers.ATOMOS.trace("Transformando con [{}] el mensaje[{}]", transformacion, mensajeOriginal);
+		if (Loggers.ATOMOS.isTraceEnabled()) {
+			Loggers.ATOMOS.trace("Transformando con [{}] el mensaje[{}]", transformacion, mensajeOriginal);
+		}
 		MensajeVortex mensajeTransformado;
 		try {
 			mensajeTransformado = transformacion.transformar(mensajeOriginal);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error en la transformacion[" + transformacion + "] del mensajeOriginal["
 					+ mensajeOriginal + "] antes de delegarlo. Descartando mensajeOriginal", e);
 			// Nada más para hacer
 			getConectorParaDescartes().recibir(mensajeOriginal);
 			return;
 		}
-		Loggers.ATOMOS.debug("Transformado mensaje original[{}] en [{}]", mensajeOriginal, mensajeTransformado);
+		if (Loggers.ATOMOS.isDebugEnabled()) {
+			Loggers.ATOMOS.debug("Transformado mensaje original[{}] en [{}]", mensajeOriginal, mensajeTransformado);
+		}
 		getConectorUnico().recibir(mensajeTransformado);
 	}
 

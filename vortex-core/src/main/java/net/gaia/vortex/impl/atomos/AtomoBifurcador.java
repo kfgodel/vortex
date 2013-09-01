@@ -52,23 +52,30 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
-		Loggers.ATOMOS.trace("Evaluando condicion[{}] en mensaje[{}] para decidir delegado", condicion, mensaje);
+		if (Loggers.ATOMOS.isTraceEnabled()) {
+			Loggers.ATOMOS.trace("Evaluando condicion[{}] en mensaje[{}] para decidir delegado", condicion, mensaje);
+		}
 		Conector conectorElegido;
 		try {
 			final ResultadoDeCondicion resultadoDeCondicion = condicion.esCumplidaPor(mensaje);
 			if (!resultadoDeCondicion.esBooleano()) {
 				// Si no es true o false, descartaremos el mensaje
 				conectorElegido = getConectorParaDescartes();
-			} else {
+			}
+			else {
 				if (resultadoDeCondicion.esTrue()) {
 					conectorElegido = getConectorPorTrue();
-				} else {
+				}
+				else {
 					conectorElegido = getConectorPorFalse();
 				}
 			}
-			Loggers.ATOMOS.debug("Evaluo[{}] la condición[{}] delegando mensaje[{}] a conector[{}]", new Object[] {
-					resultadoDeCondicion, condicion, mensaje, conectorElegido });
-		} catch (final Exception e) {
+			if (Loggers.ATOMOS.isDebugEnabled()) {
+				Loggers.ATOMOS.debug("Evaluo[{}] la condición[{}] delegando mensaje[{}] a conector[{}]", new Object[] {
+						resultadoDeCondicion, condicion, mensaje, conectorElegido });
+			}
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error al evaluar la condicion[" + condicion + "] sobre el mensaje[" + mensaje
 					+ "] para bifurcar. Descartando mensaje", e);
 			conectorElegido = getConectorParaDescartes();
