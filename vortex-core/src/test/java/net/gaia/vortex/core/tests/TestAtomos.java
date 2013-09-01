@@ -18,12 +18,12 @@ import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
+import net.gaia.vortex.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
+import net.gaia.vortex.impl.mensajes.MensajeConContenido;
 
 import org.junit.After;
 import org.junit.Assert;

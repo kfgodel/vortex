@@ -18,9 +18,9 @@ import java.util.Set;
 
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
-import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
-import net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport;
 import net.gaia.vortex.impl.ids.mensajes.IdInmutableDeMensaje;
+import net.gaia.vortex.impl.mensajes.ContenidoPrimitiva;
+import net.gaia.vortex.impl.mensajes.support.ContenidoVortexSupport;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex;
 
 import org.slf4j.Logger;

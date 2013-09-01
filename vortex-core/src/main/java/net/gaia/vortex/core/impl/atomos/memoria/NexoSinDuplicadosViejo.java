@@ -18,9 +18,9 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.impl.atomos.support.NexoFiltroSupport;
-import net.gaia.vortex.core.impl.condiciones.EsMensajeNuevo;
-import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
-import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
+import net.gaia.vortex.impl.condiciones.EsMensajeNuevo;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaLimitadaDeMensajes;
 
 /**
  * Esta clase representa el atomo de vortex que permite filtrar mensajes duplicados descartándolos.<br>

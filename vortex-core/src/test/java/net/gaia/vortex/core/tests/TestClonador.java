@@ -21,11 +21,11 @@ import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
-import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.core.impl.mensaje.copia.ClonadorDeMensajes;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
+import net.gaia.vortex.impl.mensajes.ContenidoMapa;
+import net.gaia.vortex.impl.mensajes.MensajeConContenido;
+import net.gaia.vortex.impl.mensajes.clones.ClonadorDeMensajes;
 
 import org.junit.Assert;
 import org.junit.Test;

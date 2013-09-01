@@ -1,5 +1,5 @@
 /**
- * 31/08/2012 23:07:30 Copyright (C) 2011 Darío L. García
+ * 13/06/2012 01:31:40 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.condiciones;
+package net.gaia.vortex.impl.condiciones;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,49 +19,47 @@ import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
+import ar.com.dgarcia.coding.caching.DefaultInstantiator;
+import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la condición que evalúa si un mensaje es previamente conocido. Para lo cual
- * registra los IDs de los nuevos mensajes no conocidos hasta cierto límite.<br>
- * Si se supera el límite se van descartando los IDs viejos;
+ * Esta clase representa la condicion que no es cumplida por ningun mensaje
  * 
  * @author D. García
  */
 @Paralelizable
-public class EsMensajeNuevo implements Condicion {
+public class SiempreFalse extends WeakSingletonSupport implements Condicion {
 
-	private MemoriaDeMensajes mensajesConocidos;
-	public static final String mensajesConocidos_FIELD = "mensajesConocidos";
+	private static final WeakSingleton<SiempreFalse> ultimaReferencia = new WeakSingleton<SiempreFalse>(
+			DefaultInstantiator.create(SiempreFalse.class));
+
+	public static SiempreFalse getInstancia() {
+		return ultimaReferencia.get();
+	}
 
 	/**
 	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
-	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
-		final boolean agregadoComoNuevo = mensajesConocidos.registrarNuevo(mensaje);
-		return ResultadoDeCondicion.paraBooleano(agregadoComoNuevo);
+
+	public ResultadoDeCondicion esCumplidaPor(@SuppressWarnings("unused") final MensajeVortex mensaje) {
+		return ResultadoDeCondicion.FALSE;
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
-	public String toString() {
-		return ToString.de(this).con(mensajesConocidos_FIELD, mensajesConocidos).toString();
-	}
 
-	public static EsMensajeNuevo create(final MemoriaDeMensajes memoria) {
-		final EsMensajeNuevo condicion = new EsMensajeNuevo();
-		condicion.mensajesConocidos = memoria;
-		return condicion;
+	@Override
+	public String toString() {
+		return ToString.de(this).toString();
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	
+
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}

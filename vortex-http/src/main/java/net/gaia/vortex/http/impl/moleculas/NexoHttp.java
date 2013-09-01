@@ -20,13 +20,13 @@ import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
-import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
-import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.http.impl.atomos.Deshttpizador;
 import net.gaia.vortex.http.impl.atomos.Httpizador;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaLimitadaDeMensajes;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**

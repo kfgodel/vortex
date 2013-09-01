@@ -14,7 +14,7 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.deserial;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;

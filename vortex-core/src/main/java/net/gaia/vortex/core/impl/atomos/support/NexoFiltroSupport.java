@@ -18,9 +18,9 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.atomos.condicional.FiltroViejo;
-import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.tasks.condicional.FiltrarMensaje;
+import net.gaia.vortex.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**

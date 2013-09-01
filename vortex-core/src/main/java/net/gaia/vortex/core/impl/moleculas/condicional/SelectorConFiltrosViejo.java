@@ -24,19 +24,20 @@ import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.api.moleculas.condicional.SelectorViejo;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParaleloViejo;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 
 /**
- * Esta clase implementa el selector utilizando {@link NexoFiltroViejo} en cada salida para evaluar los
- * mensajes antes de entregarlos a destino
+ * Esta clase implementa el selector utilizando {@link NexoFiltroViejo} en cada salida para evaluar
+ * los mensajes antes de entregarlos a destino
  * 
  * @author D. García
  */
 @Molecula
-public class SelectorConFiltros extends NodoMoleculaSupport implements SelectorViejo {
+@Deprecated
+public class SelectorConFiltrosViejo extends NodoMoleculaSupport implements SelectorViejo {
 
 	/**
 	 * Mapa con el que registramos que filtro usamos con cada destino
@@ -125,8 +126,8 @@ public class SelectorConFiltros extends NodoMoleculaSupport implements SelectorV
 		filtrosPorDestino.remove(destino);
 	}
 
-	public static SelectorConFiltros create(final TaskProcessor processor) {
-		final SelectorConFiltros selector = new SelectorConFiltros();
+	public static SelectorConFiltrosViejo create(final TaskProcessor processor) {
+		final SelectorConFiltrosViejo selector = new SelectorConFiltrosViejo();
 		selector.initializeWithProcessor(processor);
 		return selector;
 	}

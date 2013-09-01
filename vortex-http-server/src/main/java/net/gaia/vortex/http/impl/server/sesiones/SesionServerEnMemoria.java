@@ -19,11 +19,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 import net.gaia.vortex.http.messages.PaqueteHttpVortex;
 import net.gaia.vortex.http.sesiones.SesionVortexHttpEnServer;
+import net.gaia.vortex.impl.mensajes.MensajeConContenido;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;

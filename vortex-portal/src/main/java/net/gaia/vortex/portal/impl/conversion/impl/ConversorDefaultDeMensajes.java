@@ -16,9 +16,9 @@ import java.util.Map;
 
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
-import net.gaia.vortex.core.impl.mensaje.ContenidoPrimitiva;
-import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
+import net.gaia.vortex.impl.mensajes.ContenidoMapa;
+import net.gaia.vortex.impl.mensajes.ContenidoPrimitiva;
+import net.gaia.vortex.impl.mensajes.MensajeConContenido;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;

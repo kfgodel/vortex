@@ -18,7 +18,7 @@ import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.transformaciones.Transformacion;
-import net.gaia.vortex.core.impl.mensaje.copia.ClonadorDeMensajes;
+import net.gaia.vortex.impl.mensajes.clones.ClonadorDeMensajes;
 import net.gaia.vortex.router.impl.messages.MetadataDeMensajes;
 
 import org.slf4j.Logger;

@@ -18,7 +18,7 @@ import java.util.HashMap;
 import junit.framework.Assert;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
+import net.gaia.vortex.impl.mensajes.MensajeConContenido;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 
 import org.junit.Before;

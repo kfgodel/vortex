@@ -10,13 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.mensaje;
+package net.gaia.vortex.impl.mensajes;
 
 import java.util.Collections;
 import java.util.Map;
 
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
-import net.gaia.vortex.core.impl.mensaje.support.ContenidoVortexSupport;
+import net.gaia.vortex.impl.mensajes.support.ContenidoVortexSupport;
 
 /**
  * Esta clase representa la implementación default del contenido de un mensaje vortex como un mapa

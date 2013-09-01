@@ -18,7 +18,7 @@ import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.portal.tests.HandlerEncolador;
 import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.api.moleculas.Router;

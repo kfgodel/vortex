@@ -28,11 +28,11 @@ import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.emisores.EmisorNuloViejo;
 import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutorViejo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
+import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltrosViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
@@ -182,7 +182,7 @@ public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
 	 */
 	private void initializeWith(final TaskProcessor taskProcessor) {
 		// Creamos un selector para tomar un camino según el tipo de mensaje
-		final SelectorViejo selectorDeEntrada = SelectorConFiltros.create(taskProcessor);
+		final SelectorViejo selectorDeEntrada = SelectorConFiltrosViejo.create(taskProcessor);
 
 		// Al recibir un mensaje normal (no meta)
 		final Receptor procesoAlRecibirMensajeNormal = crearProcesoParaRecibirMensajesNormales(taskProcessor);

@@ -23,8 +23,7 @@ import net.gaia.vortex.core.api.moleculas.condicional.SelectorViejo;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
-import net.gaia.vortex.core.impl.condiciones.EsMensajeExterno;
-import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
+import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltrosViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
@@ -33,6 +32,7 @@ import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.atomos.Desobjetivizador;
 import net.gaia.vortex.portal.impl.atomos.Objetivizador;
+import net.gaia.vortex.portal.impl.condiciones.EsMensajeDeOtroComponente;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
@@ -93,12 +93,12 @@ public class PortalMapeador extends NodoMoleculaSupport implements Portal {
 		procesoDesdeUsuario = Desobjetivizador.create(processor, mapeadorVortex, nodoDeSalidaAVortex);
 
 		// El selector enviará el mensaje según la condición que indique el usuario
-		selectorDeMensajesEntrantes = SelectorConFiltros.create(processor);
+		selectorDeMensajesEntrantes = SelectorConFiltrosViejo.create(processor);
 		final NexoSinDuplicadosViejo filtroDescartaDuplicados = NexoSinDuplicadosViejo.create(processor,
 				selectorDeMensajesEntrantes);
 
 		// Primero descartamos los mensajes propios y luego los duplicados externos
-		final EsMensajeExterno siEsMensajeExterno = EsMensajeExterno.create(identificador);
+		final EsMensajeDeOtroComponente siEsMensajeExterno = EsMensajeDeOtroComponente.create(identificador);
 		procesoDesdeVortex = NexoFiltroViejo.create(processor, siEsMensajeExterno, filtroDescartaDuplicados);
 
 		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(procesoDesdeVortex, nodoDeSalidaAVortex);

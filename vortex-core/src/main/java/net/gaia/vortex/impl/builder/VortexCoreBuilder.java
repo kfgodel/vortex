@@ -22,13 +22,13 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
-import net.gaia.vortex.core.impl.condiciones.EsMensajeNuevo;
-import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
-import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.impl.atomos.AtomoBifurcador;
 import net.gaia.vortex.impl.atomos.AtomoMultiplexor;
 import net.gaia.vortex.impl.atomos.AtomoSecuenciador;
 import net.gaia.vortex.impl.atomos.AtomoTransformador;
+import net.gaia.vortex.impl.condiciones.EsMensajeNuevo;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.impl.moleculas.MoleculaSelector;
 import ar.com.dgarcia.lang.strings.ToString;
 

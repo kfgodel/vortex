@@ -8,10 +8,10 @@ import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.impl.moleculas.NodoMolecula;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.transformaciones.TransformacionNula;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 /**

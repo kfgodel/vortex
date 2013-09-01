@@ -1,5 +1,5 @@
 /**
- * 01/09/2012 11:55:32 Copyright (C) 2011 Darío L. García
+ * 31/08/2012 23:07:30 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.condiciones;
+package net.gaia.vortex.impl.condiciones;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,52 +18,51 @@ import java.util.List;
 import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la condicion que indica si un mensaje se considera externo respecto del
- * identificador de un nodo
+ * Esta clase representa la condición que evalúa si un mensaje es previamente conocido. Para lo cual
+ * registra los IDs de los nuevos mensajes no conocidos.<br>
+ * La memoria usada determinará el limite de los mensajes reconocidos
  * 
  * @author D. García
  */
 @Paralelizable
-public class EsMensajeExterno implements Condicion {
+public class EsMensajeNuevo implements Condicion {
 
-	private IdDeComponenteVortex idDelNodo;
-	public static final String idDelNodo_FIELD = "idDelNodo";
+	private MemoriaDeMensajes mensajesConocidos;
+	public static final String mensajesConocidos_FIELD = "mensajesConocidos";
 
 	/**
 	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
-	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
-		final IdDeMensaje idDelMensaje = mensaje.getIdDeMensaje();
-		final boolean esMensajeExterno = !idDelMensaje.esOriginadoEn(idDelNodo);
-		final ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(esMensajeExterno);
-		return resultado;
-	}
 
-	public static EsMensajeExterno create(final IdDeComponenteVortex idDelNodo) {
-		final EsMensajeExterno condicion = new EsMensajeExterno();
-		condicion.idDelNodo = idDelNodo;
-		return condicion;
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
+		final boolean agregadoComoNuevo = mensajesConocidos.registrarNuevo(mensaje);
+		return ResultadoDeCondicion.paraBooleano(agregadoComoNuevo);
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
-		return ToString.de(this).con(idDelNodo_FIELD, idDelNodo).toString();
+		return ToString.de(this).con(mensajesConocidos_FIELD, mensajesConocidos).toString();
+	}
+
+	public static EsMensajeNuevo create(final MemoriaDeMensajes memoria) {
+		final EsMensajeNuevo condicion = new EsMensajeNuevo();
+		condicion.mensajesConocidos = memoria;
+		return condicion;
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	
+
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}

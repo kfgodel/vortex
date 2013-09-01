@@ -20,13 +20,13 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.cliente.server.comandos.CerrarSesionCliente;
 import net.gaia.vortex.http.impl.cliente.server.comandos.CrearSesionCliente;
 import net.gaia.vortex.http.impl.cliente.server.comandos.IntercambiarMensajesCliente;
 import net.gaia.vortex.http.messages.PaqueteHttpVortex;
+import net.gaia.vortex.impl.mensajes.MensajeConContenido;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;

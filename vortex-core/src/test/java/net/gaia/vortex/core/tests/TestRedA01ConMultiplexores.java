@@ -14,7 +14,7 @@ import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParaleloViejo;
-import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
+import net.gaia.vortex.impl.mensajes.MensajeConContenido;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 
 import org.junit.After;

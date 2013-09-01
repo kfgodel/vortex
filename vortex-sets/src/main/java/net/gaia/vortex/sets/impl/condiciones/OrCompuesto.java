@@ -23,8 +23,8 @@ import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**

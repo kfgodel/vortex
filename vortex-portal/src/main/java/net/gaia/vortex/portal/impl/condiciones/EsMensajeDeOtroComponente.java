@@ -1,5 +1,5 @@
 /**
- * 13/06/2012 01:31:40 Copyright (C) 2011 Darío L. García
+ * 01/09/2012 11:55:32 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.condiciones;
+package net.gaia.vortex.portal.impl.condiciones;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,48 +18,52 @@ import java.util.List;
 import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import ar.com.dgarcia.coding.caching.DefaultInstantiator;
-import ar.com.dgarcia.coding.caching.WeakSingleton;
-import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la condicion que no es cumplida por ningun mensaje
+ * Esta clase representa la condicion que indica si un mensaje se considera externo respecto del
+ * identificador de un nodo
  * 
  * @author D. García
  */
 @Paralelizable
-public class SiempreFalse extends WeakSingletonSupport implements Condicion {
+public class EsMensajeDeOtroComponente implements Condicion {
 
-	private static final WeakSingleton<SiempreFalse> ultimaReferencia = new WeakSingleton<SiempreFalse>(
-			DefaultInstantiator.create(SiempreFalse.class));
-
-	public static SiempreFalse getInstancia() {
-		return ultimaReferencia.get();
-	}
+	private IdDeComponenteVortex idDelNodo;
+	public static final String idDelNodo_FIELD = "idDelNodo";
 
 	/**
 	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
+	
+	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
+		final IdDeMensaje idDelMensaje = mensaje.getIdDeMensaje();
+		final boolean esMensajeExterno = !idDelMensaje.esOriginadoEn(idDelNodo);
+		final ResultadoDeCondicion resultado = ResultadoDeCondicion.paraBooleano(esMensajeExterno);
+		return resultado;
+	}
 
-	public ResultadoDeCondicion esCumplidaPor(@SuppressWarnings("unused") final MensajeVortex mensaje) {
-		return ResultadoDeCondicion.FALSE;
+	public static EsMensajeDeOtroComponente create(final IdDeComponenteVortex idDelNodo) {
+		final EsMensajeDeOtroComponente condicion = new EsMensajeDeOtroComponente();
+		condicion.idDelNodo = idDelNodo;
+		return condicion;
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-
-	@Override
+	
 	public String toString() {
-		return ToString.de(this).toString();
+		return ToString.de(this).con(idDelNodo_FIELD, idDelNodo).toString();
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.condiciones.Condicion#getSubCondiciones()
 	 */
-
+	
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}

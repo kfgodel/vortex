@@ -20,7 +20,7 @@ package net.gaia.vortex.core.tests.perf;
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
 
 /**

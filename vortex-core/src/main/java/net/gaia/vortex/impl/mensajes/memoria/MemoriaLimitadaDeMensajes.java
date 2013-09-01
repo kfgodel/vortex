@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.core.impl.memoria;
+package net.gaia.vortex.impl.mensajes.memoria;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -55,7 +55,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	private ReentrantLock writeLock;
 
 	/**
-	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#registrarNuevo(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 * @see net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes#registrarNuevo(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public boolean registrarNuevo(final MensajeVortex mensaje) {
 		final boolean yaExistia = tieneRegistroDe(mensaje);
@@ -105,7 +105,7 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes#tieneRegistroDe(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 * @see net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes#tieneRegistroDe(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public boolean tieneRegistroDe(final MensajeVortex mensaje) {
 		final IdDeMensaje idDeMensaje = mensaje.getIdDeMensaje();
