@@ -17,31 +17,27 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
+import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.api.moleculas.Selector;
-import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
-import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutorViejo;
+import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltros;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
-import net.gaia.vortex.impl.nulos.ReceptorNulo;
+import net.gaia.vortex.impl.flujos.FlujoInmutable;
 
 /**
  * Esta clase prueba la velocidad de procesamiento de mensajes del {@link Selector}
  * 
  * @author dgarcia
  */
-public class TestDePerformanceSelector extends TestDePerformanceNodoSupportViejo {
+public class TestDePerformanceSelector extends TestDePerformanceNodoSupport {
 
 	/**
 	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupportViejo#crearFlujoATestear()
 	 */
 	@Override
-	protected FlujoVortexViejo crearFlujoATestear() {
-		final SelectorConFiltros selector = SelectorConFiltros.create(getProcessor());
-		final NexoEjecutorViejo conector = NexoEjecutorViejo.create(getProcessor(), ReceptorNulo.getInstancia(),
-				ReceptorNulo.getInstancia());
-		selector.conectarCon(conector, SiempreTrue.getInstancia());
-		final FlujoVortexViejo flujo = FlujoInmutableViejo.create(selector, conector);
+	protected FlujoVortex crearFlujoATestear() {
+		final Selector selector = getBuilder().selector();
+		final Conector conectorDeSalida = selector.crearConector(SiempreTrue.getInstancia());
+		final FlujoVortex flujo = FlujoInmutable.create(selector, conectorDeSalida);
 		return flujo;
 	}
 
