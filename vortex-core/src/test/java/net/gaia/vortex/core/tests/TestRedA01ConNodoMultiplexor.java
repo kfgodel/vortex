@@ -16,6 +16,7 @@ import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Compuesto;
+import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.core.prog.Loggers;
@@ -57,9 +58,8 @@ public class TestRedA01ConNodoMultiplexor {
 
 	@Before
 	public void crearNodos() {
-		builder = VortexCoreBuilder.create();
-
 		processor = VortexProcessorFactory.createProcessor();
+		builder = VortexCoreBuilder.create(processor);
 
 		mensaje1 = MensajeConContenido.crearVacio();
 		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
@@ -73,6 +73,11 @@ public class TestRedA01ConNodoMultiplexor {
 
 		interconectar(nodoEmisor, nodoRuteador);
 		interconectar(nodoRuteador, nodoReceptor);
+	}
+
+	@After
+	public void liberarProcesador() {
+		processor.detener();
 	}
 
 	/**
@@ -128,34 +133,40 @@ public class TestRedA01ConNodoMultiplexor {
 
 	/**
 	 * T004. El thread del emisor no debería bloquearse durante la entrega del mensaje.<br>
-	 * Como implementación del test verificamos que el emisor puede seguir ejecutando mientras el
-	 * receptor está bloqueado
+	 * Como implementación del test simulamos la realizacion de una tarea en el receptor que solo
+	 * puede ser iniciada si el emisor lo indica, despues de enviar el mensaje (lo que requiere un
+	 * thread autonomo en el emisor)
 	 */
 	@Test
 	public void el_Thread_Del_Emisor_No_Deberia_Bloquearse_Durante_La_Entrega_Del_Mensaje() {
-		final WaitBarrier bloqueoDelEmisor = WaitBarrier.create();
-		final WaitBarrier bloqueoDelReceptor = WaitBarrier.create();
-		final AtomicBoolean receptorBloqueado = new AtomicBoolean(false);
+		final WaitBarrier esperarParaComprobarEnEmisor = WaitBarrier.create();
+		final WaitBarrier esperarParaRealizarTareaEnReceptor = WaitBarrier.create();
+		final AtomicBoolean tareasCompletadaEnReceptor = new AtomicBoolean(false);
 		final Receptor handlerReceptor = new ReceptorSupport() {
 
 			public void recibir(final MensajeVortex mensaje) {
-				receptorBloqueado.set(true);
-				// Hacemos que el emisor siga ejecutando si nos estaba esperando
-				bloqueoDelEmisor.release();
+				tareasCompletadaEnReceptor.set(false);
 				// Esperamos que el emisor nos de permiso de ejecutar
-				bloqueoDelReceptor.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-				receptorBloqueado.set(false);
+				esperarParaRealizarTareaEnReceptor.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+				tareasCompletadaEnReceptor.set(true);
+				// Le avisamso al emisor que ya puede revisar el resultado
+				esperarParaComprobarEnEmisor.release();
 			}
 		};
 		builder.conectarDesde(nodoReceptor, handlerReceptor);
 
-		nodoEmisor.recibir(mensaje1);
+		final Conector emisorAsincronico = builder.asincronizar(nodoEmisor);
+		emisorAsincronico.recibir(mensaje1);
 
-		// Esperamos que el receptor reciba el mensaje
-		bloqueoDelEmisor.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		// En este punto el receptor debería estar bloqueado y nosotros como thread emisor libres
-		Assert.assertEquals("El receptor todavía debería estar bloqueado", true, receptorBloqueado.get());
-		bloqueoDelReceptor.release();
+		Assert.assertEquals("La tarea deberia estar pendiente", false, tareasCompletadaEnReceptor.get());
+		// Hacemos que el receptor procese la tarea
+		esperarParaRealizarTareaEnReceptor.release();
+
+		// si son threads independientes el receptor debería avisarnos cuando termine
+		esperarParaComprobarEnEmisor.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
+
+		// Ya debería estar terminada la tarea
+		Assert.assertEquals("La tarea deberia estar terminada", true, tareasCompletadaEnReceptor.get());
 	}
 
 	/**
@@ -179,7 +190,8 @@ public class TestRedA01ConNodoMultiplexor {
 		};
 		builder.conectarDesde(nodoReceptor, handlerReceptor);
 
-		nodoEmisor.recibir(mensaje1);
+		final Conector emisorAsincrono = builder.asincronizar(nodoEmisor);
+		emisorAsincrono.recibir(mensaje1);
 
 		// Esperamos que el thread utilizado para la entrega sea definido
 		threadDeEntregaDefinido.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));

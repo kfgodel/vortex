@@ -25,7 +25,7 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
-import net.gaia.vortex.impl.proto.ComponenteConector;
+import net.gaia.vortex.impl.proto.ConectorBloqueante;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 
 import org.junit.After;
@@ -57,7 +57,7 @@ public class TestDePerformanceAtomoForkJoinPool extends TestDePerformanceNodoSup
 	 */
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
-		final ComponenteConector conector = ComponenteConector.create();
+		final ConectorBloqueante conector = ConectorBloqueante.create();
 		final Receptor receptorDelPool = new ReceptorSupport() {
 			@SuppressWarnings("serial")
 			public void recibir(final MensajeVortex mensaje) {

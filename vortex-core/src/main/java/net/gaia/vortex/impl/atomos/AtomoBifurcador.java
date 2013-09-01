@@ -19,7 +19,7 @@ import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.core.prog.Loggers;
-import net.gaia.vortex.impl.proto.ComponenteConector;
+import net.gaia.vortex.impl.proto.ConectorBloqueante;
 import net.gaia.vortex.impl.support.EmisorSupport;
 
 import org.slf4j.Logger;
@@ -112,8 +112,8 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 	public static AtomoBifurcador create(final Condicion condicion) {
 		final AtomoBifurcador bifurcador = new AtomoBifurcador();
 		bifurcador.setCondicion(condicion);
-		bifurcador.conectorPorTrue = ComponenteConector.create();
-		bifurcador.conectorPorFalse = ComponenteConector.create();
+		bifurcador.conectorPorTrue = ConectorBloqueante.create();
+		bifurcador.conectorPorFalse = ConectorBloqueante.create();
 		return bifurcador;
 	}
 

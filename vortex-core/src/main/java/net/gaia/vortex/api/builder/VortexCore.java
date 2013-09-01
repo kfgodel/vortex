@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.api.builder;
 
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.atomos.Bifurcador;
 import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
@@ -204,4 +205,27 @@ public interface VortexCore {
 	 *            El componente al que deben llegar
 	 */
 	void conectarDesde(Compuesto<? extends MultiConectable> origen, Receptor destino);
+
+	/**
+	 * Crea un conector asincrono, a través del cual se pueden entregar mensajes al receptor
+	 * indicado sin utilizar el thread actual.<br>
+	 * A través de este conector se pueden cortar los bucles en redes circulares y sincronas, o
+	 * paralelizar la entrega de mensajes en variso threads.<br>
+	 * Para el procesamiento de los mensajes de utilizara el procesador de tareas de este builder
+	 * que tiene un pool de threads propios
+	 * 
+	 * @param receptor
+	 *            El receptor que será conectado como destino de los mensajes enviados desde el
+	 *            conector creado
+	 * @return El conector asincronico creado y conectado al receptor
+	 */
+	Conector asincronizar(Receptor receptor);
+
+	/**
+	 * El procesador interno de tareas que representa un pool de threads utilizado para procesar las
+	 * entregas de mensaje asíncronas.<br>
+	 * 
+	 * @return El procesador utilizado por este builder
+	 */
+	TaskProcessor getProcessor();
 }

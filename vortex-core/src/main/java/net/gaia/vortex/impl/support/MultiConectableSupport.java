@@ -19,7 +19,7 @@ package net.gaia.vortex.impl.support;
 
 import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.impl.proto.ComponenteConector;
+import net.gaia.vortex.impl.proto.ConectorBloqueante;
 
 /**
  * Esta clase sirve de base para todos los componentes que son {@link MultiConectable}s
@@ -32,7 +32,7 @@ public class MultiConectableSupport extends MultiEmisorSupport implements MultiC
 	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#crearConector()
 	 */
 	public Conector crearConector() {
-		final ComponenteConector conectorCreado = ComponenteConector.create();
+		final ConectorBloqueante conectorCreado = ConectorBloqueante.create();
 		getConectores().add(conectorCreado);
 		return conectorCreado;
 	}

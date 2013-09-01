@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.impl.builder;
 
+import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.atomos.Bifurcador;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.atomos.Secuenciador;
@@ -34,6 +35,7 @@ import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.impl.moleculas.MoleculaCompuesta;
 import net.gaia.vortex.impl.moleculas.MoleculaSelector;
+import net.gaia.vortex.impl.proto.ConectorAsincrono;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -48,8 +50,18 @@ public class VortexCoreBuilder implements VortexCore {
 	 */
 	public static final int CANTIDAD_MENSAJES_RECORDADOS = 1000;
 
-	public static VortexCoreBuilder create() {
+	private TaskProcessor processor;
+
+	/**
+	 * Crea un builder de componentes vortex que comparte el procesador pasado con otras instancias
+	 * 
+	 * @param processor
+	 *            El procesador a utilizar en los componentes que tienen procesamiento autonomo
+	 * @return El builder creado
+	 */
+	public static VortexCoreBuilder create(final TaskProcessor processor) {
 		final VortexCoreBuilder builder = new VortexCoreBuilder();
+		builder.processor = processor;
 		return builder;
 	}
 
@@ -213,4 +225,19 @@ public class VortexCoreBuilder implements VortexCore {
 		origen.getSalida().crearConector().conectarCon(destino);
 	}
 
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#asincronizar(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public Conector asincronizar(final Receptor receptor) {
+		final ConectorAsincrono conectorCreado = ConectorAsincrono.create(processor);
+		conectorCreado.conectarCon(receptor);
+		return conectorCreado;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#getProcessor()
+	 */
+	public TaskProcessor getProcessor() {
+		return processor;
+	}
 }

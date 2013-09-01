@@ -54,7 +54,7 @@ public class TestAtomos {
 		mensaje1 = MensajeConContenido.crearVacio();
 		mensaje2 = MensajeConContenido.crearVacio();
 		processor = VortexProcessorFactory.createProcessor();
-		builder = VortexCoreBuilder.create();
+		builder = VortexCoreBuilder.create(processor);
 	}
 
 	@After

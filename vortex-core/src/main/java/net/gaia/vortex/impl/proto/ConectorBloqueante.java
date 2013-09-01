@@ -12,62 +12,44 @@
  */
 package net.gaia.vortex.impl.proto;
 
-import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
-import net.gaia.vortex.impl.support.ComponenteSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.com.dgarcia.lang.strings.ToString;
-
 /**
  * Esta clase implementa el comportamiento del componente conector que permite derivar mensajes a
- * otros receptores
+ * otros receptores utilizando el mismo thread en el que recibe el mensaje.<br>
+ * Este tipo de conector es el default y más común porque es también el más rápido para procesar los
+ * mensajes (no requiere administración de tareas y threads).<br>
+ * Por ser un conector sincrónico: <br>
+ * - Al terminar de ejecutar {@link Conector#recibir(MensajeVortex)} el thread invocante puede estar
+ * seguro que el mensaje fue entregado al destino <br>
+ * - El thread es bloqueado hasta que la entrega se realiza y procesa. Lo que puede involucrar una
+ * larga cadena de componentes<br>
+ * <br>
+ * Al utilizar el mismo thread para procesar el mensaje recibido, este componete hace crecer la pila
+ * tanto como componentes sincrónicos haya conectados en cada rama. Lo cual puede resultar en un
+ * {@link StackOverflowError} si hay demasiados componentes o si están conectados sincronamente en
+ * circulo<br>
+ * <br>
+ * Este tipo de componente tiene los siguientes casos de uso:<br>
+ * - La red de componentes es lineal (no tiene bucles)<br>
+ * - Se busca el máximo de performance en el procesamiento de mensajes<br>
+ * - No se requiere una paralelización del procesamiento de los mensajes<br>
+ * - Es importante conocer el resultado de la entrega de los mensajes, sin utilizar elementos
+ * externos de sincronización
  * 
  * @author D. García
  */
-public class ComponenteConector extends ComponenteSupport implements Conector {
-	private static final Logger LOG = LoggerFactory.getLogger(ComponenteConector.class);
+public class ConectorBloqueante extends ConectorSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(ConectorBloqueante.class);
 
-	private Receptor conectado;
-	public static final String conectado_FIELD = "conectado";
-
-	public Receptor getConectado() {
-		return conectado;
-	}
-
-	/**
-	 * @see net.gaia.vortex.api.proto.Conector#conectarCon(net.gaia.vortex.api.basic.Receptor)
-	 */
-	public void conectarCon(final Receptor destino) {
-		if (destino == null) {
-			throw new IllegalArgumentException("El receptor destino no puede ser null. Usar el " + ReceptorNulo.class);
-		}
-		conectado = destino;
-	}
-
-	/**
-	 * @see net.gaia.vortex.api.proto.Conector#desconectar()
-	 */
-	public void desconectar() {
-		final ReceptorNulo receptorNulo = ReceptorNulo.getInstancia();
-		conectarCon(receptorNulo);
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToString.de(this).con(conectado_FIELD, conectado).toString();
-	}
-
-	public static ComponenteConector create() {
-		final ComponenteConector conector = new ComponenteConector();
+	public static ConectorBloqueante create() {
+		final ConectorBloqueante conector = new ConectorBloqueante();
 		// Hacemos que comience desconectado
 		conector.desconectar();
 		return conector;
@@ -91,12 +73,5 @@ public class ComponenteConector extends ComponenteSupport implements Conector {
 			ReceptorNulo.getInstancia().recibir(mensaje);
 		}
 		// Nada más que hacer
-	}
-
-	/**
-	 * @see net.gaia.vortex.api.proto.Conector#getDestino()
-	 */
-	public Receptor getDestino() {
-		return conectado;
 	}
 }

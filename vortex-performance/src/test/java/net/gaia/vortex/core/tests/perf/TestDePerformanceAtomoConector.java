@@ -19,7 +19,7 @@ package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
-import net.gaia.vortex.impl.proto.ComponenteConector;
+import net.gaia.vortex.impl.proto.ConectorBloqueante;
 
 /**
  * Esta clase intenta ser el patron de performance para los atomos en el que se simula un atomo que
@@ -34,7 +34,7 @@ public class TestDePerformanceAtomoConector extends TestDePerformanceNodoSupport
 	 */
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
-		final ComponenteConector conector = ComponenteConector.create();
+		final ConectorBloqueante conector = ConectorBloqueante.create();
 		final FlujoInmutable flujoATestear = FlujoInmutable.create(conector, conector);
 		return flujoATestear;
 	}

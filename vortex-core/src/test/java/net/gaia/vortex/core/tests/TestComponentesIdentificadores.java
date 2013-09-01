@@ -49,7 +49,8 @@ public class TestComponentesIdentificadores {
 
 	@Before
 	public void crearDependencias() {
-		builder = VortexCoreBuilder.create();
+		// Para estos test no requerimos procesador
+		builder = VortexCoreBuilder.create(null);
 		receptorFinal1 = ReceptorEncolador.create();
 		receptorFinal2 = ReceptorEncolador.create();
 

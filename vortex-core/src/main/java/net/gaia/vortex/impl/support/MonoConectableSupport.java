@@ -14,7 +14,7 @@ package net.gaia.vortex.impl.support;
 
 import net.gaia.vortex.api.basic.emisores.MonoConectable;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.impl.proto.ComponenteConector;
+import net.gaia.vortex.impl.proto.ConectorBloqueante;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -35,7 +35,7 @@ public class MonoConectableSupport extends EmisorSupport implements MonoConectab
 	}
 
 	protected void inicializar() {
-		this.conectorUnico = ComponenteConector.create();
+		this.conectorUnico = ConectorBloqueante.create();
 	}
 
 	/**

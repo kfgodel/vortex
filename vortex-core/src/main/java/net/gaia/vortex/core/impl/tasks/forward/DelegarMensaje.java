@@ -36,7 +36,9 @@ public class DelegarMensaje implements WorkUnit {
 	 */
 
 	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
-		Loggers.ATOMOS.debug("Delegando a nodo[{}] el mensaje[{}]", delegado.toShortString(), mensaje);
+		if (Loggers.ATOMOS.isDebugEnabled()) {
+			Loggers.ATOMOS.debug("Delegando a nodo[{}] el mensaje[{}]", delegado.toShortString(), mensaje);
+		}
 		// Intentamos optimizar la entrega de mensaje no mandando a uno que ya lo recibió
 		if (delegado instanceof ComponenteConMemoria) {
 			final ComponenteConMemoria receptorConMemoria = (ComponenteConMemoria) delegado;
@@ -50,7 +52,8 @@ public class DelegarMensaje implements WorkUnit {
 		// No paso por el delegado, o no podemos saberlo, en cualquier caso lo entregamos
 		try {
 			delegado.recibir(mensaje);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error al entregar un mensaje[" + mensaje + "] a un delegado[" + delegado
 					+ "]. Ignorando", e);
 		}

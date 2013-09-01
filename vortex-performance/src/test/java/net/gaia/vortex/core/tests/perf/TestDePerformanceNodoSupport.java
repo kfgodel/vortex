@@ -68,7 +68,7 @@ public abstract class TestDePerformanceNodoSupport {
 	@Before
 	public void crearProcesador() {
 		processor = VortexProcessorFactory.createProcessor();
-		builder = VortexCoreBuilder.create();
+		builder = VortexCoreBuilder.create(processor);
 	}
 
 	@After
