@@ -15,18 +15,18 @@ package net.gaia.vortex.core.tests;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.atomos.Filtro;
+import net.gaia.vortex.api.basic.emisores.MultiConectable;
+import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
-import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
+import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.MensajeConContenido;
+import net.gaia.vortex.impl.moleculas.MoleculaCompuesta;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,22 +40,21 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  */
 public class TestComponentesIdentificadores {
 
-	private NexoSinDuplicadosViejo nexo;
 	private MensajeVortex mensajeEnviado;
 	private ReceptorEncolador receptorFinal1;
-	private TaskProcessor processor;
-	private MultiplexorSinDuplicados multiplexor;
 	private ReceptorEncolador receptorFinal2;
+	private VortexCore builder;
+	private Filtro filtro;
+	private MoleculaCompuesta<MultiConectable> multiplexorSinDuplicados;
 
 	@Before
 	public void crearDependencias() {
-		processor = VortexProcessorFactory.createProcessor();
+		builder = VortexCoreBuilder.create();
 		receptorFinal1 = ReceptorEncolador.create();
 		receptorFinal2 = ReceptorEncolador.create();
-		nexo = NexoSinDuplicadosViejo.create(processor, receptorFinal1);
-		multiplexor = MultiplexorSinDuplicados.create(processor);
-		multiplexor.conectarCon(receptorFinal1);
-		multiplexor.conectarCon(receptorFinal2);
+
+		filtro = builder.filtrarMensajesDuplicadosA(receptorFinal1);
+		multiplexorSinDuplicados = builder.multiplexarSinDuplicados(receptorFinal1, receptorFinal2);
 
 		mensajeEnviado = MensajeConContenido.crearVacio();
 		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
@@ -64,74 +63,67 @@ public class TestComponentesIdentificadores {
 		mensajeEnviado.asignarId(idDelMensaje);
 	}
 
-	@After
-	public void liberarRecursos() {
-		processor.detener();
-	}
-
 	@Test
-	public void elMensajeDeberiaLlegarSiNuncaPasoPorElNexo() {
-		Assert.assertFalse("El mensaje no debería tener registro del pasaje por el ID", nexo.yaRecibio(mensajeEnviado));
-		nexo.recibir(mensajeEnviado);
+	public void elMensajeDeberiaLlegarSiNuncaPasoPorElFiltro() {
+		Assert.assertFalse("No debería tener registro del mensaje", receptorFinal1.tieneMensajes());
+		filtro.recibir(mensajeEnviado);
 		final MensajeVortex mensajeRecibido = receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.assertEquals("El mensaje recibido debería ser el enviado", mensajeEnviado, mensajeRecibido);
-		Assert.assertTrue("El mensaje debería registrar el pasajo por el identificador", nexo.yaRecibio(mensajeEnviado));
 	}
 
 	@Test
 	public void elMensajeNoDeberiaLlegarSiYaPasoPorElNexo() {
-		nexo.recibir(mensajeEnviado);
-		receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertTrue("El mensaje debería registrar el pasajo por el identificador", nexo.yaRecibio(mensajeEnviado));
+		filtro.recibir(mensajeEnviado);
+		final MensajeVortex mensajeRecibido = receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertEquals("El mensaje recibido debería ser el enviado", mensajeEnviado, mensajeRecibido);
 
 		// Lo mandamos una segunda vez
-		nexo.recibir(mensajeEnviado);
+		filtro.recibir(mensajeEnviado);
 		try {
 			receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("El mensaje no debería haber llegado a destino");
-		} catch (final TimeoutExceededException e) {
+		}
+		catch (final TimeoutExceededException e) {
 			// Es la excepción que esperabamos
 		}
 	}
 
 	@Test
 	public void elMensajeDeberiaLlegarAAmbosDestinosSiNuncaPasoPorElMultiplexor() {
-		Assert.assertFalse("El mensaje no debería tener registro del pasaje por el ID",
-				multiplexor.yaRecibio(mensajeEnviado));
-		multiplexor.recibir(mensajeEnviado);
+		Assert.assertFalse("No debería tener registro del mensaje", receptorFinal1.tieneMensajes());
+		Assert.assertFalse("No debería tener registro del mensaje", receptorFinal2.tieneMensajes());
+
+		multiplexorSinDuplicados.recibir(mensajeEnviado);
 
 		final MensajeVortex mensajeRecibido1 = receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.assertEquals("El mensaje recibido debería ser el enviado", mensajeEnviado, mensajeRecibido1);
-		Assert.assertTrue("El mensaje debería registrar el pasajo por el identificador",
-				multiplexor.yaRecibio(mensajeRecibido1));
 
 		final MensajeVortex mensajeRecibido2 = receptorFinal2.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		Assert.assertEquals("El mensaje recibido debería ser el enviado", mensajeEnviado, mensajeRecibido2);
-		Assert.assertTrue("El mensaje debería registrar el pasajo por el identificador",
-				multiplexor.yaRecibio(mensajeRecibido2));
 	}
 
 	@Test
 	public void elMensajeNoDeberiaLlegarANingunoSiYaPasoPorElMultiplexor() {
-		multiplexor.recibir(mensajeEnviado);
-		final MensajeVortex mensajeRecibido1 = receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertTrue("El mensaje debería registrar el pasajo por el identificador",
-				multiplexor.yaRecibio(mensajeRecibido1));
-		final MensajeVortex mensajeRecibido2 = receptorFinal2.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
-		Assert.assertTrue("El mensaje debería registrar el pasajo por el identificador",
-				multiplexor.yaRecibio(mensajeRecibido2));
+		multiplexorSinDuplicados.recibir(mensajeEnviado);
 
-		multiplexor.recibir(mensajeEnviado);
+		final MensajeVortex mensajeRecibido1 = receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertEquals("El mensaje recibido debería ser el enviado", mensajeEnviado, mensajeRecibido1);
+		final MensajeVortex mensajeRecibido2 = receptorFinal2.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
+		Assert.assertEquals("El mensaje recibido debería ser el enviado", mensajeEnviado, mensajeRecibido2);
+
+		multiplexorSinDuplicados.recibir(mensajeEnviado);
 		try {
 			receptorFinal1.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("El mensaje no debería haber llegado a destino");
-		} catch (final TimeoutExceededException e) {
+		}
+		catch (final TimeoutExceededException e) {
 			// Es la excepción que esperabamos
 		}
 		try {
 			receptorFinal2.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("El mensaje no debería haber llegado a destino");
-		} catch (final TimeoutExceededException e) {
+		}
+		catch (final TimeoutExceededException e) {
 			// Es la excepción que esperabamos
 		}
 	}

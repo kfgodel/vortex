@@ -19,7 +19,7 @@ import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
+import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
@@ -71,12 +71,12 @@ public class TestRedDeSocketsConHubs {
 		processor = VortexProcessorFactory.createProcessor();
 
 		// Creamos el hub al que se conectan los nexos del servidor
-		hubServidor = MultiplexorSinDuplicados.create(processor);
+		hubServidor = MultiplexorSinDuplicadosViejo.create(processor);
 		// Creamos el portal receptor conectado al hub del servidor
 		nodoReceptor = PortalMapeador.createForIOWith(processor, hubServidor);
 
 		// Creamos el hub al que se conectan los nexos del cliente
-		hubCliente = MultiplexorSinDuplicados.create(processor);
+		hubCliente = MultiplexorSinDuplicadosViejo.create(processor);
 		// Creamos el portal emisor conectado al hub cliente
 		nodoEmisor = PortalMapeador.createForOutputWith(processor, hubCliente);
 

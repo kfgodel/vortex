@@ -15,7 +15,7 @@ package net.gaia.vortex.portal.tests.performance;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
+import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
@@ -62,15 +62,15 @@ public class TestDeComunicacionTipicaEnMemoria {
 	@Before
 	public void crearNodosClientes() {
 		procesadorDelNodoServer = VortexProcessorFactory.createProcessor();
-		nodoSever = MultiplexorSinDuplicados.create(procesadorDelNodoServer);
+		nodoSever = MultiplexorSinDuplicadosViejo.create(procesadorDelNodoServer);
 
 		procesadorDelNodoReceptor = VortexProcessorFactory.createProcessor();
-		nodoReceptor = MultiplexorSinDuplicados.create(procesadorDelNodoReceptor);
+		nodoReceptor = MultiplexorSinDuplicadosViejo.create(procesadorDelNodoReceptor);
 		nodoReceptor.conectarCon(nodoSever);
 		nodoSever.conectarCon(nodoReceptor);
 
 		procesadorDelNodoEmisor = VortexProcessorFactory.createProcessor();
-		nodoEmisor = MultiplexorSinDuplicados.create(procesadorDelNodoEmisor);
+		nodoEmisor = MultiplexorSinDuplicadosViejo.create(procesadorDelNodoEmisor);
 		nodoEmisor.conectarCon(nodoSever);
 		nodoSever.conectarCon(nodoEmisor);
 

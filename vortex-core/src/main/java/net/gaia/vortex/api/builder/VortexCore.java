@@ -13,14 +13,17 @@
 package net.gaia.vortex.api.builder;
 
 import net.gaia.vortex.api.atomos.Bifurcador;
+import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
+import net.gaia.vortex.impl.moleculas.MoleculaCompuesta;
 import net.gaia.vortex.impl.moleculas.MoleculaSelector;
 
 /**
@@ -65,6 +68,16 @@ public interface VortexCore {
 	Multiplexor multiplexar(Receptor... receptores);
 
 	/**
+	 * Crea un molecula que funciona como multiplexor pero a la entrada tiene un filtro que le
+	 * permite descartar los mensajes duplicados
+	 * 
+	 * @param receptores
+	 *            Los receptores a conectar como salidas de la molecula creada
+	 * @return La molecula creada y conectada a los receptores indicados
+	 */
+	MoleculaCompuesta<MultiConectable> multiplexarSinDuplicados(Receptor... receptores);
+
+	/**
 	 * Crea un atomo bifurcador de mensajes que utiliza la condición pasada para entregar a un
 	 * receptor o al otro, según el resultado de evaluación de cada mensaje recibido
 	 * 
@@ -89,7 +102,7 @@ public interface VortexCore {
 	 *            El receptor que recibirá los mensajes que pasaron con true
 	 * @return El atomo creado y conectado
 	 */
-	Bifurcador filtrarEntradaCon(Condicion condicion, Receptor receptor);
+	Filtro filtrarEntradaCon(Condicion condicion, Receptor receptor);
 
 	/**
 	 * Crea un {@link Bifurcador} conectado al conector pasado y configurado para filtrar los
@@ -114,7 +127,27 @@ public interface VortexCore {
 	 *            La condicion para bifurcar el camino de los mensajes
 	 * @return El atomo creado
 	 */
-	Bifurcador filtroDe(Condicion condicion);
+	Filtro filtroDe(Condicion condicion);
+
+	/**
+	 * Crea un atomo bifurcador que descartará los mensajes duplicados, enviando sólo una vez los
+	 * mensajes al receptor indicado.<br>
+	 * Para discriminar los mensajes se utiliza el ID de cada uno, y una memoria que registra cierta
+	 * cantidad
+	 * 
+	 * @param receptor
+	 *            El receptor que recibirá los mensajes una sola vez
+	 * @return El atomo creado y conectado
+	 */
+	Filtro filtrarMensajesDuplicadosA(Receptor receptor);
+
+	/**
+	 * Crea el bifurcador que descarta los mensajes duplicados, permitiendo recibir los mensajes
+	 * sólo una vez en el conector de salida por true
+	 * 
+	 * @return El atomo creado
+	 */
+	Filtro filtroSinMensajesDuplicados();
 
 	/**
 	 * Crea un atomo transformador que utilizará la transformación indicada para modificar los
@@ -127,26 +160,6 @@ public interface VortexCore {
 	 * @return El atomo transformador creado y conectado
 	 */
 	Transformador transformarCon(Transformacion transformacion, Receptor receptor);
-
-	/**
-	 * Crea un atomo bifurcador que descartará los mensajes duplicados, enviando sólo una vez los
-	 * mensajes al receptor indicado.<br>
-	 * Para discriminar los mensajes se utiliza el ID de cada uno, y una memoria que registra cierta
-	 * cantidad
-	 * 
-	 * @param receptor
-	 *            El receptor que recibirá los mensajes una sola vez
-	 * @return El atomo creado y conectado
-	 */
-	Bifurcador sinDuplicadosPara(Receptor receptor);
-
-	/**
-	 * Crea el bifurcador que descarta los mensajes duplicados, permitiendo recibir los mensajes
-	 * sólo una vez en el conector de salida por true
-	 * 
-	 * @return El atomo creado
-	 */
-	Bifurcador filtroSinDuplicados();
 
 	/**
 	 * Crea un atomo transformador que modificará los mensajes recibidos con la transformación

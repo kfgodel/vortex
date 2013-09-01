@@ -26,10 +26,11 @@ import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSuppo
  * @author D. García
  */
 @Molecula
-public class MultiplexorSinDuplicados extends MultiplexorSinDuplicadosSupport {
+@Deprecated
+public class MultiplexorSinDuplicadosViejo extends MultiplexorSinDuplicadosSupport {
 
-	public static MultiplexorSinDuplicados create(final TaskProcessor processor) {
-		final MultiplexorSinDuplicados multiplexor = new MultiplexorSinDuplicados();
+	public static MultiplexorSinDuplicadosViejo create(final TaskProcessor processor) {
+		final MultiplexorSinDuplicadosViejo multiplexor = new MultiplexorSinDuplicadosViejo();
 		multiplexor.initializeWith(processor);
 		return multiplexor;
 	}

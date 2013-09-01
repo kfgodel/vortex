@@ -23,7 +23,7 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
 import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
+import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.portal.api.moleculas.Portal;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
@@ -60,7 +60,7 @@ public class TestRedA01ConPortal {
 	public void crearNodos() {
 		processor = ForkJoinTaskProcessor.create(TaskProcessorConfiguration.createOptimun());
 		// Creamos un nodo central
-		nodoRuteador = MultiplexorSinDuplicados.create(processor);
+		nodoRuteador = MultiplexorSinDuplicadosViejo.create(processor);
 		// Le agregamos las interconexiones en los extremos
 		nodoEmisor = PortalMapeador.createForIOWith(processor, nodoRuteador);
 		nodoReceptor = PortalMapeador.createForIOWith(processor, nodoRuteador);
@@ -234,8 +234,8 @@ public class TestRedA01ConPortal {
 	@Test
 	public void elMensajeDeberiaLlegarSiHayDosNodosEnElMedio() {
 		// Creamos los nodos centrales interconectados
-		final NodoViejo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
-		final NodoViejo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
+		final NodoViejo nodoIntermedio1 = MultiplexorSinDuplicadosViejo.create(processor);
+		final NodoViejo nodoIntermedio2 = MultiplexorSinDuplicadosViejo.create(processor);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
@@ -258,8 +258,8 @@ public class TestRedA01ConPortal {
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosHubsEnElMedioInterconectados() {
 		// Creamos los nodos centrales interconectados
-		final NodoViejo nodoIntermedio1 = MultiplexorSinDuplicados.create(processor);
-		final NodoViejo nodoIntermedio2 = MultiplexorSinDuplicados.create(processor);
+		final NodoViejo nodoIntermedio1 = MultiplexorSinDuplicadosViejo.create(processor);
+		final NodoViejo nodoIntermedio2 = MultiplexorSinDuplicadosViejo.create(processor);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales

@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.vortex.api.atomos.Bifurcador;
+import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
 
@@ -19,7 +19,7 @@ public class TestDePerformanceNexoFiltroDuplicados extends TestDePerformanceNodo
 	 */
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
-		final Bifurcador filtrador = getBuilder().filtroSinDuplicados();
+		final Filtro filtrador = getBuilder().filtroSinMensajesDuplicados();
 		return FlujoInmutable.create(filtrador, filtrador.getConectorPorTrue());
 	}
 

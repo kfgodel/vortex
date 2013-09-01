@@ -13,7 +13,6 @@
 package net.gaia.vortex.api.atomos;
 
 import net.gaia.vortex.api.annotations.clases.Atomo;
-import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.proto.Conector;
 
@@ -26,15 +25,7 @@ import net.gaia.vortex.api.proto.Conector;
  * @author D. García
  */
 @Atomo
-public interface Bifurcador extends Nodo {
-
-	/**
-	 * Devuelve el conector utilizado utilizado en caso de true.<br>
-	 * Los mensajes que evalúen a true serán entregados al receptor conectado a este conector.
-	 * 
-	 * @return El conector por casos true
-	 */
-	public Conector getConectorPorTrue();
+public interface Bifurcador extends Filtro {
 
 	/**
 	 * Devuelve el conector utilizado para el caso false.<br>
@@ -43,25 +34,5 @@ public interface Bifurcador extends Nodo {
 	 * @return El conector para casos false
 	 */
 	public Conector getConectorPorFalse();
-
-	/**
-	 * Devuelve la condición utilizada por este componente para evaluar los mensajes y decidir su
-	 * conector destino
-	 * 
-	 * @return La condición evaluada en cada mensaje recibido
-	 */
-	public Condicion getCondicion();
-
-	/**
-	 * Establece la condición utilizada por este filtro para aceptar los mensajes y pasarlos al
-	 * receptor que corresponda. Si la condición pasada devuelve true el mensaje es entregado al
-	 * receptor del conector {@link #getConectorPorTrue()}, si es false, es entregada al conector de
-	 * {@link #getConectorPorFalse()}. Si falla o es incierta, se descarta el mensaje enviandolo al
-	 * receptor nulo
-	 * 
-	 * @param condicion
-	 *            La condición a utilizar
-	 */
-	public void setCondicion(Condicion condicion);
 
 }

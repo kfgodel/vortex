@@ -15,7 +15,7 @@ import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
+import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
@@ -34,7 +34,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
  * Esta clase realiza las pruebas básicas de vortex definidas en A01 de la documentación utilizando
- * un {@link MultiplexorSinDuplicados}. Verificamos que es posible armar una red básica con
+ * un {@link MultiplexorSinDuplicadosViejo}. Verificamos que es posible armar una red básica con
  * conexiones unidireccionales
  * 
  * @author D. García
@@ -70,8 +70,8 @@ public class TestRedA01ConNodoMultiplexor {
 	/**
 	 * Crea un nodo tipo para las pruebas
 	 */
-	private MultiplexorSinDuplicados crearNodoDefault() {
-		return MultiplexorSinDuplicados.create(processor);
+	private MultiplexorSinDuplicadosViejo crearNodoDefault() {
+		return MultiplexorSinDuplicadosViejo.create(processor);
 	}
 
 	@After

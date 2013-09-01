@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.atomos.Bifurcador;
+import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
@@ -80,14 +81,14 @@ public class TestAtomos {
 	@Test
 	public void elCondicionalDeberiaEntregarElMensajeSiCumpleLaCondicion() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final Bifurcador filtro = builder.filtrarEntradaCon(SiempreTrue.getInstancia(), receptor);
+		final Filtro filtro = builder.filtrarEntradaCon(SiempreTrue.getInstancia(), receptor);
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, filtro, receptor);
 	}
 
 	@Test
 	public void elCondicionalNoDeberiaEntregarElMensajeSiNoCumpleLaCondicion() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final Bifurcador filtro = builder.filtrarEntradaCon(SiempreFalse.getInstancia(), receptor);
+		final Filtro filtro = builder.filtrarEntradaCon(SiempreFalse.getInstancia(), receptor);
 		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, filtro, receptor);
 	}
 
@@ -133,7 +134,7 @@ public class TestAtomos {
 		mensaje.asignarId(idDelMensaje);
 
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final Bifurcador filtro = builder.sinDuplicadosPara(receptor);
+		final Filtro filtro = builder.filtrarMensajesDuplicadosA(receptor);
 
 		// La primera vez debería llegar
 		checkMensajeEnviadoYRecibido(mensaje, mensaje, filtro, receptor);
@@ -145,7 +146,7 @@ public class TestAtomos {
 	@Test
 	public void elFiltroDeMensajesConocidosDeberiaGenerarUnErrorSiElMensajeNoTieneId() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
-		final Bifurcador filtro = builder.sinDuplicadosPara(receptor);
+		final Filtro filtro = builder.filtrarMensajesDuplicadosA(receptor);
 		// La primera vez debería llegar
 		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, filtro, receptor);
 	}

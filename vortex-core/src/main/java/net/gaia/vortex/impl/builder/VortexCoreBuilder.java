@@ -16,7 +16,9 @@ import net.gaia.vortex.api.atomos.Bifurcador;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
+import net.gaia.vortex.api.basic.Emisor;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.moleculas.Selector;
@@ -29,6 +31,7 @@ import net.gaia.vortex.impl.atomos.AtomoTransformador;
 import net.gaia.vortex.impl.condiciones.EsMensajeNuevo;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaLimitadaDeMensajes;
+import net.gaia.vortex.impl.moleculas.MoleculaCompuesta;
 import net.gaia.vortex.impl.moleculas.MoleculaSelector;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -87,6 +90,34 @@ public class VortexCoreBuilder implements VortexCore {
 	}
 
 	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#multiplexarSinDuplicados(net.gaia.vortex.api.basic.Receptor[])
+	 */
+	public MoleculaCompuesta<MultiConectable> multiplexarSinDuplicados(final Receptor... receptores) {
+		final Multiplexor multiplexor = multiplexar(receptores);
+		final Bifurcador filtroSinDuplicados = filtrarMensajesDuplicadosA(multiplexor);
+		final MoleculaCompuesta<MultiConectable> molecula = this.<MultiConectable> componer(filtroSinDuplicados,
+				multiplexor);
+		return molecula;
+	}
+
+	/**
+	 * Crea un molecula con la composición de los componentes pasados.<br>
+	 * Los componentes deben ser conectados entre sí (antes o despues de esta creación) para que la
+	 * molecula se comporte correctamente.<br>
+	 * La molecula representara a los componentes pasados como una unidad
+	 * 
+	 * @param entrada
+	 *            El componente al que se enviarán todos los mensajes recibids
+	 * @param salida
+	 *            El componente utilizado para conectar todas las salidas
+	 * @return La molecula creada
+	 */
+	private <E extends Emisor> MoleculaCompuesta<E> componer(final Receptor entrada, final E salida) {
+		final MoleculaCompuesta<E> molecula = MoleculaCompuesta.<E> create(entrada, salida);
+		return molecula;
+	}
+
+	/**
 	 * @see net.gaia.vortex.api.builder.VortexCore#bifurcarSi(net.gaia.vortex.api.condiciones.Condicion,
 	 *      net.gaia.vortex.api.basic.Receptor, net.gaia.vortex.api.basic.Receptor)
 	 */
@@ -135,22 +166,31 @@ public class VortexCoreBuilder implements VortexCore {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.builder.VortexCore#sinDuplicadosPara(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarMensajesDuplicadosA(net.gaia.vortex.api.basic.Receptor)
 	 */
-	public Bifurcador sinDuplicadosPara(final Receptor receptor) {
-		final Bifurcador filtro = filtroSinDuplicados();
+	public Bifurcador filtrarMensajesDuplicadosA(final Receptor receptor) {
+		final Bifurcador filtro = filtroSinMensajesDuplicados();
 		filtro.getConectorPorTrue().conectarCon(receptor);
 		return filtro;
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.builder.VortexCore#filtroSinDuplicados()
+	 * @see net.gaia.vortex.api.builder.VortexCore#filtroSinMensajesDuplicados()
 	 */
-	public Bifurcador filtroSinDuplicados() {
+	public Bifurcador filtroSinMensajesDuplicados() {
+		final Bifurcador filtroCreado = filtroDe(condicionSinDuplicados());
+		return filtroCreado;
+	}
+
+	/**
+	 * Crea una condición para evitar mensajes duplicados
+	 * 
+	 * @return La condicion que devuelve true cuando el mensaje es nuevo
+	 */
+	private EsMensajeNuevo condicionSinDuplicados() {
 		final MemoriaDeMensajes memoriaDelFiltro = MemoriaLimitadaDeMensajes.create(CANTIDAD_MENSAJES_RECORDADOS);
 		final EsMensajeNuevo condicion = EsMensajeNuevo.create(memoriaDelFiltro);
-		final Bifurcador filtroCreado = filtroDe(condicion);
-		return filtroCreado;
+		return condicion;
 	}
 
 	/**

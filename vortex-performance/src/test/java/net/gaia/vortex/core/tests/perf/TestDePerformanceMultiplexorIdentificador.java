@@ -5,7 +5,7 @@ package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
-import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
+import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
 
 /**
  * Esta clase prueba las velocidades de procesamiento de cada uno de los componentes bajo estrés de
@@ -21,7 +21,7 @@ public class TestDePerformanceMultiplexorIdentificador extends TestDePerformance
 	 */
 	@Override
 	protected FlujoVortexViejo crearFlujoATestear() {
-		final MultiplexorSinDuplicados nodo = MultiplexorSinDuplicados.create(getProcessor());
+		final MultiplexorSinDuplicadosViejo nodo = MultiplexorSinDuplicadosViejo.create(getProcessor());
 		return FlujoInmutableViejo.create(nodo, nodo);
 	}
 
