@@ -19,7 +19,7 @@ package net.gaia.vortex.impl.moleculas;
 
 import java.util.List;
 
-import net.gaia.vortex.api.atomos.Bifurcador;
+import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.builder.VortexCore;
@@ -70,11 +70,11 @@ public class MoleculaSelector extends MultiEmisorSupport implements Selector {
 		final List<Conector> allConectores = entrada.getConectores();
 		for (final Conector conectorDelMultiplexor : allConectores) {
 			final Receptor destino = conectorDelMultiplexor.getDestino();
-			if (!(destino instanceof Bifurcador)) {
+			if (!(destino instanceof Filtro)) {
 				// Es un conector que no creamos nosotros
 				continue;
 			}
-			final Bifurcador filtro = (Bifurcador) destino;
+			final Filtro filtro = (Filtro) destino;
 			if (filtro.getConectorPorTrue().equals(conectorDeSalida)) {
 				// Esta es la rama que buscabamos
 				entrada.eliminarConector(conectorDelMultiplexor);

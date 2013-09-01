@@ -21,6 +21,7 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
@@ -202,6 +203,14 @@ public class VortexCoreBuilder implements VortexCore {
 	public Selector selector() {
 		final MoleculaSelector selector = MoleculaSelector.create(this);
 		return selector;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#conectarDesde(net.gaia.vortex.api.moleculas.Compuesto,
+	 *      net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarDesde(final Compuesto<? extends MultiConectable> origen, final Receptor destino) {
+		origen.getSalida().crearConector().conectarCon(destino);
 	}
 
 }

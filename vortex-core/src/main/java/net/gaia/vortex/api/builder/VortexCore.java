@@ -25,8 +25,6 @@ import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
-import net.gaia.vortex.impl.moleculas.MoleculaCompuesta;
-import net.gaia.vortex.impl.moleculas.MoleculaSelector;
 
 /**
  * Esta interfaz define el contrato esperable de un builder de nodos vortex, el cual permite obtener
@@ -77,7 +75,7 @@ public interface VortexCore {
 	 *            Los receptores a conectar como salidas de la molecula creada
 	 * @return La molecula creada y conectada a los receptores indicados
 	 */
-	MoleculaCompuesta<MultiConectable> multiplexarSinDuplicados(Receptor... receptores);
+	Compuesto<MultiConectable> multiplexarSinDuplicados(Receptor... receptores);
 
 	/**
 	 * Crea un atomo bifurcador de mensajes que utiliza la condición pasada para entregar a un
@@ -174,15 +172,15 @@ public interface VortexCore {
 	Transformador transformadorPara(Transformacion transformacion);
 
 	/**
-	 * Crea una {@link MoleculaSelector} que permite entregar mensajes a conjuntos de receptores
-	 * segun las condiciones usadas al conectarlos
+	 * Crea un {@link Selector} que permite entregar mensajes a conjuntos de receptores segun las
+	 * condiciones usadas al conectarlos
 	 * 
 	 * @return El selector creado
 	 */
 	Selector selector();
 
 	/**
-	 * Crea un {@link MoleculaCompuesta} con la composición de los componentes pasados.<br>
+	 * Crea un {@link Compuesto} con la composición de los componentes pasados.<br>
 	 * Los componentes deben ser conectados entre sí (antes o despues de esta creación) para que la
 	 * molecula se comporte correctamente al recibir mensajes.<br>
 	 * La molecula representara a los componentes pasados como una unidad, derivandole a la entrada
@@ -194,6 +192,16 @@ public interface VortexCore {
 	 *            El componente utilizado para conectar todas las salidas
 	 * @return La molecula creada
 	 */
-	public <E extends Emisor> Compuesto<E> componer(final Receptor entrada, final E salida);
+	<E extends Emisor> Compuesto<E> componer(final Receptor entrada, final E salida);
 
+	/**
+	 * Crea una conexión unidireccional desde el origen al destino. Creando un conector en origen y
+	 * conectandolo al destino
+	 * 
+	 * @param origen
+	 *            El componente desde el cual parten los mensajes
+	 * @param destino
+	 *            El componente al que deben llegar
+	 */
+	void conectarDesde(Compuesto<? extends MultiConectable> origen, Receptor destino);
 }

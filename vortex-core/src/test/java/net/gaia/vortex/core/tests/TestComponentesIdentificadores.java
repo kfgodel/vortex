@@ -21,11 +21,11 @@ import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.MensajeConContenido;
-import net.gaia.vortex.impl.moleculas.MoleculaCompuesta;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class TestComponentesIdentificadores {
 	private ReceptorEncolador receptorFinal2;
 	private VortexCore builder;
 	private Filtro filtro;
-	private MoleculaCompuesta<MultiConectable> multiplexorSinDuplicados;
+	private Compuesto<MultiConectable> multiplexorSinDuplicados;
 
 	@Before
 	public void crearDependencias() {

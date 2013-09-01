@@ -10,13 +10,16 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.basic.emisores.MultiConectable;
+import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.api.NodoViejo;
+import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.core.external.VortexProcessorFactory;
 import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.MensajeConContenido;
@@ -42,17 +45,22 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestRedA01ConNodoMultiplexor {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConNodoMultiplexor.class);
 
-	private NodoViejo nodoEmisor;
-	private NodoViejo nodoRuteador;
-	private NodoViejo nodoReceptor;
+	private Compuesto<MultiConectable> nodoEmisor;
+	private Compuesto<MultiConectable> nodoRuteador;
+	private Compuesto<MultiConectable> nodoReceptor;
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
 	private GeneradorSecuencialDeIdDeMensaje generadorDeIdsDelNodo;
 
+	private VortexCore builder;
+
 	@Before
 	public void crearNodos() {
+		builder = VortexCoreBuilder.create();
+
 		processor = VortexProcessorFactory.createProcessor();
+
 		mensaje1 = MensajeConContenido.crearVacio();
 		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
 		generadorDeIdsDelNodo = GeneradorSecuencialDeIdDeMensaje.create(idDeNodo);
@@ -70,8 +78,8 @@ public class TestRedA01ConNodoMultiplexor {
 	/**
 	 * Crea un nodo tipo para las pruebas
 	 */
-	private MultiplexorSinDuplicadosViejo crearNodoDefault() {
-		return MultiplexorSinDuplicadosViejo.create(processor);
+	private Compuesto<MultiConectable> crearNodoDefault() {
+		return builder.multiplexarSinDuplicados();
 	}
 
 	@After
@@ -99,7 +107,7 @@ public class TestRedA01ConNodoMultiplexor {
 	public void el_Receptor_Debería_Poder_Recibir_De_Vortex_Cualquier_Objeto_Serializable() {
 		// Para recibir de la red nos conectamos a un componente receptor
 		final ReceptorEncolador receptorDelCliente = ReceptorEncolador.create();
-		nodoReceptor.conectarCon(receptorDelCliente);
+		builder.conectarDesde(nodoReceptor, receptorDelCliente);
 	}
 
 	/**
@@ -110,7 +118,7 @@ public class TestRedA01ConNodoMultiplexor {
 	@Test
 	public void el_Mensaje_Enviado_Desde_El_Emisor_Y_El_Recibido_Por_El_Receptor_Deberian_Ser_Iguales() {
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
-		nodoReceptor.conectarCon(handlerReceptor);
+		builder.conectarDesde(nodoReceptor, handlerReceptor);
 
 		nodoEmisor.recibir(mensaje1);
 
@@ -139,7 +147,7 @@ public class TestRedA01ConNodoMultiplexor {
 				receptorBloqueado.set(false);
 			}
 		};
-		nodoReceptor.conectarCon(handlerReceptor);
+		builder.conectarDesde(nodoReceptor, handlerReceptor);
 
 		nodoEmisor.recibir(mensaje1);
 
@@ -169,7 +177,7 @@ public class TestRedA01ConNodoMultiplexor {
 				threadDeEntregaDefinido.release();
 			}
 		};
-		nodoReceptor.conectarCon(handlerReceptor);
+		builder.conectarDesde(nodoReceptor, handlerReceptor);
 
 		nodoEmisor.recibir(mensaje1);
 
@@ -190,7 +198,7 @@ public class TestRedA01ConNodoMultiplexor {
 	public void el_Emisor_No_Deberia_Recibir_Su_Propio_Mensaje() {
 		// Le conectamos un receptor directo al emisor para ver los que le llegan
 		final ReceptorEncolador recibidosPorElEmisor = ReceptorEncolador.create();
-		nodoEmisor.conectarCon(recibidosPorElEmisor);
+		builder.conectarDesde(nodoEmisor, recibidosPorElEmisor);
 
 		// Mandamos el mensaje
 		nodoEmisor.recibir(mensaje1);
@@ -202,7 +210,8 @@ public class TestRedA01ConNodoMultiplexor {
 		try {
 			recibidosPorElEmisor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("No deberíamos haber recibido un segundo mensaje");
-		} catch (final TimeoutExceededException e) {
+		}
+		catch (final TimeoutExceededException e) {
 			// Es la excepción que esperábamos
 		}
 	}
@@ -212,13 +221,13 @@ public class TestRedA01ConNodoMultiplexor {
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayNodosEnElMedio() {
-		final NodoViejo nodoEmisor = crearNodoDefault();
-		final NodoViejo nodoIntermedio1 = crearNodoDefault();
-		final NodoViejo nodoIntermedio2 = crearNodoDefault();
-		final NodoViejo nodoReceptor = crearNodoDefault();
+		final Compuesto<MultiConectable> nodoEmisor = crearNodoDefault();
+		final Compuesto<MultiConectable> nodoIntermedio1 = crearNodoDefault();
+		final Compuesto<MultiConectable> nodoIntermedio2 = crearNodoDefault();
+		final Compuesto<MultiConectable> nodoReceptor = crearNodoDefault();
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
-		nodoReceptor.conectarCon(handlerReceptor);
+		builder.conectarDesde(nodoReceptor, handlerReceptor);
 
 		interconectar(nodoEmisor, nodoIntermedio1);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
@@ -232,7 +241,8 @@ public class TestRedA01ConNodoMultiplexor {
 		try {
 			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("No deberíamos haber recibido otro mensaje");
-		} catch (final TimeoutExceededException e) {
+		}
+		catch (final TimeoutExceededException e) {
 			// Es la excepción que esperábamos
 		}
 	}
@@ -242,17 +252,17 @@ public class TestRedA01ConNodoMultiplexor {
 	 */
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosNodosEnElMedioInterconectados() {
-		final NodoViejo nodoEmisor = crearNodoDefault();
+		final Compuesto<MultiConectable> nodoEmisor = crearNodoDefault();
 		// Le conectamos un receptor directo al emisor para ver los que le llegan
 		final ReceptorEncolador recibidosPorElEmisor = ReceptorEncolador.create();
-		nodoEmisor.conectarCon(recibidosPorElEmisor);
+		builder.conectarDesde(nodoEmisor, recibidosPorElEmisor);
 
-		final NodoViejo nodoIntermedio1 = crearNodoDefault();
-		final NodoViejo nodoIntermedio2 = crearNodoDefault();
-		final NodoViejo nodoReceptor = crearNodoDefault();
+		final Compuesto<MultiConectable> nodoIntermedio1 = crearNodoDefault();
+		final Compuesto<MultiConectable> nodoIntermedio2 = crearNodoDefault();
+		final Compuesto<MultiConectable> nodoReceptor = crearNodoDefault();
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
-		nodoReceptor.conectarCon(handlerReceptor);
+		builder.conectarDesde(nodoReceptor, handlerReceptor);
 
 		interconectar(nodoEmisor, nodoIntermedio1);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
@@ -270,7 +280,8 @@ public class TestRedA01ConNodoMultiplexor {
 		try {
 			recibidosPorElEmisor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("No deberíamos haber recibido un segundo mensaje");
-		} catch (final TimeoutExceededException e) {
+		}
+		catch (final TimeoutExceededException e) {
 			// Es la excepción que esperábamos
 		}
 	}
@@ -282,11 +293,11 @@ public class TestRedA01ConNodoMultiplexor {
 	public void elMensajeDeberiaLlegarADosReceptoresIndependientes() {
 		// Armamos la red con otro receptor
 		final ReceptorEncolador handlerReceptor1 = ReceptorEncolador.create();
-		nodoReceptor.conectarCon(handlerReceptor1);
+		builder.conectarDesde(nodoReceptor, handlerReceptor1);
 
 		final ReceptorEncolador handlerReceptor2 = ReceptorEncolador.create();
-		final NodoViejo nodoReceptor2 = crearNodoDefault();
-		nodoReceptor2.conectarCon(handlerReceptor2);
+		final Compuesto<MultiConectable> nodoReceptor2 = crearNodoDefault();
+		builder.conectarDesde(nodoReceptor2, handlerReceptor2);
 
 		interconectar(nodoRuteador, nodoReceptor2);
 
@@ -305,9 +316,10 @@ public class TestRedA01ConNodoMultiplexor {
 	/**
 	 * Crea una conexión bidireccional entre los nodos pasados
 	 */
-	public void interconectar(final NodoViejo origen, final NodoViejo destino) {
-		origen.conectarCon(destino);
-		destino.conectarCon(origen);
+	public void interconectar(final Compuesto<MultiConectable> nodoEmisor2,
+			final Compuesto<MultiConectable> nodoRuteador2) {
+		builder.conectarDesde(nodoEmisor2, nodoRuteador2);
+		builder.conectarDesde(nodoRuteador2, nodoEmisor2);
 	}
 
 	/**
@@ -318,7 +330,7 @@ public class TestRedA01ConNodoMultiplexor {
 	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo() {
 		final int cantidadDeMensajes = 100000;
 		final WaitBarrier espeerarEntregas = WaitBarrier.create(cantidadDeMensajes);
-		nodoReceptor.conectarCon(new ReceptorSupport() {
+		builder.conectarDesde(nodoReceptor, new ReceptorSupport() {
 
 			public void recibir(final MensajeVortex mensaje) {
 				espeerarEntregas.release();
