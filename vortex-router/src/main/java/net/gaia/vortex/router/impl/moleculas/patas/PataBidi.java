@@ -30,7 +30,7 @@ import net.gaia.vortex.core.impl.atomos.forward.NexoEjecutorViejo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltrosViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
-import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
@@ -72,7 +72,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class PataBidi extends NodoMoleculaSupport implements PataBidireccional {
+public class PataBidi extends NodoMoleculaSupportViejo implements PataBidireccional {
 	private static final Logger LOG = LoggerFactory.getLogger(PataBidi.class);
 
 	private static final AtomicLong proximoId = new AtomicLong(0);

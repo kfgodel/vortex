@@ -24,7 +24,7 @@ import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
-import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
@@ -58,7 +58,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidireccional,
+public abstract class NodoBidi extends NodoMoleculaSupportViejo implements NodoBidireccional,
 		ListenerDeConjuntoDeCondiciones, ListenerConexionBidiEnPata {
 	private static final Logger LOG = LoggerFactory.getLogger(NodoBidi.class);
 

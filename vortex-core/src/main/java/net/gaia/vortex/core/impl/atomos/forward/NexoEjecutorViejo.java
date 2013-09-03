@@ -20,7 +20,7 @@ import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.proto.ComponenteVortex;
 import net.gaia.vortex.core.api.atomos.forward.EjecutorViejo;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
-import net.gaia.vortex.core.impl.tasks.EjecutarYDelegar;
+import net.gaia.vortex.core.impl.tasks.EjecutarYDelegarViejo;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -63,7 +63,7 @@ public class NexoEjecutorViejo extends NexoSupport implements EjecutorViejo {
 		final Receptor destino = getDestino();
 		Loggers.ATOMOS.debug("Ejecutando [{}] antes de delegar mensaje[{}] a nodo[{}]",
 				new Object[] { ejecutante.toShortString(), mensaje, destino });
-		return EjecutarYDelegar.create(mensaje, ejecutante, destino);
+		return EjecutarYDelegarViejo.create(mensaje, ejecutante, destino);
 	}
 
 	/**

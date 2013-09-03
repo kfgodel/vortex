@@ -34,8 +34,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author dgarcia
  */
-public class EntregarAsincromente implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(EntregarAsincromente.class);
+public class EntregarAsincronamente implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(EntregarAsincronamente.class);
 
 	private Receptor enCasoDeError;
 	public static final String enCasoDeError_FIELD = "enCasoDeError";
@@ -64,9 +64,9 @@ public class EntregarAsincromente implements WorkUnit {
 		// Nada más que hacer
 	}
 
-	public static EntregarAsincromente create(final MensajeVortex mensaje, final Receptor receptor,
+	public static EntregarAsincronamente create(final MensajeVortex mensaje, final Receptor receptor,
 			final Receptor enCasoDeError) {
-		final EntregarAsincromente tarea = new EntregarAsincromente();
+		final EntregarAsincronamente tarea = new EntregarAsincronamente();
 		tarea.enCasoDeError = enCasoDeError;
 		tarea.mensaje = mensaje;
 		tarea.receptor = receptor;

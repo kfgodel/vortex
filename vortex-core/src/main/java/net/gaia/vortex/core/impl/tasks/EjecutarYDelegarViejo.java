@@ -17,7 +17,7 @@ import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
+import net.gaia.vortex.core.impl.tasks.forward.DelegarMensajeViejo;
 import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;
@@ -31,8 +31,9 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class EjecutarYDelegar implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(EjecutarYDelegar.class);
+@Deprecated
+public class EjecutarYDelegarViejo implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(EjecutarYDelegarViejo.class);
 
 	private MensajeVortex mensaje;
 	public static final String mensaje_FIELD = "mensaje";
@@ -51,19 +52,20 @@ public class EjecutarYDelegar implements WorkUnit {
 		Loggers.ATOMOS.trace("Ejecutando atomo[{}] con el mensaje[{}]", ejecutante.toShortString(), mensaje);
 		try {
 			ejecutante.recibir(mensaje);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error al ejecutar el receptor[" + ejecutante + "] con el mensaje[" + mensaje
 					+ "]. Siguiendo con delegado", e);
 		}
 
 		// Finalmente delegamos al delegado
-		final DelegarMensaje delegacion = DelegarMensaje.create(mensaje, delegado);
+		final DelegarMensajeViejo delegacion = DelegarMensajeViejo.create(mensaje, delegado);
 		parallelizer.submitAndForget(delegacion);
 	}
 
-	public static EjecutarYDelegar create(final MensajeVortex mensaje, final Receptor ejecutante,
+	public static EjecutarYDelegarViejo create(final MensajeVortex mensaje, final Receptor ejecutante,
 			final Receptor delegado) {
-		final EjecutarYDelegar ejecucion = new EjecutarYDelegar();
+		final EjecutarYDelegarViejo ejecucion = new EjecutarYDelegarViejo();
 		ejecucion.delegado = delegado;
 		ejecucion.ejecutante = ejecutante;
 		ejecucion.mensaje = mensaje;

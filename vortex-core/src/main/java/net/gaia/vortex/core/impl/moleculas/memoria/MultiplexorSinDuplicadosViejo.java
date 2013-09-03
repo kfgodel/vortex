@@ -14,7 +14,7 @@ package net.gaia.vortex.core.impl.moleculas.memoria;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Molecula;
-import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSupport;
+import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSupportViejo;
 
 /**
  * Esta clase representa un átomo que identifica los mensajes que recibe, descartando los
@@ -27,7 +27,7 @@ import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSuppo
  */
 @Molecula
 @Deprecated
-public class MultiplexorSinDuplicadosViejo extends MultiplexorSinDuplicadosSupport {
+public class MultiplexorSinDuplicadosViejo extends MultiplexorSinDuplicadosSupportViejo {
 
 	public static MultiplexorSinDuplicadosViejo create(final TaskProcessor processor) {
 		final MultiplexorSinDuplicadosViejo multiplexor = new MultiplexorSinDuplicadosViejo();

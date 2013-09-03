@@ -8,7 +8,7 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.MultiplexorSupportViejo;
-import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensaje;
+import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensajeViejo;
 import net.gaia.vortex.core.prog.Decision;
 import ar.com.dgarcia.coding.anno.HasDependencyOn;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
@@ -33,7 +33,7 @@ public class MultiplexorParaleloViejo extends MultiplexorSupportViejo {
 	@HasDependencyOn(Decision.LA_LISTA_DE_DESTINOS_ES_UN_COPY_ON_WRITE)
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		// Por cada destino derivamos la entrega al procesador interno
-		final MultiplexarMensaje multiplexion = MultiplexarMensaje.create(mensaje, getDestinos(), listenerMetricas);
+		final MultiplexarMensajeViejo multiplexion = MultiplexarMensajeViejo.create(mensaje, getDestinos(), listenerMetricas);
 		return multiplexion;
 	}
 

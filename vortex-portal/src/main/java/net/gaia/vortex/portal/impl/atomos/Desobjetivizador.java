@@ -18,7 +18,7 @@ import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
-import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
+import net.gaia.vortex.core.impl.tasks.forward.DelegarMensajeViejo;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -44,7 +44,7 @@ public class Desobjetivizador extends NexoSupport {
 	 */
 	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
-		final DelegarMensaje delegacion = DelegarMensaje.create(mensaje, getDestino());
+		final DelegarMensajeViejo delegacion = DelegarMensajeViejo.create(mensaje, getDestino());
 		return delegacion;
 	}
 

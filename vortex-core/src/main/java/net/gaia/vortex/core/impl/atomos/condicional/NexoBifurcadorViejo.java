@@ -11,7 +11,7 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.api.atomos.condicional.BifurcadorViejo;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
-import net.gaia.vortex.core.impl.tasks.condicional.BifurcarMensaje;
+import net.gaia.vortex.core.impl.tasks.condicional.BifurcarMensajeViejo;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 import org.slf4j.Logger;
@@ -56,7 +56,7 @@ public class NexoBifurcadorViejo extends ReceptorConProcesador implements Bifurc
 
 	@Override
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
-		final BifurcarMensaje elegirDelegado = BifurcarMensaje.create(mensaje, condicion, delegadoPorTrue,
+		final BifurcarMensajeViejo elegirDelegado = BifurcarMensajeViejo.create(mensaje, condicion, delegadoPorTrue,
 				delegadoPorFalse);
 		return elegirDelegado;
 	}

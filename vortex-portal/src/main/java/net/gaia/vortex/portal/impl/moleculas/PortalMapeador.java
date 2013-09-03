@@ -25,7 +25,7 @@ import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
 import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltrosViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
-import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
@@ -45,7 +45,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class PortalMapeador extends NodoMoleculaSupport implements Portal {
+public class PortalMapeador extends NodoMoleculaSupportViejo implements Portal {
 
 	private ConversorDeMensajesVortex mapeadorVortex;
 

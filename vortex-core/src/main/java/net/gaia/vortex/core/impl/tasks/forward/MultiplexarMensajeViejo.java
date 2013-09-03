@@ -19,7 +19,7 @@ import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.tasks.metricas.RegistrarRuteoRealizado;
+import net.gaia.vortex.core.impl.tasks.metricas.RegistrarRuteoRealizadoViejo;
 import net.gaia.vortex.core.prog.Loggers;
 import ar.com.dgarcia.lang.metrics.ListenerDeMetricas;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -30,7 +30,8 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class MultiplexarMensaje implements WorkUnit {
+@Deprecated
+public class MultiplexarMensajeViejo implements WorkUnit {
 
 	private MensajeVortex mensaje;
 	public static final String mensaje_FIELD = "mensaje";
@@ -49,7 +50,7 @@ public class MultiplexarMensaje implements WorkUnit {
 		Loggers.ATOMOS.debug("Multiplexando mensaje[{}] a {} destinos{}", new Object[] { mensaje, destinos.size(),
 				destinos });
 		for (final Receptor destino : destinos) {
-			final DelegarMensaje entregaEnBackground = DelegarMensaje.create(mensaje, destino);
+			final DelegarMensajeViejo entregaEnBackground = DelegarMensajeViejo.create(mensaje, destino);
 			parallelizer.submitAndForget(entregaEnBackground);
 		}
 		if (listenerDeMetricas == null) {
@@ -58,13 +59,13 @@ public class MultiplexarMensaje implements WorkUnit {
 		}
 		Loggers.ATOMOS.debug("Registrando output en metricas del mensaje[{}]", mensaje);
 		// Si tenemos listener registramos que ya ruteamos cuando podamos
-		final RegistrarRuteoRealizado registro = RegistrarRuteoRealizado.create(listenerDeMetricas);
+		final RegistrarRuteoRealizadoViejo registro = RegistrarRuteoRealizadoViejo.create(listenerDeMetricas);
 		parallelizer.submitAndForget(registro);
 	}
 
-	public static MultiplexarMensaje create(final MensajeVortex mensaje, final Collection<? extends Receptor> destinos,
-			final ListenerDeMetricas listenerMetricas) {
-		final MultiplexarMensaje multiplexion = new MultiplexarMensaje();
+	public static MultiplexarMensajeViejo create(final MensajeVortex mensaje,
+			final Collection<? extends Receptor> destinos, final ListenerDeMetricas listenerMetricas) {
+		final MultiplexarMensajeViejo multiplexion = new MultiplexarMensajeViejo();
 		multiplexion.destinos = destinos;
 		multiplexion.mensaje = mensaje;
 		multiplexion.listenerDeMetricas = listenerMetricas;

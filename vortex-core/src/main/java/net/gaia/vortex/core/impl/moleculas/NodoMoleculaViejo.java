@@ -17,7 +17,7 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.api.atomos.EmisorViejo;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
-import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
 
 /**
  * Esta clase representa un nodo cuyo comportamiento se define por el flujo con el que se construyó.
@@ -26,10 +26,11 @@ import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
  * @author D. García
  */
 @Molecula
-public class NodoMolecula extends NodoMoleculaSupport {
+@Deprecated
+public class NodoMoleculaViejo extends NodoMoleculaSupportViejo {
 
-	public static NodoMolecula create(final FlujoVortexViejo flujo) {
-		final NodoMolecula molecula = new NodoMolecula();
+	public static NodoMoleculaViejo create(final FlujoVortexViejo flujo) {
+		final NodoMoleculaViejo molecula = new NodoMoleculaViejo();
 		molecula.initializeWith(flujo);
 		return molecula;
 	}
@@ -44,7 +45,7 @@ public class NodoMolecula extends NodoMoleculaSupport {
 	 *            El componente que enviará los mensajes a la salida
 	 * @return El nodo creado
 	 */
-	public static NodoMolecula create(final Receptor componenteDeEntrada, final EmisorViejo componenteDeSalida) {
+	public static NodoMoleculaViejo create(final Receptor componenteDeEntrada, final EmisorViejo componenteDeSalida) {
 		final FlujoInmutableViejo flujo = FlujoInmutableViejo.create(componenteDeEntrada, componenteDeSalida);
 		return create(flujo);
 	}

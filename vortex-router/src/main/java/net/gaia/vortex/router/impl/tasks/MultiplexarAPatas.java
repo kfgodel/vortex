@@ -24,7 +24,7 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensaje;
+import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensajeViejo;
 import net.gaia.vortex.helpers.VortexEquals;
 import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import net.gaia.vortex.router.impl.condiciones.EsMetaMensaje;
@@ -77,7 +77,7 @@ public class MultiplexarAPatas implements WorkUnit {
 		// Loggers.ATOMOS.debug("Multiplexando mensaje[{}] a {} patas{}", new Object[] { mensaje,
 		// destinos.size(),
 		// destinos });
-		final MultiplexarMensaje multiplexarMensaje = MultiplexarMensaje.create(mensaje, destinos, null);
+		final MultiplexarMensajeViejo multiplexarMensaje = MultiplexarMensajeViejo.create(mensaje, destinos, null);
 		multiplexarMensaje.doWork(parallelizer);
 		// for (final PataBidireccional destino : destinos) {
 		// LOG.debug("Delegando mensaje[{}] a [{}]", mensaje.toShortString(),

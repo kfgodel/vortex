@@ -28,7 +28,8 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class NodoMoleculaSupport extends NodoSupportViejo {
+@Deprecated
+public class NodoMoleculaSupportViejo extends NodoSupportViejo {
 
 	private FlujoVortexViejo flujoInterno;
 	public static final String flujoInterno_FIELD = "flujoInterno";

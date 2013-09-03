@@ -23,7 +23,8 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class RegistrarRuteoRealizado implements WorkUnit {
+@Deprecated
+public class RegistrarRuteoRealizadoViejo implements WorkUnit {
 
 	private ListenerDeMetricas metricas;
 
@@ -35,8 +36,8 @@ public class RegistrarRuteoRealizado implements WorkUnit {
 		metricas.registrarOutput();
 	}
 
-	public static RegistrarRuteoRealizado create(final ListenerDeMetricas metricas) {
-		final RegistrarRuteoRealizado registrar = new RegistrarRuteoRealizado();
+	public static RegistrarRuteoRealizadoViejo create(final ListenerDeMetricas metricas) {
+		final RegistrarRuteoRealizadoViejo registrar = new RegistrarRuteoRealizadoViejo();
 		registrar.metricas = metricas;
 		return registrar;
 	}

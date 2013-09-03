@@ -9,9 +9,9 @@ import net.gaia.vortex.api.basic.emisores.MonoConectable;
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.core.impl.transformaciones.TransformacionNula;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
+import net.gaia.vortex.impl.transformaciones.TransformacionNula;
 
 /**
  * Esta clase prueba las velocidades de procesamiento de un {@link NodoPorComposicion} con distintos

@@ -20,7 +20,7 @@ package net.gaia.vortex.impl.proto;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
-import net.gaia.vortex.impl.tasks.EntregarAsincromente;
+import net.gaia.vortex.impl.tasks.EntregarAsincronamente;
 
 /**
  * Esta clase representa un conector que utiliza threads propios para entregar los mensajes que
@@ -61,7 +61,7 @@ public class ConectorAsincrono extends ConectorSupport {
 	public void recibir(final MensajeVortex mensaje) {
 		// Creamos la tarea de delegación y la ejecutamos en el pool, liberando al thread actual
 		// Usamos el receptor nulo en caso de error al entregar
-		final EntregarAsincromente delegacion = EntregarAsincromente.create(mensaje, getConectado(),
+		final EntregarAsincronamente delegacion = EntregarAsincronamente.create(mensaje, getConectado(),
 				ReceptorNulo.getInstancia());
 		processor.process(delegacion);
 	}

@@ -28,7 +28,8 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public abstract class MultiplexorSinDuplicadosSupport extends NodoMoleculaSupport implements MultiplexorViejo,
+@Deprecated
+public abstract class MultiplexorSinDuplicadosSupportViejo extends NodoMoleculaSupportViejo implements MultiplexorViejo,
 		ComponenteConMemoria {
 
 	private NexoSinDuplicadosViejo procesoDeEntrada;

@@ -21,7 +21,7 @@ import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
-import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
 import net.gaia.vortex.http.impl.atomos.Deshttpizador;
 import net.gaia.vortex.http.impl.atomos.Httpizador;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
@@ -40,7 +40,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemoria, NexoViejo {
+public class NexoHttp extends NodoMoleculaSupportViejo implements ComponenteConMemoria, NexoViejo {
 
 	private SesionVortexHttp sesion;
 	public static final String sesion_FIELD = "sesion";

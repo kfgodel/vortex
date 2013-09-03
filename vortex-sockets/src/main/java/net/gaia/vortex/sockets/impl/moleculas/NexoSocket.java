@@ -23,7 +23,7 @@ import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
-import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.sockets.impl.atomos.Desocketizador;
 import net.gaia.vortex.sockets.impl.atomos.Socketizador;
@@ -42,7 +42,7 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * @author D. García
  */
 @Molecula
-public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHandler, Disposable, NexoViejo,
+public class NexoSocket extends NodoMoleculaSupportViejo implements ObjectReceptionHandler, Disposable, NexoViejo,
 		ComponenteConMemoria {
 
 	private ObjectSocket socket;

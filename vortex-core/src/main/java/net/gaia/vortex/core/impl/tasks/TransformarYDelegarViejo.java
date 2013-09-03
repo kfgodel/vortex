@@ -9,7 +9,7 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.transformaciones.Transformacion;
-import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
+import net.gaia.vortex.core.impl.tasks.forward.DelegarMensajeViejo;
 import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;
@@ -23,8 +23,9 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class TransformarYDelegar implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(TransformarYDelegar.class);
+@Deprecated
+public class TransformarYDelegarViejo implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(TransformarYDelegarViejo.class);
 
 	private MensajeVortex mensajeOriginal;
 	public static final String mensaje_FIELD = "mensajeOriginal";
@@ -44,7 +45,8 @@ public class TransformarYDelegar implements WorkUnit {
 		MensajeVortex mensajeTransformado;
 		try {
 			mensajeTransformado = transformacion.transformar(mensajeOriginal);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error en la transformacion[" + transformacion + "] del mensajeOriginal["
 					+ mensajeOriginal + "] antes de delegarlo al delegado[" + delegado
 					+ "]. Descartando mensajeOriginal", e);
@@ -53,13 +55,13 @@ public class TransformarYDelegar implements WorkUnit {
 		}
 		Loggers.ATOMOS.debug("Transformado mensaje original[{}] en [{}]", mensajeOriginal, mensajeTransformado);
 		// La delegacion es una tarea posterior
-		final DelegarMensaje delegacion = DelegarMensaje.create(mensajeTransformado, delegado);
+		final DelegarMensajeViejo delegacion = DelegarMensajeViejo.create(mensajeTransformado, delegado);
 		parallelizer.submitAndForget(delegacion);
 	}
 
-	public static TransformarYDelegar create(final MensajeVortex mensajeOriginal, final Transformacion transformacion,
-			final Receptor delegado) {
-		final TransformarYDelegar transformar = new TransformarYDelegar();
+	public static TransformarYDelegarViejo create(final MensajeVortex mensajeOriginal,
+			final Transformacion transformacion, final Receptor delegado) {
+		final TransformarYDelegarViejo transformar = new TransformarYDelegarViejo();
 		transformar.transformacion = transformacion;
 		transformar.delegado = delegado;
 		transformar.mensajeOriginal = mensajeOriginal;

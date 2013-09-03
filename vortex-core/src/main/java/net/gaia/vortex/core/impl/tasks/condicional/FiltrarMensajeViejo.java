@@ -1,5 +1,5 @@
 /**
- * 13/06/2012 17:20:12 Copyright (C) 2011 10Pines S.R.L.
+ * 13/06/2012 11:27:27 Copyright (C) 2011 10Pines S.R.L.
  */
 package net.gaia.vortex.core.impl.tasks.condicional;
 
@@ -10,7 +10,7 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.tasks.forward.DelegarMensaje;
+import net.gaia.vortex.core.impl.tasks.forward.DelegarMensajeViejo;
 import net.gaia.vortex.core.prog.Loggers;
 
 import org.slf4j.Logger;
@@ -19,14 +19,15 @@ import org.slf4j.LoggerFactory;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la tarea realizada en thread propio que evalua una condición para elegir el
- * delegado al que envia el mensaje
+ * Esta clase representa la tarea realizada en thread propio por un componente vortex para evaluar
+ * una condición y en base al resultado descartar el mensaje o enviarlo a otro delegado
  * 
  * @author D. García
  */
-public class BifurcarMensaje implements WorkUnit {
+@Deprecated
+public class FiltrarMensajeViejo implements WorkUnit {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BifurcarMensaje.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FiltrarMensajeViejo.class);
 
 	private MensajeVortex mensaje;
 	public static final String mensaje_FIELD = "mensaje";
@@ -36,9 +37,6 @@ public class BifurcarMensaje implements WorkUnit {
 
 	private Receptor delegadoPorTrue;
 	public static final String delegadoPorTrue_FIELD = "delegadoPorTrue";
-
-	private Receptor delegadoPorFalse;
-	public static final String delegadoPorFalse_FIELD = "delegadoPorFalse";
 
 	public MensajeVortex getMensaje() {
 		return mensaje;
@@ -64,14 +62,6 @@ public class BifurcarMensaje implements WorkUnit {
 		this.delegadoPorTrue = delegadoPorTrue;
 	}
 
-	public Receptor getDelegadoPorFalse() {
-		return delegadoPorFalse;
-	}
-
-	public void setDelegadoPorFalse(final Receptor delegadoPorFalse) {
-		this.delegadoPorFalse = delegadoPorFalse;
-	}
-
 	/**
 	 * @see net.gaia.taskprocessor.api.WorkUnit#doWork()
 	 */
@@ -83,35 +73,33 @@ public class BifurcarMensaje implements WorkUnit {
 			resultadoDeCondicion = condicion.esCumplidaPor(mensaje);
 		} catch (final Exception e) {
 			LOG.error("Se produjo un error al evaluar la condicion[" + condicion + "] sobre el mensaje[" + mensaje
-					+ "] al bifurcar. Descartando mensaje", e);
+					+ "] para bifurcar. Descartando mensaje", e);
 			return;
 		}
-		if (!resultadoDeCondicion.esBooleano()) {
-			LOG.error("No es posible bifurcar el mensaje porque la condicion[" + condicion + "] sobre el mensaje["
-					+ mensaje + "] es indecidible. Descartando mensaje");
+		if (resultadoDeCondicion.esBooleano() && resultadoDeCondicion.esFalse()) {
+			Loggers.ATOMOS.debug("Evaluo[{}] la condición[{}] descartando mensaje[{}]. No llegará a nodo[{}]",
+					new Object[] { resultadoDeCondicion, condicion, mensaje, delegadoPorTrue.toShortString() });
 			return;
-		}
-		Receptor delegadoElegido;
-		if (resultadoDeCondicion.esTrue()) {
-			delegadoElegido = delegadoPorTrue;
-		} else {
-			delegadoElegido = delegadoPorFalse;
 		}
 		Loggers.ATOMOS.debug("Evaluo[{}] la condición[{}] delegando mensaje[{}] a nodo[{}]", new Object[] {
-				resultadoDeCondicion, condicion, mensaje, delegadoElegido.toShortString() });
-		final DelegarMensaje delegacion = DelegarMensaje.create(mensaje, delegadoElegido);
+				resultadoDeCondicion, condicion, mensaje, delegadoPorTrue.toShortString() });
+		final DelegarMensajeViejo delegacion = DelegarMensajeViejo.create(mensaje, delegadoPorTrue);
 		parallelizer.submitAndForget(delegacion);
 	}
 
 	/**
 	 * Inicializa esta instancia con los valores minimos
 	 */
-	protected void initializeWith(final MensajeVortex mensaje, final Condicion condicion,
-			final Receptor delegadoPorTrue, final Receptor delegadoPorFalse) {
+	protected void initializeWith(final MensajeVortex mensaje, final Condicion condicion, final Receptor delegadoPorTrue) {
 		this.condicion = condicion;
-		this.delegadoPorFalse = delegadoPorFalse;
 		this.delegadoPorTrue = delegadoPorTrue;
 		this.mensaje = mensaje;
+	}
+
+	public static FiltrarMensajeViejo create(final MensajeVortex mensaje, final Condicion condicion, final Receptor delegado) {
+		final FiltrarMensajeViejo evaluacion = new FiltrarMensajeViejo();
+		evaluacion.initializeWith(mensaje, condicion, delegado);
+		return evaluacion;
 	}
 
 	/**
@@ -120,14 +108,7 @@ public class BifurcarMensaje implements WorkUnit {
 
 	@Override
 	public String toString() {
-		return ToString.de(this).add(condicion_FIELD, condicion).add(delegadoPorTrue_FIELD, delegadoPorTrue)
-				.add(delegadoPorFalse_FIELD, delegadoPorFalse).add(mensaje_FIELD, mensaje).toString();
-	}
-
-	public static BifurcarMensaje create(final MensajeVortex mensaje, final Condicion condicion,
-			final Receptor delegadoPorTrue, final Receptor delegadoPorFalse) {
-		final BifurcarMensaje bifurcar = new BifurcarMensaje();
-		bifurcar.initializeWith(mensaje, condicion, delegadoPorTrue, delegadoPorFalse);
-		return bifurcar;
+		return ToString.de(this).add(condicion_FIELD, getCondicion()).add(delegadoPorTrue_FIELD, getDelegadoPorTrue())
+				.add(mensaje_FIELD, getMensaje()).toString();
 	}
 }

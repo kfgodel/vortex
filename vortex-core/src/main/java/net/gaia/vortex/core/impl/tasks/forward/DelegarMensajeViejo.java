@@ -22,8 +22,9 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class DelegarMensaje implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(DelegarMensaje.class);
+@Deprecated
+public class DelegarMensajeViejo implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(DelegarMensajeViejo.class);
 
 	private Receptor delegado;
 	public static final String delegado_FIELD = "delegado";
@@ -60,8 +61,8 @@ public class DelegarMensaje implements WorkUnit {
 		// Nada más que hacer
 	}
 
-	public static DelegarMensaje create(final MensajeVortex mensaje, final Receptor delegado) {
-		final DelegarMensaje entregar = new DelegarMensaje();
+	public static DelegarMensajeViejo create(final MensajeVortex mensaje, final Receptor delegado) {
+		final DelegarMensajeViejo entregar = new DelegarMensajeViejo();
 		entregar.mensaje = mensaje;
 		entregar.delegado = delegado;
 		return entregar;
