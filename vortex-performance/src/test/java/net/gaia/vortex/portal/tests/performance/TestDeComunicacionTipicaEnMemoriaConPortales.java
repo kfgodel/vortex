@@ -40,8 +40,8 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
  * 
  * @author D. García
  */
-public class TestDeComunicacionTipicaEnMemoria {
-	private static final Logger LOG = LoggerFactory.getLogger(TestDeComunicacionTipicaEnMemoria.class);
+public class TestDeComunicacionTipicaEnMemoriaConPortales {
+	private static final Logger LOG = LoggerFactory.getLogger(TestDeComunicacionTipicaEnMemoriaConPortales.class);
 
 	private TaskProcessor procesadorDelNodoEmisor;
 	private TaskProcessor procesadorDelNodoReceptor;
