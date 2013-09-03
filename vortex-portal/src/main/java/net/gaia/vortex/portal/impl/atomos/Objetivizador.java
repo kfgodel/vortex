@@ -17,7 +17,7 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
-import net.gaia.vortex.portal.api.mensaje.HandlerDeMensaje;
+import net.gaia.vortex.portal.api.mensaje.HandlerDeObjetos;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.tasks.DesvortificarEInvocarHandler;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -41,11 +41,11 @@ public class Objetivizador<T> extends ReceptorConProcesador {
 	private Class<? extends T> tipoEsperado;
 	public static final String tipoEsperado_FIELD = "tipoEsperado";
 
-	private HandlerDeMensaje<? super T> handlerDeMensajes;
+	private HandlerDeObjetos<? super T> handlerDeMensajes;
 	public static final String handlerDeMensajes_FIELD = "handlerDeMensajes";
 
 	public static <T> Objetivizador<T> create(final TaskProcessor processor, final ConversorDeMensajesVortex mapeador,
-			final Class<? extends T> tipoEsperado, final HandlerDeMensaje<? super T> handlerDeMensaje) {
+			final Class<? extends T> tipoEsperado, final HandlerDeObjetos<? super T> handlerDeMensaje) {
 		final Objetivizador<T> conversor = new Objetivizador<T>();
 		conversor.initializeWith(processor);
 		conversor.mapeador = mapeador;

@@ -14,7 +14,7 @@ import net.gaia.vortex.portal.api.moleculas.Portal;
  * 
  * @author D. García
  */
-public interface HandlerDePortal<T> extends HandlerDeMensaje<T> {
+public interface HandlerDePortal<T> extends HandlerDeObjetos<T> {
 
 	/**
 	 * Indica el tipo de objeto esperado en este handler

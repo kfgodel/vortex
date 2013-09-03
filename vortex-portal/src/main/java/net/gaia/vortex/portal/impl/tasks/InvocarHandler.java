@@ -15,7 +15,7 @@ package net.gaia.vortex.portal.impl.tasks;
 import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
-import net.gaia.vortex.portal.api.mensaje.HandlerDeMensaje;
+import net.gaia.vortex.portal.api.mensaje.HandlerDeObjetos;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class InvocarHandler<T> implements WorkUnit {
 	private T mensajeRecibido;
 	public static final String mensajeRecibido_FIELD = "mensajeRecibido";
 
-	private HandlerDeMensaje<? super T> handler;
+	private HandlerDeObjetos<? super T> handler;
 	public static final String handler_FIELD = "handler";
 
 	/**
@@ -43,14 +43,14 @@ public class InvocarHandler<T> implements WorkUnit {
 
 	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		try {
-			handler.onMensajeRecibido(mensajeRecibido);
+			handler.onObjetoRecibido(mensajeRecibido);
 		} catch (final Exception e) {
 			LOG.error("Se produjo un error en el handler[" + handler + "] al recibir el mensaje[" + mensajeRecibido
 					+ "]", e);
 		}
 	}
 
-	public static <T> InvocarHandler<T> create(final T mensajeRecibido, final HandlerDeMensaje<? super T> handler) {
+	public static <T> InvocarHandler<T> create(final T mensajeRecibido, final HandlerDeObjetos<? super T> handler) {
 		final InvocarHandler<T> invocacion = new InvocarHandler<T>();
 		invocacion.handler = handler;
 		invocacion.mensajeRecibido = mensajeRecibido;

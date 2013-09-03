@@ -136,7 +136,7 @@ public class TestDePerformanceConPortales {
 		// Generamos tantos portales como receptores tengamos
 		final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(processorRuteo, nodoVortex);
 		portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
-			public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
+			public void onObjetoRecibido(final MensajeModeloParaTests mensaje) {
 				metricas.registrarOutput();
 			}
 		});

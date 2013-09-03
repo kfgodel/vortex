@@ -107,7 +107,7 @@ public class TestRedA01ConPortal {
 	public void el_Receptor_Debería_Poder_Recibir_De_Vortex_Cualquier_Objeto_Serializable() {
 		nodoReceptor.recibirCon(new HandlerTipado<Object>(SiempreTrue.getInstancia()) {
 
-			public void onMensajeRecibido(final Object mensaje) {
+			public void onObjetoRecibido(final Object mensaje) {
 				// Recibimos cualquier cosa que ande dando vueltas
 			}
 		});
@@ -140,7 +140,7 @@ public class TestRedA01ConPortal {
 		final AtomicBoolean receptorBloqueado = new AtomicBoolean(false);
 		final HandlerTipado<String> handlerReceptor = new HandlerTipado<String>(SoloInstancias.de(String.class)) {
 
-			public void onMensajeRecibido(final String mensaje) {
+			public void onObjetoRecibido(final String mensaje) {
 				receptorBloqueado.set(true);
 				// Hacemos que el emisor siga ejecutando si nos estaba esperando
 				bloqueoDelEmisor.release();
@@ -174,7 +174,7 @@ public class TestRedA01ConPortal {
 		final AtomicReference<Thread> threadDeEntrega = new AtomicReference<Thread>();
 		final HandlerTipado<String> handlerReceptor = new HandlerTipado<String>(SoloInstancias.de(String.class)) {
 
-			public void onMensajeRecibido(final String mensaje) {
+			public void onObjetoRecibido(final String mensaje) {
 				final Thread threadActual = Thread.currentThread();
 				threadDeEntrega.set(threadActual);
 				threadDeEntregaDefinido.release();

@@ -18,7 +18,7 @@ package net.gaia.vortex.portal.api.mensaje;
  * 
  * @author D. García
  */
-public interface HandlerDeMensaje<T> {
+public interface HandlerDeObjetos<T> {
 
 	/**
 	 * Invocado cuando el portal recibe un mensaje que cumple la condición pasada, y puede convertir
@@ -27,6 +27,6 @@ public interface HandlerDeMensaje<T> {
 	 * @param mensaje
 	 *            El mensaje recibido
 	 */
-	public abstract void onMensajeRecibido(T mensaje);
+	public abstract void onObjetoRecibido(T mensaje);
 
 }
