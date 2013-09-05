@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import net.gaia.vortex.helpers.VortexMap;
+import net.gaia.vortex.impl.helpers.VortexMap;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.gaia.vortex.api.condiciones.Condicion;
-import net.gaia.vortex.helpers.VortexMap;
+import net.gaia.vortex.impl.helpers.VortexMap;
 import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;

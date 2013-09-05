@@ -14,7 +14,7 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.serial;
 
 import java.util.Map;
 
-import net.gaia.vortex.helpers.VortexMap;
+import net.gaia.vortex.impl.helpers.VortexMap;
 import net.gaia.vortex.sets.impl.condiciones.AtributoEmpieza;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;

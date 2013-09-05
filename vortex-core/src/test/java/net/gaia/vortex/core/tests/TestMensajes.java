@@ -18,7 +18,7 @@ import java.util.Map;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
-import net.gaia.vortex.helpers.VortexMap;
+import net.gaia.vortex.impl.helpers.VortexMap;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.ContenidoMapa;
