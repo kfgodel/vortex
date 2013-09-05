@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.condiciones.Condicion;
-import net.gaia.vortex.core.external.VortexProcessorFactory;
+import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.portal.tests.HandlerEncolador;
 import net.gaia.vortex.router.api.tests.MensajeParaTestDeRuteo;
 import net.gaia.vortex.router.impl.moleculas.PortalBidi;
