@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
-import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.portal.tests.HandlerCronometro;
 import net.gaia.vortex.portal.tests.MensajeCronometro;
@@ -41,8 +41,8 @@ public class TestNodoSocketPerformance {
 
 	private NodoSocket nodoCliente;
 	private NodoSocket nodoServidor;
-	private Portal nodoEmisor;
-	private Portal nodoReceptor;
+	private PortalViejo nodoEmisor;
+	private PortalViejo nodoReceptor;
 
 	private TaskProcessor processor;
 

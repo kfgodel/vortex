@@ -34,7 +34,8 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class Desobjetivizador extends NexoSupport {
+@Deprecated
+public class DesobjetivizadorViejo extends NexoSupport {
 
 	private ConversorDeMensajesVortex mapeador;
 	public static final String mapeador_FIELD = "mapeador";
@@ -42,7 +43,8 @@ public class Desobjetivizador extends NexoSupport {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
+	@Override
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final DelegarMensajeViejo delegacion = DelegarMensajeViejo.create(mensaje, getDestino());
 		return delegacion;
@@ -65,15 +67,16 @@ public class Desobjetivizador extends NexoSupport {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(mapeador_FIELD, mapeador)
 				.add("destino", getDestino()).toString();
 	}
 
-	public static Desobjetivizador create(final TaskProcessor processor, final ConversorDeMensajesVortex mapeador,
+	public static DesobjetivizadorViejo create(final TaskProcessor processor, final ConversorDeMensajesVortex mapeador,
 			final Receptor delegado) {
-		final Desobjetivizador vortificador = new Desobjetivizador();
+		final DesobjetivizadorViejo vortificador = new DesobjetivizadorViejo();
 		vortificador.mapeador = mapeador;
 		vortificador.initializeWith(processor, delegado);
 		return vortificador;

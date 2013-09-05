@@ -4,10 +4,10 @@
 package net.gaia.vortex.portal.api.mensaje;
 
 import net.gaia.vortex.api.condiciones.Condicion;
-import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 
 /**
- * Esta interfaz representa un handler de mensajes para utilizar en un {@link Portal}, que define
+ * Esta interfaz representa un handler de mensajes para utilizar en un {@link PortalViejo}, que define
  * una condición que deben cumplir los mensajes, y un tipo esperado de esos mensajes<br>
  * Esta interfaz asegura que los mensajes recibidos son del tipo esperado y que cumplen la condicion
  * asociada

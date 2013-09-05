@@ -23,7 +23,8 @@ import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
  * 
  * @author D. García
  */
-public interface Portal extends NexoViejo {
+@Deprecated
+public interface PortalViejo extends NexoViejo {
 
 	/**
 	 * Envía el mensaje a la red utilizando las conexiones de este portal para hacer circular el

@@ -29,9 +29,9 @@ import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
-import net.gaia.vortex.portal.api.moleculas.Portal;
-import net.gaia.vortex.portal.impl.atomos.Desobjetivizador;
-import net.gaia.vortex.portal.impl.atomos.Objetivizador;
+import net.gaia.vortex.portal.api.moleculas.PortalViejo;
+import net.gaia.vortex.portal.impl.atomos.DesobjetivizadorViejo;
+import net.gaia.vortex.portal.impl.atomos.ObjetivizadorViejo;
 import net.gaia.vortex.portal.impl.condiciones.EsMensajeDeOtroComponente;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
@@ -45,13 +45,13 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class PortalMapeador extends NodoMoleculaSupportViejo implements Portal {
+public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalViejo {
 
 	private ConversorDeMensajesVortex mapeadorVortex;
 
 	private Receptor procesoDesdeVortex;
 
-	private Desobjetivizador procesoDesdeUsuario;
+	private DesobjetivizadorViejo procesoDesdeUsuario;
 
 	private SelectorViejo selectorDeMensajesEntrantes;
 
@@ -63,7 +63,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements Portal {
 	private TaskProcessor procesador;
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
+	 * @see net.gaia.vortex.portal.api.moleculas.PortalViejo#enviar(java.lang.Object)
 	 */
 
 	public void enviar(final Object mensaje) {
@@ -90,7 +90,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements Portal {
 		identificador = generadorDeIdsCompartido.getIdDeComponente();
 
 		nodoDeSalidaAVortex = NexoTransformadorViejo.create(processor, generadorDeIdsCompartido, delegado);
-		procesoDesdeUsuario = Desobjetivizador.create(processor, mapeadorVortex, nodoDeSalidaAVortex);
+		procesoDesdeUsuario = DesobjetivizadorViejo.create(processor, mapeadorVortex, nodoDeSalidaAVortex);
 
 		// El selector enviará el mensaje según la condición que indique el usuario
 		selectorDeMensajesEntrantes = SelectorConFiltrosViejo.create(processor);
@@ -122,7 +122,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
+	 * @see net.gaia.vortex.portal.api.moleculas.PortalViejo#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
 	 */
 
 	public void recibirCon(final HandlerDePortal<?> handlerDelPortal) {
@@ -132,7 +132,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements Portal {
 
 		// Creamos el handler que convertirá al tipo esperado por el usuario, los mensajes recibidos
 		final Class<Object> tipoEsperadoComoMensajes = handlerDeMensajesCasteado.getTipoEsperado();
-		final Objetivizador<Object> convertirEnTipoEsperadoEInvocarHandler = Objetivizador.create(procesador,
+		final ObjetivizadorViejo<Object> convertirEnTipoEsperadoEInvocarHandler = ObjetivizadorViejo.create(procesador,
 				mapeadorVortex, tipoEsperadoComoMensajes, handlerDeMensajesCasteado);
 
 		// Filtramos por la condición que nos pasa el usuario

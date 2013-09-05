@@ -33,7 +33,8 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class Objetivizador<T> extends ReceptorConProcesador {
+@Deprecated
+public class ObjetivizadorViejo<T> extends ReceptorConProcesador {
 
 	private ConversorDeMensajesVortex mapeador;
 	public static final String mapeador_FIELD = "mapeador";
@@ -44,9 +45,10 @@ public class Objetivizador<T> extends ReceptorConProcesador {
 	private HandlerDeObjetos<? super T> handlerDeMensajes;
 	public static final String handlerDeMensajes_FIELD = "handlerDeMensajes";
 
-	public static <T> Objetivizador<T> create(final TaskProcessor processor, final ConversorDeMensajesVortex mapeador,
-			final Class<? extends T> tipoEsperado, final HandlerDeObjetos<? super T> handlerDeMensaje) {
-		final Objetivizador<T> conversor = new Objetivizador<T>();
+	public static <T> ObjetivizadorViejo<T> create(final TaskProcessor processor,
+			final ConversorDeMensajesVortex mapeador, final Class<? extends T> tipoEsperado,
+			final HandlerDeObjetos<? super T> handlerDeMensaje) {
+		final ObjetivizadorViejo<T> conversor = new ObjetivizadorViejo<T>();
 		conversor.initializeWith(processor);
 		conversor.mapeador = mapeador;
 		conversor.handlerDeMensajes = handlerDeMensaje;
@@ -57,7 +59,8 @@ public class Objetivizador<T> extends ReceptorConProcesador {
 	/**
 	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
+	@Override
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final DesvortificarEInvocarHandler<T> desvortificacion = DesvortificarEInvocarHandler.create(mensaje, mapeador,
 				tipoEsperado, handlerDeMensajes);
@@ -67,7 +70,8 @@ public class Objetivizador<T> extends ReceptorConProcesador {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.add(tipoEsperado_FIELD, tipoEsperado).add(handlerDeMensajes_FIELD, handlerDeMensajes)

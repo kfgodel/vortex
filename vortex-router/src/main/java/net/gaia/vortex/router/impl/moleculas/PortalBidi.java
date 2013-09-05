@@ -22,7 +22,7 @@ import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.impl.filtros.ConjuntoSincronizado;
 import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoPortal;
@@ -42,7 +42,7 @@ import ar.com.dgarcia.lang.strings.ToString;
 public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	private static final Logger LOG = LoggerFactory.getLogger(PortalBidi.class);
 
-	private Portal portalInterno;
+	private PortalViejo portalInterno;
 	private List<Condicion> condicionesDelPortal;
 
 	public static PortalBidi create(final TaskProcessor processor) {
@@ -55,7 +55,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
+	 * @see net.gaia.vortex.portal.api.moleculas.PortalViejo#enviar(java.lang.Object)
 	 */
 
 	public void enviar(final Object mensaje) throws ErrorDeMapeoVortexException {
@@ -68,7 +68,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
+	 * @see net.gaia.vortex.portal.api.moleculas.PortalViejo#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
 	 */
 
 	public void recibirCon(final HandlerDePortal<?> handlerDeMensajes) {

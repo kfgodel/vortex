@@ -25,7 +25,7 @@ import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
 import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
 import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
@@ -52,8 +52,8 @@ public class TestRedA01ConPortal {
 
 	private NodoViejo nodoRuteador;
 
-	private Portal nodoEmisor;
-	private Portal nodoReceptor;
+	private PortalViejo nodoEmisor;
+	private PortalViejo nodoReceptor;
 	private TaskProcessor processor;
 
 	@Before
@@ -239,8 +239,8 @@ public class TestRedA01ConPortal {
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
-		final Portal nodoEmisor = PortalMapeador.createForIOWith(processor, nodoIntermedio1);
-		final Portal nodoReceptor = PortalMapeador.createForIOWith(processor, nodoIntermedio2);
+		final PortalViejo nodoEmisor = PortalMapeador.createForIOWith(processor, nodoIntermedio1);
+		final PortalViejo nodoReceptor = PortalMapeador.createForIOWith(processor, nodoIntermedio2);
 
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		nodoReceptor.recibirCon(handlerReceptor);
@@ -263,8 +263,8 @@ public class TestRedA01ConPortal {
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
-		final Portal nodoEmisor = PortalMapeador.createForIOWith(processor, nodoIntermedio1);
-		final Portal nodoReceptor = PortalMapeador.createForIOWith(processor, nodoIntermedio2);
+		final PortalViejo nodoEmisor = PortalMapeador.createForIOWith(processor, nodoIntermedio1);
+		final PortalViejo nodoReceptor = PortalMapeador.createForIOWith(processor, nodoIntermedio2);
 
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		nodoReceptor.recibirCon(handlerReceptor);
@@ -321,7 +321,7 @@ public class TestRedA01ConPortal {
 		nodoReceptor.recibirCon(handlerReceptor1);
 
 		final HandlerEncoladorDeStrings handlerReceptor2 = HandlerEncoladorDeStrings.create();
-		final Portal nodoReceptor2 = PortalMapeador.createForIOWith(processor, nodoRuteador);
+		final PortalViejo nodoReceptor2 = PortalMapeador.createForIOWith(processor, nodoRuteador);
 		nodoReceptor2.recibirCon(handlerReceptor2);
 
 		// Mandamos el mensaje

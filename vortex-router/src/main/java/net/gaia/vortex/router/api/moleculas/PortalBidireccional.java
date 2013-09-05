@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.api.moleculas;
 
-import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 
 /**
  * Esta interfaz define el comportamiento de un portal que puede establecer comunicaciones
@@ -20,6 +20,6 @@ import net.gaia.vortex.portal.api.moleculas.Portal;
  * 
  * @author D. García
  */
-public interface PortalBidireccional extends NodoBidireccional, Portal {
+public interface PortalBidireccional extends NodoBidireccional, PortalViejo {
 
 }

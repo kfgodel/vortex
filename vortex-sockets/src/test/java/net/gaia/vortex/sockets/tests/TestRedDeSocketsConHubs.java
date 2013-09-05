@@ -20,7 +20,7 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.api.NodoViejo;
 import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
-import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
 import net.gaia.vortex.server.impl.RealizarConexiones;
@@ -48,8 +48,8 @@ import ar.com.dgarcia.testing.FreePortFinder;
 public class TestRedDeSocketsConHubs {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedDeSocketsConHubs.class);
 
-	private Portal nodoEmisor;
-	private Portal nodoReceptor;
+	private PortalViejo nodoEmisor;
+	private PortalViejo nodoReceptor;
 
 	private ClienteDeSocketVortex socketConnector;
 	private ServidorDeSocketVortex socketAcceptor;

@@ -20,7 +20,7 @@ import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
-import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
@@ -75,7 +75,7 @@ public class ComportamientoPortal implements ComportamientoBidi {
 		return flujoDeMensajes;
 	}
 
-	public Portal getPortalInterno() {
+	public PortalViejo getPortalInterno() {
 		return portalInterno;
 	}
 
