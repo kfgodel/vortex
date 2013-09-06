@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.api.moleculas;
 
+import net.gaia.vortex.api.basic.Nodo;
+import net.gaia.vortex.api.basic.emisores.MonoConectable;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 
@@ -23,7 +25,7 @@ import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
  * 
  * @author D. García
  */
-public interface Portal {
+public interface Portal extends Nodo, MonoConectable {
 	/**
 	 * Envía el mensaje a la red utilizando las conexiones de este portal para hacer circular el
 	 * mensaje.<br>
