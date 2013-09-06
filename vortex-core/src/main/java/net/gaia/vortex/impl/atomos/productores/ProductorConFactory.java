@@ -37,7 +37,7 @@ public class ProductorConFactory extends MonoConectableSupport implements Produc
 	 */
 	public void producirMensaje() {
 		final MensajeVortex mensajeCreado = factory.crearMensaje();
-		getConectorUnico().recibir(mensajeCreado);
+		getConectorDeSalida().recibir(mensajeCreado);
 	}
 
 	public static ProductorConFactory create(final MensajeFactory factory) {
@@ -52,7 +52,7 @@ public class ProductorConFactory extends MonoConectableSupport implements Produc
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(factory_FIELD, factory).con(conectorUnico_FIELD, getConectorUnico()).toString();
+		return ToString.de(this).con(factory_FIELD, factory).con(conectorUnico_FIELD, getConectorDeSalida()).toString();
 	}
 
 }

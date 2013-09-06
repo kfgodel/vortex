@@ -12,7 +12,14 @@
  */
 package net.gaia.vortex.impl.moleculas;
 
+import net.gaia.vortex.api.builder.VortexPortal;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Portal;
+import net.gaia.vortex.api.moleculas.Selector;
+import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.impl.atomos.Desobjetivizador;
+import net.gaia.vortex.impl.atomos.Objetivizador;
 import net.gaia.vortex.impl.support.MonoConectableSupport;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
@@ -27,24 +34,66 @@ import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
  */
 public class PortalConversor extends MonoConectableSupport implements Portal {
 
+	private Selector desdeVortex;
+
+	private Desobjetivizador haciaVortex;
+
+	private VortexPortal builder;
+
+	/**
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 */
+	public void recibir(final MensajeVortex mensaje) {
+		desdeVortex.recibir(mensaje);
+	}
+
 	/**
 	 * @see net.gaia.vortex.api.moleculas.Portal#enviar(java.lang.Object)
 	 */
 	public void enviar(final Object mensaje) throws ErrorDeMapeoVortexException {
-		// TODO Auto-generated method stub
-
+		haciaVortex.vortificar(mensaje);
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
 	 */
-	public void recibirCon(final HandlerDePortal<?> handlerDeMensajes) {
-		// TODO Auto-generated method stub
+	public <T> void recibirCon(final HandlerDePortal<T> handlerDelPortal) {
+		// Agregamos el caso al selector de mensajes recibidos
+		final Condicion bicondicionalDelHandler = handlerDelPortal.getBicondicional();
+		final Conector conectorCondicionado = desdeVortex.crearConectorCon(bicondicionalDelHandler);
 
+		// Si pasa la condicion se lo entregamos al conversor a objetos
+		final Class<T> tipoEsperadoComoMensajes = handlerDelPortal.getTipoEsperado();
+		final Objetivizador conversorAObjeto = builder
+				.conversorHaciaObjetos(tipoEsperadoComoMensajes, handlerDelPortal);
+		conectorCondicionado.conectarCon(conversorAObjeto);
 	}
 
-	public static PortalConversor create() {
+	public static PortalConversor create(final VortexPortal builder) {
 		final PortalConversor portal = new PortalConversor();
+		portal.inicializar(builder);
 		return portal;
+	}
+
+	/**
+	 * Inicializa el estado de esta instancia con los componentes internos necesarios
+	 * 
+	 * @param builder
+	 *            El builder desde el cual crear las instancias necesarias como dependencias
+	 */
+	private void inicializar(final VortexPortal builder) {
+		// Antes que nada llamamos al super
+		super.inicializar();
+		// Guardamos el builder que necesitamos para agregar componentes al selector
+		this.builder = builder;
+
+		// Los mensajes entrantes los mandamos al selector que sera configurado con condiciones y
+		// handlers
+		this.desdeVortex = builder.getCore().selector();
+
+		// Los objetos entrantes los convertimos en mensajes, y los mandamos al conector de salida
+		this.haciaVortex = builder.conversorDesdeObjetos();
+		this.haciaVortex.getConectorDeSalida().conectarCon(this.getConectorDeSalida());
+
 	}
 }

@@ -79,7 +79,7 @@ public class VortexCoreBuilder implements VortexCore {
 	 */
 	public Secuenciador secuenciar(final Receptor delegado, final Receptor salida) {
 		final Secuenciador secuenciador = secuenciadorDe(delegado);
-		secuenciador.getConectorUnico().conectarCon(salida);
+		secuenciador.getConectorDeSalida().conectarCon(salida);
 		return secuenciador;
 	}
 
@@ -158,7 +158,7 @@ public class VortexCoreBuilder implements VortexCore {
 	 */
 	public Transformador transformarCon(final Transformacion transformacion, final Receptor receptor) {
 		final Transformador transformador = transformadorPara(transformacion);
-		transformador.getConectorUnico().conectarCon(receptor);
+		transformador.getConectorDeSalida().conectarCon(receptor);
 		return transformador;
 	}
 

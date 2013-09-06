@@ -23,7 +23,7 @@ public class TestDePerformanceNexoEjecutor extends TestDePerformanceNodoSupport 
 	protected FlujoVortex crearFlujoATestear() {
 		final Receptor ejecutable = ReceptorNulo.getInstancia();
 		final Secuenciador secuenciador = getBuilder().secuenciadorDe(ejecutable);
-		return FlujoInmutable.create(secuenciador, secuenciador.getConectorUnico());
+		return FlujoInmutable.create(secuenciador, secuenciador.getConectorDeSalida());
 	}
 
 }

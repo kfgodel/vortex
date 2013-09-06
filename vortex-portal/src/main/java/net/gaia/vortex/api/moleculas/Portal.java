@@ -50,6 +50,6 @@ public interface Portal extends Nodo, MonoConectable {
 	 * @param handlerDeMensajes
 	 *            Un handler para agregar al conjunto y ser invocado al recibir mensajes
 	 */
-	public void recibirCon(HandlerDePortal<?> handlerDeMensajes);
+	public <T> void recibirCon(HandlerDePortal<T> handlerDeMensajes);
 
 }

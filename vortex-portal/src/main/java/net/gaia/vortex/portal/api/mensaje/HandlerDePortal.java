@@ -7,8 +7,8 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 
 /**
- * Esta interfaz representa un handler de mensajes para utilizar en un {@link PortalViejo}, que define
- * una condición que deben cumplir los mensajes, y un tipo esperado de esos mensajes<br>
+ * Esta interfaz representa un handler de mensajes para utilizar en un {@link PortalViejo}, que
+ * define una condición que deben cumplir los mensajes, y un tipo esperado de esos mensajes<br>
  * Esta interfaz asegura que los mensajes recibidos son del tipo esperado y que cumplen la condicion
  * asociada
  * 
@@ -24,10 +24,11 @@ public interface HandlerDePortal<T> extends HandlerDeObjetos<T> {
 	public Class<T> getTipoEsperado();
 
 	/**
-	 * Devuelve la condición asociada a este handler que debe ser cumplida por todos los mensajes
-	 * para poder ser pasado a este handler
+	 * Devuelve la condición necesaria y suficiente que deben pasar todos los mensajes para poder
+	 * ser entregados a este handler.<br>
+	 * Un mensaje sera entregado a este handler si y sólo si cumple la condición pasada
 	 * 
 	 * @return La condición a evaluar en cada mensaje antes de invocar este handler
 	 */
-	public Condicion getCondicionSuficiente();
+	public Condicion getBicondicional();
 }

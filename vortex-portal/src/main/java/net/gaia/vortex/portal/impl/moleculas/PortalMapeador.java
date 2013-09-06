@@ -136,7 +136,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 				mapeadorVortex, tipoEsperadoComoMensajes, handlerDeMensajesCasteado);
 
 		// Filtramos por la condición que nos pasa el usuario
-		final Condicion condicionParaRecibirMensajeEnHandler = handlerDelPortal.getCondicionSuficiente();
+		final Condicion condicionParaRecibirMensajeEnHandler = handlerDelPortal.getBicondicional();
 
 		// Agregamos el caso al selector de mensajes recibidos
 		selectorDeMensajesEntrantes.conectarCon(convertirEnTipoEsperadoEInvocarHandler,

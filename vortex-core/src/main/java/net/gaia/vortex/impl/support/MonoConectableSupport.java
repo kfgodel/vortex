@@ -28,9 +28,9 @@ public class MonoConectableSupport extends EmisorSupport implements MonoConectab
 	public static final String conectorUnico_FIELD = "conectorUnico";
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MonoEmisor#getConectorUnico()
+	 * @see net.gaia.vortex.api.basic.emisores.MonoEmisor#getConectorDeSalida()
 	 */
-	public Conector getConectorUnico() {
+	public Conector getConectorDeSalida() {
 		return conectorUnico;
 	}
 

@@ -48,22 +48,24 @@ public class Objetivizador extends ReceptorSupport {
 		Object desvortificado;
 		try {
 			desvortificado = mapeador.convertirDesdeVortex(mensaje, tipoEsperado);
-		} catch (final ErrorDeMapeoVortexException e) {
+		}
+		catch (final ErrorDeMapeoVortexException e) {
 			LOG.error("Se produjo un error al desvortificar un mensaje[" + mensaje + "] con el mapeador[" + mapeador
 					+ "]. El mensaje no llegará al handler[" + handlerDeObjetos + "]", e);
 			return;
 		}
 		try {
 			handlerDeObjetos.onObjetoRecibido(desvortificado);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error en el handler[" + handlerDeObjetos + "] al recibir el objeto["
 					+ desvortificado + "]", e);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> Objetivizador create(final ConversorDeMensajesVortex mapeador,
-			final Class<? extends T> tipoEsperado, final HandlerDeObjetos<? super T> handlerDeObjetos) {
+	public static <T> Objetivizador create(final ConversorDeMensajesVortex mapeador, final Class<?> tipoEsperado,
+			final HandlerDeObjetos<?> handlerDeObjetos) {
 		final Objetivizador objetivizador = new Objetivizador();
 		objetivizador.handlerDeObjetos = (HandlerDeObjetos<Object>) handlerDeObjetos;
 		objetivizador.mapeador = mapeador;

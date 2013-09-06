@@ -18,12 +18,13 @@
 package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.api.builder.VortexCore;
+import net.gaia.vortex.api.builder.VortexPortal;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Portal;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
+import net.gaia.vortex.impl.builder.VortexPortalBuilder;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 
@@ -50,9 +51,9 @@ public abstract class TestDePerformanceObjetoAPortalSupport {
 
 	private TaskProcessor processor;
 
-	private VortexCore builder;
+	private VortexPortal builder;
 
-	public VortexCore getBuilder() {
+	public VortexPortal getBuilder() {
 		return builder;
 	}
 
@@ -68,7 +69,7 @@ public abstract class TestDePerformanceObjetoAPortalSupport {
 	@Before
 	public void crearProcesador() {
 		processor = VortexProcessorFactory.createProcessor();
-		builder = VortexCoreBuilder.create(processor);
+		builder = VortexPortalBuilder.create(VortexCoreBuilder.create(processor));
 	}
 
 	@After
@@ -140,7 +141,7 @@ public abstract class TestDePerformanceObjetoAPortalSupport {
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
 		// Generamos tantos portales como receptores tengamos
-		final Conector salida = entrada.getConectorUnico();
+		final Conector salida = entrada.getConectorDeSalida();
 		salida.conectarCon(new ReceptorSupport() {
 			public void recibir(@SuppressWarnings("unused") final MensajeVortex mensaje) {
 				metricas.registrarOutput();

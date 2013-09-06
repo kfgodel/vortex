@@ -142,7 +142,7 @@ public class TestRuteoBidiDeUsoBasico {
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			
-			public Condicion getCondicionSuficiente() {
+			public Condicion getBicondicional() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorEsperado);
 			}
 		};
@@ -175,7 +175,7 @@ public class TestRuteoBidiDeUsoBasico {
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			
-			public Condicion getCondicionSuficiente() {
+			public Condicion getBicondicional() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, "!" + valorEsperado);
 			}
 		};
@@ -241,7 +241,7 @@ public class TestRuteoBidiDeUsoBasico {
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptorPositivo = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			
-			public Condicion getCondicionSuficiente() {
+			public Condicion getBicondicional() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorEsperado);
 			}
 		};
@@ -250,7 +250,7 @@ public class TestRuteoBidiDeUsoBasico {
 		final String valorNoEsperado = "chau";
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptorNegativo = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			
-			public Condicion getCondicionSuficiente() {
+			public Condicion getBicondicional() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorNoEsperado);
 			}
 		};
@@ -311,7 +311,7 @@ public class TestRuteoBidiDeUsoBasico {
 		final String valorEsperado = "hola";
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerEmisor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			
-			public Condicion getCondicionSuficiente() {
+			public Condicion getBicondicional() {
 				return ValorEsperadoEn.create(valorEsperado,
 						PropertyAccessor.create(MensajeParaTestDeRuteo.atributo_FIELD));
 			}
@@ -320,7 +320,7 @@ public class TestRuteoBidiDeUsoBasico {
 
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptorPositivo = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 			
-			public Condicion getCondicionSuficiente() {
+			public Condicion getBicondicional() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, valorEsperado);
 			}
 		};

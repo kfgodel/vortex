@@ -60,7 +60,7 @@ public class AtomoTransformador extends MonoConectableSupport implements Transfo
 		if (Loggers.ATOMOS.isDebugEnabled()) {
 			Loggers.ATOMOS.debug("Transformado mensaje original[{}] en [{}]", mensajeOriginal, mensajeTransformado);
 		}
-		getConectorUnico().recibir(mensajeTransformado);
+		getConectorDeSalida().recibir(mensajeTransformado);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class AtomoTransformador extends MonoConectableSupport implements Transfo
 	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
-				.con(transformacion_FIELD, transformacion).con(conectorUnico_FIELD, getConectorUnico()).toString();
+				.con(transformacion_FIELD, transformacion).con(conectorUnico_FIELD, getConectorDeSalida()).toString();
 	}
 
 	public static AtomoTransformador create(final Transformacion transformacion) {

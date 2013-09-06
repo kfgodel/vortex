@@ -41,9 +41,9 @@ public class EmisorNulo extends EmisorSupport implements MonoConectable {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MonoEmisor#getConectorUnico()
+	 * @see net.gaia.vortex.api.basic.emisores.MonoEmisor#getConectorDeSalida()
 	 */
-	public Conector getConectorUnico() {
+	public Conector getConectorDeSalida() {
 		return ConectorNulo.getInstancia();
 	}
 

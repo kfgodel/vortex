@@ -47,7 +47,7 @@ public class AtomoSecuenciador extends MonoConectableSupport implements Secuenci
 		} catch (final Exception e) {
 			LOG.error("Se produjo un error en el delegado. Continuando camino del mensaje", e);
 		}
-		getConectorUnico().recibir(mensaje);
+		getConectorDeSalida().recibir(mensaje);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class AtomoSecuenciador extends MonoConectableSupport implements Secuenci
 	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(delegado_FIELD, delegado)
-				.con(conectorUnico_FIELD, getConectorUnico()).toString();
+				.con(conectorUnico_FIELD, getConectorDeSalida()).toString();
 	}
 
 }

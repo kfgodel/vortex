@@ -1,5 +1,5 @@
 /**
- * Created on: Aug 31, 2013 11:03:32 PM by: Dario L. Garcia
+ * Created on: Sep 5, 2013 10:08:56 PM by: Dario L. Garcia
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/2.5/ar/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -15,24 +15,24 @@
  * href="https://bean2bean.svn.sourceforge.net/svnroot/bean2bean"
  * rel="dc:source">bean2bean.svn.sourceforge.net</a>
  */
-package net.gaia.vortex.api.basic.emisores;
+package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.api.moleculas.Portal;
 
 /**
- * Esta interfaz representa el {@link MonoEmisor} que ofrece un conector siempre disponible al cual
- * conectarse.<br>
- * A través de ese conector se reciben los mensajes de esta instancia
+ * Esta clase prueba la performance del portal conversor para recibir mensajes y convertirlos en
+ * objetos
  * 
  * @author dgarcia
  */
-public interface MonoConectable extends MonoEmisor {
+public class TestDePerformanceObjetoDesdePortalConversor extends TestDePerformanceObjetoDesdePortalSupport {
+
 	/**
-	 * Permite obtener el único conector de salida de este emisor, el cual puede utilizarse para
-	 * conectar al receptor que recibirá los mensajes salientes de esta instancia
-	 * 
-	 * @return El conector que sirve de contacto con el receptor
+	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceObjetoDesdePortalSupport#crearPortalATestear()
 	 */
-	public Conector getConectorDeSalida();
+	@Override
+	protected Portal crearPortalATestear() {
+		return getBuilder().portalConversor();
+	}
 
 }

@@ -55,9 +55,9 @@ public class MoleculaSelector extends MultiEmisorSupport implements Selector {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MultiConectableCondicionado#crearConector(net.gaia.vortex.api.condiciones.Condicion)
+	 * @see net.gaia.vortex.api.basic.emisores.MultiConectableCondicionado#crearConectorCon(net.gaia.vortex.api.condiciones.Condicion)
 	 */
-	public Conector crearConector(final Condicion condicionFiltro) {
+	public Conector crearConectorCon(final Condicion condicionFiltro) {
 		final Conector conectorDelMultiplexor = entrada.crearConector();
 		final Conector conectorDeSalida = core.filtrarSalidaDe(conectorDelMultiplexor, condicionFiltro);
 		return conectorDeSalida;

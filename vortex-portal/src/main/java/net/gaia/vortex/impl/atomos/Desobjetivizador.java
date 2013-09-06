@@ -39,11 +39,12 @@ public class Desobjetivizador extends MonoConectableSupport {
 	 */
 	public void vortificar(final Object mensaje) throws ErrorDeMapeoVortexException {
 		final MensajeVortex vortificado = mapeador.convertirAVortex(mensaje);
-		this.getConectorUnico().recibir(vortificado);
+		this.getConectorDeSalida().recibir(vortificado);
 	}
 
 	public static Desobjetivizador create(final ConversorDeMensajesVortex mapeador) {
 		final Desobjetivizador desobjetivizador = new Desobjetivizador();
+		desobjetivizador.inicializar();
 		desobjetivizador.mapeador = mapeador;
 		return desobjetivizador;
 	}

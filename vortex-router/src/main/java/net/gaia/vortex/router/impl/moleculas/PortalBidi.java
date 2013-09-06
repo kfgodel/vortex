@@ -73,7 +73,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 
 	public void recibirCon(final HandlerDePortal<?> handlerDeMensajes) {
 		// Registramos la condición para poder unificarlas
-		final Condicion nuevaCondicion = handlerDeMensajes.getCondicionSuficiente();
+		final Condicion nuevaCondicion = handlerDeMensajes.getBicondicional();
 		condicionesDelPortal.add(nuevaCondicion);
 
 		// Le pasamos el handler al portal real

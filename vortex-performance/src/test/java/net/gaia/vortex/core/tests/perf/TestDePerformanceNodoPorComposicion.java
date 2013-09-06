@@ -31,7 +31,7 @@ public class TestDePerformanceNodoPorComposicion extends TestDePerformanceNodoSu
 		final Transformador transformador = getBuilder().transformadorPara(TransformacionNula.getInstancia());
 		final Filtro filtro = getBuilder().filtrarEntradaCon(SiempreTrue.getInstancia(), transformador);
 		final Compuesto<MonoConectable> compuesta = getBuilder().<MonoConectable> componer(filtro, transformador);
-		final Conector conectorDeSalida = compuesta.getSalida().getConectorUnico();
+		final Conector conectorDeSalida = compuesta.getSalida().getConectorDeSalida();
 		final FlujoVortex flujo = FlujoInmutable.create(compuesta, conectorDeSalida);
 		return flujo;
 	}

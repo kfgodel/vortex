@@ -36,7 +36,7 @@ public class TestDePerformanceSelector extends TestDePerformanceNodoSupport {
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
 		final Selector selector = getBuilder().selector();
-		final Conector conectorDeSalida = selector.crearConector(SiempreTrue.getInstancia());
+		final Conector conectorDeSalida = selector.crearConectorCon(SiempreTrue.getInstancia());
 		final FlujoVortex flujo = FlujoInmutable.create(selector, conectorDeSalida);
 		return flujo;
 	}

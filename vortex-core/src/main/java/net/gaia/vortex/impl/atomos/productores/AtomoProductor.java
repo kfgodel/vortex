@@ -32,7 +32,7 @@ public class AtomoProductor extends MonoConectableSupport implements Productor {
 	 *            El mensaje a producir
 	 */
 	public void producir(final MensajeVortex mensaje) {
-		getConectorUnico().recibir(mensaje);
+		getConectorDeSalida().recibir(mensaje);
 	}
 
 	public static AtomoProductor create() {

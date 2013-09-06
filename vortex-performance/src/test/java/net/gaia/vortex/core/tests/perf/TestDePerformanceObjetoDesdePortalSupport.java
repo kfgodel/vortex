@@ -19,12 +19,13 @@ package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.builder.VortexCore;
+import net.gaia.vortex.api.builder.VortexPortal;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.moleculas.Portal;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
+import net.gaia.vortex.impl.builder.VortexPortalBuilder;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
@@ -54,9 +55,9 @@ public abstract class TestDePerformanceObjetoDesdePortalSupport {
 
 	private TaskProcessor processor;
 
-	private VortexCore builder;
+	private VortexPortal builder;
 
-	public VortexCore getBuilder() {
+	public VortexPortal getBuilder() {
 		return builder;
 	}
 
@@ -72,7 +73,7 @@ public abstract class TestDePerformanceObjetoDesdePortalSupport {
 	@Before
 	public void crearProcesador() {
 		processor = VortexProcessorFactory.createProcessor();
-		builder = VortexCoreBuilder.create(processor);
+		builder = VortexPortalBuilder.create(VortexCoreBuilder.create(processor));
 	}
 
 	@After

@@ -37,7 +37,7 @@ public interface MultiConectableCondicionado extends MultiEmisor {
 	 *            La condicion que determinara con true los mensajes que deben pasar
 	 * @return El conector para la nueva conexión
 	 */
-	Conector crearConector(Condicion condicionFiltro);
+	Conector crearConectorCon(Condicion condicionFiltro);
 
 	/**
 	 * Elimina de este emisor el conector indicado.<br>

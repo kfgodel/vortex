@@ -82,10 +82,10 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	 * Devuelve la condición necesaria de este handler, devolviendo la condición
 	 * {@link SiempreFalse} si la actual es null
 	 * 
-	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#getCondicionSuficiente()
+	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#getBicondicional()
 	 */
 	
-	public Condicion getCondicionSuficiente() {
+	public Condicion getBicondicional() {
 		return condicionSuficiente;
 	}
 

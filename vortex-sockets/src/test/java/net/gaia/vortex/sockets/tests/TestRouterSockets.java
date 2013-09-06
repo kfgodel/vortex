@@ -81,7 +81,7 @@ public class TestRouterSockets {
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 
 			@Override
-			public Condicion getCondicionSuficiente() {
+			public Condicion getBicondicional() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, "hola");
 			}
 		};
@@ -110,7 +110,7 @@ public class TestRouterSockets {
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 
 			@Override
-			public Condicion getCondicionSuficiente() {
+			public Condicion getBicondicional() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, "chau");
 			}
 		};
