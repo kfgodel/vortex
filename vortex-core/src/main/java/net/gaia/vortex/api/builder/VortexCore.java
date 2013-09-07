@@ -22,10 +22,14 @@ import net.gaia.vortex.api.basic.Emisor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.ids.mensajes.GeneradorDeIdsDeMensajes;
 import net.gaia.vortex.api.moleculas.Compuesto;
+import net.gaia.vortex.api.moleculas.Identificador;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
 
 /**
  * Esta interfaz define el contrato esperable de un builder de nodos vortex, el cual permite obtener
@@ -228,4 +232,37 @@ public interface VortexCore {
 	 * @return El procesador utilizado por este builder
 	 */
 	TaskProcessor getProcessor();
+
+	/**
+	 * Crea el componente identificador de mensajes que permite discriminar duplicados y mensajes
+	 * propios.<br>
+	 * Este componente es necesario en topologías desconocidas o que tienen bucles en las conexiones
+	 * 
+	 * @return El componente creado con ID propio
+	 */
+	Identificador identificador();
+
+	/**
+	 * Crea un identificador de componente para utilizar en un nuevo componente creado
+	 * 
+	 * @return El identificador para utilizar con mensajes identificados
+	 */
+	IdDeComponenteVortex crearIdDeComponente();
+
+	/**
+	 * Crea una memoria de mensajes para utilizar en un componente creado
+	 * 
+	 * @return La memoria que registra los mensajes recibidos
+	 */
+	MemoriaDeMensajes crearMemoriaDeMensajes();
+
+	/**
+	 * Crea un nuevo generador de identificadores para mensajes que se basa en un identificador de
+	 * componente como origen
+	 * 
+	 * @param idAsignado
+	 *            El id del componente generador
+	 * @return El generador creado
+	 */
+	GeneradorDeIdsDeMensajes crearGeneradorDeIdsParaMensajes(IdDeComponenteVortex idAsignado);
 }

@@ -26,16 +26,16 @@ import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
 import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltrosViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
+import net.gaia.vortex.deprecated.trans.GenerarIdEnMensajeViejo;
+import net.gaia.vortex.impl.condiciones.EsMensajeDeOtroComponente;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 import net.gaia.vortex.portal.impl.atomos.DesobjetivizadorViejo;
 import net.gaia.vortex.portal.impl.atomos.ObjetivizadorViejo;
-import net.gaia.vortex.portal.impl.condiciones.EsMensajeDeOtroComponente;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
-import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -75,7 +75,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado) {
-		final GenerarIdEnMensaje generador = GenerarIdEnMensaje.create(GeneradorDeIdsGlobalesParaComponentes
+		final GenerarIdEnMensajeViejo generador = GenerarIdEnMensajeViejo.create(GeneradorDeIdsGlobalesParaComponentes
 				.getInstancia().generarId());
 		initializeWith(processor, delegado, generador);
 	}
@@ -85,7 +85,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado,
-			final GenerarIdEnMensaje generadorDeIdsCompartido) {
+			final GenerarIdEnMensajeViejo generadorDeIdsCompartido) {
 		this.procesador = processor;
 		identificador = generadorDeIdsCompartido.getIdDeComponente();
 
@@ -187,7 +187,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	 *            El id para que este portal use
 	 * @return El portal creado
 	 */
-	public static PortalMapeador create(final TaskProcessor processor, final GenerarIdEnMensaje generadorDeIdsCompartido) {
+	public static PortalMapeador create(final TaskProcessor processor, final GenerarIdEnMensajeViejo generadorDeIdsCompartido) {
 		final PortalMapeador portal = new PortalMapeador();
 		portal.mapeadorVortex = ConversorDefaultDeMensajes.create();
 		portal.initializeWith(processor, ReceptorNulo.getInstancia(), generadorDeIdsCompartido);

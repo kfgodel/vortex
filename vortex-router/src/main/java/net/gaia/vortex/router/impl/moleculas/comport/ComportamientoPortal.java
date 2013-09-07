@@ -18,11 +18,11 @@ import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcadorViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
+import net.gaia.vortex.deprecated.trans.GenerarIdEnMensajeViejo;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
-import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import net.gaia.vortex.router.impl.condiciones.EsMetaMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -34,14 +34,14 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class ComportamientoPortal implements ComportamientoBidi {
 
-	private GenerarIdEnMensaje generadorDeIdsCompartido;
+	private GenerarIdEnMensajeViejo generadorDeIdsCompartido;
 
 	private PortalMapeador portalInterno;
 	public static final String portalInterno_FIELD = "portalInterno";
 
 	public static ComportamientoPortal create() {
 		final ComportamientoPortal comportamiento = new ComportamientoPortal();
-		comportamiento.generadorDeIdsCompartido = GenerarIdEnMensaje.create(GeneradorDeIdsGlobalesParaComponentes
+		comportamiento.generadorDeIdsCompartido = GenerarIdEnMensajeViejo.create(GeneradorDeIdsGlobalesParaComponentes
 				.getInstancia().generarId());
 		return comportamiento;
 	}
@@ -95,7 +95,7 @@ public class ComportamientoPortal implements ComportamientoBidi {
 	 * @see net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi#obtenerGeneradorDeIdParaMensajes()
 	 */
 	
-	public GenerarIdEnMensaje obtenerGeneradorDeIdParaMensajes() {
+	public GenerarIdEnMensajeViejo obtenerGeneradorDeIdParaMensajes() {
 		return this.generadorDeIdsCompartido;
 	}
 

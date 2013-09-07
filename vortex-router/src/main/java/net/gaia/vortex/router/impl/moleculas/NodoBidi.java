@@ -26,9 +26,9 @@ import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.deprecated.trans.GenerarIdEnMensajeViejo;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
-import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
@@ -77,7 +77,7 @@ public abstract class NodoBidi extends NodoMoleculaSupportViejo implements NodoB
 	private IdDeComponenteVortex identificador;
 	public static final String identificador_FIELD = "identificador";
 
-	private GenerarIdEnMensaje generadorDeIds;
+	private GenerarIdEnMensajeViejo generadorDeIds;
 
 	private SerializadorDeCondiciones serializador;
 

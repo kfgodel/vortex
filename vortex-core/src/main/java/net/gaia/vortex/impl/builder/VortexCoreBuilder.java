@@ -22,7 +22,10 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.ids.mensajes.GeneradorDeIdsDeMensajes;
 import net.gaia.vortex.api.moleculas.Compuesto;
+import net.gaia.vortex.api.moleculas.Identificador;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
@@ -31,9 +34,12 @@ import net.gaia.vortex.impl.atomos.AtomoMultiplexor;
 import net.gaia.vortex.impl.atomos.AtomoSecuenciador;
 import net.gaia.vortex.impl.atomos.AtomoTransformador;
 import net.gaia.vortex.impl.condiciones.EsMensajeNuevo;
+import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
+import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.impl.moleculas.MoleculaCompuesta;
+import net.gaia.vortex.impl.moleculas.MoleculaIdentificador;
 import net.gaia.vortex.impl.moleculas.MoleculaSelector;
 import net.gaia.vortex.impl.proto.ConectorAsincrono;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -193,7 +199,7 @@ public class VortexCoreBuilder implements VortexCore {
 	 * @return La condicion que devuelve true cuando el mensaje es nuevo
 	 */
 	private EsMensajeNuevo condicionSinDuplicados() {
-		final MemoriaDeMensajes memoriaDelFiltro = MemoriaLimitadaDeMensajes.create(CANTIDAD_MENSAJES_RECORDADOS);
+		final MemoriaDeMensajes memoriaDelFiltro = crearMemoriaDeMensajes();
 		final EsMensajeNuevo condicion = EsMensajeNuevo.create(memoriaDelFiltro);
 		return condicion;
 	}
@@ -239,5 +245,37 @@ public class VortexCoreBuilder implements VortexCore {
 	 */
 	public TaskProcessor getProcessor() {
 		return processor;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#identificador()
+	 */
+	public Identificador identificador() {
+		return MoleculaIdentificador.create(this);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#crearIdDeComponente()
+	 */
+	public IdDeComponenteVortex crearIdDeComponente() {
+		final IdDeComponenteVortex idDeComponeteCreado = GeneradorDeIdsGlobalesParaComponentes.getInstancia()
+				.generarId();
+		return idDeComponeteCreado;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#crearMemoriaDeMensajes()
+	 */
+	public MemoriaDeMensajes crearMemoriaDeMensajes() {
+		final MemoriaDeMensajes memoriaDelFiltro = MemoriaLimitadaDeMensajes.create(CANTIDAD_MENSAJES_RECORDADOS);
+		return memoriaDelFiltro;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#crearGeneradorDeIdsParaMensajes(net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex)
+	 */
+	public GeneradorDeIdsDeMensajes crearGeneradorDeIdsParaMensajes(final IdDeComponenteVortex idAsignado) {
+		final GeneradorSecuencialDeIdDeMensaje generador = GeneradorSecuencialDeIdDeMensaje.create(idAsignado);
+		return generador;
 	}
 }

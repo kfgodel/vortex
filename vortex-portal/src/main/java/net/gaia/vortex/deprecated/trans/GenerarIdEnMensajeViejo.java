@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.transformaciones;
+package net.gaia.vortex.deprecated.trans;
 
 import net.gaia.vortex.api.annotations.paralelizable.NoParalelizable;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
@@ -22,13 +22,14 @@ import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa la transformación que a un mensaje le asigna el identificador de mensaje.
- * El identificador se basa en un nodo de referencia
+ * Esta clase representa la transformación que le asigna a un mensaje un identificador que intenta
+ * ser unico. El identificador se basa en un identificador de componente como referencia
  * 
  * @author D. García
  */
 @NoParalelizable
-public class GenerarIdEnMensaje implements Transformacion {
+@Deprecated
+public class GenerarIdEnMensajeViejo implements Transformacion {
 
 	private GeneradorDeIdsDeMensajes generadorDeIds;
 	public static final String generadorDeIds_FIELD = "generadorDeIds";
@@ -38,15 +39,15 @@ public class GenerarIdEnMensaje implements Transformacion {
 	/**
 	 * @see net.gaia.vortex.api.transformaciones.Transformacion#transformar(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
 	public MensajeVortex transformar(final MensajeVortex mensaje) {
 		final IdDeMensaje idNuevo = generadorDeIds.generarId();
 		mensaje.asignarId(idNuevo);
 		return mensaje;
 	}
 
-	public static GenerarIdEnMensaje create(final IdDeComponenteVortex identificadorDeEmisor) {
-		final GenerarIdEnMensaje transformacion = new GenerarIdEnMensaje();
+	public static GenerarIdEnMensajeViejo create(final IdDeComponenteVortex identificadorDeEmisor) {
+		final GenerarIdEnMensajeViejo transformacion = new GenerarIdEnMensajeViejo();
 		transformacion.generadorDeIds = GeneradorSecuencialDeIdDeMensaje.create(identificadorDeEmisor);
 		transformacion.idDeComponente = identificadorDeEmisor;
 		return transformacion;
@@ -55,7 +56,8 @@ public class GenerarIdEnMensaje implements Transformacion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(generadorDeIds_FIELD, generadorDeIds).toString();
 	}

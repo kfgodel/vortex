@@ -17,9 +17,9 @@ import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
 import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
 import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
+import net.gaia.vortex.deprecated.trans.GenerarIdEnMensajeViejo;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
-import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -63,8 +63,8 @@ public class ComportamientoRouter implements ComportamientoBidi {
 	 * @see net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi#obtenerGeneradorDeIdParaMensajes()
 	 */
 	
-	public GenerarIdEnMensaje obtenerGeneradorDeIdParaMensajes() {
+	public GenerarIdEnMensajeViejo obtenerGeneradorDeIdParaMensajes() {
 		// Generamos uno nuevo
-		return GenerarIdEnMensaje.create(GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId());
+		return GenerarIdEnMensajeViejo.create(GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId());
 	}
 }

@@ -49,6 +49,16 @@ public interface VortexPortal {
 	Portal portalConversor();
 
 	/**
+	 * Crea un portal que puede identificar los mensajes enviados y recibidos de manera de descartar
+	 * mensajes propios y duplicados.<br>
+	 * Este tipo de portal basico puede ser utilizado en topologías simples cuando existen bucles en
+	 * la red
+	 * 
+	 * @return El portal creado
+	 */
+	Portal portalIdentificador();
+
+	/**
 	 * Devuelve el conversor utilizado para pasar objetos a mensajes y viceversa
 	 * 
 	 * @return El conversor de este builder

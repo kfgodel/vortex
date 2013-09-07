@@ -32,11 +32,11 @@ import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltrosViejo;
 import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
 import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.deprecated.trans.GenerarIdEnMensajeViejo;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
-import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.condiciones.EsConfirmacionDeIdRemoto;
@@ -102,7 +102,7 @@ public class PataBidi extends NodoMoleculaSupportViejo implements PataBidireccio
 
 	private ConversorDeMensajesVortex mapeador;
 
-	private GenerarIdEnMensaje generadorDeIds;
+	private GenerarIdEnMensajeViejo generadorDeIds;
 
 	private AtomicBoolean habilitadaComoBidi;
 
@@ -132,7 +132,7 @@ public class PataBidi extends NodoMoleculaSupportViejo implements PataBidireccio
 	public static PataBidi create(final NodoBidireccional nodoLocal, final Receptor nodoRemoto,
 			final TaskProcessor taskProcessor, final ConjuntoDeCondiciones conjuntoDeCondiciones,
 			final Condicion filtroDeEntradaParaPataNueva, final ConversorDeMensajesVortex mapeador,
-			final GenerarIdEnMensaje generadorDeIds, final SerializadorDeCondiciones serializador,
+			final GenerarIdEnMensajeViejo generadorDeIds, final SerializadorDeCondiciones serializador,
 			final AtomicReference<ListenerDeRuteo> listenerDeRuteo) {
 		final PataBidi pata = new PataBidi();
 		pata.serializador = serializador;

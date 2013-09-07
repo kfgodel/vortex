@@ -10,15 +10,16 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.condiciones;
+package net.gaia.vortex.impl.condiciones;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.impl.condiciones.EsMensajeNuevo;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
 
 /**
  * Esta clase representa la condición que evalua si los mensajes recibidos son de otros
@@ -53,5 +54,13 @@ public class EsMensajeNuevoDeOtroComponente implements Condicion {
 		subCondiciones.add(esDeOtro);
 		subCondiciones.add(esNuevo);
 		return subCondiciones;
+	}
+
+	public static EsMensajeNuevoDeOtroComponente create(final IdDeComponenteVortex idPropio,
+			final MemoriaDeMensajes memoriaDeDuplicados) {
+		final EsMensajeNuevoDeOtroComponente condicion = new EsMensajeNuevoDeOtroComponente();
+		condicion.esDeOtro = EsMensajeDeOtroComponente.create(idPropio);
+		condicion.esNuevo = EsMensajeNuevo.create(memoriaDeDuplicados);
+		return condicion;
 	}
 }

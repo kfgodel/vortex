@@ -55,7 +55,7 @@ public class VortexPortalBuilder implements VortexPortal {
 	 * @see net.gaia.vortex.api.builder.VortexPortal#portalConversor()
 	 */
 	public Portal portalConversor() {
-		PortalConversor portalCreado = PortalConversor.create(this);
+		final PortalConversor portalCreado = PortalConversor.create(this);
 		return portalCreado;
 	}
 
@@ -83,5 +83,15 @@ public class VortexPortalBuilder implements VortexPortal {
 		final Objetivizador conversor = Objetivizador.create(getConversorDeMensajes(), tipoEsperadoComoMensajes,
 				handlerDeObjetos);
 		return conversor;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexPortal#portalIdentificador()
+	 */
+	public Portal portalIdentificador() {
+		final Portal conversor = portalConversor();
+		conversor.getConectorDeSalida().conectarCon(asignarId);
+		// NexoFiltro conectar a conversor
+		return null;
 	}
 }
