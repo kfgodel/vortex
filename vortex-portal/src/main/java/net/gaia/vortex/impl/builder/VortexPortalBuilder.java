@@ -23,6 +23,7 @@ import net.gaia.vortex.api.moleculas.Portal;
 import net.gaia.vortex.impl.atomos.Desobjetivizador;
 import net.gaia.vortex.impl.atomos.Objetivizador;
 import net.gaia.vortex.impl.moleculas.PortalConversor;
+import net.gaia.vortex.impl.moleculas.PortalIdentificador;
 import net.gaia.vortex.portal.api.mensaje.HandlerDeObjetos;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
@@ -89,9 +90,6 @@ public class VortexPortalBuilder implements VortexPortal {
 	 * @see net.gaia.vortex.api.builder.VortexPortal#portalIdentificador()
 	 */
 	public Portal portalIdentificador() {
-		final Portal conversor = portalConversor();
-		conversor.getConectorDeSalida().conectarCon(asignarId);
-		// NexoFiltro conectar a conversor
-		return null;
+		return PortalIdentificador.create(this);
 	}
 }
