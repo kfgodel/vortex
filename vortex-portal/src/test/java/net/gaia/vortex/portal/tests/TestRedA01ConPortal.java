@@ -20,18 +20,20 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.taskprocessor.api.processor.TaskProcessorConfiguration;
-import net.gaia.taskprocessor.forkjoin.ForkJoinTaskProcessor;
-import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
+import net.gaia.vortex.api.basic.emisores.MultiConectable;
+import net.gaia.vortex.api.moleculas.Compuesto;
+import net.gaia.vortex.api.moleculas.Portal;
+import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.impl.builder.VortexCoreBuilder;
+import net.gaia.vortex.impl.builder.VortexPortalBuilder;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.portal.api.moleculas.PortalViejo;
+import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
 import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,20 +52,31 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestRedA01ConPortal {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConPortal.class);
 
-	private NodoViejo nodoRuteador;
+	private Compuesto<MultiConectable> nodoRuteador;
 
-	private PortalViejo nodoEmisor;
-	private PortalViejo nodoReceptor;
+	private Portal nodoEmisor;
+	private Portal nodoReceptor;
 	private TaskProcessor processor;
+
+	private VortexPortalBuilder builder;
 
 	@Before
 	public void crearNodos() {
-		processor = ForkJoinTaskProcessor.create(TaskProcessorConfiguration.createOptimun());
+		processor = VortexProcessorFactory.createProcessor();
+		builder = VortexPortalBuilder.create(VortexCoreBuilder.create(processor));
 		// Creamos un nodo central
-		nodoRuteador = MultiplexorSinDuplicadosViejo.create(processor);
+		nodoRuteador = builder.getCore().multiplexarSinDuplicados();
 		// Le agregamos las interconexiones en los extremos
-		nodoEmisor = PortalMapeador.createForIOWith(processor, nodoRuteador);
-		nodoReceptor = PortalMapeador.createForIOWith(processor, nodoRuteador);
+		nodoEmisor = builder.portalIdentificador();
+		nodoReceptor = builder.portalIdentificador();
+
+		// Interconectamos ida y vuelta ambos portales
+		final Conector ruteadorAsincrono = builder.getCore().asincronizar(nodoRuteador);
+		nodoEmisor.getConectorDeSalida().conectarCon(ruteadorAsincrono);
+		nodoRuteador.getSalida().crearConector().conectarCon(nodoReceptor);
+
+		nodoReceptor.getConectorDeSalida().conectarCon(nodoRuteador);
+		nodoRuteador.getSalida().crearConector().conectarCon(nodoEmisor);
 	}
 
 	@After
@@ -137,16 +150,16 @@ public class TestRedA01ConPortal {
 	public void el_Thread_Del_Emisor_No_Deberia_Bloquearse_Durante_La_Entrega_Del_Mensaje() {
 		final WaitBarrier bloqueoDelEmisor = WaitBarrier.create();
 		final WaitBarrier bloqueoDelReceptor = WaitBarrier.create();
-		final AtomicBoolean receptorBloqueado = new AtomicBoolean(false);
+		final AtomicBoolean receptorBloqueado = new AtomicBoolean(true);
 		final HandlerTipado<String> handlerReceptor = new HandlerTipado<String>(SoloInstancias.de(String.class)) {
 
 			public void onObjetoRecibido(final String mensaje) {
-				receptorBloqueado.set(true);
-				// Hacemos que el emisor siga ejecutando si nos estaba esperando
-				bloqueoDelEmisor.release();
 				// Esperamos que el emisor nos de permiso de ejecutar
 				bloqueoDelReceptor.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 				receptorBloqueado.set(false);
+
+				// Hacemos que el emisor siga ejecutando si nos estaba esperando
+				bloqueoDelEmisor.release();
 			}
 		};
 		nodoReceptor.recibirCon(handlerReceptor);
@@ -154,11 +167,16 @@ public class TestRedA01ConPortal {
 		final String mensajeEnviado = "texto de ejemplo";
 		nodoEmisor.enviar(mensajeEnviado);
 
+		// En este punto el receptor debería estar bloqueado y nosotros como thread emisor libres
+		Assert.assertEquals("El receptor todavía debería estar bloqueado", true, receptorBloqueado.get());
+
+		// Dejamos que inicie la ejecucion
+		bloqueoDelReceptor.release();
+
 		// Esperamos que el receptor reciba el mensaje
 		bloqueoDelEmisor.waitForReleaseUpTo(TimeMagnitude.of(1, TimeUnit.SECONDS));
 		// En este punto el receptor debería estar bloqueado y nosotros como thread emisor libres
-		Assert.assertEquals("El receptor todavía debería estar bloqueado", true, receptorBloqueado.get());
-		bloqueoDelReceptor.release();
+		Assert.assertEquals("El receptor todavía debería estar bloqueado", false, receptorBloqueado.get());
 	}
 
 	/**
@@ -207,7 +225,8 @@ public class TestRedA01ConPortal {
 		try {
 			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("Nunca debería salir de la espera sin excepción");
-		} catch (final TimeoutExceededException e) {
+		}
+		catch (final TimeoutExceededException e) {
 			// Es la excepción que esperábamos
 		}
 
@@ -216,6 +235,7 @@ public class TestRedA01ConPortal {
 	/**
 	 * T007. En memoria, el mensaje después de entrega debería conservar su identidad
 	 */
+	@Ignore("No es posible enviar objetos")
 	public void en_Memoria_El_Mensaje_Despues_De_Entrega_Debería_Conservar_Su_Identidad() {
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		nodoReceptor.recibirCon(handlerReceptor);
@@ -234,13 +254,18 @@ public class TestRedA01ConPortal {
 	@Test
 	public void elMensajeDeberiaLlegarSiHayDosNodosEnElMedio() {
 		// Creamos los nodos centrales interconectados
-		final NodoViejo nodoIntermedio1 = MultiplexorSinDuplicadosViejo.create(processor);
-		final NodoViejo nodoIntermedio2 = MultiplexorSinDuplicadosViejo.create(processor);
+		final Compuesto<MultiConectable> nodoIntermedio1 = builder.getCore().multiplexarSinDuplicados();
+		final Compuesto<MultiConectable> nodoIntermedio2 = builder.getCore().multiplexarSinDuplicados();
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
-		final PortalViejo nodoEmisor = PortalMapeador.createForIOWith(processor, nodoIntermedio1);
-		final PortalViejo nodoReceptor = PortalMapeador.createForIOWith(processor, nodoIntermedio2);
+		final Portal nodoEmisor = builder.portalIdentificador();
+		nodoEmisor.getConectorDeSalida().conectarCon(nodoIntermedio1);
+		nodoIntermedio1.getSalida().crearConector().conectarCon(nodoEmisor);
+
+		final Portal nodoReceptor = builder.portalIdentificador();
+		nodoReceptor.getConectorDeSalida().conectarCon(nodoIntermedio2);
+		nodoIntermedio2.getSalida().crearConector().conectarCon(nodoReceptor);
 
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		nodoReceptor.recibirCon(handlerReceptor);
@@ -258,13 +283,18 @@ public class TestRedA01ConPortal {
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosHubsEnElMedioInterconectados() {
 		// Creamos los nodos centrales interconectados
-		final NodoViejo nodoIntermedio1 = MultiplexorSinDuplicadosViejo.create(processor);
-		final NodoViejo nodoIntermedio2 = MultiplexorSinDuplicadosViejo.create(processor);
+		final Compuesto<MultiConectable> nodoIntermedio1 = builder.getCore().multiplexarSinDuplicados();
+		final Compuesto<MultiConectable> nodoIntermedio2 = builder.getCore().multiplexarSinDuplicados();
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
-		final PortalViejo nodoEmisor = PortalMapeador.createForIOWith(processor, nodoIntermedio1);
-		final PortalViejo nodoReceptor = PortalMapeador.createForIOWith(processor, nodoIntermedio2);
+		final Portal nodoEmisor = builder.portalIdentificador();
+		nodoEmisor.getConectorDeSalida().conectarCon(nodoIntermedio1);
+		nodoIntermedio1.getSalida().crearConector().conectarCon(nodoEmisor);
+
+		final Portal nodoReceptor = builder.portalIdentificador();
+		nodoReceptor.getConectorDeSalida().conectarCon(nodoIntermedio2);
+		nodoIntermedio2.getSalida().crearConector().conectarCon(nodoReceptor);
 
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		nodoReceptor.recibirCon(handlerReceptor);
@@ -278,7 +308,8 @@ public class TestRedA01ConPortal {
 		try {
 			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("No deberíamos haber recibido otro mensaje");
-		} catch (final TimeoutExceededException e) {
+		}
+		catch (final TimeoutExceededException e) {
 			// Es la excepción que esperábamos
 		}
 	}
@@ -321,7 +352,10 @@ public class TestRedA01ConPortal {
 		nodoReceptor.recibirCon(handlerReceptor1);
 
 		final HandlerEncoladorDeStrings handlerReceptor2 = HandlerEncoladorDeStrings.create();
-		final PortalViejo nodoReceptor2 = PortalMapeador.createForIOWith(processor, nodoRuteador);
+		final Portal nodoReceptor2 = builder.portalIdentificador();
+		nodoReceptor2.getConectorDeSalida().conectarCon(nodoRuteador);
+		nodoRuteador.getSalida().crearConector().conectarCon(nodoReceptor2);
+
 		nodoReceptor2.recibirCon(handlerReceptor2);
 
 		// Mandamos el mensaje
@@ -340,9 +374,10 @@ public class TestRedA01ConPortal {
 	/**
 	 * Crea una conexión bidireccional entre los nodos pasados
 	 */
-	public void interconectar(final NodoViejo origen, final NodoViejo destino) {
-		origen.conectarCon(destino);
-		destino.conectarCon(origen);
+	public void interconectar(final Compuesto<MultiConectable> nodoIntermedio1,
+			final Compuesto<MultiConectable> nodoIntermedio2) {
+		nodoIntermedio1.getSalida().crearConector().conectarCon(nodoIntermedio2);
+		nodoIntermedio2.getSalida().crearConector().conectarCon(nodoIntermedio1);
 	}
 
 }
