@@ -19,6 +19,12 @@
 	<name>Vortex Parent Pom</name>
 	<description>Proyecto que define parametros comunes para ser heredados por los proyectos de vortex</description>
 	
+	<scm>
+		<connection>scm:git:ssh://github.com/kfgodel/vortex.git</connection>
+		<developerConnection>scm:git:ssh://github.com/kfgodel/vortex.git</developerConnection>
+		<url>https://github.com/kfgodel/vortex</url>
+	</scm>
+	
 	<properties>
 		<version.vortex>0.5.1-SNAPSHOT</version.vortex>
 		<dgarcia.project.group>ar.com.dgarcia</dgarcia.project.group>
