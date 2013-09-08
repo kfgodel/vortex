@@ -21,7 +21,6 @@ import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.condiciones.SiempreFalse;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.MensajeConContenido;
@@ -53,13 +52,11 @@ public class TestAtomos {
 	public void crearProcesadorYNodos() {
 		mensaje1 = MensajeConContenido.crearVacio();
 		mensaje2 = MensajeConContenido.crearVacio();
-		processor = VortexProcessorFactory.createProcessor();
-		builder = VortexCoreBuilder.create(processor);
+		builder = VortexCoreBuilder.create(null);
 	}
 
 	@After
 	public void eliminarProcesador() {
-		processor.detener();
 	}
 
 	@Test
@@ -97,7 +94,7 @@ public class TestAtomos {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
 		final Transformacion transformacion = new Transformacion() {
 
-			public MensajeVortex transformar(@SuppressWarnings("unused") final MensajeVortex mensaje) {
+			public MensajeVortex transformar(final MensajeVortex mensaje) {
 				return mensaje2;
 			}
 		};
