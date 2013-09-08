@@ -15,7 +15,9 @@ import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.Selector;
+import net.gaia.vortex.api.moleculas.Terminal;
 import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.condiciones.SiempreFalse;
@@ -159,6 +161,42 @@ public class TestAtomos {
 
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, selector, receptorSiempreTrue);
 		verificarMensajeNoRecibido(1, receptorSiempreFalse);
+	}
+
+	/**
+	 * Verifica que a través de los terminales el distribuidor discrimina a quien enviar el mensaje
+	 */
+	@Test
+	public void elDistribuidorDeberiaEnviarSoloAlOtroReceptorSiSeUsaUnterminalParaElEnvio() {
+		final ReceptorEncolador receptorSiempreTrue = ReceptorEncolador.create();
+		final ReceptorEncolador receptorSiempreFalse = ReceptorEncolador.create();
+
+		final Distribuidor distribuidor = builder.distribuidor();
+		final Terminal terminalTrue = distribuidor.crearTerminal();
+		terminalTrue.getConectorDeSalida().conectarCon(receptorSiempreTrue);
+
+		final Terminal terminalFalse = distribuidor.crearTerminal();
+		terminalFalse.getConectorDeSalida().conectarCon(receptorSiempreFalse);
+
+		// Enviamos el mensaje desde la terminal false, y sólo debería llegar al receptor true
+		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, terminalFalse, receptorSiempreTrue);
+		verificarMensajeNoRecibido(1, receptorSiempreFalse);
+	}
+
+	/**
+	 * Verifica que el distribuidor sirve como multiplexor al no usarse los terminales
+	 */
+	@Test
+	public void elDistribuidorDeberiaEntregarElMensajeRecibidoPorSiATodosLosReceptores() {
+		final ReceptorEncolador receptor1 = ReceptorEncolador.create();
+		final ReceptorEncolador receptor2 = ReceptorEncolador.create();
+
+		final Distribuidor distribuidor = builder.distribuidor();
+		distribuidor.crearTerminal().getConectorDeSalida().conectarCon(receptor1);
+		distribuidor.crearTerminal().getConectorDeSalida().conectarCon(receptor2);
+
+		// Enviamos el mensaje desde el distribuidor, debería llegar a los dos
+		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, distribuidor, receptor1, receptor2);
 	}
 
 	/**

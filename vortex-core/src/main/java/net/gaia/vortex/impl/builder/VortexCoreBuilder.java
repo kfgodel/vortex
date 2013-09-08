@@ -25,6 +25,7 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.GeneradorDeIdsDeMensajes;
 import net.gaia.vortex.api.moleculas.Compuesto;
+import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.Identificador;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
@@ -39,6 +40,7 @@ import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.impl.moleculas.MoleculaCompuesta;
+import net.gaia.vortex.impl.moleculas.MoleculaDistribuidor;
 import net.gaia.vortex.impl.moleculas.MoleculaIdentificador;
 import net.gaia.vortex.impl.moleculas.MoleculaSelector;
 import net.gaia.vortex.impl.proto.ConectorAsincrono;
@@ -277,5 +279,12 @@ public class VortexCoreBuilder implements VortexCore {
 	public GeneradorDeIdsDeMensajes crearGeneradorDeIdsParaMensajes(final IdDeComponenteVortex idAsignado) {
 		final GeneradorSecuencialDeIdDeMensaje generador = GeneradorSecuencialDeIdDeMensaje.create(idAsignado);
 		return generador;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#distribuidor()
+	 */
+	public Distribuidor distribuidor() {
+		return MoleculaDistribuidor.create(this);
 	}
 }

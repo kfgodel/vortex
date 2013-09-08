@@ -25,6 +25,7 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.GeneradorDeIdsDeMensajes;
 import net.gaia.vortex.api.moleculas.Compuesto;
+import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.Identificador;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
@@ -265,4 +266,13 @@ public interface VortexCore {
 	 * @return El generador creado
 	 */
 	GeneradorDeIdsDeMensajes crearGeneradorDeIdsParaMensajes(IdDeComponenteVortex idAsignado);
+
+	/**
+	 * Crea un componente distribuidor de mensajes que a traves de sus terminales permite conectar
+	 * varios componentes sin tener duplicados
+	 * 
+	 * @return El componente creado
+	 */
+	Distribuidor distribuidor();
+
 }
