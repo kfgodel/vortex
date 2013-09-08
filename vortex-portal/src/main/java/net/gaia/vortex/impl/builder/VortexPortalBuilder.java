@@ -19,14 +19,14 @@ package net.gaia.vortex.impl.builder;
 
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.builder.VortexPortal;
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
 import net.gaia.vortex.api.moleculas.Portal;
+import net.gaia.vortex.api.moleculas.portal.HandlerDeObjetos;
 import net.gaia.vortex.impl.atomos.Desobjetivizador;
 import net.gaia.vortex.impl.atomos.Objetivizador;
+import net.gaia.vortex.impl.conversiones.ConversorDefaultDeMensajes;
 import net.gaia.vortex.impl.moleculas.PortalConversor;
 import net.gaia.vortex.impl.moleculas.PortalIdentificador;
-import net.gaia.vortex.portal.api.mensaje.HandlerDeObjetos;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
-import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 
 /**
  * Esta clase representa el builder del portal
@@ -77,7 +77,7 @@ public class VortexPortalBuilder implements VortexPortal {
 
 	/**
 	 * @see net.gaia.vortex.api.builder.VortexPortal#conversorHaciaObjetos(java.lang.Class,
-	 *      net.gaia.vortex.portal.api.mensaje.HandlerDeObjetos)
+	 *      net.gaia.vortex.api.moleculas.portal.HandlerDeObjetos)
 	 */
 	public <T> Objetivizador conversorHaciaObjetos(final Class<? extends T> tipoEsperadoComoMensajes,
 			final HandlerDeObjetos<? super T> handlerDeObjetos) {

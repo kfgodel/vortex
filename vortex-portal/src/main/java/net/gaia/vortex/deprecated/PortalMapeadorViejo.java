@@ -10,13 +10,15 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.moleculas;
+package net.gaia.vortex.deprecated;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.moleculas.portal.HandlerDePortal;
 import net.gaia.vortex.deprecated.FlujoInmutableViejo;
 import net.gaia.vortex.deprecated.FlujoVortexViejo;
 import net.gaia.vortex.deprecated.NexoFiltroViejo;
@@ -26,16 +28,10 @@ import net.gaia.vortex.deprecated.NodoMoleculaSupportViejo;
 import net.gaia.vortex.deprecated.NodoViejo;
 import net.gaia.vortex.deprecated.SelectorConFiltrosViejo;
 import net.gaia.vortex.deprecated.SelectorViejo;
-import net.gaia.vortex.deprecated.trans.GenerarIdEnMensajeViejo;
 import net.gaia.vortex.impl.condiciones.EsMensajeDeOtroComponente;
+import net.gaia.vortex.impl.conversiones.ConversorDefaultDeMensajes;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
-import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
-import net.gaia.vortex.portal.api.moleculas.PortalViejo;
-import net.gaia.vortex.portal.impl.atomos.DesobjetivizadorViejo;
-import net.gaia.vortex.portal.impl.atomos.ObjetivizadorViejo;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
-import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -45,7 +41,8 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalViejo {
+@Deprecated
+public class PortalMapeadorViejo extends NodoMoleculaSupportViejo implements PortalViejo {
 
 	private ConversorDeMensajesVortex mapeadorVortex;
 
@@ -63,7 +60,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	private TaskProcessor procesador;
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.PortalViejo#enviar(java.lang.Object)
+	 * @see net.gaia.vortex.deprecated.PortalViejo#enviar(java.lang.Object)
 	 */
 
 	public void enviar(final Object mensaje) {
@@ -122,7 +119,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.PortalViejo#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
+	 * @see net.gaia.vortex.deprecated.PortalViejo#recibirCon(net.gaia.vortex.api.moleculas.portal.HandlerDePortal)
 	 */
 
 	public void recibirCon(final HandlerDePortal<?> handlerDelPortal) {
@@ -153,8 +150,8 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	 *            El nodo con el cual este portal accede a la red vortex
 	 * @return El portal creado
 	 */
-	public static PortalMapeador createForIOWith(final TaskProcessor processor, final NodoViejo nexoConLaRed) {
-		final PortalMapeador portal = createForOutputWith(processor, nexoConLaRed);
+	public static PortalMapeadorViejo createForIOWith(final TaskProcessor processor, final NodoViejo nexoConLaRed) {
+		final PortalMapeadorViejo portal = createForOutputWith(processor, nexoConLaRed);
 		nexoConLaRed.conectarCon(portal);
 		return portal;
 	}
@@ -171,8 +168,8 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	 *            El componente del que se recibirán los mensajes que vienen de la red
 	 * @return El portal creado
 	 */
-	public static PortalMapeador createForOutputWith(final TaskProcessor processor, final Receptor destino) {
-		final PortalMapeador portal = new PortalMapeador();
+	public static PortalMapeadorViejo createForOutputWith(final TaskProcessor processor, final Receptor destino) {
+		final PortalMapeadorViejo portal = new PortalMapeadorViejo();
 		portal.mapeadorVortex = ConversorDefaultDeMensajes.create();
 		portal.initializeWith(processor, destino);
 		return portal;
@@ -187,8 +184,8 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	 *            El id para que este portal use
 	 * @return El portal creado
 	 */
-	public static PortalMapeador create(final TaskProcessor processor, final GenerarIdEnMensajeViejo generadorDeIdsCompartido) {
-		final PortalMapeador portal = new PortalMapeador();
+	public static PortalMapeadorViejo create(final TaskProcessor processor, final GenerarIdEnMensajeViejo generadorDeIdsCompartido) {
+		final PortalMapeadorViejo portal = new PortalMapeadorViejo();
 		portal.mapeadorVortex = ConversorDefaultDeMensajes.create();
 		portal.initializeWith(processor, ReceptorNulo.getInstancia(), generadorDeIdsCompartido);
 		return portal;

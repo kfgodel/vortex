@@ -14,8 +14,8 @@ package net.gaia.vortex.api.moleculas;
 
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.emisores.MonoConectable;
-import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
-import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
+import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
+import net.gaia.vortex.api.moleculas.portal.HandlerDePortal;
 
 /**
  * Esta interfaz define el contrato esperado del componente portal que es utilizado para enviar y

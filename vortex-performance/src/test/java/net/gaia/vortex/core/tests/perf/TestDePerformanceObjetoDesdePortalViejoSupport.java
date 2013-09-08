@@ -18,14 +18,14 @@ import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
+import net.gaia.vortex.deprecated.PortalViejo;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.MensajeConContenido;
-import net.gaia.vortex.portal.api.moleculas.PortalViejo;
-import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
+import net.gaia.vortex.impl.support.HandlerTipado;
 
 import org.junit.After;
 import org.junit.Before;

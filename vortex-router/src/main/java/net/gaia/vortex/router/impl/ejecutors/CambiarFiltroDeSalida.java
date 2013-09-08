@@ -15,9 +15,9 @@ package net.gaia.vortex.router.impl.ejecutors;
 import java.util.Map;
 
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.support.ReceptorSupport;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.messages.PublicacionDeFiltros;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;

@@ -17,10 +17,10 @@ import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
 import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.deprecated.NodoViejo;
+import net.gaia.vortex.deprecated.PortalMapeadorViejo;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
-import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.impl.support.HandlerTipado;
 
 import org.junit.After;
 import org.junit.Before;
@@ -135,7 +135,7 @@ public class TestDeComunicacionTipicaEnMemoriaConPortales {
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
-		final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(procesadorDelNodoReceptor, nodoReceptor);
+		final PortalMapeadorViejo portalReceptor = PortalMapeadorViejo.createForIOWith(procesadorDelNodoReceptor, nodoReceptor);
 		portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
 			public void onObjetoRecibido(final MensajeModeloParaTests mensaje) {
 				metricas.registrarOutput();
@@ -165,7 +165,7 @@ public class TestDeComunicacionTipicaEnMemoriaConPortales {
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
-		final PortalMapeador portalDeEnvio = PortalMapeador.createForOutputWith(procesadorDelNodoEmisor, nodoEmisor);
+		final PortalMapeadorViejo portalDeEnvio = PortalMapeadorViejo.createForOutputWith(procesadorDelNodoEmisor, nodoEmisor);
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
 			public Runnable getOrCreateRunnable() {

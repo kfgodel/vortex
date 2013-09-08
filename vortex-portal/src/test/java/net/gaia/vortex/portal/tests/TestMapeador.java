@@ -12,12 +12,12 @@
  */
 package net.gaia.vortex.portal.tests;
 
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
+import net.gaia.vortex.impl.conversiones.ConversorDefaultDeMensajes;
 import net.gaia.vortex.impl.mensajes.MensajeConContenido;
-import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
-import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
 
 import org.junit.Assert;
 import org.junit.Before;

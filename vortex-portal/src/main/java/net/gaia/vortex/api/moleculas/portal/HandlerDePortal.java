@@ -1,10 +1,10 @@
 /**
  * 14/06/2012 20:42:52 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.portal.api.mensaje;
+package net.gaia.vortex.api.moleculas.portal;
 
 import net.gaia.vortex.api.condiciones.Condicion;
-import net.gaia.vortex.portal.api.moleculas.PortalViejo;
+import net.gaia.vortex.deprecated.PortalViejo;
 
 /**
  * Esta interfaz representa un handler de mensajes para utilizar en un {@link PortalViejo}, que

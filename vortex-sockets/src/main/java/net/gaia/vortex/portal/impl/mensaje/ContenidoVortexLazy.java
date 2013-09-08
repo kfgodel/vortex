@@ -16,12 +16,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import net.gaia.vortex.api.conversiones.ConversorDeContenidoVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.impl.ids.mensajes.IdInmutableDeMensaje;
 import net.gaia.vortex.impl.mensajes.ContenidoPrimitiva;
 import net.gaia.vortex.impl.mensajes.support.ContenidoVortexSupport;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

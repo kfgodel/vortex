@@ -12,9 +12,9 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
+import net.gaia.vortex.deprecated.PortalMapeadorViejo;
+import net.gaia.vortex.deprecated.PortalViejo;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
-import net.gaia.vortex.portal.api.moleculas.PortalViejo;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 
 /**
  * Esta clase prueba la performance de procesamiento de mensajes del portal al recibir objetos
@@ -28,7 +28,7 @@ public class TestDePerformanceObjetoDesdePortalMapeador extends TestDePerformanc
 	 */
 	@Override
 	protected PortalViejo crearPortalATestear() {
-		return PortalMapeador.createForOutputWith(getProcessor(), ReceptorNulo.getInstancia());
+		return PortalMapeadorViejo.createForOutputWith(getProcessor(), ReceptorNulo.getInstancia());
 	}
 
 }

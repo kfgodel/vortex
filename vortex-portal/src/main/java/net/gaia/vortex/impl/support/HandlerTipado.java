@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.mensaje;
+package net.gaia.vortex.impl.support;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -22,8 +22,8 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.moleculas.portal.HandlerDePortal;
 import net.gaia.vortex.impl.condiciones.SiempreFalse;
-import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import ar.com.dgarcia.coding.anno.MayBeNull;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.reflection.types.Linaje;
@@ -55,7 +55,7 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#getTipoEsperado()
+	 * @see net.gaia.vortex.api.moleculas.portal.HandlerDePortal#getTipoEsperado()
 	 */
 	
 	@SuppressWarnings("unchecked")
@@ -82,7 +82,7 @@ public abstract class HandlerTipado<T> implements HandlerDePortal<T> {
 	 * Devuelve la condición necesaria de este handler, devolviendo la condición
 	 * {@link SiempreFalse} si la actual es null
 	 * 
-	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#getBicondicional()
+	 * @see net.gaia.vortex.api.moleculas.portal.HandlerDePortal#getBicondicional()
 	 */
 	
 	public Condicion getBicondicional() {

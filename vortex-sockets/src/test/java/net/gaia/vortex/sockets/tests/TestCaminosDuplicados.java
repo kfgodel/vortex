@@ -18,10 +18,10 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
+import net.gaia.vortex.deprecated.PortalMapeadorViejo;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
-import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.impl.support.HandlerTipado;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
 import org.junit.After;
@@ -50,9 +50,9 @@ public class TestCaminosDuplicados {
 	private NodoSocket clienteEmisor;
 	private NodoSocket clienteReceptor;
 
-	private PortalMapeador portalReceptor;
+	private PortalMapeadorViejo portalReceptor;
 
-	private PortalMapeador portalEmisor;
+	private PortalMapeadorViejo portalEmisor;
 
 	private NodoSocket serverParalelo;
 
@@ -188,11 +188,11 @@ public class TestCaminosDuplicados {
 
 		// Creamos el cliente del emisor y su portal
 		clienteEmisor = NodoSocket.createAndConnectTo(direccionServerEmisor, procesador);
-		portalEmisor = PortalMapeador.createForIOWith(procesador, clienteEmisor);
+		portalEmisor = PortalMapeadorViejo.createForIOWith(procesador, clienteEmisor);
 
 		// Creamos el cliente del receptor y su portal
 		clienteReceptor = NodoSocket.createAndConnectTo(direccionServerReceptor, procesador);
-		portalReceptor = PortalMapeador.createForIOWith(procesador, clienteReceptor);
+		portalReceptor = PortalMapeadorViejo.createForIOWith(procesador, clienteReceptor);
 	}
 
 	/**

@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.api.moleculas;
 
-import net.gaia.vortex.portal.api.moleculas.PortalViejo;
+import net.gaia.vortex.deprecated.PortalViejo;
 
 /**
  * Esta interfaz define el comportamiento de un portal que puede establecer comunicaciones

@@ -12,10 +12,10 @@
  */
 package net.gaia.vortex.impl.atomos;
 
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
 import net.gaia.vortex.impl.support.MonoConectableSupport;
-import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 
 /**
  * Esta clase representa el componente vortex que convierte todo los objetos indicados en mensajes y

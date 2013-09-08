@@ -12,11 +12,11 @@
  */
 package net.gaia.vortex.impl.atomos;
 
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
+import net.gaia.vortex.api.moleculas.portal.HandlerDeObjetos;
 import net.gaia.vortex.impl.support.ReceptorSupport;
-import net.gaia.vortex.portal.api.mensaje.HandlerDeObjetos;
-import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

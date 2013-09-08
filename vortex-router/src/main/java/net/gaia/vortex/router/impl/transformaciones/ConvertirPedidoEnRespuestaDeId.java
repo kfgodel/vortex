@@ -15,10 +15,10 @@ package net.gaia.vortex.router.impl.transformaciones;
 import java.util.Map;
 
 import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.transformaciones.Transformacion;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import net.gaia.vortex.router.impl.messages.bidi.RespuestaDeIdRemoto;
 
 import org.slf4j.Logger;

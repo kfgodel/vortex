@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.api.mensaje;
+package net.gaia.vortex.api.moleculas.portal;
 
 /**
  * Esta interfaz representa el contrato mínimo que requiere un handler de mensajes desde la red

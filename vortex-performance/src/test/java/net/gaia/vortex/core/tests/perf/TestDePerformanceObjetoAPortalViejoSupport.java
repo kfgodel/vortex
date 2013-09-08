@@ -16,10 +16,10 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
+import net.gaia.vortex.deprecated.PortalViejo;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.support.ReceptorSupport;
-import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 
 import org.junit.After;
 import org.junit.Before;

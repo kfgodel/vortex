@@ -14,7 +14,7 @@ package net.gaia.vortex.router.impl.moleculas.comport;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.deprecated.FlujoVortexViejo;
-import net.gaia.vortex.deprecated.trans.GenerarIdEnMensajeViejo;
+import net.gaia.vortex.deprecated.GenerarIdEnMensajeViejo;
 
 /**
  * Esta interfaz representa el comportamiento configurable para un nodo bidireccional.<br>

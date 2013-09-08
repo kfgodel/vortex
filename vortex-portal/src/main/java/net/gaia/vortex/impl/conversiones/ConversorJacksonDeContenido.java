@@ -10,13 +10,13 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.conversion.impl;
+package net.gaia.vortex.impl.conversiones;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex;
+import net.gaia.vortex.api.conversiones.ConversorDeContenidoVortex;
+import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
 
@@ -33,7 +33,7 @@ public class ConversorJacksonDeContenido implements ConversorDeContenidoVortex {
 	private ObjectMapper jacksonMapper;
 
 	/**
-	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex#convertirAEstado(java.lang.Object)
+	 * @see net.gaia.vortex.api.conversiones.ConversorDeContenidoVortex#convertirAEstado(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
 	
@@ -56,7 +56,7 @@ public class ConversorJacksonDeContenido implements ConversorDeContenidoVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex#convertirDesdeEstado(java.util.Map,
+	 * @see net.gaia.vortex.api.conversiones.ConversorDeContenidoVortex#convertirDesdeEstado(java.util.Map,
 	 *      java.lang.Class)
 	 */
 	

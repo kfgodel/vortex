@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.condiciones;
+package net.gaia.vortex.deprecated;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,8 +36,9 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Paralelizable
-public class SoloInstancias implements Condicion {
-	private static final Logger LOG = LoggerFactory.getLogger(SoloInstancias.class);
+@Deprecated
+public class SoloInstanciasViejo implements Condicion {
+	private static final Logger LOG = LoggerFactory.getLogger(SoloInstanciasViejo.class);
 
 	private Class<?> tipoEsperado;
 	public static final String tipoEsperado_FIELD = "tipoEsperado";
@@ -45,7 +46,7 @@ public class SoloInstancias implements Condicion {
 	/**
 	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final ContenidoVortex contenido = mensaje.getContenido();
 
@@ -75,7 +76,8 @@ public class SoloInstancias implements Condicion {
 		Class<?> tipoDelMensajeOriginal;
 		try {
 			tipoDelMensajeOriginal = Class.forName(nombreDelTipoOriginal);
-		} catch (final ClassNotFoundException e) {
+		}
+		catch (final ClassNotFoundException e) {
 			LOG.debug("La clase[{}] no existe en el classpath. Asumiendo que no cumple con esta condicion[{}]",
 					nombreDelTipoOriginal, this);
 			throw new UnhandledConditionException(
@@ -98,8 +100,8 @@ public class SoloInstancias implements Condicion {
 	 *            El tipo esperado del mensaje
 	 * @return La condición creada
 	 */
-	public static SoloInstancias de(final Class<?> tipoEsperado) {
-		final SoloInstancias condicion = new SoloInstancias();
+	public static SoloInstanciasViejo de(final Class<?> tipoEsperado) {
+		final SoloInstanciasViejo condicion = new SoloInstanciasViejo();
 		condicion.tipoEsperado = tipoEsperado;
 		return condicion;
 	}
@@ -107,7 +109,8 @@ public class SoloInstancias implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(tipoEsperado_FIELD, tipoEsperado).toString();
 	}
@@ -115,7 +118,7 @@ public class SoloInstancias implements Condicion {
 	/**
 	 * @see net.gaia.vortex.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	
+
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}

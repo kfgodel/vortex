@@ -21,10 +21,10 @@ import net.gaia.vortex.api.builder.VortexPortal;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Identificador;
 import net.gaia.vortex.api.moleculas.Portal;
+import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
+import net.gaia.vortex.api.moleculas.portal.HandlerDePortal;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.support.EmisorSupport;
-import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
-import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -64,7 +64,7 @@ public class PortalIdentificador extends EmisorSupport implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
+	 * @see net.gaia.vortex.api.moleculas.Portal#recibirCon(net.gaia.vortex.api.moleculas.portal.HandlerDePortal)
 	 */
 	public <T> void recibirCon(final HandlerDePortal<T> handlerDeMensajes) {
 		this.conversor.recibirCon(handlerDeMensajes);

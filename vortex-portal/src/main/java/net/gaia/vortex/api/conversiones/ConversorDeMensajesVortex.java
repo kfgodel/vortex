@@ -1,10 +1,10 @@
 /**
  * 14/06/2012 20:33:20 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.portal.impl.conversion.api;
+package net.gaia.vortex.api.conversiones;
 
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
+import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
 
 /**
  * Esta interfaz representa un elemento utilizado por los portales para la conversión de objetos de

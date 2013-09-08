@@ -24,12 +24,12 @@ import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.api.moleculas.Portal;
 import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.deprecated.SoloInstanciasViejo;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.builder.VortexPortalBuilder;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
-import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
-import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
+import net.gaia.vortex.impl.support.HandlerTipado;
 
 import org.junit.After;
 import org.junit.Before;
@@ -151,7 +151,7 @@ public class TestRedA01ConPortal {
 		final WaitBarrier bloqueoDelEmisor = WaitBarrier.create();
 		final WaitBarrier bloqueoDelReceptor = WaitBarrier.create();
 		final AtomicBoolean receptorBloqueado = new AtomicBoolean(true);
-		final HandlerTipado<String> handlerReceptor = new HandlerTipado<String>(SoloInstancias.de(String.class)) {
+		final HandlerTipado<String> handlerReceptor = new HandlerTipado<String>(SoloInstanciasViejo.de(String.class)) {
 
 			public void onObjetoRecibido(final String mensaje) {
 				// Esperamos que el emisor nos de permiso de ejecutar
@@ -190,7 +190,7 @@ public class TestRedA01ConPortal {
 	public void el_Thread_Del_Receptor_Debería_Poder_Ser_Independiente_Del_Usado_Para_La_Entrega_Del_Mensaje() {
 		final WaitBarrier threadDeEntregaDefinido = WaitBarrier.create();
 		final AtomicReference<Thread> threadDeEntrega = new AtomicReference<Thread>();
-		final HandlerTipado<String> handlerReceptor = new HandlerTipado<String>(SoloInstancias.de(String.class)) {
+		final HandlerTipado<String> handlerReceptor = new HandlerTipado<String>(SoloInstanciasViejo.de(String.class)) {
 
 			public void onObjetoRecibido(final String mensaje) {
 				final Thread threadActual = Thread.currentThread();

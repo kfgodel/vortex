@@ -17,11 +17,11 @@
  */
 package net.gaia.vortex.api.builder;
 
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
 import net.gaia.vortex.api.moleculas.Portal;
+import net.gaia.vortex.api.moleculas.portal.HandlerDeObjetos;
 import net.gaia.vortex.impl.atomos.Desobjetivizador;
 import net.gaia.vortex.impl.atomos.Objetivizador;
-import net.gaia.vortex.portal.api.mensaje.HandlerDeObjetos;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 
 /**
  * Esta interfaz extiende las opciones de creacion de {@link VortexCore} y agrega metodos propios de

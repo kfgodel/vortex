@@ -15,14 +15,14 @@ package net.gaia.vortex.router.impl.moleculas.comport;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.deprecated.FlujoInmutableViejo;
 import net.gaia.vortex.deprecated.FlujoVortexViejo;
+import net.gaia.vortex.deprecated.GenerarIdEnMensajeViejo;
 import net.gaia.vortex.deprecated.MultiplexorViejo;
 import net.gaia.vortex.deprecated.NexoBifurcadorViejo;
 import net.gaia.vortex.deprecated.NexoSinDuplicadosViejo;
-import net.gaia.vortex.deprecated.trans.GenerarIdEnMensajeViejo;
+import net.gaia.vortex.deprecated.PortalMapeadorViejo;
+import net.gaia.vortex.deprecated.PortalViejo;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
-import net.gaia.vortex.portal.api.moleculas.PortalViejo;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
 import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import net.gaia.vortex.router.impl.condiciones.EsMetaMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -36,7 +36,7 @@ public class ComportamientoPortal implements ComportamientoBidi {
 
 	private GenerarIdEnMensajeViejo generadorDeIdsCompartido;
 
-	private PortalMapeador portalInterno;
+	private PortalMapeadorViejo portalInterno;
 	public static final String portalInterno_FIELD = "portalInterno";
 
 	public static ComportamientoPortal create() {
@@ -64,7 +64,7 @@ public class ComportamientoPortal implements ComportamientoBidi {
 		bifurcador.setReceptorPorTrue(multiplexorDePatas);
 
 		// El portal interno recibe los mensaje normales
-		portalInterno = PortalMapeador.create(processor, generadorDeIdsCompartido);
+		portalInterno = PortalMapeadorViejo.create(processor, generadorDeIdsCompartido);
 		bifurcador.setReceptorPorFalse(portalInterno);
 
 		// El portal no envia directo, si no a través de las patas
@@ -79,7 +79,7 @@ public class ComportamientoPortal implements ComportamientoBidi {
 		return portalInterno;
 	}
 
-	public void setPortalInterno(final PortalMapeador portalInterno) {
+	public void setPortalInterno(final PortalMapeadorViejo portalInterno) {
 		this.portalInterno = portalInterno;
 	}
 

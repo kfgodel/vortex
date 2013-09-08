@@ -1,11 +1,12 @@
 /**
  * 14/06/2012 20:38:40 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.portal.api.moleculas;
+package net.gaia.vortex.deprecated;
 
 import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
+import net.gaia.vortex.api.moleculas.portal.HandlerDePortal;
 import net.gaia.vortex.deprecated.NexoViejo;
-import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 
 /**
  * Esta interfaz representa el componente vortex para ser usado por todo el código cliente que no

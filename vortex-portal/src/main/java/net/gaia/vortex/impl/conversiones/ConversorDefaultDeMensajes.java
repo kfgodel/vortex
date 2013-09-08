@@ -10,18 +10,18 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.conversion.impl;
+package net.gaia.vortex.impl.conversiones;
 
 import java.util.Map;
 
+import net.gaia.vortex.api.conversiones.ConversorDeContenidoVortex;
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
 import net.gaia.vortex.impl.mensajes.ContenidoMapa;
 import net.gaia.vortex.impl.mensajes.ContenidoPrimitiva;
 import net.gaia.vortex.impl.mensajes.MensajeConContenido;
-import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeContenidoVortex;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -38,7 +38,7 @@ public class ConversorDefaultDeMensajes implements ConversorDeMensajesVortex {
 	private ConversorDeContenidoVortex mapeadorDeObjetos;
 
 	/**
-	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex#convertirAVortex(java.lang.Object)
+	 * @see net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex#convertirAVortex(java.lang.Object)
 	 */
 
 	@SuppressWarnings("unchecked")
@@ -77,7 +77,7 @@ public class ConversorDefaultDeMensajes implements ConversorDeMensajesVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex#convertirDesdeVortex(net.gaia.vortex.api.mensajes.MensajeVortex,
+	 * @see net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex#convertirDesdeVortex(net.gaia.vortex.api.mensajes.MensajeVortex,
 	 *      java.lang.Class)
 	 */
 

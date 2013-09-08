@@ -16,11 +16,11 @@ import junit.framework.Assert;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
+import net.gaia.vortex.impl.conversiones.ConversorJacksonDeContenido;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.ContenidoPrimitiva;
 import net.gaia.vortex.impl.mensajes.MensajeConContenido;
-import net.gaia.vortex.portal.impl.conversion.impl.ConversorJacksonDeContenido;
 import net.gaia.vortex.portal.impl.mensaje.ContenidoVortexLazy;
 import net.gaia.vortex.textualizer.VortexTextualizer;
 
