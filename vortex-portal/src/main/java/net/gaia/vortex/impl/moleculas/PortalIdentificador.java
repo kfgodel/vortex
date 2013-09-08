@@ -25,6 +25,7 @@ import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.support.EmisorSupport;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa el portal que además de convertir los objetos, identifica los mensajes para
@@ -34,36 +35,39 @@ import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
  */
 public class PortalIdentificador extends EmisorSupport implements Portal {
 
-	private Portal conversorInterno;
-	private Identificador identificadorDeMensajes;
+	private Portal conversor;
+	public static final String conversor_FIELD = "conversor";
+
+	private Identificador identificador;
+	public static final String identificador_FIELD = "identificador";
 
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
 		// Los mensajes externos los filtra el identificador
-		this.identificadorDeMensajes.recibir(mensaje);
+		this.identificador.recibir(mensaje);
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.basic.emisores.MonoConectable#getConectorDeSalida()
 	 */
 	public Conector getConectorDeSalida() {
-		return this.identificadorDeMensajes.getConectorDeSalida();
+		return this.identificador.getConectorDeSalida();
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.moleculas.Portal#enviar(java.lang.Object)
 	 */
 	public void enviar(final Object mensaje) throws ErrorDeMapeoVortexException {
-		this.conversorInterno.enviar(mensaje);
+		this.conversor.enviar(mensaje);
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
 	 */
 	public <T> void recibirCon(final HandlerDePortal<T> handlerDeMensajes) {
-		this.conversorInterno.recibirCon(handlerDeMensajes);
+		this.conversor.recibirCon(handlerDeMensajes);
 	}
 
 	public static PortalIdentificador create(final VortexPortal builder) {
@@ -77,15 +81,24 @@ public class PortalIdentificador extends EmisorSupport implements Portal {
 	 */
 	private void inicializarCon(final VortexPortal builder) {
 		// Creamos el portal que sabe convertir los objetos
-		this.conversorInterno = builder.portalConversor();
+		this.conversor = builder.portalConversor();
 		// Creamos el identificador que filtra los mensajes
-		this.identificadorDeMensajes = builder.getCore().identificador();
+		this.identificador = builder.getCore().identificador();
 
 		// El conversor enviara los mensajes a traves del identificador para asignar ID
-		this.conversorInterno.getConectorDeSalida().conectarCon(
-				this.identificadorDeMensajes.getConectorParaEnviarConId());
+		this.conversor.getConectorDeSalida().conectarCon(this.identificador.getConectorParaEnviarConId());
 
 		// El identificador actuara como filtro para que reciba el conversor
-		this.identificadorDeMensajes.getConectorParaRecibirSinDuplicados().conectarCon(this.conversorInterno);
+		this.identificador.getConectorParaRecibirSinDuplicados().conectarCon(this.conversor);
 	}
+
+	/**
+	 * @see net.gaia.vortex.impl.support.ComponenteSupport#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(conversor_FIELD, conversor)
+				.toString();
+	}
+
 }

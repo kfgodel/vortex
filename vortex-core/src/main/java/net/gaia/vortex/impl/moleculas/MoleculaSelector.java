@@ -27,7 +27,8 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.impl.support.MultiEmisorSupport;
+import net.gaia.vortex.impl.support.EmisorSupport;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la molecula vortex que al recibir un mensaje selecciona un conjunto de
@@ -35,7 +36,7 @@ import net.gaia.vortex.impl.support.MultiEmisorSupport;
  * 
  * @author dgarcia
  */
-public class MoleculaSelector extends MultiEmisorSupport implements Selector {
+public class MoleculaSelector extends EmisorSupport implements Selector {
 
 	/**
 	 * Atomo de entrada que multiplexa a las salidas que estaran condicionadas
@@ -89,4 +90,28 @@ public class MoleculaSelector extends MultiEmisorSupport implements Selector {
 		selector.entrada = core.multiplexar();
 		return selector;
 	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#getConectores()
+	 */
+	public List<Conector> getConectores() {
+		return entrada.getConectores();
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final ToString builder = ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia());
+		final int cantidadDeConectados = getConectores().size();
+		if (cantidadDeConectados > 3) {
+			builder.con("conectados", cantidadDeConectados);
+		}
+		else {
+			builder.con("conectados", getConectores());
+		}
+		return builder.toString();
+	}
+
 }

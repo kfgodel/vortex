@@ -20,9 +20,10 @@ import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.atomos.Desobjetivizador;
 import net.gaia.vortex.impl.atomos.Objetivizador;
-import net.gaia.vortex.impl.support.MonoConectableSupport;
+import net.gaia.vortex.impl.support.EmisorSupport;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase implementa la forma más básica de portal que sólo convierte los objetos en mensaje, y
@@ -32,9 +33,10 @@ import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
  * 
  * @author D. García
  */
-public class PortalConversor extends MonoConectableSupport implements Portal {
+public class PortalConversor extends EmisorSupport implements Portal {
 
 	private Selector desdeVortex;
+	public static final String desdeVortex_FIELD = "desdeVortex";
 
 	private Desobjetivizador haciaVortex;
 
@@ -52,6 +54,13 @@ public class PortalConversor extends MonoConectableSupport implements Portal {
 	 */
 	public void enviar(final Object mensaje) throws ErrorDeMapeoVortexException {
 		haciaVortex.vortificar(mensaje);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.MonoConectable#getConectorDeSalida()
+	 */
+	public Conector getConectorDeSalida() {
+		return haciaVortex.getConectorDeSalida();
 	}
 
 	/**
@@ -82,8 +91,6 @@ public class PortalConversor extends MonoConectableSupport implements Portal {
 	 *            El builder desde el cual crear las instancias necesarias como dependencias
 	 */
 	private void inicializar(final VortexPortal builder) {
-		// Antes que nada llamamos al super
-		super.inicializar();
 		// Guardamos el builder que necesitamos para agregar componentes al selector
 		this.builder = builder;
 
@@ -93,7 +100,15 @@ public class PortalConversor extends MonoConectableSupport implements Portal {
 
 		// Los objetos entrantes los convertimos en mensajes, y los mandamos al conector de salida
 		this.haciaVortex = builder.conversorDesdeObjetos();
-		this.haciaVortex.getConectorDeSalida().conectarCon(this.getConectorDeSalida());
-
 	}
+
+	/**
+	 * @see net.gaia.vortex.impl.support.ComponenteSupport#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
+				.con(desdeVortex_FIELD, desdeVortex).toString();
+	}
+
 }

@@ -43,7 +43,8 @@ public class MonoConectableSupport extends EmisorSupport implements MonoConectab
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(conectorUnico_FIELD, conectorUnico).toString();
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
+				.con(conectorUnico_FIELD, conectorUnico).toString();
 	}
 
 }

@@ -47,8 +47,15 @@ public class MultiEmisorSupport extends EmisorSupport implements MultiEmisor {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(conectores_FIELD, conectores)
-				.toString();
+		final ToString builder = ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia());
+		final int cantidadDeConectados = conectores.size();
+		if (cantidadDeConectados > 3) {
+			builder.con(conectores_FIELD, cantidadDeConectados);
+		}
+		else {
+			builder.con(conectores_FIELD, conectores);
+		}
+		return builder.toString();
 	}
 
 }

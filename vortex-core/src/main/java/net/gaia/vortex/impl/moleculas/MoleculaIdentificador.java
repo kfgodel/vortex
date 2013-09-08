@@ -28,7 +28,7 @@ import net.gaia.vortex.api.moleculas.Identificador;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.condiciones.EsMensajeNuevoDeOtroComponente;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
-import net.gaia.vortex.impl.support.MonoConectableSupport;
+import net.gaia.vortex.impl.support.EmisorSupport;
 import net.gaia.vortex.impl.transformaciones.GenerarIdEnMensaje;
 
 /**
@@ -39,7 +39,7 @@ import net.gaia.vortex.impl.transformaciones.GenerarIdEnMensaje;
  * 
  * @author dgarcia
  */
-public class MoleculaIdentificador extends MonoConectableSupport implements Identificador {
+public class MoleculaIdentificador extends EmisorSupport implements Identificador {
 
 	private IdDeComponenteVortex idPropio;
 	private Filtro filtroRecibidos;
@@ -55,8 +55,6 @@ public class MoleculaIdentificador extends MonoConectableSupport implements Iden
 	 * Inicializa esta instancia
 	 */
 	private void inicializarCon(final VortexCore builder) {
-		super.inicializar();
-
 		// Obtenemos un ID propio de componente
 		this.idPropio = builder.crearIdDeComponente();
 
@@ -68,8 +66,7 @@ public class MoleculaIdentificador extends MonoConectableSupport implements Iden
 
 		// Creamos la transformacion para asignar Ids a los mensajes enviados
 		final GeneradorDeIdsDeMensajes generadorDeIdsParaMensajes = builder.crearGeneradorDeIdsParaMensajes(idPropio);
-		this.transformacionEnvidados = builder.transformarCon(GenerarIdEnMensaje.create(generadorDeIdsParaMensajes),
-				this.getConectorDeSalida());
+		this.transformacionEnvidados = builder.transformadorPara(GenerarIdEnMensaje.create(generadorDeIdsParaMensajes));
 	}
 
 	/**
@@ -98,5 +95,12 @@ public class MoleculaIdentificador extends MonoConectableSupport implements Iden
 	 */
 	public IdDeComponenteVortex getIdPropio() {
 		return idPropio;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.MonoConectable#getConectorDeSalida()
+	 */
+	public Conector getConectorDeSalida() {
+		return this.transformacionEnvidados.getConectorDeSalida();
 	}
 }
