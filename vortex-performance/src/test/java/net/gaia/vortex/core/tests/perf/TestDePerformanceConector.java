@@ -27,7 +27,7 @@ import net.gaia.vortex.impl.proto.ConectorBloqueante;
  * 
  * @author dgarcia
  */
-public class TestDePerformanceAtomoConector extends TestDePerformanceNodoSupport {
+public class TestDePerformanceConector extends TestDePerformanceNodoSupport {
 
 	/**
 	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearFlujoATestear()

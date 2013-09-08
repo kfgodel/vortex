@@ -14,7 +14,7 @@ import net.gaia.vortex.impl.nulos.ReceptorNulo;
  * 
  * @author D. García
  */
-public class TestDePerformanceNexoEjecutor extends TestDePerformanceNodoSupport {
+public class TestDePerformanceSecuenciador extends TestDePerformanceNodoSupport {
 
 	/**
 	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearFlujoATestear()

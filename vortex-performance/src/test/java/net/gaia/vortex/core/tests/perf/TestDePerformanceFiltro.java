@@ -14,7 +14,7 @@ import net.gaia.vortex.impl.flujos.FlujoInmutable;
  * 
  * @author D. García
  */
-public class TestDePerformanceNexoFiltro extends TestDePerformanceNodoSupport {
+public class TestDePerformanceFiltro extends TestDePerformanceNodoSupport {
 
 	/**
 	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearFlujoATestear()

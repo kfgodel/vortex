@@ -19,7 +19,7 @@ import net.gaia.vortex.impl.transformaciones.TransformacionNula;
  * 
  * @author D. García
  */
-public class TestDePerformanceNodoPorComposicion extends TestDePerformanceNodoSupport {
+public class TestDePerformanceCompuesto extends TestDePerformanceNodoSupport {
 
 	/**
 	 * Crea el nodo que cuya performance se evaluará en este tests

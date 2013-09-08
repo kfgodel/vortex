@@ -35,7 +35,7 @@ import ar.com.dgarcia.testing.stress.StressGenerator;
 @Deprecated
 public abstract class TestDePerformanceNodoSupportViejo {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceNexoFiltro.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TestDePerformanceFiltro.class);
 
 	private TaskProcessor processor;
 

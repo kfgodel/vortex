@@ -12,7 +12,7 @@ import net.gaia.vortex.impl.flujos.FlujoInmutable;
  * 
  * @author D. García
  */
-public class TestDePerformanceNexoFiltroDuplicados extends TestDePerformanceNodoSupport {
+public class TestDePerformanceFiltroDuplicados extends TestDePerformanceNodoSupport {
 
 	/**
 	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearFlujoATestear()

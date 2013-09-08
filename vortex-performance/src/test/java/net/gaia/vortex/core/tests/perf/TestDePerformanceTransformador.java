@@ -14,7 +14,7 @@ import net.gaia.vortex.impl.transformaciones.TransformacionNula;
  * 
  * @author D. García
  */
-public class TestDePerformanceNexoTransformador extends TestDePerformanceNodoSupport {
+public class TestDePerformanceTransformador extends TestDePerformanceNodoSupport {
 
 	/**
 	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearFlujoATestear()
