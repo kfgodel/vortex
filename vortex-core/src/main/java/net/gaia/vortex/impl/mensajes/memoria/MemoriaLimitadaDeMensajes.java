@@ -24,6 +24,7 @@ import net.gaia.vortex.api.mensajes.MensajeVortex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 import ar.com.dgarcia.coding.exceptions.UnhandledConditionException;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
@@ -90,6 +91,9 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	 */
 	private boolean intentarRegistrarNuevo(final MensajeVortex mensaje) {
 		final IdDeMensaje idAgregado = mensaje.getIdDeMensaje();
+		if (idAgregado == null) {
+			throw new FaultyCodeException("Se recibió un mensaje[" + mensaje + "] sin ID");
+		}
 		final boolean agregado = idsPorHash.add(idAgregado);
 		if (!agregado) {
 			// Otro thread se adelantó y puso el mismo ID
@@ -109,6 +113,9 @@ public class MemoriaLimitadaDeMensajes implements MemoriaDeMensajes {
 	 */
 	public boolean tieneRegistroDe(final MensajeVortex mensaje) {
 		final IdDeMensaje idDeMensaje = mensaje.getIdDeMensaje();
+		if (idDeMensaje == null) {
+			throw new FaultyCodeException("Se recibió un mensaje[" + mensaje + "] sin ID");
+		}
 		final boolean yaRegistrado = idsPorHash.contains(idDeMensaje);
 		return yaRegistrado;
 	}

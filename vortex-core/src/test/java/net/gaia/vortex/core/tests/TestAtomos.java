@@ -144,7 +144,7 @@ public class TestAtomos {
 	public void elFiltroDeMensajesConocidosDeberiaGenerarUnErrorSiElMensajeNoTieneId() {
 		final ReceptorEncolador receptor = ReceptorEncolador.create();
 		final Filtro filtro = builder.filtrarMensajesDuplicadosA(receptor);
-		// La primera vez debería llegar
+		// No debería llegar porque no tiene ID
 		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, filtro, receptor);
 	}
 
