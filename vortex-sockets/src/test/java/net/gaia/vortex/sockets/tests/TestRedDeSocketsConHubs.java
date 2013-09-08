@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
+import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosViejo;
+import net.gaia.vortex.deprecated.NodoViejo;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.portal.api.moleculas.PortalViejo;
 import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;

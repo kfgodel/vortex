@@ -13,11 +13,11 @@
 package net.gaia.vortex.router.impl.moleculas.comport;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.forward.MultiplexorViejo;
-import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcadorViejo;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
+import net.gaia.vortex.deprecated.FlujoInmutableViejo;
+import net.gaia.vortex.deprecated.FlujoVortexViejo;
+import net.gaia.vortex.deprecated.MultiplexorViejo;
+import net.gaia.vortex.deprecated.NexoBifurcadorViejo;
+import net.gaia.vortex.deprecated.NexoSinDuplicadosViejo;
 import net.gaia.vortex.deprecated.trans.GenerarIdEnMensajeViejo;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;

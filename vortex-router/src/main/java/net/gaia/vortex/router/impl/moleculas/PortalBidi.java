@@ -89,7 +89,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.NexoViejo#setDestino(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.deprecated.NexoViejo#setDestino(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void setDestino(final Receptor nuevoDestino) {
@@ -107,7 +107,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.NexoViejo#getDestino()
+	 * @see net.gaia.vortex.deprecated.NexoViejo#getDestino()
 	 */
 
 	public Receptor getDestino() {

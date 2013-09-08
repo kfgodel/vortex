@@ -17,7 +17,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.atomos.EmisorViejo;
+import net.gaia.vortex.deprecated.EmisorViejo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;

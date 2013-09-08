@@ -12,9 +12,9 @@
  */
 package net.gaia.vortex.server.impl;
 
-import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.deprecated.NexoViejo;
+import net.gaia.vortex.deprecated.NodoViejo;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 import ar.com.dgarcia.lang.strings.ToString;
 

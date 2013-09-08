@@ -16,8 +16,8 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
-import net.gaia.vortex.core.impl.tasks.forward.DelegarMensajeViejo;
+import net.gaia.vortex.deprecated.DelegarMensajeViejo;
+import net.gaia.vortex.deprecated.NexoSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -34,7 +34,7 @@ public class Deshttpizador extends NexoSupport {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 * @see net.gaia.vortex.deprecated.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {

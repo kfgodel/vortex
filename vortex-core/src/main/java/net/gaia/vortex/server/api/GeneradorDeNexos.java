@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.server.api;
 
-import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
+import net.gaia.vortex.deprecated.NexoViejo;
 
 /**
  * Esta interfaz es aplicable a componentes vortex que por su naturaleza pueden generar nuevos

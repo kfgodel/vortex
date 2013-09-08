@@ -3,7 +3,7 @@
  */
 package net.gaia.vortex.server.api;
 
-import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
+import net.gaia.vortex.deprecated.NexoViejo;
 
 /**
  * Esta interfaz representa una estrategia brindada externamente a una entidad creadora/destructora

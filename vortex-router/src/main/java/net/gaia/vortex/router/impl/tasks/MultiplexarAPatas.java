@@ -24,7 +24,7 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.mensajes.ContenidoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensajeViejo;
+import net.gaia.vortex.deprecated.MultiplexarMensajeViejo;
 import net.gaia.vortex.impl.helpers.VortexEquals;
 import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import net.gaia.vortex.router.impl.condiciones.EsMetaMensaje;

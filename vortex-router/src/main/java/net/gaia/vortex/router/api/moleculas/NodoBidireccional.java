@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.api.moleculas;
 
-import net.gaia.vortex.core.api.NodoViejo;
+import net.gaia.vortex.deprecated.NodoViejo;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.impl.moleculas.listeners.ListenerDeConexionesBidiEnNodo;

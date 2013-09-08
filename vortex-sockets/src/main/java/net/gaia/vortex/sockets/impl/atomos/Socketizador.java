@@ -15,7 +15,7 @@ package net.gaia.vortex.sockets.impl.atomos;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador;
+import net.gaia.vortex.deprecated.ReceptorConProcesador;
 import net.gaia.vortex.sockets.impl.tasks.EnviarPorSocket;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
@@ -31,7 +31,7 @@ public class Socketizador extends ReceptorConProcesador {
 	public static final String socket_FIELD = "socket";
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 * @see net.gaia.vortex.deprecated.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {

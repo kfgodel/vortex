@@ -13,7 +13,7 @@
 package net.gaia.vortex.http.impl.moleculas;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSupportViejo;
+import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosSupportViejo;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.server.ServidorDeNexoHttp;
 import net.gaia.vortex.server.impl.RealizarConexiones;

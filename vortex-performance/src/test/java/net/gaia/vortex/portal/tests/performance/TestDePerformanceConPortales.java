@@ -14,10 +14,10 @@ package net.gaia.vortex.portal.tests.performance;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
+import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosViejo;
+import net.gaia.vortex.deprecated.NodoViejo;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;

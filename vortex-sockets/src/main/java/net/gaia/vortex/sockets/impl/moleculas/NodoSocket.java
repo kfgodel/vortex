@@ -16,7 +16,7 @@ import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Molecula;
-import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSupportViejo;
+import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosSupportViejo;
 import net.gaia.vortex.server.impl.RealizarConexiones;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;

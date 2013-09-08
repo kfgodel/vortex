@@ -4,7 +4,7 @@
 package net.gaia.vortex.portal.api.moleculas;
 
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
+import net.gaia.vortex.deprecated.NexoViejo;
 import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
 
 /**

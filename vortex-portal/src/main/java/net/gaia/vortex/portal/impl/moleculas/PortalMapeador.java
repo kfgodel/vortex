@@ -17,15 +17,15 @@ import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.NodoViejo;
-import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
-import net.gaia.vortex.core.api.moleculas.condicional.SelectorViejo;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoFiltroViejo;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
-import net.gaia.vortex.core.impl.atomos.transformacion.NexoTransformadorViejo;
-import net.gaia.vortex.core.impl.moleculas.condicional.SelectorConFiltrosViejo;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
-import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
+import net.gaia.vortex.deprecated.FlujoInmutableViejo;
+import net.gaia.vortex.deprecated.FlujoVortexViejo;
+import net.gaia.vortex.deprecated.NexoFiltroViejo;
+import net.gaia.vortex.deprecated.NexoSinDuplicadosViejo;
+import net.gaia.vortex.deprecated.NexoTransformadorViejo;
+import net.gaia.vortex.deprecated.NodoMoleculaSupportViejo;
+import net.gaia.vortex.deprecated.NodoViejo;
+import net.gaia.vortex.deprecated.SelectorConFiltrosViejo;
+import net.gaia.vortex.deprecated.SelectorViejo;
 import net.gaia.vortex.deprecated.trans.GenerarIdEnMensajeViejo;
 import net.gaia.vortex.impl.condiciones.EsMensajeDeOtroComponente;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
@@ -71,7 +71,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor,
+	 * @see net.gaia.vortex.deprecated.NexoSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor,
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado) {
@@ -81,7 +81,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor,
+	 * @see net.gaia.vortex.deprecated.NexoSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor,
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	protected void initializeWith(final TaskProcessor processor, final Receptor delegado,
@@ -106,7 +106,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.deprecated.NexoSupport#setDestino(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void setDestino(final Receptor destino) {
@@ -114,7 +114,7 @@ public class PortalMapeador extends NodoMoleculaSupportViejo implements PortalVi
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#getDestino()
+	 * @see net.gaia.vortex.deprecated.NexoSupport#getDestino()
 	 */
 
 	public Receptor getDestino() {

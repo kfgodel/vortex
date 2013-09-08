@@ -14,7 +14,7 @@ package net.gaia.vortex.router.api.tests.listeners;
 
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.api.atomos.EmisorViejo;
+import net.gaia.vortex.deprecated.EmisorViejo;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**

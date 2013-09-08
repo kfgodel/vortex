@@ -17,8 +17,8 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.NexoSupport;
-import net.gaia.vortex.core.impl.tasks.forward.DelegarMensajeViejo;
+import net.gaia.vortex.deprecated.DelegarMensajeViejo;
+import net.gaia.vortex.deprecated.NexoSupport;
 import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
 import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -41,7 +41,7 @@ public class DesobjetivizadorViejo extends NexoSupport {
 	public static final String mapeador_FIELD = "mapeador";
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 * @see net.gaia.vortex.deprecated.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	@Override

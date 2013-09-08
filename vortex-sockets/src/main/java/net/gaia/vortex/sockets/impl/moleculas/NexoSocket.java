@@ -18,12 +18,12 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.core.api.atomos.forward.NexoViejo;
-import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
-import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicadosViejo;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutableViejo;
-import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupportViejo;
+import net.gaia.vortex.deprecated.ComponenteConMemoriaViejo;
+import net.gaia.vortex.deprecated.FlujoInmutableViejo;
+import net.gaia.vortex.deprecated.FlujoVortexViejo;
+import net.gaia.vortex.deprecated.NexoSinDuplicadosViejo;
+import net.gaia.vortex.deprecated.NexoViejo;
+import net.gaia.vortex.deprecated.NodoMoleculaSupportViejo;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.sockets.impl.atomos.Desocketizador;
 import net.gaia.vortex.sockets.impl.atomos.Socketizador;
@@ -43,7 +43,7 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  */
 @Molecula
 public class NexoSocket extends NodoMoleculaSupportViejo implements ObjectReceptionHandler, Disposable, NexoViejo,
-		ComponenteConMemoria {
+		ComponenteConMemoriaViejo {
 
 	private ObjectSocket socket;
 	public static final String socket_FIELD = "socket";
@@ -78,7 +78,7 @@ public class NexoSocket extends NodoMoleculaSupportViejo implements ObjectRecept
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.deprecated.NexoSupport#setDestino(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void setDestino(final Receptor destino) {
@@ -86,7 +86,7 @@ public class NexoSocket extends NodoMoleculaSupportViejo implements ObjectRecept
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#getDestino()
+	 * @see net.gaia.vortex.deprecated.NexoSupport#getDestino()
 	 */
 	
 	public Receptor getDestino() {
@@ -144,7 +144,7 @@ public class NexoSocket extends NodoMoleculaSupportViejo implements ObjectRecept
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.memoria.ComponenteConMemoria#yaRecibio(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 * @see net.gaia.vortex.deprecated.ComponenteConMemoriaViejo#yaRecibio(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public boolean yaRecibio(final MensajeVortex mensaje) {

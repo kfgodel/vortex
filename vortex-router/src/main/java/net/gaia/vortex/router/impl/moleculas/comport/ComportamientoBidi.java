@@ -13,7 +13,7 @@
 package net.gaia.vortex.router.impl.moleculas.comport;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.moleculas.FlujoVortexViejo;
+import net.gaia.vortex.deprecated.FlujoVortexViejo;
 import net.gaia.vortex.deprecated.trans.GenerarIdEnMensajeViejo;
 
 /**
