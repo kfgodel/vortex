@@ -43,8 +43,8 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  * 
  * @author D. García
  */
-public class TestRedA01ConNodoMultiplexor {
-	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConNodoMultiplexor.class);
+public class TestRedA01ConMultiplexorSinDuplicados {
+	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConMultiplexorSinDuplicados.class);
 
 	private Compuesto<MultiConectable> nodoEmisor;
 	private Compuesto<MultiConectable> nodoRuteador;

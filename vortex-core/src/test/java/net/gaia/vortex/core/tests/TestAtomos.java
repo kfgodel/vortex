@@ -5,7 +5,6 @@ package net.gaia.vortex.core.tests;
 
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.atomos.Bifurcador;
 import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
@@ -43,8 +42,6 @@ public class TestAtomos {
 
 	private MensajeVortex mensaje1;
 	private MensajeVortex mensaje2;
-
-	private TaskProcessor processor;
 
 	private VortexCore builder;
 
