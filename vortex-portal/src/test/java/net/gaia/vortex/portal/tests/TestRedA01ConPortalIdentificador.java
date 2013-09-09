@@ -42,14 +42,14 @@ import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
 
 /**
- * Esta clase realiza las pruebas definidas en A01 de la documentación utilizando un portal como
- * punto de acceso para código cliente.<br>
+ * Esta clase realiza las pruebas definidas en A01 de la documentación utilizando un portal
+ * identificador como punto de acceso para código cliente.<br>
  * De esta manera verificamos el uso básico de vortex para usuarios externos a la red
  * 
  * @author D. García
  */
-public class TestRedA01ConPortal {
-	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConPortal.class);
+public class TestRedA01ConPortalIdentificador {
+	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConPortalIdentificador.class);
 
 	private Compuesto<MultiConectable> nodoRuteador;
 
