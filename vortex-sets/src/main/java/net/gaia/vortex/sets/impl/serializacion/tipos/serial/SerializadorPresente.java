@@ -14,20 +14,21 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.serial;
 
 import java.util.Map;
 
-import net.gaia.vortex.helpers.VortexMap;
+import net.gaia.vortex.impl.helpers.VortexMap;
 import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el serializador de condiciones por atributo presente
  * 
  * @author D. García
  */
-public class SerializadorPresente implements SerializadorDeTipo<AtributoPresente> {
+public class SerializadorPresente extends WeakSingletonSupport implements SerializadorDeTipo<AtributoPresente> {
 	private static final WeakSingleton<SerializadorPresente> ultimaReferencia = new WeakSingleton<SerializadorPresente>(
 			DefaultInstantiator.create(SerializadorPresente.class));
 
@@ -39,7 +40,7 @@ public class SerializadorPresente implements SerializadorDeTipo<AtributoPresente
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.SerializadorDeTipo#serializarDesde(java.lang.Object,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public Map<String, Object> serializarDesde(final AtributoPresente origen, final ContextoDeSerializacion contexto) {
 		final Map<String, Object> serializado = new VortexMap();
 		serializado.put(MetadataDeSerializacion.ATRIBUTO_TIPO, MetadataDeSerializacion.TIPO_PRESENTE);

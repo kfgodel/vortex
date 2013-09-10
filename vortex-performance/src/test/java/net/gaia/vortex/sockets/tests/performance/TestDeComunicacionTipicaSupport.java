@@ -15,12 +15,12 @@ package net.gaia.vortex.sockets.tests.performance;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.deprecated.PortalMapeadorViejo;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
+import net.gaia.vortex.impl.support.HandlerTipado;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
@@ -130,9 +130,9 @@ public abstract class TestDeComunicacionTipicaSupport {
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
-		final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(procesadorDelNodoReceptor, nodoReceptor);
+		final PortalMapeadorViejo portalReceptor = PortalMapeadorViejo.createForIOWith(procesadorDelNodoReceptor, nodoReceptor);
 		portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
-			public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
+			public void onObjetoRecibido(final MensajeModeloParaTests mensaje) {
 				metricas.registrarOutput();
 			}
 		});
@@ -160,7 +160,7 @@ public abstract class TestDeComunicacionTipicaSupport {
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
-		final PortalMapeador portalDeEnvio = PortalMapeador.createForOutputWith(procesadorDelNodoEmisor, nodoEmisor);
+		final PortalMapeadorViejo portalDeEnvio = PortalMapeadorViejo.createForOutputWith(procesadorDelNodoEmisor, nodoEmisor);
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
 			public Runnable getOrCreateRunnable() {

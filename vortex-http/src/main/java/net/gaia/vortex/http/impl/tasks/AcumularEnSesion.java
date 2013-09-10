@@ -15,7 +15,7 @@ package net.gaia.vortex.http.impl.tasks;
 import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnitWithExternalWait;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
 
 /**

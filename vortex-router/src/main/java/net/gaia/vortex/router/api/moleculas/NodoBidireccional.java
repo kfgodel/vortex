@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.api.moleculas;
 
-import net.gaia.vortex.core.api.Nodo;
+import net.gaia.vortex.deprecated.NodoViejo;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.impl.moleculas.listeners.ListenerDeConexionesBidiEnNodo;
@@ -23,7 +23,7 @@ import net.gaia.vortex.router.impl.moleculas.listeners.ListenerDeConexionesBidiE
  * 
  * @author D. García
  */
-public interface NodoBidireccional extends Nodo {
+public interface NodoBidireccional extends NodoViejo {
 
 	/**
 	 * Establece el listener que este nodo utilizará para notificar cuando los filtros que utilizan

@@ -12,9 +12,9 @@
  */
 package net.gaia.vortex.router.api.tests.listeners;
 
-import net.gaia.vortex.core.api.atomos.Emisor;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.deprecated.EmisorViejo;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -25,14 +25,14 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class PasoDeRuteo {
 
-	private Emisor origen;
+	private EmisorViejo origen;
 	public static final String origen_FIELD = "origen";
 	private Receptor destino;
 	public static final String destino_FIELD = "destino";
 	private MensajeVortex mensaje;
 	public static final String mensaje_FIELD = "mensaje";
 
-	public static PasoDeRuteo create(final Emisor origen, final MensajeVortex mensaje, final Receptor destino) {
+	public static PasoDeRuteo create(final EmisorViejo origen, final MensajeVortex mensaje, final Receptor destino) {
 		final PasoDeRuteo paso = new PasoDeRuteo();
 		paso.destino = destino;
 		paso.mensaje = mensaje;
@@ -40,11 +40,11 @@ public class PasoDeRuteo {
 		return paso;
 	}
 
-	public Emisor getOrigen() {
+	public EmisorViejo getOrigen() {
 		return origen;
 	}
 
-	public void setOrigen(final Emisor origen) {
+	public void setOrigen(final EmisorViejo origen) {
 		this.origen = origen;
 	}
 
@@ -82,7 +82,7 @@ public class PasoDeRuteo {
 	 *            El receptor
 	 * @return true si corresponde a este paso
 	 */
-	public boolean representaA(final Emisor emisor, final Receptor receptor) {
+	public boolean representaA(final EmisorViejo emisor, final Receptor receptor) {
 		return this.origen.equals(emisor) && this.destino.equals(receptor);
 	}
 }

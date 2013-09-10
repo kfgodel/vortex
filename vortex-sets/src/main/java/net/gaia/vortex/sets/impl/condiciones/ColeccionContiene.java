@@ -17,11 +17,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
-import net.gaia.vortex.core.api.annotations.Paralelizable;
-import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.sets.reflection.HashHelper;
 import net.gaia.vortex.sets.reflection.ValueAccessor;
 import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
@@ -43,7 +43,7 @@ public class ColeccionContiene implements Condicion {
 	public static final String valorEsperado_FIELD = "valorEsperado";
 
 	/**
-	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
@@ -111,7 +111,7 @@ public class ColeccionContiene implements Condicion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 * @see net.gaia.vortex.api.condiciones.Condicion#getSubCondiciones()
 	 */
 
 	public List<Condicion> getSubCondiciones() {

@@ -14,11 +14,11 @@ package net.gaia.vortex.portal.tests.performance;
 
 import java.util.Arrays;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
-import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
+import net.gaia.vortex.impl.conversiones.ConversorDefaultDeMensajes;
 
 import org.junit.Before;
 import org.junit.Test;

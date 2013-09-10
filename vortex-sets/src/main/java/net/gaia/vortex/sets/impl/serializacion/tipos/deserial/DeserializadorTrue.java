@@ -14,18 +14,19 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.deserial;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase es la implementación del deserializador de condiciones true
  * 
  * @author D. García
  */
-public class DeserializadorTrue implements DeserializadorDeTipo<SiempreTrue> {
+public class DeserializadorTrue extends WeakSingletonSupport implements DeserializadorDeTipo<SiempreTrue> {
 	private static final WeakSingleton<DeserializadorTrue> ultimaReferencia = new WeakSingleton<DeserializadorTrue>(
 			DefaultInstantiator.create(DeserializadorTrue.class));
 
@@ -37,7 +38,7 @@ public class DeserializadorTrue implements DeserializadorDeTipo<SiempreTrue> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public SiempreTrue deserializarDesde(final Map<String, Object> mapaOrigen, final ContextoDeSerializacion contexto) {
 		return SiempreTrue.getInstancia();
 	}

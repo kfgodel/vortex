@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.external.VortexProcessorFactory;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.portal.tests.HandlerEncolador;
 import net.gaia.vortex.router.api.tests.MensajeParaTestDeRuteo;
 import net.gaia.vortex.router.impl.moleculas.PortalBidi;
@@ -81,7 +81,7 @@ public class TestRouterSockets {
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 
 			@Override
-			public Condicion getCondicionSuficiente() {
+			public Condicion getBicondicional() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, "hola");
 			}
 		};
@@ -110,7 +110,7 @@ public class TestRouterSockets {
 		final HandlerEncolador<MensajeParaTestDeRuteo> handlerReceptor = new HandlerEncolador<MensajeParaTestDeRuteo>() {
 
 			@Override
-			public Condicion getCondicionSuficiente() {
+			public Condicion getBicondicional() {
 				return ValorEsperadoEn.elAtributo(MensajeParaTestDeRuteo.atributo_FIELD, "chau");
 			}
 		};

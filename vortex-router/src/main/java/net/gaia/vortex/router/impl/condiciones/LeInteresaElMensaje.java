@@ -15,10 +15,10 @@ package net.gaia.vortex.router.impl.condiciones;
 import java.util.Collections;
 import java.util.List;
 
-import net.gaia.vortex.core.api.annotations.Paralelizable;
-import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.router.impl.filtros.ParteDeCondiciones;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 
@@ -43,13 +43,14 @@ public class LeInteresaElMensaje implements Condicion {
 	public static final String filtroDeSalida_FIELD = "filtroDeSalida";
 
 	/**
-	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
 		final Condicion condicionActual = filtroDeSalida.getCondicion();
 		final ResultadoDeCondicion resultado = condicionActual.esCumplidaPor(mensaje);
-		if (ResultadoDeCondicion.FALSE.equals(resultado)) {
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (ResultadoDeCondicion.FALSE.equals(resultado) && LOG.isDebugEnabled()) {
 			LOG.debug("El mensaje[{}] es descartado en[{}] porque no interesa al destino[{}] segun condicion[{}]",
 					new Object[] { mensaje.toShortString(), pata.toShortString(), pata.getNodoRemoto().toShortString(),
 							condicionActual });
@@ -58,9 +59,9 @@ public class LeInteresaElMensaje implements Condicion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 * @see net.gaia.vortex.api.condiciones.Condicion#getSubCondiciones()
 	 */
-	
+
 	public List<Condicion> getSubCondiciones() {
 		return Collections.emptyList();
 	}
@@ -68,7 +69,8 @@ public class LeInteresaElMensaje implements Condicion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(filtroDeSalida_FIELD, filtroDeSalida).toString();
 	}

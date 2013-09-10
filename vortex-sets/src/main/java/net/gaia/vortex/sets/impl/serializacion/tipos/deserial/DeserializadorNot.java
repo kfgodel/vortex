@@ -14,7 +14,7 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.deserial;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.sets.impl.condiciones.Negacion;
 import net.gaia.vortex.sets.impl.serializacion.ProblemaDeSerializacionException;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
@@ -22,13 +22,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo;
 import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el deserializador de la condicion NOT
  * 
  * @author D. García
  */
-public class DeserializadorNot implements DeserializadorDeTipo<Negacion> {
+public class DeserializadorNot extends WeakSingletonSupport implements DeserializadorDeTipo<Negacion> {
 	private static final WeakSingleton<DeserializadorNot> ultimaReferencia = new WeakSingleton<DeserializadorNot>(
 			DefaultInstantiator.create(DeserializadorNot.class));
 
@@ -40,7 +41,7 @@ public class DeserializadorNot implements DeserializadorDeTipo<Negacion> {
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public Negacion deserializarDesde(final Map<String, Object> mapaOrigen, final ContextoDeSerializacion contexto) {
 		final Object valor = mapaOrigen.get(MetadataDeSerializacion.TIPO_NOT_FILTRO);
 		if (!(valor instanceof Map)) {

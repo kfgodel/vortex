@@ -12,28 +12,28 @@
  */
 package net.gaia.vortex.server.impl;
 
-import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.deprecated.NexoViejo;
+import net.gaia.vortex.deprecated.NodoViejo;
 import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa una estrategia de conexión de {@link Nexo} a la red vortex utilizando un
+ * Esta clase representa una estrategia de conexión de {@link NexoViejo} a la red vortex utilizando un
  * nodo conocido. Esta clase conecta los nuevos nexos al nodo, y los desconecta al cerrarse
  * 
  * @author D. García
  */
 public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 
-	private Nodo nodoConocido;
+	private NodoViejo nodoConocido;
 	public static final String hubConocido_FIELD = "nodoConocido";
 
 	/**
 	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 	
-	public void onNexoCreado(final Nexo nuevoNexo) {
+	public void onNexoCreado(final NexoViejo nuevoNexo) {
 		Loggers.RUTEO.info("Conectando nuevo nexo[{}] con el nodo[{}]", nuevoNexo, nodoConocido);
 		nuevoNexo.conectarCon(nodoConocido);
 		nodoConocido.conectarCon(nuevoNexo);
@@ -43,13 +43,13 @@ public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 	
-	public void onNexoCerrado(final Nexo nexoCerrado) {
+	public void onNexoCerrado(final NexoViejo nexoCerrado) {
 		Loggers.RUTEO.info("Des-Conectando nexo[{}] del nodo[{}]", nexoCerrado, nodoConocido);
 		nodoConocido.desconectarDe(nexoCerrado);
 		nexoCerrado.desconectarDe(nodoConocido);
 	}
 
-	public static RealizarConexiones con(final Nodo nodo) {
+	public static RealizarConexiones con(final NodoViejo nodo) {
 		final RealizarConexiones conector = new RealizarConexiones();
 		conector.nodoConocido = nodo;
 		return conector;

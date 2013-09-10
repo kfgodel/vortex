@@ -19,12 +19,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.gaia.vortex.core.api.annotations.Paralelizable;
-import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -40,7 +40,7 @@ public class AndCompuesto implements Condicion, Simplificable {
 	public static final String condiciones_FIELD = "condiciones";
 
 	/**
-	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
@@ -111,7 +111,7 @@ public class AndCompuesto implements Condicion, Simplificable {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 * @see net.gaia.vortex.api.condiciones.Condicion#getSubCondiciones()
 	 */
 	
 	public List<Condicion> getSubCondiciones() {

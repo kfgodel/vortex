@@ -16,9 +16,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import net.gaia.vortex.core.api.atomos.Emisor;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.deprecated.EmisorViejo;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
@@ -36,8 +36,8 @@ public class ListenerDeRuteoEnPasos implements ListenerDeRuteo {
 
 	/**
 	 * @see net.gaia.vortex.router.api.listeners.ListenerDeRuteo#onMensajeRuteado(net.gaia.vortex.router.api.moleculas.NodoBidireccional,
-	 *      net.gaia.vortex.core.api.mensaje.MensajeVortex,
-	 *      net.gaia.vortex.core.api.atomos.Receptor)
+	 *      net.gaia.vortex.api.mensajes.MensajeVortex,
+	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void onMensajeRuteado(final NodoBidireccional origen, final MensajeVortex mensaje, final Receptor destino) {
@@ -68,7 +68,7 @@ public class ListenerDeRuteoEnPasos implements ListenerDeRuteo {
 	 * @throws TimeoutExceededException
 	 *             Si se acaba el tiempo y el paso no está
 	 */
-	public PasoDeRuteo esperarRuteo(final Emisor emisor, final Receptor receptor, final TimeMagnitude esperaMaxima)
+	public PasoDeRuteo esperarRuteo(final EmisorViejo emisor, final Receptor receptor, final TimeMagnitude esperaMaxima)
 			throws TimeoutExceededException {
 		final long startMillis = System.currentTimeMillis();
 		long millisRestantes = 0;

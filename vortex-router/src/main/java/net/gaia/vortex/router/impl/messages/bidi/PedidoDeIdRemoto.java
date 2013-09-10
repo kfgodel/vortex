@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.impl.messages.bidi;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.router.impl.messages.meta.MetamensajeSupport;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
 

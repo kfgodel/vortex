@@ -18,23 +18,23 @@ import java.util.List;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo;
-import net.gaia.vortex.core.impl.atomos.support.MultiplexorSupport;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.deprecated.MultiplexorParaleloViejo;
+import net.gaia.vortex.deprecated.MultiplexorSupportViejo;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
 import net.gaia.vortex.router.impl.tasks.MultiplexarAPatas;
 
 /**
- * Esta clase representa un multiplexor que a diferencia del {@link MultiplexorParalelo} puede
+ * Esta clase representa un multiplexor que a diferencia del {@link MultiplexorParaleloViejo} puede
  * discriminar si un mensaje va hacia una pata y sólo se lo entrega a esa
  * 
  * @author D. García
  */
-public class MultiplexorDePatas extends MultiplexorSupport {
+public class MultiplexorDePatas extends MultiplexorSupportViejo {
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.forward.MultiplexorParalelo#crearTareaAlRecibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.deprecated.MultiplexorParaleloViejo#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {

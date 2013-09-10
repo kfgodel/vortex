@@ -13,20 +13,20 @@
 package net.gaia.vortex.http.impl.moleculas;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.annotations.Molecula;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
-import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.memoria.MemoriaDeMensajes;
-import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
-import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.api.annotations.clases.Molecula;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.deprecated.ComponenteConMemoriaViejo;
+import net.gaia.vortex.deprecated.FlujoInmutableViejo;
+import net.gaia.vortex.deprecated.FlujoVortexViejo;
+import net.gaia.vortex.deprecated.NexoSinDuplicadosViejo;
+import net.gaia.vortex.deprecated.NexoViejo;
+import net.gaia.vortex.deprecated.NodoMoleculaSupportViejo;
 import net.gaia.vortex.http.impl.atomos.Deshttpizador;
 import net.gaia.vortex.http.impl.atomos.Httpizador;
 import net.gaia.vortex.http.sesiones.SesionVortexHttp;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaLimitadaDeMensajes;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -40,7 +40,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Molecula
-public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemoria, Nexo {
+public class NexoHttp extends NodoMoleculaSupportViejo implements ComponenteConMemoriaViejo, NexoViejo {
 
 	private SesionVortexHttp sesion;
 	public static final String sesion_FIELD = "sesion";
@@ -52,30 +52,30 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 	public static final String procesoDesdeHttp_FIELD = "procesoDesdeHttp";
 
 	private MemoriaDeMensajes memoriaDeMensajes;
-	private NexoSinDuplicados nodoDeSalidaAVortex;
+	private NexoSinDuplicadosViejo nodoDeSalidaAVortex;
 
 	private void initializeWith(final TaskProcessor processor, final Receptor delegado, final SesionVortexHttp sesion) {
 		// Guardamos la referencia para saber cual es nuestra sesión
 		this.sesion = sesion;
 
 		// Esta memoria nos permite descartar los mensajes que mandamos al nodo y vienen de vuelta
-		this.memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
+		this.memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicadosViejo.CANTIDAD_MENSAJES_RECORDADOS);
 
 		// Al recibir de vortex, descartamos duplicados y mandamos por http
-		procesoDesdeVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes,
+		procesoDesdeVortex = NexoSinDuplicadosViejo.create(processor, memoriaDeMensajes,
 				Httpizador.create(processor, sesion));
 
 		// Al recibir de http, descartamos duplicados y mandamos por vortex
-		nodoDeSalidaAVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes, delegado);
+		nodoDeSalidaAVortex = NexoSinDuplicadosViejo.create(processor, memoriaDeMensajes, delegado);
 		procesoDesdeHttp = Deshttpizador.create(processor, nodoDeSalidaAVortex);
 
-		final FlujoVortex flujoInterno = FlujoInmutable.create(procesoDesdeVortex, nodoDeSalidaAVortex);
+		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(procesoDesdeVortex, nodoDeSalidaAVortex);
 		initializeWith(flujoInterno);
 
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.deprecated.NexoSupport#setDestino(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void setDestino(final Receptor destino) {
@@ -83,7 +83,7 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#getDestino()
+	 * @see net.gaia.vortex.deprecated.NexoSupport#getDestino()
 	 */
 	
 	public Receptor getDestino() {
@@ -110,7 +110,7 @@ public class NexoHttp extends NodoMoleculaSupport implements ComponenteConMemori
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.memoria.ComponenteConMemoria#yaRecibio(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.deprecated.ComponenteConMemoriaViejo#yaRecibio(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public boolean yaRecibio(final MensajeVortex mensaje) {

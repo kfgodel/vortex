@@ -15,7 +15,7 @@ package net.gaia.vortex.http.sesiones;
 import java.util.List;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.cliente.server.ConexionConPollingHttpCliente;
@@ -51,7 +51,7 @@ public class SesionClienteEnMemoria implements SesionVortexHttpEnCliente, Handle
 	}
 
 	/**
-	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#onMensajeDesdeVortex(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.http.sesiones.SesionVortexHttp#onMensajeDesdeVortex(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public void onMensajeDesdeVortex(final MensajeVortex mensaje) {

@@ -5,8 +5,8 @@ package net.gaia.vortex.textualizer;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.impl.mensajes.MensajeConContenido;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.textualizer.api.CannotTextSerializeException;
 import ar.dgarcia.textualizer.api.CannotTextUnserializeException;

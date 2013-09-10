@@ -18,17 +18,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
-import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.prog.Loggers;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
-import net.gaia.vortex.portal.impl.conversion.impl.ConversorDefaultDeMensajes;
-import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
+import net.gaia.vortex.deprecated.FlujoInmutableViejo;
+import net.gaia.vortex.deprecated.FlujoVortexViejo;
+import net.gaia.vortex.deprecated.GenerarIdEnMensajeViejo;
+import net.gaia.vortex.deprecated.NodoMoleculaSupportViejo;
+import net.gaia.vortex.impl.conversiones.ConversorDefaultDeMensajes;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
@@ -58,7 +58,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidireccional,
+public abstract class NodoBidi extends NodoMoleculaSupportViejo implements NodoBidireccional,
 		ListenerDeConjuntoDeCondiciones, ListenerConexionBidiEnPata {
 	private static final Logger LOG = LoggerFactory.getLogger(NodoBidi.class);
 
@@ -72,12 +72,12 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 	private ConversorDeMensajesVortex mapeador;
 
-	private FlujoVortex flujoDeMensajesRecibidos;
+	private FlujoVortexViejo flujoDeMensajesRecibidos;
 
 	private IdDeComponenteVortex identificador;
 	public static final String identificador_FIELD = "identificador";
 
-	private GenerarIdEnMensaje generadorDeIds;
+	private GenerarIdEnMensajeViejo generadorDeIds;
 
 	private SerializadorDeCondiciones serializador;
 
@@ -98,7 +98,7 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.procesador.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
+	 * @see net.gaia.vortex.deprecated.ComponenteConProcesadorSupport#initializeWith(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
 	protected void initializeWith(final TaskProcessor processor, final ComportamientoBidi comportamiento) {
 		this.processor = processor;
@@ -117,12 +117,12 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 		// La entrada es lo que haya definido el comportamiento y como salida usamos esta propio
 		// componente
-		final FlujoVortex flujoInterno = FlujoInmutable.create(flujoDeMensajesRecibidos.getEntrada(), this);
+		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(flujoDeMensajesRecibidos.getEntrada(), this);
 		initializeWith(flujoInterno);
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.deprecated.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	@Override
@@ -139,7 +139,10 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 		// Creamos la parte que nos permite conocer el filtro de cada pata
 		final Condicion filtroDeEntradaParaPataNueva = calcularFiltroDeEntradaPara(null);
 
-		LOG.debug("Conectando bidi desde[{}] a [{}]", this.toShortString(), destino.toShortString());
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Conectando bidi desde[{}] a [{}]", this.toShortString(), destino.toShortString());
+		}
 		final PataBidi nuevaPata = PataBidi.create(this, destino, getProcessor(), conjuntoDeCondiciones,
 				filtroDeEntradaParaPataNueva, mapeador, generadorDeIds, serializador, listenerDeRuteo);
 		nuevaPata.setListenerConexionBidi(this);
@@ -147,15 +150,18 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 		// Agregamos la pata al conjunto que puede recibir mensajes
 		flujoDeMensajesRecibidos.getSalida().conectarCon(nuevaPata);
-		LOG.debug("Pata[{}] creada en [{}] para conectar con [{}]",
-				new Object[] { nuevaPata.toShortString(), this.toShortString(), destino.toShortString() });
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Pata[{}] creada en [{}] para conectar con [{}]",
+					new Object[] { nuevaPata.toShortString(), this.toShortString(), destino.toShortString() });
+		}
 
 		// Iniciamos el proceso de identificación bidireccional de la pata
 		nuevaPata.conseguirIdRemoto();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Emisor#desconectarDe(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.deprecated.EmisorViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	@Override
@@ -191,13 +197,15 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	@Override
 	public void recibir(final MensajeVortex mensaje) {
-		Loggers.BIDI_MSG.debug("Recibido en[{}] el mensaje[{}]",
-				new Object[] { this.toShortString(), mensaje.toShortString() });
+		if (Loggers.BIDI_MSG.isDebugEnabled()) {
+			Loggers.BIDI_MSG.debug("Recibido en[{}] el mensaje[{}]",
+					new Object[] { this.toShortString(), mensaje.toShortString() });
+		}
 		super.recibir(mensaje);
 	}
 
@@ -227,17 +235,21 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 
 	/**
 	 * @see net.gaia.vortex.router.impl.filtros.ListenerDeConjuntoDeCondiciones#onCambioDeCondicionEn(net.gaia.vortex.router.impl.filtros.ConjuntoDeCondiciones,
-	 *      net.gaia.vortex.core.api.condiciones.Condicion)
+	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
 
 	public void onCambioDeCondicionEn(final ConjuntoDeCondiciones conjunto, final Condicion nuevaCondicion) {
-		Loggers.BIDI_MSG.info("El nodo[{}] cambio su estado de filtros remotos a[{}]", this.toShortString(),
-				nuevaCondicion);
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (Loggers.BIDI_MSG.isInfoEnabled()) {
+			Loggers.BIDI_MSG.info("El nodo[{}] cambio su estado de filtros remotos a[{}]", this.toShortString(),
+					nuevaCondicion);
+		}
 
 		final ListenerDeCambiosDeFiltro listenerActual = listenerDeFiltros.get();
 		try {
 			listenerActual.onCambioDeFiltros(this, nuevaCondicion);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error en el listener[" + listenerActual + "] de cambios de filtros de este nodo["
 					+ this + "]", e);
 		}
@@ -316,7 +328,8 @@ public abstract class NodoBidi extends NodoMoleculaSupport implements NodoBidire
 		final Receptor destino = pata.getNodoRemoto();
 		try {
 			this.listenerDeConexiones.onConexionBidiDe(origen, destino, pata);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error en el listener de conexiones bidi del nodo[" + this.toShortString() + "]", e);
 		}
 	}

@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.router.api.listeners;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 
 /**

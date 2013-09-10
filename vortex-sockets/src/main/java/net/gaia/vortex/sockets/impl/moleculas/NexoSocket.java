@@ -15,16 +15,16 @@ package net.gaia.vortex.sockets.impl.moleculas;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.annotations.Molecula;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.atomos.forward.Nexo;
-import net.gaia.vortex.core.api.memoria.ComponenteConMemoria;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.memoria.MemoriaLimitadaDeMensajes;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
-import net.gaia.vortex.core.impl.moleculas.support.NodoMoleculaSupport;
+import net.gaia.vortex.api.annotations.clases.Molecula;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.deprecated.ComponenteConMemoriaViejo;
+import net.gaia.vortex.deprecated.FlujoInmutableViejo;
+import net.gaia.vortex.deprecated.FlujoVortexViejo;
+import net.gaia.vortex.deprecated.NexoSinDuplicadosViejo;
+import net.gaia.vortex.deprecated.NexoViejo;
+import net.gaia.vortex.deprecated.NodoMoleculaSupportViejo;
+import net.gaia.vortex.impl.mensajes.memoria.MemoriaLimitadaDeMensajes;
 import net.gaia.vortex.sockets.impl.atomos.Desocketizador;
 import net.gaia.vortex.sockets.impl.atomos.Socketizador;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -42,8 +42,8 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * @author D. García
  */
 @Molecula
-public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHandler, Disposable, Nexo,
-		ComponenteConMemoria {
+public class NexoSocket extends NodoMoleculaSupportViejo implements ObjectReceptionHandler, Disposable, NexoViejo,
+		ComponenteConMemoriaViejo {
 
 	private ObjectSocket socket;
 	public static final String socket_FIELD = "socket";
@@ -53,7 +53,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 
 	private Desocketizador procesoDesdeSocket;
 	private MemoriaLimitadaDeMensajes memoriaDeMensajes;
-	private NexoSinDuplicados nodoDeSalidaAVortex;
+	private NexoSinDuplicadosViejo nodoDeSalidaAVortex;
 	public static final String procesoDesdeSocket_FIELD = "procesoDesdeSocket";
 
 	private void initializeWith(final TaskProcessor processor, final Receptor delegado, final ObjectSocket socket) {
@@ -61,24 +61,24 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 		this.socket = socket;
 
 		// Con esta memoria evitamos recibir mensajes que el NodoSocket nos reenvíe siendo nuestros
-		memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicados.CANTIDAD_MENSAJES_RECORDADOS);
+		memoriaDeMensajes = MemoriaLimitadaDeMensajes.create(NexoSinDuplicadosViejo.CANTIDAD_MENSAJES_RECORDADOS);
 
 		// Al recibir un mensaje desde vortex, descartamos duplicados y lo mandamos por el socket
-		procesoDesdeVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes,
+		procesoDesdeVortex = NexoSinDuplicadosViejo.create(processor, memoriaDeMensajes,
 				Socketizador.create(processor, socket));
 
 		// Al recibir un mensaje desde el socket, descartamos duplicados y lo mandamos a la salida
 		// (a quien estemos conectados en ese momento)
-		nodoDeSalidaAVortex = NexoSinDuplicados.create(processor, memoriaDeMensajes, delegado);
+		nodoDeSalidaAVortex = NexoSinDuplicadosViejo.create(processor, memoriaDeMensajes, delegado);
 		procesoDesdeSocket = Desocketizador.create(processor, nodoDeSalidaAVortex);
 
 		// Definimos cual es el flujo de entrada y salida de esta molecula
-		final FlujoVortex flujoInterno = FlujoInmutable.create(procesoDesdeVortex, procesoDesdeSocket);
+		final FlujoVortexViejo flujoInterno = FlujoInmutableViejo.create(procesoDesdeVortex, procesoDesdeSocket);
 		initializeWith(flujoInterno);
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.deprecated.NexoSupport#setDestino(net.gaia.vortex.api.basic.Receptor)
 	 */
 	
 	public void setDestino(final Receptor destino) {
@@ -86,7 +86,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.impl.atomos.support.NexoSupport#getDestino()
+	 * @see net.gaia.vortex.deprecated.NexoSupport#getDestino()
 	 */
 	
 	public Receptor getDestino() {
@@ -144,7 +144,7 @@ public class NexoSocket extends NodoMoleculaSupport implements ObjectReceptionHa
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.memoria.ComponenteConMemoria#yaRecibio(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.deprecated.ComponenteConMemoriaViejo#yaRecibio(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public boolean yaRecibio(final MensajeVortex mensaje) {

@@ -14,13 +14,14 @@ package net.gaia.vortex.router.impl.moleculas.patas;
 
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el listner para evitar nulls
  * 
  * @author D. García
  */
-public class ListenerNuloConexionBidiEnPata implements ListenerConexionBidiEnPata {
+public class ListenerNuloConexionBidiEnPata extends WeakSingletonSupport implements ListenerConexionBidiEnPata {
 
 	private static final WeakSingleton<ListenerNuloConexionBidiEnPata> ultimaReferencia = new WeakSingleton<ListenerNuloConexionBidiEnPata>(
 			DefaultInstantiator.create(ListenerNuloConexionBidiEnPata.class));
@@ -32,7 +33,7 @@ public class ListenerNuloConexionBidiEnPata implements ListenerConexionBidiEnPat
 	/**
 	 * @see net.gaia.vortex.router.impl.moleculas.patas.ListenerConexionBidiEnPata#onConexionBidiPara(net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional)
 	 */
-	
+
 	public void onConexionBidiPara(final PataBidireccional pata) {
 		// No hacemos nada
 	}

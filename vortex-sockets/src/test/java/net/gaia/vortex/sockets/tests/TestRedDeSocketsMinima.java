@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.deprecated.PortalMapeadorViejo;
+import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
 import net.gaia.vortex.server.impl.RealizarConexiones;
 import net.gaia.vortex.server.impl.RealizarConexionesPorFuera;
@@ -69,7 +69,7 @@ public class TestRedDeSocketsMinima {
 	@Test
 	public void deberiaPermitirConectarUnPortalClienteConUnPortalServidorSinIntermediarios() {
 		// Creamos el portal servidor inicialmente desconectado
-		final PortalMapeador portalServidor = PortalMapeador
+		final PortalMapeadorViejo portalServidor = PortalMapeadorViejo
 				.createForOutputWith(processor, ReceptorNulo.getInstancia());
 		// El servidor conectara el portal al recibir una conexion
 		servidorSockets = ServidorDeNexoSocket.create(processor, sharedTestAddress,
@@ -77,7 +77,7 @@ public class TestRedDeSocketsMinima {
 		servidorSockets.aceptarConexionesRemotas();
 
 		// Creamos el portal cliente inicialmente desconectado
-		final PortalMapeador portalCliente = PortalMapeador.createForOutputWith(processor, ReceptorNulo.getInstancia());
+		final PortalMapeadorViejo portalCliente = PortalMapeadorViejo.createForOutputWith(processor, ReceptorNulo.getInstancia());
 		clienteSockets = ClienteDeNexoSocket
 				.create(processor, sharedTestAddress, RealizarConexiones.con(portalCliente));
 		clienteSockets.conectarASocketRomoto();
@@ -88,7 +88,7 @@ public class TestRedDeSocketsMinima {
 	/**
 	 * Verifica que un mensaje enviado desde el cliente llegue al servidor
 	 */
-	private void verificarEnvioDeMensaje(final PortalMapeador portalCliente, final PortalMapeador portalServidor) {
+	private void verificarEnvioDeMensaje(final PortalMapeadorViejo portalCliente, final PortalMapeadorViejo portalServidor) {
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		portalServidor.recibirCon(handlerReceptor);
 
@@ -102,7 +102,7 @@ public class TestRedDeSocketsMinima {
 	@Test
 	public void deberiaPermitirCrearElPortalClienteDespuesDeLaConexion() {
 		// Creamos el portal servidor inicialmente desconectado
-		final PortalMapeador portalServidor = PortalMapeador
+		final PortalMapeadorViejo portalServidor = PortalMapeadorViejo
 				.createForOutputWith(processor, ReceptorNulo.getInstancia());
 		// El servidor conectara el portal al recibir una conexion
 		servidorSockets = ServidorDeNexoSocket.create(processor, sharedTestAddress,
@@ -114,7 +114,7 @@ public class TestRedDeSocketsMinima {
 		final NexoSocket nexoConectado = clienteSockets.conectarASocketRomoto();
 
 		// Creamos ahora sí el portal cliente
-		final PortalMapeador portalCliente = PortalMapeador.createForIOWith(processor, nexoConectado);
+		final PortalMapeadorViejo portalCliente = PortalMapeadorViejo.createForIOWith(processor, nexoConectado);
 		verificarEnvioDeMensaje(portalCliente, portalServidor);
 	}
 

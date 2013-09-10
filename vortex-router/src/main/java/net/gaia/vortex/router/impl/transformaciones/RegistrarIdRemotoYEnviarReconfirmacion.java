@@ -14,10 +14,10 @@ package net.gaia.vortex.router.impl.transformaciones;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.gaia.vortex.core.api.annotations.Paralelizable;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.api.transformaciones.Transformacion;
-import net.gaia.vortex.portal.impl.conversion.api.ConversorDeMensajesVortex;
+import net.gaia.vortex.api.annotations.paralelizable.Paralelizable;
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.router.impl.messages.bidi.ConfirmacionDeIdRemoto;
 import net.gaia.vortex.router.impl.messages.bidi.ReconfirmacionDeIdRemoto;
 
@@ -45,9 +45,9 @@ public class RegistrarIdRemotoYEnviarReconfirmacion implements Transformacion {
 	private ConversorDeMensajesVortex mapeador;
 
 	/**
-	 * @see net.gaia.vortex.core.api.transformaciones.Transformacion#transformar(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.transformaciones.Transformacion#transformar(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
 	public MensajeVortex transformar(final MensajeVortex mensajeDeconfirmacion) {
 		final ConfirmacionDeIdRemoto confirmacion = mapeador.convertirDesdeVortex(mensajeDeconfirmacion,
 				ConfirmacionDeIdRemoto.class);
@@ -56,8 +56,12 @@ public class RegistrarIdRemotoYEnviarReconfirmacion implements Transformacion {
 
 		final ReconfirmacionDeIdRemoto reconfirmacion = ReconfirmacionDeIdRemoto.create(idRemoto, idLocalDePata);
 		final MensajeVortex mensajeEnviable = mapeador.convertirAVortex(reconfirmacion);
-		LOG.debug("Enviando reconfirmacion[{}] para la confirmacion[{}] recibida", reconfirmacion,
-				mensajeDeconfirmacion.toShortString());
+
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Enviando reconfirmacion[{}] para la confirmacion[{}] recibida", reconfirmacion,
+					mensajeDeconfirmacion.toShortString());
+		}
 		return mensajeEnviable;
 	}
 
@@ -73,7 +77,8 @@ public class RegistrarIdRemotoYEnviarReconfirmacion implements Transformacion {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(idLocalDePata_FIELD, idLocalDePata).con(idDePataRemota_FIELD, idDePataRemota)
 				.toString();

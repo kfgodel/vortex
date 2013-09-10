@@ -13,7 +13,7 @@
 package net.gaia.vortex.http.impl.moleculas;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.impl.moleculas.support.MultiplexorSinDuplicadosSupport;
+import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosSupportViejo;
 import net.gaia.vortex.http.api.ClienteDeHttpVortex;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.cliente.ClienteDeNexoHttp;
@@ -27,7 +27,7 @@ import ar.dgarcia.http.client.api.HttpResponseProvider;
  * 
  * @author D. García
  */
-public class NodoClienteHttp extends MultiplexorSinDuplicadosSupport {
+public class NodoClienteHttp extends MultiplexorSinDuplicadosSupportViejo {
 
 	private ClienteDeHttpVortex clienteInterno;
 

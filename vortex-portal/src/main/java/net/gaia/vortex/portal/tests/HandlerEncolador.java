@@ -15,8 +15,8 @@ package net.gaia.vortex.portal.tests;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import net.gaia.vortex.portal.impl.condiciones.SoloInstancias;
-import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
+import net.gaia.vortex.deprecated.SoloInstanciasViejo;
+import net.gaia.vortex.impl.support.HandlerTipado;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
@@ -32,17 +32,17 @@ public abstract class HandlerEncolador<T> extends HandlerTipado<T> {
 	private final BlockingQueue<Object> mensajes;
 
 	/**
-	 * @see net.gaia.vortex.portal.api.mensaje.HandlerDePortal#onMensajeRecibido(java.lang.Object)
+	 * @see net.gaia.vortex.api.moleculas.portal.HandlerDePortal#onObjetoRecibido(java.lang.Object)
 	 */
 	
-	public void onMensajeRecibido(final T mensaje) {
+	public void onObjetoRecibido(final T mensaje) {
 		mensajes.add(mensaje);
 	}
 
 	public HandlerEncolador() {
-		super(SoloInstancias.de(Object.class));
+		super(SoloInstanciasViejo.de(Object.class));
 		mensajes = new LinkedBlockingQueue<Object>();
-		setCondicionSuficiente(SoloInstancias.de(getTipoEsperado()));
+		setCondicionSuficiente(SoloInstanciasViejo.de(getTipoEsperado()));
 	}
 
 	/**

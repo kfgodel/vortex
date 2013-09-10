@@ -14,10 +14,10 @@ package net.gaia.vortex.router.impl.ejecutors;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.impl.support.ReceptorSupport;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import net.gaia.vortex.router.impl.moleculas.patas.PataBidireccional;
@@ -43,19 +43,25 @@ public class RegistrarRuteo extends ReceptorSupport {
 	public static final String pataRuteadora_FIELD = "pataRuteadora";
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 
 	public void recibir(final MensajeVortex mensaje) {
 		final NodoBidireccional nodoOrigen = pataRuteadora.getNodoLocal();
 		final Receptor destino = pataRuteadora.getNodoRemoto();
-		Loggers.BIDI_MSG.debug("  Ruteando desde[{}] hasta[{}] por[{}] mensaje[{}] ",
-				new Object[] { nodoOrigen.toShortString(), destino.toShortString(), pataRuteadora.toShortString(),
-						mensaje.toShortString() });
+
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (Loggers.BIDI_MSG.isDebugEnabled()) {
+			Loggers.BIDI_MSG.debug("  Ruteando desde[{}] hasta[{}] por[{}] mensaje[{}] ",
+					new Object[] { nodoOrigen.toShortString(), destino.toShortString(), pataRuteadora.toShortString(),
+							mensaje.toShortString() });
+		}
+
 		final ListenerDeRuteo listenerActual = listenerDeRuteos.get();
 		try {
 			listenerActual.onMensajeRuteado(nodoOrigen, mensaje, destino);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error en un listener de ruteo[" + listenerDeRuteos + "]", e);
 		}
 	}

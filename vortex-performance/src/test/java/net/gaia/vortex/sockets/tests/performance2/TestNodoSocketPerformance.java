@@ -16,9 +16,9 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.portal.api.moleculas.Portal;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.deprecated.PortalMapeadorViejo;
+import net.gaia.vortex.deprecated.PortalViejo;
+import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.portal.tests.HandlerCronometro;
 import net.gaia.vortex.portal.tests.MensajeCronometro;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
@@ -41,8 +41,8 @@ public class TestNodoSocketPerformance {
 
 	private NodoSocket nodoCliente;
 	private NodoSocket nodoServidor;
-	private Portal nodoEmisor;
-	private Portal nodoReceptor;
+	private PortalViejo nodoEmisor;
+	private PortalViejo nodoReceptor;
 
 	private TaskProcessor processor;
 
@@ -53,8 +53,8 @@ public class TestNodoSocketPerformance {
 		final InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
 		nodoServidor = NodoSocket.createAndListenTo(sharedTestAddress, processor);
 		nodoCliente = NodoSocket.createAndConnectTo(sharedTestAddress, processor);
-		nodoReceptor = PortalMapeador.createForIOWith(processor, nodoServidor);
-		nodoEmisor = PortalMapeador.createForIOWith(processor, nodoCliente);
+		nodoReceptor = PortalMapeadorViejo.createForIOWith(processor, nodoServidor);
+		nodoEmisor = PortalMapeadorViejo.createForIOWith(processor, nodoCliente);
 
 	}
 

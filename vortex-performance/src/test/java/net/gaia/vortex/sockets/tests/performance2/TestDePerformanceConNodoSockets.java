@@ -15,13 +15,13 @@ package net.gaia.vortex.sockets.tests.performance2;
 import java.net.InetSocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.deprecated.PortalMapeadorViejo;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
+import net.gaia.vortex.impl.support.HandlerTipado;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
 
 import org.junit.After;
@@ -121,9 +121,9 @@ public class TestDePerformanceConNodoSockets {
 		final NodoSocket nodoServidor = NodoSocket.createAndListenTo(sharedAddress, processorRecepcion);
 		final NodoSocket nodoCliente = NodoSocket.createAndConnectTo(sharedAddress, processorEnvios);
 		try {
-			final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(processorRecepcion, nodoServidor);
+			final PortalMapeadorViejo portalReceptor = PortalMapeadorViejo.createForIOWith(processorRecepcion, nodoServidor);
 			portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
-				public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
+				public void onObjetoRecibido(final MensajeModeloParaTests mensaje) {
 					metricas.registrarOutput();
 				}
 			});
@@ -155,7 +155,7 @@ public class TestDePerformanceConNodoSockets {
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
-		final PortalMapeador portalDeEnvio = PortalMapeador.createForOutputWith(processorEnvios, nodoVortex);
+		final PortalMapeadorViejo portalDeEnvio = PortalMapeadorViejo.createForOutputWith(processorEnvios, nodoVortex);
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
 			public Runnable getOrCreateRunnable() {

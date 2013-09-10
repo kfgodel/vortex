@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.api.listeners;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 
 /**

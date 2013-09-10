@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.server.mosquito.listeners;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 
@@ -22,13 +22,14 @@ import org.slf4j.LoggerFactory;
 
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase representa el listener de ruteos que registra en el log los mensajes ruteados
  * 
  * @author D. García
  */
-public class LoguearRuteos implements ListenerDeRuteo {
+public class LoguearRuteos extends WeakSingletonSupport implements ListenerDeRuteo {
 	private static final Logger LOG = LoggerFactory.getLogger(LoguearRuteos.class);
 
 	private static final WeakSingleton<LoguearRuteos> ultimaReferencia = new WeakSingleton<LoguearRuteos>(
@@ -40,10 +41,9 @@ public class LoguearRuteos implements ListenerDeRuteo {
 
 	/**
 	 * @see net.gaia.vortex.router.api.listeners.ListenerDeRuteo#onMensajeRuteado(net.gaia.vortex.router.api.moleculas.NodoBidireccional,
-	 *      net.gaia.vortex.core.api.mensaje.MensajeVortex,
-	 *      net.gaia.vortex.core.api.atomos.Receptor)
+	 *      net.gaia.vortex.api.mensajes.MensajeVortex, net.gaia.vortex.api.basic.Receptor)
 	 */
-	
+
 	public void onMensajeRuteado(final NodoBidireccional origen, final MensajeVortex mensaje, final Receptor destino) {
 		LOG.debug(" Se ruteo el mensaje[{}] desde[{}] a [{}]",
 				new Object[] { mensaje.toShortString(), origen.toShortString(), destino.toShortString() });

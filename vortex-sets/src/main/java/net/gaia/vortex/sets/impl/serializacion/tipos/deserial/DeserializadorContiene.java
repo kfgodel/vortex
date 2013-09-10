@@ -22,6 +22,7 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el deserializador de condiciones que verifica si una coleccion contiene un
@@ -29,7 +30,7 @@ import ar.com.dgarcia.coding.caching.WeakSingleton;
  * 
  * @author D. García
  */
-public class DeserializadorContiene implements DeserializadorDeTipo<ColeccionContiene> {
+public class DeserializadorContiene extends WeakSingletonSupport implements DeserializadorDeTipo<ColeccionContiene> {
 	private static final WeakSingleton<DeserializadorContiene> ultimaReferencia = new WeakSingleton<DeserializadorContiene>(
 			DefaultInstantiator.create(DeserializadorContiene.class));
 
@@ -41,7 +42,7 @@ public class DeserializadorContiene implements DeserializadorDeTipo<ColeccionCon
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public ColeccionContiene deserializarDesde(final Map<String, Object> mapaOrigen,
 			final ContextoDeSerializacion contexto) {
 		final Object clave = mapaOrigen.get(MetadataDeSerializacion.TIPO_CONTIENE_CLAVE);

@@ -12,12 +12,13 @@
  */
 package net.gaia.vortex.router.impl.listeners;
 
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.router.api.listeners.ListenerDeRuteo;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -25,7 +26,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class IgnorarRuteos implements ListenerDeRuteo {
+public class IgnorarRuteos extends WeakSingletonSupport implements ListenerDeRuteo {
 
 	private static final WeakSingleton<IgnorarRuteos> ultimaReferencia = new WeakSingleton<IgnorarRuteos>(
 			DefaultInstantiator.create(IgnorarRuteos.class));
@@ -36,10 +37,9 @@ public class IgnorarRuteos implements ListenerDeRuteo {
 
 	/**
 	 * @see net.gaia.vortex.router.api.listeners.ListenerDeRuteo#onMensajeRuteado(net.gaia.vortex.router.api.moleculas.NodoBidireccional,
-	 *      net.gaia.vortex.core.api.mensaje.MensajeVortex,
-	 *      net.gaia.vortex.core.api.atomos.Receptor)
+	 *      net.gaia.vortex.api.mensajes.MensajeVortex, net.gaia.vortex.api.basic.Receptor)
 	 */
-	
+
 	public void onMensajeRuteado(final NodoBidireccional origen, final MensajeVortex mensaje, final Receptor destino) {
 		// Ignoramos todos los ruteos
 	}
@@ -47,7 +47,8 @@ public class IgnorarRuteos implements ListenerDeRuteo {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).toString();
 	}

@@ -14,7 +14,7 @@ package net.gaia.vortex.http.impl.cliente.server;
 
 import java.util.List;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 
 /**
  * Esta interfaz define el contrato esperado de un handler de mensajes invocado al recibir mensajes

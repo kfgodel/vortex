@@ -15,9 +15,9 @@ package net.gaia.vortex.sets.tests;
 import java.util.Collections;
 import java.util.List;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -35,7 +35,7 @@ public class CondicionTestWrapper implements Condicion {
 	public static final String evaluada_FIELD = "evaluada";
 
 	/**
-	 * @see net.gaia.vortex.core.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.condiciones.Condicion#esCumplidaPor(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	
 	public ResultadoDeCondicion esCumplidaPor(final MensajeVortex mensaje) {
@@ -75,7 +75,7 @@ public class CondicionTestWrapper implements Condicion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.condiciones.Condicion#getSubCondiciones()
+	 * @see net.gaia.vortex.api.condiciones.Condicion#getSubCondiciones()
 	 */
 	
 	public List<Condicion> getSubCondiciones() {

@@ -6,8 +6,8 @@ package net.gaia.vortex.core.tests;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.atomos.support.basicos.ReceptorSupport;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.impl.support.ReceptorSupport;
 import ar.com.dgarcia.coding.exceptions.InterruptedWaitException;
 import ar.com.dgarcia.coding.exceptions.TimeoutExceededException;
 import ar.com.dgarcia.coding.exceptions.UnsuccessfulWaitException;
@@ -25,9 +25,9 @@ public class ReceptorEncolador extends ReceptorSupport {
 	public static final String mensajes_FIELD = "mensajes";
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.Receptor#recibir(net.gaia.vortex.core.api.mensaje.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
 	public void recibir(final MensajeVortex mensaje) {
 		mensajes.add(mensaje);
 	}
@@ -53,15 +53,26 @@ public class ReceptorEncolador extends ReceptorSupport {
 				throw new TimeoutExceededException("Pasó el tiempo de espera y no recibimos mensaje");
 			}
 			return mensaje;
-		} catch (final InterruptedException e) {
+		}
+		catch (final InterruptedException e) {
 			throw new InterruptedWaitException("Se interrumpió la espera de la cola de mensajes", e);
 		}
 	}
 
 	/**
+	 * Indica si este receptor tiene mensajes ya recibidos
+	 * 
+	 * @return false si la cola de mensajes está vacia
+	 */
+	public boolean tieneMensajes() {
+		return !mensajes.isEmpty();
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(mensajes_FIELD, mensajes)
 				.toString();

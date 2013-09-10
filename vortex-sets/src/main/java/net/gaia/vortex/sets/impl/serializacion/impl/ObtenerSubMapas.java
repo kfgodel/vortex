@@ -19,6 +19,7 @@ import java.util.Map;
 
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 import ar.com.dgarcia.lang.iterators.tree.NodeExploder;
 
 /**
@@ -26,7 +27,7 @@ import ar.com.dgarcia.lang.iterators.tree.NodeExploder;
  * 
  * @author D. García
  */
-public class ObtenerSubMapas implements NodeExploder<Map<String, Object>> {
+public class ObtenerSubMapas extends WeakSingletonSupport implements NodeExploder<Map<String, Object>> {
 
 	private static final WeakSingleton<ObtenerSubMapas> ultimaReferencia = new WeakSingleton<ObtenerSubMapas>(
 			DefaultInstantiator.create(ObtenerSubMapas.class));
@@ -38,7 +39,7 @@ public class ObtenerSubMapas implements NodeExploder<Map<String, Object>> {
 	/**
 	 * @see ar.com.dgarcia.lang.iterators.tree.NodeExploder#evaluateOn(java.lang.Object)
 	 */
-	
+
 	public Iterator<Map<String, Object>> evaluateOn(final Map<String, Object> node) {
 		final ArrayList<Map<String, Object>> subMapas = new ArrayList<Map<String, Object>>();
 

@@ -14,12 +14,13 @@ package net.gaia.vortex.sets.impl.serializacion.tipos.deserial;
 
 import java.util.Map;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.sets.impl.condiciones.CondicionDesconocida;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase representa el deserializador para tipos desconocidos, que crea una condicion
@@ -27,7 +28,7 @@ import ar.com.dgarcia.coding.caching.WeakSingleton;
  * 
  * @author D. García
  */
-public class DeserializadorDesconocido implements DeserializadorDeTipo<Condicion> {
+public class DeserializadorDesconocido extends WeakSingletonSupport implements DeserializadorDeTipo<Condicion> {
 
 	private static final WeakSingleton<DeserializadorDesconocido> ultimaReferencia = new WeakSingleton<DeserializadorDesconocido>(
 			DefaultInstantiator.create(DeserializadorDesconocido.class));
@@ -40,7 +41,7 @@ public class DeserializadorDesconocido implements DeserializadorDeTipo<Condicion
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public Condicion deserializarDesde(final Map<String, Object> mapaOrigen, final ContextoDeSerializacion contexto) {
 		final CondicionDesconocida condicionDesconocida = CondicionDesconocida.create(mapaOrigen);
 		return condicionDesconocida;

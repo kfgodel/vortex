@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.http.sesiones;
 
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 
 /**

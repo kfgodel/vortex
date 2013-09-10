@@ -20,12 +20,12 @@ import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.api.condiciones.ResultadoDeCondicion;
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
-import net.gaia.vortex.core.api.mensaje.MensajeVortex;
-import net.gaia.vortex.core.impl.tasks.forward.MultiplexarMensaje;
-import net.gaia.vortex.helpers.VortexEquals;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.deprecated.MultiplexarMensajeViejo;
+import net.gaia.vortex.impl.helpers.VortexEquals;
 import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import net.gaia.vortex.router.impl.condiciones.EsMetaMensaje;
 import net.gaia.vortex.router.impl.messages.meta.MensajeConIdDePataReceptora;
@@ -63,7 +63,10 @@ public class MultiplexarAPatas implements WorkUnit {
 
 	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		if (patas.isEmpty()) {
-			LOG.debug("El mensaje[{}] es decartado porque no existen patas para recibirlo", mensaje.toShortString());
+			// Chequeo por debug para evitar el costo de toShortString()
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("El mensaje[{}] es decartado porque no existen patas para recibirlo", mensaje.toShortString());
+			}
 			return;
 		}
 		final Collection<PataBidireccional> destinos = determinarDestinosDeAcuerdoAlMensaje();
@@ -74,7 +77,7 @@ public class MultiplexarAPatas implements WorkUnit {
 		// Loggers.ATOMOS.debug("Multiplexando mensaje[{}] a {} patas{}", new Object[] { mensaje,
 		// destinos.size(),
 		// destinos });
-		final MultiplexarMensaje multiplexarMensaje = MultiplexarMensaje.create(mensaje, destinos, null);
+		final MultiplexarMensajeViejo multiplexarMensaje = MultiplexarMensajeViejo.create(mensaje, destinos, null);
 		multiplexarMensaje.doWork(parallelizer);
 		// for (final PataBidireccional destino : destinos) {
 		// LOG.debug("Delegando mensaje[{}] a [{}]", mensaje.toShortString(),
@@ -111,8 +114,12 @@ public class MultiplexarAPatas implements WorkUnit {
 				return destinos;
 			}
 		}
-		LOG.debug("El mensaje[{}] es decartado porque el id de pata[{}] no coincide con ninguna de las existentes{}",
-				new Object[] { mensaje.toShortString(), posibleIdentificador, patas });
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(
+					"El mensaje[{}] es decartado porque el id de pata[{}] no coincide con ninguna de las existentes{}",
+					new Object[] { mensaje.toShortString(), posibleIdentificador, patas });
+		}
 		return Collections.emptyList();
 	}
 

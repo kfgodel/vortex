@@ -13,16 +13,16 @@
 package net.gaia.vortex.router.impl.moleculas.comport;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.forward.Multiplexor;
-import net.gaia.vortex.core.api.moleculas.FlujoVortex;
-import net.gaia.vortex.core.impl.atomos.condicional.NexoBifurcador;
-import net.gaia.vortex.core.impl.atomos.memoria.NexoSinDuplicados;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
-import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
-import net.gaia.vortex.core.impl.moleculas.flujos.FlujoInmutable;
-import net.gaia.vortex.portal.api.moleculas.Portal;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
-import net.gaia.vortex.portal.impl.transformaciones.GenerarIdEnMensaje;
+import net.gaia.vortex.deprecated.FlujoInmutableViejo;
+import net.gaia.vortex.deprecated.FlujoVortexViejo;
+import net.gaia.vortex.deprecated.GenerarIdEnMensajeViejo;
+import net.gaia.vortex.deprecated.MultiplexorViejo;
+import net.gaia.vortex.deprecated.NexoBifurcadorViejo;
+import net.gaia.vortex.deprecated.NexoSinDuplicadosViejo;
+import net.gaia.vortex.deprecated.PortalMapeadorViejo;
+import net.gaia.vortex.deprecated.PortalViejo;
+import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.router.impl.atomos.MultiplexorDePatas;
 import net.gaia.vortex.router.impl.condiciones.EsMetaMensaje;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -34,14 +34,14 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class ComportamientoPortal implements ComportamientoBidi {
 
-	private GenerarIdEnMensaje generadorDeIdsCompartido;
+	private GenerarIdEnMensajeViejo generadorDeIdsCompartido;
 
-	private PortalMapeador portalInterno;
+	private PortalMapeadorViejo portalInterno;
 	public static final String portalInterno_FIELD = "portalInterno";
 
 	public static ComportamientoPortal create() {
 		final ComportamientoPortal comportamiento = new ComportamientoPortal();
-		comportamiento.generadorDeIdsCompartido = GenerarIdEnMensaje.create(GeneradorDeIdsGlobalesParaComponentes
+		comportamiento.generadorDeIdsCompartido = GenerarIdEnMensajeViejo.create(GeneradorDeIdsGlobalesParaComponentes
 				.getInstancia().generarId());
 		return comportamiento;
 	}
@@ -50,36 +50,36 @@ public class ComportamientoPortal implements ComportamientoBidi {
 	 * @see net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi#crearFlujoParaMensajesRecibidos(net.gaia.taskprocessor.api.TaskProcessor)
 	 */
 	
-	public FlujoVortex crearFlujoParaMensajesRecibidos(final TaskProcessor processor) {
+	public FlujoVortexViejo crearFlujoParaMensajesRecibidos(final TaskProcessor processor) {
 		// Primero descartamos los mensajes duplicados
-		final NexoSinDuplicados filtroDeDuplicados = NexoSinDuplicados.create(processor, ReceptorNulo.getInstancia());
+		final NexoSinDuplicadosViejo filtroDeDuplicados = NexoSinDuplicadosViejo.create(processor, ReceptorNulo.getInstancia());
 
 		// Si es metamensaje va directo a las patas, si es mensaje normal al portal interno
-		final NexoBifurcador bifurcador = NexoBifurcador.create(processor, EsMetaMensaje.create(),
+		final NexoBifurcadorViejo bifurcador = NexoBifurcadorViejo.create(processor, EsMetaMensaje.create(),
 				ReceptorNulo.getInstancia(), ReceptorNulo.getInstancia());
 		filtroDeDuplicados.setDestino(bifurcador);
 
 		// Los metamensajes se los mandamos directo a las patas
-		final Multiplexor multiplexorDePatas = MultiplexorDePatas.create(processor);
+		final MultiplexorViejo multiplexorDePatas = MultiplexorDePatas.create(processor);
 		bifurcador.setReceptorPorTrue(multiplexorDePatas);
 
 		// El portal interno recibe los mensaje normales
-		portalInterno = PortalMapeador.create(processor, generadorDeIdsCompartido);
+		portalInterno = PortalMapeadorViejo.create(processor, generadorDeIdsCompartido);
 		bifurcador.setReceptorPorFalse(portalInterno);
 
 		// El portal no envia directo, si no a través de las patas
 		portalInterno.setDestino(multiplexorDePatas);
 
 		// En la entrada se reciben los mensajes, en la salida se conectan las patas
-		final FlujoVortex flujoDeMensajes = FlujoInmutable.create(filtroDeDuplicados, multiplexorDePatas);
+		final FlujoVortexViejo flujoDeMensajes = FlujoInmutableViejo.create(filtroDeDuplicados, multiplexorDePatas);
 		return flujoDeMensajes;
 	}
 
-	public Portal getPortalInterno() {
+	public PortalViejo getPortalInterno() {
 		return portalInterno;
 	}
 
-	public void setPortalInterno(final PortalMapeador portalInterno) {
+	public void setPortalInterno(final PortalMapeadorViejo portalInterno) {
 		this.portalInterno = portalInterno;
 	}
 
@@ -95,7 +95,7 @@ public class ComportamientoPortal implements ComportamientoBidi {
 	 * @see net.gaia.vortex.router.impl.moleculas.comport.ComportamientoBidi#obtenerGeneradorDeIdParaMensajes()
 	 */
 	
-	public GenerarIdEnMensaje obtenerGeneradorDeIdParaMensajes() {
+	public GenerarIdEnMensajeViejo obtenerGeneradorDeIdParaMensajes() {
 		return this.generadorDeIdsCompartido;
 	}
 

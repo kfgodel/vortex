@@ -12,11 +12,12 @@
  */
 package net.gaia.vortex.router.impl.listeners;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro;
 import net.gaia.vortex.router.api.moleculas.NodoBidireccional;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -24,7 +25,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class IgnorarCambioDeFiltro implements ListenerDeCambiosDeFiltro {
+public class IgnorarCambioDeFiltro extends WeakSingletonSupport implements ListenerDeCambiosDeFiltro {
 
 	private static final WeakSingleton<IgnorarCambioDeFiltro> ultimaReferencia = new WeakSingleton<IgnorarCambioDeFiltro>(
 			DefaultInstantiator.create(IgnorarCambioDeFiltro.class));
@@ -35,9 +36,9 @@ public class IgnorarCambioDeFiltro implements ListenerDeCambiosDeFiltro {
 
 	/**
 	 * @see net.gaia.vortex.router.api.listeners.ListenerDeCambiosDeFiltro#onCambioDeFiltros(net.gaia.vortex.router.api.moleculas.NodoBidireccional,
-	 *      net.gaia.vortex.core.api.condiciones.Condicion)
+	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
-	
+
 	public void onCambioDeFiltros(final NodoBidireccional nodo, final Condicion nuevoFiltro) {
 		// Ignoramos todos los cambios
 	}
@@ -45,7 +46,8 @@ public class IgnorarCambioDeFiltro implements ListenerDeCambiosDeFiltro {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).toString();
 	}

@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.router.impl.filtros;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 
 /**
  * Esta interfaz representa un listener que es invocado cuando se producen cambios en el conjunto de

@@ -22,13 +22,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el deserializador de condiciones por atributo presente
  * 
  * @author D. García
  */
-public class DeserializadorPresente implements DeserializadorDeTipo<AtributoPresente> {
+public class DeserializadorPresente extends WeakSingletonSupport implements DeserializadorDeTipo<AtributoPresente> {
 	private static final WeakSingleton<DeserializadorPresente> ultimaReferencia = new WeakSingleton<DeserializadorPresente>(
 			DefaultInstantiator.create(DeserializadorPresente.class));
 
@@ -40,7 +41,7 @@ public class DeserializadorPresente implements DeserializadorDeTipo<AtributoPres
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public AtributoPresente deserializarDesde(final Map<String, Object> mapaOrigen,
 			final ContextoDeSerializacion contexto) {
 		final Object clave = mapaOrigen.get(MetadataDeSerializacion.TIPO_PRESENTE_CLAVE);

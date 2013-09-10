@@ -14,7 +14,7 @@ package net.gaia.vortex.router.impl.filtros;
 
 import java.util.concurrent.Callable;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import ar.com.dgarcia.lang.conc.ReadWriteCoordinator;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -43,7 +43,7 @@ public class ParteSincronizada implements ParteDeCondiciones {
 	}
 
 	/**
-	 * @see net.gaia.vortex.router.impl.filtros.ParteDeCondiciones#cambiarA(net.gaia.vortex.core.api.condiciones.Condicion)
+	 * @see net.gaia.vortex.router.impl.filtros.ParteDeCondiciones#cambiarA(net.gaia.vortex.api.condiciones.Condicion)
 	 */
 	
 	public void cambiarA(final Condicion nuevaCondicion) {

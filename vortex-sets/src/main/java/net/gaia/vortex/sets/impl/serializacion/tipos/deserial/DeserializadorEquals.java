@@ -22,13 +22,14 @@ import net.gaia.vortex.sets.impl.serializacion.tipos.MetadataDeSerializacion;
 import net.gaia.vortex.sets.reflection.accessors.PropertyChainAccessor;
 import ar.com.dgarcia.coding.caching.DefaultInstantiator;
 import ar.com.dgarcia.coding.caching.WeakSingleton;
+import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
 
 /**
  * Esta clase implementa el deserializador de condiciones equals
  * 
  * @author D. García
  */
-public class DeserializadorEquals implements DeserializadorDeTipo<ValorEsperadoEn> {
+public class DeserializadorEquals extends WeakSingletonSupport implements DeserializadorDeTipo<ValorEsperadoEn> {
 	private static final WeakSingleton<DeserializadorEquals> ultimaReferencia = new WeakSingleton<DeserializadorEquals>(
 			DefaultInstantiator.create(DeserializadorEquals.class));
 
@@ -40,7 +41,7 @@ public class DeserializadorEquals implements DeserializadorDeTipo<ValorEsperadoE
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.DeserializadorDeTipo#deserializarDesde(java.util.Map,
 	 *      net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion)
 	 */
-	
+
 	public ValorEsperadoEn deserializarDesde(final Map<String, Object> mapaOrigen,
 			final ContextoDeSerializacion contexto) {
 		final Object clave = mapaOrigen.get(MetadataDeSerializacion.TIPO_EQUALS_CLAVE);

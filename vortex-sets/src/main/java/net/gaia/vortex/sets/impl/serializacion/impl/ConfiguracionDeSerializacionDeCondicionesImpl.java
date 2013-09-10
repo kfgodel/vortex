@@ -15,8 +15,8 @@ package net.gaia.vortex.sets.impl.serializacion.impl;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import net.gaia.vortex.core.impl.condiciones.SiempreFalse;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.impl.condiciones.SiempreFalse;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.sets.impl.condiciones.AndCompuesto;
 import net.gaia.vortex.sets.impl.condiciones.AtributoEmpieza;
 import net.gaia.vortex.sets.impl.condiciones.AtributoPresente;

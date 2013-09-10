@@ -16,13 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.api.condiciones.Condicion;
-import net.gaia.vortex.core.impl.atomos.receptores.ReceptorNulo;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
+import net.gaia.vortex.api.moleculas.portal.HandlerDePortal;
 import net.gaia.vortex.core.prog.Loggers;
-import net.gaia.vortex.portal.api.mensaje.HandlerDePortal;
-import net.gaia.vortex.portal.api.moleculas.ErrorDeMapeoVortexException;
-import net.gaia.vortex.portal.api.moleculas.Portal;
+import net.gaia.vortex.deprecated.PortalViejo;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.router.api.moleculas.PortalBidireccional;
 import net.gaia.vortex.router.impl.filtros.ConjuntoSincronizado;
 import net.gaia.vortex.router.impl.moleculas.comport.ComportamientoPortal;
@@ -42,7 +42,7 @@ import ar.com.dgarcia.lang.strings.ToString;
 public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	private static final Logger LOG = LoggerFactory.getLogger(PortalBidi.class);
 
-	private Portal portalInterno;
+	private PortalViejo portalInterno;
 	private List<Condicion> condicionesDelPortal;
 
 	public static PortalBidi create(final TaskProcessor processor) {
@@ -55,34 +55,41 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.Portal#enviar(java.lang.Object)
+	 * @see net.gaia.vortex.deprecated.PortalViejo#enviar(java.lang.Object)
 	 */
 
 	public void enviar(final Object mensaje) throws ErrorDeMapeoVortexException {
-		Loggers.BIDI_MSG.debug("Ingresado en portal[{}] el objeto[{}] como mensaje a enviar", this.toShortString(),
-				mensaje);
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (Loggers.BIDI_MSG.isDebugEnabled()) {
+			Loggers.BIDI_MSG.debug("Ingresado en portal[{}] el objeto[{}] como mensaje a enviar", this.toShortString(),
+					mensaje);
+		}
 		portalInterno.enviar(mensaje);
 	}
 
 	/**
-	 * @see net.gaia.vortex.portal.api.moleculas.Portal#recibirCon(net.gaia.vortex.portal.api.mensaje.HandlerDePortal)
+	 * @see net.gaia.vortex.deprecated.PortalViejo#recibirCon(net.gaia.vortex.api.moleculas.portal.HandlerDePortal)
 	 */
 
 	public void recibirCon(final HandlerDePortal<?> handlerDeMensajes) {
 		// Registramos la condición para poder unificarlas
-		final Condicion nuevaCondicion = handlerDeMensajes.getCondicionSuficiente();
+		final Condicion nuevaCondicion = handlerDeMensajes.getBicondicional();
 		condicionesDelPortal.add(nuevaCondicion);
 
 		// Le pasamos el handler al portal real
 		portalInterno.recibirCon(handlerDeMensajes);
 
-		LOG.debug(" En [{}] se modificó el estado de los filtros locales: {}", this.toShortString(), getFiltroLocal());
+		// Chequeo por debug para evitar el costo de toShortString()
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(" En [{}] se modificó el estado de los filtros locales: {}", this.toShortString(),
+					getFiltroLocal());
+		}
 		// Notificamos del cambio interno
 		evento_cambioEstadoFiltrosLocales();
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#setDestino(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.deprecated.NexoViejo#setDestino(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	public void setDestino(final Receptor nuevoDestino) {
@@ -100,7 +107,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	}
 
 	/**
-	 * @see net.gaia.vortex.core.api.atomos.forward.Nexo#getDestino()
+	 * @see net.gaia.vortex.deprecated.NexoViejo#getDestino()
 	 */
 
 	public Receptor getDestino() {
@@ -114,7 +121,7 @@ public class PortalBidi extends NodoBidi implements PortalBidireccional {
 	}
 
 	/**
-	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#conectarCon(net.gaia.vortex.core.api.atomos.Receptor)
+	 * @see net.gaia.vortex.router.impl.moleculas.NodoBidi#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 
 	@Override

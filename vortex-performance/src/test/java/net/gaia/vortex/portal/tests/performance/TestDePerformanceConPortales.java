@@ -13,15 +13,15 @@
 package net.gaia.vortex.portal.tests.performance;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.core.api.Nodo;
-import net.gaia.vortex.core.api.atomos.Receptor;
-import net.gaia.vortex.core.external.VortexProcessorFactory;
-import net.gaia.vortex.core.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.core.impl.moleculas.memoria.MultiplexorSinDuplicados;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.portal.impl.mensaje.HandlerTipado;
-import net.gaia.vortex.portal.impl.moleculas.PortalMapeador;
+import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosViejo;
+import net.gaia.vortex.deprecated.NodoViejo;
+import net.gaia.vortex.deprecated.PortalMapeadorViejo;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
+import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
+import net.gaia.vortex.impl.support.HandlerTipado;
 
 import org.junit.After;
 import org.junit.Before;
@@ -128,15 +128,15 @@ public class TestDePerformanceConPortales {
 			throws InterruptedException {
 		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->V->" + cantidadDeThreadsDeRecepcion + "R";
 
-		final Nodo nodoVortex = MultiplexorSinDuplicados.create(processorRuteo);
+		final NodoViejo nodoVortex = MultiplexorSinDuplicadosViejo.create(processorRuteo);
 
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
 		// Generamos tantos portales como receptores tengamos
-		final PortalMapeador portalReceptor = PortalMapeador.createForIOWith(processorRuteo, nodoVortex);
+		final PortalMapeadorViejo portalReceptor = PortalMapeadorViejo.createForIOWith(processorRuteo, nodoVortex);
 		portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {
-			public void onMensajeRecibido(final MensajeModeloParaTests mensaje) {
+			public void onObjetoRecibido(final MensajeModeloParaTests mensaje) {
 				metricas.registrarOutput();
 			}
 		});
@@ -164,7 +164,7 @@ public class TestDePerformanceConPortales {
 		final StressGenerator stress = StressGenerator.create();
 		stress.setCantidadDeThreadsEnEjecucion(cantidadDeThreadsDeEnvio);
 
-		final PortalMapeador portalDeEnvio = PortalMapeador.createForOutputWith(processorRuteo, nodoVortex);
+		final PortalMapeadorViejo portalDeEnvio = PortalMapeadorViejo.createForOutputWith(processorRuteo, nodoVortex);
 		// Por cada ejecucion genera el mensaje y lo manda por algunos de los sockets de salida
 		stress.setFactoryDeRunnable(new FactoryDeRunnable() {
 			public Runnable getOrCreateRunnable() {

@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion;
 import ar.com.dgarcia.coding.exceptions.FaultyCodeException;
 
@@ -51,7 +51,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion#guardarSerializadoDe(net.gaia.vortex.core.api.condiciones.Condicion,
+	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion#guardarSerializadoDe(net.gaia.vortex.api.condiciones.Condicion,
 	 *      java.util.Map)
 	 */
 	
@@ -60,7 +60,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 	}
 
 	/**
-	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion#obtenerSerializadoDe(net.gaia.vortex.core.api.condiciones.Condicion)
+	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion#obtenerSerializadoDe(net.gaia.vortex.api.condiciones.Condicion)
 	 */
 	
 	public Map<String, Object> obtenerSerializadoDe(final Condicion condicionRaiz) throws FaultyCodeException {
@@ -70,7 +70,7 @@ public class ContextoDeSerializacionImpl implements ContextoDeSerializacion {
 
 	/**
 	 * @see net.gaia.vortex.sets.impl.serializacion.tipos.ContextoDeSerializacion#guardarDeserializadoDe(java.util.Map,
-	 *      net.gaia.vortex.core.api.condiciones.Condicion)
+	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
 	
 	public void guardarDeserializadoDe(final Map<String, Object> mapaOriginal, final Condicion condicionDeserializada) {

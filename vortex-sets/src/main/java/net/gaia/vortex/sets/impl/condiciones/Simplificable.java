@@ -12,7 +12,7 @@
  */
 package net.gaia.vortex.sets.impl.condiciones;
 
-import net.gaia.vortex.core.api.condiciones.Condicion;
+import net.gaia.vortex.api.condiciones.Condicion;
 
 /**
  * Esta interfaz es aplicable a las condiciones que pueden simplificar su expresión eliminando

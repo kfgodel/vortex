@@ -15,14 +15,14 @@ package net.gaia.vortex.core.tests;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.gaia.vortex.core.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.core.api.ids.mensajes.IdDeMensaje;
-import net.gaia.vortex.core.api.mensaje.ContenidoVortex;
-import net.gaia.vortex.core.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
-import net.gaia.vortex.core.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
-import net.gaia.vortex.core.impl.mensaje.ContenidoMapa;
-import net.gaia.vortex.core.impl.mensaje.MensajeConContenido;
-import net.gaia.vortex.helpers.VortexMap;
+import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
+import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
+import net.gaia.vortex.api.mensajes.ContenidoVortex;
+import net.gaia.vortex.impl.helpers.VortexMap;
+import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
+import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
+import net.gaia.vortex.impl.mensajes.ContenidoMapa;
+import net.gaia.vortex.impl.mensajes.MensajeConContenido;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -110,9 +110,7 @@ public class TestMensajes {
 		mapaNoCiL2.put("level", "2");
 		mapaNoCiL1.put("mapa2", mapaNoCiL2);
 
-		@SuppressWarnings("unchecked")
 		final Map<String, Object> level1 = (Map<String, Object>) contenido.get("mapa1");
-		@SuppressWarnings("unchecked")
 		final Map<String, Object> level2 = (Map<String, Object>) level1.get("mapa2");
 		Assert.assertFalse("No podemos detectar la modificacion y deberia ser un mapa comun",
 				level2 instanceof VortexMap);
