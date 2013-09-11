@@ -13,7 +13,7 @@
 package net.gaia.vortex.api.flujos;
 
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.impl.nulos.ConectorNulo;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
@@ -35,11 +35,11 @@ public interface FlujoVortex {
 	Receptor getEntrada();
 
 	/**
-	 * Devuelve el conector que sirve como punto de salida de los mensajes en este flujo
+	 * Devuelve el componente que sirve como punto de salida de los mensajes en este flujo
 	 * 
 	 * @return El conector a utilizar para los mensajes de salida. Puede ser el {@link ConectorNulo}
 	 *         si el flujo no está inicializado
 	 */
-	Conector getSalida();
+	Conectable getSalida();
 
 }

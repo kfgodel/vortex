@@ -17,10 +17,10 @@
  */
 package net.gaia.vortex.api.atomos;
 
-import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.basic.Nodo;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
-import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 /**
  * Esta interfaz representa el componente vortex que evalua una condicion sobre los mensajes
@@ -29,15 +29,30 @@ import net.gaia.vortex.api.proto.Conector;
  * 
  * @author dgarcia
  */
-@Atomo
 public interface Filtro extends Nodo {
 	/**
-	 * Devuelve el conector utilizado en caso de true.<br>
-	 * Los mensajes que evalúen a true serán entregados al receptor conectado a este conector.
+	 * Establece el componente que recibirá los mensajes que pasen el filtro.<br>
+	 * Los mensajes que evalúen a true serán entregados al receptor indicado.<br>
+	 * <br>
+	 * Este método es el default usado por {@link #conectarCon(net.gaia.vortex.api.basic.Receptor)}
 	 * 
 	 * @return El conector por casos true
 	 */
-	public Conector getConectorPorTrue();
+	public void conectarPorTrueCon(Receptor receptorPorTrue);
+
+	/**
+	 * Desconecta el receptor de los mensajes que pasan la condición con true.<br>
+	 * Los mensajes que evaluen a true serán entregados al {@link ReceptorNulo}
+	 */
+	public void desconectarPorTrue();
+
+	/**
+	 * Conecta el receptor indicado para recibir los mensajes que pasan el filtro.<br>
+	 * Es equivalente a invocar {@link #conectarPorTrueCon(Receptor)}
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(Receptor destino);
 
 	/**
 	 * Devuelve la condición utilizada por este componente para evaluar los mensajes y decidir su

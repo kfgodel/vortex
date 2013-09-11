@@ -54,7 +54,7 @@ public class AtomoTransformador extends MonoConectableSupport implements Transfo
 			LOG.error("Se produjo un error en la transformacion[" + transformacion + "] del mensajeOriginal["
 					+ mensajeOriginal + "] antes de delegarlo. Descartando mensajeOriginal", e);
 			// Nada más para hacer
-			getConectorParaDescartes().recibir(mensajeOriginal);
+			getReceptorParaDescartes().recibir(mensajeOriginal);
 			return;
 		}
 		if (Loggers.ATOMOS.isDebugEnabled()) {

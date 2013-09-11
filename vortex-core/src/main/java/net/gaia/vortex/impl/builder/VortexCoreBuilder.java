@@ -14,6 +14,7 @@ package net.gaia.vortex.impl.builder;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.atomos.Bifurcador;
+import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
@@ -115,7 +116,7 @@ public class VortexCoreBuilder implements VortexCore {
 	 */
 	public MoleculaCompuesta<MultiConectable> multiplexarSinDuplicados(final Receptor... receptores) {
 		final Multiplexor multiplexor = multiplexar(receptores);
-		final Bifurcador filtroSinDuplicados = filtrarMensajesDuplicadosA(multiplexor);
+		final Filtro filtroSinDuplicados = filtrarMensajesDuplicadosA(multiplexor);
 		final MoleculaCompuesta<MultiConectable> molecula = this.<MultiConectable> componer(filtroSinDuplicados,
 				multiplexor);
 		return molecula;
@@ -137,8 +138,8 @@ public class VortexCoreBuilder implements VortexCore {
 	public Bifurcador bifurcarSi(final Condicion condicion, final Receptor receptorPorTrue,
 			final Receptor receptorPorFalse) {
 		final AtomoBifurcador bifurcador = AtomoBifurcador.create(condicion);
-		bifurcador.getConectorPorTrue().conectarCon(receptorPorTrue);
-		bifurcador.getConectorPorFalse().conectarCon(receptorPorFalse);
+		bifurcador.conectarPorTrueCon(receptorPorTrue);
+		bifurcador.conectarPorFalseCon(receptorPorFalse);
 		return bifurcador;
 	}
 
@@ -146,16 +147,16 @@ public class VortexCoreBuilder implements VortexCore {
 	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarEntradaCon(net.gaia.vortex.api.condiciones.Condicion,
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
-	public Bifurcador filtrarEntradaCon(final Condicion condicion, final Receptor receptor) {
-		final Bifurcador filtro = filtroDe(condicion);
-		filtro.getConectorPorTrue().conectarCon(receptor);
+	public Filtro filtrarEntradaCon(final Condicion condicion, final Receptor receptor) {
+		final Filtro filtro = filtroDe(condicion);
+		filtro.conectarPorTrueCon(receptor);
 		return filtro;
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.builder.VortexCore#filtroDe(net.gaia.vortex.api.condiciones.Condicion)
 	 */
-	public Bifurcador filtroDe(final Condicion condicion) {
+	public Filtro filtroDe(final Condicion condicion) {
 		final AtomoBifurcador filtro = AtomoBifurcador.create(condicion);
 		return filtro;
 	}
@@ -181,17 +182,17 @@ public class VortexCoreBuilder implements VortexCore {
 	/**
 	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarMensajesDuplicadosA(net.gaia.vortex.api.basic.Receptor)
 	 */
-	public Bifurcador filtrarMensajesDuplicadosA(final Receptor receptor) {
-		final Bifurcador filtro = filtroSinMensajesDuplicados();
-		filtro.getConectorPorTrue().conectarCon(receptor);
+	public Filtro filtrarMensajesDuplicadosA(final Receptor receptor) {
+		final Filtro filtro = filtroSinMensajesDuplicados();
+		filtro.conectarPorTrueCon(receptor);
 		return filtro;
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.builder.VortexCore#filtroSinMensajesDuplicados()
 	 */
-	public Bifurcador filtroSinMensajesDuplicados() {
-		final Bifurcador filtroCreado = filtroDe(condicionSinDuplicados());
+	public Filtro filtroSinMensajesDuplicados() {
+		final Filtro filtroCreado = filtroDe(condicionSinDuplicados());
 		return filtroCreado;
 	}
 
@@ -210,11 +211,10 @@ public class VortexCoreBuilder implements VortexCore {
 	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarSalidaDe(net.gaia.vortex.api.proto.Conector,
 	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
-	public Conector filtrarSalidaDe(final Conector conector, final Condicion condicion) {
-		final Bifurcador filtro = filtroDe(condicion);
+	public Filtro filtrarSalidaDe(final Conector conector, final Condicion condicion) {
+		final Filtro filtro = filtroDe(condicion);
 		conector.conectarCon(filtro);
-		final Conector conectorConFiltro = filtro.getConectorPorTrue();
-		return conectorConFiltro;
+		return filtro;
 	}
 
 	/**

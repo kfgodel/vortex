@@ -15,6 +15,7 @@ package net.gaia.vortex.impl.support;
 import net.gaia.vortex.api.proto.ComponenteVortex;
 import net.gaia.vortex.impl.helpers.SecuenciadorDeInstancias;
 import net.gaia.vortex.impl.helpers.ToShortString;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase define el comportamiento básico de componentes vortex para ser extendido por las
@@ -52,7 +53,7 @@ public abstract class ComponenteSupport implements ComponenteVortex {
 	 */
 	@Override
 	public String toString() {
-		return toShortString();
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).toString();
 	}
 
 }

@@ -17,11 +17,8 @@
  */
 package net.gaia.vortex.impl.proto;
 
-import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.impl.nulos.ReceptorNulo;
-import net.gaia.vortex.impl.support.ComponenteSupport;
-import ar.com.dgarcia.lang.strings.ToString;
+import net.gaia.vortex.impl.support.MonoEmisorSupport;
 
 /**
  * Esta clase ofrece la base para crear conectores definiendo los metodos para conectar a un
@@ -29,46 +26,6 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author dgarcia
  */
-public abstract class ConectorSupport extends ComponenteSupport implements Conector {
-
-	protected Receptor conectado;
-	public static final String conectado_FIELD = "conectado";
-
-	public Receptor getConectado() {
-		return conectado;
-	}
-
-	/**
-	 * @see net.gaia.vortex.api.proto.Conector#conectarCon(net.gaia.vortex.api.basic.Receptor)
-	 */
-	public void conectarCon(final Receptor destino) {
-		if (destino == null) {
-			throw new IllegalArgumentException("El receptor destino no puede ser null. Usar el " + ReceptorNulo.class);
-		}
-		conectado = destino;
-	}
-
-	/**
-	 * @see net.gaia.vortex.api.proto.Conector#desconectar()
-	 */
-	public void desconectar() {
-		final ReceptorNulo receptorNulo = ReceptorNulo.getInstancia();
-		conectarCon(receptorNulo);
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToString.de(this).con(conectado_FIELD, conectado).toString();
-	}
-
-	/**
-	 * @see net.gaia.vortex.api.proto.Conector#getDestino()
-	 */
-	public Receptor getDestino() {
-		return conectado;
-	}
+public abstract class ConectorSupport extends MonoEmisorSupport implements Conector {
 
 }

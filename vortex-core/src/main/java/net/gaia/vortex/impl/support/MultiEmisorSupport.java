@@ -15,9 +15,9 @@ package net.gaia.vortex.impl.support;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.basic.emisores.MultiEmisor;
-import net.gaia.vortex.api.proto.Conector;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -28,18 +28,38 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class MultiEmisorSupport extends EmisorSupport implements MultiEmisor {
 
-	private List<Conector> conectores;
+	private final List<Receptor> conectores = new CopyOnWriteArrayList<Receptor>();
 	public static final String conectores_FIELD = "conectores";
-
-	protected void inicializar() {
-		this.conectores = new CopyOnWriteArrayList<Conector>();
-	}
 
 	/**
 	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#getConectores()
 	 */
-	public List<Conector> getConectores() {
+	public List<Receptor> getConectores() {
 		return conectores;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(final Receptor destino) {
+		if (destino == null) {
+			throw new IllegalArgumentException("El receptor destino no puede ser null");
+		}
+		getConectores().add(destino);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 */
+	public void desconectar() {
+		getConectores().clear();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(final Receptor destino) {
+		getConectores().remove(destino);
 	}
 
 	/**

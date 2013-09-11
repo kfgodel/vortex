@@ -14,12 +14,12 @@ package net.gaia.vortex.impl.atomos;
 
 import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.atomos.Bifurcador;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.core.prog.Loggers;
-import net.gaia.vortex.impl.proto.ConectorBloqueante;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.impl.support.EmisorSupport;
 
 import org.slf4j.Logger;
@@ -42,11 +42,11 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 	private Condicion condicion;
 	public static final String condicion_FIELD = "condicion";
 
-	private Conector conectorPorTrue;
-	public static final String conectorPorTrue_FIELD = "conectorPorTrue";
+	private Receptor receptorPorTrue;
+	public static final String receptorPorTrue_FIELD = "receptorPorTrue";
 
-	private Conector conectorPorFalse;
-	public static final String conectorPorFalse_FIELD = "conectorPorFalse";
+	private Receptor receptorPorFalse;
+	public static final String receptorPorFalse_FIELD = "receptorPorFalse";
 
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
@@ -55,48 +55,50 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 		if (Loggers.ATOMOS.isTraceEnabled()) {
 			Loggers.ATOMOS.trace("Evaluando condicion[{}] en mensaje[{}] para decidir delegado", condicion, mensaje);
 		}
-		Conector conectorElegido;
+		Receptor receptorElegido;
 		try {
 			final ResultadoDeCondicion resultadoDeCondicion = condicion.esCumplidaPor(mensaje);
 			if (!resultadoDeCondicion.esBooleano()) {
 				// Si no es true o false, descartaremos el mensaje
-				conectorElegido = getConectorParaDescartes();
+				receptorElegido = getReceptorParaDescartes();
 			}
 			else {
 				if (resultadoDeCondicion.esTrue()) {
-					conectorElegido = getConectorPorTrue();
+					receptorElegido = getReceptorPorTrue();
 				}
 				else {
-					conectorElegido = getConectorPorFalse();
+					receptorElegido = getReceptorPorFalse();
 				}
 			}
 			if (Loggers.ATOMOS.isDebugEnabled()) {
 				Loggers.ATOMOS.debug("Evaluo[{}] la condición[{}] delegando mensaje[{}] a conector[{}]", new Object[] {
-						resultadoDeCondicion, condicion, mensaje, conectorElegido });
+						resultadoDeCondicion, condicion, mensaje, receptorElegido });
 			}
 		}
 		catch (final Exception e) {
 			LOG.error("Se produjo un error al evaluar la condicion[" + condicion + "] sobre el mensaje[" + mensaje
 					+ "] para bifurcar. Descartando mensaje", e);
-			conectorElegido = getConectorParaDescartes();
+			receptorElegido = getReceptorParaDescartes();
 		}
 
 		// Enviamos mensaje a destino
-		conectorElegido.recibir(mensaje);
+		receptorElegido.recibir(mensaje);
 	}
 
-	/**
-	 * @see net.gaia.vortex.api.atomos.Bifurcador#getConectorPorTrue()
-	 */
-	public Conector getConectorPorTrue() {
-		return conectorPorTrue;
+	public Receptor getReceptorPorTrue() {
+		return receptorPorTrue;
 	}
 
-	/**
-	 * @see net.gaia.vortex.api.atomos.Bifurcador#getConectorPorFalse()
-	 */
-	public Conector getConectorPorFalse() {
-		return conectorPorFalse;
+	public void setReceptorPorTrue(final Receptor receptorPorTrue) {
+		this.receptorPorTrue = receptorPorTrue;
+	}
+
+	public Receptor getReceptorPorFalse() {
+		return receptorPorFalse;
+	}
+
+	public void setReceptorPorFalse(final Receptor receptorPorFalse) {
+		this.receptorPorFalse = receptorPorFalse;
 	}
 
 	/**
@@ -119,8 +121,8 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 	public static AtomoBifurcador create(final Condicion condicion) {
 		final AtomoBifurcador bifurcador = new AtomoBifurcador();
 		bifurcador.setCondicion(condicion);
-		bifurcador.conectorPorTrue = ConectorBloqueante.create();
-		bifurcador.conectorPorFalse = ConectorBloqueante.create();
+		bifurcador.receptorPorTrue = ReceptorNulo.getInstancia();
+		bifurcador.receptorPorFalse = ReceptorNulo.getInstancia();
 		return bifurcador;
 	}
 
@@ -130,7 +132,70 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(condicion_FIELD, condicion)
-				.con(conectorPorTrue_FIELD, conectorPorTrue).con(conectorPorFalse_FIELD, conectorPorFalse).toString();
+				.con(receptorPorTrue_FIELD, receptorPorTrue).con(receptorPorFalse_FIELD, receptorPorFalse).toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.atomos.Filtro#conectarPorTrueCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarPorTrueCon(final Receptor receptorPorTrue) {
+		if (receptorPorTrue == null) {
+			throw new IllegalArgumentException("El receptorPorTrue destino no puede ser null. Usar el "
+					+ ReceptorNulo.class);
+		}
+		this.receptorPorTrue = receptorPorTrue;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.atomos.Filtro#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(final Receptor destino) {
+		conectarPorTrueCon(destino);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 */
+	public void desconectar() {
+		desconectarPorTrue();
+		desconectarPorFalse();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(final Receptor destino) {
+		if (this.receptorPorTrue.equals(destino)) {
+			desconectarPorTrue();
+		}
+		if (this.receptorPorFalse.equals(destino)) {
+			desconectarPorFalse();
+		}
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.atomos.Bifurcador#conectarPorFalseCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarPorFalseCon(final Receptor receptorPorFalse) {
+		if (receptorPorFalse == null) {
+			throw new IllegalArgumentException("El receptorPorFalse destino no puede ser null. Usar el "
+					+ ReceptorNulo.class);
+		}
+		this.receptorPorFalse = receptorPorFalse;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.atomos.Filtro#desconectarPorTrue()
+	 */
+	public void desconectarPorTrue() {
+		this.conectarPorTrueCon(ReceptorNulo.getInstancia());
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.atomos.Bifurcador#desconectarPorFalse()
+	 */
+	public void desconectarPorFalse() {
+		this.conectarPorFalseCon(ReceptorNulo.getInstancia());
 	}
 
 }

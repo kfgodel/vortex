@@ -13,8 +13,8 @@
 package net.gaia.vortex.impl.support;
 
 import net.gaia.vortex.api.basic.Emisor;
-import net.gaia.vortex.api.proto.Conector;
-import net.gaia.vortex.impl.nulos.ConectorNulo;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 /**
  * Esta clase sirve de base a todas las implementaciones de emisor ofreciendo métodos comunes a
@@ -22,16 +22,16 @@ import net.gaia.vortex.impl.nulos.ConectorNulo;
  * 
  * @author D. García
  */
-public class EmisorSupport extends ComponenteSupport implements Emisor {
+public abstract class EmisorSupport extends ComponenteSupport implements Emisor {
 
 	/**
-	 * Devuelve el conector utilizado para los mensajes descartados.<br>
-	 * A través de este conector, las subclases puede descartar los mensajes que no pueden ser
+	 * Devuelve el receptor al que se le entregan los mensajes descartados.<br>
+	 * A través de este receptor, las subclases puede descartar los mensajes que no pueden ser
 	 * entregados a destino
 	 * 
 	 * @return El conector para los mensajes perdidos
 	 */
-	protected Conector getConectorParaDescartes() {
-		return ConectorNulo.getInstancia();
+	protected Receptor getReceptorParaDescartes() {
+		return ReceptorNulo.getInstancia();
 	}
 }

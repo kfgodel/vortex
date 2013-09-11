@@ -19,8 +19,8 @@ public class TestDePerformanceFiltroDuplicados extends TestDePerformanceNodoSupp
 	 */
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
-		final Filtro filtrador = getBuilder().filtroSinMensajesDuplicados();
-		return FlujoInmutable.create(filtrador, filtrador.getConectorPorTrue());
+		final Filtro filtro = getBuilder().filtroSinMensajesDuplicados();
+		return FlujoInmutable.create(filtro, filtro);
 	}
 
 }

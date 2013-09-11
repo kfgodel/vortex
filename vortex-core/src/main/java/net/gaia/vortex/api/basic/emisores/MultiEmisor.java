@@ -12,10 +12,7 @@
  */
 package net.gaia.vortex.api.basic.emisores;
 
-import java.util.List;
-
 import net.gaia.vortex.api.basic.Emisor;
-import net.gaia.vortex.api.proto.Conector;
 
 /**
  * Esta interfaz representa un emisor multiple de mensajes, permitiendo conectar multiples
@@ -24,12 +21,5 @@ import net.gaia.vortex.api.proto.Conector;
  * @author D. García
  */
 public interface MultiEmisor extends Emisor {
-
-	/**
-	 * Devuelve la lista de conectores existentes en este emisor
-	 * 
-	 * @return La lista de los conectores creados
-	 */
-	List<Conector> getConectores();
 
 }

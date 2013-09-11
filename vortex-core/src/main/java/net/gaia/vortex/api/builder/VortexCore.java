@@ -122,7 +122,7 @@ public interface VortexCore {
 	 *            La condicion para filtrar los mensajes
 	 * @return El conector
 	 */
-	Conector filtrarSalidaDe(Conector conector, Condicion condicion);
+	Filtro filtrarSalidaDe(Conector conector, Condicion condicion);
 
 	/**
 	 * Crea un atomo bifurcador configurado con la condicion pasada como decisor del receptor

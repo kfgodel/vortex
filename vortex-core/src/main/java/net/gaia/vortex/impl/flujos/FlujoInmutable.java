@@ -13,8 +13,8 @@
 package net.gaia.vortex.impl.flujos;
 
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.flujos.FlujoVortex;
-import net.gaia.vortex.api.proto.Conector;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -27,7 +27,7 @@ public class FlujoInmutable implements FlujoVortex {
 	private Receptor entrada;
 	public static final String entrada_FIELD = "entrada";
 
-	private Conector salida;
+	private Conectable salida;
 	public static final String salida_FIELD = "salida";
 
 	/**
@@ -40,11 +40,11 @@ public class FlujoInmutable implements FlujoVortex {
 	/**
 	 * @see net.gaia.vortex.api.flujos.FlujoVortex#getSalida()
 	 */
-	public Conector getSalida() {
+	public Conectable getSalida() {
 		return salida;
 	}
 
-	public static FlujoInmutable create(final Receptor entrada, final Conector salida) {
+	public static FlujoInmutable create(final Receptor entrada, final Conectable salida) {
 		final FlujoInmutable flujo = new FlujoInmutable();
 		flujo.entrada = entrada;
 		flujo.salida = salida;

@@ -22,7 +22,7 @@ public class TestDePerformanceFiltro extends TestDePerformanceNodoSupport {
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
 		final Filtro filtro = getBuilder().filtroDe(SiempreTrue.getInstancia());
-		final FlujoInmutable flujoATestear = FlujoInmutable.create(filtro, filtro.getConectorPorTrue());
+		final FlujoInmutable flujoATestear = FlujoInmutable.create(filtro, filtro);
 		return flujoATestear;
 	}
 

@@ -12,27 +12,47 @@
  */
 package net.gaia.vortex.api.atomos;
 
-import net.gaia.vortex.api.annotations.clases.Atomo;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.condiciones.Condicion;
-import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 /**
- * Esta interfaz representa un atomo vortex que bifurca el camino del mensaje en función de una
+ * Esta interfaz representa un componente vortex que bifurca el camino del mensaje en función de una
  * {@link Condicion} aplicada sobre él.<br>
  * Si la condición es verdadera seguirá un camino, y si es falsa otro. Es descartado si la
  * evaluación de la condición falla
  * 
  * @author D. García
  */
-@Atomo
 public interface Bifurcador extends Filtro {
 
 	/**
-	 * Devuelve el conector utilizado para el caso false.<br>
-	 * Los mensajes evaluados a false serán entregados al receptor conectado a este conector.
+	 * Establece el receptor de los mensajes en caso de que la condición evalúe a false.<br>
+	 * Los mensajes evaluados a false serán entregados al receptor indicado.
 	 * 
 	 * @return El conector para casos false
 	 */
-	public Conector getConectorPorFalse();
+	public void conectarPorFalseCon(Receptor receptorPorFalse);
 
+	/**
+	 * Desconecta el receptor de los mensajes que pasan la condición con false.<br>
+	 * Los mensajes que evaluen a false serán entregados al {@link ReceptorNulo}
+	 */
+	public void desconectarPorFalse();
+
+	/**
+	 * Desconecta este bifurcador de las dos salidas (tanto true como false)
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 */
+	public void desconectar();
+
+	/**
+	 * Desconecta el receptor indicado de la salida de este componente.<br>
+	 * Si el receptor pasado esta conectado tanto a true como false, será desconectado de ambas
+	 * salidas
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(Receptor destino);
 }

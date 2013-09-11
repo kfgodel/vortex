@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.api.basic;
 
+import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.proto.ComponenteVortex;
-
 
 /**
  * Esta interfaz representa un componente de la red vortex que tiene la capacidad de enviar mensajes
@@ -29,6 +29,6 @@ import net.gaia.vortex.api.proto.ComponenteVortex;
  * 
  * @author D. García
  */
-public interface Emisor extends ComponenteVortex {
+public interface Emisor extends ComponenteVortex, Conectable {
 
 }

@@ -33,11 +33,24 @@ public class ToShortString {
 		if (componente == null) {
 			return String.valueOf(null);
 		}
+		final StringBuilder builder = startBuilder(componente);
+		return builder.toString();
+	}
+
+	/**
+	 * Crea un builder de string con la parte inicial de identificación de componente y clase ya
+	 * definido
+	 * 
+	 * @param componente
+	 *            El componente a identificar
+	 * @return El builder creado
+	 */
+	private static StringBuilder startBuilder(final ComponenteVortex componente) {
 		final StringBuilder builder = new StringBuilder(componente.getClass().getSimpleName());
 		builder.append("<");
 		builder.append(componente.getNumeroDeInstancia());
 		builder.append(">");
-		return builder.toString();
+		return builder;
 	}
 
 }
