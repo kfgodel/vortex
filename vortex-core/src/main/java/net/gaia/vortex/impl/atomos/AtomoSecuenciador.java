@@ -16,7 +16,8 @@ import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.impl.support.MonoConectableSupport;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
+import net.gaia.vortex.impl.support.MonoEmisorSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,46 +33,104 @@ import ar.com.dgarcia.lang.strings.ToString;
  * @author D. García
  */
 @Atomo
-public class AtomoSecuenciador extends MonoConectableSupport implements Secuenciador {
+public class AtomoSecuenciador extends MonoEmisorSupport implements Secuenciador {
 	private static final Logger LOG = LoggerFactory.getLogger(AtomoSecuenciador.class);
 
-	private Receptor delegado;
-	public static final String delegado_FIELD = "delegado";
+	private Receptor receptorMedio;
+	public static final String delegado_FIELD = "receptorMedio";
 
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
 		try {
-			delegado.recibir(mensaje);
-		} catch (final Exception e) {
-			LOG.error("Se produjo un error en el delegado. Continuando camino del mensaje", e);
+			getReceptorMedio().recibir(mensaje);
 		}
-		getConectorDeSalida().recibir(mensaje);
+		catch (final Exception e) {
+			LOG.error("Se produjo un error en el receptorMedio. Continuando camino del mensaje", e);
+		}
+		getReceptorFinal().recibir(mensaje);
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.atomos.Secuenciador#getDelegado()
+	 * @see net.gaia.vortex.api.atomos.Secuenciador#getReceptorMedio()
 	 */
-	public Receptor getDelegado() {
-		return delegado;
+	public Receptor getReceptorMedio() {
+		return receptorMedio;
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.atomos.Secuenciador#setDelegado(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.api.atomos.Secuenciador#conectarReceptorMedio(net.gaia.vortex.api.basic.Receptor)
 	 */
-	public void setDelegado(final Receptor nuevoDelegado) {
-		if (nuevoDelegado == null) {
-			throw new IllegalArgumentException("El delegado no puede ser null");
+	public void conectarReceptorMedio(final Receptor receptorMedio) {
+		if (receptorMedio == null) {
+			throw new IllegalArgumentException("El receptorMedio no puede ser null");
 		}
-		this.delegado = nuevoDelegado;
+		this.receptorMedio = receptorMedio;
 	}
 
-	public static AtomoSecuenciador create(final Receptor delegado) {
+	/**
+	 * @see net.gaia.vortex.api.atomos.Secuenciador#desconectarReceptorMedio()
+	 */
+	public void desconectarReceptorMedio() {
+		conectarReceptorMedio(ReceptorNulo.getInstancia());
+	}
+
+	/**
+	 * Crea una instancia sin parametros asumiendo el receptor nulo como receptor medio
+	 */
+	public static AtomoSecuenciador create() {
+		return create(ReceptorNulo.getInstancia());
+	}
+
+	public static AtomoSecuenciador create(final Receptor receptorMedio) {
 		final AtomoSecuenciador atomo = new AtomoSecuenciador();
-		atomo.inicializar();
-		atomo.setDelegado(delegado);
+		atomo.conectarReceptorMedio(receptorMedio);
 		return atomo;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.atomos.Secuenciador#conectarReceptorFinal(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarReceptorFinal(final Receptor receptorFinal) {
+		// Aprovecho la definición heredada
+		super.conectarCon(receptorFinal);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.atomos.Secuenciador#getReceptorFinal()
+	 */
+	public Receptor getReceptorFinal() {
+		return super.getConectado();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.atomos.Secuenciador#desconectarReceptorFinal()
+	 */
+	public void desconectarReceptorFinal() {
+		conectarReceptorFinal(ReceptorNulo.getInstancia());
+	}
+
+	/**
+	 * @see net.gaia.vortex.impl.support.MonoEmisorSupport#desconectar()
+	 */
+	@Override
+	public void desconectar() {
+		desconectarReceptorFinal();
+		desconectarReceptorMedio();
+	}
+
+	/**
+	 * @see net.gaia.vortex.impl.support.MonoEmisorSupport#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	@Override
+	public void desconectarDe(final Receptor destino) {
+		if (getReceptorMedio().equals(destino)) {
+			desconectarReceptorMedio();
+		}
+		if (getReceptorFinal().equals(destino)) {
+			desconectarReceptorFinal();
+		}
 	}
 
 	/**
@@ -79,8 +138,8 @@ public class AtomoSecuenciador extends MonoConectableSupport implements Secuenci
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(delegado_FIELD, delegado)
-				.con(conectorUnico_FIELD, getConectorDeSalida()).toString();
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
+				.con(delegado_FIELD, receptorMedio).con(conectado_FIELD, getConectado()).toString();
 	}
 
 }

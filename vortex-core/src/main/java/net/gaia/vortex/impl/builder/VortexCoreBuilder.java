@@ -88,7 +88,7 @@ public class VortexCoreBuilder implements VortexCore {
 	 */
 	public Secuenciador secuenciar(final Receptor delegado, final Receptor salida) {
 		final Secuenciador secuenciador = secuenciadorDe(delegado);
-		secuenciador.getConectorDeSalida().conectarCon(salida);
+		secuenciador.conectarCon(salida);
 		return secuenciador;
 	}
 

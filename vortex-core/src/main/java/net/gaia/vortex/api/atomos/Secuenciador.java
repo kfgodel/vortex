@@ -14,7 +14,7 @@ package net.gaia.vortex.api.atomos;
 
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.basic.emisores.MonoConectable;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 /**
  * Esta interfaz representa el componente que permite secuenciar los mensajes recibidos
@@ -23,21 +23,71 @@ import net.gaia.vortex.api.basic.emisores.MonoConectable;
  * 
  * @author D. García
  */
-public interface Secuenciador extends Nodo, MonoConectable {
+public interface Secuenciador extends Nodo {
 
 	/**
-	 * Devuelve el componente que será utilizado como observador de los mensajes recibidos
+	 * Conecta el receptor indicado como salida de este secuenciador, entregando el mensaje recibido
+	 * después de pasarlo al delegado.<br>
+	 * Este método es equivalente al {@link #conectarReceptorFinal(Receptor)}
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	void conectarCon(Receptor destino);
+
+	/**
+	 * Desconecta este secuenciador del receptor final Y del delegado
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 */
+	void desconectar();
+
+	/**
+	 * Desconecta el receptor indicado ya sea delegado o receptor final
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	void desconectarDe(Receptor destino);
+
+	/**
+	 * Conecta el receptor pasado como receptor final de los mensajes recibidos por el secuenciador.<br>
+	 * El receptor recibirá los mensajes después del delegado
+	 * 
+	 * @param receptorFinal
+	 *            El receptor conectado al final de la cadena
+	 */
+	void conectarReceptorFinal(Receptor receptorFinal);
+
+	/**
+	 * Devuelve el receptor que recibe los mensajes al final de la secuencia
+	 * 
+	 * @return El receptor final de los mensajes
+	 */
+	Receptor getReceptorFinal();
+
+	/**
+	 * Desconecta de este secuenciador el receptor final, enviando todos los mensajes al
+	 * {@link ReceptorNulo}
+	 */
+	void desconectarReceptorFinal();
+
+	/**
+	 * Conecta el receptor medio que recibirá los mensajes antes que el receptor final
+	 * 
+	 * @param receptorMedio
+	 */
+	void conectarReceptorMedio(Receptor receptorMedio);
+
+	/**
+	 * Devuelve el componente que será utilizado como observador de los mensajes recibidos,
+	 * recibiendo antes que el receptor final los mensajes
 	 * 
 	 * @return El componente que recibirá todos los mensajes antes que la salida
 	 */
-	Receptor getDelegado();
+	Receptor getReceptorMedio();
 
 	/**
-	 * Establece el componente que hará de observador de los mensajes.<br>
-	 * Recibiendo cada mensaje antes que el receptor de salida
-	 * 
-	 * @param el
-	 *            componente observador
+	 * Desconecta el receptor medio, derivando los mensajes al {@link ReceptorNulo} antes de
+	 * entregarlos al final
 	 */
-	void setDelegado(Receptor observador);
+	void desconectarReceptorMedio();
 }
