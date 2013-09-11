@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.vortex.api.atomos.Filtro;
-import net.gaia.vortex.api.basic.emisores.MultiConectable;
+import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
@@ -45,7 +45,7 @@ public class TestComponentesIdentificadores {
 	private ReceptorEncolador receptorFinal2;
 	private VortexCore builder;
 	private Filtro filtro;
-	private Compuesto<MultiConectable> multiplexorSinDuplicados;
+	private Compuesto<Multiplexor> multiplexorSinDuplicados;
 
 	@Before
 	public void crearDependencias() {

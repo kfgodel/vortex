@@ -28,14 +28,14 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class MultiEmisorSupport extends EmisorSupport implements MultiEmisor {
 
-	private final List<Receptor> conectores = new CopyOnWriteArrayList<Receptor>();
+	private final List<Receptor> conectados = new CopyOnWriteArrayList<Receptor>();
 	public static final String conectores_FIELD = "conectores";
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#getConectores()
+	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#getConectados()
 	 */
-	public List<Receptor> getConectores() {
-		return conectores;
+	public List<Receptor> getConectados() {
+		return conectados;
 	}
 
 	/**
@@ -45,21 +45,21 @@ public class MultiEmisorSupport extends EmisorSupport implements MultiEmisor {
 		if (destino == null) {
 			throw new IllegalArgumentException("El receptor destino no puede ser null");
 		}
-		getConectores().add(destino);
+		getConectados().add(destino);
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
 	 */
 	public void desconectar() {
-		getConectores().clear();
+		getConectados().clear();
 	}
 
 	/**
 	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 	public void desconectarDe(final Receptor destino) {
-		getConectores().remove(destino);
+		getConectados().remove(destino);
 	}
 
 	/**
@@ -68,12 +68,12 @@ public class MultiEmisorSupport extends EmisorSupport implements MultiEmisor {
 	@Override
 	public String toString() {
 		final ToString builder = ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia());
-		final int cantidadDeConectados = conectores.size();
+		final int cantidadDeConectados = conectados.size();
 		if (cantidadDeConectados > 3) {
 			builder.con(conectores_FIELD, cantidadDeConectados);
 		}
 		else {
-			builder.con(conectores_FIELD, conectores);
+			builder.con(conectores_FIELD, conectados);
 		}
 		return builder.toString();
 	}

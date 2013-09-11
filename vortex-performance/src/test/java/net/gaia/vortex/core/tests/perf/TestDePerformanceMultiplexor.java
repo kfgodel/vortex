@@ -21,7 +21,7 @@ public class TestDePerformanceMultiplexor extends TestDePerformanceNodoSupport {
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
 		final Multiplexor multiplexor = getBuilder().multiplexar();
-		return FlujoInmutable.create(multiplexor, multiplexor.crearConector());
+		return FlujoInmutable.create(multiplexor, multiplexor);
 	}
 
 }

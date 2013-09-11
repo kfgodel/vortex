@@ -68,7 +68,7 @@ public class MoleculaTerminal extends MonoConectableSupport implements Terminal 
 	public void noEnviarRecibidosA(final Terminal otraTerminal) {
 		final Conector conectorDeLaTerminal = otraTerminal.getConectorDeSalida();
 
-		final List<Conector> allConectores = this.multiplexorRecibidos.getConectores();
+		final List<Conector> allConectores = this.multiplexorRecibidos.getConectados();
 		for (final Conector conector : allConectores) {
 			if (conector.getDestino().equals(conectorDeLaTerminal)) {
 				this.multiplexorRecibidos.eliminarConector(conector);

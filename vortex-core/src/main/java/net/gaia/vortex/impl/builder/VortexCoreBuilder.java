@@ -20,7 +20,7 @@ import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Emisor;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.basic.emisores.MultiConectable;
+import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
@@ -106,7 +106,7 @@ public class VortexCoreBuilder implements VortexCore {
 	public Multiplexor multiplexar(final Receptor... receptores) {
 		final AtomoMultiplexor multiplexor = AtomoMultiplexor.create();
 		for (final Receptor receptor : receptores) {
-			multiplexor.crearConector().conectarCon(receptor);
+			multiplexor.conectarCon(receptor);
 		}
 		return multiplexor;
 	}
@@ -114,11 +114,10 @@ public class VortexCoreBuilder implements VortexCore {
 	/**
 	 * @see net.gaia.vortex.api.builder.VortexCore#multiplexarSinDuplicados(net.gaia.vortex.api.basic.Receptor[])
 	 */
-	public MoleculaCompuesta<MultiConectable> multiplexarSinDuplicados(final Receptor... receptores) {
+	public MoleculaCompuesta<Multiplexor> multiplexarSinDuplicados(final Receptor... receptores) {
 		final Multiplexor multiplexor = multiplexar(receptores);
 		final Filtro filtroSinDuplicados = filtrarMensajesDuplicadosA(multiplexor);
-		final MoleculaCompuesta<MultiConectable> molecula = this.<MultiConectable> componer(filtroSinDuplicados,
-				multiplexor);
+		final MoleculaCompuesta<Multiplexor> molecula = this.<Multiplexor> componer(filtroSinDuplicados, multiplexor);
 		return molecula;
 	}
 
@@ -229,8 +228,8 @@ public class VortexCoreBuilder implements VortexCore {
 	 * @see net.gaia.vortex.api.builder.VortexCore#conectarDesde(net.gaia.vortex.api.moleculas.Compuesto,
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
-	public void conectarDesde(final Compuesto<? extends MultiConectable> origen, final Receptor destino) {
-		origen.getSalida().crearConector().conectarCon(destino);
+	public void conectarDesde(final Compuesto<? extends Conectable> origen, final Receptor destino) {
+		origen.getSalida().conectarCon(destino);
 	}
 
 	/**

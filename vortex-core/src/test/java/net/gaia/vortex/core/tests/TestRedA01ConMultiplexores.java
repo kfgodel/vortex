@@ -83,7 +83,7 @@ public class TestRedA01ConMultiplexores {
 	public void el_Receptor_Debería_Poder_Recibir_De_Vortex_Cualquier_Objeto_Serializable() {
 		// Para recibir de la red nos conectamos a un componente receptor
 		final ReceptorEncolador receptorDelCliente = ReceptorEncolador.create();
-		nodoReceptor.crearConector().conectarCon(receptorDelCliente);
+		nodoReceptor.conectarCon(receptorDelCliente);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class TestRedA01ConMultiplexores {
 	@Test
 	public void el_Mensaje_Enviado_Desde_El_Emisor_Y_El_Recibido_Por_El_Receptor_Deberian_Ser_Iguales() {
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
-		nodoReceptor.crearConector().conectarCon(handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
 		nodoEmisor.recibir(mensaje1);
 
@@ -123,7 +123,7 @@ public class TestRedA01ConMultiplexores {
 				esperarPermisoDelReceptor.release();
 			}
 		};
-		nodoReceptor.crearConector().conectarCon(handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
 		final Conector emisorAsincrono = builder.asincronizar(nodoEmisor);
 		emisorAsincrono.recibir(mensaje1);
@@ -159,7 +159,7 @@ public class TestRedA01ConMultiplexores {
 				threadDeEntregaDefinido.release();
 			}
 		};
-		nodoReceptor.crearConector().conectarCon(handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
 		final Conector emisorAsincrono = builder.asincronizar(nodoEmisor);
 		emisorAsincrono.recibir(mensaje1);
@@ -194,7 +194,7 @@ public class TestRedA01ConMultiplexores {
 		}
 
 		// Si ahora lo conectamos al emisor, el mensaje nos llega
-		nodoEmisor.crearConector().conectarCon(handlerReceptor);
+		nodoEmisor.conectarCon(handlerReceptor);
 
 		nodoEmisor.recibir(mensaje1);
 		final MensajeVortex mensajeRecibido = handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
@@ -224,11 +224,11 @@ public class TestRedA01ConMultiplexores {
 	public void elMensajeDeberiaLlegarADosReceptoresIndependientes() {
 		// Armamos la red con otro receptor
 		final ReceptorEncolador handlerReceptor1 = ReceptorEncolador.create();
-		nodoReceptor.crearConector().conectarCon(handlerReceptor1);
+		nodoReceptor.conectarCon(handlerReceptor1);
 
 		final ReceptorEncolador handlerReceptor2 = ReceptorEncolador.create();
 		final Multiplexor nodoReceptor2 = builder.multiplexar(handlerReceptor2);
-		nodoEmisor.crearConector().conectarCon(nodoReceptor2);
+		nodoEmisor.conectarCon(nodoReceptor2);
 
 		// Mandamos el mensaje
 		nodoEmisor.recibir(mensaje1);
@@ -253,7 +253,7 @@ public class TestRedA01ConMultiplexores {
 	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo_Con_Creacion_De_Mensaje_Por_Vez() {
 		final int cantidadDeMensajes = 100000;
 		final WaitBarrier espeerarEntregas = WaitBarrier.create(cantidadDeMensajes);
-		nodoReceptor.crearConector().conectarCon(new ReceptorSupport() {
+		nodoReceptor.conectarCon(new ReceptorSupport() {
 
 			public void recibir(final MensajeVortex mensaje) {
 				espeerarEntregas.release();
@@ -285,7 +285,7 @@ public class TestRedA01ConMultiplexores {
 	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo_Sin_Creacion_De_mensaje() {
 		final int cantidadDeMensajes = 100000;
 		final WaitBarrier espeerarEntregas = WaitBarrier.create(cantidadDeMensajes);
-		nodoReceptor.crearConector().conectarCon(new ReceptorSupport() {
+		nodoReceptor.conectarCon(new ReceptorSupport() {
 
 			public void recibir(final MensajeVortex mensaje) {
 				espeerarEntregas.release();

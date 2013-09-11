@@ -33,7 +33,7 @@ public class MultiConectableSupport extends MultiEmisorSupport implements MultiC
 	 */
 	public Conector crearConector() {
 		final ConectorBloqueante conectorCreado = ConectorBloqueante.create();
-		getConectores().add(conectorCreado);
+		getConectados().add(conectorCreado);
 		return conectorCreado;
 	}
 
@@ -41,7 +41,7 @@ public class MultiConectableSupport extends MultiEmisorSupport implements MultiC
 	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#eliminarConector(net.gaia.vortex.api.proto.Conector)
 	 */
 	public void eliminarConector(final Conector conector) {
-		getConectores().remove(conector);
+		getConectados().remove(conector);
 	}
 
 }

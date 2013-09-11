@@ -9,8 +9,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
@@ -46,9 +46,9 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestRedA01ConMultiplexorSinDuplicados {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConMultiplexorSinDuplicados.class);
 
-	private Compuesto<MultiConectable> nodoEmisor;
-	private Compuesto<MultiConectable> nodoRuteador;
-	private Compuesto<MultiConectable> nodoReceptor;
+	private Compuesto<Multiplexor> nodoEmisor;
+	private Compuesto<Multiplexor> nodoRuteador;
+	private Compuesto<Multiplexor> nodoReceptor;
 	private MensajeVortex mensaje1;
 	private TaskProcessor processor;
 
@@ -83,7 +83,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 	/**
 	 * Crea un nodo tipo para las pruebas
 	 */
-	private Compuesto<MultiConectable> crearNodoDefault() {
+	private Compuesto<Multiplexor> crearNodoDefault() {
 		return builder.multiplexarSinDuplicados();
 	}
 
@@ -233,10 +233,10 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 	 */
 	@Test
 	public void elMensajeDeberiaLlegarSiHayNodosEnElMedio() {
-		final Compuesto<MultiConectable> nodoEmisor = crearNodoDefault();
-		final Compuesto<MultiConectable> nodoIntermedio1 = crearNodoDefault();
-		final Compuesto<MultiConectable> nodoIntermedio2 = crearNodoDefault();
-		final Compuesto<MultiConectable> nodoReceptor = crearNodoDefault();
+		final Compuesto<Multiplexor> nodoEmisor = crearNodoDefault();
+		final Compuesto<Multiplexor> nodoIntermedio1 = crearNodoDefault();
+		final Compuesto<Multiplexor> nodoIntermedio2 = crearNodoDefault();
+		final Compuesto<Multiplexor> nodoReceptor = crearNodoDefault();
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		builder.conectarDesde(nodoReceptor, handlerReceptor);
@@ -264,14 +264,14 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 	 */
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosNodosEnElMedioInterconectados() {
-		final Compuesto<MultiConectable> nodoEmisor = crearNodoDefault();
+		final Compuesto<Multiplexor> nodoEmisor = crearNodoDefault();
 		// Le conectamos un receptor directo al emisor para ver los que le llegan
 		final ReceptorEncolador recibidosPorElEmisor = ReceptorEncolador.create();
 		builder.conectarDesde(nodoEmisor, recibidosPorElEmisor);
 
-		final Compuesto<MultiConectable> nodoIntermedio1 = crearNodoDefault();
-		final Compuesto<MultiConectable> nodoIntermedio2 = crearNodoDefault();
-		final Compuesto<MultiConectable> nodoReceptor = crearNodoDefault();
+		final Compuesto<Multiplexor> nodoIntermedio1 = crearNodoDefault();
+		final Compuesto<Multiplexor> nodoIntermedio2 = crearNodoDefault();
+		final Compuesto<Multiplexor> nodoReceptor = crearNodoDefault();
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
 		builder.conectarDesde(nodoReceptor, handlerReceptor);
@@ -308,7 +308,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 		builder.conectarDesde(nodoReceptor, handlerReceptor1);
 
 		final ReceptorEncolador handlerReceptor2 = ReceptorEncolador.create();
-		final Compuesto<MultiConectable> nodoReceptor2 = crearNodoDefault();
+		final Compuesto<Multiplexor> nodoReceptor2 = crearNodoDefault();
 		builder.conectarDesde(nodoReceptor2, handlerReceptor2);
 
 		interconectar(nodoRuteador, nodoReceptor2);
@@ -328,8 +328,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 	/**
 	 * Crea una conexión bidireccional entre los nodos pasados
 	 */
-	public void interconectar(final Compuesto<MultiConectable> nodoEmisor2,
-			final Compuesto<MultiConectable> nodoRuteador2) {
+	public void interconectar(final Compuesto<Multiplexor> nodoEmisor2, final Compuesto<Multiplexor> nodoRuteador2) {
 		builder.conectarDesde(nodoEmisor2, nodoRuteador2);
 		builder.conectarDesde(nodoRuteador2, nodoEmisor2);
 	}

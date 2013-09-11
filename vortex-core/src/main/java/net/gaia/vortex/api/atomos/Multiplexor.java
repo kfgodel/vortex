@@ -13,7 +13,7 @@
 package net.gaia.vortex.api.atomos;
 
 import net.gaia.vortex.api.basic.Nodo;
-import net.gaia.vortex.api.basic.emisores.MultiConectable;
+import net.gaia.vortex.api.basic.Receptor;
 
 /**
  * Esta interfaz representa un componente vortex que entrega cada mensaje recibido a sus multiples
@@ -21,6 +21,20 @@ import net.gaia.vortex.api.basic.emisores.MultiConectable;
  * 
  * @author D. García
  */
-public interface Multiplexor extends Nodo, MultiConectable {
+public interface Multiplexor extends Nodo {
 
+	/**
+	 * Crea una nueva conexión con el destino indicado, agregandola a las conexiones de este
+	 * multiplexor
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(Receptor destino);
+
+	/**
+	 * Desconecta el receptor indicado quitandolo de las conexiones de este multiplexor
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(Receptor destino);
 }

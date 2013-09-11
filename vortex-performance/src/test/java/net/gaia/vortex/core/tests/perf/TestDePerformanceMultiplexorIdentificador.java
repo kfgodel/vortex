@@ -3,10 +3,9 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
-import net.gaia.vortex.api.basic.emisores.MultiConectable;
+import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.api.moleculas.Compuesto;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
 
 /**
@@ -23,9 +22,9 @@ public class TestDePerformanceMultiplexorIdentificador extends TestDePerformance
 	 */
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
-		final Compuesto<MultiConectable> multiplexor = getBuilder().multiplexarSinDuplicados();
-		final Conector conector = multiplexor.getSalida().crearConector();
-		final FlujoVortex flujo = FlujoInmutable.create(multiplexor, conector);
+		final Compuesto<Multiplexor> multiplexor = getBuilder().multiplexarSinDuplicados();
+		final Multiplexor salida = multiplexor.getSalida();
+		final FlujoVortex flujo = FlujoInmutable.create(multiplexor, salida);
 		return flujo;
 	}
 

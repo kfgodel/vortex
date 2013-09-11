@@ -68,7 +68,7 @@ public class MoleculaSelector extends EmisorSupport implements Selector {
 	 * @see net.gaia.vortex.api.basic.emisores.MultiConectableCondicionado#eliminarConector(net.gaia.vortex.api.proto.Conector)
 	 */
 	public void eliminarConector(final Conector conectorDeSalida) {
-		final List<Conector> allConectores = entrada.getConectores();
+		final List<Conector> allConectores = entrada.getConectados();
 		for (final Conector conectorDelMultiplexor : allConectores) {
 			final Receptor destino = conectorDelMultiplexor.getDestino();
 			if (!(destino instanceof Filtro)) {
@@ -92,10 +92,10 @@ public class MoleculaSelector extends EmisorSupport implements Selector {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#getConectores()
+	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#getConectados()
 	 */
 	public List<Conector> getConectores() {
-		return entrada.getConectores();
+		return entrada.getConectados();
 	}
 
 	/**

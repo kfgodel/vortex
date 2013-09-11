@@ -20,7 +20,7 @@ import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Emisor;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.basic.emisores.MultiConectable;
+import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.GeneradorDeIdsDeMensajes;
@@ -81,7 +81,7 @@ public interface VortexCore {
 	 *            Los receptores a conectar como salidas de la molecula creada
 	 * @return La molecula creada y conectada a los receptores indicados
 	 */
-	Compuesto<MultiConectable> multiplexarSinDuplicados(Receptor... receptores);
+	Compuesto<Multiplexor> multiplexarSinDuplicados(Receptor... receptores);
 
 	/**
 	 * Crea un atomo bifurcador de mensajes que utiliza la condición pasada para entregar a un
@@ -209,7 +209,7 @@ public interface VortexCore {
 	 * @param destino
 	 *            El componente al que deben llegar
 	 */
-	void conectarDesde(Compuesto<? extends MultiConectable> origen, Receptor destino);
+	void conectarDesde(Compuesto<? extends Conectable> origen, Receptor destino);
 
 	/**
 	 * Crea un conector asincrono, a través del cual se pueden entregar mensajes al receptor

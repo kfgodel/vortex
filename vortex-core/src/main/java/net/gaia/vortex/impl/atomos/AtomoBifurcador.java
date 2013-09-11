@@ -19,6 +19,7 @@ import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.condiciones.ResultadoDeCondicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.impl.support.EmisorSupport;
 
@@ -116,6 +117,16 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 			throw new IllegalArgumentException("La condicion pasada al bifurcador no puede ser null");
 		}
 		this.condicion = condicion;
+	}
+
+	/**
+	 * Crea un bifurcador sin parametros asumiendo la condicion {@link SiempreTrue} para bifurcar
+	 * los mensajes
+	 * 
+	 * @return El bifurcador creado
+	 */
+	public static AtomoBifurcador create() {
+		return create(SiempreTrue.getInstancia());
 	}
 
 	public static AtomoBifurcador create(final Condicion condicion) {
