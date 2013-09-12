@@ -13,7 +13,6 @@
 package net.gaia.vortex.api.atomos;
 
 import net.gaia.vortex.api.basic.Nodo;
-import net.gaia.vortex.api.basic.emisores.MonoConectable;
 import net.gaia.vortex.api.transformaciones.Transformacion;
 
 /**
@@ -25,7 +24,7 @@ import net.gaia.vortex.api.transformaciones.Transformacion;
  * 
  * @author D. García
  */
-public interface Transformador extends Nodo, MonoConectable {
+public interface Transformador extends Nodo {
 
 	/**
 	 * Establece la transformación utilizada por esta instancia para modificar los mensajes

@@ -23,7 +23,7 @@ public class TestDePerformanceTransformador extends TestDePerformanceNodoSupport
 	protected FlujoVortex crearFlujoATestear() {
 		final Transformacion transformacion = TransformacionNula.getInstancia();
 		final Transformador transformador = getBuilder().transformadorPara(transformacion);
-		return FlujoInmutable.create(transformador, transformador.getConectorDeSalida());
+		return FlujoInmutable.create(transformador, transformador);
 	}
 
 }

@@ -27,7 +27,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author dgarcia
  */
-public class MonoEmisorSupport extends ComponenteSupport implements MonoEmisor {
+public class MonoEmisorSupport extends EmisorSupport implements MonoEmisor {
 
 	protected Receptor conectado;
 	public static final String conectado_FIELD = "conectado";

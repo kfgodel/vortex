@@ -166,7 +166,7 @@ public class VortexCoreBuilder implements VortexCore {
 	 */
 	public Transformador transformarCon(final Transformacion transformacion, final Receptor receptor) {
 		final Transformador transformador = transformadorPara(transformacion);
-		transformador.getConectorDeSalida().conectarCon(receptor);
+		transformador.conectarCon(receptor);
 		return transformador;
 	}
 

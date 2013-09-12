@@ -5,10 +5,8 @@ package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Transformador;
-import net.gaia.vortex.api.basic.emisores.MonoConectable;
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.api.moleculas.Compuesto;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
 import net.gaia.vortex.impl.transformaciones.TransformacionNula;
@@ -30,9 +28,8 @@ public class TestDePerformanceCompuesto extends TestDePerformanceNodoSupport {
 	protected FlujoVortex crearFlujoATestear() {
 		final Transformador transformador = getBuilder().transformadorPara(TransformacionNula.getInstancia());
 		final Filtro filtro = getBuilder().filtrarEntradaCon(SiempreTrue.getInstancia(), transformador);
-		final Compuesto<MonoConectable> compuesta = getBuilder().<MonoConectable> componer(filtro, transformador);
-		final Conector conectorDeSalida = compuesta.getSalida().getConectorDeSalida();
-		final FlujoVortex flujo = FlujoInmutable.create(compuesta, conectorDeSalida);
+		final Compuesto<Transformador> compuesta = getBuilder().<Transformador> componer(filtro, transformador);
+		final FlujoVortex flujo = FlujoInmutable.create(compuesta, compuesta.getSalida());
 		return flujo;
 	}
 }
