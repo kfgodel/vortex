@@ -37,8 +37,8 @@ public class TestDePerformanceDistribuidorTerminal extends TestDePerformanceNodo
 	protected FlujoVortex crearFlujoATestear() {
 		final Distribuidor distribuidor = getBuilder().distribuidor();
 		final Terminal terminalEnvio = distribuidor.crearTerminal();
-		final Terminal terminaRecepcion = distribuidor.crearTerminal();
-		return FlujoInmutable.create(terminalEnvio, terminaRecepcion.getConectorDeSalida());
+		final Terminal terminalRecepcion = distribuidor.crearTerminal();
+		return FlujoInmutable.create(terminalEnvio, terminalRecepcion);
 	}
 
 }

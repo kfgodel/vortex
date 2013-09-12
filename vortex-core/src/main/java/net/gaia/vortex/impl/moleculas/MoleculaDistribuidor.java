@@ -17,13 +17,16 @@
  */
 package net.gaia.vortex.impl.moleculas;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.Terminal;
+import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -37,7 +40,7 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 
 	private VortexCore builder;
 
-	private List<MoleculaTerminal> terminales;
+	private List<Terminal> terminales;
 	public static final String terminales_FIELD = "terminales";
 
 	/**
@@ -46,7 +49,7 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 	public void recibir(final MensajeVortex mensaje) {
 		// Si no conocemos el origen se lo mandamos a todos
 		for (final Terminal terminal : terminales) {
-			terminal.getConectorDeSalida().recibir(mensaje);
+			terminal.getSalida().recibir(mensaje);
 		}
 	}
 
@@ -54,10 +57,10 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 	 * @see net.gaia.vortex.api.moleculas.Distribuidor#crearTerminal()
 	 */
 	public Terminal crearTerminal() {
-		final MoleculaTerminal nuevaTerminal = MoleculaTerminal.create(builder);
-		for (final Terminal otraTerminal : terminales) {
-			nuevaTerminal.enviarRecibidosA(otraTerminal);
-			otraTerminal.enviarRecibidosA(nuevaTerminal);
+		final Terminal nuevaTerminal = builder.terminal();
+		for (final Terminal terminalExistente : terminales) {
+			nuevaTerminal.compartirMensajesCon(terminalExistente);
+			terminalExistente.compartirMensajesCon(nuevaTerminal);
 		}
 		terminales.add(nuevaTerminal);
 		return nuevaTerminal;
@@ -68,16 +71,16 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 	 */
 	public void eliminarTerminal(final Terminal eliminable) {
 		terminales.remove(eliminable);
-		for (final Terminal otraTerminal : terminales) {
-			eliminable.noEnviarRecibidosA(otraTerminal);
-			otraTerminal.enviarRecibidosA(eliminable);
+		for (final Terminal terminalMantenida : terminales) {
+			eliminable.descompartirMensajesA(terminalMantenida);
+			terminalMantenida.descompartirMensajesA(eliminable);
 		}
 	}
 
 	public static MoleculaDistribuidor create(final VortexCore builder) {
 		final MoleculaDistribuidor distribuidor = new MoleculaDistribuidor();
 		distribuidor.builder = builder;
-		distribuidor.terminales = new CopyOnWriteArrayList<MoleculaTerminal>();
+		distribuidor.terminales = new CopyOnWriteArrayList<Terminal>();
 		return distribuidor;
 	}
 
@@ -88,5 +91,40 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(terminales_FIELD, terminales)
 				.toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.moleculas.Distribuidor#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(final Receptor destino) {
+		final Terminal terminalCreada = crearTerminal();
+		terminalCreada.conectarCon(destino);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.moleculas.Distribuidor#desconectar()
+	 */
+	public void desconectar() {
+		final List<Terminal> eliminables = new ArrayList<Terminal>(terminales);
+		for (final Terminal terminalEliminable : eliminables) {
+			terminalEliminable.desconectar();
+			eliminarTerminal(terminalEliminable);
+		}
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.moleculas.Distribuidor#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(final Receptor destino) {
+		for (final Terminal terminalConectada : terminales) {
+			final Conector conectorDeSalida = terminalConectada.getSalida();
+			final Receptor receptorConectado = conectorDeSalida.getConectado();
+			if (receptorConectado.equals(destino)) {
+				// Es la terminal que buscabamos
+				terminalConectada.desconectarDe(destino);
+				eliminarTerminal(terminalConectada);
+				return;
+			}
+		}
 	}
 }

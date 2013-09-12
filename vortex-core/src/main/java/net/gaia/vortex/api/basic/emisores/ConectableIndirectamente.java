@@ -17,18 +17,15 @@
  */
 package net.gaia.vortex.api.basic.emisores;
 
-import net.gaia.vortex.api.basic.Emisor;
-
 /**
- * Esta interfaz define el contrato esperado en los nodos cuya conexión se hace a traves de otro
- * emisor.<br>
+ * Esta interfaz define el contrato esperado en los componentes cuya conexión se hace a traves de
+ * otro componente.<br>
  * Los emisores indirectamente conectables utilizan otros emisores como salida.<br>
  * <br>
- * Las subclases de este tipo son emisores porque emiten mensajes, pero a través de otras instancias
  * 
  * @author dgarcia
  */
-public interface ConectableIndirectamente<E extends Emisor> extends Emisor {
+public interface ConectableIndirectamente<C extends Conectable> {
 
 	/**
 	 * El emisor del cual se pueden obtener los conectores para obtener los mensajes de esta
@@ -36,5 +33,5 @@ public interface ConectableIndirectamente<E extends Emisor> extends Emisor {
 	 * 
 	 * @return El emisor que sirve de salida de esta instancia
 	 */
-	E getSalida();
+	C getSalida();
 }

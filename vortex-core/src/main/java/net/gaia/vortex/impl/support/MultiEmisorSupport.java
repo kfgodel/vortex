@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.basic.emisores.MultiConectable;
 import net.gaia.vortex.api.basic.emisores.MultiEmisor;
 import ar.com.dgarcia.lang.strings.ToString;
 

@@ -17,11 +17,13 @@
  */
 package net.gaia.vortex.impl.moleculas;
 
-import net.gaia.vortex.api.basic.Emisor;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Compuesto;
-import net.gaia.vortex.impl.support.ReceptorSupport;
+import net.gaia.vortex.impl.nulos.ConectableNulo;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
+import net.gaia.vortex.impl.support.ConectableIndirectamenteSupport;
 
 /**
  * Esta clase representa una molecula compuesta de atomos que definene su comportamiento al recibir
@@ -31,7 +33,7 @@ import net.gaia.vortex.impl.support.ReceptorSupport;
  * @author dgarcia
  * @param <E>
  */
-public class MoleculaCompuesta<E extends Emisor> extends ReceptorSupport implements Compuesto<E> {
+public class MoleculaCompuesta<E extends Conectable> extends ConectableIndirectamenteSupport<E> implements Compuesto<E> {
 
 	private Receptor entrada;
 	private E salida;
@@ -40,7 +42,7 @@ public class MoleculaCompuesta<E extends Emisor> extends ReceptorSupport impleme
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
-		entrada.recibir(mensaje);
+		getEntrada().recibir(mensaje);
 	}
 
 	/**
@@ -72,10 +74,21 @@ public class MoleculaCompuesta<E extends Emisor> extends ReceptorSupport impleme
 	 *            La salida que indica también el tipo de conectabilidad
 	 * @return La molecula creada
 	 */
-	public static <E extends Emisor> MoleculaCompuesta<E> create(final Receptor entrada, final E salida) {
+	public static <E extends Conectable> MoleculaCompuesta<E> create(final Receptor entrada, final E salida) {
 		final MoleculaCompuesta<E> molecula = new MoleculaCompuesta<E>();
 		molecula.entrada = entrada;
 		molecula.salida = salida;
 		return molecula;
+	}
+
+	/**
+	 * Crea una molecula compuesta sin parametros, con el receptor nulo como entrada, y el
+	 * {@link ConectableNulo} como salida.<br>
+	 * Para que sea utilizable se debería cambiar la entrada y salida
+	 */
+	public static MoleculaCompuesta<Conectable> create() {
+		final Conectable conectable = ConectableNulo.getInstancia();
+		final MoleculaCompuesta<Conectable> create = create(ReceptorNulo.getInstancia(), conectable);
+		return create;
 	}
 }

@@ -28,6 +28,7 @@ import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.Identificador;
 import net.gaia.vortex.api.moleculas.Selector;
+import net.gaia.vortex.api.moleculas.Terminal;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
@@ -274,5 +275,20 @@ public interface VortexCore {
 	 * @return El componente creado
 	 */
 	Distribuidor distribuidor();
+
+	/**
+	 * Crea un componente conector que permite unir emisor con receptor
+	 * 
+	 * @return El componente creado
+	 */
+	Conector conector();
+
+	/**
+	 * Crea un componente terminal que permite abstraer una parte de la red como una entidad de
+	 * entrada y salida de mensajes
+	 * 
+	 * @return La terminal creada
+	 */
+	Terminal terminal();
 
 }

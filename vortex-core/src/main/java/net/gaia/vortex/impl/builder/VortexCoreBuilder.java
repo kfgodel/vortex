@@ -29,6 +29,7 @@ import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.Identificador;
 import net.gaia.vortex.api.moleculas.Selector;
+import net.gaia.vortex.api.moleculas.Terminal;
 import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.impl.atomos.AtomoBifurcador;
@@ -44,7 +45,9 @@ import net.gaia.vortex.impl.moleculas.MoleculaCompuesta;
 import net.gaia.vortex.impl.moleculas.MoleculaDistribuidor;
 import net.gaia.vortex.impl.moleculas.MoleculaIdentificador;
 import net.gaia.vortex.impl.moleculas.MoleculaSelector;
+import net.gaia.vortex.impl.moleculas.MoleculaTerminal;
 import net.gaia.vortex.impl.proto.ConectorAsincrono;
+import net.gaia.vortex.impl.proto.ConectorBloqueante;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -285,5 +288,19 @@ public class VortexCoreBuilder implements VortexCore {
 	 */
 	public Distribuidor distribuidor() {
 		return MoleculaDistribuidor.create(this);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#conector()
+	 */
+	public Conector conector() {
+		return ConectorBloqueante.create();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#terminal()
+	 */
+	public Terminal terminal() {
+		return MoleculaTerminal.create(this);
 	}
 }

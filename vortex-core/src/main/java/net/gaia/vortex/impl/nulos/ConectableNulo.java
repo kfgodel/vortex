@@ -13,8 +13,7 @@
 package net.gaia.vortex.impl.nulos;
 
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.impl.support.ComponenteSupport;
 
 import org.slf4j.Logger;
@@ -29,13 +28,13 @@ import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
  * 
  * @author D. García
  */
-public class ConectorNulo extends ComponenteSupport implements Conector {
-	private static final Logger LOG = LoggerFactory.getLogger(ConectorNulo.class);
+public class ConectableNulo extends ComponenteSupport implements Conectable {
+	private static final Logger LOG = LoggerFactory.getLogger(ConectableNulo.class);
 
-	private static final WeakSingleton<ConectorNulo> ultimaReferencia = new WeakSingleton<ConectorNulo>(
-			DefaultInstantiator.create(ConectorNulo.class));
+	private static final WeakSingleton<ConectableNulo> ultimaReferencia = new WeakSingleton<ConectableNulo>(
+			DefaultInstantiator.create(ConectableNulo.class));
 
-	public static ConectorNulo getInstancia() {
+	public static ConectableNulo getInstancia() {
 		return ultimaReferencia.get();
 	}
 
@@ -54,10 +53,10 @@ public class ConectorNulo extends ComponenteSupport implements Conector {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
-	public void recibir(final MensajeVortex mensaje) {
-		getDestino().recibir(mensaje);
+	public void desconectarDe(final Receptor destino) {
+		LOG.debug("Se intentó desconectar el conector nulo de: {}", destino);
 	}
 
 	/**

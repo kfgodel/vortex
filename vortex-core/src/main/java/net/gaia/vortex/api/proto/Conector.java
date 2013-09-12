@@ -24,4 +24,10 @@ import net.gaia.vortex.api.basic.emisores.MonoEmisor;
  */
 public interface Conector extends Receptor, MonoEmisor {
 
+	/**
+	 * Devuelve el componente al que este conector está conectado
+	 * 
+	 * @return El receptor conectado a este componente
+	 */
+	Receptor getConectado();
 }

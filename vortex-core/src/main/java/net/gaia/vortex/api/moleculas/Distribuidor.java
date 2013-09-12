@@ -18,6 +18,7 @@
 package net.gaia.vortex.api.moleculas;
 
 import net.gaia.vortex.api.basic.Nodo;
+import net.gaia.vortex.api.basic.Receptor;
 
 /**
  * Esta interfaz representa el componente distribuidor de mensajes que puede discriminar el origen
@@ -34,6 +35,37 @@ import net.gaia.vortex.api.basic.Nodo;
  * @author dgarcia
  */
 public interface Distribuidor extends Nodo {
+
+	/**
+	 * Crea una terminal y la conecta al destino indicado.<br>
+	 * Al ser creada de esta manera la terminal no puede ser usada para recibir mensajes, solo para
+	 * emitirlos al receptor indicado.<br>
+	 * Es preferible utilizar el método {@link #crearTerminal()} en vez de este
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(Receptor destino);
+
+	/**
+	 * Desconecta todas las terminales de todos los receptores impidiendo que reciban mensajes los
+	 * receptores conectados a ellas, y elimina las terminales de este distribuidor.<br>
+	 * Los receptores todavía podrán estar conectados a las terminales pero al enviar mensajes a
+	 * ellas no tendrá efecto.<br>
+	 * Es preferible utilizar el método {@link #eliminarTerminal(Terminal)} en vez de este
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 */
+	public void desconectar();
+
+	/**
+	 * Desconecta la terminal del receptor indicado, y elimina la terminal usada.<br>
+	 * Al no desconectar el receptor de la terminal, es posible que esta permanezca referenciada si
+	 * no se limpia el receptor.<br>
+	 * Es preferible utilizar el método {@link #eliminarTerminal(Terminal)} en vez de este
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(Receptor destino);
 
 	/**
 	 * Crea un nuevo terminal para acceder a los mensajes de este distribuidor sin duplicados

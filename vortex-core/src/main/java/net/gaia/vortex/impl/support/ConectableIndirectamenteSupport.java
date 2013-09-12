@@ -1,5 +1,5 @@
 /**
- * Created on: Sep 1, 2013 12:07:17 PM by: Dario L. Garcia
+ * Created on: Sep 11, 2013 10:59:42 PM by: Dario L. Garcia
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/2.5/ar/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -15,44 +15,49 @@
  * href="https://bean2bean.svn.sourceforge.net/svnroot/bean2bean"
  * rel="dc:source">bean2bean.svn.sourceforge.net</a>
  */
-package net.gaia.vortex.api.moleculas;
+package net.gaia.vortex.impl.support;
 
-import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.basic.emisores.ConectableIndirectamente;
 
 /**
- * Esta interfaz representa un componente vortex compuesto de otros que forman una red interna que
- * define el comportamiento de esta instancia.<br>
- * A traves de un componente que hace de entrada y otro que hace de salida, esta instancia puede
- * procesar los mensajes que recibe, y darle unidad a toda una red de componentes
+ * Esta clase sirve de base para los tipos de componente coenctables indirectamente
  * 
  * @author dgarcia
+ * @param <E>
  */
-public interface Compuesto<C extends Conectable> extends Nodo, ConectableIndirectamente<C> {
+public abstract class ConectableIndirectamenteSupport<E extends Conectable> extends ReceptorSupport implements
+		ConectableIndirectamente<E> {
 
 	/**
 	 * Conecta el receptor indicado a la salida de este componente.<br>
 	 * Este método es equivalente a llamar {@link #getSalida()}.{@link #conectarCon(Receptor)}
 	 * 
-	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.api.moleculas.Compuesto#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
-	public void conectarCon(Receptor destino);
+	public void conectarCon(final Receptor destino) {
+		getSalida().conectarCon(destino);
+	}
 
 	/**
 	 * Desconecta la salida de este componente de sus receptores conectados.<br>
 	 * Este método es equivalente a {@link #getSalida()}.{@link #desconectar()}
 	 * 
-	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 * @see net.gaia.vortex.api.moleculas.Compuesto#desconectar()
 	 */
-	public void desconectar();
+	public void desconectar() {
+		getSalida().desconectar();
+	}
 
 	/**
 	 * Desconecta de la salida de este componente el receptor indicado<br>
 	 * Este método es equivalente a {@link #getSalida()}.{@link #desconectarDe(Receptor)}
 	 * 
-	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.api.moleculas.Compuesto#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
-	public void desconectarDe(Receptor destino);
+	public void desconectarDe(final Receptor destino) {
+		getSalida().desconectarDe(destino);
+	}
+
 }

@@ -18,32 +18,77 @@
 package net.gaia.vortex.api.moleculas;
 
 import net.gaia.vortex.api.basic.Nodo;
-import net.gaia.vortex.api.basic.emisores.MonoConectable;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.basic.emisores.ConectableIndirectamente;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.api.proto.Conector;
 
 /**
  * Esta interfaz representa un punto de acceso a la red para un componente, con el cual se pueden
  * enviar y recibir mensajes.<br>
- * Los mensajes recibidos por este terminal son enviados a la red, y el conector de
- * {@link #getConectorDeSalida()} permite recibir los mensajes de la red
+ * Los mensajes recibidos por este terminal son enviados a la red, y el receptor conectado desde
+ * esta terminal recibe los mensajes de la red
  * 
  * @author dgarcia
  */
-public interface Terminal extends Nodo, MonoConectable {
+public interface Terminal extends Nodo, ConectableIndirectamente<Conector> {
 
 	/**
-	 * Quita la terminal pasada como receptora de los mensajes de esta terminal
+	 * Al recibir un mensaje el terminal lo envia a los conectores de salida de todos los terminales
+	 * con los que comparte los mensajes
+	 * 
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 */
+	public void recibir(MensajeVortex mensaje);
+
+	/**
+	 * Conecta el receptor indicado a la salida de este componente.<br>
+	 * Este método es equivalente a llamar {@link #getSalida()}.{@link #conectarCon(Receptor)}
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(Receptor destino);
+
+	/**
+	 * Desconecta la salida de este componente de sus receptores conectados.<br>
+	 * Este método es equivalente a {@link #getSalida()}.{@link #desconectar()}
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 */
+	public void desconectar();
+
+	/**
+	 * Desconecta de la salida de este componente el receptor indicado<br>
+	 * Este método es equivalente a {@link #getSalida()}.{@link #desconectarDe(Receptor)}
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(Receptor destino);
+
+	/**
+	 * Devuelve el conector que se debe utilizar para recibir los mensajes compartidos desde otras
+	 * terminales
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.ConectableIndirectamente#getSalida()
+	 */
+	public Conector getSalida();
+
+	/**
+	 * Quita la terminal pasada como receptora de los mensajes de esta terminal.<br>
+	 * La terminal indicada dejará de recibir los mensajes recibidos por esta terminal
 	 * 
 	 * @param otraTerminal
 	 *            La terminala excluir
 	 */
-	public abstract void noEnviarRecibidosA(final Terminal otraTerminal);
+	void descompartirMensajesA(final Terminal otraTerminal);
 
 	/**
-	 * Agrega la terminal pasada como receptora de los mensajes recibidos por esta terminal
+	 * Agrega la terminal pasada como receptora de los mensajes recibidos por esta terminal<br>
+	 * La terminal indicada recibirá también los mensajes recibidos por esta terminal
 	 * 
 	 * @param otraTerminal
 	 *            La terminal a agregar
 	 */
-	public abstract void enviarRecibidosA(final Terminal otraTerminal);
+	void compartirMensajesCon(final Terminal otraTerminal);
 
 }

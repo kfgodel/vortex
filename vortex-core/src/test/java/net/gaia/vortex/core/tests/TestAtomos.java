@@ -173,10 +173,10 @@ public class TestAtomos {
 
 		final Distribuidor distribuidor = builder.distribuidor();
 		final Terminal terminalTrue = distribuidor.crearTerminal();
-		terminalTrue.getConectorDeSalida().conectarCon(receptorSiempreTrue);
+		terminalTrue.conectarCon(receptorSiempreTrue);
 
 		final Terminal terminalFalse = distribuidor.crearTerminal();
-		terminalFalse.getConectorDeSalida().conectarCon(receptorSiempreFalse);
+		terminalFalse.conectarCon(receptorSiempreFalse);
 
 		// Enviamos el mensaje desde la terminal false, y sólo debería llegar al receptor true
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, terminalFalse, receptorSiempreTrue);
@@ -192,8 +192,8 @@ public class TestAtomos {
 		final ReceptorEncolador receptor2 = ReceptorEncolador.create();
 
 		final Distribuidor distribuidor = builder.distribuidor();
-		distribuidor.crearTerminal().getConectorDeSalida().conectarCon(receptor1);
-		distribuidor.crearTerminal().getConectorDeSalida().conectarCon(receptor2);
+		distribuidor.crearTerminal().conectarCon(receptor1);
+		distribuidor.crearTerminal().conectarCon(receptor2);
 
 		// Enviamos el mensaje desde el distribuidor, debería llegar a los dos
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, distribuidor, receptor1, receptor2);

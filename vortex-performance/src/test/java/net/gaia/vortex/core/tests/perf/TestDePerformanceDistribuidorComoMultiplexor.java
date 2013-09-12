@@ -35,7 +35,7 @@ public class TestDePerformanceDistribuidorComoMultiplexor extends TestDePerforma
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
 		final Distribuidor distribuidor = getBuilder().distribuidor();
-		return FlujoInmutable.create(distribuidor, distribuidor.crearTerminal().getConectorDeSalida());
+		return FlujoInmutable.create(distribuidor, distribuidor.crearTerminal());
 	}
 
 }
