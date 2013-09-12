@@ -192,8 +192,8 @@ public class TestAtomos {
 		final ReceptorEncolador receptorSiempreFalse = ReceptorEncolador.create();
 
 		final Selector selector = builder.selector();
-		selector.crearConectorCon(SiempreTrue.getInstancia()).conectarCon(receptorSiempreTrue);
-		selector.crearConectorCon(SiempreFalse.getInstancia()).conectarCon(receptorSiempreFalse);
+		selector.filtrandoCon(SiempreTrue.getInstancia()).conectarCon(receptorSiempreTrue);
+		selector.filtrandoCon(SiempreFalse.getInstancia()).conectarCon(receptorSiempreFalse);
 
 		checkMensajeEnviadoYRecibido(mensaje1, mensaje1, selector, receptorSiempreTrue);
 		verificarMensajeNoRecibido(1, receptorSiempreFalse);

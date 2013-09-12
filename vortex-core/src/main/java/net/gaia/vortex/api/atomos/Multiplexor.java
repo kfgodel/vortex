@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.api.atomos;
 
+import java.util.List;
+
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
 
@@ -37,4 +39,11 @@ public interface Multiplexor extends Nodo {
 	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 	public void desconectarDe(Receptor destino);
+
+	/**
+	 * Devuelve la lista de receptores conectados desde este multiplexor
+	 * 
+	 * @return La lista de receptores conocidos por este multiplexor
+	 */
+	public List<Receptor> getConectados();
 }

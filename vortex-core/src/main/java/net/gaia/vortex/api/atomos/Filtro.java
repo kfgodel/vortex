@@ -74,4 +74,10 @@ public interface Filtro extends Nodo {
 	 */
 	public void setCondicion(Condicion condicion);
 
+	/**
+	 * Devuelve el componente conectado a la salida de este
+	 * 
+	 * @return El componente que recibe los mensajes filtrados
+	 */
+	Receptor getConectado();
 }

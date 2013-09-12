@@ -17,9 +17,9 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
+import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.api.moleculas.Selector;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
 
@@ -36,7 +36,7 @@ public class TestDePerformanceSelector extends TestDePerformanceNodoSupport {
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
 		final Selector selector = getBuilder().selector();
-		final Conector conectorDeSalida = selector.crearConectorCon(SiempreTrue.getInstancia());
+		final Filtro conectorDeSalida = selector.filtrandoCon(SiempreTrue.getInstancia());
 		final FlujoVortex flujo = FlujoInmutable.create(selector, conectorDeSalida);
 		return flujo;
 	}

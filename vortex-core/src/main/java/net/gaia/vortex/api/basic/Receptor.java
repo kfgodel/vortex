@@ -25,4 +25,5 @@ public interface Receptor extends ComponenteVortex {
 	 *            El mensaje recibido por este componente
 	 */
 	public void recibir(MensajeVortex mensaje);
+
 }

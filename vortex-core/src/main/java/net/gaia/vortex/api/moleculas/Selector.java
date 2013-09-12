@@ -17,11 +17,13 @@
  */
 package net.gaia.vortex.api.moleculas;
 
-import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.api.atomos.Bifurcador;
-import net.gaia.vortex.api.atomos.Multiplexor;
+import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.basic.Nodo;
-import net.gaia.vortex.api.basic.emisores.MultiConectableCondicionado;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 
 /**
  * Esta interfaz representa la molecula vortex que selecciona los receptores de un mensaje a partir
@@ -31,12 +33,59 @@ import net.gaia.vortex.api.basic.emisores.MultiConectableCondicionado;
  * Este componente es similar al {@link Bifurcador} pero permite tener multiples salidas en vez de
  * solo dos, y las salidas no son excluyentes.<br>
  * <br>
- * A nivel implementativo este componente se puede reemplazar por un {@link Multiplexor} conectado a
- * {@link Bifurcador}es para filtrar sus salidas
  * 
  * @author dgarcia
  */
-@Molecula
-public interface Selector extends Nodo, MultiConectableCondicionado {
+public interface Selector extends Nodo {
 
+	/**
+	 * Crea un componente al cual se puede conectar un receptor para recibir los mensajes que
+	 * cumplen la condición indicada
+	 * 
+	 * @param condicion
+	 *            La condición a cumplir por los mensajes para ser entregados por el conectable
+	 *            creado
+	 * @return El conectable que solo emite mensajes que cumplen la condición
+	 */
+	Filtro filtrandoCon(Condicion condicion);
+
+	/**
+	 * Quita el componente condicionado de los conectados en este selector de manera de que deje de
+	 * recibir los mensajes de este componente
+	 * 
+	 * @param filtroCondicionado
+	 *            El conectable previamente creado con {@link #condicionadoPor(Condicion)}
+	 */
+	void quitarFiltro(Filtro filtroCondicionado);
+
+	/**
+	 * Conecta este selector con el receptor indicado utilizando la condicion {@link SiempreTrue}
+	 * como condicion default.<br>
+	 * Es preferible usar {@link #filtrandoCon(Condicion)} en vez de este método
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(Receptor destino);
+
+	/**
+	 * Elimina todos los filtros asosciados, desconectando este selector de los receptores
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 */
+	public void desconectar();
+
+	/**
+	 * Desconecta el receptor de este selector eliminando el filtro asociado
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(Receptor destino);
+
+	/**
+	 * Al recibir un mensaje este selector lo envía a todos los receptores cuya condición asociada
+	 * se cumple
+	 * 
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 */
+	public void recibir(MensajeVortex mensaje);
 }

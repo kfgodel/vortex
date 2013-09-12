@@ -26,7 +26,7 @@ import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Selector;
-import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.support.EmisorSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -42,11 +42,12 @@ public class MoleculaSelector extends EmisorSupport implements Selector {
 	 * Atomo de entrada que multiplexa a las salidas que estaran condicionadas
 	 */
 	private Multiplexor entrada;
+	public static final String entrada_FIELD = "entrada";
 
 	/**
 	 * Builder de los componentes creados internamente
 	 */
-	private VortexCore core;
+	private VortexCore builder;
 
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
@@ -56,46 +57,57 @@ public class MoleculaSelector extends EmisorSupport implements Selector {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MultiConectableCondicionado#crearConectorCon(net.gaia.vortex.api.condiciones.Condicion)
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
-	public Conector crearConectorCon(final Condicion condicionFiltro) {
-		final Conector conectorDelMultiplexor = entrada.crearConector();
-		final Conector conectorDeSalida = core.filtrarSalidaDe(conectorDelMultiplexor, condicionFiltro);
-		return conectorDeSalida;
+	public void conectarCon(final Receptor destino) {
+		filtrandoCon(SiempreTrue.getInstancia()).conectarCon(destino);
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MultiConectableCondicionado#eliminarConector(net.gaia.vortex.api.proto.Conector)
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
-	public void eliminarConector(final Conector conectorDeSalida) {
-		final List<Conector> allConectores = entrada.getConectados();
-		for (final Conector conectorDelMultiplexor : allConectores) {
-			final Receptor destino = conectorDelMultiplexor.getDestino();
-			if (!(destino instanceof Filtro)) {
-				// Es un conector que no creamos nosotros
-				continue;
-			}
-			final Filtro filtro = (Filtro) destino;
-			if (filtro.getConectorPorTrue().equals(conectorDeSalida)) {
-				// Esta es la rama que buscabamos
-				entrada.eliminarConector(conectorDelMultiplexor);
-				return;
+	public void desconectarDe(final Receptor destino) {
+		final List<Receptor> conectados = this.entrada.getConectados();
+		for (final Receptor conectado : conectados) {
+			if (conectado instanceof Filtro) {
+				final Filtro filtro = (Filtro) conectado;
+				if (filtro.getConectado().equals(destino)) {
+					// Es el filtro que buscabamos
+					quitarFiltro(filtro);
+					return;
+				}
 			}
 		}
 	}
 
-	public static MoleculaSelector create(final VortexCore core) {
-		final MoleculaSelector selector = new MoleculaSelector();
-		selector.core = core;
-		selector.entrada = core.multiplexar();
-		return selector;
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 */
+	public void desconectar() {
+		this.entrada.desconectar();
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MultiEmisor#getConectados()
+	 * @see net.gaia.vortex.api.moleculas.Selector#filtrandoCon(net.gaia.vortex.api.condiciones.Condicion)
 	 */
-	public List<Conector> getConectores() {
-		return entrada.getConectados();
+	public Filtro filtrandoCon(final Condicion condicion) {
+		final Filtro filtroCreado = builder.filtroDe(condicion);
+		entrada.conectarCon(filtroCreado);
+		return filtroCreado;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.moleculas.Selector#quitarFiltro(net.gaia.vortex.api.atomos.Filtro)
+	 */
+	public void quitarFiltro(final Filtro filtroCondicionado) {
+		entrada.desconectarDe(filtroCondicionado);
+	}
+
+	public static MoleculaSelector create(final VortexCore core) {
+		final MoleculaSelector selector = new MoleculaSelector();
+		selector.builder = core;
+		selector.entrada = core.multiplexar();
+		return selector;
 	}
 
 	/**
@@ -103,15 +115,8 @@ public class MoleculaSelector extends EmisorSupport implements Selector {
 	 */
 	@Override
 	public String toString() {
-		final ToString builder = ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia());
-		final int cantidadDeConectados = getConectores().size();
-		if (cantidadDeConectados > 3) {
-			builder.con("conectados", cantidadDeConectados);
-		}
-		else {
-			builder.con("conectados", getConectores());
-		}
-		return builder.toString();
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(entrada_FIELD, entrada)
+				.toString();
 	}
 
 }
