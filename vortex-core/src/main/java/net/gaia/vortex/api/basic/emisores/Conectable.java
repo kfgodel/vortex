@@ -17,13 +17,16 @@
  */
 package net.gaia.vortex.api.basic.emisores;
 
+import java.util.List;
+
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 /**
- * Esta interfaz representa un componente cuya salida es conectable a otro componente receptor para
- * recibir los mensajes que este envia.<br>
- * A travez de esta interfaz es posible conectar la mayoría de los componentes vortex.
+ * Esta interfaz representa un componente que es conectable a otro componente receptor, normalmente
+ * para enviarle mensajes.<br>
+ * La mayoría de los componentes de vortex implementa esta interfaz como manera default de conexión,
+ * y además ofrecen métodos específicos a su tipo que suelen ser más apropiados
  * 
  * @author dgarcia
  */
@@ -60,5 +63,14 @@ public interface Conectable {
 	 *            El destino a desconectar
 	 */
 	public void desconectarDe(Receptor destino);
+
+	/**
+	 * Devuelve la lista de los receptores a los que este componente está conectado.<br>
+	 * Dependiendo del tipo de esta instancia la lista contendrá 1 o N elementos, y será o no
+	 * modificable
+	 * 
+	 * @return La lista de receptores de mensajes desde esta instancia
+	 */
+	public List<Receptor> getConectados();
 
 }

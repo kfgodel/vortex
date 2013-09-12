@@ -17,6 +17,9 @@
  */
 package net.gaia.vortex.impl.support;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.MonoEmisor;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
@@ -37,6 +40,15 @@ public class MonoEmisorSupport extends EmisorSupport implements MonoEmisor {
 	 */
 	public Receptor getConectado() {
 		return conectado;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados() {
+		final List<Receptor> conectados = new ArrayList<Receptor>(1);
+		conectados.add(getConectado());
+		return conectados;
 	}
 
 	/**

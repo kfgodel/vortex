@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.api.basic.emisores;
 
+import java.util.List;
+
 import net.gaia.vortex.api.basic.Emisor;
 import net.gaia.vortex.api.basic.Receptor;
 
@@ -25,10 +27,18 @@ import net.gaia.vortex.api.basic.Receptor;
 public interface MonoEmisor extends Emisor {
 
 	/**
-	 * Devuelve el componente al que este emisor está conectado y que recibirá los mensajes emitidos
+	 * Devuelve el unico componente al que este emisor está conectado y que recibirá los mensajes
+	 * emitidos
 	 * 
 	 * @return El receptor conectado desde este componente
 	 */
 	Receptor getConectado();
+
+	/**
+	 * Devuelve una lista con el unico receptor al que este emisor está conectado
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados();
 
 }

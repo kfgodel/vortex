@@ -10,8 +10,9 @@ import net.gaia.vortex.api.proto.ComponenteVortex;
  * Esta interfaz representa un componente de la red vortex que puede recibir un mensaje y realizar
  * alguna acción con él. Es por lo tanto utilizable como destino de los mensajes.<br>
  * <br>
- * Esta interfaz, junto con la de Emisor son la base de todos los componentes de la red y permiten
- * la interconexión
+ * La implementación de esta interfaz implica que puede recibir mensajes, pero no que puede
+ * emitirlo. Esta interfaz, junto con la de Emisor son la base de todos los componentes de la red y
+ * permiten la interconexión
  * 
  * @author D. García
  */

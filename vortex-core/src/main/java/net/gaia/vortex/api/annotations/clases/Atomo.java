@@ -21,8 +21,8 @@ import java.lang.annotation.Target;
 /**
  * Este annotation es aplicable a aquellos componentes básicos de Vortex que son utilizables por
  * componentes más complejos para definir comportamiento adicional.<br>
- * El atomo representa una acción no divisible en partes, la cual puede realizar en forma atomica al
- * recibir un mensaje.<br>
+ * El atomo representa una acción no divisible en partes, la cual puede realizarse en forma atomica
+ * al recibir un mensaje.<br>
  * <br>
  * A diferencia de una {@link Molecula} los átomos tienen su comportamiento hardcodeado y no pueden
  * cambiarlo en runtime. Sólo pueden modificar sus conexiones con otros componentes.<br>

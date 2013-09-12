@@ -22,9 +22,9 @@ import net.gaia.vortex.api.basic.Receptor;
 
 /**
  * Esta interfaz representa el componente distribuidor de mensajes que puede discriminar el origen
- * de un mensaje y entregarselo al resto de los componentes.<br>
+ * de un mensaje para entregarselo al resto de los componentes conectados.<br>
  * Para discriminar el origen del mensaje se utilizan terminales que son creadas en el distribuidor
- * y conectadas a los componentes en cuestión<br>
+ * y conectadas a los componentes en comunicantes<br>
  * <br>
  * Su funcionamiento es muy similar al de un Hub, ya que entrega el mensaje a todos los componentes
  * conectados, excepto al que lo envió.<br>

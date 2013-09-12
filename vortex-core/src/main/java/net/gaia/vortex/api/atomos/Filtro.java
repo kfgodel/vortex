@@ -26,7 +26,8 @@ import net.gaia.vortex.impl.nulos.ReceptorNulo;
 /**
  * Esta interfaz representa el componente vortex que evalua una condicion sobre los mensajes
  * recibidos para determinar si descartarlos o entregarlos a su salida.<br>
- * Si la condición de este filtro es verdadera el mensaje será entregado. Si es falsa se descarta
+ * Si la condición de este filtro es verdadera al evaluarla sobre el mensaje recibido, este será
+ * entregado. Si es falsa se descartará
  * 
  * @author dgarcia
  */
@@ -35,7 +36,6 @@ public interface Filtro extends Nodo, MonoEmisor {
 	 * Establece el componente que recibirá los mensajes que pasen el filtro.<br>
 	 * Los mensajes que evalúen a true serán entregados al receptor indicado.<br>
 	 * <br>
-	 * Este método es el default usado por {@link #conectarCon(net.gaia.vortex.api.basic.Receptor)}
 	 * 
 	 * @return El conector por casos true
 	 */
@@ -43,7 +43,7 @@ public interface Filtro extends Nodo, MonoEmisor {
 
 	/**
 	 * Desconecta el receptor de los mensajes que pasan la condición con true.<br>
-	 * Los mensajes que evaluen a true serán entregados al {@link ReceptorNulo}
+	 * Los mensajes que evaluen a true serán entregados, entonces, al {@link ReceptorNulo}
 	 */
 	public void desconectarPorTrue();
 

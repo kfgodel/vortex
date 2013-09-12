@@ -15,7 +15,7 @@ package net.gaia.vortex.api.basic.productores;
 import net.gaia.vortex.api.basic.Emisor;
 
 /**
- * Esta interfaz representa un componente vortex que genera mensajes insertados en la red.<br>
+ * Esta interfaz representa un componente vortex que genera mensajes en la red.<br>
  * Normalmente los productores están en contacto con clases ajenas a vortex desde las cuales salen
  * los mensajes producidos
  * 

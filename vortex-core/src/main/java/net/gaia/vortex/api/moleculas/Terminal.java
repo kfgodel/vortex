@@ -24,8 +24,8 @@ import net.gaia.vortex.api.basic.emisores.ConectableIndirectamente;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 
 /**
- * Esta interfaz representa un punto de acceso a la red para un componente, con el cual se pueden
- * enviar y recibir mensajes.<br>
+ * Esta interfaz representa un punto de acceso a una red de componentes abstrayendo al red. Con la
+ * terminal se pueden enviar y recibir mensajes.<br>
  * Los mensajes recibidos por este terminal son enviados a la red, y el receptor conectado desde
  * esta terminal recibe los mensajes de la red
  * 

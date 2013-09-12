@@ -23,10 +23,11 @@ import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.basic.emisores.ConectableIndirectamente;
 
 /**
- * Esta interfaz representa un componente vortex compuesto de otros que forman una red interna que
- * define el comportamiento de esta instancia.<br>
+ * Esta interfaz representa un componente vortex compuesto de otros que forman una red interna. Esta
+ * red definirá el comportamiento real de esta instancia.<br>
  * A traves de un componente que hace de entrada y otro que hace de salida, esta instancia puede
- * procesar los mensajes que recibe, y darle unidad a toda una red de componentes
+ * procesar los mensajes que recibe, y darle unidad a toda la red de componentes como punto unico de
+ * entrada salida
  * 
  * @author dgarcia
  */

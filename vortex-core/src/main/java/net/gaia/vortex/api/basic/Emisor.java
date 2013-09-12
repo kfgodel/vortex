@@ -17,15 +17,15 @@ import net.gaia.vortex.api.proto.ComponenteVortex;
 
 /**
  * Esta interfaz representa un componente de la red vortex que tiene la capacidad de enviar mensajes
- * a receptores a los que esta conectado.<br>
+ * a otros componentes receptores con los cuales esta conectado.<br>
  * <br>
  * La implementación de esta interfaz por parte de una clase implica que el componente puede mandar
- * mensajes a otros, pero no implica que pueda recibirlos. El componente permite realizar conexiones
- * a otros componentes a los cuales puede enviarles mensajes y así formar una topología de red.<br>
+ * mensajes a otros, pero no implica que pueda recibirlos. <br>
  * <br>
- * Las implementaciones de esta interfaz ofrecerán conectores para realizar las conexiones
- * dependiendo de la manera en que puedan conectarse según su tipo. Por ejemplo algunos emisores
- * sólo pueden conectarse a una salida, mientras que otros a varias
+ * Las implementaciones de esta interfaz ofrecerán métodos para realizar las conexiones dependiendo
+ * de la manera en que puedan conectarse según su tipo. Por ejemplo algunos emisores sólo pueden
+ * conectarse a una salida, mientras que otros a varias. Aunque todos ofrecen una forma default de
+ * conexión implementando la interfaz {@link Conectable}<br>
  * 
  * @author D. García
  */

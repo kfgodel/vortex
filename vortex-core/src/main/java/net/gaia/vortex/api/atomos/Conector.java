@@ -16,9 +16,10 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.MonoEmisor;
 
 /**
- * Esta interfaz representa el componente vortex que permite conectar con otros receptores para
- * generar rutas de mensajes.<br>
- * Al recibir el mensaje, el conector lo deriva al receptor conectado
+ * Esta interfaz representa el componente vortex que permite conectar con otro receptor para generar
+ * rutas de mensajes.<br>
+ * Al recibir el mensaje, el conector sólo lo deriva al receptor conectado, permitiendo independizar
+ * el punto de entrada y el de salida del mensaje
  * 
  * @author D. García
  */

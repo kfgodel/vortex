@@ -19,7 +19,6 @@ import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
-import net.gaia.vortex.api.basic.Emisor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.builder.VortexCore;
@@ -128,7 +127,7 @@ public class VortexCoreBuilder implements VortexCore {
 	 * @see net.gaia.vortex.api.builder.VortexCore#componer(net.gaia.vortex.api.basic.Receptor,
 	 *      net.gaia.vortex.api.basic.Emisor)
 	 */
-	public <E extends Emisor> MoleculaCompuesta<E> componer(final Receptor entrada, final E salida) {
+	public <E extends Conectable> MoleculaCompuesta<E> componer(final Receptor entrada, final E salida) {
 		final MoleculaCompuesta<E> molecula = MoleculaCompuesta.<E> create(entrada, salida);
 		return molecula;
 	}
@@ -213,7 +212,7 @@ public class VortexCoreBuilder implements VortexCore {
 	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarSalidaDe(net.gaia.vortex.api.atomos.Conector,
 	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
-	public Filtro filtrarSalidaDe(final Conector conector, final Condicion condicion) {
+	public Filtro filtrarSalidaDe(final Conectable conector, final Condicion condicion) {
 		final Filtro filtro = filtroDe(condicion);
 		conector.conectarCon(filtro);
 		return filtro;

@@ -12,15 +12,13 @@
  */
 package net.gaia.vortex.api.atomos;
 
-import java.util.List;
-
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.MultiEmisor;
 
 /**
  * Esta interfaz representa un componente vortex que entrega cada mensaje recibido a sus multiples
- * salidas, permitiendo agrupar un conjunto de receptores.
+ * salidas, permitiendo agrupar un conjunto de receptores en un unico receptor.
  * 
  * @author D. García
  */
@@ -42,9 +40,10 @@ public interface Multiplexor extends Nodo, MultiEmisor {
 	public void desconectarDe(Receptor destino);
 
 	/**
-	 * Devuelve la lista de receptores conectados desde este multiplexor
+	 * Desconecta todos los receptores de este multiplexor.<br>
+	 * Los mensajes recibidos serán descartados al no tener receptores
 	 * 
-	 * @return La lista de receptores conocidos por este multiplexor
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
 	 */
-	public List<Receptor> getConectados();
+	public void desconectar();
 }

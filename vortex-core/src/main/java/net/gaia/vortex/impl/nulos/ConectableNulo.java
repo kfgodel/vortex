@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.impl.nulos;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.impl.support.ComponenteSupport;
@@ -82,5 +85,13 @@ public class ConectableNulo extends ComponenteSupport implements Conectable {
 	public int hashCode() {
 		// No tengo herencia multiple, tengo que usar metodos esstaticos compartidos
 		return WeakSingletonSupport.singletonHashFor(this);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados() {
+		// No estamos conectados a nada
+		return Collections.emptyList();
 	}
 }

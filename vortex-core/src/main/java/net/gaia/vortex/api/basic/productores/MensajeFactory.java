@@ -18,7 +18,9 @@ import net.gaia.vortex.api.mensajes.MensajeVortex;
  * Esta interfaz representa una fuente de mensajes que es invocada cada vez que se requiere un nuevo
  * mensaje.<br>
  * Las subclases de esta interfaz tendrán el contexto necesario para generar un
- * {@link MensajeVortex} válido dentro de la red
+ * {@link MensajeVortex} válido dentro de la red.<br>
+ * <br>
+ * A traves de instancias de este tipo se separa el qué (el mensaje) de cuándo (la invocación)
  * 
  * @author D. García
  */

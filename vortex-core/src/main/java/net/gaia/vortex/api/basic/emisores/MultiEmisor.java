@@ -26,9 +26,11 @@ import net.gaia.vortex.api.basic.Receptor;
 public interface MultiEmisor extends Emisor {
 
 	/**
-	 * Devuelve los componentes a los que este emisor está conectado
+	 * Devuelve la lista de todos los receptores a los que este emisor esta conectado y manda
+	 * mensajes.<br>
+	 * Dependiendo del tipo de componente, esta lista no es modificable directamente
 	 * 
-	 * @return El conjunto de receptores de este emisor
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
 	 */
 	List<Receptor> getConectados();
 

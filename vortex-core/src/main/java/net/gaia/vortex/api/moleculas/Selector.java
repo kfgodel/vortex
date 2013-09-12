@@ -26,8 +26,8 @@ import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 
 /**
- * Esta interfaz representa la molecula vortex que selecciona los receptores de un mensaje a partir
- * de las condiciones asociadas.<br>
+ * Esta interfaz representa la molecula vortex que selecciona el conjunto de receptores de un
+ * mensaje a partir de las condiciones asociadas a cada uno.<br>
  * Cada receptor conocido por este selector tiene una condicion que determina si recibe o no el
  * mensaje.<br>
  * Este componente es similar al {@link Bifurcador} pero permite tener multiples salidas en vez de
@@ -39,8 +39,8 @@ import net.gaia.vortex.impl.condiciones.SiempreTrue;
 public interface Selector extends Nodo {
 
 	/**
-	 * Crea un componente al cual se puede conectar un receptor para recibir los mensajes que
-	 * cumplen la condición indicada
+	 * Crea un componente de salida de este selector al cual se puede conectar un receptor para
+	 * recibir los mensajes que cumplen la condición indicada
 	 * 
 	 * @param condicion
 	 *            La condición a cumplir por los mensajes para ser entregados por el conectable

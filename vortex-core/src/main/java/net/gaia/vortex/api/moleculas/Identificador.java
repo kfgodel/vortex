@@ -26,6 +26,8 @@ import net.gaia.vortex.api.mensajes.MensajeVortex;
 /**
  * Esta interfaz representa el componente vortex que permite identificar los mensajes enviados y
  * descartar los duplicados recibidos.<br>
+ * A través de este componente es posible evitar mensajes duplicados o propios en redes cuya
+ * topología es desconocida, o donde existene bucles o rutas paralelas.
  * 
  * @author dgarcia
  */

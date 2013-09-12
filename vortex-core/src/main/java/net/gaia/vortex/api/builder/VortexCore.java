@@ -19,7 +19,6 @@ import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.atomos.Transformador;
-import net.gaia.vortex.api.basic.Emisor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.condiciones.Condicion;
@@ -34,35 +33,36 @@ import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
 
 /**
- * Esta interfaz define el contrato esperable de un builder de nodos vortex, el cual permite obtener
- * las instancias de componentes comunes para armar la red de un sistema, sin requerir demasiado
- * código de setup
+ * Esta interfaz define el contrato un builder de nodos vortex core, el cual permite obtener las
+ * instancias de componentes basico para armar la red de un sistema.<br>
+ * A través de instancias de esta clase se pueden crear componentes inicializados correctamente sin
+ * requerir todos los parámetros
  * 
  * @author D. García
  */
 public interface VortexCore {
 
 	/**
-	 * Crea un atomo secuenciador para los componentes indicados, de manera que el receptor
-	 * delegado, reciba el mensaje primero y una vez que terminó se le envía al receptor salida.<br>
+	 * Crea un atomo secuenciador para los componentes indicados, de manera que el receptor medio,
+	 * reciba el mensaje primero y una vez que terminó se le envía al receptor final.<br>
 	 * 
-	 * @param delegado
+	 * @param receptorMedio
 	 *            El receptor que recibirá el mensaje primero
-	 * @param salida
+	 * @param receptorFinal
 	 *            El receptor que se conectará a la salida y recibirá el mensaje después
 	 * @return El secuenciador creado y conectado
 	 */
-	Secuenciador secuenciar(Receptor delegado, Receptor salida);
+	Secuenciador secuenciar(Receptor receptorMedio, Receptor receptorFinal);
 
 	/**
-	 * Crea un atomo secuenciador que entregará los mensajes recibidos primero al receptor indicado
-	 * y luego al que se conecte a la salida
+	 * Crea un atomo secuenciador sin indicar el receptor final que entregará los mensajes recibidos
+	 * primero al receptor indicado y luego al que se conecte a la salida
 	 * 
-	 * @param delegado
+	 * @param receptorMedio
 	 *            El receptor que recibirá los mensajes primero
 	 * @return El secuenciador creado
 	 */
-	Secuenciador secuenciadorDe(Receptor delegado);
+	Secuenciador secuenciadorDe(Receptor receptorMedio);
 
 	/**
 	 * Crea un atomo multiplexor con los receptores indicados ya conectados como salidas.<br>
@@ -75,7 +75,7 @@ public interface VortexCore {
 	Multiplexor multiplexar(Receptor... receptores);
 
 	/**
-	 * Crea un molecula que funciona como multiplexor pero a la entrada tiene un filtro que le
+	 * Crea una molecula que funciona como multiplexor pero a la entrada tiene un filtro que le
 	 * permite descartar los mensajes duplicados
 	 * 
 	 * @param receptores
@@ -99,8 +99,8 @@ public interface VortexCore {
 	Bifurcador bifurcarSi(Condicion condicion, Receptor receptorPorTrue, Receptor receptorPorFalse);
 
 	/**
-	 * Crea un atomo bifurcador configurado para filtrar los mensajes de manera que al receptor
-	 * indicado, sólo lleguen los mensajes que evalúan a true en la condicion pasada.<br>
+	 * Crea un atomo filtro configurado para filtrar los mensajes de manera que al receptor indicado
+	 * sólo lleguen los mensajes que evalúan a true en la condicion pasada.<br>
 	 * Dicho de otra manera, descarta todos los mensajes que devuelvan false en la condición.
 	 * 
 	 * @param condicion
@@ -112,23 +112,22 @@ public interface VortexCore {
 	Filtro filtrarEntradaCon(Condicion condicion, Receptor receptor);
 
 	/**
-	 * Crea un {@link Bifurcador} conectado al conector pasado y configurado para filtrar los
-	 * mensajes que recibe de manera que al conector devuelto por este método sólo lleguen los
-	 * mensajes que evalúan a true en la condición pasada.<br>
-	 * Dicho de otra manera, devuelve un conector que filtrará los mensajes con la condicion pasada
+	 * Crea un atomo filtro conectado como salida del conector pasado y configurado para filtrar los
+	 * mensajes que recibe de manera que en su salida sólo envie los mensajes que evalúan a true en
+	 * la condición pasada.<br>
+	 * Dicho de otra manera, conecta y devuelve un filtro que filtrará los mensajes con la condicion
+	 * pasada
 	 * 
 	 * @param conector
 	 *            El conector que sera tomado como entrada para el filtro
 	 * @param condicion
 	 *            La condicion para filtrar los mensajes
-	 * @return El conector
+	 * @return El atomo filtro creado
 	 */
-	Filtro filtrarSalidaDe(Conector conector, Condicion condicion);
+	Filtro filtrarSalidaDe(Conectable conector, Condicion condicion);
 
 	/**
-	 * Crea un atomo bifurcador configurado con la condicion pasada como decisor del receptor
-	 * destino de salida.<br>
-	 * Se deberá conectar receptores en los conectores que correspondan
+	 * Crea un atomo filtro configurado con la condicion pasada como filtro de mensajes.<br>
 	 * 
 	 * @param condicion
 	 *            La condicion para bifurcar el camino de los mensajes
@@ -137,22 +136,22 @@ public interface VortexCore {
 	Filtro filtroDe(Condicion condicion);
 
 	/**
-	 * Crea un atomo bifurcador que descartará los mensajes duplicados, enviando sólo una vez los
+	 * Crea un atomo filtro que descartará los mensajes duplicados, enviando sólo una vez los
 	 * mensajes al receptor indicado.<br>
 	 * Para discriminar los mensajes se utiliza el ID de cada uno, y una memoria que registra cierta
 	 * cantidad
 	 * 
 	 * @param receptor
 	 *            El receptor que recibirá los mensajes una sola vez
-	 * @return El atomo creado y conectado
+	 * @return El atomo filtro creado con memoria y conectado al receptor indicado
 	 */
 	Filtro filtrarMensajesDuplicadosA(Receptor receptor);
 
 	/**
-	 * Crea el bifurcador que descarta los mensajes duplicados, permitiendo recibir los mensajes
-	 * sólo una vez en el conector de salida por true
+	 * Crea el filtro que descarta los mensajes duplicados, permitiendo recibir los mensajes sólo
+	 * una vez en el conector de salida por true
 	 * 
-	 * @return El atomo creado
+	 * @return El atomo creado con memoria de mensajes por id
 	 */
 	Filtro filtroSinMensajesDuplicados();
 
@@ -170,7 +169,7 @@ public interface VortexCore {
 
 	/**
 	 * Crea un atomo transformador que modificará los mensajes recibidos con la transformación
-	 * pasada antes de entregarselos al receptor que se indique en su conector
+	 * pasada antes de entregarselos al receptor que se conecte
 	 * 
 	 * @param transformacion
 	 *            La transformación para el transformador creado
@@ -180,18 +179,17 @@ public interface VortexCore {
 
 	/**
 	 * Crea un {@link Selector} que permite entregar mensajes a conjuntos de receptores segun las
-	 * condiciones usadas al conectarlos
+	 * condiciones usadas para cada uno
 	 * 
 	 * @return El selector creado
 	 */
 	Selector selector();
 
 	/**
-	 * Crea un {@link Compuesto} con la composición de los componentes pasados.<br>
-	 * Los componentes deben ser conectados entre sí (antes o despues de esta creación) para que la
-	 * molecula se comporte correctamente al recibir mensajes.<br>
-	 * La molecula representara a los componentes pasados como una unidad, derivandole a la entrada
-	 * los mensajes recibidos y conectando a la salida los componentes conectados
+	 * Crea un componente {@link Compuesto} con los componentes pasados.<br>
+	 * Este componente permite agrupar una red de componentes en un sólo elemento. Se utilizará el
+	 * componente entrada para recibir los mensajes, y el componente salida para las conexiones a
+	 * otros receptores
 	 * 
 	 * @param entrada
 	 *            El componente al que se enviarán todos los mensajes recibids
@@ -199,11 +197,11 @@ public interface VortexCore {
 	 *            El componente utilizado para conectar todas las salidas
 	 * @return La molecula creada
 	 */
-	<E extends Emisor> Compuesto<E> componer(final Receptor entrada, final E salida);
+	<E extends Conectable> Compuesto<E> componer(final Receptor entrada, final E salida);
 
 	/**
-	 * Crea una conexión unidireccional desde el origen al destino. Creando un conector en origen y
-	 * conectandolo al destino
+	 * Crea una conexión unidireccional desde el origen al destino. Utilizando la salida del origen
+	 * para la conexión al destino
 	 * 
 	 * @param origen
 	 *            El componente desde el cual parten los mensajes
@@ -213,10 +211,11 @@ public interface VortexCore {
 	void conectarDesde(Compuesto<? extends Conectable> origen, Receptor destino);
 
 	/**
-	 * Crea un conector asincrono, a través del cual se pueden entregar mensajes al receptor
-	 * indicado sin utilizar el thread actual.<br>
-	 * A través de este conector se pueden cortar los bucles en redes circulares y sincronas, o
-	 * paralelizar la entrega de mensajes en variso threads.<br>
+	 * Crea un conector asincrono, que independiza el thread que entrega el mensaje del que lo
+	 * recibe. A través de este conector se pueden entregar mensajes al receptor indicado sin
+	 * utilizar el thread actual.<br>
+	 * Este conector permite cortar los bucles en redes circulares y sincronas, o paralelizar la
+	 * entrega de mensajes en varios threads.<br>
 	 * Para el procesamiento de los mensajes de utilizara el procesador de tareas de este builder
 	 * que tiene un pool de threads propios
 	 * 
@@ -238,7 +237,10 @@ public interface VortexCore {
 	/**
 	 * Crea el componente identificador de mensajes que permite discriminar duplicados y mensajes
 	 * propios.<br>
-	 * Este componente es necesario en topologías desconocidas o que tienen bucles en las conexiones
+	 * Este componente es necesario en topologías desconocidas o que tienen bucles en las
+	 * conexiones.<br>
+	 * El componente creado utiliza una transformación para asignar IDs a los mensajes salientes, y
+	 * un filtro interno para descartar duplicados
 	 * 
 	 * @return El componente creado con ID propio
 	 */
@@ -252,7 +254,8 @@ public interface VortexCore {
 	IdDeComponenteVortex crearIdDeComponente();
 
 	/**
-	 * Crea una memoria de mensajes para utilizar en un componente creado
+	 * Crea una memoria de mensajes para utilizar en componentes que requieran reconocer mensajes
+	 * duplicados por ID
 	 * 
 	 * @return La memoria que registra los mensajes recibidos
 	 */
@@ -269,15 +272,17 @@ public interface VortexCore {
 	GeneradorDeIdsDeMensajes crearGeneradorDeIdsParaMensajes(IdDeComponenteVortex idAsignado);
 
 	/**
-	 * Crea un componente distribuidor de mensajes que a traves de sus terminales permite conectar
-	 * varios componentes sin tener duplicados
+	 * Crea un componente distribuidor de mensajes que a traves de sus terminales permite
+	 * interconectar varios componentes entre sí, sin entregar el mensaje recibido a su emisor.<br>
+	 * A través de este componente se puede armar una topología sin duplciados y sin Ids en mensajes
 	 * 
 	 * @return El componente creado
 	 */
 	Distribuidor distribuidor();
 
 	/**
-	 * Crea un componente conector que permite unir emisor con receptor
+	 * Crea un componente conector sincrono que permite unir emisor con receptor.<br>
+	 * Este conector utiliza el thread actual para entregar el mensaje recibido
 	 * 
 	 * @return El componente creado
 	 */
@@ -285,7 +290,7 @@ public interface VortexCore {
 
 	/**
 	 * Crea un componente terminal que permite abstraer una parte de la red como una entidad de
-	 * entrada y salida de mensajes
+	 * entrada y salida de mensajes, y que puede ser conectada a otras terminales
 	 * 
 	 * @return La terminal creada
 	 */
