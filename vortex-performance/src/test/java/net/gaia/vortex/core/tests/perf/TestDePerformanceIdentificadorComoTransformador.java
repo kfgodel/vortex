@@ -35,7 +35,7 @@ public class TestDePerformanceIdentificadorComoTransformador extends TestDePerfo
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
 		final Identificador identificador = getBuilder().identificador();
-		return FlujoInmutable.create(identificador.getConectorParaEnviarConId(), identificador.getConectorDeSalida());
+		return FlujoInmutable.create(identificador.getConectorParaEnviarConId(), identificador);
 	}
 
 }

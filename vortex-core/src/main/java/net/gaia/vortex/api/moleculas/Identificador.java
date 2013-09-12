@@ -19,9 +19,9 @@ package net.gaia.vortex.api.moleculas;
 
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.basic.emisores.MonoConectable;
+import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
-import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 
 /**
  * Esta interfaz representa el componente vortex que permite identificar los mensajes enviados y
@@ -29,7 +29,29 @@ import net.gaia.vortex.api.proto.Conector;
  * 
  * @author dgarcia
  */
-public interface Identificador extends Nodo, MonoConectable {
+public interface Identificador extends Nodo {
+
+	/**
+	 * Conecta este identificador al receptor indicado, el cual recibirá los mensajes con Id
+	 * asignado en este componente
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(Receptor destino);
+
+	/**
+	 * Desconecta este identificador del receptor
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 */
+	public void desconectar();
+
+	/**
+	 * Desconecta este identificador del receptor indicado
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(Receptor destino);
 
 	/**
 	 * Devuelve el identificador de este componente que será utilizado para generar los ids de los
@@ -57,6 +79,14 @@ public interface Identificador extends Nodo, MonoConectable {
 	 * 
 	 * @return El conector para los mensajes entrantes
 	 */
-	Conector getConectorParaRecibirSinDuplicados();
+	Conectable getConectorParaRecibirSinDuplicados();
+
+	/**
+	 * Al recibir un mensaje este identificador lo filtra eliminando duplicados. Si el mensaje es
+	 * nuevo y es externo, es entregado a través del {@link #getConectorParaRecibirSinDuplicados()}
+	 * 
+	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
+	 */
+	public void recibir(MensajeVortex mensaje);
 
 }

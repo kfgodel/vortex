@@ -16,6 +16,7 @@ import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Distribuidor;
+import net.gaia.vortex.api.moleculas.Identificador;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.moleculas.Terminal;
 import net.gaia.vortex.api.transformaciones.Transformacion;
@@ -145,6 +146,41 @@ public class TestAtomos {
 		final Filtro filtro = builder.filtrarMensajesDuplicadosA(receptor);
 		// No debería llegar porque no tiene ID
 		checkMensajeEnviadoYNoRecibido(mensaje1, mensaje1, filtro, receptor);
+	}
+
+	@Test
+	public void elIdentificadorDeberiaDescartarElMensajeLaSegundaVez() {
+		final IdDeComponenteVortex idDeNodo = GeneradorDeIdsGlobalesParaComponentes.getInstancia().generarId();
+		final GeneradorSecuencialDeIdDeMensaje generadorDeIdsMensajes = GeneradorSecuencialDeIdDeMensaje
+				.create(idDeNodo);
+		final IdDeMensaje idDelMensaje = generadorDeIdsMensajes.generarId();
+		final MensajeVortex mensaje = MensajeConContenido.crearVacio();
+		mensaje.asignarId(idDelMensaje);
+
+		final ReceptorEncolador receptor = ReceptorEncolador.create();
+		final Identificador identificador = builder.identificador();
+		identificador.getConectorParaRecibirSinDuplicados().conectarCon(receptor);
+
+		// La primera vez debería llegar
+		checkMensajeEnviadoYRecibido(mensaje, mensaje, identificador, receptor);
+
+		// La segundas vez NO debería llegar
+		checkMensajeEnviadoYNoRecibido(mensaje, mensaje, identificador, receptor);
+	}
+
+	@Test
+	public void elIdentificadorDeberiaDescartarUnMensajePropio() {
+		final MensajeVortex mensaje = MensajeConContenido.crearVacio();
+
+		final ReceptorEncolador receptor = ReceptorEncolador.create();
+		final Identificador identificador = builder.identificador();
+		identificador.getConectorParaRecibirSinDuplicados().conectarCon(receptor);
+
+		// Hacemos que se envie el mensaje a si mismo
+		identificador.conectarCon(identificador);
+
+		// NO debería llegar
+		checkMensajeEnviadoYNoRecibido(mensaje, mensaje, identificador.getConectorParaEnviarConId(), receptor);
 	}
 
 	/**

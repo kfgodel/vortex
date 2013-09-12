@@ -20,12 +20,12 @@ package net.gaia.vortex.impl.moleculas;
 import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.GeneradorDeIdsDeMensajes;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Identificador;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.condiciones.EsMensajeNuevoDeOtroComponente;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.impl.support.EmisorSupport;
@@ -43,7 +43,7 @@ public class MoleculaIdentificador extends EmisorSupport implements Identificado
 
 	private IdDeComponenteVortex idPropio;
 	private Filtro filtroRecibidos;
-	private Transformador transformacionEnvidados;
+	private Transformador transformadorEnviados;
 
 	public static MoleculaIdentificador create(final VortexCore builder) {
 		final MoleculaIdentificador identificador = new MoleculaIdentificador();
@@ -66,7 +66,7 @@ public class MoleculaIdentificador extends EmisorSupport implements Identificado
 
 		// Creamos la transformacion para asignar Ids a los mensajes enviados
 		final GeneradorDeIdsDeMensajes generadorDeIdsParaMensajes = builder.crearGeneradorDeIdsParaMensajes(idPropio);
-		this.transformacionEnvidados = builder.transformadorPara(GenerarIdEnMensaje.create(generadorDeIdsParaMensajes));
+		this.transformadorEnviados = builder.transformadorPara(GenerarIdEnMensaje.create(generadorDeIdsParaMensajes));
 	}
 
 	/**
@@ -77,17 +77,10 @@ public class MoleculaIdentificador extends EmisorSupport implements Identificado
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.moleculas.Identificador#getConectorParaEnviarConId()
-	 */
-	public Receptor getConectorParaEnviarConId() {
-		return transformacionEnvidados;
-	}
-
-	/**
 	 * @see net.gaia.vortex.api.moleculas.Identificador#getConectorParaRecibirSinDuplicados()
 	 */
-	public Conector getConectorParaRecibirSinDuplicados() {
-		return filtroRecibidos.getConectorPorTrue();
+	public Conectable getConectorParaRecibirSinDuplicados() {
+		return filtroRecibidos;
 	}
 
 	/**
@@ -98,9 +91,31 @@ public class MoleculaIdentificador extends EmisorSupport implements Identificado
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MonoConectable#getConectorDeSalida()
+	 * @see net.gaia.vortex.api.moleculas.Identificador#getConectorParaEnviarConId()
 	 */
-	public Conector getConectorDeSalida() {
-		return this.transformacionEnvidados.getConectorDeSalida();
+	public Receptor getConectorParaEnviarConId() {
+		return transformadorEnviados;
 	}
+
+	/**
+	 * @see net.gaia.vortex.api.moleculas.Identificador#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(final Receptor destino) {
+		transformadorEnviados.conectarCon(destino);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.moleculas.Identificador#desconectar()
+	 */
+	public void desconectar() {
+		transformadorEnviados.desconectar();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.moleculas.Identificador#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(final Receptor destino) {
+		transformadorEnviados.desconectarDe(destino);
+	}
+
 }
