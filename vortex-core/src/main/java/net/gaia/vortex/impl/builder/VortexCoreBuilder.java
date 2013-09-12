@@ -14,6 +14,7 @@ package net.gaia.vortex.impl.builder;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.atomos.Bifurcador;
+import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.atomos.Secuenciador;
@@ -30,7 +31,6 @@ import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.Identificador;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.moleculas.Terminal;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.impl.atomos.AtomoBifurcador;
 import net.gaia.vortex.impl.atomos.AtomoMultiplexor;
@@ -210,7 +210,7 @@ public class VortexCoreBuilder implements VortexCore {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarSalidaDe(net.gaia.vortex.api.proto.Conector,
+	 * @see net.gaia.vortex.api.builder.VortexCore#filtrarSalidaDe(net.gaia.vortex.api.atomos.Conector,
 	 *      net.gaia.vortex.api.condiciones.Condicion)
 	 */
 	public Filtro filtrarSalidaDe(final Conector conector, final Condicion condicion) {

@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.Terminal;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 

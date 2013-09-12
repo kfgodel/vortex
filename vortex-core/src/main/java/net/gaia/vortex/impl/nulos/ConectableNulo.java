@@ -39,14 +39,14 @@ public class ConectableNulo extends ComponenteSupport implements Conectable {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.proto.Conector#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 * @see net.gaia.vortex.api.atomos.Conector#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
 	public void conectarCon(final Receptor destino) {
 		LOG.debug("Se intentó conectar el conector nulo al receptor: {}", destino);
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.proto.Conector#desconectar()
+	 * @see net.gaia.vortex.api.atomos.Conector#desconectar()
 	 */
 	public void desconectar() {
 		LOG.debug("Se intentó desconectar el conector nulo");
@@ -60,7 +60,7 @@ public class ConectableNulo extends ComponenteSupport implements Conectable {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.proto.Conector#getDestino()
+	 * @see net.gaia.vortex.api.atomos.Conector#getDestino()
 	 */
 	public Receptor getDestino() {
 		return ReceptorNulo.getInstancia();

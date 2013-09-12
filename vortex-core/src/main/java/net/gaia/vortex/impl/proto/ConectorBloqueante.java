@@ -12,8 +12,8 @@
  */
 package net.gaia.vortex.impl.proto;
 
+import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 

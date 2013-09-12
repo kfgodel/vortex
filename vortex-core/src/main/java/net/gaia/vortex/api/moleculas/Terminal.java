@@ -17,11 +17,11 @@
  */
 package net.gaia.vortex.api.moleculas;
 
+import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.ConectableIndirectamente;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.api.proto.Conector;
 
 /**
  * Esta interfaz representa un punto de acceso a la red para un componente, con el cual se pueden

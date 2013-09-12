@@ -15,7 +15,7 @@ package net.gaia.vortex.impl.atomos.productores;
 import net.gaia.vortex.api.basic.productores.MensajeFactory;
 import net.gaia.vortex.api.basic.productores.Productor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.impl.support.MonoConectableSupport;
+import net.gaia.vortex.impl.support.MonoEmisorSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
@@ -26,7 +26,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
-public class ProductorConFactory extends MonoConectableSupport implements Productor {
+public class ProductorConFactory extends MonoEmisorSupport implements Productor {
 
 	private MensajeFactory factory;
 	public static final String factory_FIELD = "factory";
@@ -37,12 +37,12 @@ public class ProductorConFactory extends MonoConectableSupport implements Produc
 	 */
 	public void producirMensaje() {
 		final MensajeVortex mensajeCreado = factory.crearMensaje();
-		getConectorDeSalida().recibir(mensajeCreado);
+		getConectado().recibir(mensajeCreado);
 	}
 
 	public static ProductorConFactory create(final MensajeFactory factory) {
 		final ProductorConFactory prodcutor = new ProductorConFactory();
-		prodcutor.inicializar();
+		prodcutor.desconectar();
 		prodcutor.factory = factory;
 		return prodcutor;
 	}
@@ -52,7 +52,7 @@ public class ProductorConFactory extends MonoConectableSupport implements Produc
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(factory_FIELD, factory).con(conectorUnico_FIELD, getConectorDeSalida()).toString();
+		return ToString.de(this).con(factory_FIELD, factory).con(conectado_FIELD, getConectado()).toString();
 	}
 
 }

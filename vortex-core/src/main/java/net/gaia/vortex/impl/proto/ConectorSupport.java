@@ -17,7 +17,7 @@
  */
 package net.gaia.vortex.impl.proto;
 
-import net.gaia.vortex.api.proto.Conector;
+import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.impl.support.MonoEmisorSupport;
 
 /**

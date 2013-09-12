@@ -14,6 +14,7 @@ package net.gaia.vortex.api.builder;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.atomos.Bifurcador;
+import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.atomos.Secuenciador;
@@ -29,7 +30,6 @@ import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.Identificador;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.moleculas.Terminal;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.api.transformaciones.Transformacion;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
 

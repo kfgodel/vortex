@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.builder.VortexCore;
@@ -16,7 +17,6 @@ import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Compuesto;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.core.prog.Loggers;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;

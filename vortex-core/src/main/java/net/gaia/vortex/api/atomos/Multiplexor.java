@@ -16,6 +16,7 @@ import java.util.List;
 
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.basic.emisores.MultiEmisor;
 
 /**
  * Esta interfaz representa un componente vortex que entrega cada mensaje recibido a sus multiples
@@ -23,7 +24,7 @@ import net.gaia.vortex.api.basic.Receptor;
  * 
  * @author D. García
  */
-public interface Multiplexor extends Nodo {
+public interface Multiplexor extends Nodo, MultiEmisor {
 
 	/**
 	 * Crea una nueva conexión con el destino indicado, agregandola a las conexiones de este

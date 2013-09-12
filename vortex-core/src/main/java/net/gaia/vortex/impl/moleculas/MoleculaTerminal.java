@@ -17,11 +17,11 @@
  */
 package net.gaia.vortex.impl.moleculas;
 
+import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Terminal;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.support.ConectableIndirectamenteSupport;
 
 /**

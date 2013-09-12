@@ -18,10 +18,10 @@
 package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.builder.VortexPortal;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Portal;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.builder.VortexPortalBuilder;

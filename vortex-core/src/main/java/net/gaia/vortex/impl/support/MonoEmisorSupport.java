@@ -32,6 +32,9 @@ public class MonoEmisorSupport extends EmisorSupport implements MonoEmisor {
 	protected Receptor conectado;
 	public static final String conectado_FIELD = "conectado";
 
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.MonoEmisor#getConectado()
+	 */
 	public Receptor getConectado() {
 		return conectado;
 	}

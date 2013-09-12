@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.api.proto;
+package net.gaia.vortex.api.atomos;
 
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.MonoEmisor;
@@ -24,10 +24,4 @@ import net.gaia.vortex.api.basic.emisores.MonoEmisor;
  */
 public interface Conector extends Receptor, MonoEmisor {
 
-	/**
-	 * Devuelve el componente al que este conector está conectado
-	 * 
-	 * @return El receptor conectado a este componente
-	 */
-	Receptor getConectado();
 }

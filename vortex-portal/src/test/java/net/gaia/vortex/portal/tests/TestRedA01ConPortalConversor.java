@@ -25,10 +25,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.Portal;
 import net.gaia.vortex.api.moleculas.Terminal;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.builder.VortexPortalBuilder;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;

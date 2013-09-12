@@ -13,6 +13,7 @@
 package net.gaia.vortex.api.basic.emisores;
 
 import net.gaia.vortex.api.basic.Emisor;
+import net.gaia.vortex.api.basic.Receptor;
 
 /**
  * Esta interfaz representa un emisor de mensajes que sólo puede ser conectado a un receptor,
@@ -22,5 +23,12 @@ import net.gaia.vortex.api.basic.Emisor;
  * @author D. García
  */
 public interface MonoEmisor extends Emisor {
+
+	/**
+	 * Devuelve el componente al que este emisor está conectado y que recibirá los mensajes emitidos
+	 * 
+	 * @return El receptor conectado desde este componente
+	 */
+	Receptor getConectado();
 
 }

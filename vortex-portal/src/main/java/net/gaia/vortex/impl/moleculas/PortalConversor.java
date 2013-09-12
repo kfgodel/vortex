@@ -12,6 +12,7 @@
  */
 package net.gaia.vortex.impl.moleculas;
 
+import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.builder.VortexPortal;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
@@ -19,7 +20,6 @@ import net.gaia.vortex.api.moleculas.Portal;
 import net.gaia.vortex.api.moleculas.Selector;
 import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
 import net.gaia.vortex.api.moleculas.portal.HandlerDePortal;
-import net.gaia.vortex.api.proto.Conector;
 import net.gaia.vortex.impl.atomos.Desobjetivizador;
 import net.gaia.vortex.impl.atomos.Objetivizador;
 import net.gaia.vortex.impl.support.EmisorSupport;

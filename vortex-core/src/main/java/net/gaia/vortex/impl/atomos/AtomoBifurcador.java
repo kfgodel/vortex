@@ -209,4 +209,10 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 		this.conectarPorFalseCon(ReceptorNulo.getInstancia());
 	}
 
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.MonoEmisor#getConectado()
+	 */
+	public Receptor getConectado() {
+		return getReceptorPorTrue();
+	}
 }

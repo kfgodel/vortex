@@ -19,6 +19,7 @@ package net.gaia.vortex.api.atomos;
 
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.basic.emisores.MonoEmisor;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
@@ -29,7 +30,7 @@ import net.gaia.vortex.impl.nulos.ReceptorNulo;
  * 
  * @author dgarcia
  */
-public interface Filtro extends Nodo {
+public interface Filtro extends Nodo, MonoEmisor {
 	/**
 	 * Establece el componente que recibirá los mensajes que pasen el filtro.<br>
 	 * Los mensajes que evalúen a true serán entregados al receptor indicado.<br>
@@ -74,10 +75,4 @@ public interface Filtro extends Nodo {
 	 */
 	public void setCondicion(Condicion condicion);
 
-	/**
-	 * Devuelve el componente conectado a la salida de este
-	 * 
-	 * @return El componente que recibe los mensajes filtrados
-	 */
-	Receptor getConectado();
 }
