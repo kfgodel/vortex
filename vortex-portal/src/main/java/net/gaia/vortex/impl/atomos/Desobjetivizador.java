@@ -15,7 +15,7 @@ package net.gaia.vortex.impl.atomos;
 import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
-import net.gaia.vortex.impl.support.MonoConectableSupport;
+import net.gaia.vortex.impl.support.MonoEmisorSupport;
 
 /**
  * Esta clase representa el componente vortex que convierte todo los objetos indicados en mensajes y
@@ -23,7 +23,7 @@ import net.gaia.vortex.impl.support.MonoConectableSupport;
  * 
  * @author D. García
  */
-public class Desobjetivizador extends MonoConectableSupport {
+public class Desobjetivizador extends MonoEmisorSupport {
 
 	private ConversorDeMensajesVortex mapeador;
 	public static final String mapeador_FIELD = "mapeador";
@@ -39,12 +39,11 @@ public class Desobjetivizador extends MonoConectableSupport {
 	 */
 	public void vortificar(final Object mensaje) throws ErrorDeMapeoVortexException {
 		final MensajeVortex vortificado = mapeador.convertirAVortex(mensaje);
-		this.getConectorDeSalida().recibir(vortificado);
+		this.getConectado().recibir(vortificado);
 	}
 
 	public static Desobjetivizador create(final ConversorDeMensajesVortex mapeador) {
 		final Desobjetivizador desobjetivizador = new Desobjetivizador();
-		desobjetivizador.inicializar();
 		desobjetivizador.mapeador = mapeador;
 		return desobjetivizador;
 	}

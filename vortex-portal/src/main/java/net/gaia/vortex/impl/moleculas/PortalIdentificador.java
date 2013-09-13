@@ -17,7 +17,9 @@
  */
 package net.gaia.vortex.impl.moleculas;
 
-import net.gaia.vortex.api.atomos.Conector;
+import java.util.List;
+
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.builder.VortexPortal;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Identificador;
@@ -50,13 +52,6 @@ public class PortalIdentificador extends EmisorSupport implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MonoConectable#getConectorDeSalida()
-	 */
-	public Conector getConectorDeSalida() {
-		return this.identificador.getConectorDeSalida();
-	}
-
-	/**
 	 * @see net.gaia.vortex.api.moleculas.Portal#enviar(java.lang.Object)
 	 */
 	public void enviar(final Object mensaje) throws ErrorDeMapeoVortexException {
@@ -86,7 +81,7 @@ public class PortalIdentificador extends EmisorSupport implements Portal {
 		this.identificador = builder.getCore().identificador();
 
 		// El conversor enviara los mensajes a traves del identificador para asignar ID
-		this.conversor.getConectorDeSalida().conectarCon(this.identificador.getConectorParaEnviarConId());
+		this.conversor.conectarCon(this.identificador.getConectorParaEnviarConId());
 
 		// El identificador actuara como filtro para que reciba el conversor
 		this.identificador.getConectorParaRecibirSinDuplicados().conectarCon(this.conversor);
@@ -99,6 +94,34 @@ public class PortalIdentificador extends EmisorSupport implements Portal {
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(conversor_FIELD, conversor)
 				.toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(final Receptor destino) {
+		identificador.conectarCon(destino);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 */
+	public void desconectar() {
+		identificador.desconectar();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(final Receptor destino) {
+		identificador.desconectarDe(destino);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados() {
+		return identificador.getConectados();
 	}
 
 }

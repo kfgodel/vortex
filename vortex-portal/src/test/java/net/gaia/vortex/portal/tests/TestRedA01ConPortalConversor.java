@@ -78,12 +78,12 @@ public class TestRedA01ConPortalConversor {
 		final Terminal terminalEmisor = nodoRuteador.crearTerminal();
 		// El emisor lo conectamos asincrono a la terminal para los tests de threads independientes
 		final Conector terminalAsincronizada = builder.getCore().asincronizar(terminalEmisor);
-		nodoEmisor.getConectorDeSalida().conectarCon(terminalAsincronizada);
-		terminalEmisor.getConectorDeSalida().conectarCon(nodoEmisor);
+		nodoEmisor.conectarCon(terminalAsincronizada);
+		terminalEmisor.conectarCon(nodoEmisor);
 
 		final Terminal terminalReceptor = nodoRuteador.crearTerminal();
-		nodoReceptor.getConectorDeSalida().conectarCon(terminalReceptor);
-		terminalReceptor.getConectorDeSalida().conectarCon(nodoReceptor);
+		nodoReceptor.conectarCon(terminalReceptor);
+		terminalReceptor.conectarCon(nodoReceptor);
 	}
 
 	@After
@@ -268,13 +268,13 @@ public class TestRedA01ConPortalConversor {
 		// Le agregamos los extremos portales
 		final Portal nodoEmisor = builder.portalConversor();
 		final Terminal terminalEmisor = nodoIntermedio1.crearTerminal();
-		terminalEmisor.getConectorDeSalida().conectarCon(nodoEmisor);
-		nodoEmisor.getConectorDeSalida().conectarCon(terminalEmisor);
+		terminalEmisor.conectarCon(nodoEmisor);
+		nodoEmisor.conectarCon(terminalEmisor);
 
 		final Portal nodoReceptor = builder.portalConversor();
 		final Terminal terminalReceptor = nodoIntermedio2.crearTerminal();
-		terminalReceptor.getConectorDeSalida().conectarCon(nodoReceptor);
-		nodoReceptor.getConectorDeSalida().conectarCon(terminalReceptor);
+		terminalReceptor.conectarCon(nodoReceptor);
+		nodoReceptor.conectarCon(terminalReceptor);
 
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		nodoReceptor.recibirCon(handlerReceptor);
@@ -299,13 +299,13 @@ public class TestRedA01ConPortalConversor {
 		// Le agregamos los extremos portales
 		final Portal nodoEmisor = builder.portalConversor();
 		final Terminal terminalEmisor = nodoIntermedio1.crearTerminal();
-		terminalEmisor.getConectorDeSalida().conectarCon(nodoEmisor);
-		nodoEmisor.getConectorDeSalida().conectarCon(terminalEmisor);
+		terminalEmisor.conectarCon(nodoEmisor);
+		nodoEmisor.conectarCon(terminalEmisor);
 
 		final Portal nodoReceptor = builder.portalConversor();
 		final Terminal terminalReceptor = nodoIntermedio2.crearTerminal();
-		terminalReceptor.getConectorDeSalida().conectarCon(nodoReceptor);
-		nodoReceptor.getConectorDeSalida().conectarCon(terminalReceptor);
+		terminalReceptor.conectarCon(nodoReceptor);
+		nodoReceptor.conectarCon(terminalReceptor);
 
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		nodoReceptor.recibirCon(handlerReceptor);
@@ -365,8 +365,8 @@ public class TestRedA01ConPortalConversor {
 		final HandlerEncoladorDeStrings handlerReceptor2 = HandlerEncoladorDeStrings.create();
 		final Portal nodoReceptor2 = builder.portalConversor();
 		final Terminal terminalReceptor2 = nodoRuteador.crearTerminal();
-		nodoReceptor2.getConectorDeSalida().conectarCon(terminalReceptor2);
-		terminalReceptor2.getConectorDeSalida().conectarCon(nodoReceptor2);
+		nodoReceptor2.conectarCon(terminalReceptor2);
+		terminalReceptor2.conectarCon(nodoReceptor2);
 
 		nodoReceptor2.recibirCon(handlerReceptor2);
 
@@ -389,8 +389,8 @@ public class TestRedA01ConPortalConversor {
 	public void interconectar(final Distribuidor nodoIntermedio1, final Distribuidor nodoIntermedio2) {
 		final Terminal terminalNodo1 = nodoIntermedio1.crearTerminal();
 		final Terminal terminalNodo2 = nodoIntermedio2.crearTerminal();
-		terminalNodo1.getConectorDeSalida().conectarCon(terminalNodo2);
-		terminalNodo2.getConectorDeSalida().conectarCon(terminalNodo1);
+		terminalNodo1.conectarCon(terminalNodo2);
+		terminalNodo2.conectarCon(terminalNodo1);
 	}
 
 }

@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.atomos.Conector;
-import net.gaia.vortex.api.basic.emisores.MultiConectable;
+import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.api.moleculas.Portal;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
@@ -51,7 +51,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestRedA01ConPortalIdentificador {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConPortalIdentificador.class);
 
-	private Compuesto<MultiConectable> nodoRuteador;
+	private Compuesto<Multiplexor> nodoRuteador;
 
 	private Portal nodoEmisor;
 	private Portal nodoReceptor;
@@ -71,11 +71,11 @@ public class TestRedA01ConPortalIdentificador {
 
 		// Interconectamos ida y vuelta ambos portales
 		final Conector ruteadorAsincrono = builder.getCore().asincronizar(nodoRuteador);
-		nodoEmisor.getConectorDeSalida().conectarCon(ruteadorAsincrono);
-		nodoRuteador.getSalida().crearConector().conectarCon(nodoReceptor);
+		nodoEmisor.conectarCon(ruteadorAsincrono);
+		nodoRuteador.getSalida().conectarCon(nodoReceptor);
 
-		nodoReceptor.getConectorDeSalida().conectarCon(nodoRuteador);
-		nodoRuteador.getSalida().crearConector().conectarCon(nodoEmisor);
+		nodoReceptor.conectarCon(nodoRuteador);
+		nodoRuteador.getSalida().conectarCon(nodoEmisor);
 	}
 
 	@After
@@ -253,18 +253,18 @@ public class TestRedA01ConPortalIdentificador {
 	@Test
 	public void elMensajeDeberiaLlegarSiHayDosNodosEnElMedio() {
 		// Creamos los nodos centrales interconectados
-		final Compuesto<MultiConectable> nodoIntermedio1 = builder.getCore().multiplexarSinDuplicados();
-		final Compuesto<MultiConectable> nodoIntermedio2 = builder.getCore().multiplexarSinDuplicados();
+		final Compuesto<Multiplexor> nodoIntermedio1 = builder.getCore().multiplexarSinDuplicados();
+		final Compuesto<Multiplexor> nodoIntermedio2 = builder.getCore().multiplexarSinDuplicados();
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
 		final Portal nodoEmisor = builder.portalIdentificador();
-		nodoEmisor.getConectorDeSalida().conectarCon(nodoIntermedio1);
-		nodoIntermedio1.getSalida().crearConector().conectarCon(nodoEmisor);
+		nodoEmisor.conectarCon(nodoIntermedio1);
+		nodoIntermedio1.getSalida().conectarCon(nodoEmisor);
 
 		final Portal nodoReceptor = builder.portalIdentificador();
-		nodoReceptor.getConectorDeSalida().conectarCon(nodoIntermedio2);
-		nodoIntermedio2.getSalida().crearConector().conectarCon(nodoReceptor);
+		nodoReceptor.conectarCon(nodoIntermedio2);
+		nodoIntermedio2.getSalida().conectarCon(nodoReceptor);
 
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		nodoReceptor.recibirCon(handlerReceptor);
@@ -282,18 +282,18 @@ public class TestRedA01ConPortalIdentificador {
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosHubsEnElMedioInterconectados() {
 		// Creamos los nodos centrales interconectados
-		final Compuesto<MultiConectable> nodoIntermedio1 = builder.getCore().multiplexarSinDuplicados();
-		final Compuesto<MultiConectable> nodoIntermedio2 = builder.getCore().multiplexarSinDuplicados();
+		final Compuesto<Multiplexor> nodoIntermedio1 = builder.getCore().multiplexarSinDuplicados();
+		final Compuesto<Multiplexor> nodoIntermedio2 = builder.getCore().multiplexarSinDuplicados();
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
 		final Portal nodoEmisor = builder.portalIdentificador();
-		nodoEmisor.getConectorDeSalida().conectarCon(nodoIntermedio1);
-		nodoIntermedio1.getSalida().crearConector().conectarCon(nodoEmisor);
+		nodoEmisor.conectarCon(nodoIntermedio1);
+		nodoIntermedio1.getSalida().conectarCon(nodoEmisor);
 
 		final Portal nodoReceptor = builder.portalIdentificador();
-		nodoReceptor.getConectorDeSalida().conectarCon(nodoIntermedio2);
-		nodoIntermedio2.getSalida().crearConector().conectarCon(nodoReceptor);
+		nodoReceptor.conectarCon(nodoIntermedio2);
+		nodoIntermedio2.getSalida().conectarCon(nodoReceptor);
 
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		nodoReceptor.recibirCon(handlerReceptor);
@@ -352,8 +352,8 @@ public class TestRedA01ConPortalIdentificador {
 
 		final HandlerEncoladorDeStrings handlerReceptor2 = HandlerEncoladorDeStrings.create();
 		final Portal nodoReceptor2 = builder.portalIdentificador();
-		nodoReceptor2.getConectorDeSalida().conectarCon(nodoRuteador);
-		nodoRuteador.getSalida().crearConector().conectarCon(nodoReceptor2);
+		nodoReceptor2.conectarCon(nodoRuteador);
+		nodoRuteador.getSalida().conectarCon(nodoReceptor2);
 
 		nodoReceptor2.recibirCon(handlerReceptor2);
 
@@ -373,10 +373,9 @@ public class TestRedA01ConPortalIdentificador {
 	/**
 	 * Crea una conexión bidireccional entre los nodos pasados
 	 */
-	public void interconectar(final Compuesto<MultiConectable> nodoIntermedio1,
-			final Compuesto<MultiConectable> nodoIntermedio2) {
-		nodoIntermedio1.getSalida().crearConector().conectarCon(nodoIntermedio2);
-		nodoIntermedio2.getSalida().crearConector().conectarCon(nodoIntermedio1);
+	public void interconectar(final Compuesto<Multiplexor> nodoIntermedio1, final Compuesto<Multiplexor> nodoIntermedio2) {
+		nodoIntermedio1.getSalida().conectarCon(nodoIntermedio2);
+		nodoIntermedio2.getSalida().conectarCon(nodoIntermedio1);
 	}
 
 }

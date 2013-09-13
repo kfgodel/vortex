@@ -12,7 +12,10 @@
  */
 package net.gaia.vortex.impl.moleculas;
 
-import net.gaia.vortex.api.atomos.Conector;
+import java.util.List;
+
+import net.gaia.vortex.api.atomos.Filtro;
+import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.builder.VortexPortal;
 import net.gaia.vortex.api.condiciones.Condicion;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
@@ -28,8 +31,7 @@ import ar.com.dgarcia.lang.strings.ToString;
 /**
  * Esta clase implementa la forma más básica de portal que sólo convierte los objetos en mensaje, y
  * los mensajes en objetos.<br>
- * A diferencia de otros portales, este no discrimina mensajes propios o repetidos por lo que la
- * topología de la red no puede tener bucles
+ * A diferencia del {@link PortalIdentificador} este no descrimina mensajes propios o duplicados
  * 
  * @author D. García
  */
@@ -57,25 +59,18 @@ public class PortalConversor extends EmisorSupport implements Portal {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.basic.emisores.MonoConectable#getConectorDeSalida()
-	 */
-	public Conector getConectorDeSalida() {
-		return haciaVortex.getConectorDeSalida();
-	}
-
-	/**
 	 * @see net.gaia.vortex.api.moleculas.Portal#recibirCon(net.gaia.vortex.api.moleculas.portal.HandlerDePortal)
 	 */
 	public <T> void recibirCon(final HandlerDePortal<T> handlerDelPortal) {
 		// Agregamos el caso al selector de mensajes recibidos
 		final Condicion bicondicionalDelHandler = handlerDelPortal.getBicondicional();
-		final Conector conectorCondicionado = desdeVortex.crearConectorCon(bicondicionalDelHandler);
+		final Filtro filtroDelBicondicional = desdeVortex.filtrandoCon(bicondicionalDelHandler);
 
 		// Si pasa la condicion se lo entregamos al conversor a objetos
 		final Class<T> tipoEsperadoComoMensajes = handlerDelPortal.getTipoEsperado();
 		final Objetivizador conversorAObjeto = builder
 				.conversorHaciaObjetos(tipoEsperadoComoMensajes, handlerDelPortal);
-		conectorCondicionado.conectarCon(conversorAObjeto);
+		filtroDelBicondicional.conectarCon(conversorAObjeto);
 	}
 
 	public static PortalConversor create(final VortexPortal builder) {
@@ -109,6 +104,34 @@ public class PortalConversor extends EmisorSupport implements Portal {
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.con(desdeVortex_FIELD, desdeVortex).toString();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#conectarCon(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void conectarCon(final Receptor destino) {
+		haciaVortex.conectarCon(destino);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
+	 */
+	public void desconectar() {
+		haciaVortex.desconectar();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public void desconectarDe(final Receptor destino) {
+		haciaVortex.desconectarDe(destino);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados() {
+		return haciaVortex.getConectados();
 	}
 
 }

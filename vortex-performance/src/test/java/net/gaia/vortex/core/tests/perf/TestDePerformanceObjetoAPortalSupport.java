@@ -18,7 +18,6 @@
 package net.gaia.vortex.core.tests.perf;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.builder.VortexPortal;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Portal;
@@ -129,26 +128,24 @@ public abstract class TestDePerformanceObjetoAPortalSupport {
 	 *            El nombre para el log
 	 * @param cantidadDeThreadsDeEnvio
 	 *            La cantidad de threads en paralelo
-	 * @param flujo
+	 * @param portal
 	 * @throws InterruptedException
 	 *             Si vuela todo
 	 */
-	private void testearFlujo(final int cantidadDeThreadsDeEnvio, final Portal flujo) throws InterruptedException {
-		final Portal entrada = flujo;
-		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->" + entrada.getClass().getSimpleName() + "->R";
+	private void testearFlujo(final int cantidadDeThreadsDeEnvio, final Portal portal) throws InterruptedException {
+		final String nombreDelTest = cantidadDeThreadsDeEnvio + "T->" + portal.getClass().getSimpleName() + "->R";
 
 		// Creamos la metricas para medir
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
 		// Generamos tantos portales como receptores tengamos
-		final Conector salida = entrada.getConectorDeSalida();
-		salida.conectarCon(new ReceptorSupport() {
+		portal.conectarCon(new ReceptorSupport() {
 			public void recibir(@SuppressWarnings("unused") final MensajeVortex mensaje) {
 				metricas.registrarOutput();
 			}
 		});
 
-		correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, entrada);
+		correrThreadsEmisores(cantidadDeThreadsDeEnvio, nombreDelTest, metricas, portal);
 	}
 
 	/**

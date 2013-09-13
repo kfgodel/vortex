@@ -32,7 +32,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class MonoEmisorSupport extends EmisorSupport implements MonoEmisor {
 
-	protected Receptor conectado;
+	protected Receptor conectado = ReceptorNulo.getInstancia();
 	public static final String conectado_FIELD = "conectado";
 
 	/**

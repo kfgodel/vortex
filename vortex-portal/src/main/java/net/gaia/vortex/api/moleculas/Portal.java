@@ -13,7 +13,6 @@
 package net.gaia.vortex.api.moleculas;
 
 import net.gaia.vortex.api.basic.Nodo;
-import net.gaia.vortex.api.basic.emisores.MonoConectable;
 import net.gaia.vortex.api.moleculas.portal.ErrorDeMapeoVortexException;
 import net.gaia.vortex.api.moleculas.portal.HandlerDePortal;
 
@@ -21,11 +20,11 @@ import net.gaia.vortex.api.moleculas.portal.HandlerDePortal;
  * Esta interfaz define el contrato esperado del componente portal que es utilizado para enviar y
  * recibir objetos como mensajes vortex.<br>
  * El portal convierte los objetos en mensaje para enviarlos, y al recibir mensajes, los convierte
- * en objetos según las condiciones indicadas para cada tipo de objeto
+ * en objetos que entrega a un handler según las condiciones indicadas para cada tipo de objeto
  * 
  * @author D. García
  */
-public interface Portal extends Nodo, MonoConectable {
+public interface Portal extends Nodo {
 	/**
 	 * Envía el mensaje a la red utilizando las conexiones de este portal para hacer circular el
 	 * mensaje.<br>
