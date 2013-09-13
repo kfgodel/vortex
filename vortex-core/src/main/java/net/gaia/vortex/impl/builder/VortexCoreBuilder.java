@@ -238,7 +238,7 @@ public class VortexCoreBuilder implements VortexCore {
 	 * @see net.gaia.vortex.api.builder.VortexCore#asincronizar(net.gaia.vortex.api.basic.Receptor)
 	 */
 	public Conector asincronizar(final Receptor receptor) {
-		final ConectorAsincrono conectorCreado = ConectorAsincrono.create(processor);
+		final Conector conectorCreado = conectorAsicrono();
 		conectorCreado.conectarCon(receptor);
 		return conectorCreado;
 	}
@@ -301,5 +301,12 @@ public class VortexCoreBuilder implements VortexCore {
 	 */
 	public Terminal terminal() {
 		return MoleculaTerminal.create(this);
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#conectorAsicrono()
+	 */
+	public Conector conectorAsicrono() {
+		return ConectorAsincrono.create(processor);
 	}
 }

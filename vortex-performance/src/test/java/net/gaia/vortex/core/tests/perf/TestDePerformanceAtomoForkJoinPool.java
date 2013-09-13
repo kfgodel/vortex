@@ -25,8 +25,7 @@ import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.impl.flujos.FlujoInmutable;
-import net.gaia.vortex.impl.proto.ConectorBloqueante;
-import net.gaia.vortex.impl.support.ReceptorSupport;
+import net.gaia.vortex.impl.proto.ConectorSupport;
 
 import org.junit.After;
 import org.junit.Before;
@@ -53,23 +52,58 @@ public class TestDePerformanceAtomoForkJoinPool extends TestDePerformanceNodoSup
 	}
 
 	/**
+	 * Tarea agregada al pool cada vez que un hilo de test manda un mensaje
+	 * 
+	 * @author dgarcia
+	 */
+	@SuppressWarnings("serial")
+	public static class TareaDelPool extends RecursiveAction {
+		private Receptor receptorFinal;
+		private MensajeVortex mensaje;
+
+		@Override
+		protected void compute() {
+			receptorFinal.recibir(mensaje);
+		}
+
+		public static TareaDelPool create(final Receptor receptor, final MensajeVortex mensaje) {
+			final TareaDelPool tarea = new TareaDelPool();
+			tarea.mensaje = mensaje;
+			tarea.receptorFinal = receptor;
+			return tarea;
+		}
+	}
+
+	/**
+	 * Pseudo conector para derivar las tareas al pool
+	 * 
+	 * @author dgarcia
+	 */
+	public static class ConectorParaElTestDePool extends ConectorSupport {
+
+		private ForkJoinPool pool;
+
+		/**
+		 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
+		 */
+		public void recibir(final MensajeVortex mensaje) {
+			pool.submit(TareaDelPool.create(getConectado(), mensaje));
+		}
+
+		public static ConectorParaElTestDePool create(final ForkJoinPool pool) {
+			final ConectorParaElTestDePool conector = new ConectorParaElTestDePool();
+			conector.pool = pool;
+			return conector;
+		}
+	}
+
+	/**
 	 * @see net.gaia.vortex.core.tests.perf.TestDePerformanceNodoSupport#crearFlujoATestear()
 	 */
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
-		final ConectorBloqueante conector = ConectorBloqueante.create();
-		final Receptor receptorDelPool = new ReceptorSupport() {
-			@SuppressWarnings("serial")
-			public void recibir(final MensajeVortex mensaje) {
-				pool.submit(new RecursiveAction() {
-					@Override
-					protected void compute() {
-						conector.recibir(mensaje);
-					}
-				});
-			}
-		};
-		final FlujoInmutable flujoATestear = FlujoInmutable.create(receptorDelPool, conector);
+		final ConectorParaElTestDePool conector = ConectorParaElTestDePool.create(pool);
+		final FlujoInmutable flujoATestear = FlujoInmutable.create(conector, conector);
 		return flujoATestear;
 	}
 }

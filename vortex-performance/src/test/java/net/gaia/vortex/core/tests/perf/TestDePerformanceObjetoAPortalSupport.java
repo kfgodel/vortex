@@ -199,7 +199,7 @@ public abstract class TestDePerformanceObjetoAPortalSupport {
 	private void correrYMostrarResultados(final String nombreDelTest, final StressGenerator stress,
 			final MetricasPorTiempoImpl metricas) throws InterruptedException {
 		// Comenzamos el test
-		LOG.info("[{}] Comenzando mediciones", nombreDelTest);
+		LOG.debug("[{}] Comenzando mediciones", nombreDelTest);
 		metricas.resetear();
 		stress.start();
 
@@ -214,13 +214,13 @@ public abstract class TestDePerformanceObjetoAPortalSupport {
 		final long cantidadDeInputs = medicion.getCantidadDeInputs();
 		final long cantidadDeOutputs = medicion.getCantidadDeOutputs();
 		final long millisTranscurridos = medicion.getDuracionDeMedicionEnMilis();
-		LOG.info("[{}]: En {} ms se enviaron {} mensajes y se recibieron {}", new Object[] { nombreDelTest,
+		LOG.debug("[{}]: En {} ms se enviaron {} mensajes y se recibieron {}", new Object[] { nombreDelTest,
 				millisTranscurridos, cantidadDeInputs, cantidadDeOutputs });
 
 		LOG.info("[{}]: Delivery:{}% Input:{} msg/ms Output():{} msg/ms",
 				new Object[] { nombreDelTest, medicion.getTasaDeDelivery() * 100, medicion.getVelocidadDeInput(),
 						medicion.getVelocidadDeOutput() });
-		LOG.info("[{}] Fin", nombreDelTest);
+		LOG.debug("[{}] Fin", nombreDelTest);
 	}
 
 }

@@ -289,6 +289,18 @@ public interface VortexCore {
 	Conector conector();
 
 	/**
+	 * Crea un conector asíncrono que al recibir los mensajes utiliza un thread en background para
+	 * entregarselo a su conectado.<br>
+	 * Este conector permite cortar los bucles en redes circulares y sincronas, o paralelizar la
+	 * entrega de mensajes en varios threads.<br>
+	 * Para el procesamiento de los mensajes de utilizara el procesador de tareas de este builder
+	 * que tiene un pool de threads propios
+	 * 
+	 * @return El conector asicrono creado
+	 */
+	Conector conectorAsicrono();
+
+	/**
 	 * Crea un componente terminal que permite abstraer una parte de la red como una entidad de
 	 * entrada y salida de mensajes, y que puede ser conectada a otras terminales
 	 * 
