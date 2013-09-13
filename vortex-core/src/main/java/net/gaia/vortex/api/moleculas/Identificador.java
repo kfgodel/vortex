@@ -17,6 +17,8 @@
  */
 package net.gaia.vortex.api.moleculas;
 
+import java.util.List;
+
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.Conectable;
@@ -54,6 +56,13 @@ public interface Identificador extends Nodo {
 	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 	public void desconectarDe(Receptor destino);
+
+	/**
+	 * Devuelve la lista con el receptor conectado a la salida de este identificador
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados();
 
 	/**
 	 * Devuelve el identificador de este componente que será utilizado para generar los ids de los

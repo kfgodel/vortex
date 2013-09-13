@@ -17,6 +17,7 @@
  */
 package net.gaia.vortex.impl.moleculas;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.gaia.vortex.api.atomos.Filtro;
@@ -119,4 +120,18 @@ public class MoleculaSelector extends EmisorSupport implements Selector {
 				.toString();
 	}
 
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados() {
+		final List<Receptor> conectadosAmultiplexor = this.entrada.getConectados();
+		final ArrayList<Receptor> conectados = new ArrayList<Receptor>(conectadosAmultiplexor.size());
+		for (final Receptor conectadoAMultiplexor : conectadosAmultiplexor) {
+			if (conectadoAMultiplexor instanceof Filtro) {
+				final Filtro filtro = (Filtro) conectadoAMultiplexor;
+				conectados.add(filtro.getConectado());
+			}
+		}
+		return conectados;
+	}
 }

@@ -17,6 +17,8 @@
  */
 package net.gaia.vortex.api.moleculas;
 
+import java.util.List;
+
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
 
@@ -68,6 +70,13 @@ public interface Distribuidor extends Nodo {
 	public void desconectarDe(Receptor destino);
 
 	/**
+	 * Devuelve la lista de los receptores conectados a las terminales de este distribuidor
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados();
+
+	/**
 	 * Crea un nuevo terminal para acceder a los mensajes de este distribuidor sin duplicados
 	 * 
 	 * @return El terminal con el cual se pueden enviar mensajes al resto, y recibir sus mensajes
@@ -81,4 +90,5 @@ public interface Distribuidor extends Nodo {
 	 *            El terminal que ya no se utilizará
 	 */
 	void eliminarTerminal(Terminal eliminable);
+
 }

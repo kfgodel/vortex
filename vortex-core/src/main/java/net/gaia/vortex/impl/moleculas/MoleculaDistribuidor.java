@@ -127,4 +127,16 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 			}
 		}
 	}
+
+	/**
+	 * @see net.gaia.vortex.api.moleculas.Distribuidor#getConectados()
+	 */
+	public List<Receptor> getConectados() {
+		final List<Receptor> conectados = new ArrayList<Receptor>(terminales.size());
+		for (final Terminal terminal : terminales) {
+			final List<Receptor> conectadosATerminal = terminal.getConectados();
+			conectados.addAll(conectadosATerminal);
+		}
+		return conectados;
+	}
 }

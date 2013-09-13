@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.impl.atomos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.atomos.Bifurcador;
 import net.gaia.vortex.api.basic.Receptor;
@@ -214,5 +217,15 @@ public class AtomoBifurcador extends EmisorSupport implements Bifurcador {
 	 */
 	public Receptor getConectado() {
 		return getReceptorPorTrue();
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados() {
+		final ArrayList<Receptor> conectados = new ArrayList<Receptor>(2);
+		conectados.add(getReceptorPorTrue());
+		conectados.add(getReceptorPorFalse());
+		return conectados;
 	}
 }

@@ -17,6 +17,9 @@
  */
 package net.gaia.vortex.impl.moleculas;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Transformador;
 import net.gaia.vortex.api.basic.Receptor;
@@ -118,4 +121,12 @@ public class MoleculaIdentificador extends EmisorSupport implements Identificado
 		transformadorEnviados.desconectarDe(destino);
 	}
 
+	/**
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados() {
+		final ArrayList<Receptor> conectados = new ArrayList<Receptor>(1);
+		conectados.add(transformadorEnviados.getConectado());
+		return conectados;
+	}
 }

@@ -17,6 +17,8 @@
  */
 package net.gaia.vortex.api.moleculas;
 
+import java.util.List;
+
 import net.gaia.vortex.api.atomos.Bifurcador;
 import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.basic.Nodo;
@@ -88,4 +90,11 @@ public interface Selector extends Nodo {
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(MensajeVortex mensaje);
+
+	/**
+	 * Devuelve la lista de los receptores conectados a las salidas de este selector
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados();
 }

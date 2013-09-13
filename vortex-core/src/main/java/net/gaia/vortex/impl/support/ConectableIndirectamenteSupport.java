@@ -17,6 +17,8 @@
  */
 package net.gaia.vortex.impl.support;
 
+import java.util.List;
+
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.basic.emisores.ConectableIndirectamente;
@@ -28,7 +30,7 @@ import net.gaia.vortex.api.basic.emisores.ConectableIndirectamente;
  * @param <E>
  */
 public abstract class ConectableIndirectamenteSupport<E extends Conectable> extends ReceptorSupport implements
-		ConectableIndirectamente<E> {
+		ConectableIndirectamente<E>, Conectable {
 
 	/**
 	 * Conecta el receptor indicado a la salida de este componente.<br>
@@ -60,4 +62,13 @@ public abstract class ConectableIndirectamenteSupport<E extends Conectable> exte
 		getSalida().desconectarDe(destino);
 	}
 
+	/**
+	 * Devuelve la lista de los conectados a la salida de este componente<br>
+	 * Este método es equivalente a {@link #getSalida()}.{@link #getConectados()}
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados() {
+		return getSalida().getConectados();
+	}
 }

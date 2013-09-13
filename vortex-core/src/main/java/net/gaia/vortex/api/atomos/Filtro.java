@@ -17,6 +17,8 @@
  */
 package net.gaia.vortex.api.atomos;
 
+import java.util.List;
+
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.api.basic.emisores.MonoEmisor;
@@ -75,4 +77,11 @@ public interface Filtro extends Nodo, MonoEmisor {
 	 */
 	public void setCondicion(Condicion condicion);
 
+	/**
+	 * Devuelve los receptores conectados a este filtro. Puede haber más de uno si la subclase es un
+	 * {@link Bifurcador}
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados();
 }

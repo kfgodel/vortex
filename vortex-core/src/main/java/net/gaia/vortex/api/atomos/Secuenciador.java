@@ -12,6 +12,8 @@
  */
 package net.gaia.vortex.api.atomos;
 
+import java.util.List;
+
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
@@ -90,4 +92,11 @@ public interface Secuenciador extends Nodo {
 	 * entregarlos al final
 	 */
 	void desconectarReceptorMedio();
+
+	/**
+	 * Devuelve los dos receptores conectados, el medio y el final, en ese orden
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados();
 }

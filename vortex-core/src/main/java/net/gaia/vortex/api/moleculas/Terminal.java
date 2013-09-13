@@ -17,6 +17,8 @@
  */
 package net.gaia.vortex.api.moleculas;
 
+import java.util.List;
+
 import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
@@ -56,6 +58,13 @@ public interface Terminal extends Nodo, ConectableIndirectamente<Conector> {
 	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectar()
 	 */
 	public void desconectar();
+
+	/**
+	 * Devuelve la lista con el receptor conectado a la salida de este terminal
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.Conectable#getConectados()
+	 */
+	public List<Receptor> getConectados();
 
 	/**
 	 * Desconecta de la salida de este componente el receptor indicado<br>

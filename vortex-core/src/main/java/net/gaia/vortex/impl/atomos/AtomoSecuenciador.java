@@ -12,6 +12,9 @@
  */
 package net.gaia.vortex.impl.atomos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.gaia.vortex.api.annotations.clases.Atomo;
 import net.gaia.vortex.api.atomos.Secuenciador;
 import net.gaia.vortex.api.basic.Receptor;
@@ -142,4 +145,14 @@ public class AtomoSecuenciador extends MonoEmisorSupport implements Secuenciador
 				.con(delegado_FIELD, receptorMedio).con(conectado_FIELD, getConectado()).toString();
 	}
 
+	/**
+	 * @see net.gaia.vortex.impl.support.MonoEmisorSupport#getConectados()
+	 */
+	@Override
+	public List<Receptor> getConectados() {
+		final ArrayList<Receptor> conectados = new ArrayList<Receptor>(2);
+		conectados.add(getReceptorMedio());
+		conectados.add(getReceptorFinal());
+		return conectados;
+	}
 }
