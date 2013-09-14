@@ -18,9 +18,9 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
 import net.gaia.vortex.deprecated.NexoSocketViejo;
 import net.gaia.vortex.deprecated.ServidorDeSocketVortexViejo;
-import net.gaia.vortex.sockets.external.mina.VortexSocketConfiguration;
+import net.gaia.vortex.deprecated.VortexSocketEventHandlerViejo;
+import net.gaia.vortex.impl.sockets.VortexSocketConfiguration;
 import net.gaia.vortex.sockets.impl.sockets.ReceptionHandlerNulo;
-import net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler;
 import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
@@ -46,7 +46,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortexViejo {
 	/**
 	 * El handler de eventos para los sockets creados
 	 */
-	private VortexSocketEventHandler socketHandler;
+	private VortexSocketEventHandlerViejo socketHandler;
 	public static final String socketHandler_FIELD = "socketHandler";
 
 	private SocketErrorHandler errorHandler;
@@ -110,7 +110,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortexViejo {
 		final ServidorDeNexoSocket acceptor = new ServidorDeNexoSocket();
 		acceptor.listeningAddress = listeningAddres;
 		acceptor.errorHandler = errorHandler;
-		acceptor.socketHandler = VortexSocketEventHandler.create(processor, estrategiaDeConexion);
+		acceptor.socketHandler = VortexSocketEventHandlerViejo.create(processor, estrategiaDeConexion);
 		return acceptor;
 	}
 

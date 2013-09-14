@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.ClienteDeNexoSocketViejo;
 import net.gaia.vortex.deprecated.NexoSocketViejo;
 import net.gaia.vortex.deprecated.PortalMapeadorViejo;
 import net.gaia.vortex.deprecated.RealizarConexionesPorFueraViejo;
@@ -24,7 +25,6 @@ import net.gaia.vortex.deprecated.RealizarConexionesViejo;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
-import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
 
 import org.junit.After;
@@ -45,7 +45,7 @@ public class TestRedDeSocketsMinima {
 
 	private TaskProcessor processor;
 	private ServidorDeNexoSocket servidorSockets;
-	private ClienteDeNexoSocket clienteSockets;
+	private ClienteDeNexoSocketViejo clienteSockets;
 
 	@Before
 	public void crearDependencias() {
@@ -78,7 +78,7 @@ public class TestRedDeSocketsMinima {
 
 		// Creamos el portal cliente inicialmente desconectado
 		final PortalMapeadorViejo portalCliente = PortalMapeadorViejo.createForOutputWith(processor, ReceptorNulo.getInstancia());
-		clienteSockets = ClienteDeNexoSocket
+		clienteSockets = ClienteDeNexoSocketViejo
 				.create(processor, sharedTestAddress, RealizarConexionesViejo.con(portalCliente));
 		clienteSockets.conectarASocketRomoto();
 
@@ -109,7 +109,7 @@ public class TestRedDeSocketsMinima {
 				RealizarConexionesViejo.con(portalServidor));
 		servidorSockets.aceptarConexionesRemotas();
 
-		clienteSockets = ClienteDeNexoSocket.create(processor, sharedTestAddress,
+		clienteSockets = ClienteDeNexoSocketViejo.create(processor, sharedTestAddress,
 				RealizarConexionesPorFueraViejo.getInstancia());
 		final NexoSocketViejo nexoConectado = clienteSockets.conectarASocketRomoto();
 

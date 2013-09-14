@@ -16,10 +16,10 @@ import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Molecula;
+import net.gaia.vortex.deprecated.ClienteDeNexoSocketViejo;
 import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosSupportViejo;
 import net.gaia.vortex.deprecated.NexoSocketViejo;
 import net.gaia.vortex.deprecated.RealizarConexionesViejo;
-import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.api.SocketErrorHandler;
@@ -44,7 +44,7 @@ public class NodoSocketViejo extends MultiplexorSinDuplicadosSupportViejo implem
 	/**
 	 * Cliente de conexiones salientes por socket
 	 */
-	private ClienteDeNexoSocket cliente;
+	private ClienteDeNexoSocketViejo cliente;
 
 	/**
 	 * Crea un nuevo {@link NodoSocketViejo} que actuará de servidor de conexiones entrantes en la
@@ -118,7 +118,7 @@ public class NodoSocketViejo extends MultiplexorSinDuplicadosSupportViejo implem
 			final SocketErrorHandler errorHandler) throws ObjectSocketException {
 		final NodoSocketViejo hubSocket = new NodoSocketViejo();
 		hubSocket.initializeWith(processor);
-		hubSocket.cliente = ClienteDeNexoSocket.create(processor, remoteAddress,
+		hubSocket.cliente = ClienteDeNexoSocketViejo.create(processor, remoteAddress,
 				RealizarConexionesViejo.con(hubSocket), errorHandler);
 		hubSocket.cliente.conectarASocketRomoto();
 		return hubSocket;
@@ -128,7 +128,7 @@ public class NodoSocketViejo extends MultiplexorSinDuplicadosSupportViejo implem
 		return servidor;
 	}
 
-	public ClienteDeNexoSocket getCliente() {
+	public ClienteDeNexoSocketViejo getCliente() {
 		return cliente;
 	}
 

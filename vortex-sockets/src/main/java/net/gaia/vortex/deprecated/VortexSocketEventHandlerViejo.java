@@ -1,12 +1,11 @@
 /**
  * 19/06/2012 19:59:09 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.sockets.impl.sockets;
+package net.gaia.vortex.deprecated;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
 import net.gaia.vortex.deprecated.GeneradorDeNexosViejo;
-import net.gaia.vortex.deprecated.NexoSocketViejo;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 import org.slf4j.Logger;
@@ -21,7 +20,8 @@ import ar.dgarcia.objectsockets.api.SocketEventHandler;
 /**
  * Esta clase representa el handler de eventos de sockets utilizado para el ciclo de vida de los
  * {@link NexoSocketViejo}s asociados a cada socket.<br>
- * A través de esta clase cada socket creado genera un nuevo {@link NexoSocketViejo} al que se asocia.<br>
+ * A través de esta clase cada socket creado genera un nuevo {@link NexoSocketViejo} al que se
+ * asocia.<br>
  * <br>
  * Los nexos creados de esta manera, comienzan inicialmente asociados al receptor nulo, de manera
  * que los mensajes recibidos pueden perderse si no se conecta el nexo creado a la red en el
@@ -29,8 +29,9 @@ import ar.dgarcia.objectsockets.api.SocketEventHandler;
  * 
  * @author D. García
  */
-public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDeNexosViejo {
-	private static final Logger LOG = LoggerFactory.getLogger(VortexSocketEventHandler.class);
+@Deprecated
+public class VortexSocketEventHandlerViejo implements SocketEventHandler, GeneradorDeNexosViejo {
+	private static final Logger LOG = LoggerFactory.getLogger(VortexSocketEventHandlerViejo.class);
 
 	/**
 	 * Constante para asociar un nexo al socket creado
@@ -46,7 +47,8 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(handler_FIELD, estrategiaDeConexion).toString();
 	}
@@ -54,7 +56,7 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 	/**
 	 * @see ar.dgarcia.objectsockets.api.SocketEventHandler#onSocketOpened(ar.dgarcia.objectsockets.api.ObjectSocket)
 	 */
-	
+
 	public void onSocketOpened(final ObjectSocket nuevoSocket) {
 		LOG.debug("Creando nexo para la conexión local[{}] - remota[{}]", nuevoSocket.getLocalAddress(),
 				nuevoSocket.getRemoteAddress());
@@ -64,7 +66,8 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 		nuevoSocket.setHandler(nuevoNexo);
 		try {
 			estrategiaDeConexion.onNexoCreado(nuevoNexo);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error en la estrategia de conexion[" + estrategiaDeConexion
 					+ "] al pasarle el nexo[" + nuevoNexo + "]. Ignorando error", e);
 		}
@@ -73,7 +76,7 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 	/**
 	 * @see ar.dgarcia.objectsockets.api.SocketEventHandler#onSocketClosed(ar.dgarcia.objectsockets.api.ObjectSocket)
 	 */
-	
+
 	public void onSocketClosed(final ObjectSocket socketCerrado) {
 		LOG.debug("Cerrando nexo para la conexión local[{}] - remota[{}]", socketCerrado.getLocalAddress(),
 				socketCerrado.getRemoteAddress());
@@ -84,7 +87,8 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 		}
 		try {
 			estrategiaDeConexion.onNexoCerrado(nexoCerrado);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error en la estrategia de desconexion[" + estrategiaDeConexion
 					+ "] al pasarle el nexo[" + nexoCerrado + "]. Ignorando error", e);
 		}
@@ -107,7 +111,8 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 		NexoSocketViejo nexoCerrado;
 		try {
 			nexoCerrado = (NexoSocketViejo) objeto;
-		} catch (final ClassCastException e) {
+		}
+		catch (final ClassCastException e) {
 			throw new UnhandledConditionException("Se obtuvo del socket un objeto[" + objeto + "] que no es un nexo?",
 					e);
 		}
@@ -118,9 +123,9 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 	 * Crea este handler de sockets que utilizará el procesor para los nexos creados y la estrategia
 	 * para asociarlos a una red
 	 */
-	public static VortexSocketEventHandler create(final TaskProcessor processor,
+	public static VortexSocketEventHandlerViejo create(final TaskProcessor processor,
 			final EstrategiaDeConexionDeNexosViejo estrategia) {
-		final VortexSocketEventHandler handler = new VortexSocketEventHandler();
+		final VortexSocketEventHandlerViejo handler = new VortexSocketEventHandlerViejo();
 		handler.processor = processor;
 		handler.estrategiaDeConexion = estrategia;
 		return handler;
@@ -129,7 +134,7 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 	/**
 	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#getEstrategiaDeConexion()
 	 */
-	
+
 	public EstrategiaDeConexionDeNexosViejo getEstrategiaDeConexion() {
 		return estrategiaDeConexion;
 	}
@@ -137,7 +142,7 @@ public class VortexSocketEventHandler implements SocketEventHandler, GeneradorDe
 	/**
 	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#setEstrategiaDeConexion(net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo)
 	 */
-	
+
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexosViejo estrategia) {
 		this.estrategiaDeConexion = estrategia;
 	}

@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.ClienteDeNexoSocketViejo;
 import net.gaia.vortex.deprecated.ClienteDeSocketVortexViejo;
 import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.deprecated.NexoSocketViejo;
@@ -28,7 +29,6 @@ import net.gaia.vortex.deprecated.RealizarConexionesViejo;
 import net.gaia.vortex.deprecated.ServidorDeSocketVortexViejo;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
-import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
 
 import org.junit.After;
@@ -59,7 +59,7 @@ public class TestRedDeSocketsConHubs {
 
 	private TaskProcessor processor;
 
-	private ClienteDeNexoSocket segundoCliente;
+	private ClienteDeNexoSocketViejo segundoCliente;
 	private InetSocketAddress sharedTestAddress;
 
 	@Before
@@ -85,7 +85,7 @@ public class TestRedDeSocketsConHubs {
 		socketAcceptor.aceptarConexionesRemotas();
 
 		// Creamos el cliente de sockets que conectará los nexos salientes al hub cliente
-		socketConnector = ClienteDeNexoSocket.create(processor, sharedTestAddress, RealizarConexionesViejo.con(hubCliente));
+		socketConnector = ClienteDeNexoSocketViejo.create(processor, sharedTestAddress, RealizarConexionesViejo.con(hubCliente));
 		socketConnector.conectarASocketRomoto();
 	}
 
@@ -165,7 +165,7 @@ public class TestRedDeSocketsConHubs {
 	 */
 	@Test
 	public void deberiaRecibirElMensajeDesdeDosReceptoresDistintosUnoEnElServidorYOtroEnOtroClienteSocket() {
-		segundoCliente = ClienteDeNexoSocket.create(processor, sharedTestAddress,
+		segundoCliente = ClienteDeNexoSocketViejo.create(processor, sharedTestAddress,
 				RealizarConexionesPorFueraViejo.getInstancia());
 		final NexoSocketViejo nexoDelSegundoCliente = segundoCliente.conectarASocketRomoto();
 

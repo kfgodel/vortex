@@ -18,6 +18,7 @@
 package net.gaia.vortex.api.moleculas;
 
 import net.gaia.vortex.api.basic.Nodo;
+import ar.dgarcia.objectsockets.api.ObjectReceptionHandler;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 
 /**
@@ -35,4 +36,12 @@ public interface NodoSocket extends Nodo {
 	 * @return El socket utilizado para el intercambio de mensajes en binario
 	 */
 	ObjectSocket getSocket();
+
+	/**
+	 * Devuelve el handler utilizado en este nodo para recibir los objetos del socket.<br>
+	 * Este handler es el que convertira los objetos recibidos en mensajes vortex
+	 * 
+	 * @return El handler para los objetos recibidos
+	 */
+	ObjectReceptionHandler getObjectReceptionHandler();
 }

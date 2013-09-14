@@ -17,11 +17,11 @@ import java.net.SocketAddress;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.tests.MedicionesDePerformance;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
+import net.gaia.vortex.deprecated.ClienteDeNexoSocketViejo;
 import net.gaia.vortex.deprecated.PortalMapeadorViejo;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.support.HandlerTipado;
-import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.moleculas.NodoSocketViejo;
 
 import org.junit.After;
@@ -236,7 +236,7 @@ public abstract class TestDeComunicacionTipicaSupport {
 	 *            El nombre de test para output en el log
 	 */
 	private void mostrarMetricasDe(final NodoSocketViejo nodo, final String nombreDelTest) {
-		final ClienteDeNexoSocket clienteSockets = nodo.getCliente();
+		final ClienteDeNexoSocketViejo clienteSockets = nodo.getCliente();
 		final MetricasDeCargaImpl metricasDelCliente = clienteSockets.getMetricas();
 
 		final MetricasPorTiempo metricasSegundo = metricasDelCliente.getMetricasEnBloqueDeUnSegundo();

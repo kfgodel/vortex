@@ -37,7 +37,7 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * 
  * @author dgarcia
  */
-public class MoleculaSocket extends ReceptorSupport implements NodoSocket, ObjectReceptionHandler, Disposable {
+public class MoleculaSocket extends ReceptorSupport implements NodoSocket, Disposable {
 
 	private ObjectSocket socket;
 	public static final String socket_FIELD = "socket";
@@ -89,11 +89,10 @@ public class MoleculaSocket extends ReceptorSupport implements NodoSocket, Objec
 	}
 
 	/**
-	 * @see ar.dgarcia.objectsockets.api.ObjectReceptionHandler#onObjectReceived(java.lang.Object,
-	 *      ar.dgarcia.objectsockets.api.ObjectSocket)
+	 * @see net.gaia.vortex.api.moleculas.NodoSocket#getObjectReceptionHandler()
 	 */
-	public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
-		haciaVortex.onObjectReceived(received, receivedFrom);
+	public ObjectReceptionHandler getObjectReceptionHandler() {
+		return haciaVortex;
 	}
 
 	/**
@@ -119,4 +118,5 @@ public class MoleculaSocket extends ReceptorSupport implements NodoSocket, Objec
 	public ObjectSocket getSocket() {
 		return socket;
 	}
+
 }

@@ -10,17 +10,14 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.impl;
+package net.gaia.vortex.deprecated;
 
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.deprecated.ClienteDeSocketVortexViejo;
 import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
-import net.gaia.vortex.deprecated.NexoSocketViejo;
-import net.gaia.vortex.sockets.external.mina.VortexSocketConfiguration;
+import net.gaia.vortex.impl.sockets.VortexSocketConfiguration;
 import net.gaia.vortex.sockets.impl.sockets.ReceptionHandlerNulo;
-import net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler;
 import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
@@ -34,7 +31,8 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketException;
  * 
  * @author D. García
  */
-public class ClienteDeNexoSocket implements ClienteDeSocketVortexViejo {
+@Deprecated
+public class ClienteDeNexoSocketViejo implements ClienteDeSocketVortexViejo {
 
 	private MetricasDeCargaImpl metricas;
 
@@ -47,7 +45,7 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortexViejo {
 	/**
 	 * El handler de eventos para los sockets creados
 	 */
-	private VortexSocketEventHandler socketHandler;
+	private VortexSocketEventHandlerViejo socketHandler;
 	public static final String socketHandler_FIELD = "socketHandler";
 
 	private SocketErrorHandler errorHandler;
@@ -60,7 +58,8 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortexViejo {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(remoteAddress_FIELD, remoteAddress).add(socketHandler_FIELD, socketHandler)
 				.toString();
@@ -69,7 +68,7 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortexViejo {
 	/**
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
-	
+
 	public void closeAndDispose() {
 		internalConnector.closeAndDispose();
 	}
@@ -78,7 +77,7 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortexViejo {
 	 * @return
 	 * @see net.gaia.vortex.deprecated.ClienteDeSocketVortexViejo#conectarASocketRomoto()
 	 */
-	
+
 	public NexoSocketViejo conectarASocketRomoto() throws ObjectSocketException {
 		this.metricas = MetricasDeCargaImpl.create();
 		final VortexSocketConfiguration socketConfig = VortexSocketConfiguration.crear(remoteAddress, this.metricas);
@@ -87,28 +86,28 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortexViejo {
 		socketConfig.setReceptionHandler(ReceptionHandlerNulo.getInstancia());
 		internalConnector = ObjectSocketConnector.create(socketConfig);
 		final ObjectSocket currentSocket = internalConnector.getObjectSocket();
-		final NexoSocketViejo nexoConectado = VortexSocketEventHandler.getNexoDelSocket(currentSocket);
+		final NexoSocketViejo nexoConectado = VortexSocketEventHandlerViejo.getNexoDelSocket(currentSocket);
 		return nexoConectado;
 	}
 
-	public static ClienteDeNexoSocket create(final TaskProcessor processor, final SocketAddress remoteAddress,
+	public static ClienteDeNexoSocketViejo create(final TaskProcessor processor, final SocketAddress remoteAddress,
 			final EstrategiaDeConexionDeNexosViejo estrategiaDeConexion) {
 		return create(processor, remoteAddress, estrategiaDeConexion, null);
 	}
 
-	public static ClienteDeNexoSocket create(final TaskProcessor processor, final SocketAddress remoteAddress,
+	public static ClienteDeNexoSocketViejo create(final TaskProcessor processor, final SocketAddress remoteAddress,
 			final EstrategiaDeConexionDeNexosViejo estrategiaDeConexion, final SocketErrorHandler errorHandler) {
-		final ClienteDeNexoSocket conector = new ClienteDeNexoSocket();
+		final ClienteDeNexoSocketViejo conector = new ClienteDeNexoSocketViejo();
 		conector.errorHandler = errorHandler;
 		conector.remoteAddress = remoteAddress;
-		conector.socketHandler = VortexSocketEventHandler.create(processor, estrategiaDeConexion);
+		conector.socketHandler = VortexSocketEventHandlerViejo.create(processor, estrategiaDeConexion);
 		return conector;
 	}
 
 	/**
 	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#getEstrategiaDeConexion()
 	 */
-	
+
 	public EstrategiaDeConexionDeNexosViejo getEstrategiaDeConexion() {
 		return socketHandler.getEstrategiaDeConexion();
 	}
@@ -116,7 +115,7 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortexViejo {
 	/**
 	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#setEstrategiaDeConexion(net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo)
 	 */
-	
+
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexosViejo estrategia) {
 		socketHandler.setEstrategiaDeConexion(estrategia);
 	}
