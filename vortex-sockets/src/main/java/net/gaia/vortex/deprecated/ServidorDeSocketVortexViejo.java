@@ -10,22 +10,23 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.api;
+package net.gaia.vortex.deprecated;
 
-import net.gaia.vortex.server.api.GeneradorDeNexos;
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
+import net.gaia.vortex.deprecated.GeneradorDeNexosViejo;
+import net.gaia.vortex.sockets.impl.moleculas.NexoSocketViejo;
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
 /**
  * Esta interfaz representa un elemento utilizable en vortex para escuchar conexiones entrantes en
  * forma de sockets.<br>
- * Por cada conexión realizada se obtendrá un {@link NexoSocket} que permite abstraer la
+ * Por cada conexión realizada se obtendrá un {@link NexoSocketViejo} que permite abstraer la
  * comunicación con el socket real
  * 
  * @author D. García
  */
-public interface ServidorDeSocketVortex extends Disposable, GeneradorDeNexos {
+@Deprecated
+public interface ServidorDeSocketVortexViejo extends Disposable, GeneradorDeNexosViejo {
 	/**
 	 * Abre el socket indicado para aceptar conexiones entrantes
 	 * 

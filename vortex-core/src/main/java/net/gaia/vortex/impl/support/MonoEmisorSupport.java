@@ -85,7 +85,8 @@ public class MonoEmisorSupport extends EmisorSupport implements MonoEmisor {
 	 */
 	@Override
 	public String toString() {
-		return ToString.de(this).con(conectado_FIELD, conectado).toString();
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(conectado_FIELD, conectado)
+				.toString();
 	}
 
 }

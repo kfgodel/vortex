@@ -13,6 +13,7 @@ import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.builder.Nodos;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
@@ -113,7 +114,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 	public void el_Receptor_Debería_Poder_Recibir_De_Vortex_Cualquier_Objeto_Serializable() {
 		// Para recibir de la red nos conectamos a un componente receptor
 		final ReceptorEncolador receptorDelCliente = ReceptorEncolador.create();
-		builder.conectarDesde(nodoReceptor, receptorDelCliente);
+		nodoReceptor.conectarCon(receptorDelCliente);
 	}
 
 	/**
@@ -124,7 +125,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 	@Test
 	public void el_Mensaje_Enviado_Desde_El_Emisor_Y_El_Recibido_Por_El_Receptor_Deberian_Ser_Iguales() {
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
-		builder.conectarDesde(nodoReceptor, handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
 		nodoEmisor.recibir(mensaje1);
 
@@ -154,7 +155,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 				esperarParaComprobarEnEmisor.release();
 			}
 		};
-		builder.conectarDesde(nodoReceptor, handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
 		final Conector emisorAsincronico = builder.asincronizar(nodoEmisor);
 		emisorAsincronico.recibir(mensaje1);
@@ -189,7 +190,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 				threadDeEntregaDefinido.release();
 			}
 		};
-		builder.conectarDesde(nodoReceptor, handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
 		final Conector emisorAsincrono = builder.asincronizar(nodoEmisor);
 		emisorAsincrono.recibir(mensaje1);
@@ -211,7 +212,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 	public void el_Emisor_No_Deberia_Recibir_Su_Propio_Mensaje() {
 		// Le conectamos un receptor directo al emisor para ver los que le llegan
 		final ReceptorEncolador recibidosPorElEmisor = ReceptorEncolador.create();
-		builder.conectarDesde(nodoEmisor, recibidosPorElEmisor);
+		nodoEmisor.conectarCon(recibidosPorElEmisor);
 
 		// Mandamos el mensaje
 		nodoEmisor.recibir(mensaje1);
@@ -223,8 +224,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 		try {
 			recibidosPorElEmisor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("No deberíamos haber recibido un segundo mensaje");
-		}
-		catch (final TimeoutExceededException e) {
+		} catch (final TimeoutExceededException e) {
 			// Es la excepción que esperábamos
 		}
 	}
@@ -240,7 +240,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 		final Compuesto<Filtro, Multiplexor> nodoReceptor = crearNodoDefault();
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
-		builder.conectarDesde(nodoReceptor, handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
 		interconectar(nodoEmisor, nodoIntermedio1);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
@@ -254,8 +254,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 		try {
 			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("No deberíamos haber recibido otro mensaje");
-		}
-		catch (final TimeoutExceededException e) {
+		} catch (final TimeoutExceededException e) {
 			// Es la excepción que esperábamos
 		}
 	}
@@ -268,14 +267,14 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 		final Compuesto<Filtro, Multiplexor> nodoEmisor = crearNodoDefault();
 		// Le conectamos un receptor directo al emisor para ver los que le llegan
 		final ReceptorEncolador recibidosPorElEmisor = ReceptorEncolador.create();
-		builder.conectarDesde(nodoEmisor, recibidosPorElEmisor);
+		nodoEmisor.conectarCon(recibidosPorElEmisor);
 
 		final Compuesto<Filtro, Multiplexor> nodoIntermedio1 = crearNodoDefault();
 		final Compuesto<Filtro, Multiplexor> nodoIntermedio2 = crearNodoDefault();
 		final Compuesto<Filtro, Multiplexor> nodoReceptor = crearNodoDefault();
 
 		final ReceptorEncolador handlerReceptor = ReceptorEncolador.create();
-		builder.conectarDesde(nodoReceptor, handlerReceptor);
+		nodoReceptor.conectarCon(handlerReceptor);
 
 		interconectar(nodoEmisor, nodoIntermedio1);
 		interconectar(nodoIntermedio1, nodoIntermedio2);
@@ -293,8 +292,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 		try {
 			recibidosPorElEmisor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("No deberíamos haber recibido un segundo mensaje");
-		}
-		catch (final TimeoutExceededException e) {
+		} catch (final TimeoutExceededException e) {
 			// Es la excepción que esperábamos
 		}
 	}
@@ -306,11 +304,11 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 	public void elMensajeDeberiaLlegarADosReceptoresIndependientes() {
 		// Armamos la red con otro receptor
 		final ReceptorEncolador handlerReceptor1 = ReceptorEncolador.create();
-		builder.conectarDesde(nodoReceptor, handlerReceptor1);
+		nodoReceptor.conectarCon(handlerReceptor1);
 
 		final ReceptorEncolador handlerReceptor2 = ReceptorEncolador.create();
 		final Compuesto<Filtro, Multiplexor> nodoReceptor2 = crearNodoDefault();
-		builder.conectarDesde(nodoReceptor2, handlerReceptor2);
+		nodoReceptor2.conectarCon(handlerReceptor2);
 
 		interconectar(nodoRuteador, nodoReceptor2);
 
@@ -331,8 +329,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 	 */
 	public void interconectar(final Compuesto<Filtro, Multiplexor> nodoEmisor2,
 			final Compuesto<Filtro, Multiplexor> nodoRuteador2) {
-		builder.conectarDesde(nodoEmisor2, nodoRuteador2);
-		builder.conectarDesde(nodoRuteador2, nodoEmisor2);
+		Nodos.interconectar(nodoEmisor2, nodoRuteador2);
 	}
 
 	/**
@@ -343,7 +340,7 @@ public class TestRedA01ConMultiplexorSinDuplicados {
 	public void en_Memoria_El_Tiempo_De_Entrega_Normal_Debería_Ser_Menosr_A_1Milisegundo() {
 		final int cantidadDeMensajes = 100000;
 		final WaitBarrier espeerarEntregas = WaitBarrier.create(cantidadDeMensajes);
-		builder.conectarDesde(nodoReceptor, new ReceptorSupport() {
+		nodoReceptor.conectarCon(new ReceptorSupport() {
 
 			public void recibir(final MensajeVortex mensaje) {
 				espeerarEntregas.release();

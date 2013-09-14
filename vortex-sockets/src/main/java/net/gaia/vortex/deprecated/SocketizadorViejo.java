@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.impl.atomos;
+package net.gaia.vortex.deprecated;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
@@ -25,7 +25,8 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * 
  * @author D. García
  */
-public class Socketizador extends ReceptorConProcesador {
+@Deprecated
+public class SocketizadorViejo extends ReceptorConProcesador {
 
 	private ObjectSocket socket;
 	public static final String socket_FIELD = "socket";
@@ -33,14 +34,15 @@ public class Socketizador extends ReceptorConProcesador {
 	/**
 	 * @see net.gaia.vortex.deprecated.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
+	@Override
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final EnviarPorSocket envio = EnviarPorSocket.create(socket, mensaje);
 		return envio;
 	}
 
-	public static Socketizador create(final TaskProcessor processor, final ObjectSocket socket) {
-		final Socketizador socketizador = new Socketizador();
+	public static SocketizadorViejo create(final TaskProcessor processor, final ObjectSocket socket) {
+		final SocketizadorViejo socketizador = new SocketizadorViejo();
 		socketizador.initializeWith(processor);
 		socketizador.socket = socket;
 		return socketizador;
@@ -49,7 +51,7 @@ public class Socketizador extends ReceptorConProcesador {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(socket_FIELD, socket)
 				.toString();

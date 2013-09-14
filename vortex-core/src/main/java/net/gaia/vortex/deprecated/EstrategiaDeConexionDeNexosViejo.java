@@ -1,9 +1,8 @@
 /**
  * 19/06/2012 19:46:45 Copyright (C) 2011 10Pines S.R.L.
  */
-package net.gaia.vortex.server.api;
+package net.gaia.vortex.deprecated;
 
-import net.gaia.vortex.deprecated.NexoViejo;
 
 /**
  * Esta interfaz representa una estrategia brindada externamente a una entidad creadora/destructora
@@ -15,7 +14,8 @@ import net.gaia.vortex.deprecated.NexoViejo;
  * 
  * @author D. García
  */
-public interface EstrategiaDeConexionDeNexos {
+@Deprecated
+public interface EstrategiaDeConexionDeNexosViejo {
 
 	/**
 	 * Invocado por el administrador de los sockets durante la creación del socket y el nexo que

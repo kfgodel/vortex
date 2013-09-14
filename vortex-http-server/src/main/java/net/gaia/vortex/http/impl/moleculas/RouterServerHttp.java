@@ -13,10 +13,10 @@
 package net.gaia.vortex.http.impl.moleculas;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.RealizarConexionesViejo;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.server.ServidorDeNexoHttp;
 import net.gaia.vortex.router.impl.moleculas.support.RouterSupport;
-import net.gaia.vortex.server.impl.RealizarConexiones;
 
 /**
  * Esta clase representa el router de mensajes bidi que acepta conexiones entrantes por http
@@ -43,7 +43,7 @@ public class RouterServerHttp extends RouterSupport {
 		final RouterServerHttp nodoHttp = new RouterServerHttp();
 		nodoHttp.initializeWith(processor);
 		nodoHttp.servidorInterno = ServidorDeNexoHttp
-				.create(processor, listeningPort, RealizarConexiones.con(nodoHttp));
+				.create(processor, listeningPort, RealizarConexionesViejo.con(nodoHttp));
 		nodoHttp.servidorInterno.iniciarServidorHttp();
 		return nodoHttp;
 	}

@@ -10,24 +10,26 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.api;
+package net.gaia.vortex.deprecated;
 
-import net.gaia.vortex.server.api.GeneradorDeNexos;
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
+import net.gaia.vortex.sockets.impl.moleculas.NexoSocketViejo;
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
 /**
- * Esta interfaz representa un elemento utilizable en vortex para generar conexiones salientes
- * mediante sockets.<br>
- * Por cada conexión realizada se obtendrá un {@link NexoSocket} que permite abstraer la
- * comunicación con el socket real
+ * Esta interfaz representa un cliente de conexiones sockets que es utilizable en vortex para
+ * transmitir mensajes por ese medio.<br>
+ * Cuando se establece la conexión este cliente provee un componente vortex que permite abstraer los
+ * detalles del socket, y concentrarse en la mensajería utilizando la msima interfaz que para el
+ * resto de los componentes vortex
  * 
  * @author D. García
  */
-public interface ClienteDeSocketVortex extends Disposable, GeneradorDeNexos {
+@Deprecated
+public interface ClienteDeSocketVortexViejo extends Disposable, GeneradorDeNexosViejo {
 	/**
-	 * Conecta como cliente este nodo a la dirección indicada en la creación
+	 * Abre una conexión mediante sockets con la dirección Conecta como cliente este nodo a la
+	 * dirección indicada en la creación
 	 * 
 	 * @return El nexo creado a partir del sockect conectado y conectado a la red según la
 	 *         estrategia definida en este cliente
@@ -35,13 +37,13 @@ public interface ClienteDeSocketVortex extends Disposable, GeneradorDeNexos {
 	 * @throws ObjectSocketException
 	 *             Si no se puede conectar con el socket remoto
 	 */
-	public abstract NexoSocket conectarASocketRomoto() throws ObjectSocketException;
+	public abstract NexoSocketViejo conectarASocketRomoto() throws ObjectSocketException;
 
 	/**
 	 * Cierra la conexion saliente actual y libera los recursos. Impidiendo futuras conexiones
 	 * 
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
-	
+
 	public void closeAndDispose();
 }

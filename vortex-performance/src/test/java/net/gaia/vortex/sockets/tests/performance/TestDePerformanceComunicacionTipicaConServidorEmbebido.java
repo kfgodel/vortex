@@ -17,7 +17,7 @@ import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
-import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
+import net.gaia.vortex.sockets.impl.moleculas.NodoSocketViejo;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,14 +32,14 @@ import org.junit.Before;
 public class TestDePerformanceComunicacionTipicaConServidorEmbebido extends TestDeComunicacionTipicaSupport {
 
 	private TaskProcessor procesadorDelNodoServidor;
-	private NodoSocket nodoServidor;
+	private NodoSocketViejo nodoServidor;
 
 	@Before
 	public void crearProcesador() {
 		final SocketAddress sharedAddress = new InetSocketAddress(10000);
 
 		procesadorDelNodoServidor = VortexProcessorFactory.createProcessor();
-		nodoServidor = NodoSocket.createAndListenTo(sharedAddress, procesadorDelNodoServidor);
+		nodoServidor = NodoSocketViejo.createAndListenTo(sharedAddress, procesadorDelNodoServidor);
 
 		crearNodosClientes(sharedAddress);
 	}

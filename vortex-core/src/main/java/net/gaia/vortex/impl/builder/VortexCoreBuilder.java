@@ -227,14 +227,6 @@ public class VortexCoreBuilder implements VortexCore {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.builder.VortexCore#conectarDesde(net.gaia.vortex.api.moleculas.Compuesto,
-	 *      net.gaia.vortex.api.basic.Receptor)
-	 */
-	public void conectarDesde(final Compuesto<?, ? extends Conectable> origen, final Receptor destino) {
-		origen.getSalida().conectarCon(destino);
-	}
-
-	/**
 	 * @see net.gaia.vortex.api.builder.VortexCore#asincronizar(net.gaia.vortex.api.basic.Receptor)
 	 */
 	public Conector asincronizar(final Receptor receptor) {

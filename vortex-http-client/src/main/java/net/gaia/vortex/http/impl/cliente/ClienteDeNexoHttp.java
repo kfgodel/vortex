@@ -13,11 +13,11 @@
 package net.gaia.vortex.http.impl.cliente;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
 import net.gaia.vortex.http.api.ClienteDeHttpVortex;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 import net.gaia.vortex.http.sesiones.SesionVortexHttpEnCliente;
-import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	private SesionVortexHttpEnCliente sesionAbierta;
 
 	public static ClienteDeNexoHttp create(final TaskProcessor processor, final String serverUrl,
-			final EstrategiaDeConexionDeNexos estrategia, final HttpResponseProvider provider) {
+			final EstrategiaDeConexionDeNexosViejo estrategia, final HttpResponseProvider provider) {
 		final ClienteDeNexoHttp cliente = new ClienteDeNexoHttp();
 		cliente.urlDelServidor = serverUrl;
 		cliente.conector = VortexHttpConnector.create(processor, estrategia, provider);
@@ -50,18 +50,18 @@ public class ClienteDeNexoHttp implements ClienteDeHttpVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#getEstrategiaDeConexion()
 	 */
 	
-	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
+	public EstrategiaDeConexionDeNexosViejo getEstrategiaDeConexion() {
 		return conector.getEstrategiaDeConexion();
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#setEstrategiaDeConexion(net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo)
 	 */
 	
-	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
+	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexosViejo estrategia) {
 		this.conector.setEstrategiaDeConexion(estrategia);
 	}
 

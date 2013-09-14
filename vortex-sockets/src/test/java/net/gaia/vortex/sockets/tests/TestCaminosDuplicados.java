@@ -22,7 +22,7 @@ import net.gaia.vortex.deprecated.PortalMapeadorViejo;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.support.HandlerTipado;
-import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
+import net.gaia.vortex.sockets.impl.moleculas.NodoSocketViejo;
 
 import org.junit.After;
 import org.junit.Before;
@@ -44,21 +44,21 @@ public class TestCaminosDuplicados {
 	private static final Logger LOG = LoggerFactory.getLogger(TestCaminosDuplicados.class);
 
 	private TaskProcessor procesador;
-	private NodoSocket serverEmisor;
-	private NodoSocket serverReceptor;
-	private NodoSocket clienteIntermedio;
-	private NodoSocket clienteEmisor;
-	private NodoSocket clienteReceptor;
+	private NodoSocketViejo serverEmisor;
+	private NodoSocketViejo serverReceptor;
+	private NodoSocketViejo clienteIntermedio;
+	private NodoSocketViejo clienteEmisor;
+	private NodoSocketViejo clienteReceptor;
 
 	private PortalMapeadorViejo portalReceptor;
 
 	private PortalMapeadorViejo portalEmisor;
 
-	private NodoSocket serverParalelo;
+	private NodoSocketViejo serverParalelo;
 
-	private NodoSocket clienteReceptorParalelo;
+	private NodoSocketViejo clienteReceptorParalelo;
 
-	private NodoSocket clienteIntermedioParalelo;
+	private NodoSocketViejo clienteIntermedioParalelo;
 
 	@Before
 	public void crearProcesador() {
@@ -175,23 +175,23 @@ public class TestCaminosDuplicados {
 	private void crearNodosConIntermedios() {
 		// Creamos el primer server
 		final InetSocketAddress direccionServerEmisor = new InetSocketAddress(21111);
-		serverEmisor = NodoSocket.createAndListenTo(direccionServerEmisor, procesador);
+		serverEmisor = NodoSocketViejo.createAndListenTo(direccionServerEmisor, procesador);
 
 		// Creamos el segundo server
 		final InetSocketAddress direccionServerReceptor = new InetSocketAddress(21112);
-		serverReceptor = NodoSocket.createAndListenTo(direccionServerReceptor, procesador);
+		serverReceptor = NodoSocketViejo.createAndListenTo(direccionServerReceptor, procesador);
 
 		// Conectamos el primero con el segundo
-		clienteIntermedio = NodoSocket.createAndConnectTo(direccionServerReceptor, procesador);
+		clienteIntermedio = NodoSocketViejo.createAndConnectTo(direccionServerReceptor, procesador);
 		serverEmisor.conectarCon(clienteIntermedio);
 		clienteIntermedio.conectarCon(serverEmisor);
 
 		// Creamos el cliente del emisor y su portal
-		clienteEmisor = NodoSocket.createAndConnectTo(direccionServerEmisor, procesador);
+		clienteEmisor = NodoSocketViejo.createAndConnectTo(direccionServerEmisor, procesador);
 		portalEmisor = PortalMapeadorViejo.createForIOWith(procesador, clienteEmisor);
 
 		// Creamos el cliente del receptor y su portal
-		clienteReceptor = NodoSocket.createAndConnectTo(direccionServerReceptor, procesador);
+		clienteReceptor = NodoSocketViejo.createAndConnectTo(direccionServerReceptor, procesador);
 		portalReceptor = PortalMapeadorViejo.createForIOWith(procesador, clienteReceptor);
 	}
 
@@ -207,14 +207,14 @@ public class TestCaminosDuplicados {
 
 		// Agregamos otro server paralelo
 		final InetSocketAddress direccionServerParalelo = new InetSocketAddress(21113);
-		serverParalelo = NodoSocket.createAndListenTo(direccionServerParalelo, procesador);
+		serverParalelo = NodoSocketViejo.createAndListenTo(direccionServerParalelo, procesador);
 
 		// Y las conexiones para que llegue desde el emisor al receptor
-		clienteIntermedioParalelo = NodoSocket.createAndConnectTo(direccionServerParalelo, procesador);
+		clienteIntermedioParalelo = NodoSocketViejo.createAndConnectTo(direccionServerParalelo, procesador);
 		serverEmisor.conectarCon(clienteIntermedioParalelo);
 		clienteIntermedioParalelo.conectarCon(serverEmisor);
 
-		clienteReceptorParalelo = NodoSocket.createAndConnectTo(direccionServerParalelo, procesador);
+		clienteReceptorParalelo = NodoSocketViejo.createAndConnectTo(direccionServerParalelo, procesador);
 		clienteReceptorParalelo.conectarCon(portalReceptor);
 		portalReceptor.conectarCon(clienteReceptorParalelo);
 

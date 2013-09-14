@@ -18,14 +18,14 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.deprecated.PortalMapeadorViejo;
+import net.gaia.vortex.deprecated.RealizarConexionesPorFueraViejo;
+import net.gaia.vortex.deprecated.RealizarConexionesViejo;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
-import net.gaia.vortex.server.impl.RealizarConexiones;
-import net.gaia.vortex.server.impl.RealizarConexionesPorFuera;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
+import net.gaia.vortex.sockets.impl.moleculas.NexoSocketViejo;
 
 import org.junit.After;
 import org.junit.Before;
@@ -73,13 +73,13 @@ public class TestRedDeSocketsMinima {
 				.createForOutputWith(processor, ReceptorNulo.getInstancia());
 		// El servidor conectara el portal al recibir una conexion
 		servidorSockets = ServidorDeNexoSocket.create(processor, sharedTestAddress,
-				RealizarConexiones.con(portalServidor));
+				RealizarConexionesViejo.con(portalServidor));
 		servidorSockets.aceptarConexionesRemotas();
 
 		// Creamos el portal cliente inicialmente desconectado
 		final PortalMapeadorViejo portalCliente = PortalMapeadorViejo.createForOutputWith(processor, ReceptorNulo.getInstancia());
 		clienteSockets = ClienteDeNexoSocket
-				.create(processor, sharedTestAddress, RealizarConexiones.con(portalCliente));
+				.create(processor, sharedTestAddress, RealizarConexionesViejo.con(portalCliente));
 		clienteSockets.conectarASocketRomoto();
 
 		verificarEnvioDeMensaje(portalCliente, portalServidor);
@@ -106,12 +106,12 @@ public class TestRedDeSocketsMinima {
 				.createForOutputWith(processor, ReceptorNulo.getInstancia());
 		// El servidor conectara el portal al recibir una conexion
 		servidorSockets = ServidorDeNexoSocket.create(processor, sharedTestAddress,
-				RealizarConexiones.con(portalServidor));
+				RealizarConexionesViejo.con(portalServidor));
 		servidorSockets.aceptarConexionesRemotas();
 
 		clienteSockets = ClienteDeNexoSocket.create(processor, sharedTestAddress,
-				RealizarConexionesPorFuera.getInstancia());
-		final NexoSocket nexoConectado = clienteSockets.conectarASocketRomoto();
+				RealizarConexionesPorFueraViejo.getInstancia());
+		final NexoSocketViejo nexoConectado = clienteSockets.conectarASocketRomoto();
 
 		// Creamos ahora sí el portal cliente
 		final PortalMapeadorViejo portalCliente = PortalMapeadorViejo.createForIOWith(processor, nexoConectado);

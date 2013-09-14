@@ -23,6 +23,7 @@ import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
+import net.gaia.vortex.api.builder.Nodos;
 import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.api.moleculas.Portal;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
@@ -225,8 +226,7 @@ public class TestRedA01ConPortalIdentificador {
 		try {
 			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("Nunca debería salir de la espera sin excepción");
-		}
-		catch (final TimeoutExceededException e) {
+		} catch (final TimeoutExceededException e) {
 			// Es la excepción que esperábamos
 		}
 
@@ -308,8 +308,7 @@ public class TestRedA01ConPortalIdentificador {
 		try {
 			handlerReceptor.esperarPorMensaje(TimeMagnitude.of(1, TimeUnit.SECONDS));
 			Assert.fail("No deberíamos haber recibido otro mensaje");
-		}
-		catch (final TimeoutExceededException e) {
+		} catch (final TimeoutExceededException e) {
 			// Es la excepción que esperábamos
 		}
 	}
@@ -376,8 +375,7 @@ public class TestRedA01ConPortalIdentificador {
 	 */
 	public void interconectar(final Compuesto<Filtro, Multiplexor> nodoIntermedio1,
 			final Compuesto<Filtro, Multiplexor> nodoIntermedio2) {
-		nodoIntermedio1.getSalida().conectarCon(nodoIntermedio2);
-		nodoIntermedio2.getSalida().conectarCon(nodoIntermedio1);
+		Nodos.interconectar(nodoIntermedio1, nodoIntermedio2);
 	}
 
 }

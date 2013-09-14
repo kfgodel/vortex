@@ -200,17 +200,6 @@ public interface VortexCore {
 	<E extends Receptor, S extends Conectable> Compuesto<E, S> componer(final E entrada, final S salida);
 
 	/**
-	 * Crea una conexión unidireccional desde el origen al destino. Utilizando la salida del origen
-	 * para la conexión al destino
-	 * 
-	 * @param origen
-	 *            El componente desde el cual parten los mensajes
-	 * @param destino
-	 *            El componente al que deben llegar
-	 */
-	void conectarDesde(Compuesto<?, ? extends Conectable> origen, Receptor destino);
-
-	/**
 	 * Crea un conector asincrono, que independiza el thread que entrega el mensaje del que lo
 	 * recibe. A través de este conector se pueden entregar mensajes al receptor indicado sin
 	 * utilizar el thread actual.<br>

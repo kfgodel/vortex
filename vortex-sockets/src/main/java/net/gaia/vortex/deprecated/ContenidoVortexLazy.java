@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.portal.impl.mensaje;
+package net.gaia.vortex.deprecated;
 
 import java.util.Collection;
 import java.util.Map;
@@ -38,6 +38,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  * 
  * @author D. García
  */
+@Deprecated
 public class ContenidoVortexLazy implements ContenidoVortex {
 	private static final Logger LOG = LoggerFactory.getLogger(ContenidoVortexLazy.class);
 
@@ -66,7 +67,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#size()
 	 */
-	
+
 	public int size() {
 		cargarDatosEnCache();
 		return cache.size();
@@ -75,7 +76,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#isEmpty()
 	 */
-	
+
 	public boolean isEmpty() {
 		if (!cache.isEmpty()) {
 			// No hace falta cargar el objeto para contestar
@@ -88,7 +89,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
-	
+
 	public boolean containsKey(final Object key) {
 		if (cache.containsKey(key)) {
 			// No hace falta cargar el objeto para contestar
@@ -101,7 +102,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#containsValue(java.lang.Object)
 	 */
-	
+
 	public boolean containsValue(final Object value) {
 		if (cache.containsValue(value)) {
 			// No hace falta cargar el objeto para contestar
@@ -114,7 +115,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
-	
+
 	public Object get(final Object key) {
 		if (!cache.containsKey(key)) {
 			// Si no está en cache puede que no esté o que tengamos que revisar el objeto
@@ -170,7 +171,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
-	
+
 	public Object put(final String key, final Object value) {
 		return cache.put(key, value);
 	}
@@ -178,7 +179,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	
+
 	public Object remove(final Object key) {
 		cargarDatosEnCache();
 		return cache.remove(key);
@@ -187,7 +188,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	
+
 	public void putAll(final Map<? extends String, ? extends Object> m) {
 		cache.putAll(m);
 	}
@@ -195,7 +196,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#clear()
 	 */
-	
+
 	public void clear() {
 		throw new UnhandledConditionException("No implementamos el clear. Que uso se le da?");
 	}
@@ -203,7 +204,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#keySet()
 	 */
-	
+
 	public Set<String> keySet() {
 		cargarDatosEnCache();
 		return cache.keySet();
@@ -212,7 +213,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#values()
 	 */
-	
+
 	public Collection<Object> values() {
 		cargarDatosEnCache();
 		return cache.values();
@@ -221,7 +222,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.util.Map#entrySet()
 	 */
-	
+
 	public Set<java.util.Map.Entry<String, Object>> entrySet() {
 		cargarDatosEnCache();
 		return cache.entrySet();
@@ -243,7 +244,8 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		final boolean cargadoEnCache = unSyncYaEstaCargadoEnCache();
 		final ToString builder = ToString.de(this).con("cargado", cargadoEnCache);
@@ -258,7 +260,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#setNombreDelTipoOriginal(java.lang.String)
 	 */
-	
+
 	public void setNombreDelTipoOriginal(final String nombreDeClaseCompleto) {
 		cache.setNombreDelTipoOriginal(nombreDeClaseCompleto);
 	}
@@ -266,7 +268,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#getNombreDelTipoOriginal()
 	 */
-	
+
 	public String getNombreDelTipoOriginal() {
 		return cache.getNombreDelTipoOriginal();
 	}
@@ -274,7 +276,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#getValorComoPrimitiva()
 	 */
-	
+
 	public Object getValorComoPrimitiva() {
 		return cache.getValorComoPrimitiva();
 	}
@@ -282,7 +284,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#setValorComoPrimitiva(java.lang.Object)
 	 */
-	
+
 	public void setValorComoPrimitiva(final Object valor) {
 		cache.setValorComoPrimitiva(valor);
 	}
@@ -290,7 +292,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#tieneValorComoPrimitiva()
 	 */
-	
+
 	public boolean tieneValorComoPrimitiva() {
 		return cache.tieneValorComoPrimitiva();
 	}
@@ -298,7 +300,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#getIdDeMensaje()
 	 */
-	
+
 	@SuppressWarnings("unchecked")
 	public IdDeMensaje getIdDeMensaje() {
 		final Object object = get(ContenidoVortex.ID_DE_MENSAJE_KEY);
@@ -327,7 +329,7 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	/**
 	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#setIdDeMensaje(net.gaia.vortex.api.ids.mensajes.IdDeMensaje)
 	 */
-	
+
 	public void setIdDeMensaje(final IdDeMensaje idDelMensaje) {
 		Map<String, Object> idComoMapa = null;
 		if (idDelMensaje != null) {
@@ -340,7 +342,6 @@ public class ContenidoVortexLazy implements ContenidoVortex {
 	 * @see net.gaia.vortex.api.mensajes.ContenidoVortex#getIdDeMensajeComoMapa()
 	 */
 	@SuppressWarnings("unchecked")
-	
 	public Map<String, Object> getIdDeMensajeComoMapa() {
 		return (Map<String, Object>) get(ID_DE_MENSAJE_KEY);
 	}

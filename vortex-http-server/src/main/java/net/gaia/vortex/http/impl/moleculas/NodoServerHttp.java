@@ -14,9 +14,9 @@ package net.gaia.vortex.http.impl.moleculas;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosSupportViejo;
+import net.gaia.vortex.deprecated.RealizarConexionesViejo;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.server.ServidorDeNexoHttp;
-import net.gaia.vortex.server.impl.RealizarConexiones;
 
 /**
  * Esta clase representa un {@link NodoMultiplexor} que hace de servidor http permitiendo a clientes
@@ -46,7 +46,7 @@ public class NodoServerHttp extends MultiplexorSinDuplicadosSupportViejo {
 		final NodoServerHttp nodoHttp = new NodoServerHttp();
 		nodoHttp.initializeWith(processor);
 		nodoHttp.servidorInterno = ServidorDeNexoHttp
-				.create(processor, listeningPort, RealizarConexiones.con(nodoHttp));
+				.create(processor, listeningPort, RealizarConexionesViejo.con(nodoHttp));
 		nodoHttp.servidorInterno.iniciarServidorHttp();
 		return nodoHttp;
 	}

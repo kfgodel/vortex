@@ -22,7 +22,7 @@ import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.support.HandlerTipado;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
-import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
+import net.gaia.vortex.sockets.impl.moleculas.NodoSocketViejo;
 
 import org.junit.After;
 import org.junit.Test;
@@ -53,8 +53,8 @@ public abstract class TestDeComunicacionTipicaSupport {
 	private TaskProcessor procesadorDelNodoEmisor;
 	private TaskProcessor procesadorDelNodoReceptor;
 
-	private NodoSocket nodoEmisor;
-	private NodoSocket nodoReceptor;
+	private NodoSocketViejo nodoEmisor;
+	private NodoSocketViejo nodoReceptor;
 
 	/**
 	 * Crea los nodos clientes que se utilizan para la mensajería
@@ -64,10 +64,10 @@ public abstract class TestDeComunicacionTipicaSupport {
 	 */
 	protected void crearNodosClientes(final SocketAddress sharedAddress) {
 		procesadorDelNodoReceptor = VortexProcessorFactory.createProcessor();
-		nodoReceptor = NodoSocket.createAndConnectTo(sharedAddress, procesadorDelNodoReceptor);
+		nodoReceptor = NodoSocketViejo.createAndConnectTo(sharedAddress, procesadorDelNodoReceptor);
 
 		procesadorDelNodoEmisor = VortexProcessorFactory.createProcessor();
-		nodoEmisor = NodoSocket.createAndConnectTo(sharedAddress, procesadorDelNodoEmisor);
+		nodoEmisor = NodoSocketViejo.createAndConnectTo(sharedAddress, procesadorDelNodoEmisor);
 	}
 
 	@After
@@ -235,7 +235,7 @@ public abstract class TestDeComunicacionTipicaSupport {
 	 * @param nombreDelTest
 	 *            El nombre de test para output en el log
 	 */
-	private void mostrarMetricasDe(final NodoSocket nodo, final String nombreDelTest) {
+	private void mostrarMetricasDe(final NodoSocketViejo nodo, final String nombreDelTest) {
 		final ClienteDeNexoSocket clienteSockets = nodo.getCliente();
 		final MetricasDeCargaImpl metricasDelCliente = clienteSockets.getMetricas();
 

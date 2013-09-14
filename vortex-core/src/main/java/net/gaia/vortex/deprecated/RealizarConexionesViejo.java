@@ -10,29 +10,27 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.server.impl;
+package net.gaia.vortex.deprecated;
 
 import net.gaia.vortex.core.prog.Loggers;
-import net.gaia.vortex.deprecated.NexoViejo;
-import net.gaia.vortex.deprecated.NodoViejo;
-import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 import ar.com.dgarcia.lang.strings.ToString;
 
 /**
- * Esta clase representa una estrategia de conexión de {@link NexoViejo} a la red vortex utilizando un
- * nodo conocido. Esta clase conecta los nuevos nexos al nodo, y los desconecta al cerrarse
+ * Esta clase representa una estrategia de conexión de {@link NexoViejo} a la red vortex utilizando
+ * un nodo conocido. Esta clase conecta los nuevos nexos al nodo, y los desconecta al cerrarse
  * 
  * @author D. García
  */
-public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
+@Deprecated
+public class RealizarConexionesViejo implements EstrategiaDeConexionDeNexosViejo {
 
 	private NodoViejo nodoConocido;
 	public static final String hubConocido_FIELD = "nodoConocido";
 
 	/**
-	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
+	 * @see net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo#conectarNodo(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
-	
+
 	public void onNexoCreado(final NexoViejo nuevoNexo) {
 		Loggers.RUTEO.info("Conectando nuevo nexo[{}] con el nodo[{}]", nuevoNexo, nodoConocido);
 		nuevoNexo.conectarCon(nodoConocido);
@@ -40,17 +38,17 @@ public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
+	 * @see net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo#onNexoCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
-	
+
 	public void onNexoCerrado(final NexoViejo nexoCerrado) {
 		Loggers.RUTEO.info("Des-Conectando nexo[{}] del nodo[{}]", nexoCerrado, nodoConocido);
 		nodoConocido.desconectarDe(nexoCerrado);
 		nexoCerrado.desconectarDe(nodoConocido);
 	}
 
-	public static RealizarConexiones con(final NodoViejo nodo) {
-		final RealizarConexiones conector = new RealizarConexiones();
+	public static RealizarConexionesViejo con(final NodoViejo nodo) {
+		final RealizarConexionesViejo conector = new RealizarConexionesViejo();
 		conector.nodoConocido = nodo;
 		return conector;
 	}
@@ -58,7 +56,7 @@ public class RealizarConexiones implements EstrategiaDeConexionDeNexos {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+	@Override
 	public String toString() {
 		return ToString.de(this).add(hubConocido_FIELD, nodoConocido).toString();
 	}

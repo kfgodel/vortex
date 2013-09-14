@@ -10,10 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.server.impl;
-
-import net.gaia.vortex.deprecated.NexoViejo;
-import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
+package net.gaia.vortex.deprecated;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,18 +27,19 @@ import ar.com.dgarcia.coding.caching.WeakSingletonSupport;
  * 
  * @author D. García
  */
-public class RealizarConexionesPorFuera extends WeakSingletonSupport implements EstrategiaDeConexionDeNexos {
-	private static final Logger LOG = LoggerFactory.getLogger(RealizarConexionesPorFuera.class);
+@Deprecated
+public class RealizarConexionesPorFueraViejo extends WeakSingletonSupport implements EstrategiaDeConexionDeNexosViejo {
+	private static final Logger LOG = LoggerFactory.getLogger(RealizarConexionesPorFueraViejo.class);
 
-	private static final WeakSingleton<RealizarConexionesPorFuera> ultimaReferencia = new WeakSingleton<RealizarConexionesPorFuera>(
-			DefaultInstantiator.create(RealizarConexionesPorFuera.class));
+	private static final WeakSingleton<RealizarConexionesPorFueraViejo> ultimaReferencia = new WeakSingleton<RealizarConexionesPorFueraViejo>(
+			DefaultInstantiator.create(RealizarConexionesPorFueraViejo.class));
 
-	public static RealizarConexionesPorFuera getInstancia() {
+	public static RealizarConexionesPorFueraViejo getInstancia() {
 		return ultimaReferencia.get();
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCreado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
+	 * @see net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo#conectarNodo(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 
 	public void onNexoCreado(final NexoViejo nuevoNexo) {
@@ -49,7 +47,7 @@ public class RealizarConexionesPorFuera extends WeakSingletonSupport implements 
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos#onNexoCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
+	 * @see net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo#onNexoCerrado(net.gaia.vortex.sockets.impl.moleculas.NexoSocket)
 	 */
 
 	public void onNexoCerrado(final NexoViejo nexoCerrado) {

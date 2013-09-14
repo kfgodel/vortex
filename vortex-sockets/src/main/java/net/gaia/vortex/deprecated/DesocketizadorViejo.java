@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.impl.atomos;
+package net.gaia.vortex.deprecated;
 
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
@@ -32,14 +32,15 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * 
  * @author D. García
  */
-public class Desocketizador extends NexoSupport implements ObjectReceptionHandler {
-	private static final Logger LOG = LoggerFactory.getLogger(Desocketizador.class);
+@Deprecated
+public class DesocketizadorViejo extends NexoSupport implements ObjectReceptionHandler {
+	private static final Logger LOG = LoggerFactory.getLogger(DesocketizadorViejo.class);
 
 	/**
 	 * @see ar.dgarcia.objectsockets.api.ObjectReceptionHandler#onObjectReceived(java.lang.Object,
 	 *      ar.dgarcia.objectsockets.api.ObjectSocket)
 	 */
-	
+
 	public void onObjectReceived(final Object received, final ObjectSocket receivedFrom) {
 		if (!(received instanceof MensajeVortex)) {
 			LOG.error("Se recibio desde un socket[" + receivedFrom + "] un objeto[" + received
@@ -54,7 +55,8 @@ public class Desocketizador extends NexoSupport implements ObjectReceptionHandle
 	/**
 	 * @see net.gaia.vortex.deprecated.ReceptorConProcesador#crearTareaAlRecibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
+	@Override
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
 		final DelegarMensajeViejo delegacion = DelegarMensajeViejo.create(mensaje, getDestino());
 		return delegacion;
@@ -63,14 +65,14 @@ public class Desocketizador extends NexoSupport implements ObjectReceptionHandle
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).add(destino_FIELD, getDestino())
 				.toString();
 	}
 
-	public static Desocketizador create(final TaskProcessor processor, final Receptor destino) {
-		final Desocketizador desocketizador = new Desocketizador();
+	public static DesocketizadorViejo create(final TaskProcessor processor, final Receptor destino) {
+		final DesocketizadorViejo desocketizador = new DesocketizadorViejo();
 		desocketizador.initializeWith(processor, destino);
 		return desocketizador;
 	}

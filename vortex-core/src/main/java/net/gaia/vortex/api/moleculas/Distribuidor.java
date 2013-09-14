@@ -84,6 +84,16 @@ public interface Distribuidor extends Nodo {
 	Terminal crearTerminal();
 
 	/**
+	 * Devuelve la termina de este distribuidor que está conectada al receptor pasado en su salida
+	 * 
+	 * @param receptor
+	 *            El receptor conectado desde la terminal
+	 * @return La terminal de este distribuidor que está conectada al receptor o null si no existe
+	 *         ninguna con ese criterio
+	 */
+	Terminal getTerminalConectadaA(Receptor receptor);
+
+	/**
 	 * Elimina el terminal previamente creado para liberar recursos
 	 * 
 	 * @param eliminable

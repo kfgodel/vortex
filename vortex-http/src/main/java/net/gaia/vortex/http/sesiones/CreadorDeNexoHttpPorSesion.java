@@ -13,9 +13,9 @@
 package net.gaia.vortex.http.sesiones;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
-import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class CreadorDeNexoHttpPorSesion implements ListenerDeSesionesHttp {
 	private static final Logger LOG = LoggerFactory.getLogger(CreadorDeNexoHttpPorSesion.class);
 
 	private TaskProcessor processor;
-	private EstrategiaDeConexionDeNexos estrategia;
+	private EstrategiaDeConexionDeNexosViejo estrategia;
 	public static final String estrategia_FIELD = "estrategia";
 
 	/**
@@ -71,7 +71,7 @@ public class CreadorDeNexoHttpPorSesion implements ListenerDeSesionesHttp {
 	}
 
 	public static CreadorDeNexoHttpPorSesion create(final TaskProcessor processor,
-			final EstrategiaDeConexionDeNexos estrategia) {
+			final EstrategiaDeConexionDeNexosViejo estrategia) {
 		final CreadorDeNexoHttpPorSesion creador = new CreadorDeNexoHttpPorSesion();
 		creador.estrategia = estrategia;
 		creador.processor = processor;
@@ -94,11 +94,11 @@ public class CreadorDeNexoHttpPorSesion implements ListenerDeSesionesHttp {
 		this.processor = processor;
 	}
 
-	public EstrategiaDeConexionDeNexos getEstrategia() {
+	public EstrategiaDeConexionDeNexosViejo getEstrategia() {
 		return estrategia;
 	}
 
-	public void setEstrategia(final EstrategiaDeConexionDeNexos estrategia) {
+	public void setEstrategia(final EstrategiaDeConexionDeNexosViejo estrategia) {
 		this.estrategia = estrategia;
 	}
 

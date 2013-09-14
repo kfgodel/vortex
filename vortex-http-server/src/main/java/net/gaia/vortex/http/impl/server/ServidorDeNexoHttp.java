@@ -13,10 +13,10 @@
 package net.gaia.vortex.http.impl.server;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
 import net.gaia.vortex.http.api.ServidorDeHttpVortex;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.moleculas.NexoHttp;
-import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
 
 import org.eclipse.jetty.server.Server;
 
@@ -34,18 +34,18 @@ public class ServidorDeNexoHttp implements ServidorDeHttpVortex {
 	private VortexHttpHandler vortexHttpHandler;
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#getEstrategiaDeConexion()
 	 */
 	
-	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
+	public EstrategiaDeConexionDeNexosViejo getEstrategiaDeConexion() {
 		return this.vortexHttpHandler.getEstrategiaDeConexion();
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#setEstrategiaDeConexion(net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo)
 	 */
 	
-	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
+	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexosViejo estrategia) {
 		this.vortexHttpHandler.setEstrategiaDeConexion(estrategia);
 	}
 
@@ -79,7 +79,7 @@ public class ServidorDeNexoHttp implements ServidorDeHttpVortex {
 	}
 
 	public static ServidorDeNexoHttp create(final TaskProcessor processor, final int listeningPort,
-			final EstrategiaDeConexionDeNexos estrategiaDeConexion) {
+			final EstrategiaDeConexionDeNexosViejo estrategiaDeConexion) {
 		final ServidorDeNexoHttp servidor = new ServidorDeNexoHttp();
 		servidor.listeningPort = listeningPort;
 		servidor.vortexHttpHandler = VortexHttpHandler.create(processor, estrategiaDeConexion);

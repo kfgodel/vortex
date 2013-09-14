@@ -34,7 +34,7 @@ public class NodoMoleculaSupportViejo extends NodoSupportViejo {
 	/**
 	 * @see net.gaia.vortex.deprecated.EmisorViejo#conectarCon(net.gaia.vortex.api.basic.Receptor)
 	 */
-	
+
 	public void conectarCon(final Receptor destino) {
 		final EmisorViejo componenteSalida = flujoInterno.getSalida();
 		componenteSalida.conectarCon(destino);
@@ -43,7 +43,7 @@ public class NodoMoleculaSupportViejo extends NodoSupportViejo {
 	/**
 	 * @see net.gaia.vortex.deprecated.EmisorViejo#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
-	
+
 	public void desconectarDe(final Receptor destino) {
 		final EmisorViejo componenteSalida = flujoInterno.getSalida();
 		componenteSalida.desconectarDe(destino);
@@ -52,7 +52,7 @@ public class NodoMoleculaSupportViejo extends NodoSupportViejo {
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
-	
+
 	public void recibir(final MensajeVortex mensaje) {
 		Loggers.ATOMOS.trace("Recibido en nodo[{}] el mensaje[{}]", this.toShortString(), mensaje);
 		final Receptor componenteEntrada = flujoInterno.getEntrada();
@@ -74,7 +74,7 @@ public class NodoMoleculaSupportViejo extends NodoSupportViejo {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+	@Override
 	public String toString() {
 		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
 				.con(flujoInterno_FIELD, flujoInterno).toString();

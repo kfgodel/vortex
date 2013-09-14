@@ -17,7 +17,7 @@ import java.net.SocketAddress;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Molecula;
 import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosSupportViejo;
-import net.gaia.vortex.server.impl.RealizarConexiones;
+import net.gaia.vortex.deprecated.RealizarConexionesViejo;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
 import ar.dgarcia.objectsockets.api.Disposable;
@@ -26,13 +26,14 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
 /**
  * Esta clase representa un {@link NodoMultiplexor} conectado a un socket como cliente o como
- * servidor del cual recibe conexiones entrantes en forma de {@link NexoSocket}s conectados.<br>
- * Si el socket se desconecta por algún motivo, el {@link NexoSocket} se desconecta de este nodo
+ * servidor del cual recibe conexiones entrantes en forma de {@link NexoSocketViejo}s conectados.<br>
+ * Si el socket se desconecta por algún motivo, el {@link NexoSocketViejo} se desconecta de este nodo
  * 
  * @author D. García
  */
 @Molecula
-public class NodoSocket extends MultiplexorSinDuplicadosSupportViejo implements Disposable {
+@Deprecated
+public class NodoSocketViejo extends MultiplexorSinDuplicadosSupportViejo implements Disposable {
 
 	/**
 	 * Servidor de conexiones entrantes por socket
@@ -45,7 +46,7 @@ public class NodoSocket extends MultiplexorSinDuplicadosSupportViejo implements 
 	private ClienteDeNexoSocket cliente;
 
 	/**
-	 * Crea un nuevo {@link NodoSocket} que actuará de servidor de conexiones entrantes en la
+	 * Crea un nuevo {@link NodoSocketViejo} que actuará de servidor de conexiones entrantes en la
 	 * dirección indicada, permitiendo comunicarse remotamente al conectarse a este hub
 	 * 
 	 * @param listeningAddress
@@ -54,16 +55,16 @@ public class NodoSocket extends MultiplexorSinDuplicadosSupportViejo implements 
 	 *            El procesador para las tareas internas
 	 * @return El hub creado y escuchando en el socket indicado
 	 */
-	public static NodoSocket createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor) {
+	public static NodoSocketViejo createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor) {
 		return createAndListenTo(listeningAddress, processor, null);
 	}
 
-	public static NodoSocket createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor,
-			final SocketErrorHandler errorHandler) {
-		final NodoSocket hubSocket = new NodoSocket();
+	public static NodoSocketViejo createAndListenTo(final SocketAddress listeningAddress,
+			final TaskProcessor processor, final SocketErrorHandler errorHandler) {
+		final NodoSocketViejo hubSocket = new NodoSocketViejo();
 		hubSocket.initializeWith(processor);
 		hubSocket.servidor = ServidorDeNexoSocket.create(processor, listeningAddress,
-				RealizarConexiones.con(hubSocket), errorHandler);
+				RealizarConexionesViejo.con(hubSocket), errorHandler);
 		hubSocket.servidor.aceptarConexionesRemotas();
 		return hubSocket;
 	}
@@ -71,7 +72,7 @@ public class NodoSocket extends MultiplexorSinDuplicadosSupportViejo implements 
 	/**
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
-	
+
 	public void closeAndDispose() {
 		if (cliente != null) {
 			cliente.closeAndDispose();
@@ -82,7 +83,7 @@ public class NodoSocket extends MultiplexorSinDuplicadosSupportViejo implements 
 	}
 
 	/**
-	 * Crea un nuevo {@link NodoSocket} que se conectará a la dirección remota como cliente
+	 * Crea un nuevo {@link NodoSocketViejo} que se conectará a la dirección remota como cliente
 	 * permitiendo comunicarse remotamente al conectarse a este hub
 	 * 
 	 * @param remoteAddress
@@ -93,13 +94,13 @@ public class NodoSocket extends MultiplexorSinDuplicadosSupportViejo implements 
 	 * @throws ObjectSocketException
 	 *             Si no se pudo realizar la conexion
 	 */
-	public static NodoSocket createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor)
+	public static NodoSocketViejo createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor)
 			throws ObjectSocketException {
 		return createAndConnectTo(remoteAddress, processor, null);
 	}
 
 	/**
-	 * Crea un nuevo {@link NodoSocket} que se conectará a la dirección remota como cliente
+	 * Crea un nuevo {@link NodoSocketViejo} que se conectará a la dirección remota como cliente
 	 * permitiendo comunicarse remotamente al conectarse a este hub
 	 * 
 	 * @param remoteAddress
@@ -112,12 +113,12 @@ public class NodoSocket extends MultiplexorSinDuplicadosSupportViejo implements 
 	 * @throws ObjectSocketException
 	 *             Si no se pudo realizar la conexión
 	 */
-	public static NodoSocket createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor,
+	public static NodoSocketViejo createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor,
 			final SocketErrorHandler errorHandler) throws ObjectSocketException {
-		final NodoSocket hubSocket = new NodoSocket();
+		final NodoSocketViejo hubSocket = new NodoSocketViejo();
 		hubSocket.initializeWith(processor);
-		hubSocket.cliente = ClienteDeNexoSocket.create(processor, remoteAddress, RealizarConexiones.con(hubSocket),
-				errorHandler);
+		hubSocket.cliente = ClienteDeNexoSocket.create(processor, remoteAddress,
+				RealizarConexionesViejo.con(hubSocket), errorHandler);
 		hubSocket.cliente.conectarASocketRomoto();
 		return hubSocket;
 	}

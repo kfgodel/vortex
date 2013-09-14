@@ -13,6 +13,8 @@
 package net.gaia.vortex.http.impl.cliente;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
+import net.gaia.vortex.deprecated.GeneradorDeNexosViejo;
 import net.gaia.vortex.http.external.json.JacksonHttpTextualizer;
 import net.gaia.vortex.http.external.json.VortexHttpTextualizer;
 import net.gaia.vortex.http.impl.VortexHttpException;
@@ -22,8 +24,6 @@ import net.gaia.vortex.http.impl.cliente.sesiones.AdministradorDeSesionesCliente
 import net.gaia.vortex.http.sesiones.CreadorDeNexoHttpPorSesion;
 import net.gaia.vortex.http.sesiones.SesionClienteEnMemoria;
 import net.gaia.vortex.http.sesiones.SesionVortexHttpEnCliente;
-import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
-import net.gaia.vortex.server.api.GeneradorDeNexos;
 import ar.dgarcia.http.client.api.HttpResponseProvider;
 
 /**
@@ -32,7 +32,7 @@ import ar.dgarcia.http.client.api.HttpResponseProvider;
  * 
  * @author D. García
  */
-public class VortexHttpConnector implements GeneradorDeNexos {
+public class VortexHttpConnector implements GeneradorDeNexosViejo {
 
 	private TaskProcessor processor;
 	private HttpResponseProvider httpProvider;
@@ -41,7 +41,7 @@ public class VortexHttpConnector implements GeneradorDeNexos {
 	private CreadorDeNexoHttpPorSesion creadorDeNexos;
 
 	public static VortexHttpConnector create(final TaskProcessor processor,
-			final EstrategiaDeConexionDeNexos estrategia, final HttpResponseProvider provider) {
+			final EstrategiaDeConexionDeNexosViejo estrategia, final HttpResponseProvider provider) {
 		final VortexHttpConnector conector = new VortexHttpConnector();
 		conector.processor = processor;
 		conector.httpProvider = provider;
@@ -52,18 +52,18 @@ public class VortexHttpConnector implements GeneradorDeNexos {
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#getEstrategiaDeConexion()
 	 */
 	
-	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
+	public EstrategiaDeConexionDeNexosViejo getEstrategiaDeConexion() {
 		return creadorDeNexos.getEstrategia();
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#setEstrategiaDeConexion(net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo)
 	 */
 	
-	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
+	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexosViejo estrategia) {
 		if (estrategia == null) {
 			throw new IllegalArgumentException("La estrategia no puede ser null para el conector http");
 		}

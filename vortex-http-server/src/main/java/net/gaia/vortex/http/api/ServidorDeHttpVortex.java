@@ -12,15 +12,15 @@
  */
 package net.gaia.vortex.http.api;
 
+import net.gaia.vortex.deprecated.GeneradorDeNexosViejo;
 import net.gaia.vortex.http.impl.VortexHttpException;
-import net.gaia.vortex.server.api.GeneradorDeNexos;
 
 /**
  * Esta interfaz define el contrato esperado de un servidor http vortex
  * 
  * @author D. García
  */
-public interface ServidorDeHttpVortex extends GeneradorDeNexos {
+public interface ServidorDeHttpVortex extends GeneradorDeNexosViejo {
 	/**
 	 * Inicia el servidor http interno utilizado para aceptar requests con mensajes
 	 */

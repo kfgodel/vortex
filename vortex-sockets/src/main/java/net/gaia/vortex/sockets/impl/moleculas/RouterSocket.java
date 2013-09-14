@@ -16,8 +16,8 @@ import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Molecula;
+import net.gaia.vortex.deprecated.RealizarConexionesViejo;
 import net.gaia.vortex.router.impl.moleculas.support.RouterSupport;
-import net.gaia.vortex.server.impl.RealizarConexiones;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
 import ar.dgarcia.objectsockets.api.Disposable;
@@ -44,7 +44,7 @@ public class RouterSocket extends RouterSupport implements Disposable {
 	private ClienteDeNexoSocket cliente;
 
 	/**
-	 * Crea un nuevo {@link NodoSocket} que actuará de servidor de conexiones entrantes en la
+	 * Crea un nuevo {@link NodoSocketViejo} que actuará de servidor de conexiones entrantes en la
 	 * dirección indicada, permitiendo comunicarse remotamente al conectarse a este hub
 	 * 
 	 * @param listeningAddress
@@ -62,7 +62,7 @@ public class RouterSocket extends RouterSupport implements Disposable {
 		final RouterSocket hubSocket = new RouterSocket();
 		hubSocket.initializeWith(processor);
 		hubSocket.servidor = ServidorDeNexoSocket.create(processor, listeningAddress,
-				RealizarConexiones.con(hubSocket), errorHandler);
+				RealizarConexionesViejo.con(hubSocket), errorHandler);
 		hubSocket.servidor.aceptarConexionesRemotas();
 		return hubSocket;
 	}
@@ -81,7 +81,7 @@ public class RouterSocket extends RouterSupport implements Disposable {
 	}
 
 	/**
-	 * Crea un nuevo {@link NodoSocket} que se conectará a la dirección remota como cliente
+	 * Crea un nuevo {@link NodoSocketViejo} que se conectará a la dirección remota como cliente
 	 * permitiendo comunicarse remotamente al conectarse a este hub
 	 * 
 	 * @param remoteAddress
@@ -98,7 +98,7 @@ public class RouterSocket extends RouterSupport implements Disposable {
 	}
 
 	/**
-	 * Crea un nuevo {@link NodoSocket} que se conectará a la dirección remota como cliente
+	 * Crea un nuevo {@link NodoSocketViejo} que se conectará a la dirección remota como cliente
 	 * permitiendo comunicarse remotamente al conectarse a este hub
 	 * 
 	 * @param remoteAddress
@@ -115,7 +115,7 @@ public class RouterSocket extends RouterSupport implements Disposable {
 			final SocketErrorHandler errorHandler) throws ObjectSocketException {
 		final RouterSocket hubSocket = new RouterSocket();
 		hubSocket.initializeWith(processor);
-		hubSocket.cliente = ClienteDeNexoSocket.create(processor, remoteAddress, RealizarConexiones.con(hubSocket),
+		hubSocket.cliente = ClienteDeNexoSocket.create(processor, remoteAddress, RealizarConexionesViejo.con(hubSocket),
 				errorHandler);
 		hubSocket.cliente.conectarASocketRomoto();
 		return hubSocket;

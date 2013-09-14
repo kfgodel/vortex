@@ -22,7 +22,7 @@ import net.gaia.vortex.deprecated.PortalMapeadorViejo;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.support.HandlerTipado;
-import net.gaia.vortex.sockets.impl.moleculas.NodoSocket;
+import net.gaia.vortex.sockets.impl.moleculas.NodoSocketViejo;
 
 import org.junit.After;
 import org.junit.Before;
@@ -118,8 +118,8 @@ public class TestDePerformanceConNodoSockets {
 		final MetricasPorTiempoImpl metricas = MetricasPorTiempoImpl.create();
 
 		final InetSocketAddress sharedAddress = new InetSocketAddress(10000);
-		final NodoSocket nodoServidor = NodoSocket.createAndListenTo(sharedAddress, processorRecepcion);
-		final NodoSocket nodoCliente = NodoSocket.createAndConnectTo(sharedAddress, processorEnvios);
+		final NodoSocketViejo nodoServidor = NodoSocketViejo.createAndListenTo(sharedAddress, processorRecepcion);
+		final NodoSocketViejo nodoCliente = NodoSocketViejo.createAndConnectTo(sharedAddress, processorEnvios);
 		try {
 			final PortalMapeadorViejo portalReceptor = PortalMapeadorViejo.createForIOWith(processorRecepcion, nodoServidor);
 			portalReceptor.recibirCon(new HandlerTipado<MensajeModeloParaTests>(SiempreTrue.getInstancia()) {

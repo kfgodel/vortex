@@ -15,10 +15,10 @@ package net.gaia.vortex.sockets.impl;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
-import net.gaia.vortex.sockets.api.ServidorDeSocketVortex;
+import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
+import net.gaia.vortex.deprecated.ServidorDeSocketVortexViejo;
 import net.gaia.vortex.sockets.external.mina.VortexSocketConfiguration;
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
+import net.gaia.vortex.sockets.impl.moleculas.NexoSocketViejo;
 import net.gaia.vortex.sockets.impl.sockets.ReceptionHandlerNulo;
 import net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler;
 import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
@@ -31,11 +31,11 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
 /**
  * Esta clase representa la implementación servidor de conexiones vortex con sockets entrantes
- * utilizando {@link ObjectSocket}s wrapeados en {@link NexoSocket} para incorporarlos a la red
+ * utilizando {@link ObjectSocket}s wrapeados en {@link NexoSocketViejo} para incorporarlos a la red
  * 
  * @author D. García
  */
-public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
+public class ServidorDeNexoSocket implements ServidorDeSocketVortexViejo {
 
 	/**
 	 * Dirección en la que escucha este acceptor
@@ -67,7 +67,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.sockets.api.ServidorDeSocketVortex#aceptarConexionesRemotas()
+	 * @see net.gaia.vortex.deprecated.ServidorDeSocketVortexViejo#aceptarConexionesRemotas()
 	 */
 	
 	public void aceptarConexionesRemotas() throws ObjectSocketException {
@@ -80,7 +80,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.sockets.api.ServidorDeSocketVortex#closeAndDispose()
+	 * @see net.gaia.vortex.deprecated.ServidorDeSocketVortexViejo#closeAndDispose()
 	 */
 	
 	public void closeAndDispose() {
@@ -89,7 +89,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 
 	/**
 	 * Crea un componente que acepta conexiones entrantes en la dirección indicada y crea
-	 * {@link NexoSocket} por cada conexión utilizando al estrategia indicada para incorporarlos a
+	 * {@link NexoSocketViejo} por cada conexión utilizando al estrategia indicada para incorporarlos a
 	 * la red vortex
 	 * 
 	 * @param processor
@@ -101,12 +101,12 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	 * @return El aceptador creado
 	 */
 	public static ServidorDeNexoSocket create(final TaskProcessor processor, final SocketAddress listeningAddres,
-			final EstrategiaDeConexionDeNexos estrategiaDeConexion) {
+			final EstrategiaDeConexionDeNexosViejo estrategiaDeConexion) {
 		return create(processor, listeningAddres, estrategiaDeConexion, null);
 	}
 
 	public static ServidorDeNexoSocket create(final TaskProcessor processor, final SocketAddress listeningAddres,
-			final EstrategiaDeConexionDeNexos estrategiaDeConexion, final SocketErrorHandler errorHandler) {
+			final EstrategiaDeConexionDeNexosViejo estrategiaDeConexion, final SocketErrorHandler errorHandler) {
 		final ServidorDeNexoSocket acceptor = new ServidorDeNexoSocket();
 		acceptor.listeningAddress = listeningAddres;
 		acceptor.errorHandler = errorHandler;
@@ -115,18 +115,18 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#getEstrategiaDeConexion()
 	 */
 	
-	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
+	public EstrategiaDeConexionDeNexosViejo getEstrategiaDeConexion() {
 		return socketHandler.getEstrategiaDeConexion();
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#setEstrategiaDeConexion(net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo)
 	 */
 	
-	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
+	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexosViejo estrategia) {
 		socketHandler.setEstrategiaDeConexion(estrategia);
 	}
 

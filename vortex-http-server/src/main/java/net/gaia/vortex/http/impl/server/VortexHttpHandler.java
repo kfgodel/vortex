@@ -13,6 +13,8 @@
 package net.gaia.vortex.http.impl.server;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
+import net.gaia.vortex.deprecated.GeneradorDeNexosViejo;
 import net.gaia.vortex.http.api.HttpMetadata;
 import net.gaia.vortex.http.external.jetty.ComandoHttp;
 import net.gaia.vortex.http.external.jetty.HandlerHttpPorComandos;
@@ -23,8 +25,6 @@ import net.gaia.vortex.http.impl.server.comandos.SinComando;
 import net.gaia.vortex.http.impl.server.sesiones.AdministradorDeSesionesServer;
 import net.gaia.vortex.http.impl.server.sesiones.AdministradorServerEnMemoria;
 import net.gaia.vortex.http.sesiones.CreadorDeNexoHttpPorSesion;
-import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
-import net.gaia.vortex.server.api.GeneradorDeNexos;
 
 import org.eclipse.jetty.server.Request;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author D. García
  */
-public class VortexHttpHandler extends HandlerHttpPorComandos implements GeneradorDeNexos {
+public class VortexHttpHandler extends HandlerHttpPorComandos implements GeneradorDeNexosViejo {
 	private static final Logger LOG = LoggerFactory.getLogger(VortexHttpHandler.class);
 
 	private AdministradorDeSesionesServer administradorDeSesiones;
@@ -84,7 +84,7 @@ public class VortexHttpHandler extends HandlerHttpPorComandos implements Generad
 		return sessionId;
 	}
 
-	public static VortexHttpHandler create(final TaskProcessor processor, final EstrategiaDeConexionDeNexos estrategia) {
+	public static VortexHttpHandler create(final TaskProcessor processor, final EstrategiaDeConexionDeNexosViejo estrategia) {
 		final VortexHttpHandler handler = new VortexHttpHandler();
 		handler.creadorDeNexos = CreadorDeNexoHttpPorSesion.create(processor, estrategia);
 		handler.administradorDeSesiones = AdministradorServerEnMemoria.create(handler.creadorDeNexos, processor);
@@ -92,18 +92,18 @@ public class VortexHttpHandler extends HandlerHttpPorComandos implements Generad
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#getEstrategiaDeConexion()
 	 */
 	
-	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
+	public EstrategiaDeConexionDeNexosViejo getEstrategiaDeConexion() {
 		return this.creadorDeNexos.getEstrategia();
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#setEstrategiaDeConexion(net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo)
 	 */
 	
-	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
+	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexosViejo estrategia) {
 		if (estrategia == null) {
 			throw new IllegalArgumentException("La estrategia no puede ser null para el handler http");
 		}

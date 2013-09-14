@@ -15,10 +15,10 @@ package net.gaia.vortex.sockets.impl;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos;
-import net.gaia.vortex.sockets.api.ClienteDeSocketVortex;
+import net.gaia.vortex.deprecated.ClienteDeSocketVortexViejo;
+import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
 import net.gaia.vortex.sockets.external.mina.VortexSocketConfiguration;
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
+import net.gaia.vortex.sockets.impl.moleculas.NexoSocketViejo;
 import net.gaia.vortex.sockets.impl.sockets.ReceptionHandlerNulo;
 import net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler;
 import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
@@ -30,11 +30,11 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
 /**
  * Esta clase representa la implementación del conector de vortex con sockets salientes que utiliza
- * {@link ObjectSocket}s wrapeados en {@link NexoSocket} para integrarlos a una red existente
+ * {@link ObjectSocket}s wrapeados en {@link NexoSocketViejo} para integrarlos a una red existente
  * 
  * @author D. García
  */
-public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
+public class ClienteDeNexoSocket implements ClienteDeSocketVortexViejo {
 
 	private MetricasDeCargaImpl metricas;
 
@@ -76,10 +76,10 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 
 	/**
 	 * @return
-	 * @see net.gaia.vortex.sockets.api.ClienteDeSocketVortex#conectarASocketRomoto()
+	 * @see net.gaia.vortex.deprecated.ClienteDeSocketVortexViejo#conectarASocketRomoto()
 	 */
 	
-	public NexoSocket conectarASocketRomoto() throws ObjectSocketException {
+	public NexoSocketViejo conectarASocketRomoto() throws ObjectSocketException {
 		this.metricas = MetricasDeCargaImpl.create();
 		final VortexSocketConfiguration socketConfig = VortexSocketConfiguration.crear(remoteAddress, this.metricas);
 		socketConfig.setEventHandler(socketHandler);
@@ -87,17 +87,17 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 		socketConfig.setReceptionHandler(ReceptionHandlerNulo.getInstancia());
 		internalConnector = ObjectSocketConnector.create(socketConfig);
 		final ObjectSocket currentSocket = internalConnector.getObjectSocket();
-		final NexoSocket nexoConectado = VortexSocketEventHandler.getNexoDelSocket(currentSocket);
+		final NexoSocketViejo nexoConectado = VortexSocketEventHandler.getNexoDelSocket(currentSocket);
 		return nexoConectado;
 	}
 
 	public static ClienteDeNexoSocket create(final TaskProcessor processor, final SocketAddress remoteAddress,
-			final EstrategiaDeConexionDeNexos estrategiaDeConexion) {
+			final EstrategiaDeConexionDeNexosViejo estrategiaDeConexion) {
 		return create(processor, remoteAddress, estrategiaDeConexion, null);
 	}
 
 	public static ClienteDeNexoSocket create(final TaskProcessor processor, final SocketAddress remoteAddress,
-			final EstrategiaDeConexionDeNexos estrategiaDeConexion, final SocketErrorHandler errorHandler) {
+			final EstrategiaDeConexionDeNexosViejo estrategiaDeConexion, final SocketErrorHandler errorHandler) {
 		final ClienteDeNexoSocket conector = new ClienteDeNexoSocket();
 		conector.errorHandler = errorHandler;
 		conector.remoteAddress = remoteAddress;
@@ -106,18 +106,18 @@ public class ClienteDeNexoSocket implements ClienteDeSocketVortex {
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#getEstrategiaDeConexion()
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#getEstrategiaDeConexion()
 	 */
 	
-	public EstrategiaDeConexionDeNexos getEstrategiaDeConexion() {
+	public EstrategiaDeConexionDeNexosViejo getEstrategiaDeConexion() {
 		return socketHandler.getEstrategiaDeConexion();
 	}
 
 	/**
-	 * @see net.gaia.vortex.server.api.GeneradorDeNexos#setEstrategiaDeConexion(net.gaia.vortex.server.api.EstrategiaDeConexionDeNexos)
+	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#setEstrategiaDeConexion(net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo)
 	 */
 	
-	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexos estrategia) {
+	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexosViejo estrategia) {
 		socketHandler.setEstrategiaDeConexion(estrategia);
 	}
 

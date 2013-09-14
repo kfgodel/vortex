@@ -17,19 +17,19 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.ClienteDeSocketVortexViejo;
 import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosViejo;
 import net.gaia.vortex.deprecated.NodoViejo;
 import net.gaia.vortex.deprecated.PortalMapeadorViejo;
 import net.gaia.vortex.deprecated.PortalViejo;
+import net.gaia.vortex.deprecated.RealizarConexionesPorFueraViejo;
+import net.gaia.vortex.deprecated.RealizarConexionesViejo;
+import net.gaia.vortex.deprecated.ServidorDeSocketVortexViejo;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
-import net.gaia.vortex.server.impl.RealizarConexiones;
-import net.gaia.vortex.server.impl.RealizarConexionesPorFuera;
-import net.gaia.vortex.sockets.api.ClienteDeSocketVortex;
-import net.gaia.vortex.sockets.api.ServidorDeSocketVortex;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocket;
+import net.gaia.vortex.sockets.impl.moleculas.NexoSocketViejo;
 
 import org.junit.After;
 import org.junit.Before;
@@ -51,8 +51,8 @@ public class TestRedDeSocketsConHubs {
 	private PortalViejo nodoEmisor;
 	private PortalViejo nodoReceptor;
 
-	private ClienteDeSocketVortex socketConnector;
-	private ServidorDeSocketVortex socketAcceptor;
+	private ClienteDeSocketVortexViejo socketConnector;
+	private ServidorDeSocketVortexViejo socketAcceptor;
 
 	private NodoViejo hubServidor;
 	private NodoViejo hubCliente;
@@ -81,11 +81,11 @@ public class TestRedDeSocketsConHubs {
 		nodoEmisor = PortalMapeadorViejo.createForOutputWith(processor, hubCliente);
 
 		// Creamos el server de sockets que conectará los nexos entrantes al hub servidor
-		socketAcceptor = ServidorDeNexoSocket.create(processor, sharedTestAddress, RealizarConexiones.con(hubServidor));
+		socketAcceptor = ServidorDeNexoSocket.create(processor, sharedTestAddress, RealizarConexionesViejo.con(hubServidor));
 		socketAcceptor.aceptarConexionesRemotas();
 
 		// Creamos el cliente de sockets que conectará los nexos salientes al hub cliente
-		socketConnector = ClienteDeNexoSocket.create(processor, sharedTestAddress, RealizarConexiones.con(hubCliente));
+		socketConnector = ClienteDeNexoSocket.create(processor, sharedTestAddress, RealizarConexionesViejo.con(hubCliente));
 		socketConnector.conectarASocketRomoto();
 	}
 
@@ -166,8 +166,8 @@ public class TestRedDeSocketsConHubs {
 	@Test
 	public void deberiaRecibirElMensajeDesdeDosReceptoresDistintosUnoEnElServidorYOtroEnOtroClienteSocket() {
 		segundoCliente = ClienteDeNexoSocket.create(processor, sharedTestAddress,
-				RealizarConexionesPorFuera.getInstancia());
-		final NexoSocket nexoDelSegundoCliente = segundoCliente.conectarASocketRomoto();
+				RealizarConexionesPorFueraViejo.getInstancia());
+		final NexoSocketViejo nexoDelSegundoCliente = segundoCliente.conectarASocketRomoto();
 
 		final PortalMapeadorViejo receptor2 = PortalMapeadorViejo.createForIOWith(processor, nexoDelSegundoCliente);
 		final HandlerEncoladorDeStrings handlerReceptor2 = HandlerEncoladorDeStrings.create();

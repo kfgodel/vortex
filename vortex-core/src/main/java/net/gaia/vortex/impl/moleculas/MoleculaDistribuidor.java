@@ -116,16 +116,12 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 	 * @see net.gaia.vortex.api.moleculas.Distribuidor#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 	public void desconectarDe(final Receptor destino) {
-		for (final Terminal terminalConectada : terminales) {
-			final Conector conectorDeSalida = terminalConectada.getSalida();
-			final Receptor receptorConectado = conectorDeSalida.getConectado();
-			if (receptorConectado.equals(destino)) {
-				// Es la terminal que buscabamos
-				terminalConectada.desconectarDe(destino);
-				eliminarTerminal(terminalConectada);
-				return;
-			}
+		final Terminal terminal = getTerminalConectadaA(destino);
+		if (terminal == null) {
+			// No estaba conectada a ninguna terminal, nada que desconectar
+			return;
 		}
+		eliminarTerminal(terminal);
 	}
 
 	/**
@@ -138,5 +134,20 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 			conectados.addAll(conectadosATerminal);
 		}
 		return conectados;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.moleculas.Distribuidor#getTerminalConectadaA(net.gaia.vortex.api.basic.Receptor)
+	 */
+	public Terminal getTerminalConectadaA(final Receptor receptor) {
+		for (final Terminal terminalConectada : terminales) {
+			final Conector conectorDeSalida = terminalConectada.getSalida();
+			final Receptor receptorConectado = conectorDeSalida.getConectado();
+			if (receptorConectado.equals(receptor)) {
+				// Es la terminal que buscabamos
+				return terminalConectada;
+			}
+		}
+		return null;
 	}
 }

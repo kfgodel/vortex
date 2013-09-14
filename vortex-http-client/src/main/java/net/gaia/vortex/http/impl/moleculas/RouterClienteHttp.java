@@ -13,11 +13,11 @@
 package net.gaia.vortex.http.impl.moleculas;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.RealizarConexionesViejo;
 import net.gaia.vortex.http.api.ClienteDeHttpVortex;
 import net.gaia.vortex.http.impl.VortexHttpException;
 import net.gaia.vortex.http.impl.cliente.ClienteDeNexoHttp;
 import net.gaia.vortex.router.impl.moleculas.support.RouterSupport;
-import net.gaia.vortex.server.impl.RealizarConexiones;
 import ar.dgarcia.http.client.api.HttpResponseProvider;
 
 /**
@@ -45,7 +45,7 @@ public class RouterClienteHttp extends RouterSupport {
 
 		final RouterClienteHttp nodoHttp = new RouterClienteHttp();
 		nodoHttp.initializeWith(processor);
-		nodoHttp.clienteInterno = ClienteDeNexoHttp.create(processor, serverUrl, RealizarConexiones.con(nodoHttp),
+		nodoHttp.clienteInterno = ClienteDeNexoHttp.create(processor, serverUrl, RealizarConexionesViejo.con(nodoHttp),
 				provider);
 		nodoHttp.clienteInterno.conectarAlServidorHttp();
 		return nodoHttp;
