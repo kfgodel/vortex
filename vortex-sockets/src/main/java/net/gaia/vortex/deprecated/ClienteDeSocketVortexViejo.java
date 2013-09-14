@@ -12,7 +12,6 @@
  */
 package net.gaia.vortex.deprecated;
 
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocketViejo;
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 

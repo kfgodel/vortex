@@ -16,9 +16,9 @@ import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
+import net.gaia.vortex.deprecated.NexoSocketViejo;
 import net.gaia.vortex.deprecated.ServidorDeSocketVortexViejo;
 import net.gaia.vortex.sockets.external.mina.VortexSocketConfiguration;
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocketViejo;
 import net.gaia.vortex.sockets.impl.sockets.ReceptionHandlerNulo;
 import net.gaia.vortex.sockets.impl.sockets.VortexSocketEventHandler;
 import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;

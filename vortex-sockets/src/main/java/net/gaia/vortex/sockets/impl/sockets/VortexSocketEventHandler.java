@@ -6,8 +6,8 @@ package net.gaia.vortex.sockets.impl.sockets;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
 import net.gaia.vortex.deprecated.GeneradorDeNexosViejo;
+import net.gaia.vortex.deprecated.NexoSocketViejo;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocketViejo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.NexoSocketViejo;
 import net.gaia.vortex.deprecated.PortalMapeadorViejo;
 import net.gaia.vortex.deprecated.RealizarConexionesPorFueraViejo;
 import net.gaia.vortex.deprecated.RealizarConexionesViejo;
@@ -25,7 +26,6 @@ import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
 import net.gaia.vortex.sockets.impl.ClienteDeNexoSocket;
 import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
-import net.gaia.vortex.sockets.impl.moleculas.NexoSocketViejo;
 
 import org.junit.After;
 import org.junit.Before;
