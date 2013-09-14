@@ -31,12 +31,13 @@ import net.gaia.vortex.impl.support.ConectableIndirectamenteSupport;
  * Este tipo de moleculas no es conectable directamente si no a través de su salida
  * 
  * @author dgarcia
- * @param <E>
+ * @param <S>
  */
-public class MoleculaCompuesta<E extends Conectable> extends ConectableIndirectamenteSupport<E> implements Compuesto<E> {
+public class MoleculaCompuesta<E extends Receptor, S extends Conectable> extends ConectableIndirectamenteSupport<S>
+		implements Compuesto<E, S> {
 
-	private Receptor entrada;
-	private E salida;
+	private E entrada;
+	private S salida;
 
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
@@ -48,19 +49,19 @@ public class MoleculaCompuesta<E extends Conectable> extends ConectableIndirecta
 	/**
 	 * @see net.gaia.vortex.api.basic.emisores.ConectableIndirectamente#getSalida()
 	 */
-	public E getSalida() {
+	public S getSalida() {
 		return salida;
 	}
 
-	public Receptor getEntrada() {
+	public E getEntrada() {
 		return entrada;
 	}
 
-	public void setEntrada(final Receptor entrada) {
+	public void setEntrada(final E entrada) {
 		this.entrada = entrada;
 	}
 
-	public void setSalida(final E salida) {
+	public void setSalida(final S salida) {
 		this.salida = salida;
 	}
 
@@ -74,8 +75,9 @@ public class MoleculaCompuesta<E extends Conectable> extends ConectableIndirecta
 	 *            La salida que indica también el tipo de conectabilidad
 	 * @return La molecula creada
 	 */
-	public static <E extends Conectable> MoleculaCompuesta<E> create(final Receptor entrada, final E salida) {
-		final MoleculaCompuesta<E> molecula = new MoleculaCompuesta<E>();
+	public static <E extends Receptor, S extends Conectable> MoleculaCompuesta<E, S> create(final E entrada,
+			final S salida) {
+		final MoleculaCompuesta<E, S> molecula = new MoleculaCompuesta<E, S>();
 		molecula.entrada = entrada;
 		molecula.salida = salida;
 		return molecula;
@@ -86,9 +88,10 @@ public class MoleculaCompuesta<E extends Conectable> extends ConectableIndirecta
 	 * {@link ConectableNulo} como salida.<br>
 	 * Para que sea utilizable se debería cambiar la entrada y salida
 	 */
-	public static MoleculaCompuesta<Conectable> create() {
+	public static MoleculaCompuesta<Receptor, Conectable> create() {
 		final Conectable conectable = ConectableNulo.getInstancia();
-		final MoleculaCompuesta<Conectable> create = create(ReceptorNulo.getInstancia(), conectable);
+		final Receptor receptor = ReceptorNulo.getInstancia();
+		final MoleculaCompuesta<Receptor, Conectable> create = create(receptor, conectable);
 		return create;
 	}
 }

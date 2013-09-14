@@ -3,6 +3,7 @@
  */
 package net.gaia.vortex.core.tests.perf;
 
+import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.flujos.FlujoVortex;
 import net.gaia.vortex.api.moleculas.Compuesto;
@@ -22,7 +23,7 @@ public class TestDePerformanceMultiplexorIdentificador extends TestDePerformance
 	 */
 	@Override
 	protected FlujoVortex crearFlujoATestear() {
-		final Compuesto<Multiplexor> multiplexor = getBuilder().multiplexarSinDuplicados();
+		final Compuesto<Filtro, Multiplexor> multiplexor = getBuilder().multiplexarSinDuplicados();
 		final Multiplexor salida = multiplexor.getSalida();
 		final FlujoVortex flujo = FlujoInmutable.create(multiplexor, salida);
 		return flujo;

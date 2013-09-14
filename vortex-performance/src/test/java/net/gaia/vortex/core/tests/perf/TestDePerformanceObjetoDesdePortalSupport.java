@@ -32,9 +32,11 @@ import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponente
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.MensajeConContenido;
 import net.gaia.vortex.impl.support.HandlerTipado;
+import net.gaia.vortex.portal.tests.ObjetoDePruebas;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,11 +105,13 @@ public abstract class TestDePerformanceObjetoDesdePortalSupport {
 	}
 
 	@Test
+	@Ignore("Los valores son muy parecidos al de 8")
 	public void medirPerformanceCon16ThreadDedicadoATodoElProceso() throws InterruptedException {
 		testearParaThreads(16);
 	}
 
 	@Test
+	@Ignore("Los valores son muy parecidos al de 8")
 	public void medirPerformanceCon32ThreadDedicadoATodoElProceso() throws InterruptedException {
 		testearParaThreads(32);
 	}
@@ -211,7 +215,7 @@ public abstract class TestDePerformanceObjetoDesdePortalSupport {
 	private void correrYMostrarResultados(final String nombreDelTest, final StressGenerator stress,
 			final MetricasPorTiempoImpl metricas) throws InterruptedException {
 		// Comenzamos el test
-		LOG.info("[{}] Comenzando mediciones", nombreDelTest);
+		LOG.debug("[{}] Comenzando mediciones", nombreDelTest);
 		metricas.resetear();
 		stress.start();
 
@@ -226,13 +230,13 @@ public abstract class TestDePerformanceObjetoDesdePortalSupport {
 		final long cantidadDeInputs = medicion.getCantidadDeInputs();
 		final long cantidadDeOutputs = medicion.getCantidadDeOutputs();
 		final long millisTranscurridos = medicion.getDuracionDeMedicionEnMilis();
-		LOG.info("[{}]: En {} ms se enviaron {} mensajes y se recibieron {}", new Object[] { nombreDelTest,
+		LOG.debug("[{}]: En {} ms se enviaron {} mensajes y se recibieron {}", new Object[] { nombreDelTest,
 				millisTranscurridos, cantidadDeInputs, cantidadDeOutputs });
 
 		LOG.info("[{}]: Delivery:{}% Input:{} msg/ms Output():{} msg/ms",
 				new Object[] { nombreDelTest, medicion.getTasaDeDelivery() * 100, medicion.getVelocidadDeInput(),
 						medicion.getVelocidadDeOutput() });
-		LOG.info("[{}] Fin", nombreDelTest);
+		LOG.debug("[{}] Fin", nombreDelTest);
 	}
 
 }

@@ -82,7 +82,7 @@ public interface VortexCore {
 	 *            Los receptores a conectar como salidas de la molecula creada
 	 * @return La molecula creada y conectada a los receptores indicados
 	 */
-	Compuesto<Multiplexor> multiplexarSinDuplicados(Receptor... receptores);
+	Compuesto<Filtro, Multiplexor> multiplexarSinDuplicados(Receptor... receptores);
 
 	/**
 	 * Crea un atomo bifurcador de mensajes que utiliza la condición pasada para entregar a un
@@ -197,7 +197,7 @@ public interface VortexCore {
 	 *            El componente utilizado para conectar todas las salidas
 	 * @return La molecula creada
 	 */
-	<E extends Conectable> Compuesto<E> componer(final Receptor entrada, final E salida);
+	<E extends Receptor, S extends Conectable> Compuesto<E, S> componer(final E entrada, final S salida);
 
 	/**
 	 * Crea una conexión unidireccional desde el origen al destino. Utilizando la salida del origen
@@ -208,7 +208,7 @@ public interface VortexCore {
 	 * @param destino
 	 *            El componente al que deben llegar
 	 */
-	void conectarDesde(Compuesto<? extends Conectable> origen, Receptor destino);
+	void conectarDesde(Compuesto<?, ? extends Conectable> origen, Receptor destino);
 
 	/**
 	 * Crea un conector asincrono, que independiza el thread que entrega el mensaje del que lo

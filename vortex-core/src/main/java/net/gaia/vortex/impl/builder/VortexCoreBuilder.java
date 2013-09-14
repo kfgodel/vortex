@@ -116,10 +116,10 @@ public class VortexCoreBuilder implements VortexCore {
 	/**
 	 * @see net.gaia.vortex.api.builder.VortexCore#multiplexarSinDuplicados(net.gaia.vortex.api.basic.Receptor[])
 	 */
-	public MoleculaCompuesta<Multiplexor> multiplexarSinDuplicados(final Receptor... receptores) {
+	public Compuesto<Filtro, Multiplexor> multiplexarSinDuplicados(final Receptor... receptores) {
 		final Multiplexor multiplexor = multiplexar(receptores);
 		final Filtro filtroSinDuplicados = filtrarMensajesDuplicadosA(multiplexor);
-		final MoleculaCompuesta<Multiplexor> molecula = this.<Multiplexor> componer(filtroSinDuplicados, multiplexor);
+		final Compuesto<Filtro, Multiplexor> molecula = componer(filtroSinDuplicados, multiplexor);
 		return molecula;
 	}
 
@@ -127,8 +127,8 @@ public class VortexCoreBuilder implements VortexCore {
 	 * @see net.gaia.vortex.api.builder.VortexCore#componer(net.gaia.vortex.api.basic.Receptor,
 	 *      net.gaia.vortex.api.basic.Emisor)
 	 */
-	public <E extends Conectable> MoleculaCompuesta<E> componer(final Receptor entrada, final E salida) {
-		final MoleculaCompuesta<E> molecula = MoleculaCompuesta.<E> create(entrada, salida);
+	public <E extends Receptor, S extends Conectable> Compuesto<E, S> componer(final E entrada, final S salida) {
+		final Compuesto<E, S> molecula = MoleculaCompuesta.create(entrada, salida);
 		return molecula;
 	}
 
@@ -230,7 +230,7 @@ public class VortexCoreBuilder implements VortexCore {
 	 * @see net.gaia.vortex.api.builder.VortexCore#conectarDesde(net.gaia.vortex.api.moleculas.Compuesto,
 	 *      net.gaia.vortex.api.basic.Receptor)
 	 */
-	public void conectarDesde(final Compuesto<? extends Conectable> origen, final Receptor destino) {
+	public void conectarDesde(final Compuesto<?, ? extends Conectable> origen, final Receptor destino) {
 		origen.getSalida().conectarCon(destino);
 	}
 

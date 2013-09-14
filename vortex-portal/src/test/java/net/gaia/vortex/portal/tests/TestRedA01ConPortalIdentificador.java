@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.atomos.Conector;
+import net.gaia.vortex.api.atomos.Filtro;
 import net.gaia.vortex.api.atomos.Multiplexor;
 import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.api.moleculas.Portal;
@@ -51,7 +52,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestRedA01ConPortalIdentificador {
 	private static final Logger LOG = LoggerFactory.getLogger(TestRedA01ConPortalIdentificador.class);
 
-	private Compuesto<Multiplexor> nodoRuteador;
+	private Compuesto<Filtro, Multiplexor> nodoRuteador;
 
 	private Portal nodoEmisor;
 	private Portal nodoReceptor;
@@ -253,8 +254,8 @@ public class TestRedA01ConPortalIdentificador {
 	@Test
 	public void elMensajeDeberiaLlegarSiHayDosNodosEnElMedio() {
 		// Creamos los nodos centrales interconectados
-		final Compuesto<Multiplexor> nodoIntermedio1 = builder.getCore().multiplexarSinDuplicados();
-		final Compuesto<Multiplexor> nodoIntermedio2 = builder.getCore().multiplexarSinDuplicados();
+		final Compuesto<Filtro, Multiplexor> nodoIntermedio1 = builder.getCore().multiplexarSinDuplicados();
+		final Compuesto<Filtro, Multiplexor> nodoIntermedio2 = builder.getCore().multiplexarSinDuplicados();
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
@@ -282,8 +283,8 @@ public class TestRedA01ConPortalIdentificador {
 	@Test
 	public void elMensajeNoDeberiaLlegarMasDeUnaVezSiHayDosHubsEnElMedioInterconectados() {
 		// Creamos los nodos centrales interconectados
-		final Compuesto<Multiplexor> nodoIntermedio1 = builder.getCore().multiplexarSinDuplicados();
-		final Compuesto<Multiplexor> nodoIntermedio2 = builder.getCore().multiplexarSinDuplicados();
+		final Compuesto<Filtro, Multiplexor> nodoIntermedio1 = builder.getCore().multiplexarSinDuplicados();
+		final Compuesto<Filtro, Multiplexor> nodoIntermedio2 = builder.getCore().multiplexarSinDuplicados();
 		interconectar(nodoIntermedio1, nodoIntermedio2);
 
 		// Le agregamos los extremos portales
@@ -373,7 +374,8 @@ public class TestRedA01ConPortalIdentificador {
 	/**
 	 * Crea una conexión bidireccional entre los nodos pasados
 	 */
-	public void interconectar(final Compuesto<Multiplexor> nodoIntermedio1, final Compuesto<Multiplexor> nodoIntermedio2) {
+	public void interconectar(final Compuesto<Filtro, Multiplexor> nodoIntermedio1,
+			final Compuesto<Filtro, Multiplexor> nodoIntermedio2) {
 		nodoIntermedio1.getSalida().conectarCon(nodoIntermedio2);
 		nodoIntermedio2.getSalida().conectarCon(nodoIntermedio1);
 	}

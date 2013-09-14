@@ -26,6 +26,7 @@ import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponente
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.MensajeConContenido;
 import net.gaia.vortex.impl.support.HandlerTipado;
+import net.gaia.vortex.portal.tests.ObjetoDePruebas;
 
 import org.junit.After;
 import org.junit.Before;

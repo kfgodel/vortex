@@ -31,7 +31,7 @@ import net.gaia.vortex.api.basic.emisores.ConectableIndirectamente;
  * 
  * @author dgarcia
  */
-public interface Compuesto<C extends Conectable> extends Nodo, ConectableIndirectamente<C> {
+public interface Compuesto<E extends Receptor, S extends Conectable> extends Nodo, ConectableIndirectamente<S> {
 
 	/**
 	 * Conecta el receptor indicado a la salida de este componente.<br>
@@ -56,4 +56,20 @@ public interface Compuesto<C extends Conectable> extends Nodo, ConectableIndirec
 	 * @see net.gaia.vortex.api.basic.emisores.Conectable#desconectarDe(net.gaia.vortex.api.basic.Receptor)
 	 */
 	public void desconectarDe(Receptor destino);
+
+	/**
+	 * Devuelve el componente interno que representa la salida de este como compuesto, y al cual se
+	 * realizan las conexiones default
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.ConectableIndirectamente#getSalida()
+	 */
+	public S getSalida();
+
+	/**
+	 * Devuelve el componente que representa la entrada de este como compuesto, y al cual se envian
+	 * todos los mensajes recibidos
+	 * 
+	 * @return El componente de entrada
+	 */
+	public E getEntrada();
 }

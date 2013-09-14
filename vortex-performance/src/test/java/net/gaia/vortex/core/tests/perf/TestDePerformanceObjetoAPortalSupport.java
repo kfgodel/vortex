@@ -26,9 +26,11 @@ import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.builder.VortexPortalBuilder;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.support.ReceptorSupport;
+import net.gaia.vortex.portal.tests.ObjetoDePruebas;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,11 +100,13 @@ public abstract class TestDePerformanceObjetoAPortalSupport {
 	}
 
 	@Test
+	@Ignore("Los valores son muy parecidos a los de 8")
 	public void medirPerformanceCon16ThreadDedicadoATodoElProceso() throws InterruptedException {
 		testearParaThreads(16);
 	}
 
 	@Test
+	@Ignore("Los valores son muy parecidos a los de 8")
 	public void medirPerformanceCon32ThreadDedicadoATodoElProceso() throws InterruptedException {
 		testearParaThreads(32);
 	}

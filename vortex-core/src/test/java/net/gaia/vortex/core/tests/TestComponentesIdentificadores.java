@@ -45,7 +45,7 @@ public class TestComponentesIdentificadores {
 	private ReceptorEncolador receptorFinal2;
 	private VortexCore builder;
 	private Filtro filtro;
-	private Compuesto<Multiplexor> multiplexorSinDuplicados;
+	private Compuesto<Filtro, Multiplexor> multiplexorSinDuplicados;
 
 	@Before
 	public void crearDependencias() {

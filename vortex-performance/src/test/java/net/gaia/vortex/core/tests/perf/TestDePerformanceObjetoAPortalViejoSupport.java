@@ -20,6 +20,7 @@ import net.gaia.vortex.deprecated.PortalViejo;
 import net.gaia.vortex.impl.builder.VortexCoreBuilder;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.support.ReceptorSupport;
+import net.gaia.vortex.portal.tests.ObjetoDePruebas;
 
 import org.junit.After;
 import org.junit.Before;

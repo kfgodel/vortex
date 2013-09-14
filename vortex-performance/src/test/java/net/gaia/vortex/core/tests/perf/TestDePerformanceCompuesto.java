@@ -28,7 +28,7 @@ public class TestDePerformanceCompuesto extends TestDePerformanceNodoSupport {
 	protected FlujoVortex crearFlujoATestear() {
 		final Transformador transformador = getBuilder().transformadorPara(TransformacionNula.getInstancia());
 		final Filtro filtro = getBuilder().filtrarEntradaCon(SiempreTrue.getInstancia(), transformador);
-		final Compuesto<Transformador> compuesta = getBuilder().<Transformador> componer(filtro, transformador);
+		final Compuesto<Filtro, Transformador> compuesta = getBuilder().componer(filtro, transformador);
 		final FlujoVortex flujo = FlujoInmutable.create(compuesta, compuesta.getSalida());
 		return flujo;
 	}
