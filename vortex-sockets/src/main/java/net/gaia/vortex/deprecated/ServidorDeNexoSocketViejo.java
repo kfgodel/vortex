@@ -10,17 +10,14 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.impl;
+package net.gaia.vortex.deprecated;
 
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
-import net.gaia.vortex.deprecated.NexoSocketViejo;
-import net.gaia.vortex.deprecated.ServidorDeSocketVortexViejo;
-import net.gaia.vortex.deprecated.VortexSocketEventHandlerViejo;
+import net.gaia.vortex.impl.nulos.ReceptionHandlerNulo;
 import net.gaia.vortex.impl.sockets.VortexSocketConfiguration;
-import net.gaia.vortex.sockets.impl.sockets.ReceptionHandlerNulo;
 import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
@@ -35,7 +32,8 @@ import ar.dgarcia.objectsockets.impl.ObjectSocketException;
  * 
  * @author D. García
  */
-public class ServidorDeNexoSocket implements ServidorDeSocketVortexViejo {
+@Deprecated
+public class ServidorDeNexoSocketViejo implements ServidorDeSocketVortexViejo {
 
 	/**
 	 * Dirección en la que escucha este acceptor
@@ -60,7 +58,8 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortexViejo {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	
+
+	@Override
 	public String toString() {
 		return ToString.de(this).add(listeningAddress_FIELD, listeningAddress).add(socketHandler_FIELD, socketHandler)
 				.toString();
@@ -69,7 +68,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortexViejo {
 	/**
 	 * @see net.gaia.vortex.deprecated.ServidorDeSocketVortexViejo#aceptarConexionesRemotas()
 	 */
-	
+
 	public void aceptarConexionesRemotas() throws ObjectSocketException {
 		this.metricas = MetricasDeCargaImpl.create();
 		final ObjectSocketConfiguration socketConfig = VortexSocketConfiguration.crear(listeningAddress, this.metricas);
@@ -82,15 +81,15 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortexViejo {
 	/**
 	 * @see net.gaia.vortex.deprecated.ServidorDeSocketVortexViejo#closeAndDispose()
 	 */
-	
+
 	public void closeAndDispose() {
 		internalAcceptor.closeAndDispose();
 	}
 
 	/**
 	 * Crea un componente que acepta conexiones entrantes en la dirección indicada y crea
-	 * {@link NexoSocketViejo} por cada conexión utilizando al estrategia indicada para incorporarlos a
-	 * la red vortex
+	 * {@link NexoSocketViejo} por cada conexión utilizando al estrategia indicada para
+	 * incorporarlos a la red vortex
 	 * 
 	 * @param processor
 	 *            El procesador de tareas a utilizar con los nexos creados
@@ -100,14 +99,14 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortexViejo {
 	 *            La estrategia de conexión utilizada por este aceptador
 	 * @return El aceptador creado
 	 */
-	public static ServidorDeNexoSocket create(final TaskProcessor processor, final SocketAddress listeningAddres,
+	public static ServidorDeNexoSocketViejo create(final TaskProcessor processor, final SocketAddress listeningAddres,
 			final EstrategiaDeConexionDeNexosViejo estrategiaDeConexion) {
 		return create(processor, listeningAddres, estrategiaDeConexion, null);
 	}
 
-	public static ServidorDeNexoSocket create(final TaskProcessor processor, final SocketAddress listeningAddres,
+	public static ServidorDeNexoSocketViejo create(final TaskProcessor processor, final SocketAddress listeningAddres,
 			final EstrategiaDeConexionDeNexosViejo estrategiaDeConexion, final SocketErrorHandler errorHandler) {
-		final ServidorDeNexoSocket acceptor = new ServidorDeNexoSocket();
+		final ServidorDeNexoSocketViejo acceptor = new ServidorDeNexoSocketViejo();
 		acceptor.listeningAddress = listeningAddres;
 		acceptor.errorHandler = errorHandler;
 		acceptor.socketHandler = VortexSocketEventHandlerViejo.create(processor, estrategiaDeConexion);
@@ -117,7 +116,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortexViejo {
 	/**
 	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#getEstrategiaDeConexion()
 	 */
-	
+
 	public EstrategiaDeConexionDeNexosViejo getEstrategiaDeConexion() {
 		return socketHandler.getEstrategiaDeConexion();
 	}
@@ -125,7 +124,7 @@ public class ServidorDeNexoSocket implements ServidorDeSocketVortexViejo {
 	/**
 	 * @see net.gaia.vortex.deprecated.GeneradorDeNexosViejo#setEstrategiaDeConexion(net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo)
 	 */
-	
+
 	public void setEstrategiaDeConexion(final EstrategiaDeConexionDeNexosViejo estrategia) {
 		socketHandler.setEstrategiaDeConexion(estrategia);
 	}

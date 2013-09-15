@@ -16,12 +16,12 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.NodoSocketViejo;
 import net.gaia.vortex.deprecated.PortalMapeadorViejo;
 import net.gaia.vortex.deprecated.PortalViejo;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.portal.tests.HandlerCronometro;
 import net.gaia.vortex.portal.tests.MensajeCronometro;
-import net.gaia.vortex.sockets.impl.moleculas.NodoSocketViejo;
 
 import org.junit.After;
 import org.junit.Before;

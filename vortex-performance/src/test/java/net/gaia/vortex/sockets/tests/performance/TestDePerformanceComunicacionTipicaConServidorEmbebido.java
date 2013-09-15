@@ -16,8 +16,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.deprecated.NodoSocketViejo;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
-import net.gaia.vortex.sockets.impl.moleculas.NodoSocketViejo;
 
 import org.junit.After;
 import org.junit.Before;

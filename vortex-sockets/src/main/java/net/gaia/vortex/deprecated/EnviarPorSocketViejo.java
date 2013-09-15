@@ -10,7 +10,7 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.impl.tasks;
+package net.gaia.vortex.deprecated;
 
 import net.gaia.taskprocessor.api.InterruptedThreadException;
 import net.gaia.taskprocessor.api.WorkParallelizer;
@@ -27,8 +27,9 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * 
  * @author D. García
  */
-public class EnviarPorSocket implements WorkUnit {
-	private static final Logger LOG = LoggerFactory.getLogger(EnviarPorSocket.class);
+@Deprecated
+public class EnviarPorSocketViejo implements WorkUnit {
+	private static final Logger LOG = LoggerFactory.getLogger(EnviarPorSocketViejo.class);
 
 	private ObjectSocket socket;
 	public static final String socket_FIELD = "socket";
@@ -43,14 +44,15 @@ public class EnviarPorSocket implements WorkUnit {
 	public void doWork(final WorkParallelizer parallelizer) throws InterruptedThreadException {
 		try {
 			socket.send(datos);
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			LOG.error("Se produjo un error enviado los datos[" + datos + "] por el socket[" + socket
 					+ "]. Ignorando error", e);
 		}
 	}
 
-	public static EnviarPorSocket create(final ObjectSocket socket, final Object datos) {
-		final EnviarPorSocket envio = new EnviarPorSocket();
+	public static EnviarPorSocketViejo create(final ObjectSocket socket, final Object datos) {
+		final EnviarPorSocketViejo envio = new EnviarPorSocketViejo();
 		envio.socket = socket;
 		envio.datos = datos;
 		return envio;

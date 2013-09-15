@@ -17,11 +17,16 @@
  */
 package net.gaia.vortex.impl.builder;
 
+import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.builder.VortexSockets;
+import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.NodoSocket;
+import net.gaia.vortex.api.moleculas.SocketHost;
 import net.gaia.vortex.impl.atomos.Desocketizador;
 import net.gaia.vortex.impl.atomos.Socketizador;
+import net.gaia.vortex.impl.generadores.UsarDistribuidorCentral;
 import net.gaia.vortex.impl.moleculas.MoleculaSocket;
+import net.gaia.vortex.impl.moleculas.MoleculaSocketHost;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 
 /**
@@ -30,6 +35,8 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
  * @author dgarcia
  */
 public class VortexSocketsBuilder implements VortexSockets {
+
+	private VortexCore coreBuilder;
 
 	/**
 	 * @see net.gaia.vortex.api.builder.VortexSockets#nodoSocket(ar.dgarcia.objectsockets.api.ObjectSocket)
@@ -46,14 +53,25 @@ public class VortexSocketsBuilder implements VortexSockets {
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.builder.VortexSockets#desocketizado()
+	 * @see net.gaia.vortex.api.builder.VortexSockets#desocketizador()
 	 */
-	public Desocketizador desocketizado() {
+	public Desocketizador desocketizador() {
 		return Desocketizador.create();
 	}
 
-	public static VortexSocketsBuilder create() {
+	public static VortexSocketsBuilder create(final VortexCore coreBuilder) {
 		final VortexSocketsBuilder builder = new VortexSocketsBuilder();
+		builder.coreBuilder = coreBuilder;
 		return builder;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexSockets#distribuidorSocket()
+	 */
+	public SocketHost<Distribuidor> distribuidorSocket() {
+		final Distribuidor distribuidor = coreBuilder.distribuidor();
+		final MoleculaSocketHost<Distribuidor> host = MoleculaSocketHost.create(distribuidor,
+				UsarDistribuidorCentral.create(distribuidor), this);
+		return host;
 	}
 }

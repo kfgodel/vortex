@@ -21,12 +21,12 @@ import net.gaia.taskprocessor.api.WorkParallelizer;
 import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.core.prog.Loggers;
+import net.gaia.vortex.deprecated.RouterSocketViejo;
 import net.gaia.vortex.http.impl.moleculas.RouterServerHttp;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.server.mosquito.config.ContextConfiguration;
 import net.gaia.vortex.server.mosquito.listeners.LoguearCambiosDeFiltrosRemotos;
 import net.gaia.vortex.server.mosquito.listeners.LoguearRuteos;
-import net.gaia.vortex.sockets.impl.moleculas.RouterSocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class MosquitoSever {
 	private RouterServerHttp hubDeHttp;
 	public static final String hubDeHttp_FIELD = "hubDeHttp";
 
-	private RouterSocket hubDeSockets;
+	private RouterSocketViejo hubDeSockets;
 	public static final String hubDeSockets_FIELD = "hubDeSockets";
 
 	private TaskProcessor processor;
@@ -140,7 +140,7 @@ public class MosquitoSever {
 	public void aceptarConexiones() {
 		final SocketAddress listeningAddress = configuration.getListeningAddress();
 		Loggers.RUTEO.info("Comenzando escucha de sockets en: {}", listeningAddress);
-		hubDeSockets = RouterSocket.createAndListenTo(listeningAddress, processor);
+		hubDeSockets = RouterSocketViejo.createAndListenTo(listeningAddress, processor);
 		hubDeSockets.setListenerDeRuteos(LoguearRuteos.getInstancia());
 		hubDeSockets.setListenerDeFiltrosRemotos(LoguearCambiosDeFiltrosRemotos.getInstancia());
 		final Integer httpPort = configuration.getHttpListeningPort();

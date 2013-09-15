@@ -16,7 +16,6 @@ import net.gaia.taskprocessor.api.WorkUnit;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.deprecated.ReceptorConProcesador;
-import net.gaia.vortex.sockets.impl.tasks.EnviarPorSocket;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
 
@@ -37,7 +36,7 @@ public class SocketizadorViejo extends ReceptorConProcesador {
 
 	@Override
 	protected WorkUnit crearTareaAlRecibir(final MensajeVortex mensaje) {
-		final EnviarPorSocket envio = EnviarPorSocket.create(socket, mensaje);
+		final EnviarPorSocketViejo envio = EnviarPorSocketViejo.create(socket, mensaje);
 		return envio;
 	}
 

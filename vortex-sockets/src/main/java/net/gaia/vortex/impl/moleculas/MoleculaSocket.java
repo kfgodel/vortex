@@ -108,7 +108,7 @@ public class MoleculaSocket extends ReceptorSupport implements NodoSocket, Dispo
 		final MoleculaSocket molecula = new MoleculaSocket();
 		molecula.socket = socket;
 		molecula.desdeVortex = builder.socketizador(socket);
-		molecula.haciaVortex = builder.desocketizado();
+		molecula.haciaVortex = builder.desocketizador();
 		return molecula;
 	}
 

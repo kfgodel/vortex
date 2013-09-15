@@ -17,7 +17,9 @@
  */
 package net.gaia.vortex.api.builder;
 
+import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.NodoSocket;
+import net.gaia.vortex.api.moleculas.SocketHost;
 import net.gaia.vortex.impl.atomos.Desocketizador;
 import net.gaia.vortex.impl.atomos.Socketizador;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
@@ -52,5 +54,16 @@ public interface VortexSockets {
 	 * 
 	 * @return El componente creado que ingresa los mensajes recibidos desde el socket en la red
 	 */
-	Desocketizador desocketizado();
+	Desocketizador desocketizador();
+
+	/**
+	 * Crea un host de sockets que utiliza internamente un {@link Distribuidor} para entregar los
+	 * mensajes a destino.<br>
+	 * Este component no identifica los mensajes por lo que puede entregar mensajes duplicados si
+	 * existen bucles en la red o caminos paralelos
+	 * 
+	 * @return El host creado para redes con topología conocida
+	 */
+	SocketHost<Distribuidor> distribuidorSocket();
+
 }

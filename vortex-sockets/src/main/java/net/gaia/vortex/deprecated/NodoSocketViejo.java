@@ -1,5 +1,5 @@
 /**
- * 26/01/2013 11:40:58 Copyright (C) 2011 Darío L. García
+ * 20/06/2012 19:05:31 Copyright (C) 2011 Darío L. García
  * 
  * <a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img
  * alt="Creative Commons License" style="border-width:0"
@@ -10,33 +10,33 @@
  * licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
  * Commons Attribution 3.0 Unported License</a>.
  */
-package net.gaia.vortex.sockets.impl.moleculas;
+package net.gaia.vortex.deprecated;
 
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.annotations.clases.Molecula;
-import net.gaia.vortex.deprecated.ClienteDeNexoSocketViejo;
+import net.gaia.vortex.deprecated.MultiplexorSinDuplicadosSupportViejo;
 import net.gaia.vortex.deprecated.RealizarConexionesViejo;
-import net.gaia.vortex.router.impl.moleculas.support.RouterSupport;
-import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
 import ar.dgarcia.objectsockets.api.Disposable;
 import ar.dgarcia.objectsockets.api.SocketErrorHandler;
 import ar.dgarcia.objectsockets.impl.ObjectSocketException;
 
 /**
- * Esta clase representa el componente router que puede enviar los mensajes recibidos por socket a
- * otros componentes
+ * Esta clase representa un {@link NodoMultiplexor} conectado a un socket como cliente o como
+ * servidor del cual recibe conexiones entrantes en forma de {@link NexoSocketViejo}s conectados.<br>
+ * Si el socket se desconecta por algún motivo, el {@link NexoSocketViejo} se desconecta de este nodo
  * 
  * @author D. García
  */
 @Molecula
-public class RouterSocket extends RouterSupport implements Disposable {
+@Deprecated
+public class NodoSocketViejo extends MultiplexorSinDuplicadosSupportViejo implements Disposable {
 
 	/**
 	 * Servidor de conexiones entrantes por socket
 	 */
-	private ServidorDeNexoSocket servidor;
+	private ServidorDeNexoSocketViejo servidor;
 
 	/**
 	 * Cliente de conexiones salientes por socket
@@ -53,15 +53,15 @@ public class RouterSocket extends RouterSupport implements Disposable {
 	 *            El procesador para las tareas internas
 	 * @return El hub creado y escuchando en el socket indicado
 	 */
-	public static RouterSocket createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor) {
+	public static NodoSocketViejo createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor) {
 		return createAndListenTo(listeningAddress, processor, null);
 	}
 
-	public static RouterSocket createAndListenTo(final SocketAddress listeningAddress, final TaskProcessor processor,
-			final SocketErrorHandler errorHandler) {
-		final RouterSocket hubSocket = new RouterSocket();
+	public static NodoSocketViejo createAndListenTo(final SocketAddress listeningAddress,
+			final TaskProcessor processor, final SocketErrorHandler errorHandler) {
+		final NodoSocketViejo hubSocket = new NodoSocketViejo();
 		hubSocket.initializeWith(processor);
-		hubSocket.servidor = ServidorDeNexoSocket.create(processor, listeningAddress,
+		hubSocket.servidor = ServidorDeNexoSocketViejo.create(processor, listeningAddress,
 				RealizarConexionesViejo.con(hubSocket), errorHandler);
 		hubSocket.servidor.aceptarConexionesRemotas();
 		return hubSocket;
@@ -70,7 +70,7 @@ public class RouterSocket extends RouterSupport implements Disposable {
 	/**
 	 * @see ar.dgarcia.objectsockets.api.Disposable#closeAndDispose()
 	 */
-	
+
 	public void closeAndDispose() {
 		if (cliente != null) {
 			cliente.closeAndDispose();
@@ -92,7 +92,7 @@ public class RouterSocket extends RouterSupport implements Disposable {
 	 * @throws ObjectSocketException
 	 *             Si no se pudo realizar la conexion
 	 */
-	public static RouterSocket createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor)
+	public static NodoSocketViejo createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor)
 			throws ObjectSocketException {
 		return createAndConnectTo(remoteAddress, processor, null);
 	}
@@ -111,17 +111,17 @@ public class RouterSocket extends RouterSupport implements Disposable {
 	 * @throws ObjectSocketException
 	 *             Si no se pudo realizar la conexión
 	 */
-	public static RouterSocket createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor,
+	public static NodoSocketViejo createAndConnectTo(final SocketAddress remoteAddress, final TaskProcessor processor,
 			final SocketErrorHandler errorHandler) throws ObjectSocketException {
-		final RouterSocket hubSocket = new RouterSocket();
+		final NodoSocketViejo hubSocket = new NodoSocketViejo();
 		hubSocket.initializeWith(processor);
-		hubSocket.cliente = ClienteDeNexoSocketViejo.create(processor, remoteAddress, RealizarConexionesViejo.con(hubSocket),
-				errorHandler);
+		hubSocket.cliente = ClienteDeNexoSocketViejo.create(processor, remoteAddress,
+				RealizarConexionesViejo.con(hubSocket), errorHandler);
 		hubSocket.cliente.conectarASocketRomoto();
 		return hubSocket;
 	}
 
-	public ServidorDeNexoSocket getServidor() {
+	public ServidorDeNexoSocketViejo getServidor() {
 		return servidor;
 	}
 

@@ -15,9 +15,8 @@ package net.gaia.vortex.deprecated;
 import java.net.SocketAddress;
 
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.deprecated.EstrategiaDeConexionDeNexosViejo;
+import net.gaia.vortex.impl.nulos.ReceptionHandlerNulo;
 import net.gaia.vortex.impl.sockets.VortexSocketConfiguration;
-import net.gaia.vortex.sockets.impl.sockets.ReceptionHandlerNulo;
 import ar.com.dgarcia.lang.metrics.impl.MetricasDeCargaImpl;
 import ar.com.dgarcia.lang.strings.ToString;
 import ar.dgarcia.objectsockets.api.ObjectSocket;
@@ -58,7 +57,6 @@ public class ClienteDeNexoSocketViejo implements ClienteDeSocketVortexViejo {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-
 	@Override
 	public String toString() {
 		return ToString.de(this).add(remoteAddress_FIELD, remoteAddress).add(socketHandler_FIELD, socketHandler)

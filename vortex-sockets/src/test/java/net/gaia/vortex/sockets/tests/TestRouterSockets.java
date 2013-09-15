@@ -18,12 +18,12 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.Assert;
 import net.gaia.taskprocessor.api.processor.TaskProcessor;
 import net.gaia.vortex.api.condiciones.Condicion;
+import net.gaia.vortex.deprecated.RouterSocketViejo;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.portal.tests.HandlerEncolador;
 import net.gaia.vortex.router.api.tests.MensajeParaTestDeRuteo;
 import net.gaia.vortex.router.impl.moleculas.PortalBidi;
 import net.gaia.vortex.sets.impl.condiciones.ValorEsperadoEn;
-import net.gaia.vortex.sockets.impl.moleculas.RouterSocket;
 
 import org.junit.After;
 import org.junit.Before;
@@ -36,7 +36,7 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 import ar.com.dgarcia.testing.FreePortFinder;
 
 /**
- * Esta clase prueba el funcionamiento basico del {@link RouterSocket}
+ * Esta clase prueba el funcionamiento basico del {@link RouterSocketViejo}
  * 
  * @author D. García
  */
@@ -45,9 +45,9 @@ public class TestRouterSockets {
 
 	private TaskProcessor processor;
 
-	private RouterSocket routerServidor;
+	private RouterSocketViejo routerServidor;
 
-	private RouterSocket routerCliente;
+	private RouterSocketViejo routerCliente;
 
 	private PortalBidi emisor;
 
@@ -62,8 +62,8 @@ public class TestRouterSockets {
 		LOG.debug("Puerto libre para el test: {}", freePort);
 
 		processor = VortexProcessorFactory.createProcessor();
-		routerServidor = RouterSocket.createAndListenTo(sharedTestAddress, processor);
-		routerCliente = RouterSocket.createAndConnectTo(sharedTestAddress, processor);
+		routerServidor = RouterSocketViejo.createAndListenTo(sharedTestAddress, processor);
+		routerCliente = RouterSocketViejo.createAndConnectTo(sharedTestAddress, processor);
 		emisor = PortalBidi.create(processor);
 		receptor = PortalBidi.create(processor);
 	}

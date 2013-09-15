@@ -26,10 +26,10 @@ import net.gaia.vortex.deprecated.PortalMapeadorViejo;
 import net.gaia.vortex.deprecated.PortalViejo;
 import net.gaia.vortex.deprecated.RealizarConexionesPorFueraViejo;
 import net.gaia.vortex.deprecated.RealizarConexionesViejo;
+import net.gaia.vortex.deprecated.ServidorDeNexoSocketViejo;
 import net.gaia.vortex.deprecated.ServidorDeSocketVortexViejo;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
-import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
 
 import org.junit.After;
 import org.junit.Before;
@@ -81,7 +81,7 @@ public class TestRedDeSocketsConHubs {
 		nodoEmisor = PortalMapeadorViejo.createForOutputWith(processor, hubCliente);
 
 		// Creamos el server de sockets que conectará los nexos entrantes al hub servidor
-		socketAcceptor = ServidorDeNexoSocket.create(processor, sharedTestAddress, RealizarConexionesViejo.con(hubServidor));
+		socketAcceptor = ServidorDeNexoSocketViejo.create(processor, sharedTestAddress, RealizarConexionesViejo.con(hubServidor));
 		socketAcceptor.aceptarConexionesRemotas();
 
 		// Creamos el cliente de sockets que conectará los nexos salientes al hub cliente

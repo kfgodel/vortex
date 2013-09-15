@@ -22,10 +22,10 @@ import net.gaia.vortex.deprecated.NexoSocketViejo;
 import net.gaia.vortex.deprecated.PortalMapeadorViejo;
 import net.gaia.vortex.deprecated.RealizarConexionesPorFueraViejo;
 import net.gaia.vortex.deprecated.RealizarConexionesViejo;
+import net.gaia.vortex.deprecated.ServidorDeNexoSocketViejo;
 import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
-import net.gaia.vortex.sockets.impl.ServidorDeNexoSocket;
 
 import org.junit.After;
 import org.junit.Before;
@@ -44,7 +44,7 @@ public class TestRedDeSocketsMinima {
 	private final static InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
 
 	private TaskProcessor processor;
-	private ServidorDeNexoSocket servidorSockets;
+	private ServidorDeNexoSocketViejo servidorSockets;
 	private ClienteDeNexoSocketViejo clienteSockets;
 
 	@Before
@@ -72,7 +72,7 @@ public class TestRedDeSocketsMinima {
 		final PortalMapeadorViejo portalServidor = PortalMapeadorViejo
 				.createForOutputWith(processor, ReceptorNulo.getInstancia());
 		// El servidor conectara el portal al recibir una conexion
-		servidorSockets = ServidorDeNexoSocket.create(processor, sharedTestAddress,
+		servidorSockets = ServidorDeNexoSocketViejo.create(processor, sharedTestAddress,
 				RealizarConexionesViejo.con(portalServidor));
 		servidorSockets.aceptarConexionesRemotas();
 
@@ -105,7 +105,7 @@ public class TestRedDeSocketsMinima {
 		final PortalMapeadorViejo portalServidor = PortalMapeadorViejo
 				.createForOutputWith(processor, ReceptorNulo.getInstancia());
 		// El servidor conectara el portal al recibir una conexion
-		servidorSockets = ServidorDeNexoSocket.create(processor, sharedTestAddress,
+		servidorSockets = ServidorDeNexoSocketViejo.create(processor, sharedTestAddress,
 				RealizarConexionesViejo.con(portalServidor));
 		servidorSockets.aceptarConexionesRemotas();
 
