@@ -16,15 +16,18 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.taskprocessor.api.processor.TaskProcessor;
-import net.gaia.vortex.deprecated.ClienteDeNexoSocketViejo;
-import net.gaia.vortex.deprecated.NexoSocketViejo;
-import net.gaia.vortex.deprecated.PortalMapeadorViejo;
-import net.gaia.vortex.deprecated.RealizarConexionesPorFueraViejo;
-import net.gaia.vortex.deprecated.RealizarConexionesViejo;
-import net.gaia.vortex.deprecated.ServidorDeNexoSocketViejo;
-import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
-import net.gaia.vortex.impl.nulos.ReceptorNulo;
+import net.gaia.vortex.api.builder.Nodos;
+import net.gaia.vortex.api.builder.VortexPortal;
+import net.gaia.vortex.api.builder.VortexSockets;
+import net.gaia.vortex.api.moleculas.NodoSocket;
+import net.gaia.vortex.api.moleculas.Portal;
+import net.gaia.vortex.impl.builder.VortexCoreBuilder;
+import net.gaia.vortex.impl.builder.VortexPortalBuilder;
+import net.gaia.vortex.impl.builder.VortexSocketsBuilder;
+import net.gaia.vortex.impl.generadores.EstrategiaNula;
+import net.gaia.vortex.impl.generadores.UsarNodoCentral;
+import net.gaia.vortex.impl.sockets.ClienteDeObjectSocket;
+import net.gaia.vortex.impl.sockets.ServidorDeObjectSocket;
 import net.gaia.vortex.portal.tests.HandlerEncoladorDeStrings;
 
 import org.junit.After;
@@ -32,6 +35,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ar.com.dgarcia.lang.time.TimeMagnitude;
+import ar.com.dgarcia.testing.FreePortFinder;
 
 /**
  * Esta clase prueba algunas configuraciones mínimas de sockets para armar una red vortex a modo de
@@ -41,15 +45,19 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
  */
 public class TestRedDeSocketsMinima {
 
-	private final static InetSocketAddress sharedTestAddress = new InetSocketAddress(10488);
+	private InetSocketAddress sharedTestAddress;
 
-	private TaskProcessor processor;
-	private ServidorDeNexoSocketViejo servidorSockets;
-	private ClienteDeNexoSocketViejo clienteSockets;
+	private ServidorDeObjectSocket servidorSockets;
+	private ClienteDeObjectSocket clienteSockets;
+
+	private VortexSockets builder;
+	private VortexPortal builderPortales;
 
 	@Before
 	public void crearDependencias() {
-		processor = VortexProcessorFactory.createProcessor();
+		sharedTestAddress = new InetSocketAddress(FreePortFinder.getFreePort());
+		builder = VortexSocketsBuilder.create(VortexCoreBuilder.create(null));
+		builderPortales = VortexPortalBuilder.create(VortexCoreBuilder.create(null));
 	}
 
 	@After
@@ -60,7 +68,6 @@ public class TestRedDeSocketsMinima {
 		if (servidorSockets != null) {
 			servidorSockets.closeAndDispose();
 		}
-		processor.detener();
 	}
 
 	/**
@@ -69,17 +76,16 @@ public class TestRedDeSocketsMinima {
 	@Test
 	public void deberiaPermitirConectarUnPortalClienteConUnPortalServidorSinIntermediarios() {
 		// Creamos el portal servidor inicialmente desconectado
-		final PortalMapeadorViejo portalServidor = PortalMapeadorViejo
-				.createForOutputWith(processor, ReceptorNulo.getInstancia());
+		final Portal portalServidor = builderPortales.portalConversor();
 		// El servidor conectara el portal al recibir una conexion
-		servidorSockets = ServidorDeNexoSocketViejo.create(processor, sharedTestAddress,
-				RealizarConexionesViejo.con(portalServidor));
+		servidorSockets = ServidorDeObjectSocket.create(builder, sharedTestAddress,
+				UsarNodoCentral.create(portalServidor));
 		servidorSockets.aceptarConexionesRemotas();
 
 		// Creamos el portal cliente inicialmente desconectado
-		final PortalMapeadorViejo portalCliente = PortalMapeadorViejo.createForOutputWith(processor, ReceptorNulo.getInstancia());
-		clienteSockets = ClienteDeNexoSocketViejo
-				.create(processor, sharedTestAddress, RealizarConexionesViejo.con(portalCliente));
+		final Portal portalCliente = builderPortales.portalConversor();
+		clienteSockets = ClienteDeObjectSocket
+				.create(builder, sharedTestAddress, UsarNodoCentral.create(portalCliente));
 		clienteSockets.conectarASocketRomoto();
 
 		verificarEnvioDeMensaje(portalCliente, portalServidor);
@@ -88,7 +94,7 @@ public class TestRedDeSocketsMinima {
 	/**
 	 * Verifica que un mensaje enviado desde el cliente llegue al servidor
 	 */
-	private void verificarEnvioDeMensaje(final PortalMapeadorViejo portalCliente, final PortalMapeadorViejo portalServidor) {
+	private void verificarEnvioDeMensaje(final Portal portalCliente, final Portal portalServidor) {
 		final HandlerEncoladorDeStrings handlerReceptor = HandlerEncoladorDeStrings.create();
 		portalServidor.recibirCon(handlerReceptor);
 
@@ -102,19 +108,18 @@ public class TestRedDeSocketsMinima {
 	@Test
 	public void deberiaPermitirCrearElPortalClienteDespuesDeLaConexion() {
 		// Creamos el portal servidor inicialmente desconectado
-		final PortalMapeadorViejo portalServidor = PortalMapeadorViejo
-				.createForOutputWith(processor, ReceptorNulo.getInstancia());
+		final Portal portalServidor = builderPortales.portalConversor();
 		// El servidor conectara el portal al recibir una conexion
-		servidorSockets = ServidorDeNexoSocketViejo.create(processor, sharedTestAddress,
-				RealizarConexionesViejo.con(portalServidor));
+		servidorSockets = ServidorDeObjectSocket.create(builder, sharedTestAddress,
+				UsarNodoCentral.create(portalServidor));
 		servidorSockets.aceptarConexionesRemotas();
 
-		clienteSockets = ClienteDeNexoSocketViejo.create(processor, sharedTestAddress,
-				RealizarConexionesPorFueraViejo.getInstancia());
-		final NexoSocketViejo nexoConectado = clienteSockets.conectarASocketRomoto();
+		clienteSockets = ClienteDeObjectSocket.create(builder, sharedTestAddress, EstrategiaNula.getInstancia());
+		final NodoSocket nodoConectado = clienteSockets.conectarASocketRomoto();
 
 		// Creamos ahora sí el portal cliente
-		final PortalMapeadorViejo portalCliente = PortalMapeadorViejo.createForIOWith(processor, nexoConectado);
+		final Portal portalCliente = builderPortales.portalConversor();
+		Nodos.interconectar(nodoConectado, portalCliente);
 		verificarEnvioDeMensaje(portalCliente, portalServidor);
 	}
 

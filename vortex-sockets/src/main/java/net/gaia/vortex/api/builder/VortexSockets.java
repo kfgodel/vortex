@@ -32,6 +32,11 @@ import ar.dgarcia.objectsockets.api.ObjectSocket;
 public interface VortexSockets {
 
 	/**
+	 * El builder de componentes básicos
+	 */
+	VortexCore getCore();
+
+	/**
 	 * Crea un nuevo nodo socket a partir del socket pasado
 	 * 
 	 * @param socket

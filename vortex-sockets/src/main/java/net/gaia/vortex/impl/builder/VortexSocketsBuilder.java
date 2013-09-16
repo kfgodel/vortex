@@ -39,6 +39,13 @@ public class VortexSocketsBuilder implements VortexSockets {
 	private VortexCore coreBuilder;
 
 	/**
+	 * @see net.gaia.vortex.api.builder.VortexSockets#getCore()
+	 */
+	public VortexCore getCore() {
+		return coreBuilder;
+	}
+
+	/**
 	 * @see net.gaia.vortex.api.builder.VortexSockets#nodoSocket(ar.dgarcia.objectsockets.api.ObjectSocket)
 	 */
 	public NodoSocket nodoSocket(final ObjectSocket socket) {

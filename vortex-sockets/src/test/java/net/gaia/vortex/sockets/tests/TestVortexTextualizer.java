@@ -13,11 +13,12 @@
 package net.gaia.vortex.sockets.tests;
 
 import junit.framework.Assert;
+import net.gaia.vortex.api.conversiones.ConversorDeMensajesVortex;
 import net.gaia.vortex.api.ids.componentes.IdDeComponenteVortex;
 import net.gaia.vortex.api.ids.mensajes.IdDeMensaje;
+import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.deprecated.ContenidoVortexLazy;
-import net.gaia.vortex.impl.conversiones.ConversorJacksonDeContenido;
+import net.gaia.vortex.impl.conversiones.ConversorDefaultDeMensajes;
 import net.gaia.vortex.impl.ids.componentes.GeneradorDeIdsGlobalesParaComponentes;
 import net.gaia.vortex.impl.ids.mensajes.GeneradorSecuencialDeIdDeMensaje;
 import net.gaia.vortex.impl.mensajes.ContenidoPrimitiva;
@@ -59,12 +60,13 @@ public class TestVortexTextualizer {
 
 	@Test
 	public void deberíaConvertirEnMapaDePrimitivaUnMensajeConPrimitivaLazy() {
-		final MensajeConContenido mensaje = MensajeConContenido.create(ContenidoVortexLazy.create(
-				MensajeModeloParaTests.create(), ConversorJacksonDeContenido.create()));
+		final ConversorDeMensajesVortex mapeador = ConversorDefaultDeMensajes.create();
+		final MensajeVortex mensaje = mapeador.convertirAVortex(MensajeModeloParaTests.create());
+
 		final String texto = textualizer.convertToString(mensaje);
 		Assert.assertNotNull("Debería existir un texto", texto);
 		Assert.assertTrue("Debería tener la clave esperada",
-				texto.contains("\"CLASSNAME_KEY\":\"net.gaia.vortex.core.tests.MensajeModeloParaTests\""));
+				texto.contains("\"classname_key\":\"net.gaia.vortex.core.tests.MensajeModeloParaTests\""));
 		Assert.assertTrue("Debería tener la clave esperada", texto.contains("\"estadoAdicionalAlMensaje\":{"));
 		Assert.assertTrue("Debería tener la clave esperada", texto.contains("\"numeroConComa\":120.0"));
 		Assert.assertTrue("Debería tener la clave esperada", texto.contains("\"booleano\":true"));
@@ -72,15 +74,6 @@ public class TestVortexTextualizer {
 				.contains("\"variosStrings\":[\"s1\",\"s2\",\"s3\",\"s4\",\"s5\",\"s6\",\"s7\",\"s8\",\"s9\",\"s10\""));
 		Assert.assertTrue("Debería tener la clave esperada",
 				texto.contains("\"posibleDominio\":\"net.gaia.vortex.tests\""));
-	}
-
-	@Test
-	public void deberiaConvertirUnaInstanciaDeObjectEnMensajeVacio() {
-		final MensajeConContenido mensaje = MensajeConContenido.create(ContenidoVortexLazy.create(new Object(),
-				ConversorJacksonDeContenido.create()));
-		final String texto = textualizer.convertToString(mensaje);
-		Assert.assertNotNull("Debería existir un texto", texto);
-		Assert.assertTrue("Debería tener la clave esperada", texto.contains("\"CLASSNAME_KEY\":\"java.lang.Object\""));
 	}
 
 	@Test
