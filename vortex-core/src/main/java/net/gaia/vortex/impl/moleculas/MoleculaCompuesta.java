@@ -24,6 +24,7 @@ import net.gaia.vortex.api.moleculas.Compuesto;
 import net.gaia.vortex.impl.nulos.ConectableNulo;
 import net.gaia.vortex.impl.nulos.ReceptorNulo;
 import net.gaia.vortex.impl.support.ConectableIndirectamenteSupport;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa una molecula compuesta de atomos que definene su comportamiento al recibir
@@ -37,7 +38,10 @@ public class MoleculaCompuesta<E extends Receptor, S extends Conectable> extends
 		implements Compuesto<E, S> {
 
 	private E entrada;
+	public static final String entrada_FIELD = "entrada";
+
 	private S salida;
+	public static final String salida_FIELD = "salida";
 
 	/**
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
@@ -94,4 +98,14 @@ public class MoleculaCompuesta<E extends Receptor, S extends Conectable> extends
 		final MoleculaCompuesta<Receptor, Conectable> create = create(receptor, conectable);
 		return create;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(entrada_FIELD, entrada)
+				.con(salida_FIELD, salida).toString();
+	}
+
 }

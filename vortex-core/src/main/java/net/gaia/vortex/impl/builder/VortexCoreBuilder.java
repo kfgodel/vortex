@@ -45,6 +45,9 @@ import net.gaia.vortex.impl.moleculas.MoleculaDistribuidor;
 import net.gaia.vortex.impl.moleculas.MoleculaIdentificador;
 import net.gaia.vortex.impl.moleculas.MoleculaSelector;
 import net.gaia.vortex.impl.moleculas.MoleculaTerminal;
+import net.gaia.vortex.impl.moleculas.MoleculaTerminalSinDuplicados;
+import net.gaia.vortex.impl.moleculas.terminales.FactoryDeTerminalSimple;
+import net.gaia.vortex.impl.moleculas.terminales.FactoryDeTerminalSinDuplicados;
 import net.gaia.vortex.impl.proto.ConectorAsincrono;
 import net.gaia.vortex.impl.proto.ConectorBloqueante;
 import ar.com.dgarcia.lang.strings.ToString;
@@ -278,7 +281,21 @@ public class VortexCoreBuilder implements VortexCore {
 	 * @see net.gaia.vortex.api.builder.VortexCore#distribuidor()
 	 */
 	public Distribuidor distribuidor() {
-		return MoleculaDistribuidor.create(this);
+		return MoleculaDistribuidor.create(FactoryDeTerminalSimple.create(this));
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#distribuidorSinDuplicados()
+	 */
+	public Distribuidor distribuidorSinDuplicados() {
+		return MoleculaDistribuidor.create(FactoryDeTerminalSinDuplicados.create(this));
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexCore#terminalSinDuplicados()
+	 */
+	public Terminal terminalSinDuplicados() {
+		return MoleculaTerminalSinDuplicados.create(this);
 	}
 
 	/**

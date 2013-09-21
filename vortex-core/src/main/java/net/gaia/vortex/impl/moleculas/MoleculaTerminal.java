@@ -18,11 +18,11 @@
 package net.gaia.vortex.impl.moleculas;
 
 import net.gaia.vortex.api.atomos.Conector;
-import net.gaia.vortex.api.atomos.Multiplexor;
+import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
-import net.gaia.vortex.api.moleculas.Terminal;
-import net.gaia.vortex.impl.support.ConectableIndirectamenteSupport;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la terminal desde la cual otros componentes pueden comunicarse con una
@@ -30,10 +30,7 @@ import net.gaia.vortex.impl.support.ConectableIndirectamenteSupport;
  * 
  * @author dgarcia
  */
-public class MoleculaTerminal extends ConectableIndirectamenteSupport<Conector> implements Terminal {
-
-	private Multiplexor multiplexorDeCompartidos;
-	public static final String multiplexorDeCompartidos_FIELD = "multiplexorDeCompartidos";
+public class MoleculaTerminal extends TerminalSupport {
 
 	private Conector conectorSalida;
 	public static final String conectorSalida_FIELD = "conectorSalida";
@@ -42,37 +39,38 @@ public class MoleculaTerminal extends ConectableIndirectamenteSupport<Conector> 
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
 	public void recibir(final MensajeVortex mensaje) {
-		multiplexorDeCompartidos.recibir(mensaje);
+		// Mandamos el mensaje directo a las otras terminales
+		getMultiplexorDeCompartidos().recibir(mensaje);
 	}
 
 	public static MoleculaTerminal create(final VortexCore builder) {
 		final MoleculaTerminal terminal = new MoleculaTerminal();
-		terminal.multiplexorDeCompartidos = builder.multiplexar();
+		terminal.inicializarCon(builder);
 		terminal.conectorSalida = builder.conector();
 		return terminal;
 	}
 
 	/**
-	 * @see net.gaia.vortex.api.moleculas.Terminal#compartirMensajesCon(net.gaia.vortex.api.moleculas.Terminal)
-	 */
-	public void compartirMensajesCon(final Terminal otraTerminal) {
-		final Conector salidaDeOtraTerminal = otraTerminal.getSalida();
-		this.multiplexorDeCompartidos.conectarCon(salidaDeOtraTerminal);
-	}
-
-	/**
-	 * @see net.gaia.vortex.api.moleculas.Terminal#descompartirMensajesA(net.gaia.vortex.api.moleculas.Terminal)
-	 */
-	public void descompartirMensajesA(final Terminal otraTerminal) {
-		final Conector salidaDeOtraTerminal = otraTerminal.getSalida();
-		multiplexorDeCompartidos.desconectarDe(salidaDeOtraTerminal);
-	}
-
-	/**
 	 * @see net.gaia.vortex.api.moleculas.Terminal#getSalida()
 	 */
-	public Conector getSalida() {
+	public Conectable getSalida() {
 		return conectorSalida;
 	}
 
+	/**
+	 * @see net.gaia.vortex.api.moleculas.Terminal#getReceptorParaTerminales()
+	 */
+	public Receptor getReceptorParaTerminales() {
+		// Todo lo que nos manden de otras terminales, va directo a la salida
+		return conectorSalida;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia())
+				.con(conectorSalida_FIELD, conectorSalida).toString();
+	}
 }

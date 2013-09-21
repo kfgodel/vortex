@@ -21,12 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.basic.Receptor;
-import net.gaia.vortex.api.builder.VortexCore;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
 import net.gaia.vortex.api.moleculas.Distribuidor;
 import net.gaia.vortex.api.moleculas.Terminal;
+import net.gaia.vortex.impl.moleculas.terminales.TerminalFactory;
 import net.gaia.vortex.impl.support.ReceptorSupport;
 import ar.com.dgarcia.lang.strings.ToString;
 
@@ -38,7 +37,7 @@ import ar.com.dgarcia.lang.strings.ToString;
  */
 public class MoleculaDistribuidor extends ReceptorSupport implements Distribuidor {
 
-	private VortexCore builder;
+	private TerminalFactory builder;
 
 	private List<Terminal> terminales;
 	public static final String terminales_FIELD = "terminales";
@@ -49,7 +48,7 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 	public void recibir(final MensajeVortex mensaje) {
 		// Si no conocemos el origen se lo mandamos a todos
 		for (final Terminal terminal : terminales) {
-			terminal.getSalida().recibir(mensaje);
+			terminal.getReceptorParaTerminales().recibir(mensaje);
 		}
 	}
 
@@ -57,7 +56,7 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 	 * @see net.gaia.vortex.api.moleculas.Distribuidor#crearTerminal()
 	 */
 	public Terminal crearTerminal() {
-		final Terminal nuevaTerminal = builder.terminal();
+		final Terminal nuevaTerminal = builder.crearTerminal();
 		for (final Terminal terminalExistente : terminales) {
 			nuevaTerminal.compartirMensajesCon(terminalExistente);
 			terminalExistente.compartirMensajesCon(nuevaTerminal);
@@ -77,7 +76,7 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 		}
 	}
 
-	public static MoleculaDistribuidor create(final VortexCore builder) {
+	public static MoleculaDistribuidor create(final TerminalFactory builder) {
 		final MoleculaDistribuidor distribuidor = new MoleculaDistribuidor();
 		distribuidor.builder = builder;
 		distribuidor.terminales = new CopyOnWriteArrayList<Terminal>();
@@ -141,8 +140,7 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 	 */
 	public Terminal getTerminalConectadaA(final Receptor receptor) {
 		for (final Terminal terminalConectada : terminales) {
-			final Conector conectorDeSalida = terminalConectada.getSalida();
-			final Receptor receptorConectado = conectorDeSalida.getConectado();
+			final Receptor receptorConectado = terminalConectada.getConectado();
 			if (receptorConectado.equals(receptor)) {
 				// Es la terminal que buscabamos
 				return terminalConectada;

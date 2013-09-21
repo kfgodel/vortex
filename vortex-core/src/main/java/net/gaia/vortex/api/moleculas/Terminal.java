@@ -19,11 +19,13 @@ package net.gaia.vortex.api.moleculas;
 
 import java.util.List;
 
-import net.gaia.vortex.api.atomos.Conector;
 import net.gaia.vortex.api.basic.Nodo;
 import net.gaia.vortex.api.basic.Receptor;
+import net.gaia.vortex.api.basic.emisores.Conectable;
 import net.gaia.vortex.api.basic.emisores.ConectableIndirectamente;
+import net.gaia.vortex.api.basic.emisores.MonoEmisor;
 import net.gaia.vortex.api.mensajes.MensajeVortex;
+import net.gaia.vortex.impl.nulos.ReceptorNulo;
 
 /**
  * Esta interfaz representa un punto de acceso a una red de componentes abstrayendo al red. Con la
@@ -33,11 +35,12 @@ import net.gaia.vortex.api.mensajes.MensajeVortex;
  * 
  * @author dgarcia
  */
-public interface Terminal extends Nodo, ConectableIndirectamente<Conector> {
+public interface Terminal extends Nodo, MonoEmisor, ConectableIndirectamente<Conectable> {
 
 	/**
-	 * Al recibir un mensaje el terminal lo envia a los conectores de salida de todos los terminales
-	 * con los que comparte los mensajes
+	 * Al recibir un mensaje este terminal lo envia a los otros terminales con los que comparte,
+	 * recibiendo en los conectores de salida de todos los terminales con los que comparte los
+	 * mensajes
 	 * 
 	 * @see net.gaia.vortex.api.basic.Receptor#recibir(net.gaia.vortex.api.mensajes.MensajeVortex)
 	 */
@@ -67,6 +70,14 @@ public interface Terminal extends Nodo, ConectableIndirectamente<Conector> {
 	public List<Receptor> getConectados();
 
 	/**
+	 * Devuelve el unico receptor conectado a la salida de esta terminal.<br>
+	 * Si no hay un receptor conectado, se devuelve el {@link ReceptorNulo}
+	 * 
+	 * @see net.gaia.vortex.api.basic.emisores.MonoEmisor#getConectado()
+	 */
+	public Receptor getConectado();
+
+	/**
 	 * Desconecta de la salida de este componente el receptor indicado<br>
 	 * Este método es equivalente a {@link #getSalida()}.{@link #desconectarDe(Receptor)}
 	 * 
@@ -76,11 +87,21 @@ public interface Terminal extends Nodo, ConectableIndirectamente<Conector> {
 
 	/**
 	 * Devuelve el conector que se debe utilizar para recibir los mensajes compartidos desde otras
-	 * terminales
+	 * terminales.<br>
+	 * Este conector debe conectarse con {@link Conectable#conectarCon(Receptor)} al receptor que
+	 * quiere recibir los mensajes de este terminal
 	 * 
 	 * @see net.gaia.vortex.api.basic.emisores.ConectableIndirectamente#getSalida()
 	 */
-	public Conector getSalida();
+	public Conectable getSalida();
+
+	/**
+	 * Devuelve el receptor utilizado para recibir los mensajes compartidos desde otras terminales,
+	 * y que terminará saliendo por la salida de esta terminal en {@link #getSalida()}
+	 * 
+	 * @return El receptor para los mensajes de otras terminales
+	 */
+	public Receptor getReceptorParaTerminales();
 
 	/**
 	 * Quita la terminal pasada como receptora de los mensajes de esta terminal.<br>

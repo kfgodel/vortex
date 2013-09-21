@@ -33,6 +33,7 @@ import net.gaia.vortex.impl.condiciones.EsMensajeNuevoDeOtroComponente;
 import net.gaia.vortex.impl.mensajes.memoria.MemoriaDeMensajes;
 import net.gaia.vortex.impl.support.EmisorSupport;
 import net.gaia.vortex.impl.transformaciones.GenerarIdEnMensaje;
+import ar.com.dgarcia.lang.strings.ToString;
 
 /**
  * Esta clase representa la molécula que permite identificar los mensajes enviados y recibidos,
@@ -45,6 +46,8 @@ import net.gaia.vortex.impl.transformaciones.GenerarIdEnMensaje;
 public class MoleculaIdentificador extends EmisorSupport implements Identificador {
 
 	private IdDeComponenteVortex idPropio;
+	public static final String idPropio_FIELD = "idPropio";
+
 	private Filtro filtroRecibidos;
 	private Transformador transformadorEnviados;
 
@@ -128,5 +131,14 @@ public class MoleculaIdentificador extends EmisorSupport implements Identificado
 		final ArrayList<Receptor> conectados = new ArrayList<Receptor>(1);
 		conectados.add(transformadorEnviados.getConectado());
 		return conectados;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToString.de(this).con(numeroDeInstancia_FIELD, getNumeroDeInstancia()).con(idPropio_FIELD, idPropio)
+				.toString();
 	}
 }

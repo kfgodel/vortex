@@ -297,4 +297,23 @@ public interface VortexCore {
 	 */
 	Terminal terminal();
 
+	/**
+	 * Crea un distribuidor de mensajes que descartar los duplicados en cada terminal, para no
+	 * enviar mensajes ya recibidos a cada uno.<br>
+	 * Este tipo de distribuidor puede ser usado como punto central en redes de las que se deconoce
+	 * la topología o existen caminos paralelos o con bucles
+	 * 
+	 * @return El distribuidor de mensajes que no envia duplicados
+	 */
+	Distribuidor distribuidorSinDuplicados();
+
+	/**
+	 * Crea una terminal de mensajes que descarta los mensajes duplicados.<br>
+	 * Este tipo de terminal se usa con el {@link #distribuidorSinDuplicados()} para evitar enviar
+	 * dos veces el mismo mensaje en topologias desconocidas o con bucles en las conexiones
+	 * 
+	 * @return La terminal sin duplicados
+	 */
+	Terminal terminalSinDuplicados();
+
 }
