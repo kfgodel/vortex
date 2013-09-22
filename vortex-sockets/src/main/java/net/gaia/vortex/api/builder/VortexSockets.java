@@ -64,11 +64,24 @@ public interface VortexSockets {
 	/**
 	 * Crea un host de sockets que utiliza internamente un {@link Distribuidor} para entregar los
 	 * mensajes a destino.<br>
-	 * Este component no identifica los mensajes por lo que puede entregar mensajes duplicados si
-	 * existen bucles en la red o caminos paralelos
+	 * Este componente no identifica los mensajes por lo que puede entregar mensajes duplicados si
+	 * existen bucles en la red o caminos paralelos.<br>
+	 * Utilizar este componente si la topología de la red es conocida y no presenta mensajes
+	 * duplicados
 	 * 
 	 * @return El host creado para redes con topología conocida
 	 */
 	SocketHost<Distribuidor> distribuidorSocket();
+
+	/**
+	 * Crea un host de sockets que utiliza un distribuidor sin duplicados para entregar los
+	 * mensajes.<br>
+	 * A través de esta instancia se puede conectar a redes remotas en las que se desconoce la
+	 * topolología y podrían existir duplicados. Este tipo de distribuidor es mas lento que el
+	 * {@link #distribuidorSocket()} por que debe filtrar los mensajes que ya recibió.
+	 * 
+	 * @return El host creado sin conectar
+	 */
+	SocketHost<Distribuidor> distribuidorSocketSinDuplicados();
 
 }

@@ -71,4 +71,5 @@ public abstract class ConectableIndirectamenteSupport<E extends Conectable> exte
 	public List<Receptor> getConectados() {
 		return getSalida().getConectados();
 	}
+
 }

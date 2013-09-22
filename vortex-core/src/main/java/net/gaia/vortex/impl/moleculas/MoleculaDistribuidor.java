@@ -140,10 +140,12 @@ public class MoleculaDistribuidor extends ReceptorSupport implements Distribuido
 	 */
 	public Terminal getTerminalConectadaA(final Receptor receptor) {
 		for (final Terminal terminalConectada : terminales) {
-			final Receptor receptorConectado = terminalConectada.getConectado();
-			if (receptorConectado.equals(receptor)) {
-				// Es la terminal que buscabamos
-				return terminalConectada;
+			final List<Receptor> receptoresConectados = terminalConectada.getConectados();
+			for (final Receptor receptorConectado : receptoresConectados) {
+				if (receptorConectado.equals(receptor)) {
+					// Es la terminal que buscabamos
+					return terminalConectada;
+				}
 			}
 		}
 		return null;

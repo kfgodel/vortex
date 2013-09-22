@@ -77,8 +77,27 @@ public class VortexSocketsBuilder implements VortexSockets {
 	 */
 	public SocketHost<Distribuidor> distribuidorSocket() {
 		final Distribuidor distribuidor = coreBuilder.distribuidor();
+		return crearHostDeDistribuidor(distribuidor);
+	}
+
+	/**
+	 * Crea un host de sockets para ser conectado a un distribuidor
+	 * 
+	 * @param distribuidor
+	 *            El distribuidor central
+	 * @return El host creado
+	 */
+	private SocketHost<Distribuidor> crearHostDeDistribuidor(final Distribuidor distribuidor) {
 		final MoleculaSocketHost<Distribuidor> host = MoleculaSocketHost.create(distribuidor,
 				UsarDistribuidorCentral.create(distribuidor), this);
 		return host;
+	}
+
+	/**
+	 * @see net.gaia.vortex.api.builder.VortexSockets#distribuidorSocketSinDuplicados()
+	 */
+	public SocketHost<Distribuidor> distribuidorSocketSinDuplicados() {
+		final Distribuidor distribuidor = coreBuilder.distribuidorSinDuplicados();
+		return crearHostDeDistribuidor(distribuidor);
 	}
 }

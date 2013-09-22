@@ -16,12 +16,16 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-import net.gaia.taskprocessor.api.processor.TaskProcessor;
+import net.gaia.vortex.api.builder.Nodos;
+import net.gaia.vortex.api.builder.VortexSockets;
+import net.gaia.vortex.api.moleculas.Distribuidor;
+import net.gaia.vortex.api.moleculas.Portal;
+import net.gaia.vortex.api.moleculas.SocketHost;
 import net.gaia.vortex.core.tests.MensajeModeloParaTests;
-import net.gaia.vortex.deprecated.NodoSocketViejo;
-import net.gaia.vortex.deprecated.PortalMapeadorViejo;
+import net.gaia.vortex.impl.builder.VortexCoreBuilder;
+import net.gaia.vortex.impl.builder.VortexPortalBuilder;
+import net.gaia.vortex.impl.builder.VortexSocketsBuilder;
 import net.gaia.vortex.impl.condiciones.SiempreTrue;
-import net.gaia.vortex.impl.helpers.VortexProcessorFactory;
 import net.gaia.vortex.impl.support.HandlerTipado;
 
 import org.junit.After;
@@ -33,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import ar.com.dgarcia.lang.conc.WaitBarrier;
 import ar.com.dgarcia.lang.metrics.impl.MetricasPorTiempoImpl;
 import ar.com.dgarcia.lang.time.TimeMagnitude;
+import ar.com.dgarcia.testing.FreePortFinder;
 
 /**
  * Esta clase prueba que si existen caminos duplicados por sockets los mensajes no lleguen
@@ -43,31 +48,35 @@ import ar.com.dgarcia.lang.time.TimeMagnitude;
 public class TestCaminosDuplicados {
 	private static final Logger LOG = LoggerFactory.getLogger(TestCaminosDuplicados.class);
 
-	private TaskProcessor procesador;
-	private NodoSocketViejo serverEmisor;
-	private NodoSocketViejo serverReceptor;
-	private NodoSocketViejo clienteIntermedio;
-	private NodoSocketViejo clienteEmisor;
-	private NodoSocketViejo clienteReceptor;
+	private SocketHost<Distribuidor> serverEmisor;
+	private SocketHost<Distribuidor> serverReceptor;
+	private SocketHost<Distribuidor> clienteIntermedio;
+	private SocketHost<Distribuidor> clienteEmisor;
+	private SocketHost<Distribuidor> clienteReceptor;
 
-	private PortalMapeadorViejo portalReceptor;
+	private Portal portalReceptor;
 
-	private PortalMapeadorViejo portalEmisor;
+	private Portal portalEmisor;
 
-	private NodoSocketViejo serverParalelo;
+	private SocketHost<Distribuidor> serverParalelo;
 
-	private NodoSocketViejo clienteReceptorParalelo;
+	private SocketHost<Distribuidor> clienteReceptorParalelo;
 
-	private NodoSocketViejo clienteIntermedioParalelo;
+	private SocketHost<Distribuidor> clienteIntermedioParalelo;
+
+	private VortexSockets builder;
+
+	private VortexPortalBuilder builderPortal;
 
 	@Before
 	public void crearProcesador() {
-		procesador = VortexProcessorFactory.createProcessor();
+		final VortexCoreBuilder core = VortexCoreBuilder.create(null);
+		builder = VortexSocketsBuilder.create(core);
+		builderPortal = VortexPortalBuilder.create(core);
 	}
 
 	@After
 	public void eliminarProcesador() {
-		procesador.detener();
 	}
 
 	@After
@@ -170,29 +179,39 @@ public class TestCaminosDuplicados {
 	}
 
 	/**
-	 * Crea los nodos conectados mediante sockets con 2 servidores intermediarios
+	 * Crea una red linea con dos servidores conectados entre sí a través de un cliente intermedio,
+	 * y dos clientes socket en los extremos con portales para enviar y recibir
 	 */
 	private void crearNodosConIntermedios() {
-		// Creamos el primer server
-		final InetSocketAddress direccionServerEmisor = new InetSocketAddress(21111);
-		serverEmisor = NodoSocketViejo.createAndListenTo(direccionServerEmisor, procesador);
-
-		// Creamos el segundo server
-		final InetSocketAddress direccionServerReceptor = new InetSocketAddress(21112);
-		serverReceptor = NodoSocketViejo.createAndListenTo(direccionServerReceptor, procesador);
-
-		// Conectamos el primero con el segundo
-		clienteIntermedio = NodoSocketViejo.createAndConnectTo(direccionServerReceptor, procesador);
-		serverEmisor.conectarCon(clienteIntermedio);
-		clienteIntermedio.conectarCon(serverEmisor);
+		// Creamos el primer server que hará de emisor
+		final InetSocketAddress direccionServerEmisor = new InetSocketAddress(FreePortFinder.getFreePort());
+		serverEmisor = builder.distribuidorSocketSinDuplicados();
+		serverEmisor.listenConnectionsOn(direccionServerEmisor);
 
 		// Creamos el cliente del emisor y su portal
-		clienteEmisor = NodoSocketViejo.createAndConnectTo(direccionServerEmisor, procesador);
-		portalEmisor = PortalMapeadorViejo.createForIOWith(procesador, clienteEmisor);
+		clienteEmisor = builder.distribuidorSocket();
+		clienteEmisor.connectTo(direccionServerEmisor);
+
+		portalEmisor = builderPortal.portalIdentificador();
+		Nodos.interconectarConDistribuidor(portalEmisor, clienteEmisor.getSalida());
+
+		// Creamos el segundo server que hará de receptor
+		final InetSocketAddress direccionServerReceptor = new InetSocketAddress(FreePortFinder.getFreePort());
+		serverReceptor = builder.distribuidorSocketSinDuplicados();
+		serverReceptor.listenConnectionsOn(direccionServerReceptor);
 
 		// Creamos el cliente del receptor y su portal
-		clienteReceptor = NodoSocketViejo.createAndConnectTo(direccionServerReceptor, procesador);
-		portalReceptor = PortalMapeadorViejo.createForIOWith(procesador, clienteReceptor);
+		clienteReceptor = builder.distribuidorSocket();
+		clienteReceptor.connectTo(direccionServerReceptor);
+
+		portalReceptor = builderPortal.portalIdentificador();
+		Nodos.interconectarConDistribuidor(portalReceptor, clienteReceptor.getSalida());
+
+		// Creamos uno intermedio que esta conectado al receptor por socket y al emisor en memoria
+		clienteIntermedio = builder.distribuidorSocketSinDuplicados();
+		clienteIntermedio.connectTo(direccionServerReceptor);
+		Nodos.interconectarDistribuidores(clienteIntermedio.getSalida(), clienteEmisor.getSalida());
+
 	}
 
 	/**
@@ -206,17 +225,18 @@ public class TestCaminosDuplicados {
 		crearNodosConIntermedios();
 
 		// Agregamos otro server paralelo
-		final InetSocketAddress direccionServerParalelo = new InetSocketAddress(21113);
-		serverParalelo = NodoSocketViejo.createAndListenTo(direccionServerParalelo, procesador);
+		final InetSocketAddress direccionServerParalelo = new InetSocketAddress(FreePortFinder.getFreePort());
+		serverParalelo = builder.distribuidorSocketSinDuplicados();
+		serverParalelo.listenConnectionsOn(direccionServerParalelo);
 
-		// Y las conexiones para que llegue desde el emisor al receptor
-		clienteIntermedioParalelo = NodoSocketViejo.createAndConnectTo(direccionServerParalelo, procesador);
-		serverEmisor.conectarCon(clienteIntermedioParalelo);
-		clienteIntermedioParalelo.conectarCon(serverEmisor);
+		// Creamos un cliente como camino paralelo desde el server emisor
+		clienteIntermedioParalelo = builder.distribuidorSocket();
+		clienteIntermedioParalelo.connectTo(direccionServerParalelo);
+		Nodos.interconectarDistribuidores(clienteIntermedioParalelo.getSalida(), serverEmisor.getSalida());
 
-		clienteReceptorParalelo = NodoSocketViejo.createAndConnectTo(direccionServerParalelo, procesador);
-		clienteReceptorParalelo.conectarCon(portalReceptor);
-		portalReceptor.conectarCon(clienteReceptorParalelo);
+		// Y el otro cliente como camino paralelo desde el portal receptor
+		clienteReceptorParalelo = builder.distribuidorSocket();
+		Nodos.interconectarConDistribuidor(portalReceptor, clienteReceptorParalelo.getSalida());
 
 		final WaitBarrier esperarPrimerMensaje = WaitBarrier.create();
 		// Creamos la métricas para medir los recibidos

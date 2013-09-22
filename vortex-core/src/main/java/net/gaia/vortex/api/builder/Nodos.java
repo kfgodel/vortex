@@ -13,6 +13,8 @@
 package net.gaia.vortex.api.builder;
 
 import net.gaia.vortex.api.basic.Nodo;
+import net.gaia.vortex.api.moleculas.Distribuidor;
+import net.gaia.vortex.api.moleculas.Terminal;
 
 /**
  * Esta clase ofrece algunos métodos de operaciones comunes entre nodos
@@ -46,6 +48,35 @@ public class Nodos {
 	public static void desinterconectar(final Nodo unNodo, final Nodo otroNodo) {
 		otroNodo.desconectarDe(unNodo);
 		unNodo.desconectarDe(otroNodo);
+	}
+
+	/**
+	 * Interconecta dos distribuidores utilizando terminales creadas para conectar cada uno.<br>
+	 * 
+	 * @param unDistribuidor
+	 *            Uno de los distribuidores a conectar
+	 * @param otroDtritribuidor
+	 *            El otro distribuidor a conectar
+	 */
+	public static void interconectarDistribuidores(final Distribuidor unDistribuidor,
+			final Distribuidor otroDtritribuidor) {
+		final Terminal unaTerminal = unDistribuidor.crearTerminal();
+		final Terminal otraTerminal = otroDtritribuidor.crearTerminal();
+		interconectar(unaTerminal, otraTerminal);
+	}
+
+	/**
+	 * Interconecta el nodo pasado con el distribuidor utilizando una terminal creada en el
+	 * distribuidor para que el nodo no reciba sus propios mensajes al enviar al distribuidor
+	 * 
+	 * @param unNodo
+	 *            El nodo a interconectar
+	 * @param unDistribuidor
+	 *            El distribuidor del cual se creara una terminal
+	 */
+	public static void interconectarConDistribuidor(final Nodo unNodo, final Distribuidor unDistribuidor) {
+		final Terminal unaTerminal = unDistribuidor.crearTerminal();
+		interconectar(unNodo, unaTerminal);
 	}
 
 }
