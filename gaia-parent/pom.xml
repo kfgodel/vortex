@@ -19,7 +19,7 @@
 	  <version.dgarcia-commons>1.0.5</version.dgarcia-commons>
 	  <version.logback>1.0.13</version.logback>
 	  <version.slf4j>1.7.5</version.slf4j>
-	  <version.junit>4.8.1</version.junit>
+	  <version.junit>4.13.1</version.junit>
 	</properties>
     
     <build>
